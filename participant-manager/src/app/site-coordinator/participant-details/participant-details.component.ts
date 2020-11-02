@@ -14,6 +14,7 @@ import {
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Location} from '@angular/common';
 import {RegistryParticipant} from 'src/app/shared/participant';
+import {Permission} from 'src/app/shared/permission-enums';
 @Component({
   selector: 'app-participant-details',
   templateUrl: './participant-details.component.html',
@@ -28,6 +29,7 @@ export class ParticipantDetailsComponent
   participant$: Observable<Participant> = of();
   onBoardingStatus = OnboardingStatus;
   studyTypes = StudyType;
+  permission = Permission;
   constructor(
     private readonly locationLibrary: Location,
     private readonly participantDetailsService: ParticipantDetailsService,

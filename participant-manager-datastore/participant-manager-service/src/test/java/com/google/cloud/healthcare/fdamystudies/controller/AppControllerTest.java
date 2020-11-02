@@ -144,7 +144,7 @@ public class AppControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
-    testDataHelper.getAppPermissionRepository().deleteAll();
+    testDataHelper.getSitePermissionRepository().deleteAll();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
@@ -335,7 +335,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
         .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
-        .andExpect(jsonPath("$.name").value(appEntity.getAppName()));
+        .andExpect(jsonPath("$.name").value(appEntity.getAppName()))
+        .andExpect(jsonPath("$.participants[0].enrolledStudies").isNotEmpty());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
