@@ -457,10 +457,7 @@ public class DashboardMetaDataDao {
                               questionnaireDto.getVersion() == null
                                   ? StudyMetaDataConstants.STUDY_DEFAULT_VERSION
                                   : questionnaireDto.getVersion().toString());
-                          questionDto.setActivityId(
-                              StudyMetaDataConstants.ACTIVITY_TYPE_QUESTIONAIRE
-                                  + "-"
-                                  + questionnaireDto.getId());
+                          questionDto.setActivityId(questionnaireDto.getShortTitle());
                           if (questionDto
                               .getAddLineChart()
                               .equalsIgnoreCase(StudyMetaDataConstants.YES)) {

@@ -56,6 +56,8 @@ public class ParticipantRegistryDetail extends BaseResponse {
 
   private Integer siteStatus;
 
+  private String studyStatus;
+
   private Integer openStudySitePermission;
 
   private List<ParticipantDetail> registryParticipants = new ArrayList<>();
