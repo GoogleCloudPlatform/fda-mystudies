@@ -180,7 +180,9 @@ public class StudyServiceImpl implements StudyService {
       Long invitedCount = getCount(studyInvitedCountMap, study.getId());
       studyDetail.setEnrolled(enrolledCount);
       studyDetail.setInvited(invitedCount);
-      if (studyDetail.getInvited() != 0 && studyDetail.getInvited() >= studyDetail.getEnrolled()) {
+      if (studyDetail.getInvited() != 0
+          && (studyDetail.getType().equals(OPEN_STUDY)
+              || studyDetail.getInvited() >= studyDetail.getEnrolled())) {
         Double percentage =
             (Double.valueOf(studyDetail.getEnrolled()) * 100)
                 / Double.valueOf(studyDetail.getInvited());
@@ -293,7 +295,9 @@ public class StudyServiceImpl implements StudyService {
 
     studyDetail.setEnrolled(studyEnrolledCount);
     studyDetail.setInvited(studyInvitedCount);
-    if (studyDetail.getInvited() != 0 && studyDetail.getInvited() >= studyDetail.getEnrolled()) {
+    if (studyDetail.getInvited() != 0
+        && (studyDetail.getType().equals(OPEN_STUDY)
+            || studyDetail.getInvited() >= studyDetail.getEnrolled())) {
       Double percentage =
           (Double.valueOf(studyDetail.getEnrolled()) * 100)
               / Double.valueOf(studyDetail.getInvited());

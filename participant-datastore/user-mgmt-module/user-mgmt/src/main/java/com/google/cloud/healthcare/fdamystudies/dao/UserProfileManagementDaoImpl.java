@@ -23,6 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -284,6 +285,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudyEntity.class);
       criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
       criteriaParticipantStudiesUpdate.set("participantId", null);
+      criteriaParticipantStudiesUpdate.set(
+          "withdrawalDate", new Timestamp(Instant.now().toEpochMilli()));
       userDetails = session.get(UserDetailsEntity.class, userDetailsId);
       studyIdPredicates.add(
           criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));
@@ -295,10 +298,12 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
 
       session
           .createSQLQuery(
-              "UPDATE participant_registry_site SET onboarding_status=:onboardingStatus WHERE "
+              "UPDATE participant_registry_site SET onboarding_status=:onboardingStatus, "
+                  + "disabled_time=:disabledDate WHERE "
                   + "id IN (SELECT participant_registry_site_id FROM participant_study_info where "
                   + "user_details_id=:userDetailsId and study_info_id IN (:studyIds))")
           .setParameter("onboardingStatus", OnboardingStatus.DISABLED.getCode())
+          .setParameter("disabledDate", new Timestamp(Instant.now().toEpochMilli()))
           .setParameter("userDetailsId", userDetails)
           .setParameter("studyIds", studyInfoBoList)
           .executeUpdate();
