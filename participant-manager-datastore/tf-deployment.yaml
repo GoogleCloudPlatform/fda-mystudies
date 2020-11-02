@@ -76,7 +76,7 @@ spec:
                   key: from_email_address
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000"
             - name: PARTICIPANT_MANAGER_URL
