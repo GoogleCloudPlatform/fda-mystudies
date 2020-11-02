@@ -46,7 +46,7 @@ resource "random_string" "strings" {
     formatlist("%s_client_id", local.apps))
   )
   length  = 16
-  special = true
+  special = false
 }
 
 resource "random_password" "passwords" {
