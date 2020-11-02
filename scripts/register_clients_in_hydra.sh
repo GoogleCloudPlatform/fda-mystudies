@@ -10,6 +10,7 @@
 # $ ./scripts/register_clients_in_hydra.sh <prefix> <env>
 
 #!/bin/bash
+
 if [ "$#" -ne 2 ]; then
   echo 'Please provide deployment prefix and env in the order of <prefix> <env>>'
   exit 1
@@ -22,24 +23,28 @@ shift 2
 set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
-DATA_PROJECT=${PREFIX}-${ENV}-data
-SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
+APPS_PROJECT=${PREFIX}-${ENV}-apps
+CLUSTER=${PREFIX}-${ENV}-gke-cluster
+LOCATION=us-east1
+IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-app-import
 SCIM_AUTH_URL="http://auth-server-np:50000"
-HYDRA_ADMIN_URL="http://hydra-np:4445"
+HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
 DATETIME=`date +"%FT%TZ"`
 
+OUPUT=""
+
+echo "Reading client id and secret key for auth, participant manager and mobile apps"
 # SCIM AUTH SERVER, PARTICIPANT MANAGER & MOBILE APPS are registered
 # with the same client_id and secret_key
 AUTH_CLIENT_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=auto-auth-server-client-id`
 AUTH_SECRET_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=auto-auth-server-secret-key`
 
-for CLIENT_NAME in "SCIM AUTH SERVER" "PARTICIPANT MANAGER" "MOBILE APPS"
+for CLIENT_NAME in "SCIM AUTH SERVER" # "PARTICIPANT MANAGER" "MOBILE APPS"
 do
-  echo "Register ${CLIENT_NAME} with Hydra"
-  OUTPUT=`curl --location --request POST "${HYDRA_ADMIN_URL}/clients" \
-  --header "Content-Type: application/json" \
-  --header "Accept: application/json" \
-  --data-raw "{
+  OUTPUT="${OUTPUT} curl --location --request POST \"${HYDRA_ADMIN_URL}/clients\" \\
+  --header \"Content-Type: application/json\" \\
+  --header \"Accept: application/json\" \\
+  --data-raw '{
     \"client_id\": \"${AUTH_CLIENT_ID}\",
     \"client_name\": \"${CLIENT_NAME}\",
     \"client_secret\": \"${AUTH_SECRET_KEY}\",
@@ -48,32 +53,39 @@ do
     \"grant_types\": [\"authorization_code\",\"refresh_token\",\"client_credentials\"],
     \"token_endpoint_auth_method\": \"client_secret_basic\",
     \"redirect_uris\": [\"${SCIM_AUTH_URL}/callback\"]
-  }"`
-  echo "${OUTPUT}"
-end
+  }';
+"
+done
 
 # Loop over all applications to read secret and register with hydra.
-for APPLICATION in participant-consent-datastore participant-enroll-datastore participant-manager-datastore participant-user-datastore response-datastore study-builder study-datastore
+for APPLICATION in "participant-consent-datastore" "participant-enroll-datastore" "participant-manager-datastore" "participant-user-datastore" "response-datastore" "study-builder" "study-datastore"
 do
-  CLIENT_NAME=`echo "${APPLICATION}" | tr '[:lower:]' '[:upper:]' | sed 's/-/ /'`
+  CLIENT_NAME=`echo "${APPLICATION}" | tr '[:lower:]' '[:upper:]' | sed 's/-/ /g'`
   echo "Reading client id and secret key for: ${CLIENT_NAME}"
+
   CLIENT_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=auto-${APPLICATION}-client-id`
   SECRET_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=auto-${APPLICATION}-secret-key`
 
-  echo "Register ${CLIENT_NAME} in Hydra"
-  OUTPUT=`curl --location --request POST "${HYDRA_ADMIN_URL}/clients" \
-  --header "Content-Type: application/json" \
-  --header "Accept: application/json" \
-  --data-raw "{
+  OUTPUT="${OUTPUT} curl --location --request POST \"${HYDRA_ADMIN_URL}/clients\" \\
+  --header \"Content-Type: application/json\" \\
+  --header \"Accept: application/json\" \\
+  --data-raw '{
     \"client_id\": \"${CLIENT_ID}\",
     \"client_name\": \"${CLIENT_NAME}\",
-    \"client_secret\": \"${CLIENT_SECRET}\",
+    \"client_secret\": \"${SECRET_KEY}\",
     \"client_secret_expires_at\": 0,
     \"created_at\": \"${DATETIME}\",
     \"grant_types\": [\"client_credentials\"],
     \"token_endpoint_auth_method\": \"client_secret_basic\",
     \"redirect_uris\": [\"${SCIM_AUTH_URL}/callback\"]
-  }"`
-
-  echo "${OUTPUT}"
+  }';"
 done
+
+HYDRA_POD=`kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep hydra`
+# Import the GCS file to CloudSQL.
+#echo "Running the output in Cluster."
+
+echo "Running registration commands in Hydra pod"
+kubectl exec ${HYDRA_POD} -c hydra-ic -- bash -c "${OUTPUT}"
+
+rm ${TMPFILE}
