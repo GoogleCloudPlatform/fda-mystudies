@@ -65,11 +65,11 @@ spec:
                   key: smtp_hostname
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
             - name: HYDRA_PUBLIC_URL
-              value: "http://hydra-np:4444"
+              value: "http://hydra-np:50000/hydra"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/auth-server"
             # MISC
             - name: LOG_PATH
               valueFrom:
@@ -78,11 +78,13 @@ spec:
                   key: log_path
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
+            - name: ORG_NAME
+              value: "Google Cloud Healthcare"
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /oauth-scim-module/healthCheck
+              path: /auth-server/healthCheck
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
@@ -90,7 +92,9 @@ spec:
             readOnly: true
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ['/cloud_sql_proxy', '-instances=mystudies-dev-data:us-east1:mystudies=tcp:3306', '-credential_file=/secrets/gcloud_key/key.json']
+          command: ["/cloud_sql_proxy",
+                    "-instances=mystudies-dev-data:us-east1:mystudies=tcp:3306",
+                    "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
