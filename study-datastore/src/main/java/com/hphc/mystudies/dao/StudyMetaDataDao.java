@@ -148,8 +148,7 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())
                     ? ""
                     : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + gatewayWelcomeInfo.getImagePath()
-                        + StudyMetaDataUtil.getMilliSecondsForImagePath());
+                        + gatewayWelcomeInfo.getImagePath());
             infoBean.setText(
                 StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())
                     ? ""
@@ -290,8 +289,7 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(studyDto.getThumbnailImage())
                     ? ""
                     : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + studyDto.getThumbnailImage()
-                        + StudyMetaDataUtil.getMilliSecondsForImagePath());
+                        + studyDto.getThumbnailImage());
             studyBean.setStudyId(
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
@@ -1128,8 +1126,7 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(studyPageInfo.getImagePath())
                     ? ""
                     : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_PAGE_PATH)
-                        + studyPageInfo.getImagePath()
-                        + StudyMetaDataUtil.getMilliSecondsForImagePath());
+                        + studyPageInfo.getImagePath());
             info.setText(
                 StringUtils.isEmpty(studyPageInfo.getDescription())
                     ? ""
@@ -1154,8 +1151,7 @@ public class StudyMetaDataDao {
               StringUtils.isEmpty(studyDto.getThumbnailImage())
                   ? ""
                   : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                      + studyDto.getThumbnailImage()
-                      + StudyMetaDataUtil.getMilliSecondsForImagePath());
+                      + studyDto.getThumbnailImage());
           info.setText(StringUtils.isEmpty(studyDto.getFullName()) ? "" : studyDto.getFullName());
           infoList.add(info);
         }
@@ -1621,8 +1617,7 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(studyDto.getThumbnailImage())
                     ? ""
                     : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + studyDto.getThumbnailImage()
-                        + StudyMetaDataUtil.getMilliSecondsForImagePath());
+                        + studyDto.getThumbnailImage());
             studyBean.setStudyId(
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""

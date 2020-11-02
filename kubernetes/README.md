@@ -91,6 +91,7 @@ $ gsutil cp \
   ./response-datastore/sqlscript/mystudies_response_server_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
+  ./hydra/sqlscript/create_hydra_db_script.sql \
   gs://<prefix>-<env>-mystudies-sql-import
 ```
 
@@ -100,6 +101,12 @@ if the connection name is "myproject-data:us-east1:mystudies", you should use
 just "mystudies".
 
 Import the scripts, in this order:
+
+#### Hydra
+
+```bash
+gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/create_hydra_db_script.sql
+```
 
 #### Study builder
 

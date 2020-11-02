@@ -28,7 +28,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
+import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
@@ -154,6 +156,37 @@ public class StudiesControllerTest extends BaseMockIT {
     assertNotNull(studyInfoBo);
     assertEquals(Constants.NEW_STUDY_ID, studyInfoBo.getCustomId());
     assertEquals(Constants.LOGO_IMAGE_URL, studyInfoBo.getLogoImageUrl());
+  }
+
+  @Test
+  public void addStudyMetadataSuccessForPermission() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    StudyMetadataBean studyMetaDataBean = createStudyMetadataBean();
+    studyMetaDataBean.setStudyId(Constants.STUDY_ID_1);
+    studyMetaDataBean.setAppId(Constants.APP_ID_VALUE);
+    String requestJson = getObjectMapper().writeValueAsString(studyMetaDataBean);
+    performPost(
+        STUDY_METADATA_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
+
+    List<AppPermissionEntity> appPermissionList = appPermissionRepository.findAll();
+    List<StudyPermissionEntity> studyPermissionList = studyPermissionRepository.findAll();
+
+    AppPermissionEntity appPermission =
+        appPermissionList
+            .stream()
+            .filter(x -> x.getApp().getAppId().equals(Constants.APP_ID_VALUE))
+            .findFirst()
+            .orElse(null);
+    StudyPermissionEntity studyPermission =
+        studyPermissionList
+            .stream()
+            .filter(x -> x.getStudy().getCustomId().equals(Constants.STUDY_ID_1))
+            .findFirst()
+            .orElse(null);
+
+    assertNotNull(appPermission);
+    assertNotNull(studyPermission);
+    assertEquals(appPermission.getEdit(), studyPermission.getEdit());
   }
 
   @Test

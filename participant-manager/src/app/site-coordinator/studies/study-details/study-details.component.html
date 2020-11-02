@@ -63,17 +63,21 @@
         </div>
         <div
           *ngIf="
-            studyDetails.participantRegistryDetail.studyType ===
-              studyTypes.Open &&
-            studyDetails.participantRegistryDetail.openStudySitePermission ===
-              permission.ViewAndEdit
+            studyDetails.participantRegistryDetail.studyType === studyTypes.Open
           "
           class="pr-xlg"
         >
           <div class="enrollment-label">
             Enrollment Target:
             {{ studyDetails.participantRegistryDetail.targetEnrollment }}
-            <button class="dropbtn btn pl-none" (click)="openModal(template)">
+            <button
+              [disabled]="
+                studyDetails.participantRegistryDetail
+                  .openStudySitePermission === permission.View
+              "
+              class="dropbtn btn pl-none"
+              (click)="openModal(template)"
+            >
               <img src="assets/svgs/edit.svg" alt="edit" />
             </button>
           </div>
