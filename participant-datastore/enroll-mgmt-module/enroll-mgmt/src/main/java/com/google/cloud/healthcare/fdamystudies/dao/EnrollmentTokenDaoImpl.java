@@ -113,6 +113,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     studyStateStatus.add(ParticipantStudyStateStatus.INPROGRESS.getValue());
 
     List<String> onboardingStatus = new ArrayList<>();
+    onboardingStatus.add(OnboardingStatus.INVITED.getCode());
     onboardingStatus.add(OnboardingStatus.ENROLLED.getCode());
     onboardingStatus.add(OnboardingStatus.DISABLED.getCode());
     participantList =

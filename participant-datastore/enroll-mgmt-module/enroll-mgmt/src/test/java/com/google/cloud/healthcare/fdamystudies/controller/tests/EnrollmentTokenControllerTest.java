@@ -320,9 +320,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest();
 
-    List<ParticipantRegistrySiteEntity> participantRegistrySiteList =
-        participantRegistrySiteRepository.findByStudyIdAndEmail("3", "cdash936@gmail.com");
-
     mockMvc
         .perform(
             post(ApiEndpoint.ENROLL_PATH.getPath())
@@ -332,6 +329,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.message", is("Token already in use")));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
