@@ -49,7 +49,7 @@ public class AuthenticationService {
           final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
           final String bundleId = tokenizer.nextToken();
           final String appToken = tokenizer.nextToken();
-          if (authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)) {
+          if (authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)) {
             authenticationStatus = true;
           }
         }

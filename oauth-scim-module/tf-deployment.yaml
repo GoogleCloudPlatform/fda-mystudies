@@ -98,4 +98,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: auth-server-gcloud-key
+          secretName: auth-server-gke-sa-gcloud-key
