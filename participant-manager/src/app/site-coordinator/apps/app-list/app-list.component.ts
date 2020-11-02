@@ -55,12 +55,15 @@ export class AppListComponent implements OnInit {
     this.query$.next(query.trim());
   }
   progressBarColor(app: App): string {
-    if (app.enrollmentPercentage < 30) {
-      return 'red__text__sm';
-    } else if (app.enrollmentPercentage < 70) {
+    if (app.enrollmentPercentage && app.enrollmentPercentage > 70) {
+      return 'green__text__sm';
+    } else if (
+      app.enrollmentPercentage &&
+      (app.enrollmentPercentage >= 30 || app.enrollmentPercentage <= 70)
+    ) {
       return 'orange__text__sm';
     } else {
-      return 'green__text__sm';
+      return 'red__text__sm';
     }
   }
   checkEditPermission(permission: number): boolean {
