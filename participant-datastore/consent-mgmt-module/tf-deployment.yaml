@@ -85,4 +85,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-consent-datastore-gcloud-key
+          secretName: consent-datastore-gke-sa-gcloud-key

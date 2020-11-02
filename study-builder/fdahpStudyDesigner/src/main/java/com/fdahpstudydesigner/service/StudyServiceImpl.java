@@ -1075,7 +1075,7 @@ public class StudyServiceImpl implements StudyService {
                     file,
                     FdahpStudyDesignerConstants.STUDTYPAGES);
           } else {
-            imagePath[i] = studyPageBean.getImagePath()[i];
+            imagePath[i] = studyPageBean.getImagePath()[i].split("\\?")[0];
           }
         }
         studyPageBean.setImagePath(imagePath);
@@ -1454,8 +1454,7 @@ public class StudyServiceImpl implements StudyService {
             StringUtils.isEmpty(studyBo.getThumbnailImage())
                 ? ""
                 : propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                    + studyBo.getThumbnailImage()
-                    + FdahpStudyDesignerUtil.getMilliSecondsForImagePath());
+                    + studyBo.getThumbnailImage());
       }
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyByLatestVersion - Error", e);
