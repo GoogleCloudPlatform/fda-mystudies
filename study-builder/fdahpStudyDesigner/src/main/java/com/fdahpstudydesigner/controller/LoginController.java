@@ -169,12 +169,12 @@ public class LoginController {
       userId = sesObj.getUserId();
       String newPassword =
           (null != request.getParameter("newPassword"))
-                  && !"".equals(request.getParameter("newPassword"))
+              && !"".equals(request.getParameter("newPassword"))
               ? request.getParameter("newPassword").replaceAll(request.getParameter("_csrf"), "")
               : "";
       String oldPassword =
           (null != request.getParameter("oldPassword"))
-                  && !"".equals(request.getParameter("oldPassword"))
+              && !"".equals(request.getParameter("oldPassword"))
               ? request.getParameter("oldPassword").replaceAll(request.getParameter("_csrf"), "")
               : "";
       message = loginService.changePassword(userId, newPassword, oldPassword, sesObj);

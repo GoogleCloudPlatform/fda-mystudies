@@ -29,14 +29,14 @@ template "devops" {
   data = {
     # During Step 1, set to `true` and re-run the engine after generated devops module has been deployed.
     # Run `terraform init` in the devops module to backup its state to GCS.
-    enable_gcs_backend = false
+    enable_gcs_backend = true
 
-    admins_group = "{{.prefix}}-{{.env}}-folder-admins@{{.domain}}"
+    admins_group = "dpt-dev@{{.domain}}"
 
     project = {
       project_id = "{{.prefix}}-{{.env}}-devops"
       owners = [
-        "group:{{.prefix}}-{{.env}}-devops-owners@{{.domain}}",
+        "group:dpt-dev@{{.domain}}",
       ]
       apis = [
         "container.googleapis.com",
@@ -69,7 +69,7 @@ template "cicd" {
 
     # IAM members to give the roles/cloudbuild.builds.viewer permission so they can see build results.
     build_viewers = [
-      "group:{{.prefix}}-{{.env}}-cicd-viewers@{{.domain}}",
+      "group:dpt-dev@{{.domain}}",
     ]
 
     managed_dirs = [
@@ -88,7 +88,7 @@ template "audit" {
   recipe_path = "{{$recipes}}/audit.hcl?{{$ref}}"
   output_path = "./audit"
   data = {
-    auditors_group = "{{.prefix}}-{{.env}}-auditors@{{.domain}}"
+    auditors_group = "dpt-dev@{{.domain}}"
     project = {
       project_id = "{{.prefix}}-{{.env}}-audit"
     }
@@ -437,7 +437,7 @@ template "project_networks" {
         image_family  = "ubuntu-2004-lts"
         image_project = "ubuntu-os-cloud"
         members = [
-          "group:{{.prefix}}-{{.env}}-bastion-accessors@{{.domain}}",
+          "group:dpt-dev@{{.domain}}",
         ]
         startup_script = <<EOF
 sudo apt-get -y update
@@ -525,10 +525,10 @@ template "project_apps" {
       # DNS sets up nameservers to connect to the GKE clusters.
       dns_zones = [{
         name   = "{{.prefix}}-{{.env}}"
-        domain = "{{.prefix}}-{{.env}}.{{.domain}}."
+        domain = "{{.prefix}}.{{.domain}}."
         type   = "public"
         record_sets = [{
-          name = "{{.prefix}}-{{.env}}"
+          name = "demo"
           type = "A"
           ttl  = 30
           records = [
@@ -553,34 +553,34 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #
 # The following content should be initially commented out if the above manual step is not completed.
 
-# resource "google_cloudbuild_trigger" "server_build_triggers" {
-#   for_each = toset([
-#     "study-builder",
-#     "study-datastore",
-#     "oauth-scim-module",
-#     "participant-datastore/consent-mgmt-module",
-#     "participant-datastore/enroll-mgmt-module",
-#     "participant-datastore/user-mgmt-module",
-#     "response-datastore",
-#     "participant-manager-datastore",
-#     "hydra",
-#     "participant-manager",
-#   ])
-#
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = replace(each.key, "/", "-")
-#
-#   included_files = ["$${each.key}/**"]
-#
-#   github {
-#     owner = "{{.github_owner}}"
-#     name  = "{{.github_repo}}"
-#     push { branch = "^{{.github_branch}}$" }
-#   }
-#
-#   filename = "$${each.key}/cloudbuild.yaml"
-# }
+resource "google_cloudbuild_trigger" "server_build_triggers" {
+  for_each = toset([
+    "study-builder",
+    "study-datastore",
+    "oauth-scim-module",
+    "participant-datastore/consent-mgmt-module",
+    "participant-datastore/enroll-mgmt-module",
+    "participant-datastore/user-mgmt-module",
+    "response-datastore",
+    "participant-manager-datastore",
+    "hydra",
+    "participant-manager",
+  ])
+
+  provider = google-beta
+  project  = module.project.project_id
+  name     = replace(each.key, "/", "-")
+
+  included_files = ["$${each.key}/**"]
+
+  github {
+    owner = "{{.github_owner}}"
+    name  = "{{.github_repo}}"
+    push { branch = "^{{.github_branch}}$" }
+  }
+
+  filename = "$${each.key}/cloudbuild.yaml"
+}
 EOF
     }
   }
@@ -600,9 +600,9 @@ template "project_firebase" {
     resources = {
       iam_members = {
         # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
-        # "roles/datastore.importExportAdmin" = [
-        #   "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
-        # ]
+        "roles/datastore.importExportAdmin" = [
+          "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
+        ]
         "roles/datastore.user" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
@@ -616,10 +616,10 @@ template "project_firebase" {
           # Firestore data export
           name = "{{.prefix}}-{{.env}}-mystudies-firestore-raw-data"
           # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
-          # iam_members = [{
-          #   role   = "roles/storage.admin"
-          #   member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
-          # }]
+          iam_members = [{
+            role   = "roles/storage.admin"
+            member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
+          }]
           # TTL 7 days.
           lifecycle_rules = [{
             action = {
@@ -656,22 +656,22 @@ resource "google_firebase_project" "firebase" {
 }
 
 # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
-# resource "google_firestore_index" "activities_index" {
-#   project    = module.project.project_id
-#   collection = "Activities"
-#   fields {
-#     field_path = "participantId"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "createdTimestamp"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "__name__"
-#     order      = "ASCENDING"
-#   }
-# }
+resource "google_firestore_index" "activities_index" {
+  project    = module.project.project_id
+  collection = "Activities"
+  fields {
+    field_path = "participantId"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "createdTimestamp"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "__name__"
+    order      = "ASCENDING"
+  }
+}
 EOF
     }
   }
@@ -695,7 +695,7 @@ template "project_data" {
       }
     }
     # Step 5.4: uncomment and re-run the engine once all previous steps have been completed.
-    /* terraform_addons = {
+    terraform_addons = {
       raw_config = <<EOF
 locals {
   apps = [
@@ -733,16 +733,16 @@ resource "google_sql_user" "db_users" {
   project  = module.project.project_id
 }
 EOF
-    } */
+    }
     resources = {
       # Step 5.5: uncomment and re-run the engine once all previous steps have been completed.
-      # cloud_sql_instances = [{
-      #   name               = "mystudies"
-      #   type               = "mysql"
-      #   network_project_id = "{{.prefix}}-{{.env}}-networks"
-      #   network            = "{{.prefix}}-{{.env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
-      # }]
+      cloud_sql_instances = [{
+        name               = "mystudies"
+        type               = "mysql"
+        network_project_id = "{{.prefix}}-{{.env}}-networks"
+        network            = "{{.prefix}}-{{.env}}-network"
+        user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
+      }]
       iam_members = {
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{.prefix}}-{{.env}}-networks.iam.gserviceaccount.com",
@@ -758,12 +758,12 @@ EOF
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         # Step 5.6: uncomment and re-run the engine once all previous steps have been completed.
-        # "roles/bigquery.jobUser" = [
-        #   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
-        # ]
-        # "roles/bigquery.dataEditor" = [
-        #   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
-        # ]
+        "roles/bigquery.jobUser" = [
+          "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
+        ]
+        "roles/bigquery.dataEditor" = [
+          "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
+        ]
       }
       storage_buckets = [
         {
@@ -796,10 +796,10 @@ EOF
         {
           name = "{{.prefix}}-{{.env}}-mystudies-sql-import"
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
-          # iam_members = [{
-          #   role   = "roles/storage.objectViewer"
-          #   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
-          # }]
+          iam_members = [{
+            role   = "roles/storage.objectViewer"
+            member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          }]
         },
       ]
       bigquery_datasets = [{
@@ -919,7 +919,7 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     gcp_bucket_name                   = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
-    base_url                          = "https://{{.prefix}}-{{.env}}.{{.domain}}."
+    base_url                          = "https://demo.{{.prefix}}.{{.domain}}."
     firestore_project_id              = "{{.prefix}}-{{.env}}-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
