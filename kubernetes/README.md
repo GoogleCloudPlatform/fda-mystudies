@@ -176,7 +176,7 @@ Enter the Kubernetes Terraform directory
 cd Terraform/kubernetes/
 ```
 
-**Edit the file `terraform.tfvars`. Make sure the projects and cluster
+**Edit the file `main.tf`. Make sure the projects and cluster
 information is correct.**
 
 Init, plan, and apply the Terraform configs:
