@@ -10,7 +10,6 @@
 # $ ./scripts/register_clients_in_hydra.sh <prefix> <env>
 
 #!/bin/bash
-
 if [ "$#" -ne 2 ]; then
   echo 'Please provide deployment prefix and env in the order of <prefix> <env>>'
   exit 1
@@ -23,6 +22,9 @@ shift 2
 set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
+DATA_PROJECT=${PREFIX}-${ENV}-data
+SCIM_AUTH_URL="http://auth-server-np:50000/oauth-scim-service"
+HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
 APPS_PROJECT=${PREFIX}-${ENV}-apps
 CLUSTER=${PREFIX}-${ENV}-gke-cluster
 LOCATION=us-east1
