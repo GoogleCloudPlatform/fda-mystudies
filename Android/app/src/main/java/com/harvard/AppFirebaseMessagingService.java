@@ -20,8 +20,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -32,6 +35,7 @@ import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
+import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
@@ -145,18 +149,33 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
         realm = AppController.getRealmobj(this);
         Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+        StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
         dbServiceSubscriber.closeRealmObj(realm);
-        if (study != null) {
-          RealmList<StudyList> studyListArrayList = study.getStudies();
-          for (int j = 0; j < studyListArrayList.size(); j++) {
-            if (studyId.equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
-              if (studyListArrayList
-                  .get(j)
-                  .getStudyStatus()
-                  .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
-                sendNotification(message, contentIntent);
+        if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+          if (study != null) {
+            RealmList<StudyList> studyListArrayList = study.getStudies();
+            for (int j = 0; j < studyListArrayList.size(); j++) {
+              if (studyId.equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
+                if (studyListArrayList
+                        .get(j)
+                        .getStudyStatus()
+                        .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
+                  sendNotification(message, contentIntent);
+                }
               }
             }
+          }
+        } else {
+          if (studyData != null
+                  && studyData.getStudies() != null
+                  && studyData.getStudies().get(0) != null
+                  && studyData.getStudies().get(0).getStatus() != null
+                  && studyData
+                  .getStudies()
+                  .get(0)
+                  .getStatus()
+                  .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
+            sendNotification(message, contentIntent);
           }
         }
       } else {
@@ -180,6 +199,17 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
     dbServiceSubscriber.closeRealmObj(realm);
     int notifyIcon = R.mipmap.ic_launcher;
     Bitmap icon = BitmapFactory.decodeResource(getResources(), notifyIcon);
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+      Drawable drawable = getDrawable(notifyIcon);
+      icon =
+              Bitmap.createBitmap(
+                      drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+      Canvas canvas = new Canvas(icon);
+      drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+      drawable.draw(canvas);
+    } else {
+      icon = BitmapFactory.decodeResource(getResources(), notifyIcon);
+    }
     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     NotificationCompat.Builder notificationBuilder =
         new NotificationCompat.Builder(this)
