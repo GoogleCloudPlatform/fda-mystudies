@@ -98,7 +98,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       isValidStudyToken = true;
     }
 
-    logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends ");
+    logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends");
     return isValidStudyToken;
   }
 
