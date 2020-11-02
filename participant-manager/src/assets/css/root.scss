@@ -724,9 +724,12 @@ footer ul li:last-child a {
 
 .app__id {
   color: var(--space-gray);
-  font-size: 68.8%;
+  font-size: 75%;
 }
-
+.app__id_num {
+  color: var(--dark-gray);
+  font-size: 75%;
+}
 .blue__text__md {
   font-size: 75%;
   color: var(--light-blue);
