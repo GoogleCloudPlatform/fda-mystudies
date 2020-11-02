@@ -53,7 +53,7 @@ spec:
         readinessProbe:
           httpGet:
             port: 4444
-            path: /hydra/health/ready
+            path: /health/ready
         volumeMounts:
         - name: gcloud-key-volume
           mountPath: /secrets/gcloud_key

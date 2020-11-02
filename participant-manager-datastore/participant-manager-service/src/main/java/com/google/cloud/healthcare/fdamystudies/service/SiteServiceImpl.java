@@ -1044,9 +1044,16 @@ public class SiteServiceImpl implements SiteService {
     List<ParticipantRegistrySiteEntity> participantregistryList =
         participantRegistrySiteRepository.findByIds(participantStatusRequest.getIds());
 
+    Timestamp disabledTimestamp =
+        OnboardingStatus.DISABLED.equals(onboardingStatus)
+            ? new Timestamp(Instant.now().toEpochMilli())
+            : null;
+
     if (!OnboardingStatus.NEW.equals(onboardingStatus)) {
       participantRegistrySiteRepository.updateOnboardingStatus(
-          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+          participantStatusRequest.getStatus(),
+          participantStatusRequest.getIds(),
+          disabledTimestamp);
     } else {
       List<String> emails =
           participantregistryList
@@ -1063,7 +1070,9 @@ public class SiteServiceImpl implements SiteService {
       }
 
       participantRegistrySiteRepository.updateOnboardingStatus(
-          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+          participantStatusRequest.getStatus(),
+          participantStatusRequest.getIds(),
+          disabledTimestamp);
     }
 
     SiteEntity site = optSite.get();
