@@ -78,7 +78,7 @@ spec:
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000/auth-server"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             - name: PARTICIPANT_MANAGER_URL
               value: "http://participant-manager-np:50000"
             # MISC
