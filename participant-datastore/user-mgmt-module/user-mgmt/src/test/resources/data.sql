@@ -15,3 +15,9 @@ INSERT INTO `participant_study_info` (`id`, `participant_id`, `study_info_id`, `
 INSERT INTO `auth_info` (`id`, `app_info_id`, `created_time`, `device_token`, `device_type`, `ios_app_version`, `updated_time`, `remote_notification_flag`, `user_details_id`) VALUES (222, 1, '2020-03-22 17:12:23', '7B3F1433E1157D370EE8A6BA2E612B27EC2C0081771FC8BA1ECFCBB07BBA5A17', 'ios', '1.0.1', '2020-03-27 11:28:58', 1, 44), (223, 1, '2020-03-22 17:12:23', 'd3FncrcvPbw:APA91bHYlhS69KhhxIx8uoD152GT6JdfzF-bpmJiS04E9wVJapS5ELJwhwthRlDKPHR3OrAEap13-TxLc5EIc4OGME1iDRi04W3LYRtYkCdPQ76h5rTj1RTVT7q4SMASMVozESR2-gZl', 'android', '', '2020-03-27 11:28:58', 1, 44);
 
 INSERT INTO `user_app_details` (`id`, `app_info_id`, `created_time`, `user_details_id`) VALUES (20, 1, '2020-03-21 08:49:38', 44);
+
+INSERT INTO `ur_admin_user` (`id`, `created_time`, `email`, `first_name`, `last_name`, `super_admin`) VALUES ('1', '2020-08-05 18:51:37', 'mock@gmail.com', 'test', 'user', '0');
+
+INSERT INTO `app_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:42:42', '0','1', '1', '1');
+
+INSERT INTO `study_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `study_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:43:33', '0', '1', '1', '1', '1');

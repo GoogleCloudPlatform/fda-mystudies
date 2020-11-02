@@ -163,7 +163,6 @@ module "example_dev" {
       type    = "A"
     },
   ]
-
 }
 
 module "example_dev_gke_cluster" {
@@ -184,8 +183,8 @@ module "example_dev_gke_cluster" {
   master_ipv4_cidr_block = "192.168.0.0/28"
   master_authorized_networks = [
     {
-      cidr_block   = "104.132.0.0/14"
-      display_name = "Google Offices/Campuses/CorpDC"
+      cidr_block   = "0.0.0.0/0"
+      display_name = "Example diplay name"
     },
   ]
   istio                   = true
