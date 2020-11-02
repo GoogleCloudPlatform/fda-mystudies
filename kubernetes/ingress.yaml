@@ -9,7 +9,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /oauth-scim-module/*
+          - path: /oauth-scim-service/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000
