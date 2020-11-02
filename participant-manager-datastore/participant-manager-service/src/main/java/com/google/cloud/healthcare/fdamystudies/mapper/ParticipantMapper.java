@@ -116,6 +116,7 @@ public final class ParticipantMapper {
       participants.setStudyName(study.getName());
       participants.setCustomStudyId(study.getCustomId());
       participants.setSitePermission(permission.value());
+      participants.setStudyStatus(study.getStatus());
       setParticipantRegistryAppInfo(participants, study);
       setParticipantRegistryLocation(site, participants);
     }
@@ -178,6 +179,8 @@ public final class ParticipantMapper {
 
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    String disabledDate = DateTimeUtils.format(participantRegistrySite.getDisabledDate());
+    participant.setDisabledDate(StringUtils.defaultIfEmpty(disabledDate, NOT_APPLICABLE));
     return participant;
   }
 
