@@ -201,6 +201,7 @@ export class SiteDetailsComponent
   }
 
   onSucceedAddEmail(event: Participant[]): void {
+    this.userIds = [];
     this.newlyImportedParticipants = event;
     this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
       this.userIds.push(newlyCreatedparticpants.id),
@@ -214,6 +215,7 @@ export class SiteDetailsComponent
   }
 
   onFileImportSuccess(event: ImportParticipantEmailResponse): void {
+    this.userIds = [];
     this.newlyImportedParticipants = event.participants;
     this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
       this.userIds.push(newlyCreatedparticpants.id),
