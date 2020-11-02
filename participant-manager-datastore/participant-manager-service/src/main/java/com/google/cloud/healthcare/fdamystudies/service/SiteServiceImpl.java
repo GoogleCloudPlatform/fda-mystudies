@@ -109,6 +109,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
@@ -590,7 +591,7 @@ public class SiteServiceImpl implements SiteService {
 
     List<String> status = Arrays.asList(IN_PROGRESS, STATUS_ACTIVE);
     Optional<Long> optParticipantStudyCount =
-        participantStudyRepository.findByStudyIdAndStatus(status, study.getId());
+        participantStudyRepository.findByStudyIdSiteIdAndStatus(status, study.getId(), siteId);
 
     if (optParticipantStudyCount.isPresent()
         && optParticipantStudyCount.get() > 0
@@ -1224,7 +1225,7 @@ public class SiteServiceImpl implements SiteService {
       String studyType = study.getType();
       if (studyType.equals(OPEN_STUDY) && siteEntity.getTargetEnrollment() != null) {
         site.setEnrolled(
-            enrolledInvitedCountForOpenStudyBySiteId != null
+            MapUtils.isNotEmpty(enrolledInvitedCountForOpenStudyBySiteId)
                 ? enrolledInvitedCountForOpenStudyBySiteId.get(siteEntity.getId())
                 : 0L);
         site.setInvited(Long.valueOf(siteEntity.getTargetEnrollment()));
