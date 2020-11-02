@@ -2852,7 +2852,6 @@ public class StudyDAOImpl implements StudyDAO {
             "select s.user_id,s.view_permission"
                 + " from study_permission s, user_permission_mapping u, user_permissions p"
                 + " where s.study_id= :id"
-                //                + liveStudyBo.getId()
                 + " and s.user_id=u.user_id"
                 + " and u.permission_id = p.permission_id"
                 + " and p.permissions='ROLE_SUPERADMIN'";
@@ -2889,7 +2888,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.save(studySequenceBo);
 
         // Over View
-        query = session.createQuery("from StudyPageBo where studyId= :liveStudyBo.getId() ");
+        query = session.createQuery("from StudyPageBo where studyId= :id ");
         query.setParameter("id", liveStudyBo.getId());
         studyPageBo = query.list();
         if ((studyPageBo != null) && !studyPageBo.isEmpty()) {
@@ -2995,7 +2994,6 @@ public class StudyDAOImpl implements StudyDAO {
                   .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
                 searchQuery =
                     "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:id";
-                //                        + questionnaireBo.getId();
                 List<QuestionnaireCustomScheduleBo> questionnaireCustomScheduleList =
                     session
                         .createQuery(searchQuery)
@@ -4506,7 +4504,7 @@ public class StudyDAOImpl implements StudyDAO {
             }
           }
         }
-        List<String> deleteIdList = this.convertStringToList(deleteExceptIds);
+        List<String> deleteIdList = this.convertAllStatusIdAsList(deleteExceptIds);
 
         query =
             session.createSQLQuery(
@@ -4602,7 +4600,7 @@ public class StudyDAOImpl implements StudyDAO {
                   } else {
                     oldPermissions += ",'ROLE_MANAGE_STUDIES'";
                   }
-                  List<String> permissionList = this.convertStringToList(oldPermissions);
+                  List<String> permissionList = this.convertAllStatusIdAsList(oldPermissions);
                   permissionSet =
                       new HashSet<UserPermissions>(
                           session
@@ -4626,7 +4624,7 @@ public class StudyDAOImpl implements StudyDAO {
           }
         } else {
           if ((null != deletingUserIds) && !deletingUserIds.isEmpty()) {
-            List<String> deleteIdLists = this.convertStringToList(deleteExceptIds);
+            List<String> deleteIdLists = this.convertAllStatusIdAsList(deleteExceptIds);
             query =
                 session.createSQLQuery(
                     " DELETE FROM study_permission WHERE user_id NOT IN (:deleteIdLists) AND study_id =:id");
@@ -6891,13 +6889,9 @@ public class StudyDAOImpl implements StudyDAO {
     Session session = null;
     List<StudyBo> studyBos = null;
     String searchQuery = "";
-    // String subQry = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       if (!studyType.isEmpty() && !appId.isEmpty()) {
-        //        if (StringUtils.isNotEmpty(customStudyId)) {
-        //          subQry = " and customStudyId!=:customStudyId";
-        //        }
         if (studyType.equalsIgnoreCase(FdahpStudyDesignerConstants.STUDY_TYPE_GT)) {
           if (StringUtils.isNotEmpty(customStudyId)) {
             searchQuery =
@@ -7080,7 +7074,6 @@ public class StudyDAOImpl implements StudyDAO {
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session newSession = null;
     String queryString = "";
-    String draftColumn = null;
     try {
       if (session == null) {
         newSession = hibernateTemplate.getSessionFactory().openSession();
@@ -7088,28 +7081,21 @@ public class StudyDAOImpl implements StudyDAO {
       }
       if ((userId != null) && (studyId != null)) {
         if ((actionType != null) && (FdahpStudyDesignerConstants.DRAFT_STUDY).equals(actionType)) {
-          // draftColumn = "hasStudyDraft = 1";
           queryString =
               " Update StudyBo set hasStudyDraft = 1 , modifiedBy =:userId , modifiedOn = now() where id = :studyId ";
         } else if ((actionType != null)
             && (FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE).equals(actionType)) {
-          //          draftColumn = "hasQuestionnaireDraft = 1, hasStudyDraft = 1 ";
           queryString =
               " Update StudyBo set hasQuestionnaireDraft = 1, hasStudyDraft = 1  , modifiedBy =:userId , modifiedOn = now() where id = :studyId ";
         } else if ((actionType != null)
             && (FdahpStudyDesignerConstants.DRAFT_ACTIVETASK).equals(actionType)) {
-          //          draftColumn = "hasActivetaskDraft = 1, hasStudyDraft = 1 ";
           queryString =
               " Update StudyBo set hasActivetaskDraft = 1, hasStudyDraft = 1 , modifiedBy =:userId , modifiedOn = now() where id = :studyId ";
         } else if ((actionType != null)
             && (FdahpStudyDesignerConstants.DRAFT_CONSCENT).equals(actionType)) {
-          // draftColumn = "hasConsentDraft = 1, hasActivetaskDraft = 1, hasQuestionnaireDraft=1,
-          // hasStudyDraft = 1";
           queryString =
               " Update StudyBo set hasConsentDraft = 1, hasActivetaskDraft = 1, hasQuestionnaireDraft=1, hasStudyDraft = 1 , modifiedBy =:userId , modifiedOn = now() where id = :studyId ";
         }
-        //        queryString = " Update StudyBo set " + draftColumn + " , modifiedBy =:userId ,
-        // modifiedOn = now() where id = :studyId ";
         if (newSession != null) {
           newSession
               .createQuery(queryString)
@@ -7158,12 +7144,16 @@ public class StudyDAOImpl implements StudyDAO {
     return outputList;
   }
 
-  public List<String> convertStringToList(String input) {
+  public List<String> convertAllStatusIdAsList(String input) {
     List<String> outputList = new ArrayList<>();
-    if (!StringUtils.isEmpty(input) && input.contains(",")) {
-      String[] statusIdArray = input.split(",");
-      for (int i = 0; i < statusIdArray.length; i++) {
-        outputList.add(statusIdArray[i]);
+    if (!StringUtils.isEmpty(input)) {
+      if (input.contains(",")) {
+        String[] statusIdArray = input.split(",");
+        for (int i = 0; i < statusIdArray.length; i++) {
+          outputList.add(statusIdArray[i]);
+        }
+      } else {
+        outputList.add(input);
       }
     }
     return outputList;
