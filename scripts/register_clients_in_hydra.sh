@@ -24,8 +24,8 @@ set -e
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 DATA_PROJECT=${PREFIX}-${ENV}-data
 SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
-SCIM_AUTH_URL="http://auth-server-np:50000"
-HYDRA_ADMIN_URL="http://hydra-np:4445"
+SCIM_AUTH_URL="http://auth-server-np:50000/oauth-scim-service"
+HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
 DATETIME=`date +"%FT%TZ"`
 
 # SCIM AUTH SERVER, PARTICIPANT MANAGER & MOBILE APPS are registered
