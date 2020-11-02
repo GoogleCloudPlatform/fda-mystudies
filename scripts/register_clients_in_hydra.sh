@@ -27,7 +27,7 @@ APPS_PROJECT=${PREFIX}-${ENV}-apps
 CLUSTER=${PREFIX}-${ENV}-gke-cluster
 LOCATION=us-east1
 IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-app-import
-SCIM_AUTH_URL="http://auth-server-np:50000/auth-server"
+SCIM_AUTH_URL="http://auth-server-np:50000/oauth-scim-service"
 HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
 DATETIME=`date +"%FT%TZ"`
 

@@ -69,7 +69,7 @@ spec:
             - name: HYDRA_PUBLIC_URL
               value: "http://hydra-np:50000/hydra"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000/auth-server"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             # MISC
             - name: LOG_PATH
               valueFrom:
@@ -84,7 +84,7 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /auth-server/healthCheck
+              path: /oauth-scim-service/healthCheck
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
