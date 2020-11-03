@@ -65,19 +65,32 @@
                         class="progress-label font__bold"
                         [ngClass]="progressBarColor(study)"
                       >
-                        <span>
-                          {{ study.enrolled }} /
-                          {{ study.invited }}
-                        </span>
+                        <div *ngIf="study.type !== studyTypes.Open">
+                          <span *ngIf="study.invited != 0">
+                            {{ study.enrolled }} /
+                            {{ study.invited }}
+                          </span>
+                          <span *ngIf="study.invited == 0">0 Invited</span>
+                        </div>
+                        <div *ngIf="study.type === studyTypes.Open">
+                          <span *ngIf="study.invited != 0">
+                            {{ study.enrolled }} /
+                            {{ study.invited }}
+                          </span>
+                          <span *ngIf="study.invited === 0">
+                            {{ study.enrolled }} Enrolled
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="text-right progress__bar__next">
                   <div class="progress-bar-next__title">
-                    <span>
+                    <span *ngIf="study.invited != 0">
                       {{ study.enrollmentPercentage | number: ".2-2" }}%
                     </span>
+                    <span *ngIf="study.invited == 0">N/A</span>
                   </div>
                   <div class="text-grey__sm">
                     <span *ngIf="study.type !== studyTypes.Open">

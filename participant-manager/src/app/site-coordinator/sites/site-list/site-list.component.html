@@ -82,9 +82,22 @@
                           [ngClass]="progressBarColor(site)"
                         >
                           <div>
-                            <span class="enrolled">
-                              {{ site.enrolled }} / {{ site.invited }}
-                            </span>
+                            <div *ngIf="study.type !== studyTypes.Open">
+                              <span *ngIf="site.invited != 0">
+                                {{ site.enrolled }} /
+                                {{ site.invited }}
+                              </span>
+                              <span *ngIf="site.invited == 0">0 Invited</span>
+                            </div>
+                            <div *ngIf="study.type === studyTypes.Open">
+                              <span *ngIf="site.invited != 0">
+                                {{ site.enrolled }} /
+                                {{ site.invited }}
+                              </span>
+                              <span *ngIf="site.invited === 0">
+                                {{ site.enrolled }} Enrolled
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
