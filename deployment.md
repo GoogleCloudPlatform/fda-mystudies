@@ -304,8 +304,8 @@ regenerating the Terraform configs several times.
 ### Step 9: Secrets setup
 
 1. Run
-    [register_clients_in_hydra.sh $PREFIX $ENV](./scripts/register_clients_in_hydra.sh.sh),
-    passing your deployment PREFIX and ENV as parameters. This script will
+    [register_clients_in_hydra.sh $PREFIX $ENV](./scripts/register_clients_in_hydra.sh),
+    passing your deployment PREFIX, ENV and LOCATION as parameters. This script will
     register each application in hydra using the generated client id and secret
     keys.
 
