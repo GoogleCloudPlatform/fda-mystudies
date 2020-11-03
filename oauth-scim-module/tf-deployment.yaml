@@ -86,6 +86,12 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
+            - name: TEMP_REGID_EXPIRY_MINUTES
+              value: "30"
+            - name: ORG_NAME
+              secretKeyRef:
+                name: shared-secrets
+                key: org_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
