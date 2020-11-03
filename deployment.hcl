@@ -12,7 +12,7 @@ template "mystudies" {
     billing_account  = "0132B5-9CBD69-7F2F47"
     domain           = "hcls.joonix.net"
     default_location = "us-east1"
-    default_zone     = "b"
+    default_zone     = "d"
     github_owner     = "zohrehj"
     github_repo      = "fda-mystudies"
     github_branch    = "develop"

@@ -99,7 +99,7 @@ module "mystudies" {
   name              = "mystudies"
   project_id        = module.project.project_id
   region            = "us-east1"
-  zone              = "b"
+  zone              = "d"
   availability_type = "REGIONAL"
   database_version  = "MYSQL_5_7"
   vpc_network       = "projects/mystudies-dev-networks/global/networks/mystudies-dev-network"
