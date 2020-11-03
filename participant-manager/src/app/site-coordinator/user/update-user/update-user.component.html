@@ -12,7 +12,7 @@
         </a>
       </div>
       <div class="col-xs-12 col-md-6 pl-none text-right pr-none">
-        <span class="text__34a853g__14">
+        <span [ngClass]="statusColour(user.status)" class="text__34a853g__14">
           {{ user.status }}
         </span>
         <button
