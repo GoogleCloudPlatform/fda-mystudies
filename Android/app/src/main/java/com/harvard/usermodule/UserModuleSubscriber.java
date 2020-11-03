@@ -36,6 +36,7 @@ import com.harvard.usermodule.event.SetTouchIdEvent;
 import com.harvard.usermodule.event.SetUserEvent;
 import com.harvard.usermodule.event.SignOutEvent;
 import com.harvard.usermodule.event.TouchIdSigninEvent;
+import com.harvard.usermodule.event.UpdateAppVersionEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.event.UpdateUserProfileEvent;
 import com.harvard.usermodule.event.ValidatePasscodeEvent;
@@ -109,6 +110,10 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   public void onEvent(GetUserProfileEvent getUserProfileEvent) {
     FdaEventBus.postEvent(getUserProfileEvent.getRegistrationServerConfigEvent());
+  }
+
+  public void onEvent(UpdateAppVersionEvent updateAppVersionEvent) {
+    FdaEventBus.postEvent(updateAppVersionEvent.getRegistrationServerConfigEvent());
   }
 
   public void onEvent(UpdateUserProfileEvent updateUserProfileEvent) {

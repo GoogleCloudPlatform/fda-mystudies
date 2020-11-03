@@ -37,6 +37,7 @@ public class Urls {
   // Registration Server
   public static String REGISTER_USER = "register";
   public static String UPDATE_USER_PROFILE = "updateUserProfile";
+  public static String UPDATE_APP_VERSION = "updateAppVersion";
   public static String GET_USER_PROFILE = "userProfile";
   public static String CONFIRM_REGISTER_USER = "verifyEmailId";
   public static String RESEND_CONFIRMATION = "resendConfirmation";

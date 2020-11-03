@@ -18,6 +18,9 @@ package com.harvard;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,24 +28,38 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+import com.google.gson.Gson;
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
+import com.harvard.studyappmodule.ProfileFragment;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.NewPasscodeSetupActivity;
+import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.event.UpdateAppVersionEvent;
+import com.harvard.usermodule.webservicemodel.Info;
+import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
+import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import io.fabric.sdk.android.services.common.CommonUtils;
+import java.util.HashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class SplashActivity extends AppCompatActivity implements VersionChecker.Upgrade {
+public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete, VersionChecker.Upgrade {
 
   private static final int PASSCODE_RESPONSE = 101;
   private VersionChecker versionChecker;
   private String newVersion = "";
   private boolean force = false;
   private static final int RESULT_CODE_UPGRADE = 102;
+  private static final int UPDATE_APP_VERSION = 103;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -222,8 +239,72 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
       AlertDialog alertDialog = alertDialogBuilder.create();
       alertDialog.show();
     } else {
-      proceedToApp();
+      if (AppController.getHelperSharedPreference()
+          .readPreference(SplashActivity.this, getResources().getString(R.string.userid), "")
+          .equalsIgnoreCase("")) {
+        proceedToApp();
+      } else {
+        updateUserVersion();
+      }
     }
+  }
+
+  private void updateUserVersion() {
+    PackageManager manager = getPackageManager();
+    PackageInfo packageInfo = null;
+    try {
+      packageInfo = manager.getPackageInfo(
+          getPackageName(), 0);
+    } catch (NameNotFoundException e) {
+      Logger.log(e);
+    }
+    String version = packageInfo.versionName;
+    Info info = new Info();
+    info.setOs("Android");
+    info.setAppVersion(version);
+    Gson gson = new Gson();
+    String json = gson.toJson(info);
+    JSONObject obj = null;
+    try {
+      obj = new JSONObject(json);
+    } catch (JSONException e) {
+      Logger.log(e);
+    }
+    HashMap<String, String> header = new HashMap<>();
+    header.put(
+        "accessToken",
+        AppController.getHelperSharedPreference()
+            .readPreference(SplashActivity.this, getString(R.string.auth), ""));
+    header.put(
+        "userId",
+        AppController.getHelperSharedPreference()
+            .readPreference(SplashActivity.this, getString(R.string.userid), ""));
+    RegistrationServerConfigEvent registrationServerConfigEvent =
+        new RegistrationServerConfigEvent(
+            "post_object",
+            Urls.UPDATE_APP_VERSION,
+            UPDATE_APP_VERSION,
+            SplashActivity.this,
+            UpdateUserProfileData.class,
+            null,
+            header,
+            obj,
+            false,
+            SplashActivity.this);
+    UpdateAppVersionEvent updateAppVersionEvent = new UpdateAppVersionEvent();
+    updateAppVersionEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performUpdateAppVersion(updateAppVersionEvent);
+  }
+
+  @Override
+  public <T> void asyncResponse(T response, int responseCode) {
+    proceedToApp();
+  }
+
+  @Override
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
+    proceedToApp();
   }
 
   private void proceedToApp() {
