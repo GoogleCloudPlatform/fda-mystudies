@@ -10,13 +10,13 @@
         >
           <div
             [routerLink]="
-              checkEditPermission(app.permission)
+              checkViewPermission(app.permission)
                 ? ['/coordinator/apps', app.id]
                 : []
             "
             class="flex__justify__space-between flex__wrap"
             [ngClass]="
-              checkEditPermission(app.permission) ? ' cursor__pointer' : ''
+              checkViewPermission(app.permission) ? ' cursor__pointer' : ''
             "
           >
             <div>

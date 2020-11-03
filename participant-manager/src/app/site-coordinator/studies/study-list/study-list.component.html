@@ -8,12 +8,12 @@
         >
           <div
             [routerLink]="
-              checkEditPermission(study.studyPermission)
+              checkViewPermission(study.studyPermission)
                 ? ['/coordinator/studies', study.id]
                 : []
             "
             [ngClass]="
-              checkEditPermission(study.studyPermission)
+              checkViewPermission(study.studyPermission)
                 ? ' cursor__pointer'
                 : ''
             "
