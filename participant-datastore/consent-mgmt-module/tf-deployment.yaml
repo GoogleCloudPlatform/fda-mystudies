@@ -50,6 +50,8 @@ spec:
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000/oauth-scim-service"
             # MISC
             - name: GCP_BUCKET_NAME
               valueFrom:
