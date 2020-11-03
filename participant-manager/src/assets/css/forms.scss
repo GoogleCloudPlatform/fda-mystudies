@@ -214,3 +214,12 @@
     font-size: 100%;
   }
 }
+
+.custom__labels input[value="false"] + label:before {
+  content: url("assets/svgs/tick.svg");
+  visibility: hidden;
+}
+.custom__labels input[value="true"] + label:before {
+  content: url("assets/svgs/tick.svg");
+  visibility: visible;
+}
