@@ -184,10 +184,10 @@
 							<password>${pwd1}</password>
 						</auth>
 						<image>hub.docker.com/repository/docker/mohankgonthina/jib</image>
-						<tags>
+						<!-- <tags>
 							<tag>${maven.build.timestamp}</tag>
 							<tag>latest</tag>
-						</tags>
+						</tags> -->
 					</to>
 				</configuration>
 			</plugin>
