@@ -57,6 +57,16 @@ VALUES
   '${TOKEN}', '${EXPIRY_DATETIME}', 0, 'N');
 " >> ${TMPFILE}
 
+echo "REPLACE INTO user_permission_mapping (user_id, permission_id) VALUES
+	(1, 1),
+	(1, 2),
+	(1, 4),
+	(1, 5),
+	(1, 6),
+	(1, 7),
+	(1, 8);
+" >> ${TMPFILE}
+
 # Upload TMPFILE to GCS.
 GCS_FILE=gs://${SQL_IMPORT_BUCKET}/study_builder_supreadmin.sql
 echo "Copying the sql file to ${GCS_FILE}"
