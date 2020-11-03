@@ -46,7 +46,7 @@
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName"
-                  value="com.mysql.cj.jdbc.Driver"/>
+                  value="com.mysql.jdbc.Driver"/>
         <property name="url" value="${db.url}"/>
         <property name="username" value="${db.username}"/>
         <property name="password" value="${db.password}"/>
