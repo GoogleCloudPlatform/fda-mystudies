@@ -93,9 +93,9 @@ spec:
               value: "production"
             # SERVER CALLS
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
             # MISC
             - name: ORG_NAME
               valueFrom:
@@ -136,4 +136,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-user-datastore-gcloud-key
+          secretName: user-datastore-gke-sa-gcloud-key

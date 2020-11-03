@@ -12,8 +12,23 @@ spec:
   type: NodePort
   selector:
     app: hydra-ic
-    tier: web
   ports:
   - protocol: TCP
-    port: 4444
-    targetPort: 8080
+    port: 50000
+    targetPort: 4444
+---
+# Internal LoadBalancer for admin endpoints.
+apiVersion: v1
+kind: Service
+metadata:
+  name: hydra-admin-np
+  annotations:
+    cloud.google.com/load-balancer-type: "Internal"
+spec:
+  type: LoadBalancer
+  selector:
+    app: hydra-ic
+  ports:
+  - protocol: TCP
+    port: 50000
+    targetPort: 4445

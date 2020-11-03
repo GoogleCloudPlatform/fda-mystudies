@@ -17,6 +17,7 @@ import {
   ImportParticipantEmailResponse,
   Participant,
 } from '../shared/import-participants';
+import {Permission} from 'src/app/shared/permission-enums';
 const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
@@ -30,7 +31,7 @@ export class SiteDetailsComponent
   siteParticipants$: Observable<SiteParticipants> = of();
   siteDetailsBackup = {} as SiteParticipants;
   siteId = '';
-
+  permission = Permission;
   sendResend = '';
   enableDisable = '';
   toggleDisplay = false;
@@ -196,6 +197,7 @@ export class SiteDetailsComponent
   }
 
   onSucceedAddEmail(event: Participant[]): void {
+    this.userIds = [];
     this.newlyImportedParticipants = event;
     this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
       this.userIds.push(newlyCreatedparticpants.id),
@@ -209,6 +211,7 @@ export class SiteDetailsComponent
   }
 
   onFileImportSuccess(event: ImportParticipantEmailResponse): void {
+    this.userIds = [];
     this.newlyImportedParticipants = event.participants;
     this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
       this.userIds.push(newlyCreatedparticpants.id),

@@ -24,51 +24,40 @@ terraform {
   }
 }
 
+locals {
+  apps = [
+    "auth_server",
+    "response_datastore",
+    "study_builder",
+    "study_datastore",
+    "participant_consent_datastore",
+    "participant_enroll_datastore",
+    "participant_user_datastore",
+    "participant_manager_datastore",
+  ]
+}
+
 resource "random_string" "strings" {
-  for_each = toset([
-    "auth_server_db_user",
-    "auth_server_client_id",
-    "response_datastore_db_user",
-    "response_datastore_client_id",
-    "study_builder_db_user",
-    "study_builder_client_id",
-    "study_datastore_db_user",
-    "study_datastore_client_id",
-    "participant_consent_datastore_db_user",
-    "participant_consent_datastore_client_id",
-    "participant_enroll_datastore_db_user",
-    "participant_enroll_datastore_client_id",
-    "participant_user_datastore_db_user",
-    "participant_user_datastore_client_id",
-    "participant_manager_datastore_db_user",
-    "participant_manager_datastore_client_id",
-    "hydra_db_user",
-  ])
+  for_each = toset(concat(
+    [
+      "hydra_db_user",
+    ],
+    formatlist("%s_db_user", local.apps),
+    formatlist("%s_client_id", local.apps))
+  )
   length  = 16
-  special = true
+  special = false
 }
 
 resource "random_password" "passwords" {
-  for_each = toset([
-    "mystudies_sql_default_user_password",
-    "auth_server_db_password",
-    "auth_server_secret_key",
-    "response_datastore_db_password",
-    "response_datastore_secret_key",
-    "study_builder_db_password",
-    "study_builder_secret_key",
-    "study_datastore_db_password",
-    "study_datastore_secret_key",
-    "participant_consent_datastore_db_password",
-    "participant_consent_datastore_secret_key",
-    "participant_enroll_datastore_db_password",
-    "participant_enroll_datastore_secret_key",
-    "participant_user_datastore_db_password",
-    "participant_user_datastore_secret_key",
-    "participant_manager_datastore_db_password",
-    "participant_manager_datastore_secret_key",
-    "hydra_db_password",
-  ])
+  for_each = toset(concat(
+    [
+      "mystudies_sql_default_user_password",
+      "hydra_db_password",
+    ],
+    formatlist("%s_db_password", local.apps),
+    formatlist("%s_secret_key", local.apps))
+  )
   length  = 16
   special = true
 }

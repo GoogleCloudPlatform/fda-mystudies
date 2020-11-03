@@ -38,7 +38,7 @@ spec:
                   key: dbname
             # SERVER CALLS
             - name: PARTICIPANT_USER_DATASTORE_URL
-              value: "http://participant-user-datastore-np:50000"
+              value: "http://participant-user-datastore-np:50000/participant-user-datastore"
             # MISC
             - name: BASE_URL
               valueFrom:
@@ -79,4 +79,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: study-datastore-gcloud-key
+          secretName: study-datastore-gke-sa-gcloud-key

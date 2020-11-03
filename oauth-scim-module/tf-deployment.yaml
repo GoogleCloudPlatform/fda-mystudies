@@ -65,11 +65,11 @@ spec:
                   key: smtp_hostname
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
             - name: HYDRA_PUBLIC_URL
-              value: "http://hydra-np:4444"
+              value: "http://hydra-np:50000/hydra"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             # MISC
             - name: LOG_PATH
               valueFrom:
@@ -82,7 +82,7 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /oauth-scim-module/healthCheck
+              path: /oauth-scim-service/healthCheck
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
@@ -98,4 +98,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: auth-server-gcloud-key
+          secretName: auth-server-gke-sa-gcloud-key
