@@ -80,6 +80,18 @@ spec:
               value: "http://hydra-np:50000/hydra"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/oauth-scim-service"
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: base_url
+            # TODO(#1792): replace with actual values.
+            - name: IOS_DEEPLINK_URL
+              value: ""
+            - name: ANDROID_DEEPLINK_URL
+              value: ""
+            - name: ENCRYPTOR_PASSWORD
+              value: ""
             # MISC
             - name: LOG_PATH
               valueFrom:
