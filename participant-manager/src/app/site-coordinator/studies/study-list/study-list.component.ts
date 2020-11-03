@@ -19,7 +19,11 @@ export class StudyListComponent implements OnInit {
   studies: Study[] = [];
   manageStudiesBackup = {} as StudyResponse;
   studyTypes = StudyType;
-
+  messageMapping: {[k: string]: string} = {
+    '=0': 'No Sites',
+    '=1': 'One Site',
+    'other': '# Sites',
+  };
   constructor(
     private readonly studiesService: StudiesService,
     private readonly router: Router,
@@ -52,12 +56,15 @@ export class StudyListComponent implements OnInit {
     this.query$.next(query.trim());
   }
   progressBarColor(study: Study): string {
-    if (study.enrollmentPercentage && study.enrollmentPercentage < 30) {
-      return 'red__text__sm';
-    } else if (study.enrollmentPercentage && study.enrollmentPercentage < 70) {
+    if (study.enrollmentPercentage && study.enrollmentPercentage > 70) {
+      return 'green__text__sm';
+    } else if (
+      study.enrollmentPercentage &&
+      (study.enrollmentPercentage >= 30 || study.enrollmentPercentage <= 70)
+    ) {
       return 'orange__text__sm';
     } else {
-      return 'green__text__sm';
+      return 'red__text__sm';
     }
   }
 }
