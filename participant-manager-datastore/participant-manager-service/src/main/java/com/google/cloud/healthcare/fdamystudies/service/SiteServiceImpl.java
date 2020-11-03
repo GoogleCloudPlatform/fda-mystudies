@@ -1132,6 +1132,7 @@ public class SiteServiceImpl implements SiteService {
                   return study;
                 })
             .collect(Collectors.toList());
+
     List<EnrolledInvitedCount> enrolledInvitedCountList = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(sitePermissions)) {
       enrolledInvitedCountList = siteRepository.getEnrolledInvitedCountByUserId(userId);
