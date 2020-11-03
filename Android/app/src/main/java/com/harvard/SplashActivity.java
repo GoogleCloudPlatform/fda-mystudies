@@ -250,18 +250,9 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
   }
 
   private void updateUserVersion() {
-    PackageManager manager = getPackageManager();
-    PackageInfo packageInfo = null;
-    try {
-      packageInfo = manager.getPackageInfo(
-          getPackageName(), 0);
-    } catch (NameNotFoundException e) {
-      Logger.log(e);
-    }
-    String version = packageInfo.versionName;
     Info info = new Info();
     info.setOs("Android");
-    info.setAppVersion(version);
+    info.setAppVersion(BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE);
     Gson gson = new Gson();
     String json = gson.toJson(info);
     JSONObject obj = null;
