@@ -144,7 +144,7 @@ public class AppControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
-    testDataHelper.getAppPermissionRepository().deleteAll();
+    testDataHelper.getSitePermissionRepository().deleteAll();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc

@@ -189,14 +189,3 @@ INSERT INTO `user_permissions` (`permission_id`, `permissions`) VALUES
 	(7, 'ROLE_MANAGE_USERS_VIEW'),
 	(1, 'ROLE_SUPERADMIN');
 /*!40000 ALTER TABLE `user_permissions` ENABLE KEYS */;
-
-/*!40000 ALTER TABLE `user_permission_mapping` DISABLE KEYS */;
-INSERT INTO `user_permission_mapping` (`user_id`, `permission_id`) VALUES
-	(1, 1),
-	(1, 2),
-	(1, 4),
-	(1, 5),
-	(1, 6),
-	(1, 7),
-	(1, 8);
-/*!40000 ALTER TABLE `user_permission_mapping` ENABLE KEYS */;
