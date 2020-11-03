@@ -240,6 +240,9 @@ public class BaseMockIT {
     }
 
     for (StudyBuilderAuditEvent auditEvent : auditEvents) {
+      if (auditEvent == null) {
+        continue;
+      }
       AuditLogEventRequest auditRequest = auditRequestByEventCode.get(auditEvent.getEventCode());
 
       assertEquals(auditEvent.getEventCode(), auditRequest.getEventCode());

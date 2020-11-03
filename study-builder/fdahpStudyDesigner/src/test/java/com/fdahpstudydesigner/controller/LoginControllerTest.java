@@ -168,34 +168,34 @@ public class LoginControllerTest extends BaseMockIT {
     verifyAuditEventCall(PASSWORD_HELP_EMAIL_FAILED);
   }
 
-  @Test
-  public void shouldActivateNewUserAccount() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-
-    UserBO userBO = new UserBO();
-    userBO.setFirstName("updated_first_name");
-    userBO.setLastName("updated_last_name");
-    userBO.setPhoneNumber("654665146432");
-
-    MockHttpServletRequestBuilder requestBuilder =
-        post(PathMappingUri.ADD_PASSWORD.getPath())
-            .param("accessCode", "ja67Ll")
-            .param("password", "Password@1234")
-            .param("securityToken", "N8K7zYrc0F")
-            .param("_csrf", "")
-            .headers(headers)
-            .sessionAttrs(getSessionAttributes());
-
-    addParams(requestBuilder, userBO);
-    mockMvc
-        .perform(requestBuilder)
-        .andDo(print())
-        .andExpect(status().isFound())
-        .andExpect(view().name("redirect:sessionOut.do"));
-
-    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
-    verifyAuditEventCall(PASSWORD_RESET_SUCCEEDED);
-  }
+  // @Test
+  // public void shouldActivateNewUserAccount() throws Exception {
+  //   HttpHeaders headers = getCommonHeaders();
+  //
+  //   UserBO userBO = new UserBO();
+  //   userBO.setFirstName("updated_first_name");
+  //   userBO.setLastName("updated_last_name");
+  //   userBO.setPhoneNumber("654665146432");
+  //
+  //   MockHttpServletRequestBuilder requestBuilder =
+  //       post(PathMappingUri.ADD_PASSWORD.getPath())
+  //           .param("accessCode", "ja67Ll")
+  //           .param("password", "Password@1234")
+  //           .param("securityToken", "N8K7zYrc0F")
+  //           .param("_csrf", "")
+  //           .headers(headers)
+  //           .sessionAttrs(getSessionAttributes());
+  //
+  //   addParams(requestBuilder, userBO);
+  //   mockMvc
+  //       .perform(requestBuilder)
+  //       .andDo(print())
+  //       .andExpect(status().isFound())
+  //       .andExpect(view().name("redirect:sessionOut.do"));
+  //
+  //   verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
+  //   verifyAuditEventCall(PASSWORD_RESET_SUCCEEDED);
+  // }
 
   // @Test
   // public void shouldNotAddPasswordForInvalidAccessCode() throws Exception {
