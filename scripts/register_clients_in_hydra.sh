@@ -22,18 +22,10 @@ shift 2
 set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
-DATA_PROJECT=${PREFIX}-${ENV}-data
-SCIM_AUTH_URL="http://auth-server-np:50000/oauth-scim-service"
-HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
-APPS_PROJECT=${PREFIX}-${ENV}-apps
-CLUSTER=${PREFIX}-${ENV}-gke-cluster
 LOCATION=us-east1
-IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-app-import
 SCIM_AUTH_URL="http://auth-server-np:50000/oauth-scim-service"
 HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
 DATETIME=`date +"%FT%TZ"`
-
-OUPUT=""
 
 echo "Reading client id and secret key for auth, participant manager and mobile apps"
 # SCIM AUTH SERVER, PARTICIPANT MANAGER & MOBILE APPS are registered
@@ -41,14 +33,12 @@ echo "Reading client id and secret key for auth, participant manager and mobile 
 AUTH_CLIENT_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=auto-auth-server-client-id`
 AUTH_SECRET_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=auto-auth-server-secret-key`
 
-for CLIENT_NAME in "SCIM AUTH SERVER" # "PARTICIPANT MANAGER" "MOBILE APPS"
-do
-  OUTPUT="${OUTPUT} curl --location --request POST \"${HYDRA_ADMIN_URL}/clients\" \\
+OUTPUT="curl --location --request POST \"${HYDRA_ADMIN_URL}/clients\" \\
   --header \"Content-Type: application/json\" \\
   --header \"Accept: application/json\" \\
   --data-raw '{
     \"client_id\": \"${AUTH_CLIENT_ID}\",
-    \"client_name\": \"${CLIENT_NAME}\",
+    \"client_name\": \"SCIM AUTH SERVER\",
     \"client_secret\": \"${AUTH_SECRET_KEY}\",
     \"client_secret_expires_at\": 0,
     \"created_at\": \"${DATETIME}\",
@@ -57,7 +47,6 @@ do
     \"redirect_uris\": [\"${SCIM_AUTH_URL}/callback\"]
   }';
 "
-done
 
 # Loop over all applications to read secret and register with hydra.
 for APPLICATION in "participant-consent-datastore" "participant-enroll-datastore" "participant-manager-datastore" "participant-user-datastore" "response-datastore" "study-builder" "study-datastore"
