@@ -57,7 +57,7 @@ module "bastion_vm" {
 
   name         = "bastion-vm"
   project      = module.project.project_id
-  zone         = "us-east1-b"
+  zone         = "us-east1-d"
   host_project = module.project.project_id
   network      = module.mystudies_dev_network.network.network.self_link
   subnet       = module.mystudies_dev_network.subnets["us-east1/mystudies-dev-bastion-subnet"].self_link
