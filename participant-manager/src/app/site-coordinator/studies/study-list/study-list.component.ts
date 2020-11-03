@@ -68,7 +68,7 @@ export class StudyListComponent implements OnInit {
       return 'red__text__sm';
     }
   }
-  checkEditPermission(permission: number): boolean {
-    return permission === Permission.ViewAndEdit;
+   checkViewPermission(permission: number): boolean {
+    return permission === Permission.View;
   }
 }
