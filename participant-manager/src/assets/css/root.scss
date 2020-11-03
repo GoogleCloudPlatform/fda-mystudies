@@ -1125,3 +1125,10 @@ button:focus {
   width: 18px;
   height: 18px;
 }
+
+.select__form-control__parent > .wrap:after {
+  opacity: 0 !important;
+}
+.bg__white input:focus {
+  background-color: var(--white) !important;
+}
