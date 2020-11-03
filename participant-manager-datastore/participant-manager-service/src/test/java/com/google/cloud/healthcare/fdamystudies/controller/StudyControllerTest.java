@@ -137,7 +137,21 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].enrolled").value(1))
         .andExpect(jsonPath("$.studies[0].enrollmentPercentage").value(100));
 
-    verifyTokenIntrospectRequest();
+    verifyTokenIntrospectRequest(1);
+
+    /* Set study in the site to null and expect no study if there is no site associated with that study*/
+    siteEntity.setStudy(null);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDIES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(0)));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
@@ -861,24 +875,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
-
-    verifyTokenIntrospectRequest();
-  }
-
-  @Test
-  public void shouldNotReturnStudiesIfNoSitesForSuperAdmin() throws Exception {
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-
-    /* Set study in the site to null and expect no study if there is no site associated with that study*/
-    siteEntity.setStudy(null);
-    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
-
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_STUDIES.getPath()).headers(headers).contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk());
 
     verifyTokenIntrospectRequest();
   }
