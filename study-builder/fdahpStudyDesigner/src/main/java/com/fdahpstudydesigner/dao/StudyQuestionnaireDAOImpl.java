@@ -3191,7 +3191,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               "update response_sub_type_value rs,questionnaires_steps q set rs.destination_step_id = NULL "
                   + "where rs.response_type_id=q.instruction_form_id and q.step_type='"
                   + FdahpStudyDesignerConstants.QUESTION_STEP
-                  + "' and q.questionnaires_id=questionnaireId "
+                  + "' and q.questionnaires_id=:questionnaireId "
                   + " and rs.active=1 and q.active=1";
           query =
               session
@@ -3475,13 +3475,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String updateQuery =
               "update QuestionnairesStepsBo QSBO set QSBO.destinationStep=:stepId "
                   + " where "
-                  + "QSBO.destinationStep=0 and QSBO.sequenceNo="
-                  + (count - 1)
+                  + "QSBO.destinationStep=0 and QSBO.sequenceNo=:sequenceNo"
                   + " and QSBO.questionnairesId=:questionnairesId ";
           session
               .createQuery(updateQuery)
               .setInteger("stepId", questionnairesStepsBo.getStepId())
               .setInteger("questionnairesId", instructionsBo.getQuestionnaireId())
+              .setInteger("sequenceNo", count - 1)
               .executeUpdate();
         }
       }
@@ -3648,11 +3648,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .createQuery(
                         "From QuestionnairesStepsBo QSBO where QSBO.instructionFormId=:fromId "
-                            + " and QSBO.stepType=:setType "
+                            + " and QSBO.stepType=:stepType "
                             + " and QSBO.active=1 and QSBO.questionnairesId=:questionnairesId ")
                     .setInteger("fromId", questionsBo.getFromId())
                     .setInteger("questionnairesId", questionsBo.getQuestionnaireId())
-                    .setString("setType", FdahpStudyDesignerConstants.FORM_STEP);
+                    .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
           } else {
             query =
                 session
@@ -3686,9 +3686,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           query =
               session
                   .createQuery(
-                      "From FormMappingBo FMBO where FMBO.formId=:fromId "
+                      "From FormMappingBo FMBO where FMBO.formId=:formId "
                           + " and FMBO.active=1 order by FMBO.sequenceNo DESC ")
-                  .setInteger("fromId", questionsBo.getFromId());
+                  .setInteger("formId", questionsBo.getFromId());
           query.setMaxResults(1);
           FormMappingBo existedFormMappingBo = (FormMappingBo) query.uniqueResult();
           if (existedFormMappingBo != null) {
@@ -4787,11 +4787,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .createSQLQuery(
                           "update questionnaires set status=0,anchor_date_id=null,"
                               + "modified_by=:userId "
-                              + ",modified_date='"
-                              + FdahpStudyDesignerUtil.getCurrentDateTime()
-                              + "' where active=1 and anchor_date_id in( :anchorIds ) ")
+                              + ",modified_date=:currentDateAndTime"
+                              + " where active=1 and anchor_date_id in( :anchorIds ) ")
                       .setInteger("userId", sessionObject.getUserId())
                       .setParameterList("anchorIds", anchorIds)
+                      .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
                       .executeUpdate();
               if (count1 > 0) {
                 studySequence.setStudyExcQuestionnaries(false);
@@ -4800,11 +4800,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   session
                       .createSQLQuery(
                           "update active_task set action=0 ,anchor_date_id=null, modified_by=:userId "
-                              + ",modified_date='"
-                              + FdahpStudyDesignerUtil.getCurrentDateTime()
-                              + "' where active=1 and anchor_date_id in( :anchorIds )")
+                              + ",modified_date=:currentDateAndTime"
+                              + " where active=1 and anchor_date_id in( :anchorIds )")
                       .setInteger("userId", sessionObject.getUserId())
                       .setParameterList("anchorIds", anchorIds)
+                      .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
                       .executeUpdate();
               if (count2 > 0) {
                 studySequence.setStudyExcActiveTask(false);
