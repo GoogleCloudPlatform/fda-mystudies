@@ -59,10 +59,7 @@ spec:
                   name: user-registration-secrets
                   key: GCP_BUCKET_NAME
             - name: INSTITUTION_RESOURCES_BUCKET_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: user-registration-secrets
-                  key: INSTITUTION_RESOURCES_BUCKET_NAME
+              value: ""
             - name: AUTH_SERVER_URL
               value: "auth-server-np:50000"
             - name: RESPONSE_SERVER_URL
