@@ -31,7 +31,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>StudyMetaData REST Service</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/study-datastore/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Force SSL for entire site -->

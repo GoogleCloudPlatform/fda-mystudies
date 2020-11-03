@@ -53,7 +53,8 @@ public class StudyMetaDataController extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    LOGGER.info("INFO: StudyMetaDataController - doGet() :: Starts");
+    String contextPath = req.getContextPath();
+    LOGGER.info("INFO: StudyMetaDataController - doGet() :: Starts with contextPath:" + contextPath);
     doPost(req, resp);
     LOGGER.info("INFO: StudyMetaDataController - doGet() :: Ends");
   }

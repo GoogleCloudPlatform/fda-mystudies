@@ -47,6 +47,8 @@ public class RestAuthenticationFilter implements Filter {
       throws IOException, ServletException {
     if (request instanceof HttpServletRequest) {
       HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+      String contextPath = request.getContextPath();
+      logger.warn("RestAuthenticationFilter - doFilter() - contextPath: "+ contextPath);
       String authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
 
       if (StringUtils.isNotEmpty(authCredentials)) {
