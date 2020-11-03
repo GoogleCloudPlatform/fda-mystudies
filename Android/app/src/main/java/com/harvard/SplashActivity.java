@@ -147,7 +147,13 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
       Version currVer = new Version(versionChecker.currentVersion());
       Version newVer = new Version(newVersion);
       if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
-        proceedToApp();
+        if (AppController.getHelperSharedPreference()
+            .readPreference(SplashActivity.this, getResources().getString(R.string.userid), "")
+            .equalsIgnoreCase("")) {
+          proceedToApp();
+        } else {
+          updateUserVersion();
+        }
       } else {
         if (force) {
           Toast.makeText(
@@ -160,7 +166,13 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
           Toast.makeText(
                   SplashActivity.this, "Please consider updating app next time", Toast.LENGTH_SHORT)
               .show();
-          proceedToApp();
+          if (AppController.getHelperSharedPreference()
+              .readPreference(SplashActivity.this, getResources().getString(R.string.userid), "")
+              .equalsIgnoreCase("")) {
+            proceedToApp();
+          } else {
+            updateUserVersion();
+          }
         }
       }
     } else if (requestCode == PASSCODE_RESPONSE) {
