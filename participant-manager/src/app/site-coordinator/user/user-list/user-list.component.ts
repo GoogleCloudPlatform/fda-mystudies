@@ -50,6 +50,7 @@ onBoardingStatus=Status;
   search(query: string): void {
     this.query$.next(query.trim().toLowerCase());
   }
+  
     statusColour(status:string):string {
 if (status === this.onBoardingStatus.Active) {
   return 'txt__green'
