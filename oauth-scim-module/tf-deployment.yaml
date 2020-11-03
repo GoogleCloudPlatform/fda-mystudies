@@ -63,6 +63,16 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: smtp_hostname
+            - name: MAIL_CONTACT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: contact_email_address
+            - name: MAIL_FROM_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: from_email_address
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
