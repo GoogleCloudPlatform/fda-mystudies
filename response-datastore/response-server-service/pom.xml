@@ -205,6 +205,12 @@
       <id>qa</id>
       <properties>
         <spring.profiles.active>qa</spring.profiles.active>
+      </properties>s
+    </profile>
+    <profile>
+      <id>prod</id>
+      <properties>
+        <spring.profiles.active>prod</spring.profiles.active>
       </properties>
     </profile>
   </profiles>
