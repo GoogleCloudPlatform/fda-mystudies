@@ -28,7 +28,12 @@
                   {{ app.studiesCount | i18nPlural: studiesMessageMapping }}
                   <span *ngIf="checkEditPermission(app.permission)">
                     ,
-                    {{ app.appUsersCount | i18nPlural: appUsersMessageMapping }}
+                    <span *ngIf="app.appUsersCount">
+                      {{
+                        app.appUsersCount | i18nPlural: appUsersMessageMapping
+                      }}
+                    </span>
+                    <span *ngIf="!app.appUsersCount">No App Users</span>
                   </span>
                 </div>
               </div>
