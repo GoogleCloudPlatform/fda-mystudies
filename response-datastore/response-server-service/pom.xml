@@ -205,7 +205,7 @@
       <id>qa</id>
       <properties>
         <spring.profiles.active>qa</spring.profiles.active>
-      </properties>s
+      </properties>
     </profile>
     <profile>
       <id>prod</id>
