@@ -9,7 +9,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /oauth-scim-module/*
+          - path: /oauth-scim-service/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000
@@ -44,7 +44,7 @@ spec:
           - path: /hydra/*
             backend:
               serviceName: hydra-np
-              servicePort: 4444
+              servicePort: 50000
           - path: /#/*
             backend:
               serviceName: participant-manager-np

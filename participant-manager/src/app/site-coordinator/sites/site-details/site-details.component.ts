@@ -234,7 +234,7 @@ export class SiteDetailsComponent
       for (const participants of this.siteDetailsBackup
         .participantRegistryDetail.registryParticipants) {
         if (this.activeTab === OnboardingStatus.Invited) {
-          if (participants.enrollmentStatus !== EnrollmentStatus.YetToEnroll) {
+          if (participants.enrollmentStatus === EnrollmentStatus.YetToEnroll) {
             participants.newlyCreatedUser = this.selectedAll;
             this.userIds.push(participants.id);
           }

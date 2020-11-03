@@ -46,6 +46,7 @@ import {AboutComponent} from './about/about.component';
       positionClass: 'toast-top-center',
       preventDuplicates: true,
       enableHtml: true,
+      maxOpened: 1,
     }),
   ],
   providers: [
