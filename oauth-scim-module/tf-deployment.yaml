@@ -85,6 +85,7 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: base_url
+            # TODO(#1792): replace with actual values.
             - name: IOS_DEEPLINK_URL
               value: ""
             - name: ANDROID_DEEPLINK_URL
@@ -99,13 +100,12 @@ spec:
                   key: log_path
             - name: TEMP_REGID_EXPIRY_MINUTES
               value: "30"
+            - name: ORG_NAME
+              secretKeyRef:
+                name: shared-secrets
+                key: org_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
-            - name: ORG_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: org_name
           ports:
           - containerPort: 8080
           readinessProbe:
