@@ -14,7 +14,7 @@ export enum OnboardingStatus {
 export enum EnrollmentStatus {
   Enrolled = 'Enrolled',
   Withdrawn = 'Withdrawn',
-  YetToEnroll = 'Yet To Enroll',
+  YetToEnroll = 'Yet to Enroll',
 }
 export enum StudyType {
   Open = 'OPEN',
