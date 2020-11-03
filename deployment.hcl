@@ -21,7 +21,7 @@ template "mystudies" {
 //    master_authorized_networks = [
 //      {
 //        cidr_block   = "0.0.0.0/0"
-//        display_name = "Example diplay name"
+//        display_name = "Example display name"
 //      },
 //    ]
   }
