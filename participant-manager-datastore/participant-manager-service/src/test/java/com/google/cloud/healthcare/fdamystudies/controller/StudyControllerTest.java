@@ -865,6 +865,24 @@ public class StudyControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
   }
 
+  @Test
+  public void shouldNotReturnStudiesIfNoSitesForSuperAdmin() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    /* Set study in the site to null and expect no study if there is no site associated with that study*/
+    siteEntity.setStudy(null);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDIES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verifyTokenIntrospectRequest();
+  }
+
   @AfterEach
   public void clean() {
     testDataHelper.cleanUp();
