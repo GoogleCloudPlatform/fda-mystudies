@@ -19,7 +19,7 @@ spec:
       containers:
         # application container
         - name: participant-manager-datastore
-          image: gcr.io/fda-mystudies-dev-apps/participant-manager-datastore:latest
+          image: gcr.io/mystudies-dev-apps/participant-manager-datastore:latest
           env:
             # DB ACCESS
             - name: DB_NAME
@@ -111,6 +111,8 @@ spec:
             httpGet:
               path: /participant-manager-datastore/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
@@ -119,7 +121,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+            "-instances=mystudies-dev-data:us-east1:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

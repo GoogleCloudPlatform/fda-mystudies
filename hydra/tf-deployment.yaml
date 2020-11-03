@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: hydra-ic
-        image: gcr.io/fda-mystudies-dev-apps/hydra:latest
+        image: gcr.io/mystudies-dev-apps/hydra:latest
         env:
         # DB ACCESS
         - name: DB_USER
@@ -54,6 +54,8 @@ spec:
           httpGet:
             port: 4444
             path: /health/ready
+          initialDelaySeconds: 30
+          periodSeconds: 20
         volumeMounts:
         - name: gcloud-key-volume
           mountPath: /secrets/gcloud_key
@@ -61,7 +63,7 @@ spec:
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:latest
         command: ["/cloud_sql_proxy",
-                  "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+                  "-instances=mystudies-dev-data:us-east1:mystudies=tcp:3306",
                   "-credential_file=/secrets/gcloud_key/key.json"]
         volumeMounts:
         - name: gcloud-key-volume

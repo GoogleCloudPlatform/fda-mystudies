@@ -5,7 +5,7 @@ metadata:
   labels:
     app: auth-server
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: auth-server
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: auth-server
-          image: gcr.io/fda-mystudies-dev-apps/auth-server:latest
+          image: gcr.io/mystudies-dev-apps/auth-server:latest
           env:
             # DB ACCESS
             - name: DB_USER
@@ -91,7 +91,7 @@ spec:
             - name: ANDROID_DEEPLINK_URL
               value: ""
             - name: ENCRYPTOR_PASSWORD
-              value: ""
+              value: "placeholder"
             # MISC
             - name: LOG_PATH
               valueFrom:
@@ -112,13 +112,17 @@ spec:
             httpGet:
               path: /oauth-scim-service/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
             readOnly: true
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ['/cloud_sql_proxy', '-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306', '-credential_file=/secrets/gcloud_key/key.json']
+          command: ["/cloud_sql_proxy",
+                    "-instances=mystudies-dev-data:us-east1:mystudies=tcp:3306",
+                    "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

@@ -1,5 +1,4 @@
 steps:
 - name: 'maven'
   args: ['mvn', '-B', 'package', '-Pprod', 'com.google.cloud.tools:jib-maven-plugin:2.5.2:build', '-Dimage=gcr.io/$PROJECT_ID/auth-server']
-  dir: "oauth-scim-service"
-
+  dir: "oauth-scim-module"
