@@ -174,22 +174,11 @@
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>2.5.2</version>
-				<!-- <configuration>
-					<from>
-						<image>adoptopenjdk:11-jre-hotspot</image>
-					</from>
-					<to>
-						<auth>
-							<username>${env.usname}</username>
-							<password>${pwd1}</password>
-						</auth>
-						<image>hub.docker.com/repository/docker/mohankgonthina/jib</image>
-						<tags>
-							<tag>${maven.build.timestamp}</tag>
-							<tag>latest</tag>
-						</tags>
-					</to>
-				</configuration> -->
+				<configuration>
+          <to>
+            <image>${image_path}</image>
+          </to>
+        </configuration>
 			</plugin>
 		</plugins>
 	</build>
