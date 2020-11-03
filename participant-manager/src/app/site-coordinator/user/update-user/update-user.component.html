@@ -10,7 +10,7 @@
           <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
           <span>Edit User Details</span>
         </a>
-        <span class="text__34a853g__14">
+        <span [ngClass]="statusColour(user.status)" class="text__34a853g__14">
           {{ user.status }}
         </span>
       </div>

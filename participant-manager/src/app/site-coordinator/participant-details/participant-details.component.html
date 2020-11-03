@@ -178,7 +178,14 @@
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
                   "
-                  class="participant__label"
+                  [ngClass]="{
+                    participant__label:
+                      participant.participantDetails.onboardingStatus ==
+                      onBoardingStatus.Invited,
+                    inactive__text:
+                      participant.participantDetails.onboardingStatus ==
+                      onBoardingStatus.Disabled
+                  }"
                 >
                   {{ participant.participantDetails.onboardingStatus }}
                 </div>
