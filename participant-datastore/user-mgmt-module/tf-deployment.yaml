@@ -105,7 +105,7 @@ spec:
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
             - name: RESPONSE_DATASTORE_URL
-                value: "http://response-datastore-np:50000/response-datastore"
+              value: "http://response-datastore-np:50000/response-datastore"
             # MISC
             - name: ORG_NAME
               valueFrom:
