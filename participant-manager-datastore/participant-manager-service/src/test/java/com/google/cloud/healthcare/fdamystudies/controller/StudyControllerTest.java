@@ -429,7 +429,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnYetToEnrollStatusForenrollmentStatusWithdrawn() throws Exception {
+  public void shouldReturnYetToEnrollStatusForEnrollmentStatusWithdrawn() throws Exception {
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
