@@ -137,6 +137,7 @@ export class AuthInterceptor implements HttpInterceptor {
         console.log('in error handler :');
         console.log(err);
         if (err instanceof HttpErrorResponse) {
+          console.log(err.status);
           if (err.status === 401) {
             this.handle401Error(request, next);
           } else if (err.error instanceof ErrorEvent) {
