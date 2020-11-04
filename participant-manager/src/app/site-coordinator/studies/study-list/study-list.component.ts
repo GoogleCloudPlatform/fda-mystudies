@@ -69,6 +69,6 @@ export class StudyListComponent implements OnInit {
     }
   }
    checkViewPermission(permission: number): boolean {
-    return permission === Permission.View;
+    return permission === Permission.View || permission === Permission.ViewAndEdit;
   }
 }
