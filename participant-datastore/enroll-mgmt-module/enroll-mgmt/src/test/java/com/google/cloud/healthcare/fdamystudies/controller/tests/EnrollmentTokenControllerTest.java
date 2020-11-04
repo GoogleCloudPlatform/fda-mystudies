@@ -49,7 +49,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Autowired private EnrollmentTokenController controller;
   @Autowired private EnrollmentTokenService enrollmentTokenService;
-  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   @Autowired private ObjectMapper objectMapper;
 
