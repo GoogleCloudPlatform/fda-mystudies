@@ -2258,6 +2258,41 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnSitesForUserHavingSitePermission() throws Exception {
+    // Step 1: set the data needed to get studies with sites
+    UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
+
+    studyEntity.setApp(appEntity);
+    siteEntity.setLocation(locationEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+
+    List<SitePermissionEntity> sitePermissionList =
+        testDataHelper.getSitePermissionRepository().findAll();
+    SitePermissionEntity sitePermission = sitePermissionList.get(0);
+    sitePermission.setUrAdminUser(nonSuperAdmin);
+    testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermission);
+
+    // Step 2: call API and expect GET_SITES_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, nonSuperAdmin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].sites").isArray())
+        .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnNotFoundForGetSites() throws Exception {
     // Step 1: set the userId to invalid
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -2272,7 +2307,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED.getDescription())));
+                is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
