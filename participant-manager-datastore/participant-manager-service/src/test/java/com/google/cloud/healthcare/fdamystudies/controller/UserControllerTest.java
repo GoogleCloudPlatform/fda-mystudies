@@ -698,9 +698,9 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.user.apps").isArray())
         .andExpect(jsonPath("$.user.apps").isNotEmpty())
         .andExpect(jsonPath("$.user.apps[0].totalStudiesCount", is(1)))
-        .andExpect(jsonPath("$.user.apps[0].selectedStudiesCount", is(0)))
+        .andExpect(jsonPath("$.user.apps[0].selectedStudiesCount", is(1)))
         .andExpect(jsonPath("$.user.apps[0].totalSitesCount", is(1)))
-        .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(0)))
+        .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(1)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();
