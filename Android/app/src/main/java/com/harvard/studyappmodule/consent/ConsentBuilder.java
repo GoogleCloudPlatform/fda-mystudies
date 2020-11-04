@@ -22,19 +22,19 @@ import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
 import com.harvard.studyappmodule.consent.consentsharingstepcustom.ConsentSharingStepCustom;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.ConsentSectionCustomImage;
+import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
+import com.harvard.studyappmodule.custom.QuestionStepCustom;
+import com.harvard.studyappmodule.custom.question.TextAnswerFormatRegex;
 import io.realm.RealmList;
 import java.util.ArrayList;
-import java.util.List;
 import org.researchstack.backbone.answerformat.AnswerFormat;
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
-import org.researchstack.backbone.answerformat.TextAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.model.ConsentSection;
 import org.researchstack.backbone.model.ConsentSignature;
 import org.researchstack.backbone.step.ConsentDocumentStep;
 import org.researchstack.backbone.step.ConsentSignatureStep;
 import org.researchstack.backbone.step.ConsentVisualStep;
-import org.researchstack.backbone.step.FormStep;
 import org.researchstack.backbone.step.InstructionStep;
 import org.researchstack.backbone.step.QuestionStep;
 import org.researchstack.backbone.step.Step;
@@ -293,29 +293,44 @@ public class ConsentBuilder {
       }
     }
 
-    FormStep formStep =
-        new FormStep(context.getResources().getString(R.string.signature_form_step), "", "");
-    formStep.setStepTitle(R.string.notxt);
+    TextAnswerFormatRegex textAnswerFormat =
+            new TextAnswerFormatRegex(Integer.MAX_VALUE,
+                    "",
+                    "");
+    textAnswerFormat.setIsMultipleLines(false);
+    QuestionStepCustom firstName =
+            new QuestionStepCustom(
+                    context.getResources().getString(R.string.first_name),
+                    context.getResources().getString(R.string.first_name),
+                    textAnswerFormat);
+    firstName.setPlaceholder(context.getResources().getString(R.string.required));
+    firstName.setAnswerFormat1(textAnswerFormat);
+    firstName.setOptional(false);
 
-    TextAnswerFormat format = new TextAnswerFormat();
-    format.setIsMultipleLines(false);
+    QuestionStepCustom lastName =
+            new QuestionStepCustom(
+                    context.getResources().getString(R.string.last_name),
+                    context.getResources().getString(R.string.last_name),
+                    textAnswerFormat);
+    lastName.setPlaceholder(context.getResources().getString(R.string.required));
+    lastName.setAnswerFormat1(textAnswerFormat);
+    lastName.setOptional(false);
 
-    QuestionStep fullName =
-        new QuestionStep(
-            context.getResources().getString(R.string.first_name1),
-            context.getResources().getString(R.string.first_name2),
-            format);
-    QuestionStep lastName =
-        new QuestionStep(
-            context.getResources().getString(R.string.last_name1),
-            context.getResources().getString(R.string.last_name2),
-            format);
-    fullName.setPlaceholder(context.getResources().getString(R.string.first_name3));
-    lastName.setPlaceholder(context.getResources().getString(R.string.last_name3));
-    List<QuestionStep> questionSteps = new ArrayList<>();
-    questionSteps.add(fullName);
-    questionSteps.add(lastName);
-    formStep.setFormSteps(questionSteps);
+    ArrayList<QuestionStep> questionStepCustom = new ArrayList<>();
+    questionStepCustom.add(firstName);
+    questionStepCustom.add(lastName);
+
+    QuestionStepCustom formStep =
+            new QuestionStepCustom(context.getResources().getString(R.string.signature_form_step));
+
+    ChoiceAnswerFormatCustom formAnswerFormat =
+        new ChoiceAnswerFormatCustom(
+            ChoiceAnswerFormatCustom.CustomAnswerStyle.Form,
+            formStep,
+            questionStepCustom,
+            false,
+            "");
+    formStep.setAnswerFormat1(formAnswerFormat);
     formStep.setOptional(false);
     visualSteps.add(formStep);
 
