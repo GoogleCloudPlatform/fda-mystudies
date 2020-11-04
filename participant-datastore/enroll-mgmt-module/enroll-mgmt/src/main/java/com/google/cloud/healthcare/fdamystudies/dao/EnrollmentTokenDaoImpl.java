@@ -85,10 +85,12 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
         session
             .createQuery(
                 "from ParticipantRegistrySiteEntity PS where study.customId =:studyId and"
-                    + " upper(trim(enrollmentToken))=:token and email=:email")
+                    + " upper(trim(enrollmentToken))=:token and email=:email and"
+                    + " onboardingStatus != :onboardingStatus")
             .setParameter("studyId", studyId)
             .setParameter("token", token.toUpperCase())
             .setParameter("email", email)
+            .setParameter("onboardingStatus", "D")
             .getResultList();
 
     if (participantRegistrySite != null && !participantRegistrySite.isEmpty()) {
@@ -102,7 +104,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       isValidStudyToken = true;
     }
 
-    logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends ");
+    logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends");
     return isValidStudyToken;
   }
 
@@ -118,6 +120,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     studyStateStatus.add(ParticipantStudyStateStatus.INPROGRESS.getValue());
 
     List<String> onboardingStatus = new ArrayList<>();
+    onboardingStatus.add(OnboardingStatus.INVITED.getCode());
     onboardingStatus.add(OnboardingStatus.ENROLLED.getCode());
     onboardingStatus.add(OnboardingStatus.DISABLED.getCode());
     participantList =

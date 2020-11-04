@@ -35,6 +35,7 @@ import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
@@ -48,6 +49,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Autowired private EnrollmentTokenController controller;
   @Autowired private EnrollmentTokenService enrollmentTokenService;
+  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   @Autowired private ObjectMapper objectMapper;
 
@@ -309,6 +311,41 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldNotAllowUserForEnrollment() throws Exception {
+    List<ParticipantRegistrySiteEntity> participantRegistrySiteList =
+        participantRegistrySiteRepository.findByStudyIdAndEmail("3", "cdash936@gmail.com");
+
+    ParticipantRegistrySiteEntity participantRegistrySite = participantRegistrySiteList.get(0);
+    participantRegistrySite.setOnboardingStatus("D");
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+    // study type close
+    String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH_CLOSE);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ENROLL_PATH.getPath())
+                .headers(headers)
+                .content(requestJson)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_FOUND_INELIGIBLE_FOR_STUDY.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, USER_FOUND_INELIGIBLE_FOR_STUDY);
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void enrollParticipantSuccessForCaseInsensitiveToken() throws Exception {
 
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
@@ -392,6 +429,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.message", is("Token already in use")));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
