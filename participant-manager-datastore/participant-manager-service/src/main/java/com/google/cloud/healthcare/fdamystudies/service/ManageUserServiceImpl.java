@@ -585,13 +585,23 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     for (StudyEntity existingStudy : CollectionUtils.emptyIfNull(app.getStudies())) {
       UserStudyDetails studyResponse = UserMapper.toUserStudyDetails(existingStudy);
-      setSelectedAndStudyPermission(adminDetails, app.getId(), studyResponse);
+      if (adminDetails.isSuperAdmin()) {
+        studyResponse.setPermission(Permission.EDIT.value());
+        studyResponse.setSelected(true);
+      } else {
+        setSelectedAndStudyPermission(adminDetails, app.getId(), studyResponse);
+      }
       List<UserSiteDetails> userSites = new ArrayList<>();
       List<SiteEntity> sites = existingStudy.getSites();
       for (SiteEntity site : CollectionUtils.emptyIfNull(sites)) {
         UserSiteDetails siteResponse = UserMapper.toUserSiteDetails(site);
-        setSelectedAndSitePermission(
-            site.getId(), adminDetails, app.getId(), siteResponse, studyResponse.getStudyId());
+        if (adminDetails.isSuperAdmin()) {
+          siteResponse.setPermission(Permission.EDIT.value());
+          siteResponse.setSelected(true);
+        } else {
+          setSelectedAndSitePermission(
+              site.getId(), adminDetails, app.getId(), siteResponse, studyResponse.getStudyId());
+        }
         userSites.add(siteResponse);
       }
 

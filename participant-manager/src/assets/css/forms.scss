@@ -1,14 +1,14 @@
 @import "./colors.scss";
 #body-container {
   label {
-    font-weight: 700;
+    font-weight: 600;
   }
   input,
   textarea,
   select {
     font-size: 120%;
     border: none;
-    font-weight: 700;
+    font-weight: 600;
   }
   input:focus,
   textarea:focus,
@@ -22,23 +22,25 @@
   }
   .bg__white label {
     margin-bottom: 0;
-    font-size: 68.8%;
+    font-size: 70.8%;
     line-height: 87.5%;
     color: var(--light-blue);
+    text-transform: capitalize;
   }
   .bg__white .label {
     margin-bottom: 0;
     font-size: 68.8%;
     line-height: 87.5%;
     color: var(--light-blue);
+    text-transform: capitalize;
   }
   .bg__white input {
     background: transparent;
     font-size: 100%;
     padding: 0px;
-    color: var(--black);
+    color: var(--space-gray);
     height: auto;
-    font-weight: 700;
+    font-weight: 600;
   }
   .select__form-control {
     padding: 0;
@@ -89,7 +91,7 @@
     margin-right: 10px;
   }
   .user__details .form-group .custom__labels label:before {
-    content: "../svgs/tick.svg";
+    content: url("assets/svgs/tick.svg");
     appearance: none;
     background-color: transparent;
     border: none;
@@ -193,7 +195,7 @@
   }
   .form-item__element--select {
     font-size: 100%;
-    font-weight: 700;
+    font-weight: 600;
   }
   .form-item__element--select:invalid {
     color: var(--oslo-gray);
@@ -206,8 +208,17 @@
     font-size: 100%;
   }
   .form-item__element--select option {
-    color: var(--black);
-    font-weight: 700;
+    color: var(--space-gray);
+    font-weight: 600;
     font-size: 100%;
   }
+}
+
+.custom__labels input[value="false"] + label:before {
+  content: url("assets/svgs/tick.svg");
+  visibility: hidden;
+}
+.custom__labels input[value="true"] + label:before {
+  content: url("assets/svgs/tick.svg");
+  visibility: visible;
 }
