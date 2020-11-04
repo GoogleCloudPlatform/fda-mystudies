@@ -22,7 +22,7 @@
           {{
             user.status === userStatus.Deactivated
               ? "Activate User"
-              : "Deactivate User"
+              : (user.status === userStatus.Invited)?"Delete User": "Deactivate User"
           }}
         </button>
         <button

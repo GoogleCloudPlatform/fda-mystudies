@@ -597,6 +597,7 @@
                 </td>
               </tr>
             </tbody>
+            <div *ngIf="siteParticipants.participantRegistryDetail.registryParticipants.length===0">No records found</div>
             <tfoot>
               <tr>
                 <td colspan="4">
@@ -604,7 +605,9 @@
                 </td>
               </tr>
             </tfoot>
+          
           </table>
+           
         </div>
       </div>
     </div>
