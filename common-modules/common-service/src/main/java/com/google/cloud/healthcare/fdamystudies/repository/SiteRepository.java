@@ -88,4 +88,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + ") AS enrolled ON invites.site_id=enrolled.site_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> getEnrolledInvitedCount();
+
+  @Query("SELECT site from SiteEntity site where site.study.id= :studyId")
+  public List<SiteEntity> findSitesByStudyId(String studyId);
 }
