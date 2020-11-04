@@ -1217,44 +1217,46 @@ public class SiteServiceImpl implements SiteService {
         getEnrolledCountForOpenStudyGroupBySiteId(study);
 
     for (SitePermissionEntity sitePermissionEntity : sitePermissions) {
-      EnrolledInvitedCount enrolledInvitedCount =
-          enrolledInvitedCountMap.get(sitePermissionEntity.getSite().getId());
+      if (sitePermissionEntity.getSite().getStatus().equals(SiteStatus.ACTIVE.value())) {
+        EnrolledInvitedCount enrolledInvitedCount =
+            enrolledInvitedCountMap.get(sitePermissionEntity.getSite().getId());
 
-      Long invitedCount = 0L;
-      Long enrolledCount = 0L;
-      if (enrolledInvitedCount != null) {
-        invitedCount = enrolledInvitedCount.getInvitedCount();
-        enrolledCount = enrolledInvitedCount.getEnrolledCount();
+        Long invitedCount = 0L;
+        Long enrolledCount = 0L;
+        if (enrolledInvitedCount != null) {
+          invitedCount = enrolledInvitedCount.getInvitedCount();
+          enrolledCount = enrolledInvitedCount.getEnrolledCount();
+        }
+
+        SiteDetails site = new SiteDetails();
+        site.setId(sitePermissionEntity.getSite().getId());
+        site.setName(sitePermissionEntity.getSite().getLocation().getName());
+
+        String studyType = study.getType();
+        if (studyType.equals(OPEN_STUDY)
+            && sitePermissionEntity.getSite().getTargetEnrollment() != null) {
+          site.setEnrolled(
+              enrolledInvitedCountForOpenStudyBySiteId != null
+                  ? enrolledInvitedCountForOpenStudyBySiteId.get(
+                      sitePermissionEntity.getSite().getId())
+                  : 0L);
+          site.setInvited(Long.valueOf(sitePermissionEntity.getSite().getTargetEnrollment()));
+        } else if (studyType.equals(CLOSE_STUDY)) {
+          site.setInvited(invitedCount);
+          site.setEnrolled(enrolledCount);
+        }
+
+        if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
+          Double percentage =
+              (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
+          site.setEnrollmentPercentage(percentage);
+        } else if (site.getInvited() != 0
+            && site.getEnrolled() >= site.getInvited()
+            && studyType.equals(OPEN_STUDY)) {
+          site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
+        }
+        studyDetail.getSites().add(site);
       }
-
-      SiteDetails site = new SiteDetails();
-      site.setId(sitePermissionEntity.getSite().getId());
-      site.setName(sitePermissionEntity.getSite().getLocation().getName());
-
-      String studyType = study.getType();
-      if (studyType.equals(OPEN_STUDY)
-          && sitePermissionEntity.getSite().getTargetEnrollment() != null) {
-        site.setEnrolled(
-            enrolledInvitedCountForOpenStudyBySiteId != null
-                ? enrolledInvitedCountForOpenStudyBySiteId.get(
-                    sitePermissionEntity.getSite().getId())
-                : 0L);
-        site.setInvited(Long.valueOf(sitePermissionEntity.getSite().getTargetEnrollment()));
-      } else if (studyType.equals(CLOSE_STUDY)) {
-        site.setInvited(invitedCount);
-        site.setEnrolled(enrolledCount);
-      }
-
-      if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
-        Double percentage =
-            (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
-        site.setEnrollmentPercentage(percentage);
-      } else if (site.getInvited() != 0
-          && site.getEnrolled() >= site.getInvited()
-          && studyType.equals(OPEN_STUDY)) {
-        site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
-      }
-      studyDetail.getSites().add(site);
     }
   }
 
