@@ -12,7 +12,6 @@
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>participant-manager-datastore</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
   <name>participant-manager-datastore</name>
   <description>Paricipant Manager Datastore</description>
 

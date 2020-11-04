@@ -1,5 +1,5 @@
 steps:
 - name: 'maven'
-  args: ['mvn', '-B', 'package', '-Pprod', 'com.google.cloud.tools:jib-maven-plugin:2.5.2:build', '-Dimage=gcr.io/$PROJECT_ID/participant-enroll-datastore']
+  args: ['mvn', '-B', 'package', 'com.google.cloud.tools:jib-maven-plugin:2.5.2:build', '-Dimage=gcr.io/$PROJECT_ID/participant-enroll-datastore']
   dir: "participant-datastore/enroll-mgmt-module"
 

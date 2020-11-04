@@ -13,7 +13,6 @@
   </parent>
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>response-server-service</artifactId>
-  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>response-server-service</name>
   <description>Response Server web service components for the FDA MyStudies Open Implementation</description>

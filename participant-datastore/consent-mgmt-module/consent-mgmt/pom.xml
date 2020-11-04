@@ -12,7 +12,6 @@
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>ConsentMgmtServicesWs</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
   <name>ConsentMgmtServicesWs</name>
   <description>Project containing user management services</description>
 
