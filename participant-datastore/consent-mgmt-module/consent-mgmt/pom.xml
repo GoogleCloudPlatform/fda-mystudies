@@ -12,6 +12,7 @@
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>ConsentMgmtServicesWs</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
   <name>ConsentMgmtServicesWs</name>
   <description>Project containing user management services</description>
 
@@ -37,6 +38,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
@@ -258,6 +260,9 @@
         <groupId>com.google.cloud.tools</groupId>
         <artifactId>jib-maven-plugin</artifactId>
         <version>2.6.0</version>
+        <configuration>
+          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
+        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -12,6 +12,7 @@
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>participant-manager-datastore</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
   <name>participant-manager-datastore</name>
   <description>Paricipant Manager Datastore</description>
 
@@ -28,20 +29,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.logging.log4j</groupId>
-          <artifactId>log4j-to-slf4j</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -188,9 +175,7 @@
         <artifactId>jib-maven-plugin</artifactId>
         <version>2.6.0</version>
         <configuration>
-          <to>
-            <image>${image_path}</image>
-          </to>
+          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
         </configuration>
       </plugin>
     </plugins>
