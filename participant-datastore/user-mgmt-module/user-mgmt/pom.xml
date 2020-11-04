@@ -261,7 +261,7 @@
 				<version>2.6.0</version>
 				<configuration>
 					<from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
-					<container><appRoot>/usr/local/tomcat/webapps/ROOT</appRoot></container>
+					<container><appRoot>/usr/local/tomcat/webapps/participant-user-datastore</appRoot></container>
 				</configuration>
 			</plugin>
 		</plugins>
