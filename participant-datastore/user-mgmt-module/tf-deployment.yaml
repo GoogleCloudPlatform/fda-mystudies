@@ -38,13 +38,15 @@ spec:
                   key: dbname
             # EMAIL SERVER
             - name: MAIL_USERNAME
-              secretKeyRef:
-                name: email-credentials
-                key: email_address
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_address
             - name: MAIL_PASSWORD
-              secretKeyRef:
-                name: email-credentials
-                key: email_password
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_password
             - name: FROM_EMAIL_ADDRESS
               valueFrom:
                 secretKeyRef:
