@@ -136,6 +136,12 @@
 				<version>1.2.3.RELEASE</version>
 				<type>pom</type>
 				<scope>import</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.collections</groupId>
+						<artifactId>google-collections</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
