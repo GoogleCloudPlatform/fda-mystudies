@@ -22,7 +22,7 @@ const errorMessages = {
   EC_0014: 'Study not found',
   EC_0015: 'Location not found',
   EC_0016:
-    'This location is being used as an active site in one or more studies and cannot be decomissioned',
+    'This location is being used as an active site in one or more studies and cannot be decommissioned',
   EC_0017: 'You are not authorized to access this information',
   EC_0018: 'The request cannot be fulfilled due to bad syntax',
   EC_0019: 'Unauthorized or Invalid token',
