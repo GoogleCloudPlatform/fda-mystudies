@@ -63,6 +63,16 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: smtp_hostname
+            - name: MAIL_CONTACT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: contact_email_address
+            - name: MAIL_FROM_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: from_email_address
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
@@ -70,12 +80,30 @@ spec:
               value: "http://hydra-np:50000/hydra"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/oauth-scim-service"
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: base_url
+            # TODO(#1792): replace with actual values.
+            - name: IOS_DEEPLINK_URL
+              value: ""
+            - name: ANDROID_DEEPLINK_URL
+              value: ""
+            - name: ENCRYPTOR_PASSWORD
+              value: ""
             # MISC
             - name: LOG_PATH
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
+            - name: TEMP_REGID_EXPIRY_MINUTES
+              value: "30"
+            - name: ORG_NAME
+              secretKeyRef:
+                name: shared-secrets
+                key: org_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
