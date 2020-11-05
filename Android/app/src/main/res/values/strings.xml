@@ -563,8 +563,4 @@
     <string name="loginflow">loginflow</string>
     <string name="logintype">logintype</string>
 
-
-    <!--must change strings-->
-    <string name="FileProvider_authorities">com.myfileprovider</string>
-
 </resources>

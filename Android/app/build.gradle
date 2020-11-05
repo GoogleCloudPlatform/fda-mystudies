@@ -58,7 +58,7 @@ android {
     productFlavors {
         fda {
             dimension 'version'
-            applicationId "com.harvard.fda"
+            applicationId "com.google.FDAMyStudies"
             versionCode 15
             versionName "1.0"
         }
