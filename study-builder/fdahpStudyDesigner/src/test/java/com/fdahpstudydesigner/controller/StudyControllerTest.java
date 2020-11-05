@@ -102,15 +102,18 @@ public class StudyControllerTest extends BaseMockIT {
 
   private static final int STUDY_ID_INT_VALUE = 678574;
 
-  private static final String STUDIES_META_DATA_URI = "/studies/studymetadata";
+  private static final String STUDIES_META_DATA_URI =
+      "http://35.222.67.4:8087/participant-user-datastore/studies/studymetadata";
 
-  private static final String STUDY_META_DATA_URI = "/studymetadata";
+  private static final String STUDY_META_DATA_URI =
+      "http://35.222.67.4:8087/response-datastore/studymetadata";
 
   private static final String TEST_STUDY_ID_STRING = "678680";
 
   @Autowired NotificationDAOImpl notificationDaoImpl;
 
-  private static final String OAUTH_TOKEN = "/oauth2/token";
+  private static final String OAUTH_TOKEN =
+      "http://35.222.67.4:8084/oauth-scim-service/oauth2/token";
 
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
