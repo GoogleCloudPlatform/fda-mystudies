@@ -101,7 +101,11 @@ struct HydraAPI {
           completion(false, .unwrapError)
         }
       } else {
-        completion(false, error)
+        if error?.code == HTTPError.internalServerError.rawValue {
+          completion(false, ApiError.sessionExpiredError)
+        } else {
+          completion(false, error)
+        }
       }
     }
   }
