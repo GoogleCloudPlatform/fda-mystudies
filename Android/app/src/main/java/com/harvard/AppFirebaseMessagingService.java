@@ -17,6 +17,7 @@ package com.harvard;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,7 +45,6 @@ import io.realm.RealmList;
 import java.util.Random;
 
 public class AppFirebaseMessagingService extends FirebaseMessagingService {
-
   private NotificationManagerCompat notificationManager;
   public static String TYPE = "type";
   public static String SUBTYPE = "subtype";
@@ -54,6 +54,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
   private static String MESSAGE = "message";
   private static String NOTIFICATION_INTENT = "notificationIntent";
   private static String LOCAL_NOTIFICATION = "localNotification";
+  private static String NOTIFICATION_TYPE = "Study";
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
 
@@ -65,157 +66,53 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
     dbServiceSubscriber.closeRealmObj(realm);
   }
 
-  private void handleNotification(RemoteMessage remoteMessage) {
+  public void handleNotification(RemoteMessage remoteMessage) {
     if (!AppController.getHelperSharedPreference()
         .readPreference(this, getString(R.string.userid), "")
         .equalsIgnoreCase("")) {
       AppController.getHelperSharedPreference()
           .writePreference(this, getString(R.string.notification), "true");
-
       Intent intent = new Intent();
       intent.setAction("com.fda.notificationReceived");
       sendBroadcast(intent);
-
-      Intent notificationIntent;
-      if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-        notificationIntent = new Intent(this, StudyActivity.class);
-      } else {
-        notificationIntent = new Intent(this, StandaloneActivity.class);
-      }
-      String type = "";
-      try {
-        type = remoteMessage.getData().get(TYPE);
-      } catch (Exception e) {
-        type = "";
-        Logger.log(e);
-      }
-      String subtype = "";
-      try {
-        subtype = remoteMessage.getData().get(SUBTYPE);
-      } catch (Exception e) {
-        subtype = "";
-        Logger.log(e);
-      }
-      String studyId = "";
-      try {
-        studyId = remoteMessage.getData().get(STUDYID);
-      } catch (Exception e) {
-        studyId = "";
-        Logger.log(e);
-      }
-      String audience = "";
-      try {
-        audience = remoteMessage.getData().get(AUDIENCE);
-      } catch (Exception e) {
-        audience = "";
-        Logger.log(e);
-      }
-      String title = "";
-      try {
-        title = remoteMessage.getData().get(TITLE);
-      } catch (Exception e) {
-        title = "";
-        Logger.log(e);
-      }
-      String message = "";
-      try {
-        message = remoteMessage.getData().get(MESSAGE);
-      } catch (Exception e) {
-        message = "";
-        Logger.log(e);
-      }
-
-      if (message.contains("has been resumed.")) {
-        type = "Study";
-        subtype = "Activity";
-      }
-
-      notificationIntent.putExtra(StudyActivity.FROM, NOTIFICATION_INTENT);
-
-      notificationIntent.putExtra(TYPE, type);
-      notificationIntent.putExtra(SUBTYPE, subtype);
-      notificationIntent.putExtra(STUDYID, studyId);
-      notificationIntent.putExtra(AUDIENCE, audience);
-      notificationIntent.putExtra(LOCAL_NOTIFICATION, "");
-      notificationIntent.putExtra(TITLE, title);
-      notificationIntent.putExtra(MESSAGE, message);
-      notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-      Random random = new Random();
-      int m = random.nextInt(9999 - 1000) + 1000;
-      PendingIntent contentIntent =
-          PendingIntent.getActivity(this, m, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-      if (type.equalsIgnoreCase("Study")) {
-
-        realm = AppController.getRealmobj(this);
-        Study study = dbServiceSubscriber.getStudyListFromDB(realm);
-        StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
-        dbServiceSubscriber.closeRealmObj(realm);
-        if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-          if (study != null) {
-            RealmList<StudyList> studyListArrayList = study.getStudies();
-            for (int j = 0; j < studyListArrayList.size(); j++) {
-              if (studyId.equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
-                if (studyListArrayList
-                        .get(j)
-                        .getStudyStatus()
-                        .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
-                  sendNotification(message, contentIntent);
-                }
-              }
-            }
-          }
-        } else {
-          if (studyData != null
-                  && studyData.getStudies() != null
-                  && studyData.getStudies().get(0) != null
-                  && studyData.getStudies().get(0).getStatus() != null
-                  && studyData
-                  .getStudies()
-                  .get(0)
-                  .getStatus()
-                  .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
-            sendNotification(message, contentIntent);
-          }
-        }
-      } else {
-        sendNotification(message, contentIntent);
-      }
+      setNotification(remoteMessage, this, realm, dbServiceSubscriber);
+      dbServiceSubscriber.closeRealmObj(realm);
     }
   }
 
-  // This method is only generating push notification
-  // It is same as we did in earlier posts
-  private void sendNotification(String messageBody, PendingIntent pendingIntent) {
+  private void sendNotification(
+      String messageBody,
+      PendingIntent pendingIntent,
+      Context context,
+      Realm realm,
+      DbServiceSubscriber dbServiceSubscriber) {
     if (notificationManager == null) {
-      notificationManager = NotificationManagerCompat.from(AppFirebaseMessagingService.this);
+      notificationManager = NotificationManagerCompat.from(context);
     }
-    realm = AppController.getRealmobj(this);
     UserProfileData userProfileData = dbServiceSubscriber.getUserProfileData(realm);
     boolean isNotification = true;
     if (userProfileData != null) {
       isNotification = userProfileData.getSettings().isRemoteNotifications();
     }
-    dbServiceSubscriber.closeRealmObj(realm);
     int notifyIcon = R.mipmap.ic_launcher;
-    Bitmap icon = BitmapFactory.decodeResource(getResources(), notifyIcon);
+    Bitmap icon = BitmapFactory.decodeResource(context.getResources(), notifyIcon);
     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-      Drawable drawable = getDrawable(notifyIcon);
+      Drawable drawable = context.getDrawable(notifyIcon);
       icon =
-              Bitmap.createBitmap(
-                      drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+          Bitmap.createBitmap(
+              drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
       Canvas canvas = new Canvas(icon);
       drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
       drawable.draw(canvas);
     } else {
-      icon = BitmapFactory.decodeResource(getResources(), notifyIcon);
+      icon = BitmapFactory.decodeResource(context.getResources(), notifyIcon);
     }
     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     NotificationCompat.Builder notificationBuilder =
-        new NotificationCompat.Builder(this)
+        new NotificationCompat.Builder(context)
             .setSmallIcon(R.drawable.icon)
             .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
-            .setContentTitle(getResources().getString(R.string.app_name))
+            .setContentTitle(context.getResources().getString(R.string.app_name))
             .setContentText(messageBody)
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
@@ -223,12 +120,117 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_INFO)
             .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
             .setGroup("group");
-
     Notification notification = notificationBuilder.build();
     Random random = new Random();
     int m = random.nextInt(9999 - 1000) + 1000;
     if (isNotification) {
       notificationManager.notify(m, notification);
+    }
+  }
+
+  public void setNotification(
+      RemoteMessage remoteMessage,
+      Context context,
+      Realm realm,
+      DbServiceSubscriber dbServiceSubscriber) {
+    Intent notificationIntent;
+    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
+      notificationIntent = new Intent(context, StudyActivity.class);
+    } else {
+      notificationIntent = new Intent(context, StandaloneActivity.class);
+    }
+    String type = "";
+    try {
+      type = remoteMessage.getData().get(TYPE);
+    } catch (Exception e) {
+      type = "";
+      Logger.log(e);
+    }
+    String subtype = "";
+    try {
+      subtype = remoteMessage.getData().get(SUBTYPE);
+    } catch (Exception e) {
+      subtype = "";
+      Logger.log(e);
+    }
+    String studyId = "";
+    try {
+      studyId = remoteMessage.getData().get(STUDYID);
+    } catch (Exception e) {
+      studyId = "";
+      Logger.log(e);
+    }
+    String audience = "";
+    try {
+      audience = remoteMessage.getData().get(AUDIENCE);
+    } catch (Exception e) {
+      audience = "";
+      Logger.log(e);
+    }
+    String title = "";
+    try {
+      title = remoteMessage.getData().get(TITLE);
+    } catch (Exception e) {
+      title = "";
+      Logger.log(e);
+    }
+    String message = "";
+    try {
+      message = remoteMessage.getData().get(MESSAGE);
+    } catch (Exception e) {
+      message = "";
+      Logger.log(e);
+    }
+    if (message.contains("has been resumed.")) {
+      type = "Study";
+      subtype = "Activity";
+    }
+    notificationIntent.putExtra(StudyActivity.FROM, NOTIFICATION_INTENT);
+    notificationIntent.putExtra(TYPE, type);
+    notificationIntent.putExtra(SUBTYPE, subtype);
+    notificationIntent.putExtra(STUDYID, studyId);
+    notificationIntent.putExtra(AUDIENCE, audience);
+    notificationIntent.putExtra(LOCAL_NOTIFICATION, "");
+    notificationIntent.putExtra(TITLE, title);
+    notificationIntent.putExtra(MESSAGE, message);
+    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    Random random = new Random();
+    int m = random.nextInt(9999 - 1000) + 1000;
+    PendingIntent contentIntent =
+        PendingIntent.getActivity(
+            context, m, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    if (type.equalsIgnoreCase(NOTIFICATION_TYPE)) {
+      Study study = dbServiceSubscriber.getStudyListFromDB(realm);
+      StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
+      if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
+        if (study != null) {
+          RealmList<StudyList> studyListArrayList = study.getStudies();
+          for (int j = 0; j < studyListArrayList.size(); j++) {
+            if (studyId.equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
+              if (studyListArrayList
+                  .get(j)
+                  .getStudyStatus()
+                  .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
+                sendNotification(message, contentIntent, context, realm, dbServiceSubscriber);
+              }
+            }
+          }
+        }
+      } else {
+        if (studyData != null
+            && studyData.getStudies() != null
+            && studyData.getStudies().get(0) != null
+            && studyData.getStudies().get(0).getStatus() != null
+            && studyData
+                .getStudies()
+                .get(0)
+                .getStatus()
+                .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
+          sendNotification(message, contentIntent, context, realm, dbServiceSubscriber);
+        }
+      }
+    } else {
+      sendNotification(message, contentIntent, context, realm, dbServiceSubscriber);
     }
   }
 }
