@@ -24,11 +24,16 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   ) {
     super();
   }
+
   fileChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    const selectedFile: File = (target.files as FileList)[0];
-    this.file = selectedFile;
-    this.fileName = this.file.name;
+    if (target.files?.length) {
+      const selectedFile: File = (target.files as FileList)[0];
+      this.file = selectedFile;
+      this.fileName = this.file.name;
+    } else {
+      this.fileName = '';
+    }
   }
 
   cancelled(): void {

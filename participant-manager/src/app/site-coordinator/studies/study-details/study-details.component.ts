@@ -44,6 +44,7 @@ export class StudyDetailsComponent
   }
 
   ngOnInit(): void {
+    console.log('study details');
     this.sharedService.updateSearchPlaceHolder(
       'Search by Site ID or Participant Email',
     );
@@ -77,11 +78,11 @@ export class StudyDetailsComponent
         }
         this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
-            participant.enrollmentStatus!==EnrollmentStatus.NotEligile && (
-            participant.email?.toLowerCase().includes(query.toLowerCase()) ||
-            participant.locationName
-              ?.toLowerCase()
-              .includes(query.toLowerCase())),
+            participant.enrollmentStatus !== EnrollmentStatus.NotEligile &&
+            (participant.email?.toLowerCase().includes(query.toLowerCase()) ||
+              participant.locationName
+                ?.toLowerCase()
+                .includes(query.toLowerCase())),
         );
         return this.studyDetailsBackup;
       }),
