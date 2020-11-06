@@ -72,7 +72,7 @@ public enum ErrorCode {
       "Sorry, an error has occurred and your request could not be processed. Please try again later."),
 
   CURRENT_PASSWORD_INVALID(
-      400, "EC_0010", Constants.BAD_REQUEST, "Current password entered is invalid"),
+      400, "EC_0010", Constants.BAD_REQUEST, "The current password entered is incorrect"),
 
   ENFORCE_PASSWORD_HISTORY(
       400,
@@ -258,7 +258,6 @@ public enum ErrorCode {
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
       403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study"),
 
-
   CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION(
       403,
       "EC_0126",
@@ -276,7 +275,6 @@ public enum ErrorCode {
       "EC_0125",
       HttpStatus.FORBIDDEN.toString(),
       "Invitation cannot be enabled as participant record is enabled in another site within the same study.");
-
 
   private final int status;
   private final String code;
