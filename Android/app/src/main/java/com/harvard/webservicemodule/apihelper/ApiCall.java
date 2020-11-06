@@ -279,7 +279,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
               "userId",
               SharedPreferenceHelper.readPreference(
                   context, context.getString(R.string.userid), ""));
-          refreshTokenJsonData.put("redirect_uri", BuildConfig.AUTH_SERVER_REDIRECT_URL);
+          refreshTokenJsonData.put("redirect_uri", Urls.AUTH_SERVER_REDIRECT_URL);
           refreshTokenJsonData.put("client_id", "oauth-scim-client-id");
           refreshTokenJsonData.put("grant_type", "refresh_token");
 
