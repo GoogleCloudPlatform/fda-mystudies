@@ -48,7 +48,7 @@
     height: auto;
   }
   .select__form-control__parent {
-    border: 1px solid var(--periwinkle-gray);
+    border: 1px solid var(--semi-dark-gray);
     padding: 20px;
     border-radius: 7px;
   }
@@ -82,7 +82,7 @@
     content: "";
     appearance: none;
     background-color: var(--white);
-    border: 1px solid var(--periwinkle-gray);
+    border: 1px solid var(--semi-dark-gray);
     padding: 7px;
     display: inline-block;
     position: relative;
@@ -141,7 +141,7 @@
     top: 0;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--periwinkle-gray);
+    border: 1px solid var(--semi-dark-gray);
     border-radius: 100%;
     background: var(--white);
   }
@@ -176,7 +176,7 @@
     top: 0;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--periwinkle-gray);
+    border: 1px solid var(--semi-dark-gray);
     border-radius: 100%;
     background: var(--white);
   }
