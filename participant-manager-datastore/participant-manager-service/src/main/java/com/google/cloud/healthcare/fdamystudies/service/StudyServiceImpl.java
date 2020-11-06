@@ -35,7 +35,6 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyCount;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
@@ -80,8 +79,6 @@ public class StudyServiceImpl implements StudyService {
   @Autowired private SiteRepository siteRepository;
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
-
-  @Autowired private AppPermissionRepository appPermissionRepository;
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
@@ -360,11 +357,21 @@ public class StudyServiceImpl implements StudyService {
     } else {
       Optional<StudyPermissionEntity> optStudyPermission =
           studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
-      app =
-          optStudyPermission
-              .orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED))
-              .getApp();
-      studyPermissionEntity = optStudyPermission.get();
+      StudyEntity study = optStudy.get();
+      if (study.getType().equals(OPEN_STUDY) && !optStudyPermission.isPresent()) {
+        List<SitePermissionEntity> optSitePermission =
+            sitePermissionRepository.findByUserIdAndStudyId(userId, studyId);
+        if (CollectionUtils.isEmpty(optSitePermission)) {
+          throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+        }
+        app = study.getApp();
+      } else {
+        app =
+            optStudyPermission
+                .orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED))
+                .getApp();
+        studyPermissionEntity = optStudyPermission.get();
+      }
 
       if (app == null) {
         throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
@@ -398,9 +405,12 @@ public class StudyServiceImpl implements StudyService {
       if (optSiteEntity.isPresent()) {
         participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
       }
-
-      participantRegistryDetail.setOpenStudySitePermission(
-          user.isSuperAdmin() ? Permission.EDIT.value() : studyPermissionEntity.getEdit().value());
+      if (!user.isSuperAdmin() && studyPermissionEntity != null) {
+        participantRegistryDetail.setOpenStudySitePermission(
+            studyPermissionEntity.getEdit().value());
+      } else {
+        participantRegistryDetail.setOpenStudySitePermission(Permission.EDIT.value());
+      }
     }
 
     List<ParticipantRegistrySiteEntity> participantSiteList = null;
