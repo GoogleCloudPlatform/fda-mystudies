@@ -1,0 +1,75 @@
+<div class="subheader p-none">
+  <div class="max__w__1280 m-none">
+    <div class="flex__justify__space-between">
+      <div class="subheader__title">Manage Users</div>
+      <div>
+        <button
+          class="btn btn-primary width__auto blue__btn font14"
+          routerLink="/coordinator/users/new"
+        >
+          Add New User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="max__w__1280 m-none" *ngIf="manageUser$ | async as manageUsers">
+  <div class="cards1 m-none">
+    <table
+      class="table table-striped custom__table"
+      [mfData]="manageUsers.users"
+      #mf="mfDataTable"
+      [mfRowsOnPage]="10"
+    >
+      <thead class="custom__thead">
+        <tr>
+          <th>
+            <mfDefaultSorter by="firstName">First Name</mfDefaultSorter>
+          </th>
+          <th>
+            <mfDefaultSorter by="lastName">Last Name</mfDefaultSorter>
+          </th>
+          <th>
+            <mfDefaultSorter by="email">Email</mfDefaultSorter>
+          </th>
+          <th>
+            <mfDefaultSorter by="status">Status</mfDefaultSorter>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="custom__tbody">
+        <tr
+          class="border__bottom__red border-top__c4d1e6 progress__bar"
+          *ngFor="let user of mf.data"
+          routerLink="/coordinator/users/{{ user.id }}"
+        >
+          <td>
+            <span class="tbl__td__label">First Name:</span>
+            <span class="no_st_en">{{ user.firstName }}</span>
+          </td>
+          <td>
+            <span class="tbl__td__label">Last Name:</span>
+            {{ user.lastName }}
+          </td>
+          <td>
+            <span class="tbl__td__label">Email:</span>
+            {{ user.email }}
+          </td>
+          <td>
+            <span class="tbl__td__label">Status:</span>
+            <span [ngClass]="statusColour(user.status)">
+              {{ user.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot class="custom__tfoot">
+        <tr>
+          <td colspan="4">
+            <mfBootstrapPaginator></mfBootstrapPaginator>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

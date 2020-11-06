@@ -1,0 +1,21 @@
+<!-- 
+  Copyright 2020 Google LLC
+ 
+  Use of this source code is governed by an APACHE LICENSE, VERSION 2.0
+  that can be found in the LICENSE file or at
+  https://www.apache.org/licenses/LICENSE-2.0.html -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="12.728"
+  height="12.728"
+  viewBox="0 0 12.728 12.728"
+>
+  <defs>
+    <style
+    >.a{fill:none;stroke:#5f6368;stroke-miterlimit:10;stroke-width:2px;}</style>
+  </defs>
+  <g transform="translate(105.359 -345.775) rotate(45)">
+    <line class="a" x2="16" transform="translate(171 319)" />
+    <line class="a" y1="16" transform="translate(179 311)" />
+  </g>
+</svg>

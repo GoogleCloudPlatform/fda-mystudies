@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -50,9 +51,27 @@ extension String {
   }
 
   static func randomString(length: Int) -> String {
-    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    return String((0..<length).compactMap { _ in letters.randomElement() })
+    let c = Array("abcdefghjklmnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ12345789")
+    let k = c.count
+
+    var result = [Character](repeating: "-", count: length)
+
+    for i in 0..<length {
+      let r = Int.random(in: 0...(k - 1))
+      result[i] = c[r]
+    }
+
+    return String(result)
   }
+
+  func base64ToBase64url() -> String {
+    return
+      self
+      .replacingOccurrences(of: "+", with: "-")
+      .replacingOccurrences(of: "/", with: "_")
+      .replacingOccurrences(of: "=", with: "")
+  }
+
 }
 
 extension String {

@@ -3,7 +3,10 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.CommonApplicationPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Arrays;
@@ -33,9 +36,15 @@ public final class AuditEventMapper {
     auditRequest.setAppVersion(getValue(request, APP_VERSION));
     auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
     auditRequest.setUserId(getValue(request, USER_ID));
-    auditRequest.setSource(getValue(request, SOURCE));
+
+    String source = getValue(request, SOURCE);
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (platformComponent == null) {
+      throw new ErrorCodeException(ErrorCode.INVALID_SOURCE_NAME);
+    }
+    auditRequest.setSource(source);
+
     auditRequest.setUserIp(getUserIP(request));
-    auditRequest.setSource(getValue(request, SOURCE));
 
     MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
     auditRequest.setMobilePlatform(mobilePlatform.getValue());
@@ -75,8 +84,10 @@ public final class AuditEventMapper {
     if (eventEnum.getSource().isPresent()) {
       auditRequest.setSource(eventEnum.getSource().get().getValue());
     }
-    
-    auditRequest.setDestination(eventEnum.getDestination().getValue());
+
+    if (eventEnum.getDestination() != null) {
+      auditRequest.setDestination(eventEnum.getDestination().getValue());
+    }
 
     if (eventEnum.getUserAccessLevel().isPresent()) {
       auditRequest.setUserAccessLevel(eventEnum.getUserAccessLevel().get().getValue());
@@ -88,7 +99,7 @@ public final class AuditEventMapper {
     auditRequest.setSourceApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setDestinationApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setPlatformVersion(commonPropConfig.getApplicationVersion());
-    auditRequest.setOccured(new Timestamp(Instant.now().toEpochMilli()));
+    auditRequest.setOccurred(new Timestamp(Instant.now().toEpochMilli()));
     return auditRequest;
   }
 }

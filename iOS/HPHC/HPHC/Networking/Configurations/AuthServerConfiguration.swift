@@ -81,7 +81,6 @@ class AuthServerConfiguration: NetworkConfiguration {
 
     if User.currentUser.authToken != nil {
       header[kUserAuthToken] = User.currentUser.authToken
-      header["clientToken"] = User.currentUser.clientToken
     } else {
       header["clientId"] = clientId
       header["secretKey"] = secretKey

@@ -492,6 +492,10 @@ class Utilities: NSObject {
     return Bundle.main.bundleIdentifier!
   }
 
+  class func currentDevicePlatform() -> String {
+    return "IOS"
+  }
+
   // MARK: Alert handlers
 
   class func showAlertWithTitleAndMessage(title: String, message: String, on vc: UIViewController) {
@@ -517,6 +521,16 @@ class Utilities: NSObject {
     }
 
     return randomString
+  }
+
+  class func dictionaryToData(value: JSONDictionary) -> Data? {
+    guard
+      let theJSONData = try? JSONSerialization.data(
+        withJSONObject: value,
+        options: []
+      )
+    else { return nil }
+    return theJSONData
   }
 }
 

@@ -51,6 +51,10 @@ public class Urls {
           + "&redirect_uri=" + AUTH_SERVER_REDIRECT_URL
           + "&state=" + FdaApplication.getRandomString();
 
+  // Deeplinks
+  public static String DEEPLINK_CALLBACK="/mystudies/callback";
+  public static String DEEPLINK_ACTIVATION="/mystudies/activation";
+
   // participant-datastore Server
   public static String REGISTER_USER = "/register";
   public static String UPDATE_USER_PROFILE = "/updateUserProfile";
@@ -61,7 +65,7 @@ public class Urls {
   public static String WITHDRAW = "/withdrawfromstudy";
   public static String CONTACT_US = "/contactUs";
   public static String FEEDBACK = "/feedback";
-
+  
   // participant-datastore Enrollment Server
   public static String UPDATE_STUDY_PREFERENCE = "/updateStudyState";
   public static String STUDY_STATE = "/studyState";

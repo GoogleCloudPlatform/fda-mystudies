@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -22,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 public class UpdateEmailStatusRequest {
 
   @ToString.Exclude
-  @Size(max = 320)
+  @Size(max = EMAIL_LENGTH)
   @Email
   private String email;
 

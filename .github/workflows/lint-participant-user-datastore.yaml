@@ -1,0 +1,25 @@
+name: lint-participant-user-datastore
+
+on:
+  pull_request:
+    paths:
+    - 'participant-datastore/user-mgmt-module/**'
+    - '.github/workflows/lint-participant-user-datastore.yml'
+jobs:
+  checkstyle_job:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: /participant-datastore/user-mgmt-module/user-mgmt
+    name: Checkstyle job
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run check style
+      uses: nikitasavinov/checkstyle-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: 'github-pr-review'
+        level: warning
+        workdir: ./participant-datastore/user-mgmt-module/user-mgmt/src
+        tool_name: user-mgmt Checks
