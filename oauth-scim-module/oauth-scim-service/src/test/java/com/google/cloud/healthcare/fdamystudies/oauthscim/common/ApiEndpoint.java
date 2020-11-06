@@ -22,13 +22,9 @@ public enum ApiEndpoint {
 
   RESET_PASSWORD("http://localhost:8002/oauth-scim-service/user/reset_password"),
 
-  REVOKE_TOKEN("http://localhost:8002/oauth-scim-service/oauth2/revoke"),
-
   LOGIN_PAGE("http://localhost:8002/oauth-scim-service/login"),
 
   CONSENT_PAGE("http://localhost:8002/oauth-scim-service/consent"),
-
-  TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/oauth2/introspect"),
 
   LOGOUT("http://localhost:8002/oauth-scim-service/users/{userId}/logout"),
 
@@ -36,7 +32,9 @@ public enum ApiEndpoint {
 
   UPDATE_EMAIL_STATUS("http://localhost:8002/oauth-scim-service/users/{userId}"),
 
-  DELETE_USER("http://localhost:8002/oauth-scim-service/users/{userId}");
+  DELETE_USER("http://localhost:8002/oauth-scim-service/users/{userId}"),
+
+  CALLBACK("http://localhost:8002/oauth-scim-service/callback");
 
   private String url;
 

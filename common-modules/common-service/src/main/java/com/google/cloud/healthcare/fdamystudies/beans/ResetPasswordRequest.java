@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -20,7 +22,7 @@ import lombok.ToString;
 public class ResetPasswordRequest {
 
   @ToString.Exclude
-  @Size(max = 320)
+  @Size(max = EMAIL_LENGTH)
   @Email
   @NotBlank
   private String email;
@@ -28,6 +30,4 @@ public class ResetPasswordRequest {
   @Size(max = 100)
   @NotBlank
   private String appId;
-
-  @ToString.Exclude private String userId;
 }

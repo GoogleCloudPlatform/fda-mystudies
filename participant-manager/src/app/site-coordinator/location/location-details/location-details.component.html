@@ -1,0 +1,82 @@
+<div class="subheader p-none pl-none">
+  <div class="max__w__1280 m-none">
+    <div class="flex__justify__space-between">
+      <div>
+        <a routerLink="/coordinator/locations" class="subheader__title">
+          <img src="assets/svgs/back-arrow.svg" alt="Backwards" />
+          <span class="pl-1">Location Details</span>
+        </a>
+      </div>
+      <div>
+        <button
+          class="btn font12__light-grey p-none"
+          name="edit_location"
+          (click)="openModal(template)"
+        >
+          <img class="mr-xs" src="assets/svgs/edit.svg" alt="edit" />
+          <span class="text__deco font12__light-grey">
+            Edit Location Details
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <div class="max__w__1280 add__location">
+    <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+      <div class="border-bottom__c4d1e6 flex__justify__space-between">
+        <div>
+          <div class="form-group">
+            <div class="label">Location ID</div>
+            <div class="font16__grey">{{ locationBackup.customId }}</div>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <div class="label">Location Name</div>
+            <div class="font16__grey">{{ locationBackup.name }}</div>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <div
+              [ngClass]="locationBackup.status == 1 ? 'active__' : 'deactive__'"
+            >
+              {{ locationBackup.status == 1 ? "Active" : "Deactivated" }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="">
+        <div class="">
+          <div class="form-group">
+            <div class="label">Description</div>
+            <div class="font16__grey">
+              {{ locationBackup.description }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="locationBackup.studyNames?.length != 0"
+      class="cards__list mb-xlg"
+    >
+      <div class="subheader__title mb-lg mt-xlg">
+        Associated Studies ( {{ locationBackup.studyNames?.length }} )
+      </div>
+      <ul data-test="studiesCount" class="box___shadow__radius">
+        <li *ngFor="let study of locationBackup.studyNames">{{ study }}</li>
+      </ul>
+    </div>
+  </div>
+  <ng-template #template>
+    <edit-location
+      [location]="location"
+      [locationId]="locationId"
+      (closeModalEvent)="closeModal($event)"
+    ></edit-location>
+  </ng-template>
+</div>

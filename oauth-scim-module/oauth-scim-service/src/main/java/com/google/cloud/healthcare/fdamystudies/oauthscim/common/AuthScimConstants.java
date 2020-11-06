@@ -39,6 +39,8 @@ public final class AuthScimConstants {
 
   public static final String PASSWORD = "password";
 
+  public static final String ACCOUNT_LOCKED_PASSWORD = "account_locked_password";
+
   public static final String EXPIRES_AT = "expires_at";
 
   public static final String SALT = "salt";
@@ -53,11 +55,9 @@ public final class AuthScimConstants {
 
   public static final String TOKEN = "token";
 
-  public static final String CORRELATION_ID = "correlation_id";
+  public static final String CORRELATION_ID = "correlationId";
 
   public static final String LOGIN_CHALLENGE = "login_challenge";
-
-  public static final String SKIP = "skip";
 
   public static final String APP_ID = "appId";
 
@@ -105,7 +105,11 @@ public final class AuthScimConstants {
 
   public static final String GRANT_SCOPE = "grant_scope";
 
+  public static final String SOURCE = "source";
+
   public static final String MOBILE_PLATFORM_COOKIE = "mystudies_mobilePlatform";
+
+  public static final String SOURCE_COOKIE = "mystudies_source";
 
   public static final String TEMP_REG_ID_COOKIE = "mystudies_tempRegId";
 

@@ -8,24 +8,28 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
+
 import com.google.cloud.MonitoredResource;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.logging.*;
+import com.google.cloud.logging.LogEntry;
+import com.google.cloud.logging.Logging;
+import com.google.cloud.logging.LoggingOptions;
+import com.google.cloud.logging.Payload;
+import com.google.cloud.logging.Severity;
+import java.util.Collections;
+import java.util.Map;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
-import java.util.Map;
-
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 
 @Service
 @ConditionalOnProperty(
     value = "commonservice.auditlogevent.enabled",
     havingValue = "true",
     matchIfMissing = true)
-public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEventService {
+public class AuditEventServiceImpl implements AuditEventService {
 
   private XLogger logger = XLoggerFactory.getXLogger(AuditEventServiceImpl.class.getName());
 
@@ -41,8 +45,9 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
     // The data to write to the log
     Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);
 
-    LogEntry entry = LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
-            .setTimestamp(auditRequest.getOccured().getTime())
+    LogEntry entry =
+        LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
+            .setTimestamp(auditRequest.getOccurred().getTime())
             .setSeverity(Severity.INFO)
             .setLogName(AUDIT_LOG_NAME)
             .setResource(MonitoredResource.newBuilder("global").build())
@@ -50,6 +55,7 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
 
     // Writes the log entry asynchronously
     logging.write(Collections.singleton(entry));
-    logger.exit(String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
+    logger.exit(
+        String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }
 }

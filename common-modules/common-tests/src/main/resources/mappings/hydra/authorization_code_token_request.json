@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "url": "/oauth2/token",
+    "url": "/hydra/oauth2/token",
     "bodyPatterns": [
       {
         "contains": "authorization_code"

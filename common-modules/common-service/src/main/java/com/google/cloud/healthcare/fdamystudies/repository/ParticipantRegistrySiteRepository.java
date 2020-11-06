@@ -9,10 +9,13 @@ package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,17 +35,33 @@ public interface ParticipantRegistrySiteRepository
 
   @Query(
       "SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id = :studyId and pr.email = :email")
-  public Optional<ParticipantRegistrySiteEntity> findByStudyIdAndEmail(
-      String studyId, String email);
+  public List<ParticipantRegistrySiteEntity> findByStudyIdAndEmail(String studyId, String email);
 
   @Query(
       "SELECT pr.onboardingStatus AS onboardingStatus, count(pr.email) AS count FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id= :siteId group by pr.onboardingStatus")
   public List<ParticipantRegistrySiteCount> findStatusCountBySiteId(String siteId);
 
   @Query(
-      "SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
+      "SELECT pr FROM ParticipantRegistrySiteEntity pr "
+          + "where pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
+  public Page<ParticipantRegistrySiteEntity> findBySiteIdAndStatusForPage(
+      String siteId, String onboardingStatus, Pageable pageable);
+
+  @Query(
+      "SELECT pr FROM ParticipantRegistrySiteEntity pr "
+          + "where pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
   public List<ParticipantRegistrySiteEntity> findBySiteIdAndStatus(
       String siteId, String onboardingStatus);
+
+  @Query("SELECT COUNT(pr) FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id=:siteId")
+  public Long countbysiteId(String siteId);
+
+  @Query(
+      "SELECT COUNT(pr) FROM ParticipantRegistrySiteEntity pr where pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus")
+  public Long countBySiteIdAndStatus(String siteId, String onboardingStatus);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id =:siteId")
+  public Page<ParticipantRegistrySiteEntity> findBySiteIdForPage(String siteId, Pageable pageable);
 
   @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id =:siteId")
   public List<ParticipantRegistrySiteEntity> findBySiteId(String siteId);
@@ -59,6 +78,19 @@ public interface ParticipantRegistrySiteRepository
 
   @Modifying
   @Query(
-      "update ParticipantRegistrySiteEntity pr set pr.onboardingStatus=:status where pr.id IN (:ids)")
-  public void updateOnboardingStatus(@Param("status") String status, List<String> ids);
+      "update ParticipantRegistrySiteEntity pr set pr.onboardingStatus=:status, pr.disabledDate=:disabledDate where pr.id IN (:ids)")
+  public void updateOnboardingStatus(
+      @Param("status") String status, List<String> ids, Timestamp disabledDate);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id=:studyId")
+  public List<ParticipantRegistrySiteEntity> findByStudyId(String studyId);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id=:studyId")
+  public Page<ParticipantRegistrySiteEntity> findByStudyIdForPagination(
+      String studyId, Pageable pageable);
+
+  @Query(
+      "SELECT pr.id FROM ParticipantRegistrySiteEntity pr WHERE (pr.onboardingStatus='N' OR pr.onboardingStatus='I') AND pr.study.id =:studyId AND pr.email IN (:emails)")
+  public Optional<ParticipantRegistrySiteEntity> findExistingRecordByStudyIdAndEmails(
+      String studyId, List<String> emails);
 }
