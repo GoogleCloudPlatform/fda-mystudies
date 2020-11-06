@@ -403,6 +403,7 @@ public class StandaloneActivity extends AppCompatActivity
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
         Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+        addClearTopFlag(intent);
         intent.putExtra("studyId", studyId);
         intent.putExtra("to", calledFor);
         intent.putExtra("from", from);
@@ -428,6 +429,7 @@ public class StandaloneActivity extends AppCompatActivity
         } else {
           AppController.getHelperProgressDialog().dismissDialog();
           Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+          addClearTopFlag(intent);
           intent.putExtra("studyId", studyId);
           intent.putExtra("to", calledFor);
           intent.putExtra("from", from);
@@ -439,6 +441,7 @@ public class StandaloneActivity extends AppCompatActivity
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
         Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+        addClearTopFlag(intent);
         intent.putExtra("studyId", studyId);
         intent.putExtra("to", calledFor);
         intent.putExtra("from", from);
@@ -460,6 +463,7 @@ public class StandaloneActivity extends AppCompatActivity
         || responseCode == GET_CONSENT_DOC
         || responseCode == CONSENTPDF) {
       Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+      addClearTopFlag(intent);
       intent.putExtra("studyId", studyId);
       intent.putExtra("to", calledFor);
       intent.putExtra("from", from);
@@ -590,6 +594,7 @@ public class StandaloneActivity extends AppCompatActivity
                             .getStudyStatus()
                             .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
                       Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+                      addClearTopFlag(intent);
                       intent.putExtra("studyId", studyId);
                       startActivity(intent);
                       finish();
@@ -1364,5 +1369,10 @@ public class StandaloneActivity extends AppCompatActivity
       dbServiceSubscriber.closeRealmObj(realm);
     }
     super.onDestroy();
+  }
+
+  private void addClearTopFlag(Intent intent){
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
   }
 }
