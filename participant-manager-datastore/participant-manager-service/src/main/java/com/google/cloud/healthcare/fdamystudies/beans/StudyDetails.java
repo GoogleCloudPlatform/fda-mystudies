@@ -41,4 +41,6 @@ public class StudyDetails {
   private Integer studyPermission;
 
   private String logoImageUrl;
+
+  private String studyStatus;
 }

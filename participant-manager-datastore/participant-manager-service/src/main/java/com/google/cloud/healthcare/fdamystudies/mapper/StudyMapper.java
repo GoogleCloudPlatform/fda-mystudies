@@ -76,6 +76,7 @@ public final class StudyMapper {
     studyDetail.setAppId(study.getApp().getAppId());
     studyDetail.setAppInfoId(study.getApp().getId());
     studyDetail.setLogoImageUrl(study.getLogoImageUrl());
+    studyDetail.setStudyStatus(study.getStatus());
 
     return studyDetail;
   }
