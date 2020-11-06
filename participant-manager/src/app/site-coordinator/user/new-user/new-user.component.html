@@ -247,12 +247,6 @@
                             <span class="app__id ml-xs">
                               ({{ app.customId }})
                             </span>
-                            <span>
-                              {{
-                                app.selectedSitesCount
-                                  | i18nPlural: sitesMessageMapping
-                              }}
-                            </span>
                           </label>
                         </div>
                         <div class="pl-xl pt-xs">
@@ -286,13 +280,22 @@
                           </span>
                         </div>
                       </div>
-                      <div
-                        class="fa__plus__minus"
-                        type="button"
-                        data-toggle="collapse"
-                        [attr.data-target]="'#collapse' + app.id"
-                        aria-expanded="false"
-                      ></div>
+
+                      <div class="app__id_num flex__justify__space-between">
+                        <div class="pr-2">
+                          {{
+                            app.selectedSitesCount
+                              | i18nPlural: sitesMessageMapping
+                          }}
+                        </div>
+                        <div
+                          class="fa__plus__minus"
+                          type="button"
+                          data-toggle="collapse"
+                          [attr.data-target]="'#collapse' + app.id"
+                          aria-expanded="false"
+                        ></div>
+                      </div>
                     </div>
                   </div>
                   <div
