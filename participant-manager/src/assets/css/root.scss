@@ -166,28 +166,28 @@ html {
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 13px;
+    font-size: 92%;
   }
   .page-item.disabled .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 13px;
+    font-size: 92%;
   }
   .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 13px;
+    font-size: 92%;
   }
   .page-item:last-child .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 13px;
+    font-size: 92%;
   }
   .pagination li:first-child:before {
     position: relative;
@@ -197,7 +197,7 @@ html {
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 13px;
+    font-size: 92%;
     top: -1px;
   }
   .pagination li:last-child:before {
@@ -208,7 +208,7 @@ html {
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 13px;
+    font-size: 92%;
     top: -1px;
   }
   .tbl__td__label {
@@ -361,7 +361,7 @@ html {
     margin-left: 5px;
   }
   .subheader {
-    min-height: 67px;
+    min-height: 63px;
     line-height: 63px;
   }
 }
