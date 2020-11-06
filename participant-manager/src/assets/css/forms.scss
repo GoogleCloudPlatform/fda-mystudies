@@ -81,8 +81,8 @@
   .form-group .custom__labels label:before {
     content: "";
     appearance: none;
-    background-color: transparent;
-    border: 1px solid var(--geyser-gray);
+    background-color: var(--white);
+    border: 1px solid var(--periwinkle-gray);
     padding: 7px;
     display: inline-block;
     position: relative;
@@ -141,7 +141,7 @@
     top: 0;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--alto-gray);
+    border: 1px solid var(--periwinkle-gray);
     border-radius: 100%;
     background: var(--white);
   }
@@ -176,7 +176,7 @@
     top: 0;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--alto-gray);
+    border: 1px solid var(--periwinkle-gray);
     border-radius: 100%;
     background: var(--white);
   }

@@ -174,7 +174,7 @@
           <tbody>
             <tr>
               <td>
-                <div
+                <span
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
                   "
@@ -188,33 +188,33 @@
                   }"
                 >
                   {{ participant.participantDetails.onboardingStatus }}
-                </div>
-                <div
+                </span>
+                <span
                   *ngIf="
                     participant.participantDetails.studyType === studyTypes.Open
                   "
                   class="participant__label"
                 >
                   NA
-                </div>
+                </span>
               </td>
               <td>
-                <div
+                <span
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
                   "
                   class="inactive__text"
                 >
                   {{ participant.participantDetails.invitationDate }}
-                </div>
-                <div
+                </span>
+                <span
                   *ngIf="
                     participant.participantDetails.studyType === studyTypes.Open
                   "
                   class="inactive__text"
                 >
                   NA
-                </div>
+                </span>
               </td>
 
               <table
@@ -225,13 +225,13 @@
                 "
               >
                 <td class="inactive__text">
-                  {{ enrollmentDetails.enrollmentStatus }}
+                  <span>{{ enrollmentDetails.enrollmentStatus }}</span>
                 </td>
                 <td class="mb__mt-sm inactive__text">
-                  {{ enrollmentDetails.enrollmentDate }}
+                  <span>{{ enrollmentDetails.enrollmentDate }}</span>
                 </td>
                 <td class="mb__mt-sm inactive__text">
-                  {{ enrollmentDetails.withdrawalDate }}
+                  <span>{{ enrollmentDetails.withdrawalDate }}</span>
                 </td>
               </table>
             </tr>

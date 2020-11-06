@@ -69,16 +69,19 @@
           class="pr-xlg"
         >
           <div class="enrollment-label">
-            Enrollment Target:
-            {{ studyDetails.participantRegistryDetail.targetEnrollment }}
             <button
               [disabled]="
                 studyDetails.participantRegistryDetail
                   .openStudySitePermission === permission.View
               "
-              class="dropbtn btn pl-none"
+              class="btn font12__light-grey p-none"
               (click)="openModal(template)"
             >
+              <span class="text__deco font12__light-grey">
+                Enrollment Target:
+                {{ studyDetails.participantRegistryDetail.targetEnrollment }}
+              </span>
+
               <img src="assets/svgs/edit.svg" alt="edit" />
             </button>
           </div>
