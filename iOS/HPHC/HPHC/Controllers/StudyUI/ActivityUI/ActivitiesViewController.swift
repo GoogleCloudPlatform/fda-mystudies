@@ -74,10 +74,6 @@ class ActivitiesViewController: UIViewController {
     appDelegate.checkConsentStatus(controller: self)
   }
 
-  deinit {
-    NotificationCenter.default.removeObserver(self)
-  }
-
   // MARK: - Viewcontroller Lifecycle
 
   override func viewDidLoad() {
@@ -88,7 +84,7 @@ class ActivitiesViewController: UIViewController {
 
     self.tableView?.estimatedRowHeight = 126
     self.tableView?.rowHeight = UITableView.automaticDimension
-
+    self.tableView?.tableFooterView = UIView()
     self.navigationItem.title = NSLocalizedString("Study Activities", comment: "")
     self.tableView?.sectionHeaderHeight = 30
 
@@ -175,7 +171,7 @@ class ActivitiesViewController: UIViewController {
       /// Update status to false so notification can be registered again.
       Study.currentStudy?.activitiesLocalNotificationUpdated = false
       DBHandler.updateLocalNotificationScheduleStatus(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: Study.currentStudy?.studyId ?? "",
         status: false
       )
 
@@ -233,8 +229,8 @@ class ActivitiesViewController: UIViewController {
   }
 
   func checkForDashBoardInfo() {
-
-    DBHandler.loadStatisticsForStudy(studyId: (Study.currentStudy?.studyId)!) {
+    guard let studyID = Study.currentStudy?.studyId else { return }
+    DBHandler.loadStatisticsForStudy(studyId: studyID) {
       (statiticsList) in
 
       if statiticsList.count != 0 {
@@ -479,9 +475,9 @@ class ActivitiesViewController: UIViewController {
 
   /// Updates Activity Run Status.
   /// - Parameter status: Status of the Activity.
-  func updateActivityRun(status: UserActivityStatus.ActivityStatus) {
+  func updateActivityRun(status: UserActivityStatus.ActivityStatus, alert: Bool = true) {
 
-    let activity = Study.currentActivity!
+    guard let activity = Study.currentActivity else { return }
 
     let activityStatus = User.currentUser.updateActivityStatus(
       studyId: activity.studyId!,
@@ -509,7 +505,7 @@ class ActivitiesViewController: UIViewController {
     DBHandler.updateParticipationStatus(for: activity)
 
     if status == .completed {
-      self.updateCompletionAdherence()
+      self.updateCompletionAdherence(with: alert)
     }
 
   }
@@ -520,12 +516,12 @@ class ActivitiesViewController: UIViewController {
   ///     adherence =  (totalCompletedRuns*100) / (totalCompletedRuns + totalIncompletedRuns)
   ///
   /// Also alerts the user about the study Completion Status.
-  func updateCompletionAdherence() {
+  func updateCompletionAdherence(with alert: Bool = true) {
 
     var totalRuns = 0
     var totalCompletedRuns = 0
     var totalIncompletedRuns = 0
-    let activities = Study.currentStudy?.activities  //.filter({$0.state == "active"})
+    let activities = Study.currentStudy?.activities.filter({ $0.state == "active" })
 
     /// Calculate Runs
     for activity in activities! {
@@ -552,10 +548,10 @@ class ActivitiesViewController: UIViewController {
       )
     )
 
-    let studyid = (Study.currentStudy?.studyId)!
+    guard let currentStudy = Study.currentStudy else { return }
 
     let status = User.currentUser.udpateCompletionAndAdherence(
-      studyId: studyid,
+      studyId: currentStudy.studyId,
       completion: Int(completion),
       adherence: Int(adherence)
     )
@@ -563,12 +559,12 @@ class ActivitiesViewController: UIViewController {
     /// Update to server
     EnrollServices().updateCompletionAdherence(studyStatus: status, delegate: self)
     /// Update Local DB
-    DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
+    DBHandler.updateStudyParticipationStatus(study: currentStudy)
 
     /// Compose Alert based on Completion
-    let halfCompletionKey = "50pcShown" + (Study.currentStudy?.studyId)!
-    let fullCompletionKey = "100pcShown" + (Study.currentStudy?.studyId)!
-    let missedKey = "totalMissed" + (Study.currentStudy?.studyId)!
+    let halfCompletionKey = "50pcShown" + currentStudy.studyId
+    let fullCompletionKey = "100pcShown" + currentStudy.studyId
+    let missedKey = "totalMissed" + currentStudy.studyId
 
     let ud = UserDefaults.standard
     if completion > 50 && completion < 100 {
@@ -578,12 +574,11 @@ class ActivitiesViewController: UIViewController {
       }
 
     }
-
-    if completion == 100 {
+    if completion == 100 && alert {
 
       if !(ud.bool(forKey: fullCompletionKey)) {
         let message =
-          "The study " + (Study.currentStudy?.name!)!
+          "The study " + (currentStudy.name ?? "")
           + " is 100 percent complete. Thank you for your participation."
         UIUtilities.showAlertWithMessage(alertMessage: message)
         ud.set(true, forKey: fullCompletionKey)
@@ -595,8 +590,7 @@ class ActivitiesViewController: UIViewController {
     if ud.object(forKey: missedKey) == nil {
       ud.set(totalIncompletedRuns, forKey: missedKey)
 
-    } else {
-      let previousMissed = (ud.object(forKey: missedKey) as? Int)!
+    } else if let previousMissed = ud.object(forKey: missedKey) as? Int {
       ud.set(totalIncompletedRuns, forKey: missedKey)
       if previousMissed < totalIncompletedRuns {
         // show alert
@@ -624,8 +618,8 @@ class ActivitiesViewController: UIViewController {
   }
 
   /// To update Activity Status To Complete.
-  func updateActivityStatusToComplete() {
-    self.updateActivityRun(status: .completed)
+  func updateActivityStatusToComplete(alert: Bool) {
+    self.updateActivityRun(status: .completed, alert: alert)
   }
 
   /// Schedules AD resources with activity response.
@@ -651,7 +645,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   /// Save completed staus in database.
-  func updateRunStatusToComplete() {
+  func updateRunStatusToComplete(with alert: Bool = true) {
     guard let currentActivity = Study.currentActivity,
       let activityID = currentActivity.actvityId,
       let studyID = currentActivity.studyId
@@ -663,7 +657,7 @@ class ActivitiesViewController: UIViewController {
       activityId: activityID,
       studyId: studyID
     )
-    self.updateActivityStatusToComplete()
+    self.updateActivityStatusToComplete(alert: alert)
     let activityResponse = self.lastActivityResponse ?? [:]
     lastActivityResponse = [:]
     let isActivitylifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
@@ -735,9 +729,9 @@ class ActivitiesViewController: UIViewController {
 
   /// Handler for studyUpdateResponse.
   func handleStudyUpdatesResponse() {
-
+    guard let currentStudy = Study.currentStudy else { return }
     Study.currentStudy?.newVersion = StudyUpdates.studyVersion
-    DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
+    DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
 
     //Consent Updated
     if StudyUpdates.studyConsentUpdated {
@@ -745,7 +739,7 @@ class ActivitiesViewController: UIViewController {
 
     } else if StudyUpdates.studyInfoUpdated {
       WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: currentStudy.studyId,
         delegate: self
       )
 
@@ -1054,7 +1048,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
       self.removeProgressIndicator()
-      self.updateRunStatusToComplete()
+      self.updateRunStatusToComplete(with: false)
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
@@ -1124,7 +1118,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       }
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
-        self.updateRunStatusToComplete()
+        self.updateRunStatusToComplete(with: false)
       } else {
         self.lastActivityResponse = nil
       }

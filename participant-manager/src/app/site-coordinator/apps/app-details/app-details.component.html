@@ -1,0 +1,148 @@
+<ng-container *ngIf="appDetail$ | async as appDetails">
+  <section class="subheader p-none pl-none">
+    <div class="max__w__1280 m-none">
+      <div class="flex__justify__space-between">
+        <div
+          class="subheader__title flex__justify__space-between align__items__baseline"
+        >
+          <div>
+            <a routerLink="/coordinator/apps">
+              <img src="assets/svgs/back-arrow.svg" alt="go back" />
+            </a>
+          </div>
+          <div>
+            <div class="mb-xs">App Participant Registry</div>
+            <div>
+              <div class="pr-xlg flex__justify__space-between">
+                <div class="banner__label mr-xs">
+                  {{ appDetails.customId }}
+                  <span class="banner__text">{{ appDetails.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="max__w__1280 m-none site__participant">
+    <div class="cards1 m-none">
+      <table
+        class="table table-striped"
+        [mfData]="appDetails.participants"
+        #mf="mfDataTable"
+        [mfRowsOnPage]="10"
+      >
+        <thead>
+          <tr>
+            <span
+              class="sort__by__text mobile__view mr-sm"
+              style="background: transparent"
+            >
+              Sort By:
+            </span>
+            <th>
+              <mfDefaultSorter by="Email">Participant Email</mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="Date">App Registration Date</mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="Status">App Account Status</mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="Enrolled">Studies</mfDefaultSorter>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let applists of mf.data">
+            <td [routerLink]="['/coordinator/participant', applists.id]">
+              <span class="tbl__td__label">Participant Email:</span>
+              <span class="no_st_en">{{ applists.email }}</span>
+            </td>
+            <td>
+              <span class="tbl__td__label">App Registration Date:</span>
+              {{ applists.registrationDate }}
+            </td>
+            <td>
+              <span class="tbl__td__label">App Account Status:</span>
+              <div
+                [ngClass]="{
+                  participant__label:
+                    applists.registrationStatus === statusEnum.Active,
+                  inactive__text:
+                    applists.registrationStatus === statusEnum.Inactive
+                }"
+              >
+                {{ applists.registrationStatus }}
+              </div>
+            </td>
+            <td>
+              <span class="tbl__td__label">Number of Studies Enrolled:</span>
+              <span
+                [class.no_st_en]="applists.enrolledStudies.length > 0"
+                (click)="openModal(appEnrollList, applists.enrolledStudies)"
+              >
+                {{ applists.enrolledStudies.length }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <mfBootstrapPaginator></mfBootstrapPaginator>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+</ng-container>
+
+<ng-template #appEnrollList>
+  <div #appsListData class="modal-body modal__body">
+    <button type="button" class="close pad__15__20" (click)="modalRef.hide()">
+      &times;
+    </button>
+    <ul class="app__level__pop__list">
+      <li *ngFor="let applists of enrolledStudies">
+        <div class="blue__text__md text-uppercase">
+          {{ applists.customStudyId }}
+        </div>
+
+        <div>
+          <li *ngFor="let sitelists of applists.sites">
+            <div
+              class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none flex__justify__space-between"
+            >
+              <div class="p-none cursor__none">
+                Site ID :
+                <span class="blue__text__md blue__link cursor__none">
+                  {{ sitelists.customSiteId }} {{ sitelists.siteName }}
+                </span>
+              </div>
+              <div>
+                <div>
+                  <span class="text-grey__sm">Date of Enrollment:</span>
+                  <span class="text__date__sm">
+                    {{ sitelists.enrollmentDate }}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <span class="text-grey__sm">Date of Withdrawal:</span>
+                  <span class="text__date__sm">
+                    {{ sitelists.withdrawlDate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

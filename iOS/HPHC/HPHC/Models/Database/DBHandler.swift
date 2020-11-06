@@ -47,7 +47,6 @@ class DBHandler: NSObject {
       dbUser?.emailId = user.emailId!
       dbUser?.userId = user.userId
       dbUser?.verified = user.verified
-      dbUser?.clientToken = user.clientToken
 
       try? realm.write {
         realm.add(dbUser!, update: .all)
@@ -59,7 +58,6 @@ class DBHandler: NSObject {
           dbUser?.userType = (user.userType?.rawValue)!
           dbUser?.emailId = user.emailId!
           dbUser?.authToken = user.authToken
-          dbUser?.clientToken = user.clientToken
           dbUser?.verified = user.verified
           dbUser?.refreshToken = user.refreshToken
         }
@@ -80,10 +78,9 @@ class DBHandler: NSObject {
       let currentUser = User.currentUser
       currentUser.firstName = dbUser?.firstName
       currentUser.lastName = dbUser?.lastName
-      currentUser.verified = dbUser?.verified
+      currentUser.verified = dbUser?.verified ?? false
       currentUser.userId = dbUser?.userId
       currentUser.emailId = dbUser?.emailId
-      currentUser.clientToken = dbUser?.clientToken
       currentUser.userType = (dbUser?.userType).map { UserType(rawValue: $0) }!
 
       let settings = Settings()
@@ -722,7 +719,6 @@ class DBHandler: NSObject {
       .filter {
         $0.sourceActivityId == activityId
           && $0.studyId == studyId
-          && $0.startDate == nil
       }
 
     guard let dbActivity = dbActivities.last
@@ -2355,4 +2351,31 @@ class DBHandler: NSObject {
     }
   }
 
+  class func logout() {
+    let appDomain = Bundle.main.bundleIdentifier!
+    UserDefaults.standard.removePersistentDomain(forName: appDomain)
+    UserDefaults.standard.synchronize()
+
+    // Delete from database
+    DBHandler.deleteCurrentUser()
+
+    // Reset user object
+    User.resetCurrentUser()
+
+    // Delete complete database
+    DBHandler.deleteAll()
+
+    // Cancel all local notification
+    LocalNotification.cancelAllLocalNotification()
+
+    LocalNotification.removeAllDeliveredNotifications()
+
+    // Reset Filters
+    StudyFilterHandler.instance.previousAppliedFilters = []
+    StudyFilterHandler.instance.searchText = ""
+
+    // Delete keychain values
+    FDAKeychain.shared[kUserAuthTokenKeychainKey] = nil
+    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = nil
+  }
 }

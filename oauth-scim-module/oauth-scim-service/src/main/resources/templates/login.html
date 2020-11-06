@@ -24,7 +24,7 @@
 </head>
 <body class="bg__aqua-gray">
   <form th:action="@{/login}" method="POST" id="loginForm" novalidate
-    onsubmit="return validateform()" th:object="${loginRequest}">
+    onsubmit="return validateform();" th:object="${loginRequest}">
     <div class="centered__div box__shadow-cmn">
       <div class="signin__container">
         <div>
@@ -34,10 +34,9 @@
             </div>
           </div>
           <div class="input__field">
-            <div class="err__msg" id="email_error" style="display: none">Please
-              enter valid email address</div>
+            <div class="err__msg" id="email_error" style="display: none">Enter an email</div>
             <label>Email</label> <input type="email" name="email"
-              th:field="*{email}" id="email" placeholder="Enter Email"
+              th:field="*{email}" id="email" placeholder="Enter your email"
               value="" required="required"
               onblur="validateField('email');" />
           </div>
@@ -47,7 +46,7 @@
             <label>Password</label> <input type="password"
               th:field="*{password}" name="password" id="password"
               placeholder="Enter your password" required="required"
-              minlength="8" maxlength="64" value=""
+              minlength="8" maxlength="64" value="" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\S+$).{8,64}$"
               onblur="validateField('password');" />
           </div>
 
@@ -67,7 +66,7 @@
             <div class="col-md-5 pr-none text-right">
               <a class="blue__link forgot__pwd desktop"
                 th:href="${forgot_password_link}">Forgot password?</a> <span
-                class="mobile" th:if="${mobileDevice}">New user?
+                class="mobile" th:if="${mobileApp}">New user?
                 <a th:href="${signup_link}" class="sign__up">Sign up</a>
               </span>
             </div>
@@ -85,11 +84,11 @@
     <div>&copy; 2019 FDA MyStudies. All rights reserved.</div>
     <div>
       <ul>
-        <li th:if="${!mobileDevice}"><a th:href="${about_link}">About</a></li>
-        <li th:if="${!mobileDevice}"><a th:href="${terms_link}">Terms
+        <li th:if="${!mobileApp}"><a th:href="${about_link}">About</a></li>
+        <li th:if="${!mobileApp}"><a th:href="${terms_link}">Terms
             of Service</a></li>
-        <li th:if="${mobileDevice}"><a th:href="${terms_link}">Terms</a></li>
-        <li th:if="${mobileDevice}"><a
+        <li th:if="${mobileApp}"><a th:href="${terms_link}">Terms</a></li>
+        <li th:if="${mobileApp}"><a
           th:href="${privacy_policy_link}">Privacy Policy</a></li>
       </ul>
     </div>

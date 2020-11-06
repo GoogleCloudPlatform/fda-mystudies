@@ -1,0 +1,37 @@
+{
+	"email": "super_admin_test@grr.la",
+	"firstName": "mockit_user_firstname",
+	"lastName": "mockit_user_lastname",
+	"superAdmin": false,
+	"id": null,
+	"manageLocations": 1,
+	"apps": [
+		{
+			"id": "58641e381737a4b6901737a5e73d94635",
+			"customId": "App001",
+			"name": "AppName1",
+			"selected": "false",
+			"permission": 1,
+			"studies": [
+				{
+					"studyId": "32541e381737a4b6901737a5e73d98542",
+					"customStudyId": "Study001",
+					"studyName": "StudyName1",
+					"selected": "false",
+					"permission": 1,
+					"sites": [
+						{
+							"siteId": "76511e381737a4b6901737a5e73d96354",
+							"locationId": 40,
+							"customLocationId": "Location1",
+							"locationName": "LocationName1",
+							"locationDescription": "LocationDesc1",
+							"selected": "false",
+							"permission": 1
+						}
+					]
+				}
+			]
+		}
+	]
+}

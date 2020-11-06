@@ -16,11 +16,9 @@ import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration
 import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
 @Configuration
-@Profile({"dev", "local", "qa", "mockit"})
 public class AppConfig extends CommonModuleConfiguration {
 
   @Autowired ServletContext context;

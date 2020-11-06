@@ -1,22 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
-	<artifactId>common-modules</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+  <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+  <artifactId>common-modules</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-	<name>common-modules</name>
+  <name>common-modules</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-	<modules>
-		<module>common-service</module>
-		<module>common-tests</module>
-	</modules>
+  <modules>
+    <module>common-service</module>
+    <module>common-tests</module>
+  </modules>
 
 </project>

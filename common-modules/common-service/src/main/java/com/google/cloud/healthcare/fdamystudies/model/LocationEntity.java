@@ -22,6 +22,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -32,16 +33,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "locations")
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
+@Table(
+    name = "locations",
+    indexes = {@Index(name = "locations_status_idx", columnList = "status")})
 public class LocationEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -52,13 +50,13 @@ public class LocationEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "custom_id", nullable = false, length = SMALL_LENGTH)
+  @Column(name = "custom_id", nullable = false, unique = true, length = SMALL_LENGTH)
   private String customId;
 
   @Column(name = "status")
   private Integer status;
 
-  @Column(name = "name", length = LARGE_LENGTH)
+  @Column(name = "name", length = LARGE_LENGTH, unique = true, nullable = false)
   private String name;
 
   @Column(name = "description")

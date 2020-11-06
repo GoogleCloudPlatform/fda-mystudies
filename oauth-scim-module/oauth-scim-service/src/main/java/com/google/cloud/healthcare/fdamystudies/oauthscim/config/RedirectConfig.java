@@ -10,8 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.config;
 
 import static com.google.cloud.healthcare.fdamystudies.common.MobilePlatform.ANDROID;
 import static com.google.cloud.healthcare.fdamystudies.common.MobilePlatform.IOS;
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.MOBILE_APPS;
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_MANAGER;
 
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import java.io.Serializable;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,116 +26,94 @@ public class RedirectConfig implements Serializable {
 
   private static final long serialVersionUID = 2189883675260389666L;
 
-  @Value("${participant.manager.callback-url}")
-  private String participantManagerCallbackUrl;
+  @Value("${participant.manager.url}")
+  private String participantManagerUrl;
 
-  @Value("${mystudies.ios.app.callback-url}")
-  private String myStudiesIosAppCallbackUrl;
+  @Value("${ios.deeplink.url}")
+  private String iosDeeplinkUrl;
 
-  @Value("${mystudies.android.app.callback-url}")
-  private String myStudiesAndroidAppCallbackUrl;
+  @Value("${android.deeplink.url}")
+  private String androidDeeplinkUrl;
 
-  @Value("${participant.manager.forgot-password-url}")
-  private String participantManagerForgotPasswordUrl;
-
-  @Value("${mystudies.ios.app.forgot-password-url}")
-  private String myStudiesIosAppForgotPasswordUrl;
-
-  @Value("${mystudies.android.app.forgot-password-url}")
-  private String myStudiesAndroidAppForgotPasswordUrl;
-
-  @Value("${mystudies.ios.app.signup-url}")
-  private String myStudiesIosAppSignupUrl;
-
-  @Value("${mystudies.android.app.signup-url}")
-  private String myStudiesAndroidAppSignupUrl;
-
-  @Value("${mystudies.ios.app.account-activation-url}")
-  private String myStudiesIosAppAccountActivationUrl;
-
-  @Value("${mystudies.android.app.account-activation-url}")
-  private String myStudiesAndroidAppAccountActivationUrl;
-
-  @Value("${participant.manager.account-activation-url}")
-  private String participantManagerAccountActivationUrl;
-
-  @Value("${mystudies.ios.app.terms-url}")
-  private String myStudiesIosAppTermsUrl;
-
-  @Value("${mystudies.android.app.terms-url}")
-  private String myStudiesAndroidAppTermsUrl;
-
-  @Value("${participant.manager.terms-url}")
-  private String participantManagerTermsUrl;
-
-  @Value("${mystudies.ios.app.privacy-policy-url}")
-  private String myStudiesIosAppPrivacyPolicyUrl;
-
-  @Value("${mystudies.android.app.privacy-policy-url}")
-  private String myStudiesAndroidAppPrivacyPolicyUrl;
-
-  @Value("${participant.manager.about-url}")
-  private String participantManagerAboutUrl;
-
-  public String getCallbackUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppCallbackUrl;
-    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppCallbackUrl;
+  public String getCallbackUrl(String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/callback";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
+      return androidDeeplinkUrl + "/callback";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == IOS) {
+      return iosDeeplinkUrl + "/callback";
     }
-    return participantManagerCallbackUrl;
+    return null;
   }
 
-  public String getForgotPasswordUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppForgotPasswordUrl;
-    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppForgotPasswordUrl;
+  public String getForgotPasswordUrl(String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/forgotPassword";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
+      return androidDeeplinkUrl + "/forgotPassword";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == IOS) {
+      return iosDeeplinkUrl + "/forgotPassword";
     }
-    return participantManagerForgotPasswordUrl;
+    return null;
   }
 
   public String getSignupUrl(String mobilePlatform) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppSignupUrl;
+      return androidDeeplinkUrl + "/signup";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppSignupUrl;
+      return iosDeeplinkUrl + "/signup";
     }
     return null;
   }
 
-  public String getAccountActivationUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppAccountActivationUrl;
-    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppAccountActivationUrl;
+  public String getAccountActivationUrl(String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/activation";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
+      return androidDeeplinkUrl + "/activation";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == IOS) {
+      return iosDeeplinkUrl + "/activation";
     }
-    return participantManagerAccountActivationUrl;
+    return null;
   }
 
-  public String getTermsUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppTermsUrl;
-    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppTermsUrl;
+  public String getTermsUrl(String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/terms";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
+      return androidDeeplinkUrl + "/terms";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == IOS) {
+      return iosDeeplinkUrl + "/terms";
     }
-    return participantManagerTermsUrl;
+    return null;
   }
 
   public String getPrivacyPolicyUrl(String mobilePlatform) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppPrivacyPolicyUrl;
+      return androidDeeplinkUrl + "/privacyPolicy";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppPrivacyPolicyUrl;
+      return iosDeeplinkUrl + "/privacyPolicy";
     }
     return null;
   }
 
-  public String getAboutUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID
-        || MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return null;
+  public String getAboutUrl(String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/about";
     }
-    return participantManagerAboutUrl;
+    return null;
   }
 }

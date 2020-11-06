@@ -1,13 +1,26 @@
-#!/bin/bash
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
 # Script to copy Push Notification info from gcloud secret to CloudSQL.
-set -e
 
-PREFIX=example
-ENV=dev
+#!/bin/bash
+if [ "$#" -ne 2 ]; then
+  echo 'Please provide deployment prefix and env in the order of <prefix> <env>>'
+  exit 1
+fi
+
+PREFIX=${1}
+ENV=${2}
+shift 2
+
+set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 DATA_PROJECT=${PREFIX}-${ENV}-data
-SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-my-studies-sql-import
+SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
 
 TMPFILE=$(mktemp)
 
@@ -37,5 +50,5 @@ gsutil mv ${TMPFILE} ${GCS_FILE}
 
 # Import the GCS file to CloudSQL.
 echo "Importing ${GCS_FILE} to CloudSQL."
-gcloud sql import sql --project=${DATA_PROJECT} my-studies ${GCS_FILE}
+gcloud sql import sql --project=${DATA_PROJECT} mystudies ${GCS_FILE}
 gsutil rm ${GCS_FILE}

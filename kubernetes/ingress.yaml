@@ -1,43 +1,55 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: heroes-hat-dev
+  name: fda-mystudies-dev
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: my-studies-ingress-ip
-    networking.gke.io/managed-certificates: heroes-hat-cert
+    kubernetes.io/ingress.global-static-ip-name: mystudies-ingress-ip
+    networking.gke.io/managed-certificates: fda-mystudies-cert
 spec:
   rules:
     - http:
         paths:
-          - path: /AuthServer/*
+          - path: /oauth-scim-service/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000
-          - path: /mystudies-response-server/*
+          - path: /response-datastore/*
             backend:
-              serviceName: response-server-np
+              serviceName: response-datastore-np
               servicePort: 50000
-          - path: /myStudiesUserMgmtWS/*
+          - path: /participant-user-datastore/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-user-datastore-np
               servicePort: 50000
-          - path: /myStudiesConsentMgmtWS/*
+          - path: /participant-consent-datastore/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-consent-datastore-np
               servicePort: 50000
-          - path: /myStudiesEnrollmentMgmt/*
+          - path: /participant-enroll-datastore/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-enroll-datastore-np
               servicePort: 50000
-          - path: /StudyMetaData/*
+          - path: /study-datastore/*
             backend:
-              serviceName: study-meta-data-np
+              serviceName: study-datastore-np
               servicePort: 50000
           - path: /studybuilder/*
             backend:
-              serviceName: study-designer-np
+              serviceName: study-builder-np
               servicePort: 50000
-          - path: /fdaResources/*
+          - path: /study-resources/*
             backend:
-              serviceName: study-designer-np
+              serviceName: study-builder-np
+              servicePort: 50000
+          - path: /hydra/*
+            backend:
+              serviceName: hydra-np
+              servicePort: 50000
+          - path: /#/*
+            backend:
+              serviceName: participant-manager-np
+              servicePort: 50000
+          - path: /participant-manager-datastore/*
+            backend:
+              serviceName: participant-manager-datastore-np
               servicePort: 50000

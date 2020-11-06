@@ -1,0 +1,104 @@
+@import "./colors.scss";
+.text-weight-light {
+  font-weight: 200;
+}
+
+.text-weight-normal {
+  font-weight: 400;
+}
+
+.text-weight-semibold {
+  font-weight: 600;
+}
+
+.text-weight-bold {
+  font-weight: 700;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+a.w-link,
+a.w-link:hover {
+  color: var(--white);
+  text-decoration: none;
+}
+
+.font12 {
+  font-size: 75% !important;
+}
+
+.font11 {
+  font-size: 68.75% !important;
+}
+
+.font13 {
+  font-size: 81.25% !important;
+}
+
+.font14 {
+  font-size: 87.5% !important;
+}
+
+.font16__grey {
+  font-size: 100%;
+  color: var(--space-gray);
+}
+
+.font24__grey {
+  font-size: 150%;
+  line-height: 150%;
+  color: var(--space-gray);
+}
+
+.font12__light-grey {
+  color: var(--light-gray);
+  font-size: 75%;
+}
+
+.font24 {
+  font-size: 150%;
+  line-height: 150%;
+}
+
+.font26 {
+  font-size: 162.5%;
+  line-height: 162.5%;
+}
+
+.text__deco {
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.green__text {
+  color: var(--green);
+}
+
+.lh__6 {
+  line-height: 6px;
+}
+
+.font__bold {
+  font-weight: 600;
+}
