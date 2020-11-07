@@ -276,11 +276,16 @@ public enum ErrorCode {
       HttpStatus.FORBIDDEN.toString(),
       "Invitation cannot be enabled as participant record is enabled in another site within the same study."),
 
+
   TOKEN_EXPIRED(
       410,
       "EC_0066",
       HttpStatus.GONE.toString(),
-      "The token entered is no longer valid. Please contact the site coordinator for assistance.");
+      "The token entered is no longer valid. Please contact the site coordinator for assistance."),
+
+  LOCATION_NAME_EXISTS(
+      400, "EC_0068", Constants.BAD_REQUEST, "Sorry, a location with this name already exists");
+
 
   private final int status;
   private final String code;
