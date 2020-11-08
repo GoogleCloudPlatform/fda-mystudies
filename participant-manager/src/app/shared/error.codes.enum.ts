@@ -16,7 +16,8 @@ const errorMessages = {
   EC_0009:
     'Sorry, an error has occurred and your request could not be processed. Please try again later.',
   EC_0010: 'Current password entered is invalid',
-  EC_0011: 'Your new password cannot repeat any of your previous 10 passwords',
+  EC_0011:
+    'Your new password should not match any of your previous 10 passwords',
   EC_0012: 'User is not active',
   EC_0013: 'App not found',
   EC_0014: 'Study not found',
@@ -30,7 +31,7 @@ const errorMessages = {
   EC_0021: 'You do not have permission to access this site',
   EC_0022: 'Site exists with the given location ID and study ID',
   EC_0023: 'You do not have permission to view or add or update locations',
-  EC_0024: 'User not found',
+  EC_0024: 'This is not a registered email',
   EC_0025: 'Location ID already exists',
   EC_0026: 'Provided email ID does not exists or user is not invited',
   EC_0027: `Can't activate an already actived location`,
