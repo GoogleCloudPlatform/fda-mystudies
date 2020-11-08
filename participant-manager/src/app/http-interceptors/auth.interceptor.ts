@@ -63,7 +63,6 @@ export class AuthInterceptor implements HttpInterceptor {
     this.refreshTokenSubject.next(null);
     return this.authService.refreshToken().subscribe(
       (authServerResponse: AccessToken) => {
-        console.log('refresh token is successfull');
         this.refreshTokenSubject.next(authServerResponse);
         localStorage.setItem('accessToken', authServerResponse.access_token);
         localStorage.setItem('refreshToken', authServerResponse.refresh_token);
@@ -76,9 +75,6 @@ export class AuthInterceptor implements HttpInterceptor {
       (error: unknown) => {
         if (error instanceof HttpErrorResponse) {
           const customError = error.error as ApiResponse;
-          if (getMessage(customError.error_code)) {
-            this.toasterService.error('Session Expired');
-          }
           localStorage.clear();
           void this.router.navigate(['/']);
         }
@@ -140,6 +136,13 @@ export class AuthInterceptor implements HttpInterceptor {
           console.log(err.status);
           if (err.status === 401) {
             this.handle401Error(request, next);
+          } else if (
+            err.url ===
+            'http://35.193.185.224:8087/oauth-scim-service/oauth2/token'
+          ) {
+            this.toasterService.error(
+              'your session expired logged out successfully ',
+            );
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
           } else {
