@@ -161,10 +161,7 @@ public class FdaApplication extends Application {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
       byte[] digest = md.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
       codeChallenge =
-          Base64.encodeToString(digest, Base64.NO_PADDING)
-              .replace("+", "-")
-              .replace("/", "_")
-              .replace("=", "");
+          Base64.encodeToString(digest, Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
     } catch (Exception e) {
       Logger.log(e);
     }

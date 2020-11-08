@@ -37,6 +37,16 @@ spec:
                   name: participant-user-datastore-credentials
                   key: dbname
             # EMAIL SERVER
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_address
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_password
             - name: FROM_EMAIL_ADDRESS
               valueFrom:
                 secretKeyRef:
@@ -93,9 +103,11 @@ spec:
               value: "production"
             # SERVER CALLS
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
+            - name: RESPONSE_DATASTORE_URL
+              value: "http://response-datastore-np:50000/response-datastore"
             # MISC
             - name: ORG_NAME
               valueFrom:
@@ -136,4 +148,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-user-datastore-gcloud-key
+          secretName: user-datastore-gke-sa-gcloud-key

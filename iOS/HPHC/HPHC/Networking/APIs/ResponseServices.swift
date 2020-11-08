@@ -117,7 +117,7 @@ class ResponseServices: NSObject {
           "version": activityVersion,
           kActivityRunId: "\(currentRunId)",
           JSONKey.studyVersion: studyVersion,
-        ] as [String: String]
+        ]
 
       let activityType = Study.currentActivity?.type?.rawValue
 
@@ -232,7 +232,7 @@ class ResponseServices: NSObject {
       [
         kUserId: user.userId,
         kParticipantId: participantId,
-      ] as [String: String]
+      ] as? [String: String]
 
     let params =
       [
@@ -255,7 +255,7 @@ class ResponseServices: NSObject {
     self.delegate = delegate
 
     let user = User.currentUser
-    let headerParams = [kUserId: user.userId] as [String: String]
+    let headerParams = [kUserId: user.userId] as? [String: String]
 
     let params = [kActivites: [activityStauts.getBookmarkUserActivityStatus()]] as [String: Any]
     let method = ResponseMethods.updateActivityState.method

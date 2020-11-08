@@ -84,7 +84,7 @@ class ActivitiesViewController: UIViewController {
 
     self.tableView?.estimatedRowHeight = 126
     self.tableView?.rowHeight = UITableView.automaticDimension
-
+    self.tableView?.tableFooterView = UIView()
     self.navigationItem.title = NSLocalizedString("Study Activities", comment: "")
     self.tableView?.sectionHeaderHeight = 30
 

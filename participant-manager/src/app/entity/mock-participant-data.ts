@@ -8,6 +8,7 @@ import {ApiResponse} from './api.response.model';
 import {RegistryParticipant} from '../shared/participant';
 import {EnrollmentStatus} from '../shared/enums';
 import {StudyType} from '../shared/enums';
+import {Permission} from '../shared/permission-enums';
 
 export const expectedParticipantDetails = {
   participantDetails: {
@@ -32,7 +33,7 @@ export const expectedParticipantDetails = {
     registrationDate: '28/06/1952',
     enrolledStudies: [],
     studyType: StudyType.Close,
-
+    sitePermission: Permission.ViewAndEdit,
     enrollments: [
       {
         participantId: '23',

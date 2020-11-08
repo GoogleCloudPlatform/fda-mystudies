@@ -80,9 +80,9 @@ spec:
                   name: shared-secrets
                   key: base_url
             - name: PARTICIPANT_USER_DATASTORE_URL
-              value: "http://participant-user-datastore-np:50000"
+              value: "http://participant-user-datastore-np:50000/participant-user-datastore"
             - name: RESPONSE_DATASTORE_URL
-              value: "http://response-datastore-np:50000"
+              value: "http://response-datastore-np:50000/response-datastore"
             # MISC
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
@@ -109,4 +109,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: study-builder-gcloud-key
+          secretName: study-builder-gke-sa-gcloud-key

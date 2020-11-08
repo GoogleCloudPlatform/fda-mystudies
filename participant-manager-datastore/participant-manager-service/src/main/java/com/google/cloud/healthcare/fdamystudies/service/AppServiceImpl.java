@@ -8,8 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.APP_PARTICIPANT_REGISTRY_VIEWED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
@@ -19,6 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -30,7 +29,6 @@ import com.google.cloud.healthcare.fdamystudies.mapper.StudyMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
@@ -46,6 +44,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -91,15 +90,17 @@ public class AppServiceImpl implements AppService {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
+    List<AppCount> appInvitedCountList = appRepository.findInvitedCountByAppId();
+    Map<String, AppCount> appInvitedCountMap =
+        appInvitedCountList
+            .stream()
+            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
-      AppResponse appResponse = getAppsForSuperAdmin(optUserRegAdminEntity.get());
+      AppResponse appResponse =
+          getAppsForSuperAdmin(optUserRegAdminEntity.get(), appInvitedCountMap);
       logger.exit(String.format("total apps for superadmin=%d", appResponse.getApps().size()));
       return appResponse;
-    }
-
-    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
-    if (CollectionUtils.isEmpty(appPermissions)) {
-      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
     }
 
     List<SitePermissionEntity> sitePermissions =
@@ -123,18 +124,13 @@ public class AppServiceImpl implements AppService {
 
     List<String> usersSiteIds = getUserSiteIds(sitePermissions);
 
-    List<ParticipantRegistrySiteEntity> participantRegistry =
-        participantRegistrySiteRepository.findBySiteIds(usersSiteIds);
-
-    Map<String, Long> siteWithInvitedParticipantCountMap =
-        getSiteWithInvitedParticipantCountMap(participantRegistry);
-
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudiesRepository.findParticipantEnrollmentsBySiteIds(usersSiteIds);
 
     Map<String, Long> siteWithEnrolledParticipantCountMap =
         participantsEnrollments
             .stream()
+            .filter(e -> e.getStatus().equals(EnrollmentStatus.IN_PROGRESS.getStatus()))
             .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
 
     return prepareAppResponse(
@@ -142,12 +138,13 @@ public class AppServiceImpl implements AppService {
         appPermissionsByAppInfoId,
         appIdbyUsersCount,
         sitePermissionByAppInfoAndStudyInfo,
-        siteWithInvitedParticipantCountMap,
+        appInvitedCountMap,
         siteWithEnrolledParticipantCountMap,
         optUserRegAdminEntity.get());
   }
 
-  private AppResponse getAppsForSuperAdmin(UserRegAdminEntity userRegAdminEntity) {
+  private AppResponse getAppsForSuperAdmin(
+      UserRegAdminEntity userRegAdminEntity, Map<String, AppCount> appInvitedCountMap) {
     List<AppCount> appUsersCountList = userDetailsRepository.findAppUsersCount();
     Map<String, AppCount> appUsersCountMap =
         appUsersCountList
@@ -157,12 +154,6 @@ public class AppServiceImpl implements AppService {
     List<AppCount> studiesList = studyRepository.findAppStudiesCount();
     Map<String, AppCount> appStudiesCountMap =
         studiesList.stream().collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
-
-    List<AppCount> appInvitedCountList = appRepository.findInvitedCountByAppId();
-    Map<String, AppCount> appInvitedCountMap =
-        appInvitedCountList
-            .stream()
-            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
 
     List<AppCount> appEnrolledCountList = appRepository.findEnrolledCountByAppId();
     Map<String, AppCount> appEnrolledCountMap =
@@ -212,7 +203,7 @@ public class AppServiceImpl implements AppService {
       Map<String, Long> appIdbyUsersCount,
       Map<AppEntity, Map<StudyEntity, List<SitePermissionEntity>>>
           sitePermissionByAppInfoAndStudyInfo,
-      Map<String, Long> siteWithInvitedParticipantCountMap,
+      Map<String, AppCount> siteWithInvitedParticipantCountMap,
       Map<String, Long> siteWithEnrolledParticipantCountMap,
       UserRegAdminEntity userRegAdminEntity) {
     List<AppDetails> apps = new ArrayList<>();
@@ -257,27 +248,18 @@ public class AppServiceImpl implements AppService {
 
   private void calculateEnrollmentPercentage(
       AppDetails appDetails,
-      Map<String, Long> siteWithInvitedParticipantCountMap,
+      Map<String, AppCount> siteWithInvitedParticipantCountMap,
       Map<String, Long> siteWithEnrolledParticipantCountMap,
       Map.Entry<AppEntity, Map<StudyEntity, List<SitePermissionEntity>>> entry) {
     long appInvitedCount = 0L;
     long appEnrolledCount = 0L;
     for (Map.Entry<StudyEntity, List<SitePermissionEntity>> studyEntry :
         entry.getValue().entrySet()) {
-      String studyType = studyEntry.getKey().getType();
       for (SitePermissionEntity sitePermission : studyEntry.getValue()) {
+        appInvitedCount = getCount(siteWithInvitedParticipantCountMap, appDetails.getId());
+
         String siteId = sitePermission.getSite().getId();
-        if (siteWithInvitedParticipantCountMap.get(siteId) != null
-            && CLOSE_STUDY.equals(studyType)) {
-          appInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
-        }
-
-        if (sitePermission.getSite().getTargetEnrollment() != null
-            && OPEN_STUDY.equals(studyType)) {
-          appInvitedCount += sitePermission.getSite().getTargetEnrollment();
-        }
-
-        if (siteWithEnrolledParticipantCountMap.get(siteId) != null) {
+        if (siteWithEnrolledParticipantCountMap.containsKey(siteId)) {
           appEnrolledCount += siteWithEnrolledParticipantCountMap.get(siteId);
         }
       }
@@ -292,16 +274,6 @@ public class AppServiceImpl implements AppService {
               / Double.valueOf(appDetails.getInvitedCount());
       appDetails.setEnrollmentPercentage(percentage);
     }
-  }
-
-  private Map<String, Long> getSiteWithInvitedParticipantCountMap(
-      List<ParticipantRegistrySiteEntity> participantRegistry) {
-    return participantRegistry
-        .stream()
-        .collect(
-            Collectors.groupingBy(
-                e -> e.getSite().getId(),
-                Collectors.summingLong(ParticipantRegistrySiteEntity::getInvitationCount)));
   }
 
   private List<String> getUserSiteIds(List<SitePermissionEntity> sitePermissions) {
@@ -324,7 +296,7 @@ public class AppServiceImpl implements AppService {
 
   private Map<String, AppPermissionEntity> getAppPermissionsMap(
       String userId, List<String> appIds) {
-    Map<String, AppPermissionEntity> appPermissionsByAppInfoId = null;
+    Map<String, AppPermissionEntity> appPermissionsByAppInfoId = new HashMap<>();
 
     List<AppPermissionEntity> appPermissions =
         appPermissionRepository.findAppPermissionsOfUserByAppIds(appIds, userId);

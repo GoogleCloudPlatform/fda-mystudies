@@ -24,6 +24,43 @@ terraform {
   }
 }
 
+resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" {
+  name        = "fw-allow-k8s-ingress-lb-health-checks"
+  description = "GCE L7 firewall rule"
+  network     = module.example_dev_network.network.network.self_link
+  project     = module.project.project_id
+
+  allow {
+    protocol = "tcp"
+    ports    = ["30000-32767"]
+  }
+  allow {
+    protocol = "tcp"
+    ports    = ["4444"]
+  }
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+  allow {
+    protocol = "tcp"
+    ports    = ["8080"]
+  }
+
+  # Load Balancer Health Check IP ranges.
+  source_ranges = [
+    "130.211.0.0/22",
+    "209.85.152.0/22",
+    "209.85.204.0/22",
+    "35.191.0.0/16",
+  ]
+
+  target_tags = [
+    "gke-example-dev-gke-cluster",
+    "gke-example-dev-gke-cluster-default-node-pool",
+  ]
+}
+
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 # Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
 # Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
@@ -62,7 +99,6 @@ module "bastion_vm" {
   network      = module.example_dev_network.network.network.self_link
   subnet       = module.example_dev_network.subnets["us-central1/example-dev-bastion-subnet"].self_link
   members      = ["group:example-dev-bastion-accessors@example.com"]
-
   image_family = "ubuntu-2004-lts"
 
   image_project = "ubuntu-os-cloud"
@@ -142,15 +178,13 @@ module "example_dev_router" {
 
       subnetworks = [
         {
-          name                    = "${module.example_dev_network.subnets["us-central1/example-dev-bastion-subnet"].self_link}"
-          source_ip_ranges_to_nat = ["PRIMARY_IP_RANGE"]
-
+          name                     = "${module.example_dev_network.subnets["us-central1/example-dev-bastion-subnet"].self_link}"
+          source_ip_ranges_to_nat  = ["PRIMARY_IP_RANGE"]
           secondary_ip_range_names = []
         },
         {
-          name                    = "${module.example_dev_network.subnets["us-central1/example-dev-gke-subnet"].self_link}"
-          source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-
+          name                     = "${module.example_dev_network.subnets["us-central1/example-dev-gke-subnet"].self_link}"
+          source_ip_ranges_to_nat  = ["ALL_IP_RANGES"]
           secondary_ip_range_names = []
         },
       ]

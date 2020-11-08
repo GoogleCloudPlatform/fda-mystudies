@@ -60,15 +60,15 @@ spec:
                   key: password
             # SERVER CALLS
             - name: AUTH_SERVER_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             - name: STUDY_DATASTORE_URL
-              value: "http://study-datastore-np:50000"
+              value: "http://study-datastore-np:50000/study-datastore"
             - name: PARTICIPANT_ENROLL_DATASTORE_URL
-              value: "http://participant-enroll-datastore:50000"
+              value: "http://participant-enroll-datastore:50000/participant-enroll-datastore"
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             # MISC
             - name: FILE_STORAGE_PATH
               value: ""
@@ -106,4 +106,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: response-datastore-gcloud-key
+          secretName: response-datastore-gke-sa-gcloud-key

@@ -66,22 +66,28 @@ public final class ParticipantMapper {
         idMap.put(participantStudy.getParticipantRegistrySite().getId(), participantStudy);
       }
     }
+
     ParticipantStudyEntity participantStudy = idMap.get(participantSite.getId());
     if (participantStudy != null) {
-      String enrollmentStatus =
-          EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantStudy.getStatus())
-              ? EnrollmentStatus.ENROLLED.getStatus()
-              : participantStudy.getStatus();
-      participantDetail.setEnrollmentStatus(enrollmentStatus);
+      if (EnrollmentStatus.WITHDRAWN.getStatus().equalsIgnoreCase(participantStudy.getStatus())
+          && (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
+              || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode))) {
+        participantDetail.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
+      } else {
+        String enrollmentStatus =
+            EnrollmentStatus.IN_PROGRESS.getStatus().equalsIgnoreCase(participantStudy.getStatus())
+                ? EnrollmentStatus.ENROLLED.getStatus()
+                : participantStudy.getStatus();
+        participantDetail.setEnrollmentStatus(enrollmentStatus);
+      }
+
       String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
       participantDetail.setEnrollmentDate(
           StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-    }
-
-    if (OnboardingStatus.INVITED.getCode().equalsIgnoreCase(onboardingStatusCode)
-        || OnboardingStatus.NEW.getCode().equalsIgnoreCase(onboardingStatusCode)) {
+    } else {
       participantDetail.setEnrollmentStatus(YET_TO_ENROLL);
     }
+
     return participantDetail;
   }
 
@@ -119,6 +125,7 @@ public final class ParticipantMapper {
       participants.setStudyName(study.getName());
       participants.setCustomStudyId(study.getCustomId());
       participants.setSitePermission(permission.value());
+      participants.setStudyStatus(study.getStatus());
       setParticipantRegistryAppInfo(participants, study);
       setParticipantRegistryLocation(site, participants);
     }
@@ -176,14 +183,13 @@ public final class ParticipantMapper {
         participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
       }
     } else {
-      if (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
-          || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode)) {
-        participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
-      }
+      participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
     }
 
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    String disabledDate = DateTimeUtils.format(participantRegistrySite.getDisabledDate());
+    participant.setDisabledDate(StringUtils.defaultIfEmpty(disabledDate, NOT_APPLICABLE));
     return participant;
   }
 

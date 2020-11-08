@@ -49,11 +49,11 @@ spec:
                   key: secret_key
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
             - name: RESPONSE_DATASTORE_URL
-              value: "http://response-datastore-np:50000"
+              value: "http://response-datastore-np:50000/response-datastore"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             # MISC
             - name: LOG_PATH
               valueFrom:
@@ -84,4 +84,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-enroll-datastore-gcloud-key
+          secretName: enroll-datastore-gke-sa-gcloud-key

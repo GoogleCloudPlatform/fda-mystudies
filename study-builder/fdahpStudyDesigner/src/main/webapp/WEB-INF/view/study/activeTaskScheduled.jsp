@@ -2268,7 +2268,7 @@
 
       var frequence_id = $("#oneTimeFreId").val();
       var frequency_date = $("#chooseDate").val();
-      var freQuence_time = $("#selectTime").val();
+      var freQuence_time = $("#selectTime1").val();
       if ($('#isLaunchStudy').is(':checked')) {
         var isLaunch_study = true;
       }

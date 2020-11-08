@@ -117,9 +117,11 @@ CREATE TABLE IF NOT EXISTS `locations` (
   `is_default` varchar(1) NOT NULL DEFAULT 'N',
   `updated_time` datetime DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
   `status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_a1m10y1e7v3wu2497hh138k5i` (`custom_id`),
+  UNIQUE KEY `name` (`name`),
   KEY `locations_status_idx` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
