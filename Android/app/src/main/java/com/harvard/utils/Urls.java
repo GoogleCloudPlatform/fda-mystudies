@@ -19,27 +19,27 @@ import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 
 public class Urls {
-  public static String BASE_URL_WCP_SERVER = BuildConfig.BASE_URL_WCP_SERVER;
-  public static String BASE_URL_REGISTRATION_SERVER = BuildConfig.BASE_URL_REGISTRATION_SERVER;
-  public static String BASE_URL_REGISTRATION_CONSENT_SERVER =
-          BuildConfig.BASE_URL_REGISTRATION_CONSENT_SERVER;
-  public static String BASE_URL_REGISTRATION_ENROLLMENT_SERVER =
-          BuildConfig.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
+  public static String BASE_URL_STUDY_DATASTORE = BuildConfig.BASE_URL_STUDY_DATASTORE;
+  public static String BASE_URL_PARTICIPANT_DATASTORE = BuildConfig.BASE_URL_PARTICIPANT_DATASTORE;
+  public static String BASE_URL_PARTICIPANT_CONSENT_DATASTORE =
+          BuildConfig.BASE_URL_PARTICIPANT_CONSENT_DATASTORE;
+  public static String BASE_URL_PARTICIPANT_ENROLLMENT_DATASTORE =
+          BuildConfig.BASE_URL_PARTICIPANT_ENROLLMENT_DATASTORE;
   public static String BASE_URL_AUTH_SERVER = BuildConfig.BASE_URL_AUTH_SERVER;
-  public static String BASE_URL_RESPONSE_SERVER = BuildConfig.BASE_URL_RESPONSE_SERVER;
+  public static String BASE_URL_RESPONSE_DATASTORE = BuildConfig.BASE_URL_RESPONSE_DATASTORE;
 
   // Auth Server
-  public static String LOGIN = "login";
+  public static String LOGIN = "/login";
 
   // New Auth Server
-  public static String TOKENS = "oauth2/token";
-  public static String AUTH_SERVICE = "users/";
+  public static String TOKENS = "/oauth2/token";
+  public static String AUTH_SERVICE = "/users";
   public static String CHANGE_PASSWORD = "/change_password";
-  public static String FORGOT_PASSWORD = "user/reset_password";
+  public static String FORGOT_PASSWORD = "/user/reset_password";
   public static String LOGOUT = "/logout";
-  public static String AUTH_SERVER_REDIRECT_URL = BuildConfig.BASE_URL_AUTH_SERVER + "callback";
-  public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "auth"
-          + "?client_id=oauth-scim-client-id"
+  public static String AUTH_SERVER_REDIRECT_URL = BuildConfig.BASE_URL_AUTH_SERVER + "/callback";
+  public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "/oauth2/auth"
+          + "?client_id=" + BuildConfig.HYDRA_CLIENT_ID
           + "&scope=offline_access"
           + "&response_type=code"
           + "&appId=" + BuildConfig.APP_ID
@@ -55,44 +55,44 @@ public class Urls {
   public static String DEEPLINK_CALLBACK="/mystudies/callback";
   public static String DEEPLINK_ACTIVATION="/mystudies/activation";
 
-  // Registration Server
-  public static String REGISTER_USER = "register";
-  public static String UPDATE_USER_PROFILE = "updateUserProfile";
-  public static String GET_USER_PROFILE = "userProfile";
-  public static String CONFIRM_REGISTER_USER = "verifyEmailId";
-  public static String RESEND_CONFIRMATION = "resendConfirmation";
-  public static String DELETE_ACCOUNT = "deactivate";
-  public static String WITHDRAW = "withdrawfromstudy";
-  public static String CONTACT_US = "contactUs";
-  public static String FEEDBACK = "feedback";
+  // participant-datastore Server
+  public static String REGISTER_USER = "/register";
+  public static String UPDATE_USER_PROFILE = "/updateUserProfile";
+  public static String GET_USER_PROFILE = "/userProfile";
+  public static String CONFIRM_REGISTER_USER = "/verifyEmailId";
+  public static String RESEND_CONFIRMATION = "/resendConfirmation";
+  public static String DELETE_ACCOUNT = "/deactivate";
+  public static String WITHDRAW = "/withdrawfromstudy";
+  public static String CONTACT_US = "/contactUs";
+  public static String FEEDBACK = "/feedback";
+  
+  // participant-datastore Enrollment Server
+  public static String UPDATE_STUDY_PREFERENCE = "/updateStudyState";
+  public static String STUDY_STATE = "/studyState";
+  public static String VALIDATE_ENROLLMENT_ID = "/validateEnrollmentToken";
+  public static String ENROLL_ID = "/enroll";
 
-  // Registration Enrollment Server
-  public static String UPDATE_STUDY_PREFERENCE = "updateStudyState";
-  public static String STUDY_STATE = "studyState";
-  public static String VALIDATE_ENROLLMENT_ID = "validateEnrollmentToken";
-  public static String ENROLL_ID = "enroll";
+  // participant-datastore consent Server
+  public static String UPDATE_ELIGIBILITY_CONSENT = "/updateEligibilityConsentStatus";
+  public static String CONSENTPDF = "/consentDocument";
 
-  // Registration consent Server
-  public static String UPDATE_ELIGIBILITY_CONSENT = "updateEligibilityConsentStatus";
-  public static String CONSENTPDF = "consentDocument";
-
-  // WCP server
-  public static String STUDY_INFO = "studyInfo";
-  public static String CONSENT_METADATA = "eligibilityConsent";
-  public static String ACTIVITY = "activity";
-  public static String STUDY_LIST = "studyList";
-  public static String SPECIFIC_STUDY = "study";
-  public static String STUDY_UPDATES = "studyUpdates";
-  public static String ACTIVITY_LIST = "activityList";
-  public static String RESOURCE_LIST = "resources";
-  public static String NOTIFICATIONS = "notifications";
-  public static String DASHBOARD_INFO = "studyDashboard";
-  public static String GET_CONSENT_DOC = "consentDocument";
-  public static String VERSION_INFO = "versionInfo";
+  // Study Datastore server
+  public static String STUDY_INFO = "/studyInfo";
+  public static String CONSENT_METADATA = "/eligibilityConsent";
+  public static String ACTIVITY = "/activity";
+  public static String STUDY_LIST = "/studyList";
+  public static String SPECIFIC_STUDY = "/study";
+  public static String STUDY_UPDATES = "/studyUpdates";
+  public static String ACTIVITY_LIST = "/activityList";
+  public static String RESOURCE_LIST = "/resources";
+  public static String NOTIFICATIONS = "/notifications";
+  public static String DASHBOARD_INFO = "/studyDashboard";
+  public static String GET_CONSENT_DOC = "/consentDocument";
+  public static String VERSION_INFO = "/versionInfo";
 
   // Response server
-  public static String PROCESS_RESPONSE = "participant/process-response";
-  public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_SERVER + "participant/getresponse?";
-  public static String UPDATE_ACTIVITY_PREFERENCE = "participant/update-activity-state";
-  public static String ACTIVITY_STATE = "participant/get-activity-state";
+  public static String PROCESS_RESPONSE = "/participant/process-response";
+  public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_DATASTORE + "/participant/getresponse?";
+  public static String UPDATE_ACTIVITY_PREFERENCE = "/participant/update-activity-state";
+  public static String ACTIVITY_STATE = "/participant/get-activity-state";
 }
