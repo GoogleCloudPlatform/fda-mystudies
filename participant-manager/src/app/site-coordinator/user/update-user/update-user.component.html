@@ -456,7 +456,10 @@
         </div>
       </section>
     </div>
-    <section class="btn__container">
+    <section
+      *ngIf="user.status !== userStatus.Deactivated"
+      class="btn__container"
+    >
       <button
         [disabled]="!editUserForm.form.valid"
         type="submit"

@@ -1,17 +1,24 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {AppDetails} from './app-details';
-import {EntityService} from 'src/app/service/entity.service';
+import {environment} from '@environment';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppDetailsService {
-  constructor(private readonly entityService: EntityService<AppDetails>) {}
+  constructor(private readonly http: HttpClient,
+) {}
 
   get(appId: string): Observable<AppDetails> {
-    return this.entityService.get(
-      `apps/${encodeURIComponent(appId)}/participants`,
-    );
+     return this.http.get<AppDetails>(
+        `${environment.baseUrl}/apps/${encodeURIComponent(
+          appId,
+        )}/participants`,
+        {
+          params: {excludeSiteStatus: ['notEligible']},
+        },
+      );
   }
 }
