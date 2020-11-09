@@ -118,6 +118,7 @@
 		6EF2FCEF1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */; };
 		6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */; };
 		6F02217A2264729E00A2DBC8 /* OtherTextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */; };
+		6F04F526254C7B4500F4E74A /* TemporaryPasswordData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F04F523254C7B4500F4E74A /* TemporaryPasswordData.plist */; };
 		6F07148C2428DCE2002749DA /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07148B2428DCE2002749DA /* Collection+Extensions.swift */; };
 		6F209F02242E5E96005DD23F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F209F01242E5E96005DD23F /* Data+Extensions.swift */; };
 		6F214B9424603EFE008F2742 /* WKWebView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */; };
@@ -418,6 +419,7 @@
 		6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftMenuResourceTableViewCell.swift; sourceTree = "<group>"; };
 		6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextChoiceCell.xib; sourceTree = "<group>"; };
 		6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OtherTextChoiceCell.xib; sourceTree = "<group>"; };
+		6F04F523254C7B4500F4E74A /* TemporaryPasswordData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TemporaryPasswordData.plist; sourceTree = "<group>"; };
 		6F07148824279452002749DA /* Default.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Default.xcconfig; sourceTree = "<group>"; };
 		6F07148B2428DCE2002749DA /* Collection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
 		6F209F01242E5E96005DD23F /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
@@ -1216,6 +1218,7 @@
 		6FE00CDB238FEEDA0067A7B8 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				6F04F523254C7B4500F4E74A /* TemporaryPasswordData.plist */,
 				6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */,
 				6EE93DB71E93C8850027A5DC /* Activities.plist */,
 				940577AB1E767C8D0043215C /* ChangePasswordData.plist */,
@@ -2005,6 +2008,7 @@
 				6E14F2031F0224AD00EA8D1E /* Notification.json in Resources */,
 				6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */,
 				89893F0522B1115300A846CE /* Main.storyboard in Resources */,
+				6F04F526254C7B4500F4E74A /* TemporaryPasswordData.plist in Resources */,
 				6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */,
 				484ACBFC1F28A82B00BCC819 /* FilterData.plist in Resources */,
 				6EE93DC91E93C8850027A5DC /* Activities.plist in Resources */,
