@@ -16,10 +16,12 @@
 package com.harvard.studyappmodule;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -52,20 +54,20 @@ import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
-import com.harvard.usermodule.SignInActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -117,8 +119,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     HashMap<String, String> header = new HashMap();
     HashMap<String, String> params = new HashMap();
     params.put("studyId", AppConfig.StudyId);
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             Urls.SPECIFIC_STUDY + "?studyId=" + AppConfig.StudyId,
             SPECIFIC_STUDY,
@@ -130,7 +132,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             false,
             this);
 
-    getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
 
@@ -168,14 +170,40 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Toast.makeText(
-                    StandaloneStudyInfoActivity.this,
-                    "SignIn to Join the Study",
-                    Toast.LENGTH_SHORT)
-                .show();
-            Intent intent = new Intent(StandaloneStudyInfoActivity.this, SignInActivity.class);
-            intent.putExtra("from", "StudyInfo");
-            startActivityForResult(intent, JOIN_ACTION_SIGIN);
+            if (SharedPreferenceHelper.readPreference(
+                    StandaloneStudyInfoActivity.this, getString(R.string.userid), "")
+                .equalsIgnoreCase("")) {
+              Toast.makeText(
+                      StandaloneStudyInfoActivity.this,
+                      "SignIn to Join the Study",
+                      Toast.LENGTH_SHORT)
+                  .show();
+              SharedPreferenceHelper.writePreference(
+                  StandaloneStudyInfoActivity.this,
+                  getString(R.string.loginflow),
+                  "StandaloneStudyInfo");
+              SharedPreferenceHelper.writePreference(
+                  StandaloneStudyInfoActivity.this, getString(R.string.logintype), "signIn");
+              CustomTabsIntent customTabsIntent =
+                  new CustomTabsIntent.Builder()
+                      .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                      .setShowTitle(true)
+                      .setCloseButtonIcon(
+                          BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                      .setStartAnimations(
+                          StandaloneStudyInfoActivity.this,
+                          R.anim.slide_in_right,
+                          R.anim.slide_out_left)
+                      .setExitAnimations(
+                          StandaloneStudyInfoActivity.this,
+                          R.anim.slide_in_left,
+                          R.anim.slide_out_right)
+                      .build();
+              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+              startActivity(customTabsIntent.intent);
+            } else {
+              loginCallback();
+            }
           }
         });
 
@@ -213,8 +241,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     HashMap<String, String> header = new HashMap<>();
     String url = Urls.STUDY_INFO + "?studyId=" + AppConfig.StudyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -226,7 +254,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             false,
             StandaloneStudyInfoActivity.this);
 
-    getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
   }
@@ -286,8 +314,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                 + AppConfig.StudyId
                 + "&consentVersion=&activityId=&activityVersion=";
         GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-        WcpConfigEvent wcpConfigEvent =
-            new WcpConfigEvent(
+        StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+            new StudyDatastoreConfigEvent(
                 "get",
                 url,
                 GET_CONSENT_DOC,
@@ -299,7 +327,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                 false,
                 StandaloneStudyInfoActivity.this);
 
-        getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+        getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
         StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
         studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
 
@@ -433,9 +461,9 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           new ConnectionDetector(StandaloneStudyInfoActivity.this);
 
       String url =
-          Urls.BASE_URL_WCP_SERVER + Urls.CONSENT_METADATA + "?studyId=" + AppConfig.StudyId;
+          Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + AppConfig.StudyId;
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -666,47 +694,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == JOIN_ACTION_SIGIN) {
       if (resultCode == RESULT_OK) {
-
-        AppController.getHelperProgressDialog()
-            .showProgress(StandaloneStudyInfoActivity.this, "", "", false);
-
-        HashMap<String, String> header = new HashMap();
-        header.put(
-            "accessToken",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StandaloneStudyInfoActivity.this, getResources().getString(R.string.auth), ""));
-        header.put(
-            "userId",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StandaloneStudyInfoActivity.this,
-                    getResources().getString(R.string.userid),
-                    ""));
-        header.put(
-            "clientToken",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StandaloneStudyInfoActivity.this,
-                    getResources().getString(R.string.clientToken),
-                    ""));
-        RegistrationServerEnrollmentConfigEvent registrationServerConfigEvent =
-            new RegistrationServerEnrollmentConfigEvent(
-                "get",
-                Urls.STUDY_STATE,
-                GET_PREFERENCES,
-                StandaloneStudyInfoActivity.this,
-                StudyData.class,
-                null,
-                header,
-                null,
-                false,
-                this);
-        GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-        getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-            registrationServerConfigEvent);
-        UserModulePresenter userModulePresenter = new UserModulePresenter();
-        userModulePresenter.performGetUserPreference(getPreferenceEvent);
+        loginCallback();
       }
     } else if (requestCode == 12345) {
       if (resultCode == RESULT_OK) {
@@ -831,5 +819,39 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             }
           }
         });
+  }
+
+  private void loginCallback() {
+    AppController.getHelperProgressDialog()
+        .showProgress(StandaloneStudyInfoActivity.this, "", "", false);
+
+    HashMap<String, String> header = new HashMap();
+    header.put(
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(
+                    StandaloneStudyInfoActivity.this, getResources().getString(R.string.auth), ""));
+    header.put(
+        "userId",
+        AppController.getHelperSharedPreference()
+            .readPreference(
+                StandaloneStudyInfoActivity.this, getResources().getString(R.string.userid), ""));
+    ParticipantEnrollmentDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
+            "get",
+            Urls.STUDY_STATE,
+            GET_PREFERENCES,
+            StandaloneStudyInfoActivity.this,
+            StudyData.class,
+            null,
+            header,
+            null,
+            false,
+            this);
+    GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
+    getPreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(participantDatastoreConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }
 }
