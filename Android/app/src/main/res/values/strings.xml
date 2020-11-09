@@ -219,12 +219,7 @@
     <string name="false_text">False</string>
     <string name="signature">Signature</string>
     <string name="signature_form_step">SIGNATURE_FORM_STEP</string>
-    <string name="first_name1">First Name</string>
-    <string name="first_name2">First name</string>
-    <string name="first_name3">Required</string>
-    <string name="last_name1">Last Name</string>
-    <string name="last_name2">Last name</string>
-    <string name="last_name3">Required</string>
+    <string name="required">Required</string>
     <string name="next1">next</string>
     <string name="exit_message">Are you sure you want to exit?</string>
     <string name="end_task">End Task</string>
@@ -576,9 +571,5 @@
     <string name="login_studyinfo_enroll">login_studyinfo_enroll</string>
     <string name="login_studyinfo_rejoin">login_studyinfo_rejoin</string>
     <string name="login_studyinfo_about_this_study">login_studyinfo_about_this_study</string>
-
-
-    <!--must change strings-->
-    <string name="FileProvider_authorities">com.myfileprovider</string>
 
 </resources>

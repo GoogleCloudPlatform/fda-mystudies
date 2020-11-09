@@ -1,0 +1,19 @@
+{
+  "studyId": "REGteststudy",
+  "message": "daily with in a day",
+  "activities": [
+    {
+      "activityId": "DailyMultipleText",
+      "activityVersion": 1.0,
+      "studyId": "REGteststudy",
+      "activityState": "inProgress",
+      "activityRunId": 1,
+      "bookmarked": false,
+      "activityRun": {
+        "total": 6,
+        "missed": 1,
+        "completed": 1
+      }
+    }
+  ]
+}

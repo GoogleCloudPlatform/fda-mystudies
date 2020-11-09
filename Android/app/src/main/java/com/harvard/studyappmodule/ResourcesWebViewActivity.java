@@ -22,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -236,9 +237,14 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   }
 
   public File copy(File src) throws IOException {
-    String primaryStoragePath =
-        Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + intentTitle + ".pdf";
-    File file = new File(primaryStoragePath);
+    String filePath;
+    if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
+      filePath =
+          Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + intentTitle + ".pdf";
+    } else {
+      filePath = getExternalFilesDir(getString(R.string.app_name)) + "/" + intentTitle + ".pdf";
+    }
+    File file = new File(filePath);
     if (!file.exists()) {
       file.createNewFile();
     }

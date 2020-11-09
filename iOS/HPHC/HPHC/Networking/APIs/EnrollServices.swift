@@ -51,7 +51,7 @@ class EnrollServices: NSObject {
     self.delegate = delegate
 
     let user = User.currentUser
-    let headerParams = [kUserId: user.userId!] as [String: String]
+    let headerParams = [kUserId: user.userId ?? ""]
     let method = EnrollmentMethods.studyState.method
 
     self.sendRequestWith(method: method, params: nil, headers: headerParams)
@@ -99,7 +99,7 @@ class EnrollServices: NSObject {
     self.delegate = delegate
 
     let user = User.currentUser
-    let headerParams = [kUserId: user.userId] as [String: String]
+    let headerParams = [kUserId: user.userId] as? [String: String]
     let params = [kStudies: [studyStauts.getParticipatedUserStudyStatus()]] as [String: Any]
     let method = EnrollmentMethods.updateStudyState.method
 

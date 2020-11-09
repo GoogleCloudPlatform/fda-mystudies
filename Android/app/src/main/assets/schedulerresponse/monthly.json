@@ -1,0 +1,39 @@
+{
+  "activityId": "MonthlyTest",
+  "activityVersion": "1.0",
+  "title": "MonthlyTest",
+  "type": "questionnaire",
+  "startTime": "2020-10-20T11:30:00.000+0000",
+  "endTime": "2021-06-20T11:30:00.000+0000",
+  "branching": false,
+  "lastModified": "2020-10-20T06:07:57.000+0000",
+  "state": "active",
+  "taskSubType": "",
+  "schedulingType": "Regular",
+  "anchorDate": {
+    "sourceType": "",
+    "sourceActivityId": "",
+    "sourceKey": "",
+    "sourceFormKey": "",
+    "start": {
+      "anchorDays": 0,
+      "dayOfWeek": 0,
+      "dateOfMonth": "",
+      "time": ""
+    },
+    "end": {
+      "anchorDays": 0,
+      "repeatInterval": 0,
+      "time": ""
+    }
+  },
+  "frequency": {
+    "type": "Monthly",
+    "runs": [
+
+    ],
+    "anchorRuns": [
+
+    ]
+  }
+}

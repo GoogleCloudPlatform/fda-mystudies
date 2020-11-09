@@ -71,7 +71,13 @@
               "
               class="flex__justify__space-between"
             >
-              <div>
+              <div
+                [hidden]="
+                  siteParticipants.participantRegistryDetail.studyStatus ===
+                    studyStatus.Deactivated ||
+                  siteParticipants.participantRegistryDetail.siteStatus === 0
+                "
+              >
                 <div class="dropdown">
                   <button
                     name="btnToggleParticipant"
@@ -116,11 +122,21 @@
                   </div>
                 </div>
               </div>
-              <div>
+              <div
+                [hidden]="
+                  siteParticipants.participantRegistryDetail.studyPermission !==
+                    permission.ViewAndEdit ||
+                  (siteParticipants.participantRegistryDetail.studyStatus ===
+                    studyStatus.Deactivated &&
+                    siteParticipants.participantRegistryDetail.siteStatus === 0)
+                "
+              >
                 <button
                   name="buttonDecommision"
                   class="btn banner__default__btn flex__row__reverse pad__5__13"
-                  (click)="decommissionSite()"
+                  (click)="
+                    decommissionSite(siteParticipants.participantRegistryDetail)
+                  "
                 >
                   {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
@@ -145,7 +161,13 @@
         class="p-md pb-none"
       >
         <div class="flex__ flex__justify__center">
-          <div>
+          <div
+            [hidden]="
+              siteParticipants.participantRegistryDetail.studyStatus ===
+                studyStatus.Deactivated ||
+              siteParticipants.participantRegistryDetail.siteStatus === 0
+            "
+          >
             <div class="dropdown">
               <button
                 name="btnToggleParticipant"
@@ -190,13 +212,27 @@
               </div>
             </div>
           </div>
-          <div>
+          <div
+            [hidden]="
+              siteParticipants.participantRegistryDetail.studyPermission !==
+                permission.ViewAndEdit ||
+              (siteParticipants.participantRegistryDetail.studyStatus ===
+                studyStatus.Deactivated &&
+                siteParticipants.participantRegistryDetail.siteStatus === 0)
+            "
+          >
             <button
               name="buttonDecommision"
               class="btn banner__default__btn flex__row__reverse pad__5__13 font12"
-              (click)="decommissionSite()"
+              (click)="
+                decommissionSite(siteParticipants.participantRegistryDetail)
+              "
             >
-              Decommission Site for Study
+              {{
+                siteParticipants.participantRegistryDetail.siteStatus === 1
+                  ? "Decommission Site for Study"
+                  : "Activate Site for Study"
+              }}
             </button>
           </div>
         </div>
@@ -254,7 +290,10 @@
         <div
           [hidden]="
             siteParticipants.participantRegistryDetail.sitePermission !==
-            permission.ViewAndEdit
+              permission.ViewAndEdit ||
+            siteParticipants.participantRegistryDetail.studyStatus ===
+              studyStatus.Deactivated ||
+            siteParticipants.participantRegistryDetail.siteStatus === 0
           "
           class="flex__ flex__justify__center"
         >
@@ -360,7 +399,10 @@
             <div
               [hidden]="
                 siteParticipants.participantRegistryDetail.sitePermission !==
-                permission.ViewAndEdit
+                  permission.ViewAndEdit ||
+                siteParticipants.participantRegistryDetail.studyStatus ===
+                  studyStatus.Deactivated ||
+                siteParticipants.participantRegistryDetail.siteStatus === 0
               "
               class="flex__justify__space-between mb-xs"
             >
