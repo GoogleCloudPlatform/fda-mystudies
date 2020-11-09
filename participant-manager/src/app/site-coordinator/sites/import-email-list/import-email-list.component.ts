@@ -29,8 +29,12 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
     const target = event.target as HTMLInputElement;
     if (target.files?.length) {
       const selectedFile: File = target.files[0];
-      this.file = selectedFile;
-      this.fileName = this.file.name;
+      if (selectedFile.type === '.xlsx' || selectedFile.type === '.csv') {
+        this.file = selectedFile;
+        this.fileName = this.file.name;
+      } else {
+        this.toastr.error('The uploaded file is not in the prescribed format.');
+      }
     } else {
       this.fileName = '';
     }
