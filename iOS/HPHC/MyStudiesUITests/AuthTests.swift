@@ -62,7 +62,13 @@ class MyStudiesUITests: UITestBase {
     app.launchArguments += ["LOGGED_USER"]
     app.launch()
 
-    app.navigationBars.firstMatch.buttons["menu icn"].tap()
+    let menuBtn = app.navigationBars.firstMatch.buttons["menu icn"]
+    if menuBtn.exists {
+      menuBtn.tap()
+    } else {
+      app.navigationBars.firstMatch.buttons.firstMatch.tap()
+    }
+    
     app.staticTexts["My Account"].tap()
 
     // Error alert
