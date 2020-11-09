@@ -16,7 +16,10 @@
 package com.harvard.gatewaymodule;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,10 +31,11 @@ import com.harvard.R;
 import com.harvard.gatewaymodule.events.GetStartedEvent;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
-import com.harvard.usermodule.SignInActivity;
 import com.harvard.usermodule.SignupActivity;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
+import com.harvard.utils.Urls;
 
 public class GatewayActivity extends AppCompatActivity {
   private static final int UPGRADE = 100;
@@ -53,10 +57,10 @@ public class GatewayActivity extends AppCompatActivity {
     setFont();
     bindEvents();
     setViewPagerView();
-    if (getIntent().getStringExtra("from") != null
-        && getIntent().getStringExtra("from").equalsIgnoreCase("forgot")) {
-      Intent intent = new Intent(GatewayActivity.this, SignInActivity.class);
-      startActivity(intent);
+
+    if (getIntent().getStringExtra("action") != null
+            && getIntent().getStringExtra("action").equalsIgnoreCase(AppController.loginCallback)) {
+      loadLogin();
     }
   }
 
@@ -100,8 +104,7 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Intent intent = new Intent(GatewayActivity.this, SignInActivity.class);
-            startActivity(intent);
+            loadLogin();
           }
         });
 
@@ -132,8 +135,7 @@ public class GatewayActivity extends AppCompatActivity {
           public void onPageSelected(int position) {
             // Check if this is the page you want.
             if (position == 0) {
-              getStarted.setBackground(
-                  getResources().getDrawable(R.drawable.rectangle_blue_white));
+              getStarted.setBackground(getResources().getDrawable(R.drawable.rectangle_blue_white));
               getStarted.setTextColor(getResources().getColor(R.color.white));
             } else {
               getStarted.setBackground(
@@ -169,5 +171,24 @@ public class GatewayActivity extends AppCompatActivity {
     if (requestCode == UPGRADE) {
       alertDialog.dismiss();
     }
+  }
+
+  private void loadLogin() {
+    SharedPreferenceHelper.writePreference(
+        GatewayActivity.this, getString(R.string.loginflow), "Gateway");
+    SharedPreferenceHelper.writePreference(
+        GatewayActivity.this, getString(R.string.logintype), "signIn");
+    CustomTabsIntent.Builder builder =
+        new CustomTabsIntent.Builder()
+            .setToolbarColor(getResources().getColor(R.color.colorAccent))
+            .setShowTitle(true)
+            .setCloseButtonIcon(
+                BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+            .setStartAnimations(GatewayActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+            .setExitAnimations(GatewayActivity.this, R.anim.slide_in_left, R.anim.slide_out_right);
+
+    CustomTabsIntent customTabsIntent = builder.build();
+    customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+    startActivity(customTabsIntent.intent);
   }
 }

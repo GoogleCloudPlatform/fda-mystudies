@@ -1,0 +1,12 @@
+{
+  "onetime": [
+    {
+      "runId": 1,
+      "startDate": "2020-10-20T11:25:00.000+0530",
+      "endDate": "2020-10-31T23:59:59.000+0530",
+      "activityId": "OneTimeTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    }
+  ]
+}

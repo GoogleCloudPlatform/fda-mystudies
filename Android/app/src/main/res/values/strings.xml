@@ -2,6 +2,13 @@
 <resources>
     <!--Shared Preference-->
     <string name="auth">authentication</string>
+    <string name="filter_signup">signup</string>
+    <string name="filter_callback">callback</string>
+    <string name="filter_activation">activation</string>
+    <string name="filter_error">error</string>
+    <string name="filter_forgotPassword">forgotPassword</string>
+    <string name="filter_privacy">privacy</string>
+    <string name="filter_terms">terms</string>
     <string name="userid">UserId</string>
     <string name="verified">Verified</string>
     <string name="join">Join</string>
@@ -212,12 +219,7 @@
     <string name="false_text">False</string>
     <string name="signature">Signature</string>
     <string name="signature_form_step">SIGNATURE_FORM_STEP</string>
-    <string name="first_name1">First Name</string>
-    <string name="first_name2">First name</string>
-    <string name="first_name3">Required</string>
-    <string name="last_name1">Last Name</string>
-    <string name="last_name2">Last name</string>
-    <string name="last_name3">Required</string>
+    <string name="required">Required</string>
     <string name="next1">next</string>
     <string name="exit_message">Are you sure you want to exit?</string>
     <string name="end_task">End Task</string>
@@ -557,9 +559,17 @@
     <string name="visit_website">Visit Website</string>
     <string name="join_study">Join Study</string>
     <string name="clientToken">clientToken</string>
-
-
-    <!--must change strings-->
-    <string name="FileProvider_authorities">com.myfileprovider</string>
+    <string name="server_connect_error">Couldn\'t connect to server. Please try again later.</string>
+    <string name="loginflow">loginflow</string>
+    <string name="logintype">logintype</string>
+    <string name="login_studyinfo_studyId">login_studyinfo_studyId</string>
+    <string name="login_studyinfo_title">login_studyinfo_title</string>
+    <string name="login_studyinfo_bookmark">login_studyinfo_bookmark</string>
+    <string name="login_studyinfo_status">login_studyinfo_status</string>
+    <string name="login_studyinfo_studyStatus">login_studyinfo_studyStatus</string>
+    <string name="login_studyinfo_position">login_studyinfo_position</string>
+    <string name="login_studyinfo_enroll">login_studyinfo_enroll</string>
+    <string name="login_studyinfo_rejoin">login_studyinfo_rejoin</string>
+    <string name="login_studyinfo_about_this_study">login_studyinfo_about_this_study</string>
 
 </resources>

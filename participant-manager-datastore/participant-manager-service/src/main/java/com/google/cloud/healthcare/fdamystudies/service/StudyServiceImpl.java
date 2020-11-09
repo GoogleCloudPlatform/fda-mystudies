@@ -165,28 +165,33 @@ public class StudyServiceImpl implements StudyService {
     List<StudyEntity> studies = studyRepository.findAll();
     List<StudyDetails> studyDetailsList = new ArrayList<>();
     for (StudyEntity study : studies) {
-      StudyDetails studyDetail = new StudyDetails();
-      studyDetail.setId(study.getId());
-      studyDetail.setCustomId(study.getCustomId());
-      studyDetail.setName(study.getName());
-      studyDetail.setType(study.getType());
-      studyDetail.setLogoImageUrl(study.getLogoImageUrl());
-      SiteCount siteCount = sitesPerStudyMap.get(study.getId());
-      if (siteCount != null && siteCount.getCount() != null) {
-        studyDetail.setSitesCount(siteCount.getCount());
+      List<SiteEntity> sites = siteRepository.findSitesByStudyId(study.getId());
+      if (CollectionUtils.isNotEmpty(sites)) {
+        StudyDetails studyDetail = new StudyDetails();
+        studyDetail.setId(study.getId());
+        studyDetail.setCustomId(study.getCustomId());
+        studyDetail.setName(study.getName());
+        studyDetail.setType(study.getType());
+        studyDetail.setLogoImageUrl(study.getLogoImageUrl());
+        SiteCount siteCount = sitesPerStudyMap.get(study.getId());
+        if (siteCount != null && siteCount.getCount() != null) {
+          studyDetail.setSitesCount(siteCount.getCount());
+        }
+        studyDetail.setStudyPermission(Permission.EDIT.value());
+        Long enrolledCount = getCount(studyEnrolledCountMap, study.getId());
+        Long invitedCount = getCount(studyInvitedCountMap, study.getId());
+        studyDetail.setEnrolled(enrolledCount);
+        studyDetail.setInvited(invitedCount);
+        if (studyDetail.getInvited() != 0
+            && (studyDetail.getType().equals(OPEN_STUDY)
+                || studyDetail.getInvited() >= studyDetail.getEnrolled())) {
+          Double percentage =
+              (Double.valueOf(studyDetail.getEnrolled()) * 100)
+                  / Double.valueOf(studyDetail.getInvited());
+          studyDetail.setEnrollmentPercentage(percentage);
+        }
+        studyDetailsList.add(studyDetail);
       }
-      studyDetail.setStudyPermission(Permission.EDIT.value());
-      Long enrolledCount = getCount(studyEnrolledCountMap, study.getId());
-      Long invitedCount = getCount(studyInvitedCountMap, study.getId());
-      studyDetail.setEnrolled(enrolledCount);
-      studyDetail.setInvited(invitedCount);
-      if (studyDetail.getInvited() != 0 && studyDetail.getInvited() >= studyDetail.getEnrolled()) {
-        Double percentage =
-            (Double.valueOf(studyDetail.getEnrolled()) * 100)
-                / Double.valueOf(studyDetail.getInvited());
-        studyDetail.setEnrollmentPercentage(percentage);
-      }
-      studyDetailsList.add(studyDetail);
     }
     return new StudyResponse(
         MessageCode.GET_STUDIES_SUCCESS, studyDetailsList, userRegAdminEntity.isSuperAdmin());
@@ -293,7 +298,9 @@ public class StudyServiceImpl implements StudyService {
 
     studyDetail.setEnrolled(studyEnrolledCount);
     studyDetail.setInvited(studyInvitedCount);
-    if (studyDetail.getInvited() != 0 && studyDetail.getInvited() >= studyDetail.getEnrolled()) {
+    if (studyDetail.getInvited() != 0
+        && (studyDetail.getType().equals(OPEN_STUDY)
+            || studyDetail.getInvited() >= studyDetail.getEnrolled())) {
       Double percentage =
           (Double.valueOf(studyDetail.getEnrolled()) * 100)
               / Double.valueOf(studyDetail.getInvited());

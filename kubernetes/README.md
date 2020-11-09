@@ -91,6 +91,7 @@ $ gsutil cp \
   ./response-datastore/sqlscript/mystudies_response_server_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
+  ./hydra/sqlscript/create_hydra_db_script.sql \
   gs://<prefix>-<env>-mystudies-sql-import
 ```
 
@@ -101,16 +102,17 @@ just "mystudies".
 
 Import the scripts, in this order:
 
+#### Hydra
+
+```bash
+gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/create_hydra_db_script.sql
+```
+
 #### Study builder
 
 ```bash
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/HPHC_My_Studies_DB_Create_Script.sql
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/procedures.sql
-```
-
-`version_info_script.sql` should be run after a superadmin has been already created for Study Builder.
-You can use [create_study_builder_superadmin.sh](../scripts/create_study_builder_superadmin.sh) to create or update Study Builder's superadmin account.
-```bash
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/version_info_script.sql
 ```
 

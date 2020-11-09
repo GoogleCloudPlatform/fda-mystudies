@@ -37,6 +37,8 @@ public class ParticipantDetail {
 
   private String invitedDate;
 
+  private String disabledDate;
+
   private String siteId;
 
   private String locationName;

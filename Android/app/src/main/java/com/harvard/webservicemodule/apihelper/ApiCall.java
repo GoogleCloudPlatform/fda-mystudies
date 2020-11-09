@@ -25,7 +25,7 @@ import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityInfoData;
-import com.harvard.usermodule.webservicemodel.RefreshToken;
+import com.harvard.usermodule.webservicemodel.TokenData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
@@ -279,8 +279,8 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
               "userId",
               SharedPreferenceHelper.readPreference(
                   context, context.getString(R.string.userid), ""));
-          refreshTokenJsonData.put("redirect_uri", BuildConfig.AUTH_SERVER_REDIRECT_URL);
-          refreshTokenJsonData.put("client_id", "oauth-scim-client-id");
+          refreshTokenJsonData.put("redirect_uri", Urls.AUTH_SERVER_REDIRECT_URL);
+          refreshTokenJsonData.put("client_id", BuildConfig.HYDRA_CLIENT_ID);
           refreshTokenJsonData.put("grant_type", "refresh_token");
 
           HashMap<String, String> refreshTokenHeader = new HashMap<>();
@@ -343,7 +343,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         response = "success";
 
         obj = parseJson(responseModel, genericClass);
-        if (urlPassed.contains(Urls.BASE_URL_WCP_SERVER + "activity")) {
+        if (urlPassed.contains(Urls.BASE_URL_STUDY_DATASTORE + "/activity")) {
           try {
             ActivityInfoData activityInfoData = (ActivityInfoData) obj;
             JSONObject jsonObject = new JSONObject(responseModel.getResponseData());
@@ -462,22 +462,22 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       response = "success";
 
       if (forRefreshToken) {
-        obj = parseJson(responseModel, RefreshToken.class);
-        RefreshToken refreshToken = (RefreshToken) obj;
-        if (refreshToken != null) {
+        obj = parseJson(responseModel, TokenData.class);
+        TokenData tokenData = (TokenData) obj;
+        if (tokenData != null) {
           AppController.getHelperSharedPreference()
-              .writePreference(context, context.getString(R.string.auth), refreshToken.getAuth());
+              .writePreference(context, context.getString(R.string.auth), tokenData.getAccess_token());
           AppController.getHelperSharedPreference()
               .writePreference(
                   context,
                   context.getString(R.string.refreshToken),
-                  refreshToken.getRefreshToken());
+                      tokenData.getRefresh_token());
         } else {
           response = "error";
         }
       } else {
         obj = parseJson(responseModel, genericClass);
-        if (urlPassed.contains(Urls.BASE_URL_WCP_SERVER + "activity")) {
+        if (urlPassed.contains(Urls.BASE_URL_STUDY_DATASTORE + "/activity")) {
           try {
             ActivityInfoData activityInfoData = (ActivityInfoData) obj;
             JSONObject jsonObject = new JSONObject(responseModel.getResponseData());

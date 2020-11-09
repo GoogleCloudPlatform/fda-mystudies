@@ -273,6 +273,7 @@ public class StudyStateServiceImpl implements StudyStateService {
               participantStudy.get().getParticipantRegistrySite().getId());
       ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
       participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+      participantRegistrySite.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
       participantStudy.get().setParticipantId(null);
       participantStudyRepository.saveAndFlush(participantStudy.get());

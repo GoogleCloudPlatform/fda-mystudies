@@ -244,6 +244,7 @@ public class LocationQuestion
                                 // or EditorInfo.IME_NULL if being called due to the enter key being
                                 // pressed.
                                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                                  AppController.getHelperHideKeyboardContext(context,search);
                                   LatLng latLng = getLocationFromAddress(v.getText().toString());
                                   if (latLng != null) {
                                     googleMap.clear();

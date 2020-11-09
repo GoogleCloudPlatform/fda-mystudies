@@ -109,6 +109,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
@@ -233,9 +234,7 @@ public class SiteServiceImpl implements SiteService {
       site.setLocation(location.get());
     }
 
-    if (!userRegAdmin.isSuperAdmin()) {
-      addSitePermissions(userId, studyId, site);
-    }
+    addSitePermissions(userId, studyId, site);
 
     site = siteRepository.save(site);
 
@@ -248,15 +247,11 @@ public class SiteServiceImpl implements SiteService {
         studyPermissionRepository.findByStudyId(studyId);
 
     for (StudyPermissionEntity studyPermission : userStudypermissionList) {
-      Permission editPermission =
-          studyPermission.getUrAdminUser().getId().equals(userId)
-              ? Permission.EDIT
-              : studyPermission.getEdit();
       SitePermissionEntity sitePermission = new SitePermissionEntity();
       sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
       sitePermission.setStudy(studyPermission.getStudy());
       sitePermission.setApp(studyPermission.getApp());
-      sitePermission.setCanEdit(editPermission);
+      sitePermission.setCanEdit(studyPermission.getEdit());
       sitePermission.setCreatedBy(userId);
       site.addSitePermissionEntity(sitePermission);
     }
@@ -590,7 +585,7 @@ public class SiteServiceImpl implements SiteService {
 
     List<String> status = Arrays.asList(IN_PROGRESS, STATUS_ACTIVE);
     Optional<Long> optParticipantStudyCount =
-        participantStudyRepository.findByStudyIdAndStatus(status, study.getId());
+        participantStudyRepository.findByStudyIdSiteIdAndStatus(status, study.getId(), siteId);
 
     if (optParticipantStudyCount.isPresent()
         && optParticipantStudyCount.get() > 0
@@ -1050,9 +1045,16 @@ public class SiteServiceImpl implements SiteService {
     List<ParticipantRegistrySiteEntity> participantregistryList =
         participantRegistrySiteRepository.findByIds(participantStatusRequest.getIds());
 
+    Timestamp disabledTimestamp =
+        OnboardingStatus.DISABLED.equals(onboardingStatus)
+            ? new Timestamp(Instant.now().toEpochMilli())
+            : null;
+
     if (!OnboardingStatus.NEW.equals(onboardingStatus)) {
       participantRegistrySiteRepository.updateOnboardingStatus(
-          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+          participantStatusRequest.getStatus(),
+          participantStatusRequest.getIds(),
+          disabledTimestamp);
     } else {
       List<String> emails =
           participantregistryList
@@ -1069,7 +1071,9 @@ public class SiteServiceImpl implements SiteService {
       }
 
       participantRegistrySiteRepository.updateOnboardingStatus(
-          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+          participantStatusRequest.getStatus(),
+          participantStatusRequest.getIds(),
+          disabledTimestamp);
     }
 
     SiteEntity site = optSite.get();
@@ -1111,8 +1115,8 @@ public class SiteServiceImpl implements SiteService {
     List<SitePermissionEntity> sitePermissions =
         sitePermissionRepository.findSitePermissionByUserId(userId);
 
-    if (CollectionUtils.isEmpty(studyPermissions)) {
-      throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+    if (CollectionUtils.isEmpty(studyPermissions) && CollectionUtils.isEmpty(sitePermissions)) {
+      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
     Map<String, StudyPermissionEntity> studyPermissionsByStudyId = new HashMap<>();
@@ -1128,38 +1132,51 @@ public class SiteServiceImpl implements SiteService {
                   return study;
                 })
             .collect(Collectors.toList());
+
     List<EnrolledInvitedCount> enrolledInvitedCountList = new ArrayList<>();
+    ;
+    List<StudyEntity> userStudiesWithSites = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(sitePermissions)) {
+      userStudiesWithSites =
+          sitePermissions
+              .stream()
+              .map(SitePermissionEntity::getStudy)
+              .distinct()
+              .collect(Collectors.toList());
       enrolledInvitedCountList = siteRepository.getEnrolledInvitedCountByUserId(userId);
     }
 
     Map<String, EnrolledInvitedCount> enrolledInvitedCountMap =
-        enrolledInvitedCountList
+        CollectionUtils.emptyIfNull(enrolledInvitedCountList)
             .stream()
             .collect(Collectors.toMap(EnrolledInvitedCount::getSiteId, Function.identity()));
 
+    List<StudyEntity> studyList =
+        CollectionUtils.isNotEmpty(studyPermissions) ? userStudies : userStudiesWithSites;
+
     List<StudyDetails> studies = new ArrayList<>();
-    for (StudyEntity study : userStudies) {
+    for (StudyEntity study : studyList) {
       StudyDetails studyDetail = StudyMapper.toStudyDetails(study);
 
       if (studyPermissionsByStudyId.get(study.getId()) != null) {
-        Integer studyEditPermission =
-            studyPermissionsByStudyId.get(study.getId()).getEdit().value();
+        Integer permission = studyPermissionsByStudyId.get(study.getId()).getEdit().value();
         studyDetail.setStudyPermission(
-            studyEditPermission == Permission.NO_PERMISSION.value()
-                ? Permission.VIEW.value()
-                : Permission.EDIT.value());
-        studyDetail.setStudyPermission(studyEditPermission);
+            permission == Permission.NO_PERMISSION.value()
+                ? Permission.NO_PERMISSION.value()
+                : permission);
       }
 
-      if (CollectionUtils.isNotEmpty(study.getSites())) {
-        addSites(enrolledInvitedCountMap, study, studyDetail);
+      List<SitePermissionEntity> sitePermissionList =
+          sitePermissionRepository.findByUserIdAndStudyId(userId, study.getId());
+
+      if (CollectionUtils.isNotEmpty(sitePermissions)
+          || CollectionUtils.isNotEmpty(studyPermissions)) {
+        addSitesForNonSuperAdmin(enrolledInvitedCountMap, study, studyDetail, sitePermissionList);
       }
 
       studyDetail.setSitesCount((long) studyDetail.getSites().size());
       studies.add(studyDetail);
     }
-
     logger.exit(String.format("%d studies found", studies.size()));
     return new SiteDetailsResponse(studies, MessageCode.GET_SITES_SUCCESS);
   }
@@ -1190,6 +1207,59 @@ public class SiteServiceImpl implements SiteService {
     return studies;
   }
 
+  private void addSitesForNonSuperAdmin(
+      Map<String, EnrolledInvitedCount> enrolledInvitedCountMap,
+      StudyEntity study,
+      StudyDetails studyDetail,
+      List<SitePermissionEntity> sitePermissions) {
+
+    Map<String, Long> enrolledInvitedCountForOpenStudyBySiteId =
+        getEnrolledCountForOpenStudyGroupBySiteId(study);
+
+    for (SitePermissionEntity sitePermissionEntity : sitePermissions) {
+      if (sitePermissionEntity.getSite().getStatus().equals(SiteStatus.ACTIVE.value())) {
+        EnrolledInvitedCount enrolledInvitedCount =
+            enrolledInvitedCountMap.get(sitePermissionEntity.getSite().getId());
+
+        Long invitedCount = 0L;
+        Long enrolledCount = 0L;
+        if (enrolledInvitedCount != null) {
+          invitedCount = enrolledInvitedCount.getInvitedCount();
+          enrolledCount = enrolledInvitedCount.getEnrolledCount();
+        }
+
+        SiteDetails site = new SiteDetails();
+        site.setId(sitePermissionEntity.getSite().getId());
+        site.setName(sitePermissionEntity.getSite().getLocation().getName());
+
+        String studyType = study.getType();
+        if (studyType.equals(OPEN_STUDY)
+            && sitePermissionEntity.getSite().getTargetEnrollment() != null) {
+          site.setEnrolled(
+              enrolledInvitedCountForOpenStudyBySiteId != null
+                  ? enrolledInvitedCountForOpenStudyBySiteId.get(
+                      sitePermissionEntity.getSite().getId())
+                  : 0L);
+          site.setInvited(Long.valueOf(sitePermissionEntity.getSite().getTargetEnrollment()));
+        } else if (studyType.equals(CLOSE_STUDY)) {
+          site.setInvited(invitedCount);
+          site.setEnrolled(enrolledCount);
+        }
+
+        if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
+          Double percentage =
+              (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
+          site.setEnrollmentPercentage(percentage);
+        } else if (site.getInvited() != 0
+            && site.getEnrolled() >= site.getInvited()
+            && studyType.equals(OPEN_STUDY)) {
+          site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
+        }
+        studyDetail.getSites().add(site);
+      }
+    }
+  }
+
   private void addSites(
       Map<String, EnrolledInvitedCount> enrolledInvitedCountMap,
       StudyEntity study,
@@ -1215,7 +1285,7 @@ public class SiteServiceImpl implements SiteService {
       String studyType = study.getType();
       if (studyType.equals(OPEN_STUDY) && siteEntity.getTargetEnrollment() != null) {
         site.setEnrolled(
-            enrolledInvitedCountForOpenStudyBySiteId != null
+            MapUtils.isNotEmpty(enrolledInvitedCountForOpenStudyBySiteId)
                 ? enrolledInvitedCountForOpenStudyBySiteId.get(siteEntity.getId())
                 : 0L);
         site.setInvited(Long.valueOf(siteEntity.getTargetEnrollment()));

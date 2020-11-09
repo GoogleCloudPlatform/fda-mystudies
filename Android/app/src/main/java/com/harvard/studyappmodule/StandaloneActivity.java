@@ -63,9 +63,9 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantConsentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -140,8 +140,8 @@ public class StandaloneActivity extends AppCompatActivity
         HashMap<String, String> header = new HashMap();
         HashMap<String, String> params = new HashMap();
         params.put("studyId", AppConfig.StudyId);
-        WcpConfigEvent wcpConfigEvent =
-            new WcpConfigEvent(
+        StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+            new StudyDatastoreConfigEvent(
                 "get",
                 Urls.SPECIFIC_STUDY + "?studyId=" + AppConfig.StudyId,
                 SPECIFIC_STUDY,
@@ -153,13 +153,14 @@ public class StandaloneActivity extends AppCompatActivity
                 false,
                 this);
 
-        getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
+        getUserStudyListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
         StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
         studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
       } else {
         Intent intent = new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
         ComponentName cn = intent.getComponent();
         Intent mainIntent = Intent.makeRestartActivityTask(cn);
+        mainIntent.putExtra("flow", getIntent().getStringExtra("flow"));
         startActivity(mainIntent);
         finish();
       }
@@ -193,25 +194,19 @@ public class StandaloneActivity extends AppCompatActivity
 
             HashMap<String, String> header = new HashMap();
             header.put(
-                "accessToken",
-                AppController.getHelperSharedPreference()
-                    .readPreference(
-                        StandaloneActivity.this, getResources().getString(R.string.auth), ""));
+                "Authorization",
+                "Bearer "
+                    + AppController.getHelperSharedPreference()
+                        .readPreference(
+                            StandaloneActivity.this, getResources().getString(R.string.auth), ""));
             header.put(
                 "userId",
                 AppController.getHelperSharedPreference()
                     .readPreference(
                         StandaloneActivity.this, getResources().getString(R.string.userid), ""));
-            header.put(
-                "clientToken",
-                AppController.getHelperSharedPreference()
-                    .readPreference(
-                        StandaloneActivity.this,
-                        getResources().getString(R.string.clientToken),
-                        ""));
 
-            RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-                new RegistrationServerEnrollmentConfigEvent(
+            ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+                new ParticipantEnrollmentDatastoreConfigEvent(
                     "get",
                     Urls.STUDY_STATE,
                     GET_PREFERENCES,
@@ -223,8 +218,8 @@ public class StandaloneActivity extends AppCompatActivity
                     false,
                     this);
             GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-            getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-                registrationServerEnrollmentConfigEvent);
+            getPreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+                participantEnrollmentDatastoreConfigEvent);
             UserModulePresenter userModulePresenter = new UserModulePresenter();
             userModulePresenter.performGetUserPreference(getPreferenceEvent);
           } else {
@@ -338,6 +333,7 @@ public class StandaloneActivity extends AppCompatActivity
                 } else {
                   Intent intent =
                       new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
+                  intent.putExtra("flow", getIntent().getStringExtra("flow"));
                   intent.putExtra("studyId", studyListArrayList.get(j).getStudyId());
                   intent.putExtra("title", studyListArrayList.get(j).getTitle());
                   intent.putExtra("bookmark", studyListArrayList.get(j).isBookmarked());
@@ -361,6 +357,7 @@ public class StandaloneActivity extends AppCompatActivity
             studyListArrayList.get(0).setStudyStatus(YET_TO_JOIN);
 
             Intent intent = new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
+            intent.putExtra("flow", getIntent().getStringExtra("flow"));
             intent.putExtra("studyId", studyListArrayList.get(0).getStudyId());
             intent.putExtra("title", studyListArrayList.get(0).getTitle());
             intent.putExtra("bookmark", studyListArrayList.get(0).isBookmarked());
@@ -406,6 +403,7 @@ public class StandaloneActivity extends AppCompatActivity
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
         Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+        addClearTopFlag(intent);
         intent.putExtra("studyId", studyId);
         intent.putExtra("to", calledFor);
         intent.putExtra("from", from);
@@ -431,6 +429,7 @@ public class StandaloneActivity extends AppCompatActivity
         } else {
           AppController.getHelperProgressDialog().dismissDialog();
           Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+          addClearTopFlag(intent);
           intent.putExtra("studyId", studyId);
           intent.putExtra("to", calledFor);
           intent.putExtra("from", from);
@@ -442,6 +441,7 @@ public class StandaloneActivity extends AppCompatActivity
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
         Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+        addClearTopFlag(intent);
         intent.putExtra("studyId", studyId);
         intent.putExtra("to", calledFor);
         intent.putExtra("from", from);
@@ -463,6 +463,7 @@ public class StandaloneActivity extends AppCompatActivity
         || responseCode == GET_CONSENT_DOC
         || responseCode == CONSENTPDF) {
       Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+      addClearTopFlag(intent);
       intent.putExtra("studyId", studyId);
       intent.putExtra("to", calledFor);
       intent.putExtra("from", from);
@@ -492,6 +493,7 @@ public class StandaloneActivity extends AppCompatActivity
               "");
         } else {
           Intent intent = new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
+          intent.putExtra("flow", getIntent().getStringExtra("flow"));
           intent.putExtra("studyId", studyListArrayList.get(0).getStudyId());
           intent.putExtra("title", studyListArrayList.get(0).getTitle());
           intent.putExtra("bookmark", studyListArrayList.get(0).isBookmarked());
@@ -592,6 +594,7 @@ public class StandaloneActivity extends AppCompatActivity
                             .getStudyStatus()
                             .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
                       Intent intent = new Intent(StandaloneActivity.this, SurveyActivity.class);
+                      addClearTopFlag(intent);
                       intent.putExtra("studyId", studyId);
                       startActivity(intent);
                       finish();
@@ -614,6 +617,7 @@ public class StandaloneActivity extends AppCompatActivity
                     } else {
                       Intent intent =
                           new Intent(getApplicationContext(), StandaloneStudyInfoActivity.class);
+                      intent.putExtra("flow", getIntent().getStringExtra("flow"));
                       intent.putExtra("studyId", studyListArrayList.get(i).getStudyId());
                       intent.putExtra("title", studyListArrayList.get(i).getTitle());
                       intent.putExtra("bookmark", studyListArrayList.get(i).isBookmarked());
@@ -795,8 +799,8 @@ public class StandaloneActivity extends AppCompatActivity
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
     HashMap<String, String> header = new HashMap();
     String url = Urls.STUDY_UPDATES + "?studyId=" + studyId + "&studyVersion=" + studyVersion;
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             STUDY_UPDATES,
@@ -808,7 +812,7 @@ public class StandaloneActivity extends AppCompatActivity
             false,
             this);
 
-    getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
   }
@@ -822,8 +826,8 @@ public class StandaloneActivity extends AppCompatActivity
             + "&consentVersion=&activityId=&activityVersion=";
     AppController.getHelperProgressDialog().showProgress(StandaloneActivity.this, "", "", false);
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             GET_CONSENT_DOC,
@@ -835,7 +839,7 @@ public class StandaloneActivity extends AppCompatActivity
             false,
             StandaloneActivity.this);
 
-    getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
   }
@@ -844,17 +848,19 @@ public class StandaloneActivity extends AppCompatActivity
     ConsentPdfEvent consentPdfEvent = new ConsentPdfEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(StandaloneActivity.this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(
+                    StandaloneActivity.this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(
                 StandaloneActivity.this, getResources().getString(R.string.userid), ""));
     String url = Urls.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
-    RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
-        new RegistrationServerConsentConfigEvent(
+    ParticipantConsentDatastoreConfigEvent participantConsentDatastoreConfigEvent =
+        new ParticipantConsentDatastoreConfigEvent(
             "get",
             url,
             CONSENTPDF,
@@ -865,7 +871,7 @@ public class StandaloneActivity extends AppCompatActivity
             null,
             false,
             StandaloneActivity.this);
-    consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
+    consentPdfEvent.setParticipantConsentDatastoreConfigEvent(participantConsentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPdf(consentPdfEvent);
   }
@@ -884,9 +890,9 @@ public class StandaloneActivity extends AppCompatActivity
     protected String doInBackground(String... params) {
       ConnectionDetector connectionDetector = new ConnectionDetector(StandaloneActivity.this);
 
-      String url = Urls.BASE_URL_WCP_SERVER + Urls.CONSENT_METADATA + "?studyId=" + studyId;
+      String url = Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -1071,8 +1077,7 @@ public class StandaloneActivity extends AppCompatActivity
     ArrayList<StudyList> closed = new ArrayList<>();
     ArrayList<StudyList> others = new ArrayList<>();
 
-    ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc =
-        new ArrayList<>();
+    ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeYetToJoinCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeOthersCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> upComingCompletionAdherenceCalc = new ArrayList<>();
@@ -1098,15 +1103,13 @@ public class StandaloneActivity extends AppCompatActivity
               dbServiceSubscriber.getStudies(studyListArrayList.get(i).getStudyId(), realm);
           if (studies != null) {
             try {
-              CompletionAdherence completionAdherenceCalculation =
-                  new CompletionAdherence();
+              CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
               completionAdherenceCalculation.setCompletion(studies.getCompletion());
               completionAdherenceCalculation.setAdherence(studies.getAdherence());
               completionAdherenceCalculation.setActivityAvailable(false);
               completionAdherenceCalcSort = completionAdherenceCalculation;
             } catch (Exception e) {
-              CompletionAdherence completionAdherenceCalculation =
-                  new CompletionAdherence();
+              CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
               completionAdherenceCalculation.setAdherence(0);
               completionAdherenceCalculation.setCompletion(0);
               completionAdherenceCalculation.setActivityAvailable(false);
@@ -1114,8 +1117,7 @@ public class StandaloneActivity extends AppCompatActivity
               Logger.log(e);
             }
           } else {
-            CompletionAdherence completionAdherenceCalculation =
-                new CompletionAdherence();
+            CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
             completionAdherenceCalculation.setAdherence(0);
             completionAdherenceCalculation.setCompletion(0);
             completionAdherenceCalculation.setActivityAvailable(false);
@@ -1367,5 +1369,10 @@ public class StandaloneActivity extends AppCompatActivity
       dbServiceSubscriber.closeRealmObj(realm);
     }
     super.onDestroy();
+  }
+
+  private void addClearTopFlag(Intent intent){
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
   }
 }

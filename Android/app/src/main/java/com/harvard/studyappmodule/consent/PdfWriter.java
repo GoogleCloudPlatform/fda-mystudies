@@ -65,7 +65,7 @@ public class PdfWriter {
     float fontSize = 14;
     float leading = 1.5f * fontSize;
     PDRectangle mediabox = page.getMediaBox();
-    float margin = 25;
+    float margin = 50;
     float width = mediabox.getWidth() - 2 * margin;
     float startX = mediabox.getLowerLeftX() + margin;
     float startY = mediabox.getUpperRightY() - margin;
