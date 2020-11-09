@@ -546,7 +546,7 @@ public class SiteServiceImpl implements SiteService {
   private void checkPreConditionsForSiteActivate(SiteEntity site) {
     Optional<LocationEntity> optLocation = locationRepository.findById(site.getLocation().getId());
     if (optLocation.get().getStatus().equals(INACTIVE_STATUS)) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION);
+      throw new ErrorCodeException(ErrorCode.LOCATION_DECOMMISSIONED);
     }
 
     Optional<StudyEntity> optStudyEntity = studyRepository.findById(site.getStudyId());
