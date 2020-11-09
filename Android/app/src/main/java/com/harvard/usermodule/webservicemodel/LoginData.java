@@ -23,6 +23,15 @@ public class LoginData {
   private String refreshToken;
   private String clientToken;
   private boolean resetPassword = false;
+  private String tempRegId;
+
+  public String getTempRegId() {
+    return tempRegId;
+  }
+
+  public void setTempRegId(String tempRegId) {
+    this.tempRegId = tempRegId;
+  }
 
   public String getClientToken() {
     return clientToken;

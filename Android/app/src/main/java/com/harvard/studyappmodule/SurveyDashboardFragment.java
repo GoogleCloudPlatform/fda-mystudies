@@ -28,6 +28,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -74,7 +75,7 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -242,8 +243,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     GetActivityListEvent getActivityListEvent = new GetActivityListEvent();
     HashMap<String, String> header = new HashMap();
     String url = Urls.DASHBOARD_INFO + "?studyId=" + ((SurveyActivity) context).getStudyId();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             DASHBOARD_INFO,
@@ -255,7 +256,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             false,
             this);
 
-    getActivityListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getActivityListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetActivityList(getActivityListEvent);
   }
@@ -472,8 +473,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 calendarEnd.add(Calendar.DATE, -1);
                 fromDayVal = simpleDateFormat.format(calendarStart.getTime());
                 toDayVal = simpleDateFormat.format(calendarEnd.getTime());
-                SimpleDateFormat dateFormatForDashboardCurrentDayOut = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                changeDateLabel.setText(dateFormatForDashboardCurrentDayOut.format(calendarStart.getTime()));
+                SimpleDateFormat dateFormatForDashboardCurrentDayOut =
+                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                changeDateLabel.setText(
+                    dateFormatForDashboardCurrentDayOut.format(calendarStart.getTime()));
 
               } catch (ParseException e) {
                 Logger.log(e);
@@ -491,7 +494,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 calendarEnd.add(Calendar.DATE, -7);
                 fromDayVal = dateFormatForApi.format(calendarStart.getTime());
                 toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat =
+                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 changeDateLabel.setText(
                     simpleDateFormat.format(calendarStart.getTime())
                         + " - "
@@ -512,7 +516,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 calendarEnd.add(Calendar.MONTH, -1);
                 fromDayVal = dateFormatForApi.format(calendarStart.getTime());
                 toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-                SimpleDateFormat dateFormatForChartAndStat = AppController.getDateFormatForChartAndStat();
+                SimpleDateFormat dateFormatForChartAndStat =
+                    AppController.getDateFormatForChartAndStat();
                 changeDateLabel.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
 
               } catch (ParseException e) {
@@ -529,7 +534,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
             if (dateType.equalsIgnoreCase(DAY)) {
               try {
-                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat =
+                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
                 Date selectedEndDate = dateFormatForApi.parse(toDayVal);
@@ -551,7 +557,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               }
             } else if (dateType.equalsIgnoreCase(WEEK)) {
               try {
-                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat =
+                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
                 Date selectedEndDate = dateFormatForApi.parse(toDayVal);
@@ -584,7 +591,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             } else if (dateType.equalsIgnoreCase(MONTH)) {
               try {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
-                SimpleDateFormat dateFormatForChartAndStat = AppController.getDateFormatForChartAndStat();
+                SimpleDateFormat dateFormatForChartAndStat =
+                    AppController.getDateFormatForChartAndStat();
                 Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
                 Date selectedEndDate = simpleDateFormat.parse(toDayVal);
                 Calendar calendarStart = Calendar.getInstance();
@@ -597,7 +605,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                   fromDayVal = simpleDateFormat.format(calendarStart.getTime());
                   toDayVal = simpleDateFormat.format(calendarEnd.getTime());
 
-                  changeDateLabel.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
+                  changeDateLabel.setText(
+                      dateFormatForChartAndStat.format(calendarStart.getTime()));
                   addViewStatisticsValuesRefresh();
                 }
               } catch (ParseException e) {
@@ -684,7 +693,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   }
 
   private void saveBitmap(Bitmap bitmap) {
-    String root = Environment.getExternalStorageDirectory().toString();
+    String root;
+    if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
+      root = Environment.getExternalStorageDirectory().getAbsolutePath();
+    } else {
+      root = getActivity().getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
+    }
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
     String fname = ((SurveyActivity) context).getTitle1() + "_Dashboard.png";
@@ -719,7 +733,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     try {
       int month = currentMonth + 1;
       String originDate = currentDay + " " + month + " " + currentYear;
-      SimpleDateFormat dateFormatForDashboardCurrentDay = AppController.getDateFormatForDashboardCurrentDay();
+      SimpleDateFormat dateFormatForDashboardCurrentDay =
+          AppController.getDateFormatForDashboardCurrentDay();
       SimpleDateFormat formatOut = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
       SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
       Calendar calendar = Calendar.getInstance();
@@ -1170,7 +1185,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     calendar1.set(Calendar.SECOND, 59);
     calendar1.set(Calendar.MILLISECOND, 999);
     toDayVal = dateFormatForApi.format(calendar1.getTime());
-    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+    SimpleDateFormat simpleDateFormat =
+        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
     changeDateLabel.setText(simpleDateFormat.format(calendar.getTime()));
     setColorForSelectedDayMonthYear(dayLayout);
     dateType = DAY;
@@ -1193,7 +1209,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     calendar.set(Calendar.MILLISECOND, 999);
     toDayVal = dateFormatForApi.format(calendar.getTime());
 
-    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+    SimpleDateFormat simpleDateFormat =
+        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
     String text =
         simpleDateFormat.format(calendar.getTime()) + " - " + simpleDateFormat.format(new Date());
     changeDateLabel.setText(text);
@@ -1272,8 +1289,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             getString(R.string.clientToken),
             SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
         header.put(
-            "accessToken",
-            SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+            "Authorization",
+            "Bearer "
+                + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
         header.put(
             "userId",
             SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
@@ -1281,10 +1299,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         responseModel =
             HttpRequest.getRequest(
                 Urls.PROCESSRESPONSEDATA
-                    + AppConfig.ORG_ID_KEY
-                    + "="
-                    + AppConfig.ORG_ID_VALUE
-                    + "&"
                     + AppConfig.APP_ID_KEY
                     + "="
                     + AppConfig.APP_ID_VALUE
@@ -1411,13 +1425,13 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             for (int i = 0; i < jsonArray.length(); i++) {
               JSONObject jsonObject1 = new JSONObject(String.valueOf(jsonArray.get(i)));
               JSONArray jsonArray1 = (JSONArray) jsonObject1.get("data");
+              int duration = 0;
               for (int j = 0; j < jsonArray1.length(); j++) {
                 JSONObject jsonObjectData = (JSONObject) jsonArray1.get(j);
                 Type type = new TypeToken<Map<String, Object>>() {}.getType();
                 Map<String, Object> map = gson.fromJson(String.valueOf(jsonObjectData), type);
                 StepRecordCustom stepRecordCustom = new StepRecordCustom();
                 Date completedDate = new Date();
-                int duration = 0;
                 try {
                   Object completedDateValMap = gson.toJson(map.get("Created"));
                   Map<String, Object> completedDateVal =

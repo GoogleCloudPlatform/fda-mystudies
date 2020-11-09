@@ -81,6 +81,10 @@ public class AppControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAppsRegisteredByUserForSuperAdmin() throws Exception {
+    participantRegistrySiteEntity.setOnboardingStatus("I");
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+    participantStudyEntity.setStatus("inProgress");
+    testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -93,9 +97,9 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.superAdmin").value(true))
-        .andExpect(jsonPath("$.apps[0].invitedCount").value(2))
+        .andExpect(jsonPath("$.apps[0].invitedCount").value(1))
         .andExpect(jsonPath("$.apps[0].enrolledCount").value(1))
-        .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(50.0))
+        .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(100))
         .andExpect(jsonPath("$.apps[0].appUsersCount").value(1));
 
     verifyTokenIntrospectRequest();
@@ -103,6 +107,10 @@ public class AppControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAppsRegisteredByUser() throws Exception {
+    participantRegistrySiteEntity.setOnboardingStatus("I");
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+    participantStudyEntity.setStatus("inProgress");
+    testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
 
@@ -119,7 +127,10 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.studyPermissionCount").value(1))
         .andExpect(jsonPath("$.superAdmin").value(false))
-        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1));
+        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1))
+        .andExpect(jsonPath("$.apps[0].invitedCount").value(1))
+        .andExpect(jsonPath("$.apps[0].enrolledCount").value(1))
+        .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(100));
 
     verifyTokenIntrospectRequest();
   }
