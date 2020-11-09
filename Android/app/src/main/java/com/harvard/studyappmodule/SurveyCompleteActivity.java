@@ -46,8 +46,8 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.HashMap;
@@ -130,16 +130,17 @@ public class SurveyCompleteActivity extends AppCompatActivity
           SharedPreferenceHelper.readPreference(
               SurveyCompleteActivity.this, getString(R.string.clientToken), ""));
       header.put(
-          "accessToken",
-          SharedPreferenceHelper.readPreference(
-              SurveyCompleteActivity.this, getString(R.string.auth), ""));
+          "Authorization",
+          "Bearer "
+              + SharedPreferenceHelper.readPreference(
+                  SurveyCompleteActivity.this, getString(R.string.auth), ""));
       header.put(
           "userId",
           SharedPreferenceHelper.readPreference(
               SurveyCompleteActivity.this, getString(R.string.userid), ""));
 
-      ResponseServerConfigEvent responseServerConfigEvent =
-          new ResponseServerConfigEvent(
+      ResponseDatastoreConfigEvent responseDatastoreConfigEvent =
+          new ResponseDatastoreConfigEvent(
               "post_object",
               Urls.PROCESS_RESPONSE,
               PROCESS_RESPONSE_RESPONSECODE,
@@ -150,7 +151,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
               getResponseDataJson(activityObj, activities, studies),
               false,
               this);
-      processResponseEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+      processResponseEvent.setResponseDatastoreConfigEvent(responseDatastoreConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
       studyModulePresenter.performProcessResponse(processResponseEvent);
 
@@ -170,7 +171,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
       processResponsejson.put("participantId", studies.getParticipantId());
       processResponsejson.put("tokenIdentifier", studies.getHashedToken());
       processResponsejson.put("applicationId", AppConfig.APP_ID_VALUE);
-      processResponsejson.put("orgId", AppConfig.ORG_ID_VALUE);
       processResponsejson.put("siteId", studies.getSiteId());
 
       JSONObject infoJson = new JSONObject();
@@ -567,21 +567,18 @@ public class SurveyCompleteActivity extends AppCompatActivity
         dbServiceSubscriber.getStudies(
             getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID), realm);
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
     header.put("participantId", studies.getParticipantId());
 
-    ResponseServerConfigEvent responseServerConfigEvent =
-        new ResponseServerConfigEvent(
+    ResponseDatastoreConfigEvent responseDatastoreConfigEvent =
+        new ResponseDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -595,7 +592,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
     dbServiceSubscriber.closeRealmObj(realm);
     ActivityStateEvent activityStateEvent = new ActivityStateEvent();
-    activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+    activityStateEvent.setResponseDatastoreConfigEvent(responseDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performActivityState(activityStateEvent);
   }
@@ -611,8 +608,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
     JSONObject activityStatus = new JSONObject();
     JSONObject activityRun = new JSONObject();
     try {
-      activityStatus.put(
-          "studyId", getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID));
       activityStatus.put("activityState", SurveyActivitiesFragment.COMPLETED);
       activityStatus.put("activityId", activityId[1]);
       activityStatus.put(
@@ -803,7 +798,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.PROCESS_RESPONSE,
             "",
             getResponseDataJson(activityObj, activities, studies).toString(),
-            "ResponseServer",
+            "ResponseDatastore",
             "",
             "",
             "");
@@ -828,7 +823,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.UPDATE_ACTIVITY_PREFERENCE,
             "",
             getActivityPreferenceJson().toString(),
-            "ResponseServer",
+            "ResponseDatastore",
             "",
             "",
             "");
@@ -885,7 +880,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
-            "RegistrationServerEnrollment",
+            "ParticipantEnrollmentDatastore",
             "",
             "",
             "");
@@ -936,7 +931,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
               Urls.UPDATE_ACTIVITY_PREFERENCE,
               "",
               getActivityPreferenceJson().toString(),
-              "ResponseServer",
+              "ResponseDatastore",
               "",
               "",
               "");
@@ -994,7 +989,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
-            "ResponseServer",
+            "ParticipantEnrollmentDatastore",
             "",
             "",
             "");
@@ -1167,20 +1162,17 @@ public class SurveyCompleteActivity extends AppCompatActivity
   public void updateStudyState(String completion, String adherence) {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
@@ -1192,8 +1184,8 @@ public class SurveyCompleteActivity extends AppCompatActivity
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
