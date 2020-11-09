@@ -149,7 +149,7 @@ public class StudiesDaoImpl implements StudiesDao {
           && studyMetadataBean.getStudyType().equals(AppConstants.OPEN_STUDY)) {
         LocationEntity defaultLocation =
             (LocationEntity)
-                session.createQuery("from LocationBo where isdefault='Y'").getSingleResult();
+                session.createQuery("from LocationEntity where isDefault='Y'").getSingleResult();
         if (defaultLocation != null) {
           StudyEntity studyInfoCreated = session.get(StudyEntity.class, generatedStudyid);
           SiteEntity site = new SiteEntity();
