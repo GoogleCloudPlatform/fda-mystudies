@@ -1,0 +1,39 @@
+{
+  "activityId": "WeeklyTest",
+  "activityVersion": "1.0",
+  "title": "WeeklyTest",
+  "type": "questionnaire",
+  "startTime": "2020-10-20T11:25:00.000+0000",
+  "endTime": "2020-11-24T11:25:00.000+0000",
+  "branching": false,
+  "lastModified": "2020-10-20T06:07:58.000+0000",
+  "state": "active",
+  "taskSubType": "",
+  "schedulingType": "Regular",
+  "anchorDate": {
+    "sourceType": "",
+    "sourceActivityId": "",
+    "sourceKey": "",
+    "sourceFormKey": "",
+    "start": {
+      "anchorDays": 0,
+      "dayOfWeek": 0,
+      "dateOfMonth": "",
+      "time": ""
+    },
+    "end": {
+      "anchorDays": 0,
+      "repeatInterval": 0,
+      "time": ""
+    }
+  },
+  "frequency": {
+    "type": "Weekly",
+    "runs": [
+
+    ],
+    "anchorRuns": [
+
+    ]
+  }
+}

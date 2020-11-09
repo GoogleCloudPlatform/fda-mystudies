@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: participant-datastore-enroll-np
+  name: participant-enroll-datastore-np
   # Add Container Native Load Balancing.
   # See https://cloud.google.com/kubernetes-engine/docs/how-to/container-native-load-balancing#create_service
   annotations:
