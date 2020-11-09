@@ -67,9 +67,9 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantConsentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
@@ -145,7 +145,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private EligibilityConsent eligibilityConsent;
   private StudyList studyList;
   private String pdfPath;
-  String sharingConsent = "n/a";
+  String sharingConsent = "Not Applicable";
 
   public static Intent newIntent(
       Context context,
@@ -309,11 +309,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                         k++) {
                       if (((String) objects[j])
                           .equalsIgnoreCase(
-                              comprehensionCorrectAnswers
-                                  .get(i)
-                                  .getAnswer()
-                                  .get(k)
-                                  .getAnswer())) {
+                              comprehensionCorrectAnswers.get(i).getAnswer().get(k).getAnswer())) {
                         answer.add("" + ((String) objects[j]));
                       }
                     }
@@ -489,16 +485,13 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         SharedPreferenceHelper.readPreference(
             CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
     header.put(
-        "clientToken",
-        SharedPreferenceHelper.readPreference(
-            CustomConsentViewTaskActivity.this, getString(R.string.clientToken), ""));
-    header.put(
-        "accessToken",
-        SharedPreferenceHelper.readPreference(
-            CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + SharedPreferenceHelper.readPreference(
+                CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
 
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_json",
             Urls.ENROLL_ID,
             ENROLL_ID_RESPONSECODE,
@@ -510,8 +503,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             CustomConsentViewTaskActivity.this);
     EnrollIdEvent enrollIdEvent = new EnrollIdEvent();
-    enrollIdEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    enrollIdEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performEnrollId(enrollIdEvent);
   }
@@ -521,17 +514,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -570,8 +560,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     } catch (JSONException e) {
       Logger.log(e);
     }
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -583,8 +573,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -620,7 +610,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           this,
           getIntent().getStringExtra(STUDYID),
           StudyFragment.IN_PROGRESS,
-              enrolledDate,
+          enrolledDate,
           participantId,
           siteId,
           hashToken,
@@ -690,7 +680,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       try {
         StepResult result = taskResult.getStepResult("sharing");
         if (result != null) {
-          JSONObject resultObj = new JSONObject(result.getResults().toString());
+          JSONObject resultObj = new JSONObject(result.getResults());
           sharingConsent = resultObj.get("answer").toString();
         }
       } catch (Exception e) {
@@ -899,8 +889,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             + getIntent().getStringExtra(STUDYID)
             + "&studyVersion="
             + studyList.getStudyVersion();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             STUDY_UPDATES,
@@ -912,7 +902,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             this);
 
-    getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
   }
@@ -923,9 +913,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       HashMap headerparams = new HashMap();
       headerparams.put(
-          "accessToken",
-          AppController.getHelperSharedPreference()
-              .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
+          "Authorization",
+          "Bearer "
+              + AppController.getHelperSharedPreference()
+                  .readPreference(
+                      CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
       headerparams.put(
           "userId",
           AppController.getHelperSharedPreference()
@@ -955,8 +947,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         Logger.log(e);
       }
 
-      RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
-          new RegistrationServerConsentConfigEvent(
+      ParticipantConsentDatastoreConfigEvent participantConsentDatastoreConfigEvent =
+          new ParticipantConsentDatastoreConfigEvent(
               "post_object",
               Urls.UPDATE_ELIGIBILITY_CONSENT,
               UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
@@ -969,8 +961,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               CustomConsentViewTaskActivity.this);
       UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
           new UpdateEligibilityConsentStatusEvent();
-      updateEligibilityConsentStatusEvent.setRegistrationServerConsentConfigEvent(
-          registrationServerConsentConfigEvent);
+      updateEligibilityConsentStatusEvent.setParticipantConsentDatastoreConfigEvent(
+          participantConsentDatastoreConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
       studyModulePresenter.performUpdateEligibilityConsent(updateEligibilityConsentStatusEvent);
     } else {
@@ -988,25 +980,21 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private void getStudySate() {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(
-                CustomConsentViewTaskActivity.this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(
+                    CustomConsentViewTaskActivity.this,
+                    getResources().getString(R.string.auth),
+                    ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(
                 CustomConsentViewTaskActivity.this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(
-                CustomConsentViewTaskActivity.this,
-                getResources().getString(R.string.clientToken),
-                ""));
 
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "get",
             Urls.STUDY_STATE,
             GET_PREFERENCES,
@@ -1018,8 +1006,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             this);
     GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-    getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    getPreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }

@@ -15,16 +15,16 @@
 
 package com.harvard.studyappmodule.events;
 
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 
 public class ProcessResponseDataEvent {
-  private ResponseServerConfigEvent responseServerConfigEvent;
+  private ResponseDatastoreConfigEvent responseDatastoreConfigEvent;
 
-  public ResponseServerConfigEvent getResponseServerConfigEvent() {
-    return responseServerConfigEvent;
+  public ResponseDatastoreConfigEvent getResponseDatastoreConfigEvent() {
+    return responseDatastoreConfigEvent;
   }
 
-  public void setResponseServerConfigEvent(ResponseServerConfigEvent responseServerConfigEvent) {
-    this.responseServerConfigEvent = responseServerConfigEvent;
+  public void setResponseDatastoreConfigEvent(ResponseDatastoreConfigEvent responseDatastoreConfigEvent) {
+    this.responseDatastoreConfigEvent = responseDatastoreConfigEvent;
   }
 }
