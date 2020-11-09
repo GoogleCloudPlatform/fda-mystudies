@@ -114,7 +114,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
             .createQuery(
                 "from ParticipantStudyEntity PS,StudyEntity SB, ParticipantRegistrySiteEntity PR"
                     + " where SB.id =PS.study.id and PS.participantRegistrySite.id=PR.id"
-                    + " and upper(trim(PR.enrollmentToken))=:token and SB.customId=:studyId and PR.enrollmentTokenUsed=:tokenUsed")
+                    + " and upper(trim(PR.enrollmentToken))=:token and SB.customId=:studyId and"
+                    + " PR.enrollmentTokenUsed=:tokenUsed")
             .setParameter("token", tokenValue.toUpperCase())
             .setParameter("studyId", studyId)
             .setParameter("tokenUsed", true)
