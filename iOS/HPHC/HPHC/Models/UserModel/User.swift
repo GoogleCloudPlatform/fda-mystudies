@@ -264,8 +264,8 @@ class User {
     -> UserStudyStatus
   {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
 
       study.adherence = adherence
       study.completion = completion
@@ -291,8 +291,8 @@ class User {
   /// - Returns: Boolean state of  `Study` bookmarked
   func isStudyBookmarked(studyId: String) -> Bool {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       return study.bookmarked
     }
     return false
@@ -304,8 +304,8 @@ class User {
   /// - Returns: An object of `UserStudyStatus`
   func bookmarkStudy(studyId: String) -> UserStudyStatus {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       study.bookmarked = true
       return study
     } else {
@@ -323,8 +323,8 @@ class User {
   /// - Returns: An object of `UserStudyStatus`
   func removeBookbarkStudy(studyId: String) -> UserStudyStatus? {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       study.bookmarked = false
       return study
     }
@@ -340,8 +340,8 @@ class User {
   /// - Returns: Boolean state of `Activity` bookmarked
   func isActivityBookmarked(studyId: String, activityId: String) -> Bool {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+    let activityes = self.participatedActivites
+    if let activity = activityes?.filter({ $0.studyId == studyId && $0.activityId == activityId })
       .first
     {
       return activity.bookmarked
@@ -357,8 +357,8 @@ class User {
   /// - Returns: An object of `UserActivityStatus`
   func bookmarkActivity(studyId: String, activityId: String) -> UserActivityStatus {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+    let activities = self.participatedActivites
+    if let activity = activities?.filter({ $0.studyId == studyId && $0.activityId == activityId })
       .first
     {
       activity.bookmarked = true
@@ -380,8 +380,8 @@ class User {
   ///   - activityId: ActivityId to filter `UserActivityStatus`
   func removeBookbarkActivity(studyId: String, activityId: String) {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+    let activities = self.participatedActivites
+    if let activity = activities?.filter({ $0.studyId == studyId && $0.activityId == activityId })
       .first
     {
       activity.bookmarked = true
@@ -397,8 +397,8 @@ class User {
   /// - Returns: Object of `UserStudyStatus`
   func updateStudyStatus(studyId: String, status: UserStudyStatus.StudyStatus) -> UserStudyStatus {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       study.status = status
       return study
     } else {
@@ -416,8 +416,8 @@ class User {
   ///   - participantId:
   func updateParticipantId(studyId: String, participantId: String) -> UserStudyStatus {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       study.participantId = participantId
       return study
     } else {
@@ -434,8 +434,8 @@ class User {
   /// - Returns: Study status
   func getStudyStatus(studyId: String) -> UserStudyStatus.StudyStatus {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       return study.status
     }
     return .yetToJoin
@@ -457,8 +457,8 @@ class User {
     status: UserActivityStatus.ActivityStatus
   ) -> UserActivityStatus {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.activityId == activityId && $0.activityRunId == runId }
+    let activities = self.participatedActivites
+    if let activity = activities?.filter({ $0.activityId == activityId && $0.activityRunId == runId }
     ).first {
       activity.status = status
       return activity
@@ -481,8 +481,8 @@ class User {
     -> UserActivityStatus.ActivityStatus?
   {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.activityId == activityId }).first {
+    let activities = self.participatedActivites
+    if let activity = activities?.filter({ $0.activityId == activityId }).first {
       return activity.status
     }
     return .yetToJoin
