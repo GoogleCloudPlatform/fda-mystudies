@@ -74,7 +74,7 @@
 						<image>tomcat:9.0.33-jdk11-openjdk</image>
 					</from>
 					<container>
-						<appRoot>/usr/local/tomcat/webapps/participant-user-datastore</appRoot>
+						<appRoot>/usr/local/tomcat/webapps/response-datastore</appRoot>
 					</container>
 				</configuration>
 			</plugin>
