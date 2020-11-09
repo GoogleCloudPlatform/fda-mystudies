@@ -143,7 +143,7 @@ export class AddNewUserComponent
       (app) => app.selectedSitesCount > 0,
     );
     if (
-      this.user.superAdmin ||
+      this.user.superAdmin || this.user.manageLocationsSelected ||
       (this.selectedApps.length > 0 && permissionsSelected.length > 0)
     ) {
       this.disableButton = true;

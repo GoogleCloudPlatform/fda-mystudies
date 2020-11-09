@@ -633,9 +633,8 @@
                 <td *ngIf="activeTab != onBoardingStatus.New">
                   <div
                     [ngClass]="{
-                      participant__label:
-                        participant.enrollmentStatus == 'Enrolled',
-                      inactive__text:
+                      'txt__green': participant.enrollmentStatus == 'Enrolled',
+                      'txt__light-gray':
                         participant.enrollmentStatus == 'Withdrawn'
                     }"
                   >
