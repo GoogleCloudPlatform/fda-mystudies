@@ -838,7 +838,7 @@ public class SiteServiceImpl implements SiteService {
 
       participantRegistrySiteEntity.setInvitationCount(
           participantRegistrySiteEntity.getInvitationCount() + 1);
-
+      participantRegistrySiteEntity.setEnrollmentTokenUsed(false);
       participantRegistrySiteEntity.setEnrollmentTokenExpiry(
           new Timestamp(
               Instant.now()
