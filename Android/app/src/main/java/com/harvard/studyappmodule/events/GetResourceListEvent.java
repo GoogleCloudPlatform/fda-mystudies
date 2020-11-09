@@ -15,17 +15,17 @@
 
 package com.harvard.studyappmodule.events;
 
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 
 public class GetResourceListEvent {
 
-  private WcpConfigEvent wcpConfigEvent;
+  private StudyDatastoreConfigEvent studyDatastoreConfigEvent;
 
-  public WcpConfigEvent getWcpConfigEvent() {
-    return wcpConfigEvent;
+  public StudyDatastoreConfigEvent getStudyDatastoreConfigEvent() {
+    return studyDatastoreConfigEvent;
   }
 
-  public void setWcpConfigEvent(WcpConfigEvent wcpConfigEvent) {
-    this.wcpConfigEvent = wcpConfigEvent;
+  public void setStudyDatastoreConfigEvent(StudyDatastoreConfigEvent studyDatastoreConfigEvent) {
+    this.studyDatastoreConfigEvent = studyDatastoreConfigEvent;
   }
 }
