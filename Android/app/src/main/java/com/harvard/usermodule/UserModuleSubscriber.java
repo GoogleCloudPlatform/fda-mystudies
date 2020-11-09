@@ -50,12 +50,12 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** Register user. */
   public void onEvent(RegisterUserEvent registerUserEvent) {
-    FdaEventBus.postEvent(registerUserEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(registerUserEvent.getParticipantDatastoreConfigEvent());
   }
 
   /** verify account. */
   public void onEvent(VerifyUserEvent verifyUserEvent) {
-    FdaEventBus.postEvent(verifyUserEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(verifyUserEvent.getParticipantDatastoreConfigEvent());
   }
 
   /** set touchId. */
@@ -74,12 +74,12 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** touchId login. */
   public void onEvent(TouchIdSigninEvent touchIdSigninEvent) {
-    FdaEventBus.postEvent(touchIdSigninEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(touchIdSigninEvent.getParticipantDatastoreConfigEvent());
   }
 
   /** Participent Enrollment. */
   public void onEvent(ParticipentEnrollmentEvent participentEnrollmentEvent) {
-    FdaEventBus.postEvent(participentEnrollmentEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(participentEnrollmentEvent.getResponseDatastoreConfigEvent());
   }
 
   /** Forgot password. */
@@ -94,33 +94,33 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** delete account from registration server. */
   public void onEvent(DeleteAccountRegServerEvent deleteAccountRegServerEvent) {
-    FdaEventBus.postEvent(deleteAccountRegServerEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountRegServerEvent.getParticipantDatastoreConfigEvent());
   }
 
   /** delete account from response server. */
   public void onEvent(DeleteAccountResServerEvent deleteAccountResServerEvent) {
-    FdaEventBus.postEvent(deleteAccountResServerEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountResServerEvent.getResponseDatastoreConfigEvent());
   }
 
   /** Sign out. */
   public void onEvent(SignOutEvent signOutEvent) {
-    FdaEventBus.postEvent(signOutEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(signOutEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(GetUserProfileEvent getUserProfileEvent) {
-    FdaEventBus.postEvent(getUserProfileEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(getUserProfileEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(UpdateUserProfileEvent updateUserProfileEvent) {
-    FdaEventBus.postEvent(updateUserProfileEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(updateUserProfileEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(UpdatePreferenceEvent updatePreferenceEvent) {
-    FdaEventBus.postEvent(updatePreferenceEvent.getRegistrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(updatePreferenceEvent.getParticipantEnrollmentDatastoreConfigEvent());
   }
 
   public void onEvent(ResendEmailEvent resendEmailEvent) {
-    FdaEventBus.postEvent(resendEmailEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(resendEmailEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(LogoutEvent logoutEvent) {
@@ -128,14 +128,14 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(GetPreferenceEvent getPreferenceEvent) {
-    FdaEventBus.postEvent(getPreferenceEvent.getRegistrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(getPreferenceEvent.getParticipantEnrollmentDatastoreConfigEvent());
   }
 
   public void onEvent(DeleteAccountEvent deleteAccountEvent) {
-    FdaEventBus.postEvent(deleteAccountEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(ConsentPdfEvent consentPdfEvent) {
-    FdaEventBus.postEvent(consentPdfEvent.getRegistrationServerConsentConfigEvent());
+    FdaEventBus.postEvent(consentPdfEvent.getParticipantConsentDatastoreConfigEvent());
   }
 }

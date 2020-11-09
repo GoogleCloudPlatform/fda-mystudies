@@ -1,3 +1,5 @@
+import {StudyType} from 'src/app/shared/enums';
+
 export interface AppDetails {
   appId: string;
   customId: string;
@@ -23,6 +25,7 @@ export interface EnrolledStudy {
   customStudyId: string;
   studyName: string;
   sites: Site[];
+  studyType: StudyType;
 }
 
 export interface Site {

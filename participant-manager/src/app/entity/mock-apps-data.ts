@@ -1,5 +1,6 @@
 import {ManageApps} from '../site-coordinator/apps/shared/app.model';
 import {AppDetails} from '../site-coordinator/apps/shared/app-details';
+import {StudyType} from '../shared/enums';
 
 export const expectedAppList = {
   apps: [
@@ -43,6 +44,7 @@ export const expectedAppDetails = {
           studyId: '4028617973bdef0d0173bdef1e4a0004',
           customStudyId: 'CovidStudy',
           studyName: 'COVID Test Study',
+          studyType: StudyType.Close,
           sites: [
             {
               siteId: '4028617973bdef0d0173bdef1e530005',
@@ -83,6 +85,8 @@ export const expectedAppDetails = {
           studyId: '4ef1e4a0004',
           customStudyId: 'NewCovidStudy2019',
           studyName: 'TestStudy',
+          studyType: StudyType.Close,
+
           sites: [
             {
               siteId: '617973b45',
@@ -136,6 +140,7 @@ export const filteredEmail = {
           studyId: '4ef1e4a0004',
           customStudyId: 'NewCovidStudy2019',
           studyName: 'TestStudy',
+          studyType: StudyType.Close,
           sites: [
             {
               siteId: '617973b45',

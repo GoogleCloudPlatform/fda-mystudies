@@ -86,9 +86,5 @@ describe('SiteListComponent', () => {
       2,
       'should display all study list',
     );
-    const sitesLists = compiled.querySelectorAll('.sites_row');
-    const sitesListPCT = compiled.querySelectorAll('.enrolled');
-    expect(sitesLists[0].textContent).toContain('Location1');
-    expect(sitesListPCT[0].textContent).toContain(' 1 / 300 ');
   });
 });

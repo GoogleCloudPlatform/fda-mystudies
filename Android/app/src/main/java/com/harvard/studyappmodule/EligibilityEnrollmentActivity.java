@@ -32,7 +32,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
 import java.util.HashMap;
 
 public class EligibilityEnrollmentActivity extends AppCompatActivity
@@ -130,16 +130,13 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
         SharedPreferenceHelper.readPreference(
             EligibilityEnrollmentActivity.this, getString(R.string.userid), ""));
     header.put(
-        "clientToken",
-        SharedPreferenceHelper.readPreference(
-            EligibilityEnrollmentActivity.this, getString(R.string.clientToken), ""));
-    header.put(
-        "accessToken",
-        SharedPreferenceHelper.readPreference(
-            EligibilityEnrollmentActivity.this, getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + SharedPreferenceHelper.readPreference(
+                EligibilityEnrollmentActivity.this, getString(R.string.auth), ""));
 
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_json",
             Urls.VALIDATE_ENROLLMENT_ID,
             VERIFY_ENROLLMENT_ID,
@@ -151,8 +148,8 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
             false,
             EligibilityEnrollmentActivity.this);
     VerifyEnrollmentIdEvent verifyEnrollmentIdEvent = new VerifyEnrollmentIdEvent();
-    verifyEnrollmentIdEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    verifyEnrollmentIdEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performVerifyEnrollmentId(verifyEnrollmentIdEvent);
   }

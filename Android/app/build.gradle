@@ -1,43 +1,28 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.27.1'
-    }
-}
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    google()
-}
-
 apply plugin: 'realm-android'
 def apikeyPropertiesFile = rootProject.file("api.properties");
 def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "28.0.3"
     defaultConfig {
 
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
-        buildConfigField("String", "BASE_URL_WCP_SERVER", apikeyProperties['BASE_URL_WCP_SERVER'])
-        buildConfigField("String", "BASE_URL_REGISTRATION_SERVER", apikeyProperties['BASE_URL_REGISTRATION_SERVER'])
-        buildConfigField("String", "BASE_URL_REGISTRATION_CONSENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_CONSENT_SERVER'])
-        buildConfigField("String", "BASE_URL_REGISTRATION_ENROLLMENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_ENROLLMENT_SERVER'])
+        buildConfigField("String", "BASE_URL_STUDY_DATASTORE", apikeyProperties['BASE_URL_STUDY_DATASTORE'])
+        buildConfigField("String", "BASE_URL_PARTICIPANT_DATASTORE", apikeyProperties['BASE_URL_PARTICIPANT_DATASTORE'])
+        buildConfigField("String", "BASE_URL_PARTICIPANT_CONSENT_DATASTORE", apikeyProperties['BASE_URL_PARTICIPANT_CONSENT_DATASTORE'])
+        buildConfigField("String", "BASE_URL_PARTICIPANT_ENROLLMENT_DATASTORE", apikeyProperties['BASE_URL_PARTICIPANT_ENROLLMENT_DATASTORE'])
         buildConfigField("String", "BASE_URL_AUTH_SERVER", apikeyProperties['BASE_URL_AUTH_SERVER'])
         buildConfigField("String", "BASE_URL_HYDRA_SERVER", apikeyProperties['BASE_URL_HYDRA_SERVER'])
-        buildConfigField("String", "BASE_URL_RESPONSE_SERVER", apikeyProperties['BASE_URL_RESPONSE_SERVER'])
+        buildConfigField("String", "BASE_URL_RESPONSE_DATASTORE", apikeyProperties['BASE_URL_RESPONSE_DATASTORE'])
         buildConfigField("String", "APP_TYPE", apikeyProperties['APP_TYPE'])
         buildConfigField("String", "APP_ID", apikeyProperties['APP_ID'])
-        buildConfigField("String", "ORG_ID", apikeyProperties['ORG_ID'])
+        buildConfigField("String", "HYDRA_CLIENT_ID", apikeyProperties['HYDRA_CLIENT_ID'])
         buildConfigField("String", "STUDY_ID", apikeyProperties['STUDY_ID'])
     }
     buildTypes {
@@ -73,7 +58,7 @@ android {
     productFlavors {
         fda {
             dimension 'version'
-            applicationId "com.harvard.fda"
+            applicationId "com.google.FDAMyStudies"
             versionCode 15
             versionName "1.0"
         }
@@ -98,16 +83,17 @@ dependencies {
     implementation 'com.github.barteksc:android-pdf-viewer:2.4.0'
     implementation 'com.kovachcode:timePickerWithSeconds:1.0.1'
     implementation 'com.tom_roush:pdfbox-android:1.8.10.1'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
-        transitive = true
-    }
+    implementation 'com.android.support:customtabs:28.0.0'
+    implementation 'junit:junit:4.13'
 
-    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
-    debugImplementation 'com.uphyca:stetho_realm:2.3.0'
+    //please remove these 2 dependencies for release build
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.uphyca:stetho_realm:2.3.0'
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:4.4.0"
     testImplementation 'org.mockito:mockito-android:2.11.0'
     testImplementation 'junit:junit:4.12'
 }
