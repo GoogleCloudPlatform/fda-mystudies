@@ -40,6 +40,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
+import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
@@ -318,21 +320,11 @@ public class SurveyActivity extends AppCompatActivity
             closeDrawer();
             if (previousValue != R.id.mSignInProfileLayout) {
               previousValue = R.id.mSignInProfileLayout;
-              if (AppController.getHelperSharedPreference()
-                  .readPreference(SurveyActivity.this, getString(R.string.userid), "")
-                  .equalsIgnoreCase("")) {
-                getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frameLayoutContainer, new SignInFragment(), "fragment")
-                    .commit();
-                menutitle.setText(R.string.sign_in);
-              } else {
-                getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frameLayoutContainer, new ProfileFragment(), "fragment")
-                    .commit();
-                menutitle.setText(R.string.profile);
-              }
+              getSupportFragmentManager()
+                  .beginTransaction()
+                  .replace(R.id.frameLayoutContainer, new ProfileFragment(), "fragment")
+                  .commit();
+              menutitle.setText(R.string.profile);
             }
           }
         });
@@ -404,20 +396,25 @@ public class SurveyActivity extends AppCompatActivity
                     .showProgress(SurveyActivity.this, "", "", false);
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put("reason", "user_action");
+
                 HashMap<String, String> header = new HashMap<String, String>();
                 header.put(
-                    "userId",
-                    AppController.getHelperSharedPreference()
-                        .readPreference(SurveyActivity.this, getString(R.string.userid), ""));
-                header.put(
-                    "accessToken",
-                    AppController.getHelperSharedPreference()
-                        .readPreference(SurveyActivity.this, getString(R.string.auth), ""));
+                    "Authorization",
+                    "Bearer "
+                        + SharedPreferenceHelper.readPreference(
+                            SurveyActivity.this, getString(R.string.auth), ""));
+                header.put("correlationId", "" + FdaApplication.getRandomString());
+                header.put("appId", "" + BuildConfig.APP_ID);
+                header.put("mobilePlatform", "ANDROID");
+
                 AuthServerConfigEvent authServerConfigEvent =
                     new AuthServerConfigEvent(
-                        "delete",
-                        Urls.LOGOUT,
+                        "post",
+                        Urls.AUTH_SERVICE
+                            + "/"
+                            + SharedPreferenceHelper.readPreference(
+                                SurveyActivity.this, getString(R.string.userid), "")
+                            + Urls.LOGOUT,
                         LOGOUT_REPSONSECODE,
                         SurveyActivity.this,
                         LoginData.class,

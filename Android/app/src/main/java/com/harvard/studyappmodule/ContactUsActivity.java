@@ -31,7 +31,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 
 public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
@@ -170,8 +170,8 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
     params.put("body", message.getText().toString());
     params.put("firstName", firstName.getText().toString());
     params.put("email", email.getText().toString());
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "post",
             Urls.CONTACT_US,
             CONTACT_US,
@@ -183,7 +183,7 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             this);
     ContactUsEvent contactUsEvent = new ContactUsEvent();
-    contactUsEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    contactUsEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performContactUsEvent(contactUsEvent);
   }

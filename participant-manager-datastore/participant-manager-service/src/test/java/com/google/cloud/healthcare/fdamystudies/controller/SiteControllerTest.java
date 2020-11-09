@@ -723,6 +723,8 @@ public class SiteControllerTest extends BaseMockIT {
                 .value(OnboardingStatus.NEW.getStatus())))
         .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(1)))
         .andExpect(
+            jsonPath("$.participantRegistryDetail.studyPermission", is(Permission.EDIT.value())))
+        .andExpect(
             jsonPath(
                 "$.participantRegistryDetail.registryParticipants[0].enrollmentStatus",
                 is("Yet to Enroll")))
@@ -772,6 +774,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
         .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.studyPermission", is(Permission.EDIT.value())))
         .andExpect(
             (jsonPath("$.participantRegistryDetail.registryParticipants[0].onboardingStatus")
                 .value(OnboardingStatus.NEW.getStatus())))
