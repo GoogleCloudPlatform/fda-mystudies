@@ -23,6 +23,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -202,6 +203,8 @@ public class MultiChoiceTextQuestionBody<T>
             new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         otherText.setLayoutParams(otherTextlayoutParams);
+        otherText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        otherText.setSingleLine(true);
         linearLayout.addView(otherText);
         otherText.setHint(item.getOther().getPlaceholder());
         otherText.setVisibility(View.GONE);

@@ -370,6 +370,7 @@ public class SiteServiceImpl implements SiteService {
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
       participantRegistryDetail =
           ParticipantMapper.fromSite(optSite.get(), Permission.EDIT, siteId);
+      participantRegistryDetail.setStudyPermission(Permission.EDIT.value());
     } else {
       Optional<SitePermissionEntity> optSitePermission =
           sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
@@ -381,6 +382,13 @@ public class SiteServiceImpl implements SiteService {
       }
       participantRegistryDetail =
           ParticipantMapper.fromSite(optSite.get(), optSitePermission.get().getCanEdit(), siteId);
+
+      Optional<StudyPermissionEntity> studyPermissionOpt =
+          studyPermissionRepository.findByStudyIdAndUserId(
+              participantRegistryDetail.getStudyId(), userId);
+      if (studyPermissionOpt.isPresent()) {
+        participantRegistryDetail.setStudyPermission(studyPermissionOpt.get().getEdit().value());
+      }
     }
     Map<String, Long> statusWithCountMap = getOnboardingStatusWithCount(siteId);
     participantRegistryDetail.setCountByStatus(statusWithCountMap);

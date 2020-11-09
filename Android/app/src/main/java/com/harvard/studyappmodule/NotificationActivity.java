@@ -36,7 +36,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -114,8 +114,8 @@ public class NotificationActivity extends AppCompatActivity
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
     HashMap<String, String> header = new HashMap();
     String url = Urls.NOTIFICATIONS + "?skip=0";
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             NOTIFICATIONS,
@@ -127,7 +127,7 @@ public class NotificationActivity extends AppCompatActivity
             false,
             this);
 
-    getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
   }
