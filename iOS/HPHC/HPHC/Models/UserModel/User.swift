@@ -66,6 +66,9 @@ enum AccountStatus: Int {
   /// User account not verified
   case pending = 1
 
+  /// User account is locked
+  case accountLocked = 2
+
   /// Logged In with temporary password
   case tempPassword = 3
 }

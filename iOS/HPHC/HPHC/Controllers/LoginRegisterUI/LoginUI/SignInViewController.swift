@@ -76,6 +76,7 @@ class SignInViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    SessionService.resetSession()
     setupNavigation()
     DispatchQueue.main.async {
       self.load()
@@ -111,7 +112,6 @@ class SignInViewController: UIViewController {
     if viewLoadFrom == .gatewayOverview || Utilities.isStandaloneApp() {
       self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
-    SessionService.resetSession()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -193,7 +193,7 @@ class SignInViewController: UIViewController {
       case .pending:
         User.currentUser.verified = false
         navigateToVerifyController()
-      case .tempPassword:
+      case .tempPassword, .accountLocked:
         User.currentUser.verified = true
         User.currentUser.isLoggedInWithTempPassword = true
         grantVerifiedUser(with: code)
