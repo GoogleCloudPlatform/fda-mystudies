@@ -141,7 +141,7 @@ export class AuthInterceptor implements HttpInterceptor {
             'http://35.193.185.224:8087/oauth-scim-service/oauth2/token'
           ) {
             this.toasterService.error(
-              'your session expired logged out successfully ',
+              'Your session has expired and have been loged out successfully',
             );
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
