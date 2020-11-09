@@ -33,6 +33,8 @@ import android.widget.Switch;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
+import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
@@ -54,7 +56,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import io.realm.Realm;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -124,16 +126,17 @@ public class ProfileFragment extends Fragment
   private void callUserProfileWebService() {
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, context.getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(context, context.getString(R.string.userid), ""));
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "get",
             Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
@@ -144,7 +147,7 @@ public class ProfileFragment extends Fragment
             null,
             false,
             this);
-    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }
@@ -324,20 +327,22 @@ public class ProfileFragment extends Fragment
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
 
     HashMap<String, String> params = new HashMap<>();
-    params.put("reason", "user_action");
+
     HashMap<String, String> header = new HashMap<String, String>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, getString(R.string.auth), ""));
-    header.put(
-        "userId",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, getString(R.string.userid), ""));
+        "Authorization",
+        "Bearer " + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+    header.put("correlationId", "" + FdaApplication.getRandomString());
+    header.put("appId", "" + BuildConfig.APP_ID);
+    header.put("mobilePlatform", "ANDROID");
+
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
-            "delete",
-            Urls.LOGOUT,
+            "post",
+            Urls.AUTH_SERVICE
+                + "/"
+                + SharedPreferenceHelper.readPreference(context, getString(R.string.userid), "")
+                + Urls.LOGOUT,
             LOGOUT_REPSONSECODE,
             context,
             LoginData.class,
@@ -623,9 +628,10 @@ public class ProfileFragment extends Fragment
 
       HashMap<String, String> header = new HashMap<>();
       header.put(
-          "accessToken",
-          AppController.getHelperSharedPreference()
-              .readPreference(context, getString(R.string.auth), ""));
+          "Authorization",
+          "Bearer "
+              + AppController.getHelperSharedPreference()
+                  .readPreference(context, getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
@@ -655,7 +661,7 @@ public class ProfileFragment extends Fragment
             Urls.UPDATE_USER_PROFILE,
             "",
             obj.toString(),
-            "RegistrationServer",
+            "ParticipantDatastoreServer",
             userProfileId,
             "",
             "");
@@ -663,8 +669,8 @@ public class ProfileFragment extends Fragment
         Logger.log(e);
       }
 
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+          new ParticipantDatastoreConfigEvent(
               "post_object",
               Urls.UPDATE_USER_PROFILE,
               UPDATE_USER_PROFILE_REQUEST,
@@ -675,7 +681,7 @@ public class ProfileFragment extends Fragment
               obj,
               false,
               ProfileFragment.this);
-      updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+      updateUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
     } catch (Exception e) {

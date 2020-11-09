@@ -29,7 +29,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
 import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,17 +61,14 @@ public class NotEligibleActivity extends AppCompatActivity
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -90,8 +87,8 @@ public class NotEligibleActivity extends AppCompatActivity
     } catch (JSONException e) {
       Logger.log(e);
     }
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -103,8 +100,8 @@ public class NotEligibleActivity extends AppCompatActivity
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

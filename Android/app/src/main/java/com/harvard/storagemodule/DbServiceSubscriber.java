@@ -1525,6 +1525,18 @@ public class DbServiceSubscriber {
     });
   }
 
+  public void saveActivityStartTime(ActivitiesWS activitiesWS, Realm realm, String startTime) {
+    realm.beginTransaction();
+    activitiesWS.setStartTime(startTime);
+    realm.commitTransaction();
+  }
+
+  public void saveActivityEndTime(ActivitiesWS activitiesWS, Realm realm, String endTime) {
+    realm.beginTransaction();
+    activitiesWS.setEndTime(endTime);
+    realm.commitTransaction();
+  }
+
   public void closeRealmObj(Realm realm) {
     if (realm != null && !realm.isClosed()) {
       realm.close();

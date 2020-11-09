@@ -50,7 +50,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -328,9 +328,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       HashMap<String, String> params = new HashMap<>();
       params.put("emailId", email.getText().toString());
       params.put("password", password.getText().toString());
-      params.put("appId", BuildConfig.APPLICATION_ID);
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+          new ParticipantDatastoreConfigEvent(
               "post",
               Urls.REGISTER_USER,
               REGISTRATION_REQUEST,
@@ -342,7 +341,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
               false,
               this);
       RegisterUserEvent registerUserEvent = new RegisterUserEvent();
-      registerUserEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+      registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performRegistration(registerUserEvent);
     }
@@ -364,19 +363,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     } else if (responseCode == REGISTRATION_REQUEST) {
       registrationData = (RegistrationData) response;
       if (registrationData != null) {
-        userID = registrationData.getUserId();
-        userAuth = registrationData.getAuth();
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                SignupActivity.this,
-                getString(R.string.refreshToken),
-                registrationData.getRefreshToken());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                SignupActivity.this,
-                getString(R.string.clientToken),
-                registrationData.getClientToken());
-        new GetFcmRefreshToken().execute();
+        Intent intent = new Intent(SignupActivity.this, VerificationStepActivity.class);
+        intent.putExtra("email", email.getText().toString());
+        intent.putExtra("type", "signup");
+        startActivity(intent);
+
       } else {
         Toast.makeText(
                 this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
@@ -509,7 +500,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   private void callUpdateProfileWebService(String deviceToken) {
     AppController.getHelperProgressDialog().showProgress(SignupActivity.this, "", "", false);
     HashMap<String, String> params = new HashMap<>();
-    params.put("accessToken", userAuth);
+    params.put("Authorization", "Bearer " + userAuth);
     params.put("userId", userID);
 
     JSONObject jsonObjBody = new JSONObject();
@@ -534,8 +525,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       Logger.log(e);
     }
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
@@ -547,7 +538,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updateUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }
