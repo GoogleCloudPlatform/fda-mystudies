@@ -35,7 +35,7 @@ public enum ErrorCode {
       401,
       "EC_0002",
       HttpStatus.UNAUTHORIZED.toString(),
-      "Your temporary password is expired. Please use the forgot password link to reset your password."),
+      "The temporary password entered is either invalid or expired. Please use the Forgot Password link to get password help."),
 
   ACCOUNT_DEACTIVATED(403, "EC_0003", Constants.BAD_REQUEST, "Your account has been deactivated"),
 
