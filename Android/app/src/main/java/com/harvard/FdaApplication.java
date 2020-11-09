@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.util.Base64;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
 import com.harvard.studyappmodule.StudyModuleSubscriber;
@@ -34,7 +33,6 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 import com.harvard.webservicemodule.WebserviceSubscriber;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
-import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -57,7 +55,6 @@ public class FdaApplication extends Application {
   public void onCreate() {
     instance = this;
     super.onCreate();
-    Fabric.with(this, new Crashlytics());
     dbInitialize();
     initChannel();
     randomAlphaNumeric(50);
@@ -161,10 +158,7 @@ public class FdaApplication extends Application {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
       byte[] digest = md.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
       codeChallenge =
-          Base64.encodeToString(digest, Base64.NO_PADDING)
-              .replace("+", "-")
-              .replace("/", "_")
-              .replace("=", "");
+          Base64.encodeToString(digest, Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
     } catch (Exception e) {
       Logger.log(e);
     }

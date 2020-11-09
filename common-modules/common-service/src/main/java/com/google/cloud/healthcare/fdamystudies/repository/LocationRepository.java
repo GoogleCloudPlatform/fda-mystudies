@@ -31,4 +31,6 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
   public List<LocationEntity> findByStatusAndExcludeStudyId(Integer status, String excludeStudyId);
 
   public Optional<LocationEntity> findByCustomId(String customId);
+
+  public Optional<LocationEntity> findByName(String name);
 }

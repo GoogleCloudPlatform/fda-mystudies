@@ -41,6 +41,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
+import com.harvard.usermodule.SignupActivity;
 import com.harvard.usermodule.TermsPrivacyPolicyActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.VerificationStepActivity;
@@ -54,7 +55,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -302,9 +303,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       HashMap<String, String> params = new HashMap<>();
       params.put("emailId", email.getText().toString());
       params.put("password", password.getText().toString());
-      params.put("appId", BuildConfig.APPLICATION_ID);
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+          new ParticipantDatastoreConfigEvent(
               "post",
               Urls.REGISTER_USER,
               REGISTRATION_REQUEST,
@@ -316,7 +316,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
               false,
               this);
       RegisterUserEvent registerUserEvent = new RegisterUserEvent();
-      registerUserEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+      registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performRegistration(registerUserEvent);
     }
@@ -336,17 +336,10 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     if (responseCode == REGISTRATION_REQUEST) {
       registrationData = (RegistrationData) response;
       if (registrationData != null) {
-        userID = registrationData.getUserId();
-        userAuth = registrationData.getAuth();
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                context, getString(R.string.refreshToken), registrationData.getRefreshToken());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                context,
-                context.getString(R.string.clientToken),
-                registrationData.getClientToken());
-        new GetFcmRefreshToken().execute();
+        Intent intent = new Intent(context, VerificationStepActivity.class);
+        intent.putExtra("email", email.getText().toString());
+        intent.putExtra("type", "signup");
+        startActivity(intent);
       } else {
         Toast.makeText(
                 context,
@@ -440,7 +433,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
 
     HashMap<String, String> params = new HashMap<>();
-    params.put("accessToken", userAuth);
+    params.put("Authorization", "Bearer " + userAuth);
     params.put("userId", userID);
 
     JSONObject jsonObjBody = new JSONObject();
@@ -465,8 +458,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       Logger.log(e);
     }
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
@@ -478,7 +471,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updateUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }

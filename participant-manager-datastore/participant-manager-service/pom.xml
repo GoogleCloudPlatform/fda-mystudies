@@ -173,11 +173,10 @@
       <plugin>
         <groupId>com.google.cloud.tools</groupId>
         <artifactId>jib-maven-plugin</artifactId>
-        <version>2.5.2</version>
+        <version>2.6.0</version>
         <configuration>
-          <to>
-            <image>${image_path}</image>
-          </to>
+          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
+          <container><appRoot>/usr/local/tomcat/webapps/participant-manager-datastore</appRoot></container>
         </configuration>
       </plugin>
     </plugins>
@@ -218,6 +217,12 @@
       <id>qa</id>
       <properties>
         <spring.profiles.active>qa</spring.profiles.active>
+      </properties>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <properties>
+        <spring.profiles.active>prod</spring.profiles.active>
       </properties>
     </profile>
   </profiles>

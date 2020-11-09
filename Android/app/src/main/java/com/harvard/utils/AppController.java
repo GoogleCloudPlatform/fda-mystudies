@@ -42,7 +42,7 @@ import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
-import com.harvard.usermodule.SignInActivity;
+import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -91,6 +91,7 @@ public class AppController {
   private static KeyStore keyStore;
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
+  public static String loginCallback = "login_callback";
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
     if (sharedPreferenceHelper == null) {
@@ -178,6 +179,11 @@ public class AppController {
     if (view == null) {
       view = new View(activity);
     }
+    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+  }
+
+  public static void getHelperHideKeyboardContext(Context context, View view) {
+    InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
   }
 
@@ -798,7 +804,7 @@ public class AppController {
   number------- > auto increment
   httpMethod--- > post/get
   url---------- > server url
-  serverType--- > registraion/response/wcp
+  serverType--- > registraion/response/studyBuilder
   userProfileId-> userId (only for profile scenario handling other case pass "" )
   studyId-------> handling bookmark duplicate(only using the class studyinfo other class pass it "")
   activityId----> handling SurveyActivitiesFragment duplication other class pass it ""
@@ -864,11 +870,21 @@ public class AppController {
     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
     notificationManager.cancelAll();
 
-    Intent intent = new Intent(context, SignInActivity.class);
-    ComponentName cn = intent.getComponent();
-    Intent mainIntent = Intent.makeRestartActivityTask(cn);
-    context.startActivity(mainIntent);
-    ((Activity) context).finish();
+    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
+      Intent intent = new Intent(context, StudyActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      mainIntent.putExtra("action", loginCallback);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    } else {
+      Intent intent = new Intent(context, StandaloneActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      mainIntent.putExtra("action", loginCallback);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    }
   }
 
   public static String getHashedValue(String valueToHash) {
@@ -885,5 +901,26 @@ public class AppController {
       Logger.log(e);
     }
     return generatedHash;
+  }
+
+  public static boolean checkafter(Date starttime) {
+    return starttime.after(new Date());
+  }
+
+  public static boolean isWithinRange(Date starttime, Date endtime) {
+    if (endtime == null) {
+      return (new Date().after(starttime) || new Date().equals(starttime));
+    } else {
+      return (new Date().after(starttime) || new Date().equals(starttime))
+              && new Date().before(endtime);
+    }
+  }
+
+  public static String getSourceActivityId(Resource resource) {
+    return resource.getAvailability().getSourceActivityId();
+  }
+
+  public static String getSourceKey(Resource resource) {
+    return resource.getAvailability().getSourceKey();
   }
 }

@@ -5,7 +5,7 @@
         <a
           r
           routerLink="/coordinator/users/{{ adminId }}"
-          class="subheader__title"
+          class="subheader__title cursor__pointer"
         >
           <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
           <span>Edit User Details</span>
@@ -15,6 +15,8 @@
         <span [ngClass]="statusColour(user.status)" class="text__34a853g__14">
           {{ user.status }}
         </span>
+      </div>
+      <div class="col-xs-12 col-md-6 pl-none text-right pr-none">
         <button
           (click)="changeStatus()"
           class="btn banner__default__btn pad__5__13 bt__font12__pad113 ml-sm"
@@ -155,7 +157,7 @@
       </div>
     </section>
     <div *ngIf="!user.superAdmin">
-      <h2 class="subheader__title mb-sm">Permissions</h2>
+      <h2 class="subheader__title mb-sm cursor__pointer">Permissions</h2>
 
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="row">
@@ -211,7 +213,7 @@
       </section>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="form-group">
-          <div class="user__card__title pb-xlg">Sites, Studies and Apps</div>
+          <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
           <div class="select__form-control__parent">
             <label class="wrap">
               Add an app
