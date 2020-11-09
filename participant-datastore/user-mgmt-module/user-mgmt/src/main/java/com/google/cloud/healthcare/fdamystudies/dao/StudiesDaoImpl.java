@@ -14,6 +14,7 @@ import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -158,6 +159,18 @@ public class StudiesDaoImpl implements StudiesDao {
           site.setStatus(1);
           site.setTargetEnrollment(0);
           session.save(site);
+
+          for (AppPermissionEntity appPermission : appPermissionList) {
+            SitePermissionEntity sitePermission = new SitePermissionEntity();
+            sitePermission.setApp(appInfo);
+            sitePermission.setStudy(studyInfo);
+            sitePermission.setSite(site);
+            sitePermission.setUrAdminUser(appPermission.getUrAdminUser());
+            sitePermission.setCanEdit(appPermission.getEdit());
+            sitePermission.setCreated(Timestamp.from(Instant.now()));
+            sitePermission.setCreatedBy(appPermission.getCreatedBy());
+            session.save(sitePermission);
+          }
         }
       }
     }
