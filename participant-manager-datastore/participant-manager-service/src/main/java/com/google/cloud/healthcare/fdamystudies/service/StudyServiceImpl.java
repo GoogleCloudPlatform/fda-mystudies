@@ -359,9 +359,9 @@ public class StudyServiceImpl implements StudyService {
           studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
       StudyEntity study = optStudy.get();
       if (study.getType().equals(OPEN_STUDY) && !optStudyPermission.isPresent()) {
-        List<SitePermissionEntity> optSitePermission =
+        List<SitePermissionEntity> sitePermissions =
             sitePermissionRepository.findByUserIdAndStudyId(userId, studyId);
-        if (CollectionUtils.isEmpty(optSitePermission)) {
+        if (CollectionUtils.isEmpty(sitePermissions)) {
           throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
         }
         app = study.getApp();
@@ -405,11 +405,12 @@ public class StudyServiceImpl implements StudyService {
       if (optSiteEntity.isPresent()) {
         participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
       }
-      if (!user.isSuperAdmin() && studyPermissionEntity != null) {
+
+      if (user.isSuperAdmin()) {
+        participantRegistryDetail.setOpenStudySitePermission(Permission.EDIT.value());
+      } else if (studyPermissionEntity != null) {
         participantRegistryDetail.setOpenStudySitePermission(
             studyPermissionEntity.getEdit().value());
-      } else {
-        participantRegistryDetail.setOpenStudySitePermission(Permission.EDIT.value());
       }
     }
 
