@@ -33,6 +33,8 @@ public enum PathMappingUri {
 
   SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT("/adminStudies/saveOrUpdateActiveTaskContent.do"),
 
+  SAVE_OR_UPDATE_ACTIVE_TASK_Schedule("/adminStudies/saveOrUpdateActiveTaskSchedule.do"),
+
   DELETE_ACTIVE_TASK("/adminStudies/deleteActiveTask.do"),
 
   VIEW_NOTIFICATION_LIST("/adminNotificationView/viewNotificationList.do"),
