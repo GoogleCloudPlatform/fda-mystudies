@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class ApiCallTest {
   private ApiCallSyncronizer async = null;
-  private static final String SERVER_TYPE_WCP = "WCP";
+  private static final String SERVER_TYPE_STUDY_DATASTORE = "STUDY_DATASTORE";
   private static final String SERVER_TYPE_AUTH_SERVER = "AuthServer";
   private static final int RESULT_CODE = 100;
   private static final String PARAMS_EMAIL_KEY = "email";
@@ -35,7 +35,7 @@ public class ApiCallTest {
   @Test
   public void apiCallGetTest() {
     StringBuilder studyListUrl = new StringBuilder();
-    studyListUrl.append(Urls.BASE_URL_WCP_SERVER);
+    studyListUrl.append(Urls.BASE_URL_STUDY_DATASTORE);
     studyListUrl.append(Urls.STUDY_LIST);
     async = new ApiCallSyncronizer();
     ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
@@ -59,7 +59,7 @@ public class ApiCallTest {
           }
         },
         false,
-        SERVER_TYPE_WCP);
+        SERVER_TYPE_STUDY_DATASTORE);
     async.doWait();
   }
 

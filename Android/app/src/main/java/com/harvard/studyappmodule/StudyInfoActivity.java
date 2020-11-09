@@ -16,10 +16,13 @@
 package com.harvard.studyappmodule;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -51,7 +54,6 @@ import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
 import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
-import com.harvard.usermodule.SignInActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
@@ -60,13 +62,14 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -190,12 +193,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Intent intent = new Intent();
-            intent.putExtra("position", position);
-            intent.putExtra("bookmark", bookmarked);
-            intent.putExtra("action", "refresh");
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            backClicked();
           }
         });
 
@@ -220,9 +218,61 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 .readPreference(
                     StudyInfoActivity.this, getResources().getString(R.string.userid), "")
                 .equalsIgnoreCase("")) {
-              Intent intent = new Intent(StudyInfoActivity.this, SignInActivity.class);
-              intent.putExtra("from", "StudyInfo");
-              startActivityForResult(intent, JOIN_ACTION_SIGIN);
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this, getString(R.string.loginflow), "StudyInfo");
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this, getString(R.string.logintype), "signIn");
+
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_studyId",
+                  getIntent().getStringExtra("studyId"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_status",
+                  getIntent().getStringExtra("status"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_studyStatus",
+                  getIntent().getStringExtra("studyStatus"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_position",
+                  getIntent().getStringExtra("position"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_title",
+                  getIntent().getStringExtra("title"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_bookmark",
+                  "" + getIntent().getBooleanExtra("bookmark", false));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_enroll",
+                  getIntent().getStringExtra("enroll"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_rejoin",
+                  getIntent().getStringExtra("rejoin"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_about_this_study",
+                  "" + getIntent().getBooleanExtra("about_this_study", false));
+
+              CustomTabsIntent customTabsIntent =
+                  new CustomTabsIntent.Builder()
+                      .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                      .setShowTitle(true)
+                      .setCloseButtonIcon(
+                          BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                      .setStartAnimations(
+                          StudyInfoActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+                      .setExitAnimations(
+                          StudyInfoActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+                      .build();
+              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+              startActivity(customTabsIntent.intent);
             } else {
               new CallConsentMetaData(true).execute();
             }
@@ -255,6 +305,34 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             }
           }
         });
+  }
+
+  private void backClicked() {
+    if (getIntent().getStringExtra("flow") != null
+        && getIntent().getStringExtra("flow").equalsIgnoreCase("login_callback")) {
+      if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+        Intent intent = new Intent(StudyInfoActivity.this, StudyActivity.class);
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = Intent.makeRestartActivityTask(cn);
+        startActivity(mainIntent);
+        finish();
+      } else {
+        Intent intent = new Intent(StudyInfoActivity.this, StandaloneActivity.class);
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = Intent.makeRestartActivityTask(cn);
+        startActivity(mainIntent);
+        finish();
+      }
+    } else {
+      Intent intent = new Intent();
+      intent.putExtra("position", position);
+      intent.putExtra("bookmark", bookmarked);
+      intent.putExtra("status", status);
+      intent.putExtra("studyId", studyId);
+      intent.putExtra("action", "refresh");
+      setResult(Activity.RESULT_OK, intent);
+      finish();
+    }
   }
 
   private void joinStudy() {
@@ -321,9 +399,9 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     protected String doInBackground(String... params) {
       ConnectionDetector connectionDetector = new ConnectionDetector(StudyInfoActivity.this);
 
-      String url = Urls.BASE_URL_WCP_SERVER + Urls.CONSENT_METADATA + "?studyId=" + studyId;
+      String url = Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -486,14 +564,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
   @Override
   public void onBackPressed() {
-    Intent intent = new Intent();
-    intent.putExtra("position", position);
-    intent.putExtra("bookmark", bookmarked);
-    intent.putExtra("status", status);
-    intent.putExtra("studyId", studyId);
-    intent.putExtra("action", "refresh");
-    setResult(Activity.RESULT_OK, intent);
-    finish();
+    backClicked();
   }
 
   @Override
@@ -501,41 +572,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == JOIN_ACTION_SIGIN) {
       if (resultCode == RESULT_OK) {
-        AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
-
-        HashMap<String, String> header = new HashMap();
-        header.put(
-            "accessToken",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StudyInfoActivity.this, getResources().getString(R.string.auth), ""));
-        header.put(
-            "userId",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
-        header.put(
-            "clientToken",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StudyInfoActivity.this, getResources().getString(R.string.clientToken), ""));
-        RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-            new RegistrationServerEnrollmentConfigEvent(
-                "get",
-                Urls.STUDY_STATE,
-                GET_PREFERENCES,
-                StudyInfoActivity.this,
-                StudyData.class,
-                null,
-                header,
-                null,
-                false,
-                this);
-        GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-        getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-            registrationServerEnrollmentConfigEvent);
-        UserModulePresenter userModulePresenter = new UserModulePresenter();
-        userModulePresenter.performGetUserPreference(getPreferenceEvent);
+        loginCallback();
       }
     } else if (requestCode == 12345) {
       if (resultCode == RESULT_OK) {
@@ -561,6 +598,39 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     }
   }
 
+  private void loginCallback() {
+    AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
+
+    HashMap<String, String> header = new HashMap();
+    header.put(
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(
+                    StudyInfoActivity.this, getResources().getString(R.string.auth), ""));
+    header.put(
+        "userId",
+        AppController.getHelperSharedPreference()
+            .readPreference(StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
+            "get",
+            Urls.STUDY_STATE,
+            GET_PREFERENCES,
+            StudyInfoActivity.this,
+            StudyData.class,
+            null,
+            header,
+            null,
+            false,
+            this);
+    GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
+    getPreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performGetUserPreference(getPreferenceEvent);
+  }
+
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
     if (responseCode == STUDY_INFO) {
@@ -573,8 +643,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 + studyId
                 + "&consentVersion=&activityId=&activityVersion=";
         GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-        WcpConfigEvent wcpConfigEvent =
-            new WcpConfigEvent(
+        StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+            new StudyDatastoreConfigEvent(
                 "get",
                 url,
                 StudyInfoActivity.GET_CONSENT_DOC,
@@ -586,7 +656,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 false,
                 StudyInfoActivity.this);
 
-        getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+        getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
         StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
         studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
       } else {
@@ -750,8 +820,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     HashMap<String, String> header = new HashMap<>();
     String url = Urls.STUDY_INFO + "?studyId=" + studyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -763,7 +833,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             StudyInfoActivity.this);
 
-    getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
   }
@@ -773,17 +843,14 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -822,7 +889,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           Urls.UPDATE_STUDY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "RegistrationServerEnrollment",
+          "ParticipantEnrollmentDatastore",
           "",
           studyId,
           "");
@@ -830,8 +897,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       Logger.log(e);
     }
     //////////
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
@@ -843,8 +910,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -879,6 +946,11 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             }
           }
         });
+
+    if (getIntent().getStringExtra("flow") != null
+        && getIntent().getStringExtra("flow").equalsIgnoreCase("login_callback")) {
+      loginCallback();
+    }
   }
 
   @Override
