@@ -79,6 +79,7 @@ enum HTTPError: Int {
   case tokenExpired = 401
   case forbidden = 403
   case badRequest = 400
+  case internalServerError = 500
 
   var description: String? {
     switch self {
