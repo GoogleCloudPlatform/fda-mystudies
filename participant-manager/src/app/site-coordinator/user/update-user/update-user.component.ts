@@ -62,7 +62,13 @@ export class UpdateUserComponent
           this.user = data.user;
           this.user.manageLocationsSelected =
             this.user.manageLocations !== null;
+            if (this.user.superAdmin) {
+              this.selectedApps=[];
+              this.user.manageLocationsSelected=false;
+              this.user.manageLocations=null;
+            } else {
           this.selectedApps = this.user.apps;
+            }
           this.getAllApps();
         }),
     );
@@ -170,8 +176,8 @@ export class UpdateUserComponent
       (app) => app.selectedSitesCount > 0,
     );
     if (
-      this.user.superAdmin ||
-      (this.selectedApps.length > 0 && permissionsSelected.length > 0)
+      this.user.superAdmin || this.user.manageLocationsSelected ||
+      (this.selectedApps.length > 0 && permissionsSelected.length > 0 )
     ) {
       if (this.user.superAdmin) {
         this.user.apps = [];

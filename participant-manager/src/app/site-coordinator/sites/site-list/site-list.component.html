@@ -106,7 +106,8 @@
               <div
                 *ngIf="
                   study.type !== studyTypes.Open &&
-                  study.studyPermission === permission.ViewAndEdit
+                  study.studyPermission === permission.ViewAndEdit &&
+                  study.studyStatus !== studyStatus.Deactivated
                 "
               >
                 <button
