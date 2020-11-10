@@ -388,7 +388,7 @@ public class AppServiceImpl implements AppService {
   @Override
   @Transactional(readOnly = true)
   public AppParticipantsResponse getAppParticipants(
-      String appId, String adminId, AuditLogEventRequest auditRequest) {
+      String appId, String adminId, AuditLogEventRequest auditRequest, String[] excludeSiteStatus) {
     logger.entry("getAppParticipants(appId, adminId)");
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(adminId);
     if (!optUserRegAdminEntity.isPresent()) {
@@ -415,7 +415,7 @@ public class AppServiceImpl implements AppService {
     if (CollectionUtils.isNotEmpty(userDetails)) {
       Map<String, Map<StudyEntity, List<ParticipantStudyEntity>>> participantsEnrolled =
           getEnrolledParticipants(userDetails, studyEntity);
-      participants = prepareParticpantDetails(userDetails, participantsEnrolled);
+      participants = prepareParticpantDetails(userDetails, participantsEnrolled, excludeSiteStatus);
     }
 
     AppParticipantsResponse appParticipantsResponse =
@@ -457,7 +457,8 @@ public class AppServiceImpl implements AppService {
   private List<ParticipantDetail> prepareParticpantDetails(
       List<UserDetailsEntity> userDetails,
       Map<String, Map<StudyEntity, List<ParticipantStudyEntity>>>
-          participantEnrollmentsByUserDetailsAndStudy) {
+          participantEnrollmentsByUserDetailsAndStudy,
+      String[] excludeSiteStatus) {
     List<ParticipantDetail> participantList = new ArrayList<>();
     for (UserDetailsEntity userDetailsEntity : userDetails) {
       ParticipantDetail participant = ParticipantMapper.toParticipantDetails(userDetailsEntity);
@@ -465,7 +466,8 @@ public class AppServiceImpl implements AppService {
         Map<StudyEntity, List<ParticipantStudyEntity>> enrolledStudiesByStudyInfoId =
             participantEnrollmentsByUserDetailsAndStudy.get(userDetailsEntity.getId());
         List<AppStudyDetails> enrolledStudies =
-            StudyMapper.toAppStudyDetailsList(enrolledStudiesByStudyInfoId);
+            StudyMapper.toAppStudyDetailsList(
+                enrolledStudiesByStudyInfoId, excludeSiteStatus, true);
         participant.getEnrolledStudies().addAll(enrolledStudies);
       }
       participantList.add(participant);
