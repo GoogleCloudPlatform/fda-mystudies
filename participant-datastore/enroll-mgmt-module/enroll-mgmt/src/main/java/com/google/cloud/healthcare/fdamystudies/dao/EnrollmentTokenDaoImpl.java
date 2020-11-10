@@ -9,6 +9,11 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
+
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantStudyStateStatus;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -95,6 +100,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       participantRegistrySiteDetails = participantRegistrySite.get(0);
     }
     if (participantRegistrySiteDetails != null) {
+      Timestamp now = new Timestamp(Instant.now().toEpochMilli());
+      if (now.after(participantRegistrySiteDetails.getEnrollmentTokenExpiry())) {
+        throw new ErrorCodeException(ErrorCode.TOKEN_EXPIRED);
+      }
       isValidStudyToken = true;
     }
 
