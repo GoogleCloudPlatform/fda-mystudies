@@ -537,10 +537,10 @@
                 <td *ngIf="activeTab == onBoardingStatus.All">
                   <div
                     [ngClass]="{
-                      participant__label:
+                      'txt__green':
                         participant.onboardingStatus ==
                         onBoardingStatus.Invited,
-                      inactive__text:
+                      'txt__light-gray':
                         participant.onboardingStatus ==
                         onBoardingStatus.Disabled
                     }"
