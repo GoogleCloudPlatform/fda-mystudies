@@ -90,15 +90,8 @@ public class AppServiceImpl implements AppService {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    List<AppCount> appInvitedCountList = appRepository.findInvitedCountByAppId();
-    Map<String, AppCount> appInvitedCountMap =
-        appInvitedCountList
-            .stream()
-            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
-
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
-      AppResponse appResponse =
-          getAppsForSuperAdmin(optUserRegAdminEntity.get(), appInvitedCountMap);
+      AppResponse appResponse = getAppsForSuperAdmin(optUserRegAdminEntity.get());
       logger.exit(String.format("total apps for superadmin=%d", appResponse.getApps().size()));
       return appResponse;
     }
@@ -133,6 +126,12 @@ public class AppServiceImpl implements AppService {
             .filter(e -> e.getStatus().equals(EnrollmentStatus.IN_PROGRESS.getStatus()))
             .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
 
+    List<AppCount> appInvitedCountList = appRepository.findInvitedCountByAppId(userId);
+    Map<String, AppCount> appInvitedCountMap =
+        appInvitedCountList
+            .stream()
+            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
     return prepareAppResponse(
         sitePermissions,
         appPermissionsByAppInfoId,
@@ -143,8 +142,7 @@ public class AppServiceImpl implements AppService {
         optUserRegAdminEntity.get());
   }
 
-  private AppResponse getAppsForSuperAdmin(
-      UserRegAdminEntity userRegAdminEntity, Map<String, AppCount> appInvitedCountMap) {
+  private AppResponse getAppsForSuperAdmin(UserRegAdminEntity userRegAdminEntity) {
     List<AppCount> appUsersCountList = userDetailsRepository.findAppUsersCount();
     Map<String, AppCount> appUsersCountMap =
         appUsersCountList
@@ -154,6 +152,12 @@ public class AppServiceImpl implements AppService {
     List<AppCount> studiesList = studyRepository.findAppStudiesCount();
     Map<String, AppCount> appStudiesCountMap =
         studiesList.stream().collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
+    List<AppCount> appInvitedCountList = appRepository.findInvitedCountByAppId();
+    Map<String, AppCount> appInvitedCountMap =
+        appInvitedCountList
+            .stream()
+            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
 
     List<AppCount> appEnrolledCountList = appRepository.findEnrolledCountByAppId();
     Map<String, AppCount> appEnrolledCountMap =
