@@ -93,4 +93,6 @@ public interface ParticipantRegistrySiteRepository
       "SELECT pr.id FROM ParticipantRegistrySiteEntity pr WHERE (pr.onboardingStatus='N' OR pr.onboardingStatus='I') AND pr.study.id =:studyId AND pr.email IN (:emails)")
   public Optional<ParticipantRegistrySiteEntity> findExistingRecordByStudyIdAndEmails(
       String studyId, List<String> emails);
+
+  public Optional<ParticipantRegistrySiteEntity> findByEnrollmentToken(String enrollmentToken);
 }
