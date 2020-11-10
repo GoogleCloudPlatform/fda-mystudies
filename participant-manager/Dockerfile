@@ -5,7 +5,9 @@ WORKDIR /app
 COPY . ./
 #RUN npm cache clean --force
 #RUN npm install -g npm@7.0.6
-RUN npm ci
+#RUN npm install
+RUN package-lock.json
+RUN npm i
 RUN npm install -g @angular/cli
 RUN ng build --aot --prod
 #Stage2
