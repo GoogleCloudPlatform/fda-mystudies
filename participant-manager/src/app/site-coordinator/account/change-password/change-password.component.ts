@@ -17,6 +17,7 @@ export class ChangePasswordComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   resetPasswordForm: FormGroup;
+  changePasswordTitle = 'Change Password';
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -44,12 +45,25 @@ export class ChangePasswordComponent
     return this.resetPasswordForm.controls;
   }
   ngOnInit(): void {
-    this.passCriteria = `Your password must be 8 to 64 characters long.  
+    this.route.queryParams.subscribe((params) => {
+      if (params.action && params.action === 'passwordsetup') {
+        this.changePasswordTitle = 'Set Up Password';
+      }
+    }),
+      // this.route.queryParams
+      //   .filter((params) => params.order)
+      //   .subscribe((params) => {
+      //     console.log(params); // { order: "popular" }
+
+      //     this.order = params.order;
+      //     console.log(this.order); // popular
+      //   });
+      (this.passCriteria = `Your password must be 8 to 64 characters long.  
                         - contain a lower case letter.
                         - contain an upper case letter. 
                         - contain a number.
                         - contain a special character from the following set:
-                        !"" # $ % ' () * + , - . : ; < = > ? @ [] ^_  {} |~"' `;
+                        !"" # $ % ' () * + , - . : ; < = > ? @ [] ^_  {} |~"' `);
   }
   changePassword(): void {
     if (!this.resetPasswordForm.valid) return;

@@ -29,7 +29,11 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
     const target = event.target as HTMLInputElement;
     if (target.files?.length) {
       const selectedFile: File = target.files[0];
-      if (selectedFile.type === '.xlsx' || selectedFile.type === '.csv') {
+
+      if (
+        selectedFile.type ===
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      ) {
         this.file = selectedFile;
         this.fileName = this.file.name;
       } else {
