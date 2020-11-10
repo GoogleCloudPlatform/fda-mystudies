@@ -1777,7 +1777,7 @@
               "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span  </li></ul>");
         }
       }
-    );
+    });
 
     $("#maximumspanId").blur(function () {
       var value = $(this).val();
@@ -1799,7 +1799,7 @@
               "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
         }
       }
-    );
+    });
 
     $("#playspeedId").blur(function () {
       var value = $(this).val();
@@ -1828,7 +1828,7 @@
               "<ul class='list-unstyled'><li>Play Speed should be <= 20 seconds</li></ul>");
         }
       }
-    );
+    });
     $("#maximumtestId").blur(function () {
       var value = $(this).val();
       $(this).parent().removeClass("has-danger").removeClass("has-error");
