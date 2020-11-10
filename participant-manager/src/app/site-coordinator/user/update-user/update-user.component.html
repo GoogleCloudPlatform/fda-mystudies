@@ -239,6 +239,7 @@
                       <div>
                         <div class="custom__labels">
                           <input
+                            #permissionCheckBox
                             type="checkbox"
                             id="appCheckBox{{ app.id }}"
                             [(ngModel)]="app.selected"
@@ -314,6 +315,7 @@
                               <div>
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="studyCheckBoxChange(study, app)"
                                     [disabled]="app.selected"
                                     type="checkbox"
@@ -392,6 +394,7 @@
                               <div *ngFor="let site of study.sites">
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="
                                       siteCheckBoxChange(site, study, app)
                                     "
