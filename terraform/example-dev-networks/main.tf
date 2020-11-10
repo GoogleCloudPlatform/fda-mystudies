@@ -24,6 +24,40 @@ terraform {
   }
 }
 
+resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" {
+  name        = "fw-allow-k8s-ingress-lb-health-checks"
+  description = "GCE L7 firewall rule"
+  network     = module.example_dev_network.network.network.self_link
+  project     = module.project.project_id
+  allow {
+    protocol = "tcp"
+    ports    = ["30000-32767"]
+  }
+  allow {
+    protocol = "tcp"
+    ports    = ["4444"]
+  }
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+  allow {
+    protocol = "tcp"
+    ports    = ["8080"]
+  }
+  # Load Balancer Health Check IP ranges.
+  source_ranges = [
+    "130.211.0.0/22",
+    "209.85.152.0/22",
+    "209.85.204.0/22",
+    "35.191.0.0/16",
+  ]
+  target_tags = [
+    "gke-example-dev-gke-cluster",
+    "gke-example-dev-gke-cluster-default-node-pool",
+  ]
+}
+
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
