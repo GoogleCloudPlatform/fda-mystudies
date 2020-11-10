@@ -5,3 +5,14 @@
   font-weight: 500;
   text-align: center;
 }
+
+@media only screen and (max-width: 580px) and (min-width: 320px) {
+  .child_text {
+    color: var(--space-gray);
+    font-size: 100%;
+    font-family: Muli, sans-serif;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 50%;
+  }
+}
