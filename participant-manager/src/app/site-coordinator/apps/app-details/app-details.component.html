@@ -76,17 +76,21 @@
                 <span class="tbl__td__label">App Account Status:</span>
                 <div
                   [ngClass]="{
-                    participant__label:
+                    'txt__green':
                       applists.registrationStatus === statusEnum.Active,
-                    inactive__text:
-                      applists.registrationStatus === statusEnum.Inactive
+                    'txt__light-gray':
+                      applists.registrationStatus === statusEnum.Deactivated
                   }"
                 >
-                  {{ applists.registrationStatus }}
+                  {{
+                    applists.registrationStatus == "Deactivated"
+                      ? "Inactive"
+                      : applists.registrationStatus
+                  }}
                 </div>
               </td>
               <td>
-                <span class="tbl__td__label">Number of Studies Enrolled:</span>
+                <span class="tbl__td__label">Studies:</span>
                 <span
                   [class.no_st_en]="applists.enrolledStudies.length > 0"
                   (click)="openModal(appEnrollList, applists.enrolledStudies)"
@@ -126,6 +130,7 @@
               class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none flex__justify__space-between"
             >
               <div class="p-none cursor__none">
+                <div>{{ applists.studyName }}</div>
                 Site ID :
                 <span
                   *ngIf="applists.studyType !== studyTypes.Open"
@@ -146,10 +151,7 @@
                   <span class="text__date__sm">
                     {{ sitelists.enrollmentDate }}
                   </span>
-                </div>
-              </div>
-              <div>
-                <div>
+                  <br />
                   <span class="text-grey__sm">Date of Withdrawal:</span>
                   <span class="text__date__sm">
                     {{ sitelists.withdrawlDate }}

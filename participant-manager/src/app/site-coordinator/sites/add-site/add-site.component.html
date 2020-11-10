@@ -3,13 +3,13 @@
     <div class="col-xs-12 col-md-5 p-none">
       <div name="customId">
         <label>study</label>
-        <div>{{ newSite.customId }}</div>
+        <div>{{ newSite.name }}</div>
       </div>
     </div>
     <div class="col-xs-12 col-md-7 p-none">
       <div name="appId">
         <label>app</label>
-        <div>{{ newSite.appId }}</div>
+        <div>{{ newSite.appName }}</div>
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@
         <div class="form-group">
           <div class="form-item">
             <label>Location</label>
-            <div class="select-wrap">
+            <div class="select-wrap select select-fancy select-fancy-image">
               <select
                 class="form-item__element form-item__element--select width__100 cursor__pointer"
                 [(ngModel)]="site.locationId"

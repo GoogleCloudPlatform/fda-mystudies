@@ -46,10 +46,10 @@ html {
     background-image: url("assets/svgs/search.svg") !important;
     background-repeat: no-repeat !important;
     background-position: 5% !important;
-    text-indent: 5px !important;
+    text-indent: 25px !important;
     margin-right: 20px !important;
     padding-right: 30px !important;
-    padding-left: 35px !important;
+    padding-left: 10px !important;
   }
   .bg__white .search__user__details {
     height: 32px;
@@ -166,28 +166,28 @@ html {
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 92%;
+    font-size: 81.3%;
   }
   .page-item.disabled .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 92%;
+    font-size: 81.3%;
   }
   .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 92%;
+    font-size: 81.3%;
   }
   .page-item:last-child .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 92%;
+    font-size: 81.3%;
   }
   .pagination li:first-child:before {
     position: relative;
@@ -197,7 +197,7 @@ html {
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 92%;
+    font-size: 81.3%;
     top: -1px;
   }
   .pagination li:last-child:before {
@@ -208,7 +208,7 @@ html {
     background-color: transparent;
     border-color: transparent;
     border: none;
-    font-size: 92%;
+    font-size: 81.3%;
     top: -1px;
   }
   .tbl__td__label {
@@ -361,7 +361,7 @@ html {
     margin-left: 5px;
   }
   .subheader {
-    min-height: 63px;
+    min-height: 67px;
     line-height: 63px;
   }
 }
@@ -1118,7 +1118,7 @@ button:focus {
 .add__site {
   width: 100%;
   height: 100%;
-  max-width: 100px;
+  max-width: 90px;
   max-height: 32px;
 }
 .helpout_svg {
@@ -1131,4 +1131,10 @@ button:focus {
 }
 .bg__white input:focus {
   background-color: var(--white) !important;
+}
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
 }
