@@ -47,7 +47,7 @@ export class ChangePasswordComponent
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       if (params.action && params.action === 'passwordsetup') {
-        this.changePasswordTitle = 'Set Up Password';
+        this.changePasswordTitle = 'SET UP PASSWORD';
       }
     }),
       // this.route.queryParams
