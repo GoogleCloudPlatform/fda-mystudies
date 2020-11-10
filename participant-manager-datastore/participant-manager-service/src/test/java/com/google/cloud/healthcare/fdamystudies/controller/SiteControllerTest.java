@@ -1205,6 +1205,14 @@ public class SiteControllerTest extends BaseMockIT {
     SiteEntity siteEntity = optSiteEntity.get();
     assertNotNull(siteEntity);
     assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
+
+    List<ParticipantRegistrySiteEntity> participants =
+        participantRegistrySiteRepository.findBySiteId(siteId);
+    ParticipantRegistrySiteEntity participantRegistrySiteEntity = participants.get(0);
+    assertNotNull(participantRegistrySiteEntity);
+    assertEquals(
+        participantRegistrySiteEntity.getOnboardingStatus(), OnboardingStatus.DISABLED.getCode());
+    assertNotNull(participantRegistrySiteEntity.getDisabledDate());
   }
 
   @Test
