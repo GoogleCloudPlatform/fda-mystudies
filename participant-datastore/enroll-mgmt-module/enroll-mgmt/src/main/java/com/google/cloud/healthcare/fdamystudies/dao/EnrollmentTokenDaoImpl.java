@@ -299,7 +299,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
         participantregistrySite.setInvitationDate(Timestamp.from(Instant.now()));
         participantregistrySite.setEmail(userDetail.getEmail());
-        participantregistrySite.setOnboardingStatus("E");
+        participantregistrySite.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
         participantregistrySite.setStudy(studyEntity);
         countAddregistry = (String) session.save(participantregistrySite);
 

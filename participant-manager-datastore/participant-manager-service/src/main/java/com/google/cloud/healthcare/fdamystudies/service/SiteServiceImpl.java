@@ -699,7 +699,8 @@ public class SiteServiceImpl implements SiteService {
       Enrollment enrollment = new Enrollment(null, "-", YET_TO_ENROLL, "-");
       participantDetail.getEnrollments().add(enrollment);
     } else {
-      ParticipantMapper.addEnrollments(participantDetail, participantsEnrollments);
+      ParticipantMapper.addEnrollments(
+          participantDetail, participantsEnrollments, participantDetail.getOnboardingStatus());
       List<String> participantStudyIds =
           participantsEnrollments
               .stream()
