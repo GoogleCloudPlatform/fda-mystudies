@@ -71,10 +71,11 @@
                 <td>
                   <span class="tbl__td__label">Status:</span>
                   <span
-                    class="text__387fea__12 mobile__view mr-sm"
-                    style="background: transparent"
+                    [ngClass]="
+                      location.status === 1 ? ' txt__green' : 'txt__light-gray'
+                    "
                   >
-                    Sort By:
+                    {{ location.status == 1 ? "Active" : "Deactivated" }}
                   </span>
                 </td>
               </tr>
