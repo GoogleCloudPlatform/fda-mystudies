@@ -35,7 +35,7 @@ public enum ErrorCode {
       401,
       "EC_0002",
       HttpStatus.UNAUTHORIZED.toString(),
-      "Your temporary password is expired. Please use the forgot password link to reset your password."),
+      "The temporary password entered is either invalid or expired. Please use the Forgot Password link to get password help."),
 
   ACCOUNT_DEACTIVATED(403, "EC_0003", Constants.BAD_REQUEST, "Your account has been deactivated"),
 
@@ -277,8 +277,16 @@ public enum ErrorCode {
       HttpStatus.FORBIDDEN.toString(),
       "Invitation cannot be enabled as participant record is enabled in another site within the same study."),
 
+
+  TOKEN_EXPIRED(
+      410,
+      "EC_0066",
+      HttpStatus.GONE.toString(),
+      "The token entered is no longer valid. Please contact the site coordinator for assistance."),
+
   LOCATION_NAME_EXISTS(
       400, "EC_0068", Constants.BAD_REQUEST, "Sorry, a location with this name already exists");
+
 
   private final int status;
   private final String code;

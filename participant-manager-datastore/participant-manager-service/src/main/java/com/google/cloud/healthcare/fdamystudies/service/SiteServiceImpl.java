@@ -278,6 +278,11 @@ public class SiteServiceImpl implements SiteService {
     ParticipantRegistrySiteEntity participantRegistrySite =
         ParticipantMapper.fromParticipantRequest(participant, site);
     participantRegistrySite.setCreatedBy(userId);
+    participantRegistrySite.setEnrollmentTokenExpiry(
+        new Timestamp(
+            Instant.now()
+                .plus(appPropertyConfig.getEnrollmentTokenExpiryInHours(), ChronoUnit.HOURS)
+                .toEpochMilli()));
     participantRegistrySite =
         participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
     ParticipantResponse response =
@@ -1002,6 +1007,11 @@ public class SiteServiceImpl implements SiteService {
       ParticipantRegistrySiteEntity participantRegistrySite =
           ParticipantMapper.fromParticipantDetail(participantDetail, siteEntity);
       participantRegistrySite.setCreatedBy(userId);
+      participantRegistrySite.setEnrollmentTokenExpiry(
+          new Timestamp(
+              Instant.now()
+                  .plus(appPropertyConfig.getEnrollmentTokenExpiryInHours(), ChronoUnit.HOURS)
+                  .toEpochMilli()));
       participantRegistrySite =
           participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
       participantDetail.setId(participantRegistrySite.getId());
