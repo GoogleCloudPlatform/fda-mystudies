@@ -1134,11 +1134,10 @@ public class SiteControllerTest extends BaseMockIT {
             put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
                 .headers(headers)
                 .contextPath(getContextPath()))
-        .andExpect(status().isForbidden())
+        .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath(
-                "$.error_description",
-                is(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION.getDescription())));
+                "$.error_description", is(ErrorCode.LOCATION_DECOMMISSIONED.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
