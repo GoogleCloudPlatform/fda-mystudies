@@ -37,7 +37,7 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
         this.file = selectedFile;
         this.fileName = this.file.name;
       } else {
-        this.toastr.error('The uploaded file is not in the prescribed format.');
+        this.toastr.error('Please upload a .xls or .xlsx file');
       }
     } else {
       this.fileName = '';
