@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {UserService} from '../shared/user.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
@@ -33,6 +33,8 @@ export class UpdateUserComponent
     '=1': '1 Site',
     'other': '# Sites',
   };
+@ViewChildren('permissionCheckBox')
+  selectedPermission: QueryList<ElementRef> =new QueryList();
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
@@ -172,12 +174,13 @@ export class UpdateUserComponent
   }
 
   update(): void {
-    const permissionsSelected = this.selectedApps.filter(
-      (app) => app.selectedSitesCount > 0,
-    );
+  const permissionsSelected=this.selectedPermission.filter((element) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return element.nativeElement?.checked as boolean;
+    });
     if (
       this.user.superAdmin || this.user.manageLocationsSelected ||
-      (this.selectedApps.length > 0 && permissionsSelected.length > 0 )
+      (this.selectedApps.length > 0 && permissionsSelected.length!==0 )
     ) {
       if (this.user.superAdmin) {
         this.user.apps = [];
