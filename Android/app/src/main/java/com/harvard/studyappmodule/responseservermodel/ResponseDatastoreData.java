@@ -16,7 +16,7 @@ package com.harvard.studyappmodule.responseservermodel;
 
 import java.util.ArrayList;
 
-public class ResponseServerData {
+public class ResponseDatastoreData {
   private ArrayList<Errors> errors;
 
   private String exception;

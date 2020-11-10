@@ -95,6 +95,11 @@ public class LocationServiceImpl implements LocationService {
       throw new ErrorCodeException(ErrorCode.CUSTOM_ID_EXISTS);
     }
 
+    Optional<LocationEntity> optLocationEntity = locationRepository.findByName(location.getName());
+    if (optLocationEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_NAME_EXISTS);
+    }
+
     location.setCreatedBy(adminUser.getId());
     LocationEntity created = locationRepository.saveAndFlush(location);
 
@@ -293,12 +298,7 @@ public class LocationServiceImpl implements LocationService {
   @Transactional
   public LocationResponse getLocationsForSite(
       String userId, Integer status, String excludeStudyId) {
-    Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
 
-    UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
-      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
-    }
     List<LocationEntity> listOfLocation =
         (List<LocationEntity>)
             CollectionUtils.emptyIfNull(

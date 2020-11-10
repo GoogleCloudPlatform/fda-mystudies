@@ -13,66 +13,35 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.usermodule.webservicemodel;
+package com.harvard.webservicemodule.events;
 
-public class RefreshToken {
-  private String message;
+import android.content.Context;
+import com.harvard.utils.Urls;
+import java.util.HashMap;
+import org.json.JSONObject;
 
-  private String verified;
-
-  private String userId;
-
-  private String refreshToken;
-
-  private String clientToken;
-
-  private String accessToken;
-
-  public String getClientToken() {
-    return clientToken;
+public class StudyDatastoreConfigEvent<V> extends WebserviceConfigEvent {
+  public StudyDatastoreConfigEvent(
+      String method,
+      String url,
+      int requestCode,
+      Context context,
+      Class modelclass,
+      HashMap params,
+      HashMap header,
+      JSONObject jsonobj,
+      boolean showAlert,
+      V v) {
+    super(method, url, requestCode, context, modelclass, params, header, jsonobj, showAlert, v);
   }
 
-  public void setClientToken(String clientToken) {
-    this.clientToken = clientToken;
+  @Override
+  public String getProductionUrl() {
+    return Urls.BASE_URL_STUDY_DATASTORE;
   }
 
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-  public String getVerified() {
-    return verified;
-  }
-
-  public void setVerified(String verified) {
-    this.verified = verified;
-  }
-
-  public String getUserId() {
-    return userId;
-  }
-
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
-
-  public String getRefreshToken() {
-    return refreshToken;
-  }
-
-  public void setRefreshToken(String refreshToken) {
-    this.refreshToken = refreshToken;
-  }
-
-  public String getAuth() {
-    return accessToken;
-  }
-
-  public void setAuth(String auth) {
-    this.accessToken = auth;
+  @Override
+  public String getDevelopmentUrl() {
+    return Urls.BASE_URL_STUDY_DATASTORE;
   }
 }

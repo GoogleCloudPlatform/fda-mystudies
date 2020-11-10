@@ -114,7 +114,7 @@ public class PasscodeSetupActivity extends AppCompatActivity {
                 getResources().getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
-                    getHelperLogout();
+                    AppController.forceSignout(PasscodeSetupActivity.this);
                   }
                 });
 
@@ -148,25 +148,6 @@ public class PasscodeSetupActivity extends AppCompatActivity {
             }
           }
         });
-  }
-
-  public void getHelperLogout() {
-    SharedPreferences settings = SharedPreferenceHelper.getPreferences(PasscodeSetupActivity.this);
-    settings.edit().clear().apply();
-    // delete passcode from keystore
-    String pass = AppController.refreshKeys("passcode");
-    if (pass != null) {
-      AppController.deleteKey("passcode_" + pass);
-    }
-
-    dbServiceSubscriber.deleteDb(this);
-
-    Intent intent = new Intent(PasscodeSetupActivity.this, GatewayActivity.class);
-    ComponentName cn = intent.getComponent();
-    Intent mainIntent = Intent.makeRestartActivityTask(cn);
-    mainIntent.putExtra("from", "forgot");
-    startActivity(mainIntent);
-    finish();
   }
 
   @Override
