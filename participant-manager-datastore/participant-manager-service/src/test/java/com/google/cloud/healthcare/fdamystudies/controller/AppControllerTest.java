@@ -485,7 +485,6 @@ public class AppControllerTest extends BaseMockIT {
     // Step 2: Call API to return GET_APPS_PARTICIPANTS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-
     mockMvc
         .perform(
             get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
