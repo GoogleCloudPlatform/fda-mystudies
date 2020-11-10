@@ -6,7 +6,7 @@ COPY . ./
 #RUN npm cache clean --force
 #RUN npm install -g npm@7.0.6
 #RUN npm install
-RUN rm /participant-manager/package-lock.json
+RUN rm /app/participant-manager/package-lock.json
 RUN npm i
 RUN npm install -g @angular/cli
 RUN ng build --aot --prod
