@@ -1,10 +1,13 @@
 <router-outlet></router-outlet>
 <ngx-spinner
-  bdColor="rgba(51, 51, 51, 0.83)"
-  size="medium"
-  color="#fff"
-  type="ball-atom"
+  bdColor="rgba(255, 255, 255, 0.7)"
+  size="large"
+  color="#387fea"
+  type="ball-clip-rotate"
   [fullScreen]="true"
 >
-  <p style="font-size: 20px; color: white">loading please wait...</p>
+  <div class="child child_text">
+    <div>Please wait while we set things up for you…</div>
+    <div>this might take a few seconds.</div>
+  </div>
 </ngx-spinner>
