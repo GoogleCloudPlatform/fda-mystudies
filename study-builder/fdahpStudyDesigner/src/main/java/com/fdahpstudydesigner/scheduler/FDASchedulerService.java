@@ -260,7 +260,6 @@ public class FDASchedulerService {
 
     StringEntity requestEntity = new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
     post.setEntity(requestEntity);
-    HttpResponse response = client.execute(post);
-    return response;
+    return client.execute(post);
   }
 }
