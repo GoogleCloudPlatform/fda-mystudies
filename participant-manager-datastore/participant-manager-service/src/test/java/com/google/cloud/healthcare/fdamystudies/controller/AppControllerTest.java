@@ -101,7 +101,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].invitedCount").value(1))
         .andExpect(jsonPath("$.apps[0].enrolledCount").value(1))
         .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(100))
-        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1));
+        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1))
+        .andExpect(jsonPath("$.apps[0].studiesCount").value(1));
 
     verifyTokenIntrospectRequest();
   }
