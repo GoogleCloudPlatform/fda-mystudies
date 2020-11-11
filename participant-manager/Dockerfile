@@ -3,7 +3,7 @@
 FROM node:latest AS compile-image
 WORKDIR /app
 COPY . ./
-RUN npm install
+RUN npm install --no-progress
 RUN npm install -g @angular/cli
 RUN ng build --aot --prod
 #Stage2
