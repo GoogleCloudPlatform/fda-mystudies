@@ -55,7 +55,10 @@ class EligibilityStepViewController: ORKStepViewController {
 
   // MARK: - UI Properties
   var descriptionText: String?
-
+  
+  /// The max characters allowed for user to enter token.
+  let maxCharForToken = 8
+  
   var taskResult: EligibilityTokenTaskResult = EligibilityTokenTaskResult(
     identifier: kFetalKickCounterStepDefaultIdentifier
   )
@@ -180,9 +183,9 @@ extension EligibilityStepViewController: UITextFieldDelegate {
     if string == " " {
       return false  // Ignore spaces
     } else if let text = textField.text,
-      (text + string).count > 8
+      (text + string).count > maxCharForToken
     {
-      return false  // Block user typing more than 8 characters.
+      return false  // Block user typing more than max characters allowed.
     } else {
       return true
     }
