@@ -32,7 +32,8 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
 
       if (
         selectedFile.type ===
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        selectedFile.type === 'application/vnd.ms-excel'
       ) {
         this.file = selectedFile;
         this.fileName = this.file.name;

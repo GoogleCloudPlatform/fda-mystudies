@@ -179,10 +179,10 @@
                     participant.participantDetails.studyType !== studyTypes.Open
                   "
                   [ngClass]="{
-                    participant__label:
+                    'txt__green':
                       participant.participantDetails.onboardingStatus ==
                       onBoardingStatus.Invited,
-                    inactive__text:
+                    'txt__light-gray':
                       participant.participantDetails.onboardingStatus ==
                       onBoardingStatus.Disabled
                   }"

@@ -89,7 +89,7 @@ const errorMessages = {
   EC_0124: 'This study is deactivated. Sites cannot be added to deactivated studies.',
   EC_0125:
     '1 or more participant record(s) could not be enabled. This could happen if the emails exist in enabled state in another site of the same study.',
-  /* eslint-enable @typescript-eslint/naming-convention */
+    /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;
 

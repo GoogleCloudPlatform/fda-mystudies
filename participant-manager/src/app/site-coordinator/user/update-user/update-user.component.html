@@ -221,18 +221,22 @@ Superadmins can manage users of this Particpant Manager and in addition,can mana
         <div class="form-group">
           <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
           <div class="select__form-control__parent">
-            <label class="wrap pb-1 text-initial">Add an app</label>
-            <ng-select
-              [items]="appDetails.apps"
-              [clearable]="false"
-              [multiple]="true"
-              bindLabel="name"
-              class="form-control select__form-control"
-              placeholder="Enter App ID or Name"
-              [hideSelected]="true"
-              [(ngModel)]="selectedApps"
-              [ngModelOptions]="{standalone: true}"
-            ></ng-select>
+            <label class="wrap pb-1 text-initial">
+              Add an app
+              <ng-select
+                [items]="appDetails.apps"
+                [clearable]="false"
+                [multiple]="true"
+                bindLabel="name"
+                bindValue="customId"
+                class="form-control select__form-control"
+                placeholder="Enter App ID or Name"
+                [hideSelected]="true"
+                [(ngModel)]="selectedAppsIds"
+                [ngModelOptions]="{standalone: true}"
+                (add)="add($event)"
+              ></ng-select>
+            </label>
           </div>
         </div>
         <div class="form-group pt-none pt-0">
@@ -245,6 +249,7 @@ Superadmins can manage users of this Particpant Manager and in addition,can mana
                       <div>
                         <div class="custom__labels">
                           <input
+                            #permissionCheckBox
                             type="checkbox"
                             id="appCheckBox{{ app.id }}"
                             [(ngModel)]="app.selected"
@@ -332,6 +337,7 @@ Superadmins can manage users of this Particpant Manager and in addition,can mana
                               <div>
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="studyCheckBoxChange(study, app)"
                                     [disabled]="app.selected"
                                     type="checkbox"
@@ -415,6 +421,7 @@ Superadmins can manage users of this Particpant Manager and in addition,can mana
                               <div *ngFor="let site of study.sites">
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="
                                       siteCheckBoxChange(site, study, app)
                                     "

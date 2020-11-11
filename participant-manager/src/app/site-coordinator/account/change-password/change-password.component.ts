@@ -18,6 +18,8 @@ export class ChangePasswordComponent
   implements OnInit {
   resetPasswordForm: FormGroup;
   changePasswordTitle = 'Change Password';
+  currentPasswordValidationMessage = 'Enter your current password';
+  currentPasswordPlaceholder = 'Enter Current Password';
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -48,6 +50,8 @@ export class ChangePasswordComponent
     this.route.queryParams.subscribe((params) => {
       if (params.action && params.action === 'passwordsetup') {
         this.changePasswordTitle = 'SET UP PASSWORD';
+        this.currentPasswordValidationMessage = 'Enter your temporary password';
+        this.currentPasswordPlaceholder = 'Enter Temporary Password';
       }
     }),
       // this.route.queryParams

@@ -19,7 +19,6 @@ import {
 } from '../shared/import-participants';
 import {Permission} from 'src/app/shared/permission-enums';
 import {ParticipantRegistryDetail} from 'src/app/shared/participant-registry-detail';
-const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
   templateUrl: './site-details.component.html',
@@ -53,6 +52,7 @@ export class SiteDetailsComponent
   ) {
     super();
   }
+
   @HostListener('click') onClick() {
     this.toggleDisplay = false;
   }
@@ -75,6 +75,7 @@ export class SiteDetailsComponent
     $event.stopPropagation();
     this.toggleDisplay = !this.toggleDisplay;
   }
+
   fetchSiteParticipant(fetchingOption: OnboardingStatus): void {
     this.siteParticipants$ = combineLatest(
       this.particpantDetailService.get(this.siteId, fetchingOption),
@@ -106,6 +107,7 @@ export class SiteDetailsComponent
       }),
     );
   }
+
   search(query: string): void {
     this.query$.next(query.trim().toLowerCase());
   }
@@ -128,6 +130,7 @@ export class SiteDetailsComponent
     if (checkbox.checked) {
       this.userIds.push(checkbox.id);
     } else {
+      this.selectedAll = false;
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
