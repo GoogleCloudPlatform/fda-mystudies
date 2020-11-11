@@ -34,6 +34,7 @@ export class AddSiteComponent
     this.newSite.customId = this.study.customId;
     this.newSite.appId = this.study.appId;
     this.site.studyId = String(this.study.id);
+    this.site.locationId=''
     this.getLocation(this.site.studyId);
   }
   getLocation(studyId: string): void {
