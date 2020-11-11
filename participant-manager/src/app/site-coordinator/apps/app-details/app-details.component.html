@@ -118,48 +118,49 @@
     <button type="button" class="close pad__15__20" (click)="modalRef.hide()">
       &times;
     </button>
-    <ul class="app__level__pop__list">
+
+    <ul class="app__level__pop__list mt-3">
       <li *ngFor="let applists of enrolledStudies">
         <div class="blue__text__md text-uppercase">
           {{ applists.customStudyId }}
         </div>
 
-        <div>
-          <li *ngFor="let sitelists of applists.sites">
-            <div
-              class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none flex__justify__space-between"
-            >
-              <div class="p-none cursor__none">
-                <div>{{ applists.studyName }}</div>
-                Site ID :
-                <span
-                  *ngIf="applists.studyType !== studyTypes.Open"
-                  class="blue__text__md blue__link cursor__none"
-                >
-                  {{ sitelists.customSiteId }} {{ sitelists.siteName }}
-                </span>
-                <span
-                  *ngIf="applists.studyType === studyTypes.Open"
-                  class="blue__text__md blue__link cursor__none"
-                >
-                  NA(Open Study)
-                </span>
+        <div *ngFor="let sitelists of applists.sites">
+          <div
+            class="row flex-wrap-unset col-xs-12 col-md-12 p-none flex__justify__space-between"
+          >
+            <div class="p-none cursor__none">
+              <div class="font20 text_light-black">
+                {{ applists.studyName }}
               </div>
+              <span class="text-grey__sm">Site ID :</span>
+              <span
+                *ngIf="applists.studyType !== studyTypes.Open"
+                class="blue__text__md blue__link cursor__none"
+              >
+                {{ sitelists.customSiteId }} {{ sitelists.siteName }}
+              </span>
+              <span
+                *ngIf="applists.studyType === studyTypes.Open"
+                class="blue__text__md blue__link cursor__none"
+              >
+                NA(Open Study)
+              </span>
+            </div>
+            <div>
               <div>
-                <div>
-                  <span class="text-grey__sm">Date of Enrollment:</span>
-                  <span class="text__date__sm">
-                    {{ sitelists.enrollmentDate }}
-                  </span>
-                  <br />
-                  <span class="text-grey__sm">Date of Withdrawal:</span>
-                  <span class="text__date__sm">
-                    {{ sitelists.withdrawlDate }}
-                  </span>
-                </div>
+                <span class="text-grey__sm">Date of Enrollment:</span>
+                <span class="text__date__sm">
+                  {{ sitelists.enrollmentDate }}
+                </span>
+                <br />
+                <span class="text-grey__sm">Date of Withdrawal:</span>
+                <span class="text__date__sm">
+                  {{ sitelists.withdrawlDate }}
+                </span>
               </div>
             </div>
-          </li>
+          </div>
         </div>
       </li>
     </ul>
