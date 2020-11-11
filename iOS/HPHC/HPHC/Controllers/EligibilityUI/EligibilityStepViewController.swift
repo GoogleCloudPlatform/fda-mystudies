@@ -100,7 +100,7 @@ class EligibilityStepViewController: ORKStepViewController {
     if let step = step as? EligibilityStep {
       step.type = "token"
     }
-
+    tokenTextField.delegate = self
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -178,8 +178,11 @@ extension EligibilityStepViewController: UITextFieldDelegate {
   ) -> Bool {
 
     if string == " " {
-      return false
-
+      return false  // Ignore spaces
+    } else if let text = textField.text,
+      (text + string).count > 8
+    {
+      return false  // Block user typing more than 8 characters.
     } else {
       return true
     }
