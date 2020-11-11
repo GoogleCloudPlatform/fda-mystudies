@@ -2265,6 +2265,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].studyStatus").value(STATUS_ACTIVE))
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
         .andExpect(jsonPath("$.studies[0].logoImageUrl", is(studyEntity.getLogoImageUrl())))
+        .andExpect(jsonPath("$.studies[0].appName").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();
@@ -2300,6 +2301,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].sites").isArray())
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.studies[0].appName").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     assertEquals(sitePermission.getSite().getStatus(), siteEntity.getStatus());

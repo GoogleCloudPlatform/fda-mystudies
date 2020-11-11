@@ -32,6 +32,8 @@ public class StudyDetails {
 
   private String appId;
 
+  private String appName;
+
   private Long invited;
 
   private Long enrolled;
