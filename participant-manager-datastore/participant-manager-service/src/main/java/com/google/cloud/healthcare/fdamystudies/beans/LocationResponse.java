@@ -22,6 +22,8 @@ public class LocationResponse extends BaseResponse {
 
   private Long totalLocationsCount;
 
+  private Integer locationPermission;
+
   public LocationResponse(MessageCode messageCode, List<LocationDetails> locations) {
     super(messageCode);
     this.locations.addAll(locations);
