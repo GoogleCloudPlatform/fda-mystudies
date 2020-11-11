@@ -20,6 +20,7 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class SiteMapper {
@@ -43,9 +44,13 @@ public class SiteMapper {
   }
 
   public static List<AppSiteDetails> toParticipantSiteList(
-      Entry<StudyEntity, List<ParticipantStudyEntity>> entry) {
+      Entry<StudyEntity, List<ParticipantStudyEntity>> entry, String[] excludeSiteStatus) {
     List<AppSiteDetails> sites = new ArrayList<>();
     for (ParticipantStudyEntity enrollment : entry.getValue()) {
+      if (ArrayUtils.contains(excludeSiteStatus, enrollment.getStatus())) {
+        continue;
+      }
+
       AppSiteDetails studiesEnrollment = new AppSiteDetails();
 
       if (enrollment.getSite() != null) {
