@@ -35,6 +35,8 @@ export class UpdateUserComponent
   };
 @ViewChildren('permissionCheckBox')
   selectedPermission: QueryList<ElementRef> =new QueryList();
+  selectedAppsIds:string[]=[];
+
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
@@ -70,12 +72,15 @@ export class UpdateUserComponent
               this.user.manageLocations=null;
             } else {
           this.selectedApps = this.user.apps;
+               this.selectedAppsIds=this.selectedApps.map((ele)=>ele.customId);
             }
           this.getAllApps();
         }),
     );
   }
-
+add(event:unknown|App) :void{
+ this.selectedApps.push(event as App)
+}
   getAllApps(): void {
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
@@ -85,6 +90,7 @@ export class UpdateUserComponent
   }
   deleteAppFromList(appId: string): void {
     this.selectedApps = this.selectedApps.filter((obj) => obj.id !== appId);
+    this.selectedAppsIds=this.selectedApps.map((ele)=>ele.customId);
   }
 
   appCheckBoxChange(app: App): void {
