@@ -188,7 +188,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     AuthUserRequest userRequest =
         new AuthUserRequest(
-            "PARTICIPANT MANAGER",
+            "Participant Manager",
             setUpAccountRequest.getEmail(),
             setUpAccountRequest.getPassword(),
             UserAccountStatus.ACTIVE.getStatus());
