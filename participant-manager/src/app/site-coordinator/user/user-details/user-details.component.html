@@ -60,7 +60,9 @@
             </div>
             <div>
               <div class="blue__text__md">Status</div>
-              <div class="participant__label">{{ user.status }}</div>
+              <div [ngClass]="statusColour(user.status)">
+                {{ user.status }}
+              </div>
             </div>
           </div>
         </div>
@@ -81,7 +83,9 @@
               disabled
               [value]="user.manageLocationsSelected"
             />
-            <label for="locations">Allow access to locations</label>
+            <label class="text-initial" for="locations">
+              Allow access to locations
+            </label>
           </div>
           <div class="pl-lg text-grey__sm">
             <span
