@@ -387,9 +387,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         }
         if (!StringUtils.isBlank(user.getInfo().getDeviceToken())) {
           authInfo.setDeviceToken(user.getInfo().getDeviceToken());
-        } // To maintain single session and update old device token
-        // when user changed the device from android to IOS or vice versa
-        else if (!StringUtils.isBlank(authInfo.getDeviceToken())) {
+        } else if (!StringUtils.isBlank(authInfo.getDeviceToken())) {
           authInfo.setDeviceToken(null);
         }
       }
