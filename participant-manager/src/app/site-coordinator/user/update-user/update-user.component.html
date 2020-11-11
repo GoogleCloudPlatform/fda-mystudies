@@ -220,11 +220,13 @@
                 [clearable]="false"
                 [multiple]="true"
                 bindLabel="name"
+                bindValue="customId"
                 class="form-control select__form-control"
                 placeholder="Enter App ID or Name"
                 [hideSelected]="true"
-                [(ngModel)]="selectedApps"
+                [(ngModel)]="selectedAppsIds"
                 [ngModelOptions]="{standalone: true}"
+                (add)="add($event)"
               ></ng-select>
             </label>
           </div>
