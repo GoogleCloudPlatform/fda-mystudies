@@ -2,10 +2,11 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/participant-manager', '.']
   dir: "participant-manager"
+  args: ['sleep', '600']
+  timeout: 660s
   
 
 images: ['gcr.io/$PROJECT_ID/participant-manager']
-args: ['sleep', '600']
-timeout: 660s
+
 
 
