@@ -57,7 +57,7 @@ public class HttpRequest {
   private static int TimeoutInterval = 180000;
   private static String errorDescKey = "error_description";
   private static String headerErrorKey = "StatusMessage";
-  private static String SERVER_TYPE_WCP = "WCP";
+  private static String SERVER_TYPE_STUDY_DATASTORE = "STUDY_DATASTORE";
   private static String CONTENT_TYPE_KEY = "Content-Type";
   private static String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
   private static String APPLICATION_JSON = "application/json";
@@ -88,7 +88,8 @@ public class HttpRequest {
       HashMap<String, String> headersData,
       String serverType) {
     String bodyParams;
-    if (headersData.containsKey(CONTENT_TYPE_KEY)
+    if (headersData != null
+        && headersData.containsKey(CONTENT_TYPE_KEY)
         && headersData.get(CONTENT_TYPE_KEY).equalsIgnoreCase(APPLICATION_X_WWW_FORM_URLENCODED)) {
       bodyParams = getDataString(params);
     } else {
@@ -180,7 +181,6 @@ public class HttpRequest {
         }
         httppost.addHeader(CONTENT_TYPE_KEY, APPLICATION_JSON);
         httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        httppost.addHeader(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
         StringEntity params1 = new StringEntity(jsonObject.toString());
         httppost.setEntity(params1);
@@ -281,12 +281,11 @@ public class HttpRequest {
       conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestProperty(CONTENT_TYPE_KEY, APPLICATION_JSON);
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
-      if (serverType.equalsIgnoreCase(SERVER_TYPE_WCP)) {
+      if (serverType.equalsIgnoreCase(SERVER_TYPE_STUDY_DATASTORE)) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
-        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        conn.setRequestProperty(AppConfig.STUDY_DATASTORE_APP_ID_KEY, AppConfig.APP_ID_VALUE);
       }
 
       if (headersData != null) {
