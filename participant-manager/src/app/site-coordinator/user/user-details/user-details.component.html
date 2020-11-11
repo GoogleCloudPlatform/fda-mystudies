@@ -60,7 +60,9 @@
             </div>
             <div>
               <div class="blue__text__md">Status</div>
-              <div class="participant__label">{{ user.status }}</div>
+              <div [ngClass]="statusColour(user.status)">
+                {{ user.status }}
+              </div>
             </div>
           </div>
         </div>

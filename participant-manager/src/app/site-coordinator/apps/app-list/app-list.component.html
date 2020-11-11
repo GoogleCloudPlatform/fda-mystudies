@@ -51,7 +51,9 @@
                         <span *ngIf="app.invitedCount != 0">
                           {{ app.enrolledCount }} / {{ app.invitedCount }}
                         </span>
-                        <span *ngIf="app.invitedCount == 0">N/A</span>
+                        <span *ngIf="app.invitedCount == 0">
+                          {{ app.enrolledCount }} Enrolled
+                        </span>
                       </div>
                     </div>
                   </div>
