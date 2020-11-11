@@ -216,18 +216,22 @@ Superadmins can manage users of this Particpant Manager and in addition,can mana
         <div class="form-group">
           <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
           <div class="select__form-control__parent">
-            <label class="wrap pb-1">Add an app</label>
-            <ng-select
-              [items]="appDetails.apps"
-              [clearable]="false"
-              [multiple]="true"
-              bindLabel="name"
-              class="form-control select__form-control"
-              placeholder="Enter App ID or Name"
-              [hideSelected]="true"
-              [(ngModel)]="selectedApps"
-              [ngModelOptions]="{standalone: true}"
-            ></ng-select>
+            <label class="wrap">
+              Add an app
+              <ng-select
+                [items]="appDetails.apps"
+                [clearable]="false"
+                [multiple]="true"
+                bindLabel="name"
+                bindValue="customId"
+                class="form-control select__form-control"
+                placeholder="Enter App ID or Name"
+                [hideSelected]="true"
+                [(ngModel)]="selectedAppsIds"
+                [ngModelOptions]="{standalone: true}"
+                (add)="add($event)"
+              ></ng-select>
+            </label>
           </div>
         </div>
         <div class="form-group pt-none pt-0">
