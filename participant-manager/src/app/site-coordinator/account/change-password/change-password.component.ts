@@ -20,6 +20,7 @@ export class ChangePasswordComponent
   changePasswordTitle = 'Change Password';
   currentPasswordValidationMessage = 'Enter your current password';
   currentPasswordPlaceholder = 'Enter Current Password';
+  currentPasswordlabel = 'Current Password';
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -52,6 +53,7 @@ export class ChangePasswordComponent
         this.changePasswordTitle = 'SET UP PASSWORD';
         this.currentPasswordValidationMessage = 'Enter your temporary password';
         this.currentPasswordPlaceholder = 'Enter Temporary Password';
+        this.currentPasswordlabel = 'Temporary Password';
       }
     }),
       // this.route.queryParams
