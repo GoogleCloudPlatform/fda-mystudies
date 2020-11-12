@@ -1829,6 +1829,7 @@ extension UIApplication {
 extension AppDelegate {
   fileprivate func mockTestUser() {
     guard isTestingLoggedUser else { return }
+    DBHandler.deleteAll()
     User.currentUser.authToken = "Bearer accesstoken-12345"
     User.currentUser.refreshToken = "FXm_WOcEddMDzumj"
     User.currentUser.emailId = "test@xyz.la"

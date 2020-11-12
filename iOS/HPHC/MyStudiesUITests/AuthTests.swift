@@ -73,7 +73,7 @@ class MyStudiesUITests: UITestBase {
 
     // Error alert
     app.alerts.buttons["OK"].tap()
-    app.staticTexts["CHANGE PASSWORD"].tap()
+    app.staticTexts["Change Password"].tap()
 
     XCTAssertTrue(app.secureTextFields["enter current password"].exists,
                   "Current password field not found")
