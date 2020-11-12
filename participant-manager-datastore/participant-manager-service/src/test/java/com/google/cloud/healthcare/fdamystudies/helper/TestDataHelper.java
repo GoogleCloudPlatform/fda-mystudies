@@ -361,8 +361,7 @@ public class TestDataHelper {
     sitePermissionRepository.saveAndFlush(sitePermission);
   }
 
-  public List<StudyEntity> createMultipleStudyEntity(
-      UserRegAdminEntity userEntity, AppEntity appEntity) {
+  public List<StudyEntity> createMultipleStudyEntity(AppEntity appEntity) {
     List<StudyEntity> studyList = new ArrayList<>();
     for (int i = 1; i <= 2; i++) {
       StudyEntity studyEntity = newStudyEntity();

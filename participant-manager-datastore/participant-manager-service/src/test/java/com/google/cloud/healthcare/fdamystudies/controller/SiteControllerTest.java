@@ -2374,7 +2374,7 @@ public class SiteControllerTest extends BaseMockIT {
     testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermission);
 
     // create few more studies and associated sites
-    List<StudyEntity> studyList = testDataHelper.createMultipleStudyEntity(null, appEntity);
+    List<StudyEntity> studyList = testDataHelper.createMultipleStudyEntity(appEntity);
     for (StudyEntity study : studyList) {
       testDataHelper.createMultipleSiteEntityWithPermission(
           study, admin, appEntity, locationEntity);
