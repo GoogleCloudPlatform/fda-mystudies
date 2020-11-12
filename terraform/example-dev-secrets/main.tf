@@ -41,6 +41,9 @@ resource "random_string" "strings" {
   for_each = toset(concat(
     [
       "hydra_db_user",
+      "sd_response_datastore_id",
+      "sd_android_id",
+      "sd_ios_id",
     ],
     formatlist("%s_db_user", local.apps),
     formatlist("%s_client_id", local.apps))
@@ -54,6 +57,9 @@ resource "random_password" "passwords" {
     [
       "mystudies_sql_default_user_password",
       "hydra_db_password",
+      "sd_response_datastore_password",
+      "sd_android_password",
+      "sd_ios_password",
     ],
     formatlist("%s_db_password", local.apps),
     formatlist("%s_secret_key", local.apps))
@@ -88,38 +94,6 @@ module "project" {
     "secretmanager.googleapis.com",
   ]
 }
-
-resource "google_secret_manager_secret" "manual_study_builder_user" {
-  provider = google-beta
-
-  secret_id = "manual-study-builder-user"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
-
-resource "google_secret_manager_secret" "manual_study_builder_password" {
-  provider = google-beta
-
-  secret_id = "manual-study-builder-password"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
 
 resource "google_secret_manager_secret" "manual_mystudies_email_address" {
   provider = google-beta
@@ -1199,4 +1173,136 @@ resource "google_secret_manager_secret_version" "auto_participant_manager_datast
 
   secret      = google_secret_manager_secret.auto_participant_manager_datastore_secret_key.id
   secret_data = random_password.passwords["participant_manager_datastore_secret_key"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_response_datastore_password" {
+  provider = google-beta
+
+  secret_id = "auto-sd-response-datastore-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_response_datastore_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_response_datastore_password.id
+  secret_data = random_password.passwords["sd_response_datastore_password"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_response_datastore_id" {
+  provider = google-beta
+
+  secret_id = "auto-sd-response-datastore-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_response_datastore_id_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_response_datastore_id.id
+  secret_data = random_string.strings["sd_response_datastore_id"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_android_password" {
+  provider = google-beta
+
+  secret_id = "auto-sd-android-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_android_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_android_password.id
+  secret_data = random_password.passwords["sd_android_password"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_android_id" {
+  provider = google-beta
+
+  secret_id = "auto-sd-android-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_android_id_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_android_id.id
+  secret_data = random_string.strings["sd_android_id"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_ios_password" {
+  provider = google-beta
+
+  secret_id = "auto-sd-ios-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_ios_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_ios_password.id
+  secret_data = random_password.passwords["sd_ios_password"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_ios_id" {
+  provider = google-beta
+
+  secret_id = "auto-sd-ios-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_ios_id_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_ios_id.id
+  secret_data = random_string.strings["sd_ios_id"].result
 }

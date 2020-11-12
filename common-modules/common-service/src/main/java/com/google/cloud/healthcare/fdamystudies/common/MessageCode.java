@@ -104,7 +104,6 @@ public enum MessageCode {
 
   FORGOT_PASSWORD(HttpStatus.OK, "EC_0065", "Password help has been sent to your registered email");
 
-
   private final HttpStatus httpStatus;
   private final String code;
   private final String message;

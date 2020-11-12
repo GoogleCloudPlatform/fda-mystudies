@@ -47,17 +47,17 @@ spec:
                 secretKeyRef:
                   name: response-datastore-credentials
                   key: secret_key
-            # STUDY BUILDER AUTHENTICATION
-            - name: STUDY_BUILDER_USER
+            # STUDY DATASTORE AUTHENTICATION
+            - name: STUDY_DATASTORE_ID
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-connect-credentials
-                  key: username
-            - name: STUDY_BUILDER_PASS
+                  name: study-datastore-connect-credentials
+                  key: response_datastore_id
+            - name: STUDY_DATASTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-connect-credentials
-                  key: password
+                  name: study-datastore-connect-credentials
+                  key: response_datastore_password
             # SERVER CALLS
             - name: AUTH_SERVER_URL
               value: "http://auth-server-np:50000/oauth-scim-service"

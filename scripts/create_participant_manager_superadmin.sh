@@ -60,7 +60,7 @@ echo "Insert default location"
 echo "REPLACE INTO locations
   (id, custom_id, is_default, name, status)
 VALUES
-	('1', 'location1', 'Y', 'Default Location', 1);
+	('1', 'location1', 'Y', 'Site', 1);
 " >> ${TMPFILE}
 
 SECURITY_CODE=`cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 64 | head -n 1 | sed 's/^.* //'`

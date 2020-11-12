@@ -41,11 +41,11 @@ spec:
             backend:
               serviceName: study-builder-np
               servicePort: 50000
-          - path: /hydra/*
+          - path: /oauth2/*
             backend:
               serviceName: hydra-np
               servicePort: 50000
-          - path: /#/*
+          - path: /participant-manager/*
             backend:
               serviceName: participant-manager-np
               servicePort: 50000
