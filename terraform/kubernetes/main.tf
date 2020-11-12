@@ -107,6 +107,12 @@ data "google_secret_manager_secret_version" "secrets" {
       "auto-hydra-db-password",
       "auto-hydra-db-user",
       "auto-hydra-system-secret",
+      "auto-sd-response-datastore-password",
+      "auto-sd-response-datastore-id",
+      "auto-sd-android-password",
+      "auto-sd-android-id",
+      "auto-sd-ios-password",
+      "auto-sd-ios-id",
     ],
     formatlist("auto-%s-db-user", local.apps),
     formatlist("auto-%s-db-password", local.apps),
@@ -180,6 +186,20 @@ resource "kubernetes_secret" "hydra_credentials" {
   }
 }
 
+# Study datastore connect credentials.
+resource "kubernetes_secret" "study_datastore_connect_credentials" {
+  metadata {
+    name = "study-datastore-connect-credentials"
+  }
+  data = {
+    response_datastore_id       = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-id"].secret_data
+    response_datastore_password = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-password"].secret_data
+    android_id                  = data.google_secret_manager_secret_version.secrets["auto-sd-android-id"].secret_data
+    android_password            = data.google_secret_manager_secret_version.secrets["auto-sd-android-password"].secret_data
+    ios_id                      = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
+    ios_password                = data.google_secret_manager_secret_version.secrets["auto-sd-ios-password"].secret_data
+  }
+}
 # Study builder connect credentials.
 resource "kubernetes_secret" "study_builder_connect_credentials" {
 
