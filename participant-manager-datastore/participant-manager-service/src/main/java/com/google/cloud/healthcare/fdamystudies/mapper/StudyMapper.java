@@ -48,19 +48,25 @@ public final class StudyMapper {
   }
 
   public static List<AppStudyDetails> toAppStudyDetailsList(
-      Map<StudyEntity, List<ParticipantStudyEntity>> enrolledStudiesByStudyInfoId) {
+      Map<StudyEntity, List<ParticipantStudyEntity>> enrolledStudiesByStudyInfoId,
+      String[] excludeSiteStatus,
+      boolean excludeStudiesWithNoSites) {
 
     List<AppStudyDetails> appStudyDetailsList = new ArrayList<>();
 
     for (Entry<StudyEntity, List<ParticipantStudyEntity>> entry :
         enrolledStudiesByStudyInfoId.entrySet()) {
+      List<AppSiteDetails> sites = SiteMapper.toParticipantSiteList(entry, excludeSiteStatus);
+      if (sites.isEmpty() && excludeStudiesWithNoSites) {
+        continue;
+      }
+
       AppStudyDetails appStudyDetails = new AppStudyDetails();
       StudyEntity study = entry.getKey();
       appStudyDetails.setCustomStudyId(study.getCustomId());
       appStudyDetails.setStudyName(study.getName());
       appStudyDetails.setStudyId(study.getId());
       appStudyDetails.setStudyType(study.getType());
-      List<AppSiteDetails> sites = SiteMapper.toParticipantSiteList(entry);
       appStudyDetails.setSites(sites);
       appStudyDetailsList.add(appStudyDetails);
     }
@@ -75,7 +81,9 @@ public final class StudyMapper {
     studyDetail.setType(study.getType());
     studyDetail.setAppId(study.getApp().getAppId());
     studyDetail.setAppInfoId(study.getApp().getId());
+    studyDetail.setAppName(study.getApp().getAppName());
     studyDetail.setLogoImageUrl(study.getLogoImageUrl());
+    studyDetail.setStudyStatus(study.getStatus());
 
     return studyDetail;
   }

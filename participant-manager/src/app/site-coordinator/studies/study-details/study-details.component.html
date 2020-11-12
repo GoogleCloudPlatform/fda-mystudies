@@ -70,9 +70,11 @@
         >
           <div class="enrollment-label mt-4">
             <button
-              [disabled]="
+              *ngIf="
                 studyDetails.participantRegistryDetail
-                  .openStudySitePermission === permission.View
+                  .openStudySitePermission === permission.ViewAndEdit ||
+                studyDetails.participantRegistryDetail.sitePermission ===
+                  permission.ViewAndEdit
               "
               class="btn mt-2 enrol_btn p-none"
               (click)="openModal(template)"
@@ -177,6 +179,10 @@
               <td>{{ lists.enrollmentDate }}</td>
             </tr>
           </tbody>
+  <div *ngIf="studyDetails.participantRegistryDetail.registryParticipants.length=== 0">
+    No records found
+  </div>
+
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="5">
