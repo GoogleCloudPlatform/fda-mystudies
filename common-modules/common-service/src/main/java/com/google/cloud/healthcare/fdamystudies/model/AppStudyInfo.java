@@ -22,7 +22,4 @@ public interface AppStudyInfo {
   Long getStudyCount();
 
   Timestamp getCreatedTimestamp();
-
-  /** @return site level permission only, 1- study and site level permissions */
-  int getStudyPermission();
 }
