@@ -60,7 +60,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.firstName.errors?.required"
                   >
-                    Please fill out this field.
+                    Enter a first name.
                   </span>
                 </div>
               </div>
@@ -86,7 +86,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.lastName.errors?.required"
                   >
-                    Please fill out this field.
+                    Enter a last name.
                   </span>
                 </div>
               </div>
@@ -152,13 +152,13 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.confirmPassword.errors?.required"
                 >
-                  Please confirm password.
+                  Please fill out this field.
                 </span>
                 <span
                   class="help-block with-errors error__msg"
                   *ngIf="f.confirmPassword.errors?.mustMatch"
                 >
-                  Passwords must match.
+                  Passwords do not match.
                 </span>
               </div>
             </div>
