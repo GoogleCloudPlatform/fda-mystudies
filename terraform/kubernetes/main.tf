@@ -102,6 +102,9 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-bundle-id",
       "manual-ios-certificate",
       "manual-ios-certificate-password",
+      "manual-ios-deeplink-url",
+      "manual-android-deeplink-url",
+      "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
       "auto-hydra-system-secret",
@@ -165,6 +168,20 @@ resource "kubernetes_secret" "client_side_credentials" {
   data = {
     client_id  = data.google_secret_manager_secret_version.secrets["auto-auth-server-client-id"].secret_data
     secret_key = data.google_secret_manager_secret_version.secrets["auto-auth-server-secret-key"].secret_data
+  }
+}
+
+# Auth-server secrets.
+resource "kubernetes_secret" "auth_server_secrets" {
+
+  metadata {
+    name = "auth-server-secrets"
+  }
+
+  data = {
+    encryptor_password   = data.google_secret_manager_secret_version.secrets["auto-auth-server-encryptor-password"].secret_data
+    ios_deeplink_url     = data.google_secret_manager_secret_version_secrets["manual-ios-deeplink-url"].secret_data
+    android_deeplink_url = data.google_secret_manager_secret_version_secrets["manual-android-deeplink-url"].secret_data
   }
 }
 

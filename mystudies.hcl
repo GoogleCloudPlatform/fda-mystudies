@@ -186,6 +186,12 @@ template "project_secrets" {
           secret_id = "manual-ios-certificate-password"
         },
         {
+          secret_id = "manual-ios-deeplink-url"
+        },
+        {
+          secret_id = "manual-android-deeplink-url"
+        },
+        {
           secret_id   = "auto-mystudies-sql-default-user-password"
           secret_data = "$${random_password.passwords[\"mystudies_sql_default_user_password\"].result}"
         },
@@ -216,6 +222,10 @@ template "project_secrets" {
         {
           secret_id   = "auto-auth-server-secret-key"
           secret_data = "$${random_password.passwords[\"auth_server_secret_key\"].result}"
+        },
+        {
+          secret_id   = "auto-auth-server-encryptor-password"
+          secret_data = "$${random_password.passwords[\"auth_server_encryptor_password\"].result}"
         },
         {
           secret_id   = "auto-response-datastore-db-user"
@@ -393,6 +403,7 @@ resource "random_password" "passwords" {
       "sd_response_datastore_password",
       "sd_android_password",
       "sd_ios_password",
+      "auth_server_encryptor_password"
     ],
     formatlist("%s_db_password", local.apps),
     formatlist("%s_secret_key", local.apps))
@@ -967,6 +978,9 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-bundle-id",
       "manual-ios-certificate",
       "manual-ios-certificate-password",
+      "manual-ios-deeplink-url",
+      "manual-android-deeplink-url",
+      "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
       "auto-hydra-system-secret",
@@ -1030,6 +1044,20 @@ resource "kubernetes_secret" "client_side_credentials" {
   data = {
     client_id  = data.google_secret_manager_secret_version.secrets["auto-auth-server-client-id"].secret_data
     secret_key = data.google_secret_manager_secret_version.secrets["auto-auth-server-secret-key"].secret_data
+  }
+}
+
+# Auth-server secrets.
+resource "kubernetes_secret" "auth_server_secrets" {
+
+  metadata {
+    name = "auth-server-secrets"
+  }
+
+  data = {
+    encryptor_password   = data.google_secret_manager_secret_version.secrets["auto-auth-server-encryptor-password"].secret_data
+    ios_deeplink_url     = data.google_secret_manager_secret_version_secrets["manual-ios-deeplink-url"].secret_data
+    android_deeplink_url = data.google_secret_manager_secret_version_secrets["manual-android-deeplink-url"].secret_data
   }
 }
 
