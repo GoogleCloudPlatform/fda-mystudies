@@ -4,8 +4,7 @@ import {SuccessCode} from 'src/app/shared/success.codes.enum';
 
 export interface ManageLocations {
   locations: Location[];
-  locationPermission:Permission;
-
+  locationPermission: Permission;
 }
 export interface Location extends ApiResponse {
   locationId: string;
@@ -22,9 +21,7 @@ export interface Location extends ApiResponse {
 
   studiesCount: number;
 
-  locationPermission:Permission;
-
-
+  locationPermission: Permission;
 }
 
 export interface StatusUpdateRequest {

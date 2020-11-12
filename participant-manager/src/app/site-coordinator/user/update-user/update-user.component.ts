@@ -1,4 +1,10 @@
-import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {UserService} from '../shared/user.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
@@ -33,8 +39,8 @@ export class UpdateUserComponent
     '=1': '1 Site',
     'other': '# Sites',
   };
-@ViewChildren('permissionCheckBox')
-  selectedPermission: QueryList<ElementRef> =new QueryList();
+  @ViewChildren('permissionCheckBox')
+  selectedPermission: QueryList<ElementRef> = new QueryList();
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
@@ -64,13 +70,13 @@ export class UpdateUserComponent
           this.user = data.user;
           this.user.manageLocationsSelected =
             this.user.manageLocations !== null;
-            if (this.user.superAdmin) {
-              this.selectedApps=[];
-              this.user.manageLocationsSelected=false;
-              this.user.manageLocations=null;
-            } else {
-          this.selectedApps = this.user.apps;
-            }
+          if (this.user.superAdmin) {
+            this.selectedApps = [];
+            this.user.manageLocationsSelected = false;
+            this.user.manageLocations = null;
+          } else {
+            this.selectedApps = this.user.apps;
+          }
           this.getAllApps();
         }),
     );
@@ -174,13 +180,14 @@ export class UpdateUserComponent
   }
 
   update(): void {
-  const permissionsSelected=this.selectedPermission.filter((element) => {
+    const permissionsSelected = this.selectedPermission.filter((element) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       return element.nativeElement?.checked as boolean;
     });
     if (
-      this.user.superAdmin || this.user.manageLocationsSelected ||
-      (this.selectedApps.length > 0 && permissionsSelected.length!==0 )
+      this.user.superAdmin ||
+      this.user.manageLocationsSelected ||
+      (this.selectedApps.length > 0 && permissionsSelected.length !== 0)
     ) {
       if (this.user.superAdmin) {
         this.user.apps = [];
