@@ -58,11 +58,12 @@
               </div>
             </div>
           </div>
+          
           <section
             *ngIf="
               participant.participantDetails.studyType !== studyTypes.Open &&
               participant.participantDetails.sitePermission ===
-                permission.ViewAndEdit
+                permission.ViewAndEdit 
             "
             class="desk__view"
           >
@@ -71,8 +72,8 @@
                 class="mr-sm"
                 *ngIf="
                   participant.participantDetails.onboardingStatus !==
-                  onBoardingStatus.Disabled
-                "
+                  onBoardingStatus.Disabled  && participant.participantDetails.studyStatus !== studyStatus.Deactivated
+                 && participant.participantDetails.siteStatus !== 0"
               >
                 <button
                   [disabled]="
@@ -87,7 +88,9 @@
                   {{ sendResend }}
                 </button>
               </div>
-              <div>
+              <div
+               *ngIf="participant.participantDetails.studyStatus !== studyStatus.Deactivated && participant.participantDetails.siteStatus !== 0"
+              >
                 <button
                   [disabled]="
                     hasCompletedEnrollment(participant.participantDetails)
@@ -113,8 +116,8 @@
     <section
       *ngIf="
         participant.participantDetails.studyType !== studyTypes.Open &&
-        participant.participantDetails.sitePermission === permission.ViewAndEdit
-      "
+        participant.participantDetails.sitePermission === permission.ViewAndEdit &&  participant.participantDetails.studyStatus !== studyStatus.Deactivated
+       && participant.participantDetails.siteStatus !== 0"
       class="subheader p-none pl-none mobile__view border-top__c4d1e6"
     >
       <div class="flex__ flex__justify__center">
@@ -224,8 +227,18 @@
                     .enrollments
                 "
               >
-                <td class="inactive__text">
-                  <span>{{ enrollmentDetails.enrollmentStatus }}</span>
+                <td >
+                  <span 
+                    [ngClass]="{
+                    'txt__green':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Enrolled,
+                    'txt__light-gray':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Withdrawn
+                  }"
+                  
+                  >{{ enrollmentDetails.enrollmentStatus }}</span>
                 </td>
                 <td class="mb__mt-sm inactive__text">
                   <span>{{ enrollmentDetails.enrollmentDate }}</span>
