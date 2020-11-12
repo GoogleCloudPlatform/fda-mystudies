@@ -77,12 +77,18 @@ export class SetUpAccountComponent
   }
 
   getPreStoredDetails(): void {
-    this.setUpAccountService.get(this.setUpCode).subscribe((user) => {
-      if (user.redirectTo === 'login') {
-        void this.router.navigate(['/login']);
-      }
-      this.setupAccountForm.patchValue(user);
-    });
+    this.setUpAccountService.get(this.setUpCode).subscribe(
+      (user) => {
+        if (user.redirectTo === 'login') {
+          void this.router.navigate(['/pagenotfound']);
+        }
+        this.setupAccountForm.patchValue(user);
+      },
+      (err) => {
+        console.log(err);
+        void this.router.navigate(['']);
+      },
+    );
   }
 
   registerUser(): void {
