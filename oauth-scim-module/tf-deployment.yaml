@@ -77,7 +77,7 @@ spec:
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
             - name: HYDRA_PUBLIC_URL
-              value: "http://hydra-np:50000/hydra"
+              value: "http://hydra-np:50000"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/oauth-scim-service"
             - name: BASE_URL
