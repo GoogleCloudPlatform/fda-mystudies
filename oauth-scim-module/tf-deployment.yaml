@@ -91,17 +91,20 @@ spec:
                   name: shared-secrets
                   key: base_url
             - name: IOS_DEEPLINK_URL
-              secretKeyRef:
-                name: auth-server-secrets
-                key: ios_deeplink_url
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: ios_deeplink_url
             - name: ANDROID_DEEPLINK_URL
-              secretKeyRef:
-                name: auth-server-secrets
-                key: android_deeplink_url
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: android_deeplink_url
             - name: ENCRYPTOR_PASSWORD
-              secretKeyRef:
-                name: auth-server-secrets
-                key: encryptor_password
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: encryptor_password
             # MISC
             - name: LOG_PATH
               valueFrom:
