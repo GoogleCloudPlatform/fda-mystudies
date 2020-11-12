@@ -5,7 +5,11 @@ import {AppRoutingModule} from './app-routing.module';
 import {LoginComponent} from './auth/login/login.component';
 import {SetUpAccountComponent} from './auth/set-up-account/set-up-account.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
-import {HashLocationStrategy, LocationStrategy, APP_BASE_HREF} from '@angular/common';
+import {
+  HashLocationStrategy,
+  LocationStrategy,
+  APP_BASE_HREF,
+} from '@angular/common';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {EntityService} from './service/entity.service';
 import {httpInterceptorProviders} from './http-interceptors';
@@ -62,5 +66,4 @@ import {environment} from '@environment';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
