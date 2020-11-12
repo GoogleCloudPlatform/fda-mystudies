@@ -66,18 +66,18 @@
           *ngIf="
             studyDetails.participantRegistryDetail.studyType === studyTypes.Open
           "
-          class="pr-xlg"
+          class="pt-1"
         >
-          <div class="enrollment-label">
+          <div class="enrollment-label mt-4">
             <button
               [disabled]="
                 studyDetails.participantRegistryDetail
                   .openStudySitePermission === permission.View
               "
-              class="btn font12__light-grey p-none"
+              class="btn mt-2 enrol_btn p-none"
               (click)="openModal(template)"
             >
-              <span class="text__deco font12__light-grey">
+              <span>
                 Enrollment Target:
                 {{ studyDetails.participantRegistryDetail.targetEnrollment }}
               </span>
@@ -155,7 +155,7 @@
                   [ngClass]="{
                     'txt__green':
                       lists.onboardingStatus === onboardingStatus.Invited,
-                      'txt__light-gray':
+                    'txt__light-gray':
                       lists.onboardingStatus === onboardingStatus.Disabled
                   }"
                 >
@@ -167,7 +167,7 @@
                   [ngClass]="{
                     'txt__green':
                       lists.enrollmentStatus === enrollmentStatus.Enrolled,
-                       'txt__light-gray':
+                    'txt__light-gray':
                       lists.enrollmentStatus === enrollmentStatus.Withdrawn
                   }"
                 >
