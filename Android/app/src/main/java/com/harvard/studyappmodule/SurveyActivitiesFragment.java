@@ -62,6 +62,9 @@ import com.harvard.studyappmodule.activitylistmodel.ActivityListData;
 import com.harvard.studyappmodule.activitylistmodel.AnchorDateSchedulingDetails;
 import com.harvard.studyappmodule.activitylistmodel.Frequency;
 import com.harvard.studyappmodule.activitylistmodel.FrequencyRuns;
+import com.harvard.studyappmodule.activitylistmodel.SchedulingAnchorDate;
+import com.harvard.studyappmodule.activitylistmodel.SchedulingAnchorDateEnd;
+import com.harvard.studyappmodule.activitylistmodel.SchedulingAnchorDateStart;
 import com.harvard.studyappmodule.consent.ConsentBuilder;
 import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
@@ -98,9 +101,9 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -186,6 +189,7 @@ public class SurveyActivitiesFragment extends Fragment
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
   String title = "";
+
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -305,7 +309,8 @@ public class SurveyActivitiesFragment extends Fragment
       AppController.getHelperProgressDialog()
           .showSwipeListCustomProgress(getActivity(), R.drawable.transparent, false);
     } else {
-      AppController.getHelperProgressDialog().showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
+      AppController.getHelperProgressDialog()
+          .showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
     }
 
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
@@ -318,11 +323,11 @@ public class SurveyActivitiesFragment extends Fragment
             + ((SurveyActivity) context).getStudyId()
             + "&studyVersion="
             + studyList.getStudyVersion();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get", url, STUDY_UPDATES, context, StudyUpdate.class, null, header, null, false, this);
 
-    getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
   }
@@ -335,8 +340,8 @@ public class SurveyActivitiesFragment extends Fragment
     GetActivityListEvent getActivityListEvent = new GetActivityListEvent();
     HashMap<String, String> header = new HashMap();
     String url = Urls.ACTIVITY_LIST + "?studyId=" + ((SurveyActivity) context).getStudyId();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             ACTIVTTYLIST_RESPONSECODE,
@@ -348,7 +353,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    getActivityListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getActivityListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetActivityList(getActivityListEvent);
   }
@@ -368,12 +373,12 @@ public class SurveyActivitiesFragment extends Fragment
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
 
       String url =
-          Urls.BASE_URL_WCP_SERVER
+          Urls.BASE_URL_STUDY_DATASTORE
               + Urls.CONSENT_METADATA
               + "?studyId="
               + ((SurveyActivity) context).getStudyId();
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -632,17 +637,14 @@ public class SurveyActivitiesFragment extends Fragment
 
       HashMap<String, String> header = new HashMap();
       header.put(
-          "accessToken",
-          AppController.getHelperSharedPreference()
-              .readPreference(context, context.getResources().getString(R.string.auth), ""));
+          "Authorization",
+          "Bearer "
+              + AppController.getHelperSharedPreference()
+                  .readPreference(context, context.getResources().getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
               .readPreference(context, context.getResources().getString(R.string.userid), ""));
-      header.put(
-          "clientToken",
-          AppController.getHelperSharedPreference()
-              .readPreference(context, context.getResources().getString(R.string.clientToken), ""));
       Realm realm = AppController.getRealmobj(context);
       Studies studies =
           dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
@@ -653,8 +655,8 @@ public class SurveyActivitiesFragment extends Fragment
               + ((SurveyActivity) context).getStudyId()
               + "&participantId="
               + studies.getParticipantId();
-      ResponseServerConfigEvent responseServerConfigEvent =
-          new ResponseServerConfigEvent(
+      ResponseDatastoreConfigEvent responseDatastoreConfigEvent =
+          new ResponseDatastoreConfigEvent(
               "get",
               url,
               GET_PREFERENCES,
@@ -666,7 +668,7 @@ public class SurveyActivitiesFragment extends Fragment
               false,
               this);
       ActivityStateEvent activityStateEvent = new ActivityStateEvent();
-      activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+      activityStateEvent.setResponseDatastoreConfigEvent(responseDatastoreConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performActivityState(activityStateEvent);
 
@@ -1418,8 +1420,8 @@ public class SurveyActivitiesFragment extends Fragment
     header.put("studyId", studyId);
     String url = Urls.RESOURCE_LIST + "?studyId=" + studyId;
     GetResourceListEvent getResourceListEvent = new GetResourceListEvent();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             RESOURCE_REQUEST_CODE,
@@ -1431,7 +1433,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    getResourceListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getResourceListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetResourceListEvent(getResourceListEvent);
   }
@@ -1441,8 +1443,8 @@ public class SurveyActivitiesFragment extends Fragment
     HashMap<String, String> header = new HashMap<>();
     String url = Urls.STUDY_INFO + "?studyId=" + studyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -1454,7 +1456,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
   }
@@ -1555,6 +1557,11 @@ public class SurveyActivitiesFragment extends Fragment
     } else {
       paused = false;
     }
+    SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
+    StudyData studyPreferences = dbServiceSubscriber.getStudyPreference(realm);
+    Date joiningDate =
+        survayScheduler.getJoiningDateOfStudy(
+            studyPreferences, ((SurveyActivity) context).getStudyId());
     filterPos = positon;
     Filter filter = getFilterList();
     studyVideoAdapter =
@@ -1564,7 +1571,8 @@ public class SurveyActivitiesFragment extends Fragment
             filter.getStatus(),
             filter.getCurrentRunStatusForActivities(),
             SurveyActivitiesFragment.this,
-            paused);
+            paused,
+            joiningDate);
     surveyActivitiesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     surveyActivitiesRecyclerView.setAdapter(studyVideoAdapter);
   }
@@ -1656,6 +1664,24 @@ public class SurveyActivitiesFragment extends Fragment
                   .getActivityId()
                   .equalsIgnoreCase(activityListDataDB.getActivities().get(i).getActivityId())) {
                 activityAvailable = true;
+                if (activityListDataDB.getActivities().get(i).getStartTime().equalsIgnoreCase("")
+                    && !activityListData
+                        .getActivities()
+                        .get(j)
+                        .getStartTime()
+                        .equalsIgnoreCase("")) {
+                  dbServiceSubscriber.saveActivityStartTime(
+                      activityListDataDB.getActivities().get(i),
+                      realm,
+                      activityListData.getActivities().get(j).getStartTime());
+                }
+                if (activityListDataDB.getActivities().get(i).getEndTime().equalsIgnoreCase("")
+                    && !activityListData.getActivities().get(j).getEndTime().equalsIgnoreCase("")) {
+                  dbServiceSubscriber.saveActivityEndTime(
+                      activityListDataDB.getActivities().get(i),
+                      realm,
+                      activityListData.getActivities().get(j).getEndTime());
+                }
               }
             }
             if (!activityAvailable) {
@@ -1720,7 +1746,9 @@ public class SurveyActivitiesFragment extends Fragment
         ActivityData activityData =
             dbServiceSubscriber.getActivityPreference(
                 ((SurveyActivity) context).getStudyId(), realm);
-        Date joiningDate = new Date();
+        Date joiningDate =
+            survayScheduler.getJoiningDateOfStudy(
+                studyPreferences, ((SurveyActivity) context).getStudyId());
 
         Date currentDate = new Date();
 
@@ -1765,6 +1793,18 @@ public class SurveyActivitiesFragment extends Fragment
                   Logger.log(e);
                 } catch (Exception e1) {
                   Logger.log(e1);
+                }
+              } else {
+                if (activitiesArrayList.get(i).getFrequency().getType().equalsIgnoreCase("One Time")
+                    && activitiesArrayList.get(i).getAnchorDate() != null
+                    && activitiesArrayList.get(i).getAnchorDate().getEnd() == null) {
+                  try {
+                    starttime =
+                        simpleDateFormat.parse(
+                            activitiesArrayList.get(i).getStartTime().split("\\.")[0]);
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
                 }
               }
             }
@@ -1887,7 +1927,8 @@ public class SurveyActivitiesFragment extends Fragment
                     activityData,
                     ((SurveyActivity) context).getStudyId(),
                     activitiesArrayList.get(i).getActivityId(),
-                    calendarCurrentTime.getTime());
+                    calendarCurrentTime.getTime(),
+                    activitiesArrayList.get(i));
             if (activityStatus != null) {
               if (activityStatus.getCompletedRun() >= 0) {
                 completed = completed + activityStatus.getCompletedRun();
@@ -1901,11 +1942,11 @@ public class SurveyActivitiesFragment extends Fragment
             }
             if (!activitiesArrayList.get(i).getState().equalsIgnoreCase("deleted")) {
               if (starttime != null) {
-                if (isWithinRange(starttime, endtime)) {
+                if (AppController.isWithinRange(starttime, endtime)) {
                   currentactivityList.add(activitiesArrayList.get(i));
                   currentActivityStatus.add(activityStatus);
                   currentStatus.add(STATUS_CURRENT);
-                } else if (checkafter(starttime)) {
+                } else if (AppController.checkafter(starttime)) {
                   upcomingactivityList.add(activitiesArrayList.get(i));
                   upcomingActivityStatus.add(activityStatus);
                   upcomingStatus.add(STATUS_UPCOMING);
@@ -2141,6 +2182,41 @@ public class SurveyActivitiesFragment extends Fragment
           activitiesWS.setBranching(activitiesArrayList.get(k).getBranching());
           activitiesWS.setStatus(activitiesArrayList.get(k).getStatus());
           activitiesWS.setTitle(activitiesArrayList.get(k).getTitle());
+          activitiesWS.setSchedulingType(activitiesArrayList.get(k).getSchedulingType());
+          if (activitiesArrayList
+                  .get(k)
+                  .getFrequency()
+                  .getType()
+                  .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)
+              && activitiesArrayList.get(k).getAnchorDate() != null) {
+            SchedulingAnchorDate schedulingAnchorDate = new SchedulingAnchorDate();
+            schedulingAnchorDate.setSourceType(
+                activitiesArrayList.get(k).getAnchorDate().getSourceType());
+            if (activitiesArrayList.get(k).getAnchorDate().getStart() != null) {
+              SchedulingAnchorDateStart schedulingAnchorDateStart = new SchedulingAnchorDateStart();
+              schedulingAnchorDateStart.setAnchorDays(
+                  activitiesArrayList.get(k).getAnchorDate().getStart().getAnchorDays());
+              schedulingAnchorDateStart.setDateOfMonth(
+                  activitiesArrayList.get(k).getAnchorDate().getStart().getDateOfMonth());
+              schedulingAnchorDateStart.setDayOfWeek(
+                  activitiesArrayList.get(k).getAnchorDate().getStart().getDayOfWeek());
+              schedulingAnchorDateStart.setTime(
+                  activitiesArrayList.get(k).getAnchorDate().getStart().getTime());
+              schedulingAnchorDate.setStart(schedulingAnchorDateStart);
+            }
+
+            if (activitiesArrayList.get(k).getAnchorDate().getEnd() != null) {
+              SchedulingAnchorDateEnd schedulingAnchorDateEnd = new SchedulingAnchorDateEnd();
+              schedulingAnchorDateEnd.setAnchorDays(
+                  activitiesArrayList.get(k).getAnchorDate().getEnd().getAnchorDays());
+              schedulingAnchorDateEnd.setRepeatInterval(
+                  activitiesArrayList.get(k).getAnchorDate().getEnd().getRepeatInterval());
+              schedulingAnchorDateEnd.setTime(
+                  activitiesArrayList.get(k).getAnchorDate().getEnd().getTime());
+              schedulingAnchorDate.setEnd(schedulingAnchorDateEnd);
+            }
+            activitiesWS.setAnchorDate(schedulingAnchorDate);
+          }
 
           activitiesArrayList1.add(activitiesWS);
         } else {
@@ -2187,6 +2263,11 @@ public class SurveyActivitiesFragment extends Fragment
       } else {
         paused = false;
       }
+      SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
+      StudyData studyPreferences = dbServiceSubscriber.getStudyPreference(realm);
+      Date joiningDate =
+          survayScheduler.getJoiningDateOfStudy(
+              studyPreferences, ((SurveyActivity) context).getStudyId());
       title = studyList.getTitle();
       Filter filter = getFilterList();
       studyVideoAdapter =
@@ -2196,7 +2277,8 @@ public class SurveyActivitiesFragment extends Fragment
               filter.getStatus(),
               filter.getCurrentRunStatusForActivities(),
               SurveyActivitiesFragment.this,
-              paused);
+              paused,
+              joiningDate);
 
       activityListDataDB = null;
 
@@ -2235,6 +2317,7 @@ public class SurveyActivitiesFragment extends Fragment
       if (motivationalNotification == null) {
         if (completion >= 100) {
           hundredPc = true;
+          fiftyPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
               context.getResources().getString(R.string.study)
@@ -2247,7 +2330,16 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
-
+          SetDialogHelper.setNeutralDialog(
+              context,
+              context.getResources().getString(R.string.study)
+                  + " "
+                  + title
+                  + " "
+                  + context.getResources().getString(R.string.percent_complete2),
+              false,
+              context.getResources().getString(R.string.ok),
+              context.getResources().getString(R.string.app_name));
         } else if (missed > 0) {
           SetDialogHelper.setNeutralDialog(
               context,
@@ -2263,6 +2355,7 @@ public class SurveyActivitiesFragment extends Fragment
       } else if (!motivationalNotification.isFiftyPc() && !motivationalNotification.isHundredPc()) {
         if (completion >= 100) {
           hundredPc = true;
+          fiftyPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
               context.getResources().getString(R.string.study)
@@ -2275,6 +2368,27 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
+          SetDialogHelper.setNeutralDialog(
+              context,
+              context.getResources().getString(R.string.study)
+                  + " "
+                  + title
+                  + " "
+                  + context.getResources().getString(R.string.percent_complete2),
+              false,
+              context.getResources().getString(R.string.ok),
+              context.getResources().getString(R.string.app_name));
+        } else if (motivationalNotification.getMissed() != missed) {
+          SetDialogHelper.setNeutralDialog(
+              context,
+              context.getResources().getString(R.string.missed_activity)
+                  + " "
+                  + ((SurveyActivity) context).getTitle1()
+                  + " "
+                  + context.getResources().getString(R.string.we_encourage),
+              false,
+              context.getResources().getString(R.string.ok),
+              context.getResources().getString(R.string.app_name));
         }
       } else if (!motivationalNotification.isHundredPc()) {
         if (completion >= 100) {
@@ -2289,23 +2403,17 @@ public class SurveyActivitiesFragment extends Fragment
               false,
               context.getResources().getString(R.string.ok),
               context.getResources().getString(R.string.app_name));
-        }
-
-      } else if (!motivationalNotification.isFiftyPc()) {
-        if (!motivationalNotification.isHundredPc() && completion >= 50) {
-          fiftyPc = true;
+        } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.study)
+              context.getResources().getString(R.string.missed_activity)
                   + " "
-                  + title
+                  + ((SurveyActivity) context).getTitle1()
                   + " "
-                  + context.getResources().getString(R.string.percent_complete1),
+                  + context.getResources().getString(R.string.we_encourage),
               false,
               context.getResources().getString(R.string.ok),
               context.getResources().getString(R.string.app_name));
-        } else if (motivationalNotification.isHundredPc()) {
-          fiftyPc = true;
         }
 
       } else if (motivationalNotification.getMissed() != missed) {
@@ -2354,17 +2462,14 @@ public class SurveyActivitiesFragment extends Fragment
   public void updateStudyState(String completion, String adherence) {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, context.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(context, context.getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -2385,8 +2490,8 @@ public class SurveyActivitiesFragment extends Fragment
     } catch (JSONException e) {
       Logger.log(e);
     }
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
@@ -2398,8 +2503,8 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -2543,19 +2648,6 @@ public class SurveyActivitiesFragment extends Fragment
     dbServiceSubscriber.insert(context, databaseEvent);
   }
 
-  boolean isWithinRange(Date starttime, Date endtime) {
-    if (endtime == null) {
-      return (new Date().after(starttime) || new Date().equals(starttime));
-    } else {
-      return (new Date().after(starttime) || new Date().equals(starttime))
-          && new Date().before(endtime);
-    }
-  }
-
-  boolean checkafter(Date starttime) {
-    return starttime.after(new Date());
-  }
-
   boolean checkbefore(Date starttime) {
     return new Date().before(starttime);
   }
@@ -2638,8 +2730,8 @@ public class SurveyActivitiesFragment extends Fragment
             + activityId
             + "&activityVersion="
             + activityVersion;
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             ACTIVTTYINFO_RESPONSECODE,
@@ -2651,7 +2743,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    getActivityInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+    getActivityInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetActivityInfo(getActivityInfoEvent);
   }
@@ -2772,17 +2864,14 @@ public class SurveyActivitiesFragment extends Fragment
     Realm realm = AppController.getRealmobj(context);
     Studies studies = dbServiceSubscriber.getStudies(studyId, realm);
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, context.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(context, context.getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.clientToken), ""));
     header.put("participantId", studies.getParticipantId());
     dbServiceSubscriber.closeRealmObj(realm);
     JSONObject jsonObject = new JSONObject();
@@ -2791,7 +2880,6 @@ public class SurveyActivitiesFragment extends Fragment
     JSONObject activityStatus = new JSONObject();
     JSONObject activityRun = new JSONObject();
     try {
-      activityStatus.put("studyId", studyId);
       activityStatus.put("activityState", IN_PROGRESS);
       activityStatus.put("activityId", activityId);
       activityStatus.put("activityRunId", "" + activityRunId);
@@ -2844,7 +2932,7 @@ public class SurveyActivitiesFragment extends Fragment
           Urls.UPDATE_ACTIVITY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "ResponseServer",
+          "ResponseDatastore",
           "",
           "",
           studyIdActivityId);
@@ -2852,8 +2940,8 @@ public class SurveyActivitiesFragment extends Fragment
       Logger.log(e);
     }
 
-    ResponseServerConfigEvent responseServerConfigEvent =
-        new ResponseServerConfigEvent(
+    ResponseDatastoreConfigEvent responseDatastoreConfigEvent =
+        new ResponseDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -2865,7 +2953,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
     ActivityStateEvent activityStateEvent = new ActivityStateEvent();
-    activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+    activityStateEvent.setResponseDatastoreConfigEvent(responseDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performActivityState(activityStateEvent);
   }
@@ -2919,8 +3007,9 @@ public class SurveyActivitiesFragment extends Fragment
             getString(R.string.clientToken),
             SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
         header.put(
-            "accessToken",
-            SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+            "Authorization",
+            "Bearer "
+                + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
         header.put(
             "userId",
             SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
@@ -2932,10 +3021,6 @@ public class SurveyActivitiesFragment extends Fragment
         responseModel =
             HttpRequest.getRequest(
                 Urls.PROCESSRESPONSEDATA
-                    + AppConfig.ORG_ID_KEY
-                    + "="
-                    + AppConfig.ORG_ID_VALUE
-                    + "&"
                     + AppConfig.APP_ID_KEY
                     + "="
                     + AppConfig.APP_ID_VALUE

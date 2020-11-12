@@ -30,17 +30,17 @@ public class HttpRequestInstrumentedTest {
   private static final String HEADER_CORELATIONID_VALUE = "d16a2aff-6636-4023-a9da-e414db40eecb";
   private static final String HEADER_MOBILE_PLATFORM_KEY = "mobilePlatform";
   private static final String HEADER_MOBILE_PLATFORM_VALUE = "ANDROID";
-  private static final String SERVER_TYPE_WCP_SERVER = "WCP";
+  private static final String SERVER_TYPE_STUDY_DATASTORE_SERVER = "STUDY_DATASTORE";
   private static final String SERVER_TYPE_AUTH_SERVER = "auth";
   private static final String ASSERT_THAT_IS = "200";
 
   @Test
   public void getRequestTest() {
     StringBuilder studyListUrl = new StringBuilder();
-    studyListUrl.append(Urls.BASE_URL_WCP_SERVER);
+    studyListUrl.append(Urls.BASE_URL_STUDY_DATASTORE);
     studyListUrl.append(Urls.STUDY_LIST);
     Responsemodel responsemodel =
-        HttpRequest.getRequest(studyListUrl.toString(), null, SERVER_TYPE_WCP_SERVER);
+        HttpRequest.getRequest(studyListUrl.toString(), null, SERVER_TYPE_STUDY_DATASTORE_SERVER);
     assertThat(FAILED_MESSAGE, responsemodel.getResponseCode(), is(ASSERT_THAT_IS));
   }
 

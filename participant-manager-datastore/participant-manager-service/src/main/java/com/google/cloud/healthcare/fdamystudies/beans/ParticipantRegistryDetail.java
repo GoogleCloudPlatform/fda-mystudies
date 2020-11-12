@@ -54,6 +54,8 @@ public class ParticipantRegistryDetail extends BaseResponse {
 
   private Integer sitePermission;
 
+  private Integer studyPermission;
+
   private Integer siteStatus;
 
   private String studyStatus;
