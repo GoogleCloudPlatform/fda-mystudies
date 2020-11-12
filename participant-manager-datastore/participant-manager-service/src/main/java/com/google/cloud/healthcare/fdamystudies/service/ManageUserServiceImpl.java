@@ -158,9 +158,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       return ErrorCode.NOT_SUPER_ADMIN_ACCESS;
     }
 
-    if (!user.isSuperAdmin()
-        && (user.getManageLocations() == Permission.NO_PERMISSION.value()
-            && (CollectionUtils.isEmpty(user.getApps()) || !hasAtleastOnePermission(user)))) {
+    if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
       return ErrorCode.PERMISSION_MISSING;
     }
 
@@ -171,6 +169,12 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private boolean hasAtleastOnePermission(UserRequest user) {
     logger.entry("hasAtleastOnePermission()");
+    if (user.getManageLocations() != Permission.NO_PERMISSION.value()) {
+      return true;
+    } else if (CollectionUtils.isEmpty(user.getApps())) {
+      return false;
+    }
+
     Predicate<UserAppPermissionRequest> appPredicate = app -> app.isSelected();
     Predicate<UserStudyPermissionRequest> studyPredicate = study -> study.isSelected();
     Predicate<UserSitePermissionRequest> sitePredicate = site -> site.isSelected();
@@ -397,9 +401,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       return ErrorCode.USER_NOT_FOUND;
     }
 
-    if (!user.isSuperAdmin()
-        && (user.getManageLocations() == Permission.NO_PERMISSION.value()
-            && (CollectionUtils.isEmpty(user.getApps()) || !hasAtleastOnePermission(user)))) {
+    if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
       return ErrorCode.PERMISSION_MISSING;
     }
 
