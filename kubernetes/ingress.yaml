@@ -45,7 +45,7 @@ spec:
             backend:
               serviceName: hydra-np
               servicePort: 50000
-          - path: /#/*
+          - path: /participant-manager/*
             backend:
               serviceName: participant-manager-np
               servicePort: 50000
