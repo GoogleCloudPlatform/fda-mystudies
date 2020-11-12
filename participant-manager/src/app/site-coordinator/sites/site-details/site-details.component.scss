@@ -75,10 +75,10 @@ input[type="checkbox"]:checked + label::before {
   content: "";
   display: block;
   position: absolute;
-  top: 5px;
+  top: 3px;
   left: 6px;
   width: 5px;
-  height: 9px;
+  height: 14px;
   border: solid #dee2e6;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);

@@ -324,7 +324,7 @@ html {
   }
   .ng-select.ng-select-multiple {
     border: none;
-    height: 26px;
+    height: 20px;
     line-height: 10px;
   }
   .ng-select.ng-select-multiple .ng-select-container .ng-value-container {
@@ -362,7 +362,7 @@ html {
   }
   .subheader {
     min-height: 67px;
-    line-height: 63px;
+    line-height: 67px;
   }
 }
 
@@ -1142,4 +1142,8 @@ select {
 .info_i {
   color: var(--stone-gray);
   font-size: 10px;
+}
+
+.mart_min {
+  margin-top: -3px;
 }

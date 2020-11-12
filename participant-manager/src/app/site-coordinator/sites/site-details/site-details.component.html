@@ -471,9 +471,14 @@
                       (change)="selectAll()"
                     />
                     <label
-                          *ngIf="siteParticipants.participantRegistryDetail.sitePermission ===
-                                                        permission.ViewAndEdit && siteParticipants.participantRegistryDetail.siteStatus !== 0"
-                    for="css"></label>
+                      *ngIf="
+                        siteParticipants.participantRegistryDetail
+                          .sitePermission === permission.ViewAndEdit &&
+                        siteParticipants.participantRegistryDetail
+                          .siteStatus !== 0
+                      "
+                      for="css"
+                    ></label>
                   </span>
                   <mfDefaultSorter by="email">
                     Participant Email
@@ -525,7 +530,6 @@
                 <td *ngIf="activeTab == onBoardingStatus.New">
                   <div>
                     <div class="form-group mb-none">
-                  
                       <input
                         type="checkbox"
                         id="{{ participant.id }}"
@@ -533,19 +537,23 @@
                         (change)="rowCheckBoxChange($event)"
                       />
                       <label
-                        *ngIf="siteParticipants.participantRegistryDetail.sitePermission ===
-                                                        permission.ViewAndEdit && siteParticipants.participantRegistryDetail.siteStatus !== 0"
-                        for="{{ participant.id }}"></label>
-                        <span
-                          class="no_st_en cursor__pointer outline__none"
-                          [routerLink]="[
-                            '/coordinator/participant',
-                            participant.id
-                          ]"
-                        >
-                          {{ participant.email }}
-                        </span>
-                      
+                        *ngIf="
+                          siteParticipants.participantRegistryDetail
+                            .sitePermission === permission.ViewAndEdit &&
+                          siteParticipants.participantRegistryDetail
+                            .siteStatus !== 0
+                        "
+                        for="{{ participant.id }}"
+                      ></label>
+                      <span
+                        class="no_st_en cursor__pointer outline__none"
+                        [routerLink]="[
+                          '/coordinator/participant',
+                          participant.id
+                        ]"
+                      >
+                        {{ participant.email }}
+                      </span>
                     </div>
                   </div>
                 </td>
@@ -578,20 +586,24 @@
                           (change)="rowCheckBoxChange($event)"
                         />
 
-                      <label
-                        *ngIf="siteParticipants.participantRegistryDetail.sitePermission ===
-                                                        permission.ViewAndEdit && siteParticipants.participantRegistryDetail.siteStatus !== 0"
-                        for="{{ participant.id }}"></label>
-                          <span
-                            class="no_st_en cursor__pointer outline__none"
-                            [routerLink]="[
-                              '/coordinator/participant',
-                              participant.id
-                            ]"
-                          >
-                            {{ participant.email }}
-                          </span>
-                     
+                        <label
+                          *ngIf="
+                            siteParticipants.participantRegistryDetail
+                              .sitePermission === permission.ViewAndEdit &&
+                            siteParticipants.participantRegistryDetail
+                              .siteStatus !== 0
+                          "
+                          for="{{ participant.id }}"
+                        ></label>
+                        <span
+                          class="no_st_en cursor__pointer outline__none"
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
+                        >
+                          {{ participant.email }}
+                        </span>
                       </div>
                       <div
                         *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
@@ -622,19 +634,24 @@
                         [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
-                    <label *ngIf="siteParticipants.participantRegistryDetail.sitePermission ===
-                                  permission.ViewAndEdit && siteParticipants.participantRegistryDetail.siteStatus !== 0"
-                      for="{{ participant.id }}"></label>
-                        <span
-                          class="no_st_en cursor__pointer outline__none"
-                          [routerLink]="[
-                            '/coordinator/participant',
-                            participant.id
-                          ]"
-                        >
-                          {{ participant.email }}
-                        </span>
-                
+                      <label
+                        *ngIf="
+                          siteParticipants.participantRegistryDetail
+                            .sitePermission === permission.ViewAndEdit &&
+                          siteParticipants.participantRegistryDetail
+                            .siteStatus !== 0
+                        "
+                        for="{{ participant.id }}"
+                      ></label>
+                      <span
+                        class="no_st_en cursor__pointer outline__none"
+                        [routerLink]="[
+                          '/coordinator/participant',
+                          participant.id
+                        ]"
+                      >
+                        {{ participant.email }}
+                      </span>
                     </div>
                   </div>
                 </td>
@@ -667,7 +684,7 @@
             >
               No records found
             </div>
-            <tfoot>
+            <tfoot class="custom__tfoot">
               <tr>
                 <td colspan="4">
                   <mfBootstrapPaginator></mfBootstrapPaginator>
