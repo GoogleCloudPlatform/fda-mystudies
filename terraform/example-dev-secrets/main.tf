@@ -95,38 +95,6 @@ module "project" {
   ]
 }
 
-resource "google_secret_manager_secret" "manual_study_builder_user" {
-  provider = google-beta
-
-  secret_id = "manual-study-builder-user"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
-
-resource "google_secret_manager_secret" "manual_study_builder_password" {
-  provider = google-beta
-
-  secret_id = "manual-study-builder-password"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
-
 resource "google_secret_manager_secret" "manual_mystudies_email_address" {
   provider = google-beta
 

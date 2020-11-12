@@ -84,8 +84,6 @@ data "google_secret_manager_secret_version" "secrets" {
 
   for_each = toset(concat(
     [
-      "manual-study-builder-user",
-      "manual-study-builder-password",
       "manual-mystudies-email-address",
       "manual-mystudies-email-password",
       "manual-mystudies-contact-email-address",
@@ -198,18 +196,6 @@ resource "kubernetes_secret" "study_datastore_connect_credentials" {
     android_password            = data.google_secret_manager_secret_version.secrets["auto-sd-android-password"].secret_data
     ios_id                      = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
     ios_password                = data.google_secret_manager_secret_version.secrets["auto-sd-ios-password"].secret_data
-  }
-}
-# Study builder connect credentials.
-resource "kubernetes_secret" "study_builder_connect_credentials" {
-
-  metadata {
-    name = "study-builder-connect-credentials"
-  }
-
-  data = {
-    username = data.google_secret_manager_secret_version.secrets["manual-study-builder-user"].secret_data
-    password = data.google_secret_manager_secret_version.secrets["manual-study-builder-password"].secret_data
   }
 }
 
