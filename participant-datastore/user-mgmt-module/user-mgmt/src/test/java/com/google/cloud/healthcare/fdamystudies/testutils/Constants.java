@@ -16,7 +16,7 @@ public final class Constants {
   public static final String APP_ID_HEADER = "appId";
   public static final String STUDY_ID = "studyId1";
   public static final String STUDY_TITLE = "studyTitle";
-  public static final String STUDY_TYPE = "open";
+  public static final String STUDY_TYPE = "OPEN";
   public static final String STUDY_STATUS = "Active";
   public static final String STUDY_CATEGORY = "Public Health";
   public static final String STUDY_TAGLINE = "Basics of Study";
