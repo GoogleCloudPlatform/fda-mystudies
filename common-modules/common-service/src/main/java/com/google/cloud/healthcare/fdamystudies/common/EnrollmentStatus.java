@@ -15,7 +15,8 @@ public enum EnrollmentStatus {
   IN_PROGRESS("inProgress"),
   ENROLLED("Enrolled"),
   YET_TO_JOIN("yetToJoin"),
-  WITHDRAWN("Withdrawn");
+  WITHDRAWN("Withdrawn"),
+  NOT_ELIGIBLE("notEligible");
 
   private String code;
 

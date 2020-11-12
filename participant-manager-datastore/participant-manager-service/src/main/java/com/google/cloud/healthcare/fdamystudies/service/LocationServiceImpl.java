@@ -243,6 +243,7 @@ public class LocationServiceImpl implements LocationService {
     LocationResponse locationResponse =
         new LocationResponse(MessageCode.GET_LOCATION_SUCCESS, locationDetailsList);
     locationResponse.setTotalLocationsCount(locationRepository.count());
+    locationResponse.setLocationPermission(adminUser.getLocationPermission());
     logger.exit(String.format("locations size=%d", locationResponse.getLocations().size()));
     return locationResponse;
   }
@@ -289,7 +290,7 @@ public class LocationServiceImpl implements LocationService {
     if (!StringUtils.isEmpty(studyNames)) {
       locationResponse.getStudyNames().addAll(Arrays.asList(studyNames.split(",")));
     }
-
+    locationResponse.setLocationPermission(adminUser.getLocationPermission());
     logger.exit(String.format("locationId=%s", locationEntity.getId()));
     return locationResponse;
   }

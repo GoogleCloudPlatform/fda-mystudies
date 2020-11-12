@@ -39,7 +39,37 @@ spec:
             # SERVER CALLS
             - name: PARTICIPANT_USER_DATASTORE_URL
               value: "http://participant-user-datastore-np:50000/participant-user-datastore"
-            # MISC
+            - name: RESPONSE_DATASTORE_APP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-connect-credentials
+                  key: response_datastore_password
+            - name: RESPONSE_SERVER_BUNDLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-connect-credentials
+                  key: response_datastore_id
+            - name: ANDROID_APP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-connect-credentials
+                  key: android_password
+            - name: ANDROID_BUNDLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-connect-credentials
+                  key: android_id
+            - name: IOS_APP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-connect-credentials
+                  key: ios_password
+            - name: IOS_BUNDLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-connect-credentials
+                  key: ios_id
+                # MISC
             - name: BASE_URL
               valueFrom:
                 secretKeyRef:
