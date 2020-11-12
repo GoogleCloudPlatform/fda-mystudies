@@ -460,7 +460,7 @@ footer ul li a {
   color: var(--space-gray);
   padding: 0 25px;
   border-right: 1px solid var(--gray);
-  font-size: 85%;
+  font-size: 12px;
 }
 
 footer ul li:last-child a {
@@ -1118,7 +1118,7 @@ button:focus {
 .add__site {
   width: 100%;
   height: 100%;
-  max-width: 90px;
+  max-width: 100px;
   max-height: 32px;
 }
 .helpout_svg {

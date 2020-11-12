@@ -22,7 +22,7 @@
         <div class="form-group">
           <div class="form-item">
             <label>Location</label>
-            <div class="select-wrap select select-fancy select-fancy-image">
+            <div class="select-wrap select select-fancy select-fancy-noimage">
               <select
                 class="form-item__element form-item__element--select width__100 cursor__pointer"
                 [(ngModel)]="site.locationId"
@@ -31,7 +31,7 @@
                 #location="ngModel"
                 placeholder="Enter App ID or Name"
               >
-                <option disabled selected>Select Location</option>
+                <option value="" disabled selected>Select Location</option>
                 <option
                   class="cursor__pointer"
                   *ngFor="let location of manageLocations.locations"
