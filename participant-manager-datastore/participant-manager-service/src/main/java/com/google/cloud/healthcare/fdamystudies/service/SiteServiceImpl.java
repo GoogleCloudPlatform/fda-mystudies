@@ -69,6 +69,7 @@ import com.google.cloud.healthcare.fdamystudies.mapper.ConsentMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.StudyMapper;
+import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCount;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteCount;
@@ -278,6 +279,11 @@ public class SiteServiceImpl implements SiteService {
     ParticipantRegistrySiteEntity participantRegistrySite =
         ParticipantMapper.fromParticipantRequest(participant, site);
     participantRegistrySite.setCreatedBy(userId);
+    participantRegistrySite.setEnrollmentTokenExpiry(
+        new Timestamp(
+            Instant.now()
+                .plus(appPropertyConfig.getEnrollmentTokenExpiryInHours(), ChronoUnit.HOURS)
+                .toEpochMilli()));
     participantRegistrySite =
         participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
     ParticipantResponse response =
@@ -554,7 +560,7 @@ public class SiteServiceImpl implements SiteService {
   private void checkPreConditionsForSiteActivate(SiteEntity site) {
     Optional<LocationEntity> optLocation = locationRepository.findById(site.getLocation().getId());
     if (optLocation.get().getStatus().equals(INACTIVE_STATUS)) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION);
+      throw new ErrorCodeException(ErrorCode.LOCATION_DECOMMISSIONED);
     }
 
     Optional<StudyEntity> optStudyEntity = studyRepository.findById(site.getStudyId());
@@ -574,14 +580,12 @@ public class SiteServiceImpl implements SiteService {
         study = site.getStudy();
       }
     } else {
-      Optional<SitePermissionEntity> optSitePermission =
-          sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
-      if (!optSitePermission.isPresent()) {
+      Optional<SiteEntity> optSite = siteRepository.findById(siteId);
+      if (!optSite.isPresent()) {
         throw new ErrorCodeException(ErrorCode.SITE_NOT_FOUND);
       }
-      SitePermissionEntity sitePermission = optSitePermission.get();
-      study = sitePermission.getStudy();
 
+      study = optSite.get().getStudy();
       if (!isEditPermissionAllowedForStudy(study.getId(), userId)) {
         throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
       }
@@ -634,11 +638,28 @@ public class SiteServiceImpl implements SiteService {
             .map(studyAdminId -> studyAdminId.getUrAdminUser().getId())
             .collect(Collectors.toList());
 
+    List<String> appIds =
+        sitePermissions
+            .stream()
+            .distinct()
+            .map(appId -> appId.getApp().getId())
+            .collect(Collectors.toList());
+
+    List<AppPermissionEntity> appPermissions =
+        (List<AppPermissionEntity>)
+            CollectionUtils.emptyIfNull(
+                appPermissionRepository.findByUserIdsAndAppIds(siteAdminIds, appIds));
+
+    List<String> appAdminIds =
+        appPermissions
+            .stream()
+            .distinct()
+            .map(appAdminId -> appAdminId.getUrAdminUser().getId())
+            .collect(Collectors.toList());
+
     for (SitePermissionEntity sitePermission : sitePermissions) {
-      if (studyAdminIds.contains(sitePermission.getUrAdminUser().getId())) {
-        sitePermission.setCanEdit(Permission.VIEW);
-        sitePermissionRepository.saveAndFlush(sitePermission);
-      } else {
+      if (!(studyAdminIds.contains(sitePermission.getUrAdminUser().getId())
+          && appAdminIds.contains(sitePermission.getUrAdminUser().getId()))) {
         sitePermissionRepository.delete(sitePermission);
       }
     }
@@ -654,6 +675,7 @@ public class SiteServiceImpl implements SiteService {
         if (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
             || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode)) {
           participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+          participantRegistrySite.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
         }
         participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
       }
@@ -1009,6 +1031,11 @@ public class SiteServiceImpl implements SiteService {
       ParticipantRegistrySiteEntity participantRegistrySite =
           ParticipantMapper.fromParticipantDetail(participantDetail, siteEntity);
       participantRegistrySite.setCreatedBy(userId);
+      participantRegistrySite.setEnrollmentTokenExpiry(
+          new Timestamp(
+              Instant.now()
+                  .plus(appPropertyConfig.getEnrollmentTokenExpiryInHours(), ChronoUnit.HOURS)
+                  .toEpochMilli()));
       participantRegistrySite =
           participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
       participantDetail.setId(participantRegistrySite.getId());

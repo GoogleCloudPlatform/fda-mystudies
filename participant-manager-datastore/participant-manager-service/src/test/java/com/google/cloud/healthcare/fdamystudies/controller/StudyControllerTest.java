@@ -321,6 +321,7 @@ public class StudyControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     StudyEntity study = testDataHelper.newStudyEntity();
+    study.setType(CLOSE_STUDY);
     testDataHelper.getStudyRepository().saveAndFlush(study);
     mockMvc
         .perform(
@@ -332,6 +333,31 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.error_description")
                 .value(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnSiteAccessDeniedForStudyParticipants() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    StudyEntity study = testDataHelper.newStudyEntity();
+    study.setType(OPEN_STUDY);
+    testDataHelper.getStudyRepository().saveAndFlush(study);
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), study.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
