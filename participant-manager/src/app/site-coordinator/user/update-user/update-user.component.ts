@@ -1,4 +1,10 @@
-import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {UserService} from '../shared/user.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
@@ -33,9 +39,9 @@ export class UpdateUserComponent
     '=1': '1 Site',
     'other': '# Sites',
   };
-@ViewChildren('permissionCheckBox')
-  selectedPermission: QueryList<ElementRef> =new QueryList();
-  selectedAppsIds:string[]=[];
+  @ViewChildren('permissionCheckBox')
+  selectedPermission: QueryList<ElementRef> = new QueryList();
+  selectedAppsIds: string[] = [];
 
   constructor(
     private readonly router: Router,
@@ -66,21 +72,21 @@ export class UpdateUserComponent
           this.user = data.user;
           this.user.manageLocationsSelected =
             this.user.manageLocations !== null;
-            if (this.user.superAdmin) {
-              this.selectedApps=[];
-              this.user.manageLocationsSelected=false;
-              this.user.manageLocations=null;
-            } else {
-          this.selectedApps = this.user.apps;
-               this.selectedAppsIds=this.selectedApps.map((ele)=>ele.customId);
-            }
+          if (this.user.superAdmin) {
+            this.selectedApps = [];
+            this.user.manageLocationsSelected = false;
+            this.user.manageLocations = null;
+          } else {
+            this.selectedApps = this.user.apps;
+            this.selectedAppsIds = this.selectedApps.map((ele) => ele.customId);
+          }
           this.getAllApps();
         }),
     );
   }
-add(event:unknown|App) :void{
- this.selectedApps.push(event as App)
-}
+  add(event: unknown | App): void {
+    this.selectedApps.push(event as App);
+  }
   getAllApps(): void {
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
@@ -90,7 +96,7 @@ add(event:unknown|App) :void{
   }
   deleteAppFromList(appId: string): void {
     this.selectedApps = this.selectedApps.filter((obj) => obj.id !== appId);
-    this.selectedAppsIds=this.selectedApps.map((ele)=>ele.customId);
+    this.selectedAppsIds = this.selectedApps.map((ele) => ele.customId);
   }
 
   appCheckBoxChange(app: App): void {
@@ -180,13 +186,14 @@ add(event:unknown|App) :void{
   }
 
   update(): void {
-  const permissionsSelected=this.selectedPermission.filter((element) => {
+    const permissionsSelected = this.selectedPermission.filter((element) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       return element.nativeElement?.checked as boolean;
     });
     if (
-      this.user.superAdmin || this.user.manageLocationsSelected ||
-      (this.selectedApps.length > 0 && permissionsSelected.length!==0 )
+      this.user.superAdmin ||
+      this.user.manageLocationsSelected ||
+      (this.selectedApps.length > 0 && permissionsSelected.length !== 0)
     ) {
       if (this.user.superAdmin) {
         this.user.apps = [];
@@ -212,21 +219,34 @@ add(event:unknown|App) :void{
       return;
     }
   }
-  changeStatus(): void {
-    const statusUpdateRequest: UpdateStatusRequest = {
-      status: this.user.status === this.userStatus.Deactivated ? 1 : 0,
-    };
-    this.userService
-      .updateStatus(statusUpdateRequest, this.adminId)
-      .subscribe((successResponse: ApiResponse) => {
-        if (getMessage(successResponse.code)) {
-          this.toastr.success(getMessage(successResponse.code));
-        } else this.toastr.success('Success');
-        this.user.status =
-          this.user.status === this.userStatus.Deactivated
-            ? this.userStatus.Active
-            : this.userStatus.Deactivated;
-      });
+  changeStatus(userStatus: Status | undefined): void {
+    if (userStatus === Status.Invited) {
+      this.userService
+        .deleteInvitation(this.adminId)
+        .subscribe((successResponse: ApiResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else {
+            this.toastr.success('Success');
+          }
+          void this.router.navigate(['coordinator/users']);
+        });
+    } else {
+      const statusUpdateRequest: UpdateStatusRequest = {
+        status: this.user.status === this.userStatus.Deactivated ? 1 : 0,
+      };
+      this.userService
+        .updateStatus(statusUpdateRequest, this.adminId)
+        .subscribe((successResponse: ApiResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else this.toastr.success('Success');
+          this.user.status =
+            this.user.status === this.userStatus.Deactivated
+              ? this.userStatus.Active
+              : this.userStatus.Deactivated;
+        });
+    }
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.status;
