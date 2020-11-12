@@ -38,7 +38,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.Calendar;
 import java.util.HashMap;
 import org.json.JSONException;
@@ -57,7 +57,9 @@ public class LoginCallbackActivity extends AppCompatActivity
   UserProfileData userProfileData;
   private static final int PASSCODE_RESPONSE = 103;
   private static final int STUDYINFO_REQUEST = 100;
+  private static final int CHANGE_PASSWORD_RESPONSE = 104;
   private static final String PASSWORD_RESET_STATUS = "3";
+  private static final String ACCOUNT_LOCKED_STATUS = "2";
   private static final String INTENT_SIGNIN = "signin";
   private static final String INTENT_FLOW = "login_callback";
 
@@ -75,6 +77,7 @@ public class LoginCallbackActivity extends AppCompatActivity
       Uri uri = intent.getData();
       if (uri != null) {
         userId = uri.getQueryParameter("userId");
+        emailId = uri.getQueryParameter("email");
         if (uri.getPath().equalsIgnoreCase(Urls.DEEPLINK_CALLBACK)) {
           code = uri.getQueryParameter("code");
           accountStatus = uri.getQueryParameter("accountStatus");
@@ -137,13 +140,16 @@ public class LoginCallbackActivity extends AppCompatActivity
               LoginCallbackActivity.this,
               getString(R.string.refreshToken),
               tokenData.getRefresh_token());
-      if (accountStatus != null && accountStatus.equalsIgnoreCase(PASSWORD_RESET_STATUS)) {
+      if (accountStatus != null
+          && (accountStatus.equalsIgnoreCase(PASSWORD_RESET_STATUS)
+              || accountStatus.equalsIgnoreCase(ACCOUNT_LOCKED_STATUS))) {
+        AppController.getHelperProgressDialog().dismissDialog();
         Intent changePasswordIntent =
-            new Intent(LoginCallbackActivity.this, ChangePasswordActivity.class);
+                new Intent(LoginCallbackActivity.this, ChangePasswordActivity.class);
         changePasswordIntent.putExtra("userid", userId);
         changePasswordIntent.putExtra("auth", userAuth);
-        startActivity(changePasswordIntent);
-        finish();
+        changePasswordIntent.putExtra("email", emailId);
+        startActivityForResult(changePasswordIntent, CHANGE_PASSWORD_RESPONSE);
       } else {
         new GetFcmRefreshToken().execute();
       }
@@ -161,6 +167,7 @@ public class LoginCallbackActivity extends AppCompatActivity
       userProfileData = (UserProfileData) response;
       if (userProfileData != null) {
         if (userProfileData.getSettings().isPasscode()) {
+          AppController.getHelperProgressDialog().dismissDialog();
           AppController.getHelperSharedPreference()
               .writePreference(
                   LoginCallbackActivity.this, getString(R.string.initialpasscodeset), "no");
@@ -169,6 +176,8 @@ public class LoginCallbackActivity extends AppCompatActivity
               .writePreference(LoginCallbackActivity.this, getString(R.string.userid), "" + userId);
           AppController.getHelperSharedPreference()
               .writePreference(LoginCallbackActivity.this, getString(R.string.auth), "" + userAuth);
+          AppController.getHelperSharedPreference()
+                  .writePreference(LoginCallbackActivity.this, getString(R.string.verified), "true");
           AppController.getHelperSharedPreference()
               .writePreference(
                   LoginCallbackActivity.this,
@@ -346,8 +355,8 @@ public class LoginCallbackActivity extends AppCompatActivity
       }
     }
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
@@ -359,7 +368,7 @@ public class LoginCallbackActivity extends AppCompatActivity
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updateUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }
@@ -370,8 +379,8 @@ public class LoginCallbackActivity extends AppCompatActivity
     header.put("userId", userId);
 
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "get",
             Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
@@ -382,13 +391,17 @@ public class LoginCallbackActivity extends AppCompatActivity
             null,
             false,
             this);
-    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    login();
+    if (requestCode == PASSCODE_RESPONSE) {
+      login();
+    } else if (requestCode == CHANGE_PASSWORD_RESPONSE && resultCode == RESULT_OK) {
+      new GetFcmRefreshToken().execute();
+    }
   }
 }

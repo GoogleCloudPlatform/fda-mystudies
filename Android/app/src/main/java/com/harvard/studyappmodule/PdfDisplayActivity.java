@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,7 +45,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantConsentDatastoreConfigEvent;
 import io.realm.Realm;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -164,16 +165,17 @@ public class PdfDisplayActivity extends AppCompatActivity
 
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
     String url = Urls.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
-    RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
-        new RegistrationServerConsentConfigEvent(
+    ParticipantConsentDatastoreConfigEvent participantConsentDatastoreConfigEvent =
+        new ParticipantConsentDatastoreConfigEvent(
             "get",
             url,
             CONSENTPDF,
@@ -185,7 +187,7 @@ public class PdfDisplayActivity extends AppCompatActivity
             false,
             PdfDisplayActivity.this);
     ConsentPdfEvent consentPdfEvent = new ConsentPdfEvent();
-    consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
+    consentPdfEvent.setParticipantConsentDatastoreConfigEvent(participantConsentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPdf(consentPdfEvent);
   }
@@ -258,13 +260,13 @@ public class PdfDisplayActivity extends AppCompatActivity
 
   public void sharePdfCreation() {
     try {
-      String temPdfPath =
-          Environment.getExternalStorageDirectory().getAbsolutePath()
-              + "/"
-              + title
-              + "_"
-              + getString(R.string.signed_consent)
-              + ".pdf";
+      String root;
+      if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
+        root = Environment.getExternalStorageDirectory().getAbsolutePath();
+      } else {
+        root = getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
+      }
+      String temPdfPath = root + "/" + title + "_" + getString(R.string.signed_consent) + ".pdf";
       File file = new File(temPdfPath);
       if (!file.exists()) {
         file.createNewFile();
