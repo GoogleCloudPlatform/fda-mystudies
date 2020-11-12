@@ -159,7 +159,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     if (!user.isSuperAdmin()
-        && (CollectionUtils.isEmpty(user.getApps()) || !hasAtleastOnePermission(user))) {
+        && (user.getManageLocations() == Permission.NO_PERMISSION.value()
+            && (CollectionUtils.isEmpty(user.getApps()) || !hasAtleastOnePermission(user)))) {
       return ErrorCode.PERMISSION_MISSING;
     }
 
@@ -212,25 +213,27 @@ public class ManageUserServiceImpl implements ManageUserService {
         UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
-    Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
-        user.getApps()
-            .stream()
-            .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
+    if (CollectionUtils.isNotEmpty(user.getApps())) {
+      Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
+          user.getApps()
+              .stream()
+              .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
 
-    // save permissions for selected apps
-    for (UserAppPermissionRequest app :
-        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
-      saveAppStudySitePermissions(user, adminDetails, app);
-    }
+      // save permissions for selected apps
+      for (UserAppPermissionRequest app :
+          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
+        saveAppStudySitePermissions(user, adminDetails, app);
+      }
 
-    // save permissions for unselected apps
-    for (UserAppPermissionRequest app :
-        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
-      for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
-        if (study.isSelected()) {
-          saveStudySitePermissions(user, adminDetails, study);
-        } else if (CollectionUtils.isNotEmpty(study.getSites())) {
-          saveSitePermissions(user, adminDetails, study);
+      // save permissions for unselected apps
+      for (UserAppPermissionRequest app :
+          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
+        for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
+          if (study.isSelected()) {
+            saveStudySitePermissions(user, adminDetails, study);
+          } else if (CollectionUtils.isNotEmpty(study.getSites())) {
+            saveSitePermissions(user, adminDetails, study);
+          }
         }
       }
     }
@@ -394,9 +397,12 @@ public class ManageUserServiceImpl implements ManageUserService {
       return ErrorCode.USER_NOT_FOUND;
     }
 
-    if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
+    if (!user.isSuperAdmin()
+        && (user.getManageLocations() == Permission.NO_PERMISSION.value()
+            && (CollectionUtils.isEmpty(user.getApps()) || !hasAtleastOnePermission(user)))) {
       return ErrorCode.PERMISSION_MISSING;
     }
+
     logger.exit("Successfully validated user request");
     return null;
   }
@@ -461,29 +467,29 @@ public class ManageUserServiceImpl implements ManageUserService {
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
     userAdminRepository.saveAndFlush(adminDetails);
 
-    deleteAllPermissions(user.getId());
+    if (CollectionUtils.isNotEmpty(user.getApps())) {
+      deleteAllPermissions(user.getId());
+      user.setSuperAdminUserId(superAdminUserId);
+      Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
+          user.getApps()
+              .stream()
+              .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
 
-    user.setSuperAdminUserId(superAdminUserId);
+      // save permissions for selected apps
+      for (UserAppPermissionRequest app :
+          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
+        saveAppStudySitePermissions(user, adminDetails, app);
+      }
 
-    Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
-        user.getApps()
-            .stream()
-            .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
-
-    // save permissions for selected apps
-    for (UserAppPermissionRequest app :
-        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
-      saveAppStudySitePermissions(user, adminDetails, app);
-    }
-
-    // save permissions for unselected apps
-    for (UserAppPermissionRequest app :
-        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
-      for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
-        if (study.isSelected()) {
-          saveStudySitePermissions(user, adminDetails, study);
-        } else if (CollectionUtils.isNotEmpty(study.getSites())) {
-          saveSitePermissions(user, adminDetails, study);
+      // save permissions for unselected apps
+      for (UserAppPermissionRequest app :
+          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
+        for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
+          if (study.isSelected()) {
+            saveStudySitePermissions(user, adminDetails, study);
+          } else if (CollectionUtils.isNotEmpty(study.getSites())) {
+            saveSitePermissions(user, adminDetails, study);
+          }
         }
       }
     }
