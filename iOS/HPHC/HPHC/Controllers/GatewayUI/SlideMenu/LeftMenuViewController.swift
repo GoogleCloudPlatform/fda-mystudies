@@ -626,9 +626,6 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    if requestName as String == AuthServerMethods.logout.description {
-      self.signout()
-    }
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
   }
 
@@ -645,10 +642,6 @@ extension LeftMenuViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
-    } else if requestName as String == AuthServerMethods.logout.description
-      && error.code == HTTPError.forbidden.rawValue
-    {
-      self.signout()
     } else {
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kErrorTitle, comment: "") as NSString,

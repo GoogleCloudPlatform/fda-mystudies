@@ -41,8 +41,6 @@ struct HydraAPI {
       .asURLRequest()
   }
 
-  static func logout(user: User, completion: @escaping StatusHandler) {}
-
   static func grant(
     user: User,
     with code: String,

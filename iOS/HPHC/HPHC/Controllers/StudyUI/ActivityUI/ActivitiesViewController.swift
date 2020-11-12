@@ -1071,8 +1071,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
 
       self.checkForActivitiesUpdates()
-    } else if requestName as String == AuthServerMethods.getRefreshedToken.method.methodName {
-      self.removeProgressIndicator()
     } else if requestName as String == WCPMethods.resources.method.methodName {
       DispatchQueue.main.async {
         ResourcesViewController.refreshNotifications()

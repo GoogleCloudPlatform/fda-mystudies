@@ -452,9 +452,6 @@ extension ResponseServices: NMWebServiceDelegate {
     switch requestName {
     case ResponseMethods.getParticipantResponse.description as String:
       self.handleGetParticipantResponse(response: response as! [String: Any])
-    case AuthServerMethods.getRefreshedToken.description as String:
-      self.handleUpdateTokenResponse()
-      return
     case ResponseMethods.processResponse.description as String: break
     case ResponseMethods.updateActivityState.description as String: break
     case ResponseMethods.activityState.description as String:
