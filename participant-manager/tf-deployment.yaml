@@ -21,3 +21,9 @@ spec:
         image: gcr.io/fda-mystudies-dev-apps/participant-manager:latest
         ports:
         - containerPort: 80
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /participant-manager/index.html
+          initialDelaySeconds: 30
+          periodSeconds: 20
