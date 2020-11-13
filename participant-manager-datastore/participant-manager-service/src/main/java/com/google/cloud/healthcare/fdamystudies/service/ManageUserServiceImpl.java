@@ -423,6 +423,8 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     userAdminRepository.saveAndFlush(adminDetails);
 
+    deleteAppStudySiteLevelPermissions(user.getId());
+
     EmailResponse emailResponse = sendUserUpdatedEmail(user);
     logger.debug(String.format("send update email status=%s", emailResponse.getHttpStatusCode()));
 
@@ -469,8 +471,9 @@ public class ManageUserServiceImpl implements ManageUserService {
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
     userAdminRepository.saveAndFlush(adminDetails);
 
+    deleteAppStudySiteLevelPermissions(user.getId());
+
     if (CollectionUtils.isNotEmpty(user.getApps())) {
-      deleteAllPermissions(user.getId());
       user.setSuperAdminUserId(superAdminUserId);
       Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
           user.getApps()
@@ -511,7 +514,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
   }
 
-  private void deleteAllPermissions(String userId) {
+  private void deleteAppStudySiteLevelPermissions(String userId) {
     logger.entry("deleteAllPermissions()");
     sitePermissionRepository.deleteByAdminUserId(userId);
     studyPermissionRepository.deleteByAdminUserId(userId);
