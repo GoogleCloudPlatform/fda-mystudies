@@ -9,13 +9,10 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,13 +35,11 @@ public class InviteParticipantEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_info_id")
-  private StudyEntity study;
+  @Column(name = "study_info_id")
+  private String study;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "participant_registry_site_id")
-  private ParticipantRegistrySiteEntity participantRegistrySite;
+  @Column(name = "participant_registry_site_id")
+  private String participantRegistrySite;
 
   @Column(name = "status", columnDefinition = "TINYINT(1) default 0")
   private boolean status;

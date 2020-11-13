@@ -815,10 +815,9 @@ public class SiteServiceImpl implements SiteService {
     List<ParticipantRegistrySiteEntity> participantsList =
         participantRegistrySiteRepository.findByIds(inviteParticipantRequest.getIds());
     SiteEntity siteEntity = optSiteEntity.get();
+
     List<ParticipantRegistrySiteEntity> invitedParticipants =
         findEligibleParticipantsAndInvite(participantsList, siteEntity);
-
-    participantRegistrySiteRepository.saveAll(invitedParticipants);
 
     participantsList.removeAll(invitedParticipants);
     List<String> failedParticipantIds =
@@ -835,7 +834,7 @@ public class SiteServiceImpl implements SiteService {
 
     logger.exit(
         String.format(
-            "%d email invitations sent and %d failed",
+            "%d invited and %d failed participants",
             invitedParticipantIds.size(), failedParticipantIds.size()));
     return new InviteParticipantResponse(
         MessageCode.PARTICIPANTS_INVITED_SUCCESS, invitedParticipantIds, failedParticipantIds);
@@ -870,8 +869,8 @@ public class SiteServiceImpl implements SiteService {
                   .toEpochMilli()));
 
       InviteParticipantEntity inviteParticipantsEmail = new InviteParticipantEntity();
-      inviteParticipantsEmail.setParticipantRegistrySite(participantRegistrySiteEntity);
-      inviteParticipantsEmail.setStudy(siteEntity.getStudy());
+      inviteParticipantsEmail.setParticipantRegistrySite(participantRegistrySiteEntity.getId());
+      inviteParticipantsEmail.setStudy(siteEntity.getStudy().getId());
 
       invitedParticipantsEmailRepository.saveAndFlush(inviteParticipantsEmail);
 

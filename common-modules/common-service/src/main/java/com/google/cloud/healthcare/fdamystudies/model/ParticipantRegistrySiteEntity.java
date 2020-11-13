@@ -121,10 +121,4 @@ public class ParticipantRegistrySiteEntity implements Serializable {
     participantStudies.add(participantStudiesEntity);
     participantStudiesEntity.setParticipantRegistrySite(this);
   }
-
-  @OneToMany(
-      cascade = CascadeType.ALL,
-      fetch = FetchType.LAZY,
-      mappedBy = "participantRegistrySite")
-  private List<InviteParticipantEntity> inviteParticipants = new ArrayList<>();
 }
