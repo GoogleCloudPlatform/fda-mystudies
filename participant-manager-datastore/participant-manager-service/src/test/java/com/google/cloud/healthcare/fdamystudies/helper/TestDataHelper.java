@@ -376,6 +376,7 @@ public class TestDataHelper {
     getStudyPermissionRepository().deleteAll();
     getSitePermissionRepository().deleteAll();
     getStudyConsentRepository().deleteAll();
+    getInviteParticipantsEmailRepository().deleteAll();
     getParticipantStudyRepository().deleteAll();
     getParticipantRegistrySiteRepository().deleteAll();
     getSiteRepository().deleteAll();
@@ -384,6 +385,5 @@ public class TestDataHelper {
     getUserRegAdminRepository().deleteAll();
     getLocationRepository().deleteAll();
     getUserDetailsRepository().deleteAll();
-    getInviteParticipantsEmailRepository().deleteAll();
   }
 }
