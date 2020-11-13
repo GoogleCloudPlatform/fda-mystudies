@@ -46,7 +46,7 @@ export class AppListComponent implements OnInit {
         this.manageAppsBackup = {...manageApps};
         if (manageApps.studyPermissionCount < 2) {
           this.toastr.error(
-            'This view displays study-wise enrollment if you manage multiple sites.',
+            'This view displays app-wise enrollment if you manage multiple studies.',
           );
         }
         this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
