@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AppStudyInfo;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -75,4 +76,32 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "GROUP BY appId ",
       nativeQuery = true)
   public List<AppCount> findInvitedCountByAppId(@Param("userId") String userId);
+
+  @Query(
+      value =
+          "SELECT created_time AS createdTimeStamp, app_info_id AS appId, custom_app_id AS customAppId, app_name AS appName, COUNT(study_id) As studyCount "
+              + "FROM( "
+              + "SELECT ai.created_time, sp.app_info_id, ai.custom_app_id, ai.app_name, sp.study_id "
+              + "FROM study_permissions sp, app_info ai "
+              + "WHERE ai.id=sp.app_info_id AND sp.ur_admin_user_id = :userId AND sp.study_id IN (SELECT sp.study_id FROM sites_permissions sp WHERE sp.ur_admin_user_id = :userId) "
+              + "UNION ALL "
+              + "SELECT DISTINCT ai.created_time, sp.app_info_id, ai.custom_app_id, ai.app_name, sp.study_id "
+              + "FROM sites_permissions sp, app_info ai, sites s "
+              + "WHERE ai.id=sp.app_info_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id = :userId AND sp.study_id NOT IN ( "
+              + "SELECT st.study_id "
+              + "FROM study_permissions st "
+              + "WHERE st.ur_admin_user_id = :userId)) rstAlias GROUP BY created_time,app_info_id,custom_app_id,app_name "
+              + "ORDER BY created_time DESC ",
+      nativeQuery = true)
+  public List<AppStudyInfo> findAppsByUserId(@Param("userId") String userId);
+
+  @Query(
+      value =
+          "SELECT sp.app_info_id as appId, COUNT(ps.site_id) AS count "
+              + "FROM participant_study_info ps, sites_permissions sp "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' "
+              + "AND sp.ur_admin_user_id = :userId "
+              + "GROUP BY sp.app_info_id ",
+      nativeQuery = true)
+  public List<AppCount> findEnrolledCountByAppId(String userId);
 }

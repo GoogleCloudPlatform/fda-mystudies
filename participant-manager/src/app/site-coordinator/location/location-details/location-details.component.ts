@@ -5,6 +5,7 @@ import {Location} from '../shared/location.model';
 import {LocationService} from '../shared/location.service';
 import {ToastrService} from 'ngx-toastr';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {Permission} from 'src/app/shared/permission-enums';
 
 @Component({
   selector: 'location-details',
@@ -17,6 +18,8 @@ export class LocationDetailsComponent
   location = {} as Location;
   locationBackup = {} as Location;
   locationId = '';
+  permission = Permission;
+
   constructor(
     private readonly modalService: BsModalService,
     private modalRef: BsModalRef,
