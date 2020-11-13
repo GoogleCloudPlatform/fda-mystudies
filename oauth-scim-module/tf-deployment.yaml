@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -85,13 +90,18 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: base_url
-            # TODO(#1792): replace with actual values.
             - name: IOS_DEEPLINK_URL
-              value: ""
+              secretKeyRef:
+                name: auth-server-secrets
+                key: ios_deeplink_url
             - name: ANDROID_DEEPLINK_URL
-              value: ""
+              secretKeyRef:
+                name: auth-server-secrets
+                key: android_deeplink_url
             - name: ENCRYPTOR_PASSWORD
-              value: ""
+              secretKeyRef:
+                name: auth-server-secrets
+                key: encryptor_password
             # MISC
             - name: LOG_PATH
               valueFrom:
