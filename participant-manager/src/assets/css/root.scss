@@ -1147,3 +1147,54 @@ select {
 .mart_min {
   margin-top: -3px;
 }
+
+/* Responsive code - tab mobile start here */
+
+.search_svg {
+  background: #f1f3f4;
+}
+
+@media only screen and (max-width: 360px) and (min-width: 320px) {
+  .search_svg {
+    background: transparent;
+  }
+
+  .prog > .pro__base {
+    float: left;
+  }
+  .progress__bar__next {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 414px) and (min-width: 361px) {
+  .search_svg {
+    background: transparent;
+  }
+
+  .prog > .pro__base {
+    float: left;
+  }
+  .progress__bar__next {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 412px) {
+  .search_svg {
+    background: transparent;
+  }
+
+  .prog > .pro__base {
+    float: left;
+  }
+  .progress__bar__next {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 769px) and (min-width: 501px) {
+  .search_svg {
+    background: transparent;
+  }
+}
