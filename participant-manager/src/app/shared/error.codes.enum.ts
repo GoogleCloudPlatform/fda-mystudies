@@ -82,6 +82,8 @@ const errorMessages = {
   EC_0124: 'Cannot add site to Deactivated study',
   EC_0125:
     'Invitation cannot be enabled as participant record is enabled in another site with in same study.',
+  EC_0069:
+    'This site cannot be activated as the associated location is decommissioned',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;
