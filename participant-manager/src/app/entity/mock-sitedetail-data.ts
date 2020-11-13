@@ -1,4 +1,4 @@
-import {EnrollmentStatus, StudyType} from '../shared/enums';
+import {EnrollmentStatus, Status, StudyType} from '../shared/enums';
 import {
   StatusUpdate,
   InviteSend,
@@ -25,7 +25,8 @@ export const expectedSiteParticipantDetails = {
     customLocationId: 'Location1',
     locationName: 'Location1',
     targetEnrollment: 1,
-
+    studyStatus: Status.Active,
+    studyPermission: Permission.ViewAndEdit,
     registryParticipants: [
       {
         customLocationId: '',

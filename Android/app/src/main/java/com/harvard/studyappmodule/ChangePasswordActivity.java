@@ -15,6 +15,8 @@
 
 package com.harvard.studyappmodule;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,7 +26,11 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
+import com.harvard.FdaApplication;
 import com.harvard.R;
+import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.ChangePasswordEvent;
 import com.harvard.usermodule.webservicemodel.ChangePasswordData;
@@ -35,6 +41,8 @@ import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import java.util.HashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ChangePasswordActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
@@ -94,16 +102,8 @@ public class ChangePasswordActivity extends AppCompatActivity
   }
 
   private void setTextForView() {
-    if (password != null && !password.equalsIgnoreCase("")) {
-      oldPassword.setText(password);
-      oldPassword.setFocusable(false);
-      oldPassword.setClickable(false);
-      title.setText(getResources().getString(R.string.change_password_heading1));
-      relpassword.setVisibility(View.GONE);
-    } else {
-      relpassword.setVisibility(View.VISIBLE);
-      title.setText(getResources().getString(R.string.change_password_heading));
-    }
+    relpassword.setVisibility(View.VISIBLE);
+    title.setText(getResources().getString(R.string.change_password_heading));
   }
 
   private void setFont() {
@@ -130,24 +130,7 @@ public class ChangePasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            try {
-              AppController.getHelperHideKeyboard(ChangePasswordActivity.this);
-            } catch (Exception e) {
-              Logger.log(e);
-            }
-            if (from != null && from.equalsIgnoreCase("ProfileFragment")) {
-              finish();
-            } else {
-              SharedPreferences settings =
-                  SharedPreferenceHelper.getPreferences(ChangePasswordActivity.this);
-              settings.edit().clear().apply();
-              // delete passcode from keystore
-              String pass = AppController.refreshKeys("passcode");
-              if (pass != null) {
-                AppController.deleteKey("passcode_" + pass);
-              }
-              finish();
-            }
+            onBackPressed();
           }
         });
 
@@ -155,7 +138,7 @@ public class ChangePasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (clicked == false) {
+            if (!clicked) {
               clicked = true;
               String passwordPattern =
                   "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
@@ -236,27 +219,29 @@ public class ChangePasswordActivity extends AppCompatActivity
   private void callChangePasswordWebService() {
 
     HashMap<String, String> header = new HashMap<>();
-    header.put("accessToken", auth);
-    header.put("userId", userId);
+    header.put("Authorization", "Bearer " + auth);
+    header.put("correlation_id", FdaApplication.getRandomString());
+    header.put("appId", BuildConfig.APP_ID);
+    header.put("mobilePlatform", "ANDROID");
 
-    HashMap<String, String> params = new HashMap<>();
-    if (password != null && password.equalsIgnoreCase("")) {
-      params.put("currentPassword", password);
-    } else {
+    JSONObject params = new JSONObject();
+    try {
       params.put("currentPassword", oldPassword.getText().toString());
+      params.put("newPassword", newPassword.getText().toString());
+    } catch (JSONException e) {
+      e.printStackTrace();
     }
-    params.put("newPassword", newPassword.getText().toString());
 
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
-            "post",
-            Urls.CHANGE_PASSWORD,
+            "put",
+            Urls.AUTH_SERVICE + "/" + userId + Urls.CHANGE_PASSWORD,
             CHANGE_PASSWORD_REQUEST,
             ChangePasswordActivity.this,
             ChangePasswordData.class,
-            params,
-            header,
             null,
+            header,
+            params,
             false,
             ChangePasswordActivity.this);
     ChangePasswordEvent changePasswordEvent = new ChangePasswordEvent();
@@ -279,21 +264,14 @@ public class ChangePasswordActivity extends AppCompatActivity
           .show();
       finish();
     } else {
-      AppController.getHelperSharedPreference()
-          .writePreference(ChangePasswordActivity.this, getString(R.string.userid), "" + userId);
-      AppController.getHelperSharedPreference()
-          .writePreference(ChangePasswordActivity.this, getString(R.string.auth), "" + auth);
-      AppController.getHelperSharedPreference()
-          .writePreference(
-              ChangePasswordActivity.this, getString(R.string.verified), "" + isVerified);
-      AppController.getHelperSharedPreference()
-          .writePreference(ChangePasswordActivity.this, getString(R.string.email), "" + emailId);
       Toast.makeText(
               this,
-              getResources().getString(R.string.password_change_message_signin),
+              getResources().getString(R.string.password_change_message),
               Toast.LENGTH_SHORT)
           .show();
-      AppController.forceSignout(ChangePasswordActivity.this);
+      Intent intent = new Intent();
+      setResult(RESULT_OK, intent);
+      finish();
     }
   }
 
@@ -326,7 +304,19 @@ public class ChangePasswordActivity extends AppCompatActivity
       if (pass != null) {
         AppController.deleteKey("passcode_" + pass);
       }
-      finish();
+      if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+        Intent intent = new Intent(ChangePasswordActivity.this, GatewayActivity.class);
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = Intent.makeRestartActivityTask(cn);
+        startActivity(mainIntent);
+        finish();
+      } else {
+        Intent intent = new Intent(ChangePasswordActivity.this, StandaloneActivity.class);
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = Intent.makeRestartActivityTask(cn);
+        startActivity(mainIntent);
+        finish();
+      }
     }
   }
 }

@@ -1,0 +1,53 @@
+{
+  "dailywithinadayruns": [
+    {
+      "runId": 1,
+      "startDate": "2020-10-20T11:40:17.000+0530",
+      "endDate": "2020-10-20T21:27:59.000+0530",
+      "activityId": "DailyMultipleText",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 2,
+      "startDate": "2020-10-20T21:28:00.000+0530",
+      "endDate": "2020-10-20T23:59:59.000+0530",
+      "activityId": "DailyMultipleText",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 3,
+      "startDate": "2020-10-21T11:25:00.000+0530",
+      "endDate": "2020-10-21T21:27:59.000+0530",
+      "activityId": "DailyMultipleText",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 4,
+      "startDate": "2020-10-21T21:28:00.000+0530",
+      "endDate": "2020-10-21T23:59:59.000+0530",
+      "activityId": "DailyMultipleText",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 5,
+      "startDate": "2020-10-22T11:25:00.000+0530",
+      "endDate": "2020-10-22T21:27:59.000+0530",
+      "activityId": "DailyMultipleText",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 6,
+      "startDate": "2020-10-22T21:28:00.000+0530",
+      "endDate": "2020-10-22T23:59:59.000+0530",
+      "activityId": "DailyMultipleText",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    }
+  ]
+}
+

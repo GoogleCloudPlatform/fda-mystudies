@@ -15,6 +15,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO_OF_RECORDS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PAGE_NO;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
@@ -722,6 +723,8 @@ public class SiteControllerTest extends BaseMockIT {
                 .value(OnboardingStatus.NEW.getStatus())))
         .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(1)))
         .andExpect(
+            jsonPath("$.participantRegistryDetail.studyPermission", is(Permission.EDIT.value())))
+        .andExpect(
             jsonPath(
                 "$.participantRegistryDetail.registryParticipants[0].enrollmentStatus",
                 is("Yet to Enroll")))
@@ -771,6 +774,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
         .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.studyPermission", is(Permission.EDIT.value())))
         .andExpect(
             (jsonPath("$.participantRegistryDetail.registryParticipants[0].onboardingStatus")
                 .value(OnboardingStatus.NEW.getStatus())))
@@ -1130,11 +1135,10 @@ public class SiteControllerTest extends BaseMockIT {
             put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
                 .headers(headers)
                 .contextPath(getContextPath()))
-        .andExpect(status().isForbidden())
+        .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath(
-                "$.error_description",
-                is(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION.getDescription())));
+                "$.error_description", is(ErrorCode.LOCATION_DECOMMISSIONED.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
@@ -1200,6 +1204,14 @@ public class SiteControllerTest extends BaseMockIT {
     SiteEntity siteEntity = optSiteEntity.get();
     assertNotNull(siteEntity);
     assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
+
+    List<ParticipantRegistrySiteEntity> participants =
+        participantRegistrySiteRepository.findBySiteId(siteId);
+    ParticipantRegistrySiteEntity participantRegistrySiteEntity = participants.get(0);
+    assertNotNull(participantRegistrySiteEntity);
+    assertEquals(
+        participantRegistrySiteEntity.getOnboardingStatus(), OnboardingStatus.DISABLED.getCode());
+    assertNotNull(participantRegistrySiteEntity.getDisabledDate());
   }
 
   @Test
@@ -1964,6 +1976,24 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnInvalidFile() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:update_admin_user_request.json");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description", is(ErrorCode.INVALID_FILE_UPLOAD.getDescription())));
+  }
+
+  @Test
   public void shouldReturnImportNewParticipantAndInvalidEmail() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
@@ -2250,8 +2280,10 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies", hasSize(1)))
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].sites").isArray())
+        .andExpect(jsonPath("$.studies[0].studyStatus").value(STATUS_ACTIVE))
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
         .andExpect(jsonPath("$.studies[0].logoImageUrl", is(studyEntity.getLogoImageUrl())))
+        .andExpect(jsonPath("$.studies[0].appName").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();
@@ -2287,6 +2319,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].sites").isArray())
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.studies[0].appName").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     assertEquals(sitePermission.getSite().getStatus(), siteEntity.getStatus());

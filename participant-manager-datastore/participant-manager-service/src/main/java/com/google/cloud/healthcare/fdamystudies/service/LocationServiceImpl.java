@@ -95,6 +95,11 @@ public class LocationServiceImpl implements LocationService {
       throw new ErrorCodeException(ErrorCode.CUSTOM_ID_EXISTS);
     }
 
+    Optional<LocationEntity> optLocationEntity = locationRepository.findByName(location.getName());
+    if (optLocationEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_NAME_EXISTS);
+    }
+
     location.setCreatedBy(adminUser.getId());
     LocationEntity created = locationRepository.saveAndFlush(location);
 
@@ -238,6 +243,7 @@ public class LocationServiceImpl implements LocationService {
     LocationResponse locationResponse =
         new LocationResponse(MessageCode.GET_LOCATION_SUCCESS, locationDetailsList);
     locationResponse.setTotalLocationsCount(locationRepository.count());
+    locationResponse.setLocationPermission(adminUser.getLocationPermission());
     logger.exit(String.format("locations size=%d", locationResponse.getLocations().size()));
     return locationResponse;
   }
@@ -284,7 +290,7 @@ public class LocationServiceImpl implements LocationService {
     if (!StringUtils.isEmpty(studyNames)) {
       locationResponse.getStudyNames().addAll(Arrays.asList(studyNames.split(",")));
     }
-
+    locationResponse.setLocationPermission(adminUser.getLocationPermission());
     logger.exit(String.format("locationId=%s", locationEntity.getId()));
     return locationResponse;
   }
@@ -293,12 +299,7 @@ public class LocationServiceImpl implements LocationService {
   @Transactional
   public LocationResponse getLocationsForSite(
       String userId, Integer status, String excludeStudyId) {
-    Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
 
-    UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
-      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
-    }
     List<LocationEntity> listOfLocation =
         (List<LocationEntity>)
             CollectionUtils.emptyIfNull(

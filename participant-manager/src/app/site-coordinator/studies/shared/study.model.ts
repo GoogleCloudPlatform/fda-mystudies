@@ -1,3 +1,4 @@
+import {Status} from 'src/app/shared/enums';
 import {Site} from './site.model';
 
 export interface Study {
@@ -15,6 +16,7 @@ export interface Study {
   logoImageUrl: string;
   invited?: number;
   enrolled?: number;
+  studyStatus: Status;
 }
 
 export interface StudyResponse {
