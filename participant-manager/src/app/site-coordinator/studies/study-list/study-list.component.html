@@ -7,7 +7,16 @@
           class="bg__white cards cards__var box__shadow-cmn ml-none mr-none studies_row"
         >
           <div
-            [routerLink]="['/coordinator/studies', study.id]"
+            [routerLink]="
+              checkViewPermission(study.studyPermission)
+                ? ['/coordinator/studies', study.id]
+                : []
+            "
+            [ngClass]="
+              checkViewPermission(study.studyPermission)
+                ? ' cursor__pointer'
+                : ''
+            "
             class="flex__justify__space-between flex__wrap"
           >
             <div>
@@ -19,9 +28,7 @@
                   <div class="blue__text__md text-capitalize">
                     {{ study.customId }}
                   </div>
-                  <div
-                    class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
-                  >
+                  <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                     {{ study.name }}
                   </div>
                   <div
@@ -55,7 +62,7 @@
                 <div class="mb__width__100">
                   <div class="col-xs-12 p-none lh__6">
                     <div class="prog">
-                      <div *ngIf="study.invited" class="pro__base">
+                      <div class="pro__base">
                         <div
                           class="pro__top"
                           [style.width.%]="study.enrollmentPercentage"
@@ -65,11 +72,22 @@
                         class="progress-label font__bold"
                         [ngClass]="progressBarColor(study)"
                       >
-                        <span *ngIf="study.invited">
-                          {{ study.enrolled }} /
-                          {{ study.invited }}
-                        </span>
-                        <span *ngIf="study.invited == 0">N/A</span>
+                        <div *ngIf="study.type !== studyTypes.Open">
+                          <span *ngIf="study.invited != 0">
+                            {{ study.enrolled }} /
+                            {{ study.invited }}
+                          </span>
+                          <span *ngIf="study.invited == 0">0 Invited</span>
+                        </div>
+                        <div *ngIf="study.type === studyTypes.Open">
+                          <span *ngIf="study.invited != 0">
+                            {{ study.enrolled }} /
+                            {{ study.invited }}
+                          </span>
+                          <span *ngIf="study.invited === 0">
+                            {{ study.enrolled }} Enrolled
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

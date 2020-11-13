@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,3 +26,9 @@ spec:
         image: gcr.io/fda-mystudies-dev-apps/participant-manager:latest
         ports:
         - containerPort: 80
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /participant-manager/index.html
+          initialDelaySeconds: 30
+          periodSeconds: 20

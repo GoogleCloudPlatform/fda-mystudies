@@ -17,7 +17,7 @@ const successMessages = {
   MSG_0015: 'User profile fetched successfully',
   MSG_0016: 'User profile with security code fetched successfully',
   MSG_0017: 'Participant details fetched successfully',
-  MSG_0018: 'Invitation to particiapant sent successfully',
+  MSG_0018: 'Invitation sent successfully',
   MSG_0019: 'Your password has been reset successfully',
   MSG_0020: 'Email accepted by receiving mail server',
   MSG_0021: 'Email list imported successfully',
@@ -25,8 +25,7 @@ const successMessages = {
   MSG_0023: 'Sites fetched successfully',
   MSG_0024: 'Consent document fetched successfully',
   MSG_0025: 'User details updated successfully',
-  MSG_0026:
-    'New account added successfully. Please wait while we set things up for you… this might take a few seconds.',
+  MSG_0026: 'Account created successfully.',
   MSG_0027: 'Admin details fetched successfully',
   MSG_0028: 'User deactivated successfully',
   MSG_0029: 'User activated successfully',

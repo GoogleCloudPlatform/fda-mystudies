@@ -355,6 +355,9 @@ an initial superadmin account for Study Builder.
     # certificate and password generated for APNs.
     manual-ios-certificate
     manual-ios-certificate-password
+    # redirect links to mobile apps, e.g. app://gcp/mystudies
+    manual-ios-deeplink-url
+    manual-android-deeplink-url
     ```
 
 1. Modify
