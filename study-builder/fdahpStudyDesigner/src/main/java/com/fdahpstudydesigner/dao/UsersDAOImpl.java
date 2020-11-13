@@ -428,7 +428,7 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
-                  + "u.password,u.email_changed FROM users u,roles r WHERE r.role_id = u.role_id and u.user_id "
+                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id and u.user_id "
                   + "not in (select upm.user_id from user_permission_mapping upm where "
                   + "upm.permission_id = (select up.permission_id from user_permissions up "
                   + "where up.permissions ='ROLE_SUPERADMIN')) ORDER BY u.user_id DESC ");
