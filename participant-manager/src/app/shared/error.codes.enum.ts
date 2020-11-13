@@ -29,24 +29,27 @@ const errorMessages = {
   EC_0019: 'Unauthorized or Invalid token',
   EC_0020: 'Email ID or status to be provided',
   EC_0021: 'You do not have permission to access this site',
-  EC_0022: 'Site already exists for this combination of location ID and study ID',
+  EC_0022:
+    'Site already exists for this combination of location ID and study ID',
   EC_0023: 'You do not have permission to view or add or update locations',
   EC_0024: 'This is not a registered email',
   EC_0025: 'Location ID already exists',
-  EC_0026: 'This email either does not exist or has not been sent an invitation yet.',
+  EC_0026:
+    'This email either does not exist or has not been sent an invitation yet.',
   EC_0027: `This location already has 'Active' status`,
   EC_0028: `This site cannot be modified`,
   EC_0029: `This location is already decommissioned`,
   EC_0030: 'You do not have permission to update the location',
   EC_0031: 'Participant(s) cannot be added to the registry of an open study',
-  EC_0032: 'User should have atleast one permission in the system to access this resource.',
+  EC_0032:
+    'User should have atleast one permission in the system to access this resource.',
   EC_0033: 'Invalid security code',
   EC_0035: 'Error in getting participants details',
   EC_0036: 'The uploaded file is not in the prescribed format',
-  EC_0037:
-    'The uploaded file does not adhere to the given template',
+  EC_0037: 'The uploaded file does not adhere to the given template',
   EC_0038: 'Enrollment target update failed (the study is a closed study)',
-  EC_0039: 'Enrollment target failed to be updated (the site is decommissionned)',
+  EC_0039:
+    'Enrollment target failed to be updated (the site is decommissionned)',
   EC_0040: 'Error in getting consent data',
   EC_0041: `Allowed values for 'fields' are studies, sites`,
   EC_0042: 'Admin user not found',
@@ -54,13 +57,15 @@ const errorMessages = {
     'Your account is pending activation. Please check your email for details.',
   EC_0044:
     'Your account is pending activation. Please check your email for details.',
-  EC_0045: 'An account with this email is already registered or pending activation.',
+  EC_0045:
+    'An account with this email is already registered or pending activation.',
   EC_0046: 'User does not exist',
   EC_0047: 'You do not have permission to view/edit this study',
   EC_0048: 'You do not have permission to manage this site',
   EC_0049: `Site doesn't exist or is inactive`,
   EC_0050: `Allowed values are: N, D, I and E`,
-  EC_0051: 'The decommission action cannot be taken with this site as it belongs to an open study',
+  EC_0051:
+    'The decommission action cannot be taken with this site as it belongs to an open study',
   EC_0052: 'Invalid user status',
   EC_0053: 'Cannot add site to open study',
   EC_0054: 'User Id is required',
@@ -78,18 +83,26 @@ const errorMessages = {
   EC_0063:
     'This view displays app-wise enrolment if you manage multiple studies.',
   EC_0064: 'The email already exists',
-  EC_0065: 'The user’s account is already active. Please try deactivating the user instead.',
-  EC_0066:'The token entered is no longer valid. Please contact the site coordinator for assistance.',
-  EC_0067:'Account created successfully',
-  EC_0068:'Sorry, a location with this name already exists',
-  EC_0069:'This site cannot be activated as the associated location is decommissioned',
-  EC_0400:'Invalid entries found in the submitted form. Please try again.',
+  EC_0065:
+    'The user’s account is already active. Please try deactivating the user instead.',
+  EC_0066:
+    'The token entered is no longer valid. Please contact the site coordinator for assistance.',
+  EC_0067: 'Account created successfully',
+  EC_0068: 'Sorry, a location with this name already exists',
+  EC_0069:
+    'This site cannot be activated as the associated location is decommissioned',
+  EC_0400: 'Invalid entries found in the submitted form. Please try again.',
   EC_0122: 'Cannot add site using a decommissioned location.',
   EC_0123: 'You do not have permission to access this app',
-  EC_0124: 'This study is deactivated. Sites cannot be added to deactivated studies.',
+  EC_0124:
+    'This study is deactivated. Sites cannot be added to deactivated studies.',
   EC_0125:
     '1 or more participant record(s) could not be enabled. This could happen if the emails exist in enabled state in another site of the same study.',
-    /* eslint-enable @typescript-eslint/naming-convention */
+  EC_0071:
+    'This view displays study-wise enrollment if you manage multiple sites.',
+  EC_0072:
+    'This view displays app-wise enrollment if you manage multiple studies.',
+  /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;
 
