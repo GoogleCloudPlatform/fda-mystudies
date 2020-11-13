@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/hydra/oauth2/auth/requests/login?login_challenge=d9d3ff8a-0c93-466a-bc4f-bf8b0d3d5453"
+    "url": "/oauth2/auth/requests/login?login_challenge=d9d3ff8a-0c93-466a-bc4f-bf8b0d3d5453"
   },
   "response": {
     "status": 200,
