@@ -53,7 +53,7 @@ export class UserDetailsComponent
         }),
     );
   }
-  statusColour(status: string|undefined): string {
+  statusColour(status: string | undefined): string {
     if (status === this.onBoardingStatus.Active) {
       return 'txt__green';
     } else if (status === this.onBoardingStatus.Deactivated) {
