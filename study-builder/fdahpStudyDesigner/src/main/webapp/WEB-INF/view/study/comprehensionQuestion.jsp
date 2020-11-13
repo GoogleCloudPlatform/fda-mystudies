@@ -404,14 +404,14 @@
           if (message == "SUCCESS") {
             var questionId = jsonobject.questionId;
             $("#id").val(questionId);
-            $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $('#alertMsg').show();
           } else {
             var errMsg = jsonobject.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(errMsg);
             } else {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             }
           }
           setTimeout(hideDisplayMessage, 4000);
@@ -419,7 +419,7 @@
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
-          $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+          $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
           setTimeout(hideDisplayMessage, 4000);
         }
       });
@@ -444,7 +444,7 @@
       return true;
     } else {
       $('#alertMsg').show();
-      $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+      $("#alertMsg").removeClass('s-box').addClass('e-box').text(
           "Please select at least one correct answer as yes.");
       setTimeout(hideDisplayMessage, 3000);
       return false;

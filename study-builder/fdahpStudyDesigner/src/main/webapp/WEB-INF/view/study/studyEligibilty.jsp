@@ -347,7 +347,7 @@
                                           'e-box')
                                       .addClass(
                                           's-box')
-                                      .html(
+                                      .text(
                                           "Reorder done successfully");
                                   $(
                                       '#alertMsg')
@@ -375,7 +375,7 @@
                                           's-box')
                                       .addClass(
                                           'e-box')
-                                      .html(
+                                      .text(
                                           "Unable to reorder consent");
                                 }
                                 setTimeout(
@@ -391,7 +391,7 @@
                                         's-box')
                                     .addClass(
                                         'e-box')
-                                    .html(
+                                    .text(
                                         error);
                                 setTimeout(
                                     hideDisplayMessage,
@@ -534,7 +534,7 @@
                                     'e-box')
                                 .addClass(
                                     's-box')
-                                .html(
+                                .text(
                                     "Question deleted successfully");
                             $('#alertMsg').show();
                             if ($('.fifthConsent')
@@ -561,7 +561,7 @@
                                     's-box')
                                 .addClass(
                                     'e-box')
-                                .html(
+                                .text(
                                     "Unable to delete Question");
                             $('#alertMsg').show();
                           }
@@ -574,7 +574,7 @@
                           $("#alertMsg").removeClass(
                               's-box').addClass(
                               'e-box')
-                              .html(error);
+                              .text(error);
                           setTimeout(
                               hideDisplayMessage,
                               4000);

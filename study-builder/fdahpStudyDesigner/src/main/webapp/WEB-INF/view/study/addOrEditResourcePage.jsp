@@ -566,7 +566,7 @@
         reader = new FileReader();
         reader.onload = function () {
           if ($.inArray($(thisAttr).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
-            $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").html(
+            $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").text(
                 '<ul class="list-unstyled"><li>Please select a pdf file</li></ul>');
             $("#delete").click();
           } else if ($("#uploadImg").val()) {
@@ -581,13 +581,13 @@
               $("#uploadPdf").text("Change PDF");
             }
             $("#delete").removeClass("dis-none");
-            $("#uploadImg").parent().removeClass('has-error has-danger').find(".help-block").html(
+            $("#uploadImg").parent().removeClass('has-error has-danger').find(".help-block").text(
                 '');
             $('.pdfClass').off("click");
           }
         };
         reader.onerror = function () {
-          $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").html(
+          $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").text(
               '<ul class="list-unstyled"><li>Please select a pdf file</li></ul>');
           $("#delete").click();
         }
@@ -699,7 +699,7 @@
         $('.disBtn2').attr('required', 'required');
         $('.disBtn1').removeAttr('required');
         $('.disBtn1').selectpicker('refresh');
-        $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").html("");
+        $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").text("");
         if ($('#StartDate').attr('oldStartDateVal') != '') {
           $('#inlineRadio6').prop('checked', true);
           $('#StartDate').val($('#StartDate').attr('oldStartDateVal'));
@@ -964,7 +964,7 @@
             '<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
         valid = false;
       } else {
-        $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").html("");
+        $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").text("");
         resetValidation($('#ydays').parents('form'));
       }
     }

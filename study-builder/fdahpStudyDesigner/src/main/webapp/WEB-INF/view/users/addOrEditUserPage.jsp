@@ -491,7 +491,7 @@
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
-        $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
+        $('#emailId').parent().find(".help-block").text("<ul class='list-unstyled'><li></li></ul>");
         if (email !== '') {
           $.ajax({
             url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
@@ -506,7 +506,7 @@
               if ('SUCCESS' !== message) {
                 $('#emailId').validator('validate');
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-                $('#emailId').parent().find(".help-block").html("");
+                $('#emailId').parent().find(".help-block").text("");
               } else {
                 $("body").removeClass("loading");
                 $('#emailId').val('');
@@ -521,7 +521,7 @@
       } else {
         $('#emailId').validator('validate');
         $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#emailId').parent().find(".help-block").html("");
+        $('#emailId').parent().find(".help-block").text("");
       }
     });
 
@@ -660,7 +660,7 @@
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
-        $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
+        $('#emailId').parent().find(".help-block").text("<ul class='list-unstyled'><li></li></ul>");
         if (email !== '') {
           $("body").addClass("loading");
           $.ajax({
@@ -676,7 +676,7 @@
               if ('SUCCESS' !== message) {
                 $('#emailId').validator('validate');
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-                $('#emailId').parent().find(".help-block").html("");
+                $('#emailId').parent().find(".help-block").text("");
                 saveUser();
               } else {
                 $("body").removeClass("loading");
@@ -693,7 +693,7 @@
       } else {
         $('#emailId').validator('validate');
         $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#emailId').parent().find(".help-block").html("");
+        $('#emailId').parent().find(".help-block").text("");
         saveUser();
       }
     });

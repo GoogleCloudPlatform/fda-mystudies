@@ -309,7 +309,7 @@
       if (dt != '' && dt != moment(serverDate()).format("MM/DD/YYYY")) {
         $('.timepicker').data("DateTimePicker").minDate(false);
         $('.timepicker').parent().removeClass('has-error has-danger').find(
-            '.help-block.with-errors').html('');
+            '.help-block.with-errors').text('');
       } else {
         $('.timepicker').data("DateTimePicker").minDate(serverDateTime());
       }
@@ -463,10 +463,10 @@
       dt.setHours(thisDate.getHours());
       dt.setMinutes(thisDate.getMinutes());
       $('.timepicker').parent().removeClass('has-error has-danger').find(
-          '.help-block.with-errors').html('');
+          '.help-block.with-errors').text('');
       if (dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
-            '.help-block.with-errors').html(
+            '.help-block.with-errors').text(
             '<ul class="list-unstyled"><li>Please select a time that has not already passed for the current date.</li></ul>');
         valid = false;
       }

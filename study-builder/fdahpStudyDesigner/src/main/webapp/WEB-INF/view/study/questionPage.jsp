@@ -2454,7 +2454,7 @@
       $('.useAnchorDateName').hide();
       $("#anchorTextId").attr('required', false);
       $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
-      $("#anchorTextId").parent().find(".help-block").html("");
+      $("#anchorTextId").parent().find(".help-block").text("");
     }
 
     $('#useAnchorDateId').click(function () {
@@ -2465,7 +2465,7 @@
         $('.useAnchorDateName').hide();
         $("#anchorTextId").attr('required', false);
         $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
-        $("#anchorTextId").parent().find(".help-block").html("");
+        $("#anchorTextId").parent().find(".help-block").text("");
       }
     });
 
@@ -3283,7 +3283,7 @@
       if (minDate != '' && maxDate != '' && new Date(minDate) >= new Date(maxDate)) {
         $('#maxDateId').data("DateTimePicker").clear();
         $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
-        $('#maxDateId').parent().find(".help-block").html(
+        $('#maxDateId').parent().find(".help-block").text(
             '<ul class="list-unstyled"><li>Max Date and Time Should not be less than or equal Min Date and Time</li></ul>');
       } else {
         $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
@@ -3304,7 +3304,7 @@
         } else {
           $("#defaultDate").data("DateTimePicker").clear();
           $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
-          $('#defaultDate').parent().find(".help-block").html(
+          $('#defaultDate').parent().find(".help-block").text(
               '<ul class="list-unstyled"><li>Enter default date to be shown as selected as per availability of Min and Max</li></ul>');
         }
       }
@@ -3575,7 +3575,7 @@
     if (id != null && id != '' && typeof id != 'undefined') {
       var previousResponseType = '${questionsBo.responseType}';
       if (Number(id) != Number(previousResponseType)) {
-        var responseType = $("#responseTypeId>option:selected").html();
+        var responseType = $("#responseTypeId>option:selected").text();
         resetTheLineStatData();
         if (responseType != 'Boolean') {
           $("#" + responseType.replace(/\s/g, '')).find('input:text').val('');
@@ -4068,7 +4068,7 @@
               $("#prevStatShortNameId").val(statShortName);
             }
 
-            $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             if (callback)
@@ -4081,9 +4081,9 @@
           } else {
             var errMsg = jsonobject.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(errMsg);
             } else {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             }
             if (callback)
               callback(false);
@@ -4093,7 +4093,7 @@
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
-          $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+          $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
           setTimeout(hideDisplayMessage, 4000);
         }
       });
@@ -4197,7 +4197,7 @@
         "</div>";
     $(".value-picker:last").after(newValuePicker);
     $(".value-picker").parent().removeClass("has-danger").removeClass("has-error");
-    $(".value-picker").parent().find(".help-block").html('');
+    $(".value-picker").parent().find(".help-block").text('');
     $(".value-picker").parents("form").validator("destroy");
     $(".value-picker").parents("form").validator();
 
@@ -4214,7 +4214,7 @@
 
       $(param).parents(".value-picker").remove();
       $(".value-picker").parent().removeClass("has-danger").removeClass("has-error");
-      $(".value-picker").parent().find(".help-block").html('');
+      $(".value-picker").parent().find(".help-block").text('');
       $(".value-picker").parents("form").validator("destroy");
       $(".value-picker").parents("form").validator();
       if ($('.value-picker').length > 2) {
@@ -4588,7 +4588,7 @@
       } else {
         callback(true);
         $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-        $(thisAttr).parent().find(".help-block").html("");
+        $(thisAttr).parent().find(".help-block").text("");
       }
     } else {
       callback(false);
@@ -4830,7 +4830,7 @@
     } else {
       callback(true);
       $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-      $(thisAttr).parent().find(".help-block").html("");
+      $(thisAttr).parent().find(".help-block").text("");
     }
   }
 </script>

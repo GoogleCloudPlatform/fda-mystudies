@@ -214,7 +214,7 @@
             if ('SUCCESS' == message) {
               $(thisAttr).validator('validate');
               $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-              $(thisAttr).parent().find(".help-block").html("");
+              $(thisAttr).parent().find(".help-block").text("");
               oldShortTitle = shortTitle;
               callback(true);
             } else {

@@ -224,11 +224,11 @@
     if ($('#inlineRadio1').prop('checked')) {
       $('#datetimepicker, #timepicker1').prop('disabled', false);
       $('#datetimepicker, #timepicker1').attr('required', 'required');
-      $('#immiUpdateButton').html('Update');
+      $('#immiUpdateButton').text('Update');
     }
     if ($('#inlineRadio2').prop('checked')) {
       $('.add_notify_option').addClass('dis-none');
-      $('#immiUpdateButton').html('Send');
+      $('#immiUpdateButton').text('Send');
     }
     </c:if>
 
@@ -237,11 +237,11 @@
     if ($('#inlineRadio1').prop('checked')) {
       $('#datetimepicker, #timepicker1').prop('disabled', false);
       $('#datetimepicker, #timepicker1').attr('required', 'required');
-      $('#immiUpdateButton').html('Update');
+      $('#immiUpdateButton').text('Update');
     }
     if ($('#inlineRadio2').prop('checked')) {
       $('.add_notify_option').addClass('dis-none');
-      $('#immiUpdateButton').html('Send');
+      $('#immiUpdateButton').text('Send');
     }
     </c:if>
 
@@ -252,12 +252,12 @@
     $('#appNotificationFormId textarea').prop('disabled', true);
     if ($('#inlineRadio1').prop('checked')) {
       $('#datetimepicker, #timepicker1').attr('required', 'required');
-      $('#immiResendButton').html('Save');
+      $('#immiResendButton').text('Save');
     }
     if ($('#inlineRadio2').prop('checked')) {
       $('.add_notify_option').addClass('dis-none');
       $('#datetimepicker, #timepicker1').removeAttr('required');
-      $('#immiResendButton').html('Resend');
+      $('#immiResendButton').text('Resend');
     }
     $('#buttonType').val('resend');
     </c:if>
@@ -269,9 +269,9 @@
       $('.add_notify_option').addClass('dis-none');
       resetValidation('.mandatoryForAppNotification');
       $('.addNotification').prop('disabled', false);
-      $('#immiSaveButton').html('Send');
-      $('#immiUpdateButton').html('Send');
-      $('#immiResendButton').html('Resend');
+      $('#immiSaveButton').text('Send');
+      $('#immiUpdateButton').text('Send');
+      $('#immiResendButton').text('Resend');
     });
 
     $('#inlineRadio1').on('click', function () {
@@ -283,9 +283,9 @@
         $(this).val($(this).attr('oldValue'));
       });
       resetValidation('.mandatoryForAppNotification');
-      $('#immiSaveButton').html('Create');
-      $('#immiUpdateButton').html('Update');
-      $('#immiResendButton').html('Save');
+      $('#immiSaveButton').text('Create');
+      $('#immiUpdateButton').text('Update');
+      $('#immiResendButton').text('Save');
     });
 
     $('.backOrCancelBtnOfNotification').on('click', function () {
@@ -409,12 +409,12 @@
       if (dt < serverDateTime()) {
         $('#timepicker1').val('');
         $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
-            .html(
+            .text(
                 '<ul class="list-unstyled"><li>Please select a time that has not already passed for the current date.</li></ul>');
         valid = false;
       } else {
         $('.timepicker').parent().removeClass('has-error has-danger').find(
-            '.help-block.with-errors').html('');
+            '.help-block.with-errors').text('');
       }
     }
     return valid;

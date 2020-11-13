@@ -606,10 +606,10 @@
           if (fetalKick == 0) {
             console.log("inside 0");
             $('#fetalKickId').val('');
-            $('.timeDurationClass').find('.help-block').html(
+            $('.timeDurationClass').find('.help-block').text(
                 '<ul class="list-unstyled"><li>Number of kicks should be greater than zero.</li></ul>');
           } else {
-            $('.timeDurationClass').find('.help-block').html('');
+            $('.timeDurationClass').find('.help-block').text('');
           }
         }
       });
@@ -620,7 +620,7 @@
           $('.chartSection').show();
         if (frequencyType && frequencyType == 'Manually Schedule') {
           $('.activeaddToChartText').show();
-          $('.activeaddToChartText').html(
+          $('.activeaddToChartText').text(
               'A max of x runs will be displayed in each view of the chart.');
         }
       }
@@ -1057,7 +1057,7 @@
             e.preventDefault();
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
-            $(this).parent().find(".help-block").empty().html(
+            $(this).parent().find(".help-block").empty().text(
                 "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
           }
         }
@@ -1074,7 +1074,7 @@
             e.preventDefault();
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
-            $(this).parent().find(".help-block").empty().html(
+            $(this).parent().find(".help-block").empty().text(
                 "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
           }
         }
@@ -1128,7 +1128,7 @@
         } else {
           callback(true);
           $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-          $('.shortTitleClass').parent().find(".help-block").html("");
+          $('.shortTitleClass').parent().find(".help-block").text("");
         }
       } else {
         callback(false);
@@ -1190,7 +1190,7 @@
           } else {
             callback(true);
             $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-            $('.shortTitleClass').parent().find(".help-block").html("");
+            $('.shortTitleClass').parent().find(".help-block").text("");
           }
         } else {
           $.ajax({
