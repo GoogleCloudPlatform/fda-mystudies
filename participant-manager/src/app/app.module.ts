@@ -8,7 +8,6 @@ import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.co
 import {
   HashLocationStrategy,
   LocationStrategy,
-  APP_BASE_HREF,
 } from '@angular/common';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {EntityService} from './service/entity.service';
@@ -24,7 +23,6 @@ import {CookieService} from 'ngx-cookie-service';
 import {ErrorComponent} from './error/error.component';
 import {TermsComponent} from './terms/terms.component';
 import {AboutComponent} from './about/about.component';
-import {environment} from '@environment';
 
 @NgModule({
   declarations: [
@@ -61,8 +59,6 @@ import {environment} from '@environment';
     BsModalRef,
     httpInterceptorProviders,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    {provide: APP_BASE_HREF, useValue: environment.baseHref},
   ],
   bootstrap: [AppComponent],
 })
