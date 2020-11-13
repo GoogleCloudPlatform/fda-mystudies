@@ -12,6 +12,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.E
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.TOKEN_EXPIRED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,8 +32,12 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySi
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +49,10 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Autowired private EnrollmentTokenController controller;
   @Autowired private EnrollmentTokenService enrollmentTokenService;
-  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   @Autowired private ObjectMapper objectMapper;
+
+  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   protected ObjectMapper getObjectMapper() {
     return objectMapper;
@@ -61,6 +67,14 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Test
   public void validateEnrollmentTokenSuccess() throws Exception {
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN);
+    ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentTokenExpiry(
+        new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
+
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYOF_HEALTH);
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
@@ -197,7 +211,76 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void validateEnrollmentForExpiredToken() throws Exception {
+
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN);
+    ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentTokenExpiry(
+        new Timestamp(Instant.now().minus(1, ChronoUnit.DAYS).toEpochMilli()));
+
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+    String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYOF_HEALTH);
+
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.VALIDATE_ENROLLMENT_TOKEN_PATH.getPath())
+                .headers(headers)
+                .content(requestJson)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isGone())
+        .andExpect(jsonPath("$.error_description", is(TOKEN_EXPIRED.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void enrollParticipantForExpiredToken() throws Exception {
+
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN_NEW);
+    ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentTokenExpiry(
+        new Timestamp(Instant.now().minus(1, ChronoUnit.DAYS).toEpochMilli()));
+
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+    // study type close
+    String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH_CLOSE);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ENROLL_PATH.getPath())
+                .headers(headers)
+                .content(requestJson)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isGone())
+        .andExpect(jsonPath("$.error_description", is(TOKEN_EXPIRED.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void enrollParticipantSuccessStudyTypeClose() throws Exception {
+
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN_NEW);
+    ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentTokenExpiry(
+        new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
+
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
     // study type close
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH_CLOSE);
     HttpHeaders headers = TestUtils.getCommonHeaders();
@@ -263,6 +346,15 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Test
   public void enrollParticipantSuccessForCaseInsensitiveToken() throws Exception {
+
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN_NEW);
+    ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentTokenExpiry(
+        new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
+
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
     // study type close
     String requestJson = getEnrollmentJson("6DL0pOqf", Constants.STUDYOF_HEALTH_CLOSE);
     HttpHeaders headers = TestUtils.getCommonHeaders();
@@ -293,6 +385,13 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Test
   public void shouldFailEnrollmentForExistingParticipant() throws Exception {
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN_NEW);
+    ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentTokenExpiry(
+        new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
+
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
     // study type close
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH_CLOSE);
     HttpHeaders headers = TestUtils.getCommonHeaders();

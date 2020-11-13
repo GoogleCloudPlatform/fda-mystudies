@@ -34,7 +34,6 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
-import io.fabric.sdk.android.services.common.CommonUtils;
 
 public class SplashActivity extends AppCompatActivity implements VersionChecker.Upgrade {
 
@@ -49,28 +48,12 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
 
-    if (CommonUtils.isRooted(SplashActivity.this)) {
-      Toast.makeText(
-              SplashActivity.this,
-              getResources().getString(R.string.rooted_device),
-              Toast.LENGTH_LONG)
-          .show();
-      new Handler()
-          .postDelayed(
-              new Runnable() {
-                @Override
-                public void run() {
-                  System.exit(0);
-                }
-              },
-              1000);
-    } else {
       // sync registration
       SyncAdapterManager.init(this);
       AppController.keystoreInitilize(SplashActivity.this);
       versionChecker = new VersionChecker(SplashActivity.this);
       versionChecker.execute();
-    }
+
     AppController.getHelperSharedPreference()
         .writePreference(SplashActivity.this, getString(R.string.json_object_filter), "");
   }

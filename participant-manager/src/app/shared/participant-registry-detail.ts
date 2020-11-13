@@ -1,6 +1,6 @@
 import {RegistryParticipant} from './participant';
 import {Permission} from './permission-enums';
-import {StudyType} from './enums';
+import {Status, StudyType} from './enums';
 
 export interface ParticipantRegistryDetail {
   studyId: string;
@@ -21,6 +21,8 @@ export interface ParticipantRegistryDetail {
   registryParticipants: RegistryParticipant[];
   countByStatus: CountByStatus;
   status?: string;
+  studyStatus: Status;
+  studyPermission: Permission;
 }
 export interface CountByStatus {
   // eslint-disable-next-line @typescript-eslint/naming-convention
