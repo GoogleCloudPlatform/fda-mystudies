@@ -15,21 +15,30 @@
   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <link rel="stylesheet" th:href="@{/css/utilities.css}">
+<link rel="stylesheet" th:href="@{/css/Loader.css}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" th:src="@{/js/consent.js}"></script>
 </head>
 <body class="bg__aqua-gray">
   <form th:action="@{/consent}" method="post" id="consentForm"
     name="consentForm">
-    <div class="loader">
-      <img th:src="@{/images/loader.svg}" />
-      <div>
-        <div>Please wait while we set things up for you…</div>
-        <div>this might take a few seconds.</div>
+    <div>
+      <div class="loading_div">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
-      <div>
-        <input type="submit" id="acceptConsent" value="Allow"
-          style="display: none" />
+      <div class="loading_div">
+        <div class="loading_text">
+          <div>
+            <div>Please wait while we set things up for you…</div>
+            <div>this might take a few seconds.</div>
+          </div>
+        </div>
+        <div>
+          <input type="submit" id="acceptConsent" value="Allow"
+            style="display: none" />
+        </div>
       </div>
     </div>
   </form>
