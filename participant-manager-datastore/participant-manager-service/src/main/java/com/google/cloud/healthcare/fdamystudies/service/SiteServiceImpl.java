@@ -880,25 +880,6 @@ public class SiteServiceImpl implements SiteService {
     return invitedParticipants;
   }
 
-  private EmailResponse sendInvitationEmail(
-      ParticipantRegistrySiteEntity participantRegistrySiteEntity, SiteEntity siteEntity) {
-    Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("study name", siteEntity.getStudy().getName());
-    templateArgs.put("org name", appPropertyConfig.getOrgName());
-    templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
-    templateArgs.put("contact email address", appPropertyConfig.getContactEmail());
-    EmailRequest emailRequest =
-        new EmailRequest(
-            appPropertyConfig.getFromEmail(),
-            new String[] {participantRegistrySiteEntity.getEmail()},
-            null,
-            null,
-            appPropertyConfig.getParticipantInviteSubject(),
-            appPropertyConfig.getParticipantInviteBody(),
-            templateArgs);
-    return emailService.sendMimeMail(emailRequest);
-  }
-
   @Override
   @Transactional
   public ImportParticipantResponse importParticipants(
