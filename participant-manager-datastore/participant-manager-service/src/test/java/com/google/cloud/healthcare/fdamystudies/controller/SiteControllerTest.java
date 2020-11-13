@@ -26,13 +26,11 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.INVITATION_EMAIL_SENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANTS_EMAIL_LIST_IMPORTED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANTS_EMAIL_LIST_IMPORT_PARTIAL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_EMAIL_ADDED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_DISABLED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_EMAIL_RESENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_ENABLED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_ACTIVATED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_DECOMMISSIONED_FOR_STUDY;
@@ -44,9 +42,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -100,7 +95,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -1758,8 +1752,6 @@ public class SiteControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
             .andReturn();
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
-
     // Step 4: verify updated values
     String id =
         JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
@@ -1770,15 +1762,6 @@ public class SiteControllerTest extends BaseMockIT {
     assertEquals(
         OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(PARTICIPANT_INVITATION_EMAIL_RESENT.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, PARTICIPANT_INVITATION_EMAIL_RESENT);
     verifyTokenIntrospectRequest();
   }
 
@@ -1817,7 +1800,6 @@ public class SiteControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
             .andReturn();
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
     // Step 3: verify updated values
     String id =
         JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
@@ -1828,15 +1810,6 @@ public class SiteControllerTest extends BaseMockIT {
     assertEquals(
         OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, INVITATION_EMAIL_SENT);
     verifyTokenIntrospectRequest();
   }
 

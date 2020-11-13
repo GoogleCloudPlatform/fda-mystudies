@@ -48,7 +48,7 @@ public interface SiteService {
       String participantRegistrySiteId, String userId, Integer page, Integer limit);
 
   public InviteParticipantResponse inviteParticipants(
-      InviteParticipantRequest inviteparticipantBean, AuditLogEventRequest auditRequest);
+      InviteParticipantRequest inviteparticipantBean);
 
   public ImportParticipantResponse importParticipants(
       String userId, String siteId, MultipartFile multipartFile, AuditLogEventRequest auditRequest);
@@ -60,4 +60,6 @@ public interface SiteService {
 
   public UpdateTargetEnrollmentResponse updateTargetEnrollment(
       UpdateTargetEnrollmentRequest enrollmentRequest, AuditLogEventRequest auditRequest);
+
+  public void sendInvitationEmail();
 }

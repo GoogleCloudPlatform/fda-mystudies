@@ -172,6 +172,9 @@ public class StudyEntity implements Serializable {
     participantStudiesEntity.setStudy(this);
   }
 
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  private List<InviteParticipantEntity> inviteParticipants = new ArrayList<>();
+
   @Transient
   public String getAppId() {
     return app != null ? app.getId() : StringUtils.EMPTY;
