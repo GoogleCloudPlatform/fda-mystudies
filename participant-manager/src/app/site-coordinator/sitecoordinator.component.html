@@ -1,5 +1,5 @@
 <header>
-  <div (keydown)="onKeyDown($event)" id="desktop-menu">
+  <div  (keyup)="onKeyUp($event)" id="desktop-menu">
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
         <a routerLink="/coordinator/studies/sites" class="navbar-brand">
@@ -96,7 +96,7 @@
     [searchPlaceholder]="searchPlaceholder"
     [showSearchBar]="showSearchBar"
     [filterQuery]="filterQuery"
-    (keyDown)="onKeyDown($event)"
+    (keyup)="onKeyUp($event)"
   ></mobile-menu>
 </header>
 
