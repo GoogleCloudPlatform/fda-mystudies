@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.APP_PARTICIPANT_REGISTRY_VIEWED;
 import static org.hamcrest.CoreMatchers.is;
@@ -86,6 +87,8 @@ public class AppControllerTest extends BaseMockIT {
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
     participantStudyEntity.setStatus("inProgress");
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
+    userDetailsEntity.setStatus(ACTIVE_STATUS);
+    testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -113,6 +116,8 @@ public class AppControllerTest extends BaseMockIT {
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
     participantStudyEntity.setStatus("inProgress");
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
+    userDetailsEntity.setStatus(ACTIVE_STATUS);
+    testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
 
