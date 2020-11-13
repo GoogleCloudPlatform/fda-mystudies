@@ -10,7 +10,7 @@ metadata:
   labels:
     app: auth-server
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: auth-server
@@ -91,17 +91,20 @@ spec:
                   name: shared-secrets
                   key: base_url
             - name: IOS_DEEPLINK_URL
-              secretKeyRef:
-                name: auth-server-secrets
-                key: ios_deeplink_url
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: ios_deeplink_url
             - name: ANDROID_DEEPLINK_URL
-              secretKeyRef:
-                name: auth-server-secrets
-                key: android_deeplink_url
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: android_deeplink_url
             - name: ENCRYPTOR_PASSWORD
-              secretKeyRef:
-                name: auth-server-secrets
-                key: encryptor_password
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: encryptor_password
             # MISC
             - name: LOG_PATH
               valueFrom:
@@ -111,9 +114,10 @@ spec:
             - name: TEMP_REGID_EXPIRY_MINUTES
               value: "30"
             - name: ORG_NAME
-              secretKeyRef:
-                name: shared-secrets
-                key: org_name
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: org_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
@@ -122,13 +126,17 @@ spec:
             httpGet:
               path: /oauth-scim-service/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
             readOnly: true
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ['/cloud_sql_proxy', '-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306', '-credential_file=/secrets/gcloud_key/key.json']
+          command: ["/cloud_sql_proxy",
+                    "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+                    "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
