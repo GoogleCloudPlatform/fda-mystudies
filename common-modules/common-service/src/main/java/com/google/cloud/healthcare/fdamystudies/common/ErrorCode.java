@@ -264,7 +264,6 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This site cannot be activated as the associated location is decommissioned"),
 
-
   CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_STUDY(
       403,
       "EC_0127",
@@ -277,7 +276,6 @@ public enum ErrorCode {
       HttpStatus.FORBIDDEN.toString(),
       "Invitation cannot be enabled as participant record is enabled in another site within the same study."),
 
-
   TOKEN_EXPIRED(
       410,
       "EC_0066",
@@ -286,7 +284,6 @@ public enum ErrorCode {
 
   LOCATION_NAME_EXISTS(
       400, "EC_0068", Constants.BAD_REQUEST, "Sorry, a location with this name already exists");
-
 
   private final int status;
   private final String code;

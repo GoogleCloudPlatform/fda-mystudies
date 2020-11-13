@@ -937,7 +937,7 @@ public class LoginControllerTest extends BaseMockIT {
     headers.add("appVersion", "1.0");
     headers.add("appId", PlatformComponent.PARTICIPANT_MANAGER.getValue());
     headers.add("studyId", "MyStudies");
-    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
+    headers.add("source", "PARTICIPANT%20MANAGER");
     headers.add("correlationId", IdGenerator.id());
     return headers;
   }
