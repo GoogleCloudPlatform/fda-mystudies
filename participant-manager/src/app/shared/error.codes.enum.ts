@@ -98,6 +98,7 @@ const errorMessages = {
     'This study is deactivated. Sites cannot be added to deactivated studies.',
   EC_0125:
     '1 or more participant record(s) could not be enabled. This could happen if the emails exist in enabled state in another site of the same study.',
+  EC_0070: 'No sites found',
   EC_0071:
     'This view displays study-wise enrollment if you manage multiple sites.',
   EC_0072:
