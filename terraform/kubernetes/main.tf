@@ -84,8 +84,6 @@ data "google_secret_manager_secret_version" "secrets" {
 
   for_each = toset(concat(
     [
-      "manual-study-builder-user",
-      "manual-study-builder-password",
       "manual-mystudies-email-address",
       "manual-mystudies-email-password",
       "manual-mystudies-contact-email-address",
@@ -104,6 +102,9 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-bundle-id",
       "manual-ios-certificate",
       "manual-ios-certificate-password",
+      "manual-ios-deeplink-url",
+      "manual-android-deeplink-url",
+      "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
       "auto-hydra-system-secret",
@@ -170,6 +171,20 @@ resource "kubernetes_secret" "client_side_credentials" {
   }
 }
 
+# Auth-server secrets.
+resource "kubernetes_secret" "auth_server_secrets" {
+
+  metadata {
+    name = "auth-server-secrets"
+  }
+
+  data = {
+    encryptor_password   = data.google_secret_manager_secret_version.secrets["auto-auth-server-encryptor-password"].secret_data
+    ios_deeplink_url     = data.google_secret_manager_secret_version_secrets["manual-ios-deeplink-url"].secret_data
+    android_deeplink_url = data.google_secret_manager_secret_version_secrets["manual-android-deeplink-url"].secret_data
+  }
+}
+
 
 # Hydra credentials.
 resource "kubernetes_secret" "hydra_credentials" {
@@ -198,18 +213,6 @@ resource "kubernetes_secret" "study_datastore_connect_credentials" {
     android_password            = data.google_secret_manager_secret_version.secrets["auto-sd-android-password"].secret_data
     ios_id                      = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
     ios_password                = data.google_secret_manager_secret_version.secrets["auto-sd-ios-password"].secret_data
-  }
-}
-# Study builder connect credentials.
-resource "kubernetes_secret" "study_builder_connect_credentials" {
-
-  metadata {
-    name = "study-builder-connect-credentials"
-  }
-
-  data = {
-    username = data.google_secret_manager_secret_version.secrets["manual-study-builder-user"].secret_data
-    password = data.google_secret_manager_secret_version.secrets["manual-study-builder-password"].secret_data
   }
 }
 

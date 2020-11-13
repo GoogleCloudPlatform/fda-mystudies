@@ -33,7 +33,6 @@ export class UpdateUserComponent
     '=1': '1 Site',
     'other': '# Sites',
   };
-
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
@@ -230,5 +229,15 @@ export class UpdateUserComponent
           this.toastr.success(getMessage(successResponse.code));
         } else this.toastr.success('Success');
       });
+  }
+
+  statusColour(status: Status | undefined): string {
+    if (status && status === this.userStatus.Active) {
+      return 'txt__green';
+    } else if (status && status === this.userStatus.Deactivated) {
+      return 'txt__light-gray';
+    } else {
+      return 'txt__space-gray';
+    }
   }
 }
