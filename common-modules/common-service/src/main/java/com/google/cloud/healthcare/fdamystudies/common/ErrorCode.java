@@ -72,7 +72,7 @@ public enum ErrorCode {
       "Sorry, an error has occurred and your request could not be processed. Please try again later."),
 
   CURRENT_PASSWORD_INVALID(
-      400, "EC_0010", Constants.BAD_REQUEST, "Current password entered is invalid"),
+      400, "EC_0010", Constants.BAD_REQUEST, "The current password entered is incorrect"),
 
   ENFORCE_PASSWORD_HISTORY(
       400,

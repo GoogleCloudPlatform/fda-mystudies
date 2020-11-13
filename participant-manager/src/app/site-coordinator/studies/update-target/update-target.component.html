@@ -14,6 +14,7 @@
             name="target"
             #target="ngModel"
             min="0"
+            max="99999"
             oninput="validity.valid||(value='');"
           />
           <div *ngIf="target.invalid && (target.dirty || target.touched)">
