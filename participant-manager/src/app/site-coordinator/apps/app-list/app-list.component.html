@@ -1,6 +1,6 @@
 <div class="max__w__1280">
   <div class="tab-content">
-    <ng-container *ngIf="manageApp$ | async as manageApps; else loadingOrError">
+    <ng-container *ngIf="manageApp$ | async as manageApps">
       <div
         *ngIf="manageApps.superAdmin || manageApps.studyPermissionCount >= 2"
       >
@@ -94,6 +94,6 @@
         <div *ngIf="manageApps.apps.length === 0">No records found</div>
       </div>
     </ng-container>
-    <ng-template #loadingOrError>No records found</ng-template>
+  
   </div>
 </div>

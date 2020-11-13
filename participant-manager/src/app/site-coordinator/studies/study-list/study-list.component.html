@@ -1,6 +1,6 @@
 <div class="max__w__1280">
   <div class="tab-content">
-    <ng-container *ngIf="studyList$ | async as studyList ; else loadingOrError">
+    <ng-container *ngIf="studyList$ | async as studyList">
       <div *ngIf="studyList.superAdmin || studyList.sitePermissionCount >= 2">
         <div
           *ngFor="let study of studyList.studies"
@@ -120,8 +120,6 @@
       </div>
       
     </ng-container>
-    <ng-template #loadingOrError>
-      No records found
-    </ng-template>
+
   </div>
 </div>
