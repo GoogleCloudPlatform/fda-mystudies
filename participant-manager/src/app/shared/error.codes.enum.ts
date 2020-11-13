@@ -84,6 +84,12 @@ const errorMessages = {
     'Invitation cannot be enabled as participant record is enabled in another site with in same study.',
   EC_0069:
     'This site cannot be activated as the associated location is decommissioned',
+  EC_0070: 'No sites found',
+  EC_0071:
+    'This view displays study-wise enrollment if you manage multiple sites.',
+  EC_0072:
+    'This view displays app-wise enrollment if you manage multiple studies.',
+
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;
