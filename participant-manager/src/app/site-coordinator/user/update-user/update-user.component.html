@@ -140,6 +140,7 @@
                 [(ngModel)]="user.superAdmin"
                 name="superAdminCheckBox"
                 #superAdminCheckBox="ngModel"
+                (change)="superAdminCheckBoxChange()"
               />
               <label class="mt-xs" for="role">
                 Super Admin

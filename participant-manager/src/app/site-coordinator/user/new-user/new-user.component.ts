@@ -186,4 +186,12 @@ export class AddNewUserComponent
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.manageLocationsSelected;
   }
+   superAdminCheckBoxChange():void {
+    if (this.user.superAdmin) {
+    this.selectedApps = [];
+            this.selectedAppsIds = [];
+            this.user.manageLocationsSelected = false;
+            this.user.manageLocations = null;
+  }
+}
 }

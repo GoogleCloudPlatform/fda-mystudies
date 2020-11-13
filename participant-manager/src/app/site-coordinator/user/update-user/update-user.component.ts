@@ -281,4 +281,12 @@ export class UpdateUserComponent
       return 'inActive__';
     }
   }
+  superAdminCheckBoxChange():void {
+    if (this.user.superAdmin) {
+    this.selectedApps = [];
+            this.selectedAppsIds = [];
+            this.user.manageLocationsSelected = false;
+            this.user.manageLocations = null;
+  }
 }
+  }
