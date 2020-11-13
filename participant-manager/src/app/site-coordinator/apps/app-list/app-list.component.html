@@ -9,16 +9,21 @@
           class="bg__white cards box__shadow-cmn p-xl ml-none mr-none apps_row"
         >
           <div
-            [routerLink]="['/coordinator/apps', app.id]"
+            [routerLink]="
+              checkViewPermission(app.permission)
+                ? ['/coordinator/apps', app.id]
+                : []
+            "
             class="flex__justify__space-between flex__wrap"
+            [ngClass]="
+              checkViewPermission(app.permission) ? ' cursor__pointer' : ''
+            "
           >
             <div>
               <div class="blue__text__md text-capitalize">
                 {{ app.customId }}
               </div>
-              <div
-                class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
-              >
+              <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                 {{ app.name }}
               </div>
               <div
@@ -28,7 +33,12 @@
                   {{ app.studiesCount | i18nPlural: studiesMessageMapping }}
                   <span *ngIf="checkEditPermission(app.permission)">
                     ,
-                    {{ app.appUsersCount | i18nPlural: appUsersMessageMapping }}
+                    <span *ngIf="app.appUsersCount">
+                      {{
+                        app.appUsersCount | i18nPlural: appUsersMessageMapping
+                      }}
+                    </span>
+                    <span *ngIf="!app.appUsersCount">No App Users</span>
                   </span>
                 </div>
               </div>

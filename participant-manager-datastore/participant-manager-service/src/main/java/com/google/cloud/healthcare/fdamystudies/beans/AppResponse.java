@@ -23,14 +23,14 @@ public class AppResponse extends BaseResponse {
 
   private List<AppDetails> apps = new ArrayList<>();
 
-  private int studyPermissionCount;
+  private long studyPermissionCount;
 
   private boolean superAdmin;
 
   public AppResponse(
       MessageCode messageCode,
       List<AppDetails> apps,
-      int studyPermissionCount,
+      long studyPermissionCount,
       boolean superAdmin) {
     super(messageCode);
     this.apps.addAll(apps);

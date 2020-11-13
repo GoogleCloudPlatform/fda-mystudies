@@ -69,6 +69,7 @@ import com.google.cloud.healthcare.fdamystudies.mapper.ConsentMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.StudyMapper;
+import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCount;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteCount;
@@ -637,11 +638,28 @@ public class SiteServiceImpl implements SiteService {
             .map(studyAdminId -> studyAdminId.getUrAdminUser().getId())
             .collect(Collectors.toList());
 
+    List<String> appIds =
+        sitePermissions
+            .stream()
+            .distinct()
+            .map(appId -> appId.getApp().getId())
+            .collect(Collectors.toList());
+
+    List<AppPermissionEntity> appPermissions =
+        (List<AppPermissionEntity>)
+            CollectionUtils.emptyIfNull(
+                appPermissionRepository.findByUserIdsAndAppIds(siteAdminIds, appIds));
+
+    List<String> appAdminIds =
+        appPermissions
+            .stream()
+            .distinct()
+            .map(appAdminId -> appAdminId.getUrAdminUser().getId())
+            .collect(Collectors.toList());
+
     for (SitePermissionEntity sitePermission : sitePermissions) {
-      if (studyAdminIds.contains(sitePermission.getUrAdminUser().getId())) {
-        sitePermission.setCanEdit(Permission.VIEW);
-        sitePermissionRepository.saveAndFlush(sitePermission);
-      } else {
+      if (!(studyAdminIds.contains(sitePermission.getUrAdminUser().getId())
+          && appAdminIds.contains(sitePermission.getUrAdminUser().getId()))) {
         sitePermissionRepository.delete(sitePermission);
       }
     }
@@ -657,6 +675,7 @@ public class SiteServiceImpl implements SiteService {
         if (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
             || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode)) {
           participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+          participantRegistrySite.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
         }
         participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
       }
@@ -897,6 +916,11 @@ public class SiteServiceImpl implements SiteService {
       MultipartFile multipartFile,
       AuditLogEventRequest auditRequest) {
     logger.entry("begin importParticipants()");
+
+    if (!(StringUtils.endsWith(multipartFile.getOriginalFilename(), ".xlsx")
+        || StringUtils.endsWith(multipartFile.getOriginalFilename(), ".xls"))) {
+      throw new ErrorCodeException(ErrorCode.INVALID_FILE_UPLOAD);
+    }
 
     // Validate site type, status and access permission
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
