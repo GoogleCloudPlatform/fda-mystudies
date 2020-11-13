@@ -51,6 +51,7 @@ import {environment} from '@environment';
       positionClass: 'toast-top-center',
       preventDuplicates: true,
       enableHtml: true,
+      maxOpened: 1,
     }),
   ],
   providers: [
