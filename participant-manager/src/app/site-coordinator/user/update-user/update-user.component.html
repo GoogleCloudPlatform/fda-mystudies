@@ -243,6 +243,7 @@
                       <div>
                         <div class="custom__labels">
                           <input
+                            #permissionCheckBox
                             type="checkbox"
                             id="appCheckBox{{ app.id }}"
                             [(ngModel)]="app.selected"
@@ -318,6 +319,7 @@
                               <div>
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="studyCheckBoxChange(study, app)"
                                     [disabled]="app.selected"
                                     type="checkbox"
@@ -396,6 +398,7 @@
                               <div *ngFor="let site of study.sites">
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="
                                       siteCheckBoxChange(site, study, app)
                                     "
@@ -460,7 +463,10 @@
         </div>
       </section>
     </div>
-    <section class="btn__container">
+    <section
+      *ngIf="user.status !== userStatus.Deactivated"
+      class="btn__container"
+    >
       <button
         [disabled]="!editUserForm.form.valid"
         type="submit"
