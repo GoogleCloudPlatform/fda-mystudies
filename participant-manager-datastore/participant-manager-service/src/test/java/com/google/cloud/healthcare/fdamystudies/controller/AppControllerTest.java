@@ -27,6 +27,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.InviteParticipantEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
@@ -59,6 +60,7 @@ public class AppControllerTest extends BaseMockIT {
   private SiteEntity siteEntity;
   private UserDetailsEntity userDetailsEntity;
   private LocationEntity locationEntity;
+  private InviteParticipantEntity inviteParticipantEntity;
 
   @BeforeEach
   public void setUp() {
@@ -72,6 +74,8 @@ public class AppControllerTest extends BaseMockIT {
     participantStudyEntity =
         testDataHelper.createParticipantStudyEntity(
             siteEntity, studyEntity, participantRegistrySiteEntity);
+    inviteParticipantEntity =
+        testDataHelper.createInviteParticipantEntity(studyEntity, participantRegistrySiteEntity);
   }
 
   @Test
