@@ -9,7 +9,7 @@
   height="18"
   viewBox="0 0 24 24"
   width="18"
-  style="background:#f1f3f4;"
+  class="search_svg"
 >
   <path d="M0 0h24v24H0V0z" fill="none" />
   <path

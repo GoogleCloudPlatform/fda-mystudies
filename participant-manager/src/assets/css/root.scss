@@ -1198,3 +1198,41 @@ select {
     background: transparent;
   }
 }
+
+@media only screen and (max-width: 769px) and (min-width: 320px) {
+  .table.custom__table {
+    box-shadow: none !important;
+    border-radius: 7px;
+    background: transparent;
+  }
+
+  tbody.custom__tbody,
+  thead.custom__thead {
+    box-shadow: none;
+    border-radius: 7px;
+    background: transparent;
+  }
+
+  .table th {
+    background: var(--athens-gray) !important;
+    color: var(--space-gray) !important;
+  }
+  .table th a {
+    color: var(--space-gray);
+  }
+
+  .table tbody tr {
+    padding: 10px 0px;
+  }
+  .mobile_mt-2 {
+    margin-top: 0.5rem !important;
+  }
+
+  .form-group .custom__labels label {
+    font-size: 75% !important;
+  }
+
+  .acc__dele {
+    margin-right: 0px;
+  }
+}
