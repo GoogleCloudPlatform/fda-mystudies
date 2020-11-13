@@ -18,6 +18,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -28,6 +29,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -42,6 +44,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   private static final Logger logger = LoggerFactory.getLogger(EnrollmentTokenDaoImpl.class);
 
   @Autowired private SessionFactory sessionFactory;
+
+  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   @Override
   public boolean studyExists(@NotNull String studyId) {
@@ -284,7 +288,15 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           participantBeans.setSiteId(participants.getSite().getId());
         }
       } else {
-        participantregistrySite = new ParticipantRegistrySiteEntity();
+        List<ParticipantRegistrySiteEntity> participantList =
+            participantRegistrySiteRepository.findByStudyIdAndEmail(
+                studyEntity.getId(), userDetail.getEmail());
+
+        participantregistrySite =
+            CollectionUtils.isEmpty(participantList)
+                ? new ParticipantRegistrySiteEntity()
+                : participantList.get(0);
+
         participantregistrySite.setEnrollmentToken(tokenValue);
 
         siteCriteria = criteriaBuilder.createQuery(SiteEntity.class);
