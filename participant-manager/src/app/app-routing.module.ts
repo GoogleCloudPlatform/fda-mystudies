@@ -31,9 +31,9 @@ const routes: Routes = [
   {path: 'terms', component: TermsComponent},
   {path: 'about', component: AboutComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
-  // {path: '**', component: PageNotFoundComponent},
-  {path: 'pagenotfound', component: PageNotFoundComponent},
-  {path: '**', redirectTo: 'pagenotfound'},
+  {path: '**', component: PageNotFoundComponent},
+  // {path: 'pagenotfound', component: PageNotFoundComponent},
+  // {path: '**', redirectTo: 'pagenotfound'},
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -86,7 +86,7 @@ export class SetUpAccountComponent
       },
       (err) => {
         console.log(err);
-        void this.router.navigate(['']);
+        void this.router.navigate(['/login']);
       },
     );
   }
