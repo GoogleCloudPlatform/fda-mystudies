@@ -1132,7 +1132,7 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findSitePermissionByUserId(userId);
 
     if (CollectionUtils.isEmpty(studyPermissions) && CollectionUtils.isEmpty(sitePermissions)) {
-      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.NO_SITES_FOUND);
     }
 
     Map<String, StudyPermissionEntity> studyPermissionsByStudyId =
@@ -1169,6 +1169,18 @@ public class SiteServiceImpl implements SiteService {
             .collect(Collectors.toMap(EnrolledInvitedCount::getSiteId, Function.identity()));
 
     List<StudyDetails> studies = new ArrayList<>();
+
+    studyPermissions
+        .stream()
+        .map(
+            studyPermission -> {
+              StudyEntity study = studyPermission.getStudy();
+              if (!userStudies.contains(study)) {
+                userStudies.add(study);
+              }
+              return study;
+            })
+        .collect(Collectors.toSet());
 
     for (StudyEntity study : userStudies) {
       StudyDetails studyDetail = StudyMapper.toStudyDetails(study);
@@ -1228,13 +1240,15 @@ public class SiteServiceImpl implements SiteService {
     Map<String, Long> enrolledInvitedCountForOpenStudyBySiteId =
         getEnrolledCountForOpenStudyGroupBySiteId(study);
 
-    for (SitePermissionEntity sitePermissionEntity : sitePermissions) {
-      prepareSiteDetails(
-          enrolledInvitedCountMap,
-          study,
-          studyDetail,
-          enrolledInvitedCountForOpenStudyBySiteId,
-          sitePermissionEntity);
+    if (sitePermissions != null) {
+      for (SitePermissionEntity sitePermissionEntity : sitePermissions) {
+        prepareSiteDetails(
+            enrolledInvitedCountMap,
+            study,
+            studyDetail,
+            enrolledInvitedCountForOpenStudyBySiteId,
+            sitePermissionEntity);
+      }
     }
   }
 
