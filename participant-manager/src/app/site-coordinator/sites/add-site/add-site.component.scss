@@ -1,8 +1,8 @@
 .select-fancy-noimage:after {
   content: "";
   width: 0;
-  position: relative;
-  top: 10px;
+  position: absolute;
+  top: 50%;
   border-width: 6px 4px;
   border-style: solid;
   pointer-events: none;
