@@ -7,12 +7,12 @@
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="https://www.thymeleaf.org">
+  xmlns:th="https://www.thymeleaf.org">
 <head>
 <title>Please wait</title>
 
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <link rel="stylesheet" th:href="@{/css/utilities.css}">
 <link rel="stylesheet" th:href="@{/css/Loader.css}">
@@ -20,30 +20,30 @@
 <script type="text/javascript" th:src="@{/js/autoLogin.js}"></script>
 </head>
 <body class="bg__aqua-gray">
-	<form th:action="@{/login}" method="POST" id="autoSignInForm"
-		name="autoSignInForm">
-		<div>
-			<div class="loading_div">
-				<div class="spinner-border" role="status">
-					<span class="sr-only">Loading...</span>
-				</div>
-			</div>
-			<div class="loading_div">
-				<div class="loading_text">
-					<div>
-						<div>Please wait while we set things up for you…</div>
-						<div>this might take a few seconds.</div>
-					</div>
-				</div>
-				<div>
-					<input type="submit" id="acceptConsent" value="Allow"
-						style="display: none" />
-				</div>
-			</div>
-		</div>
-		<div style="display: none">
-			<input type="submit" value="Sign In" id="submitBtn" />
-		</div>
-	</form>
+  <form th:action="@{/login}" method="POST" id="autoSignInForm"
+    name="autoSignInForm">
+    <div>
+      <div class="loading_div">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <div class="loading_div">
+        <div class="loading_text">
+          <div>
+            <div>Please wait while we set things up for you…</div>
+            <div>this might take a few seconds.</div>
+          </div>
+        </div>
+        <div>
+          <input type="submit" id="acceptConsent" value="Allow"
+            style="display: none" />
+        </div>
+      </div>
+    </div>
+    <div style="display: none">
+      <input type="submit" value="Sign In" id="submitBtn" />
+    </div>
+  </form>
 </body>
 </html>
