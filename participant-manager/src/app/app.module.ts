@@ -51,6 +51,7 @@ import {environment} from '@environment';
       positionClass: 'toast-top-center',
       preventDuplicates: true,
       enableHtml: true,
+      maxOpened: 1,
     }),
   ],
   providers: [
@@ -60,6 +61,7 @@ import {environment} from '@environment';
     BsModalRef,
     httpInterceptorProviders,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     {provide: APP_BASE_HREF, useValue: environment.baseHref},
   ],
   bootstrap: [AppComponent],
