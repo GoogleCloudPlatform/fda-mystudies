@@ -100,6 +100,9 @@
               </td>
             </tr>
           </tbody>
+            <div *ngIf="appDetails.participants.length === 0">
+              No records found
+            </div>
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">

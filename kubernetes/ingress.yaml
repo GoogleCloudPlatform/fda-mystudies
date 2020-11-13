@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -41,11 +46,11 @@ spec:
             backend:
               serviceName: study-designer-np
               servicePort: 50000
-          - path: /hydra/*
+          - path: /oauth2/*
             backend:
               serviceName: hydra-np
               servicePort: 50000
-          - path: /participant-manager/*
+          - path: /#/*
             backend:
               serviceName: participant-manager-np
               servicePort: 50000

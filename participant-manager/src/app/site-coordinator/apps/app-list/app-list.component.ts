@@ -70,6 +70,8 @@ export class AppListComponent implements OnInit {
     return permission === Permission.ViewAndEdit;
   }
   checkViewPermission(permission: number): boolean {
-    return permission === Permission.View || permission === Permission.ViewAndEdit;
+    return (
+      permission === Permission.View || permission === Permission.ViewAndEdit
+    );
   }
 }

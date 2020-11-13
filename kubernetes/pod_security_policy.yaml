@@ -1,4 +1,10 @@
-# Taken from https://kubernetes.io/docs/concepts/policy/pod-security-policy/#example-policies
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
+# Based on https://kubernetes.io/docs/concepts/policy/pod-security-policy/#example-policies
 
 # This is an example of a restrictive policy that requires users to run as an
 # unprivileged user, blocks possible escalations to root, and requires use of

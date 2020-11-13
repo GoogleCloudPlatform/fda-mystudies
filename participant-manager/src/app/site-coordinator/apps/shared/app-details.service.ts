@@ -8,17 +8,14 @@ import {HttpClient} from '@angular/common/http';
   providedIn: 'root',
 })
 export class AppDetailsService {
-  constructor(private readonly http: HttpClient,
-) {}
+  constructor(private readonly http: HttpClient) {}
 
   get(appId: string): Observable<AppDetails> {
-     return this.http.get<AppDetails>(
-        `${environment.baseUrl}/apps/${encodeURIComponent(
-          appId,
-        )}/participants`,
-        {
-          params: {excludeSiteStatus: ['notEligible']},
-        },
-      );
+    return this.http.get<AppDetails>(
+      `${environment.baseUrl}/apps/${encodeURIComponent(appId)}/participants`,
+      {
+        params: {excludeSiteStatus: ['notEligible']},
+      },
+    );
   }
 }
