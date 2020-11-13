@@ -236,4 +236,14 @@ add(event:unknown|App) :void{
         } else this.toastr.success('Success');
       });
   }
+
+  statusColour(status: Status | undefined): string {
+    if (status && status === this.userStatus.Active) {
+      return 'txt__green';
+    } else if (status && status === this.userStatus.Deactivated) {
+      return 'txt__light-gray';
+    } else {
+      return 'txt__space-gray';
+    }
+  }
 }
