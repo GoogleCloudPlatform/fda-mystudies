@@ -207,15 +207,14 @@
                 "${_csrf.parameterName}": "${_csrf.token}",
               },
               success: function deleteConsentInfo(data) {
-                var jsonobject = eval(data);
-                var status = jsonobject.message;
+                var status = data.message;
                 var markAsComplete = data.markAsComplete;
                 var activityMsg = data.activityMsg;
                 if (status == "SUCCESS") {
                   $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                       "Questionnaire deleted successfully");
                   $('#alertMsg').show();
-                  var questionnaireList = jsonobject.questionnaireList;
+                  var questionnaireList = data.questionnaireList;
                   reloadDataTabel(questionnaireList);
                   if ($('.sixthQuestionnaires').find('span').hasClass(
                       'sprites-icons-2 tick pull-right mt-xs')) {

@@ -777,12 +777,11 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function (data) {
-          var jsonobj = eval(data);
-          var message = jsonobj.message;
-          $("#alertMsg").text('');
+          var message = data.message;
+          $("#alertMsg").html('');
           if (message == "SUCCESS") {
-            var consentId = jsonobj.consentId;
-            var studyId = jsonobj.studyId;
+            var consentId = data.consentId;
+            var studyId = data.studyId;
             $("#consentId").val(consentId);
             $("#studyId").val(studyId);
             var consentDocumentType = $('input[name="consentDocType"]:checked').val();

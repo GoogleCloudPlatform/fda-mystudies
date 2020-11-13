@@ -209,10 +209,9 @@
                 "${_csrf.parameterName}": "${_csrf.token}",
               },
               success: function emailValid(data, status) {
-                var jsonobject = eval(data);
-                var message = jsonobject.message;
-                var checkListMessage = jsonobject.checkListMessage;
-                var checkFailureMessage = jsonobject.checkFailureMessage;
+                var message = data.message;
+                var checkListMessage = data.checkListMessage;
+                var checkFailureMessage = data.checkFailureMessage;
                 if (message == "SUCCESS") {
                   if (checkListMessage == "Yes") {
                     showBootBoxMessage(buttonText,
@@ -313,8 +312,7 @@
               "${_csrf.parameterName}": "${_csrf.token}",
             },
             success: function updateAction(data, status) {
-              var jsonobject = eval(data);
-              var message = jsonobject.message;
+              var message = data.message;
               if (message == "SUCCESS") {
                 if (buttonText == 'deactivateId'
                     || buttonText == 'lunchId'

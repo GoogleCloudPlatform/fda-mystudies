@@ -444,10 +444,9 @@
                   "${_csrf.token}");
             },
             success: function (data) {
-              var jsonobject = eval(data);
-              var message = jsonobject.message;
+              var message = data.message;
               if (message == "SUCCESS") {
-                var consentInfoId = jsonobject.consentInfoId;
+                var consentInfoId = data.consentInfoId;
                 $("#id").val(consentInfoId);
                 $("#alertMsg").removeClass('e-box').addClass(
                     's-box')
