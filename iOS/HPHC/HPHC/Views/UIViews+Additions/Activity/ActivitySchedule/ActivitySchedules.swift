@@ -230,7 +230,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
 
       let values = response.values
       for value in values {
-        let responseValue = value["value"] as? Float ?? 0
+        let responseValue = value["value"] as? Double ?? 0.0
         let count = value["count"] as? Float ?? 0
         let dateString = value["date"] as? String ?? ""
         // SetData Format
@@ -242,7 +242,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
           DBHandler.saveStatisticsDataFor(
             activityId: activityID,
             key: key,
-            data: responseValue,
+            data: Float(responseValue),
             fkDuration: Int(count),
             date: date
           )
