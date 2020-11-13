@@ -1,3 +1,9 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
 #!/usr/bin/env bash
 
 # Short helper script to run repetitive commands for Kubernetes deployments.

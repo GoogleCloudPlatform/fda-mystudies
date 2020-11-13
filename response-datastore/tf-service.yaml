@@ -1,9 +1,12 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: v1
 kind: Service
 metadata:
   name: response-datastore-np
-  # Add Container Native Load Balancing.
-  # See https://cloud.google.com/kubernetes-engine/docs/how-to/container-native-load-balancing#create_service
   annotations:
     cloud.google.com/neg: '{"ingress": true}' # Creates a NEG after an Ingress is created
 spec:
