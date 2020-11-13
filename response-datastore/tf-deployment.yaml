@@ -95,8 +95,8 @@ spec:
             httpGet:
               path: /response-datastore/healthCheck
               port: 8080
-              initialDelaySeconds: 180
-              periodSeconds: 20
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

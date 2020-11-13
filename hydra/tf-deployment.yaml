@@ -59,8 +59,8 @@ spec:
           httpGet:
             port: 4444
             path: /health/ready
-            initialDelaySeconds: 40
-            periodSeconds: 20
+          initialDelaySeconds: 40
+          periodSeconds: 20
         volumeMounts:
         - name: gcloud-key-volume
           mountPath: /secrets/gcloud_key
