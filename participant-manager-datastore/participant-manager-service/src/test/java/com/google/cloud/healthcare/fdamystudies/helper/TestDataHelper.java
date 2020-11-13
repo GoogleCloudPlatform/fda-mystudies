@@ -25,7 +25,6 @@ import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
-import com.google.cloud.healthcare.fdamystudies.model.InviteParticipantEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
@@ -38,7 +37,6 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.InviteParticipantsEmailRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
@@ -100,8 +98,6 @@ public class TestDataHelper {
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private StudyConsentRepository studyConsentRepository;
-
-  @Autowired private InviteParticipantsEmailRepository inviteParticipantsEmailRepository;
 
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -363,20 +359,11 @@ public class TestDataHelper {
     sitePermissionRepository.saveAndFlush(sitePermission);
   }
 
-  public InviteParticipantEntity createInviteParticipantEntity(
-      StudyEntity studyEntity, ParticipantRegistrySiteEntity participantRegistrySiteEntity) {
-    InviteParticipantEntity inviteParticipantEntity = new InviteParticipantEntity();
-    inviteParticipantEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
-    inviteParticipantEntity.setStudy(studyEntity);
-    return inviteParticipantsEmailRepository.saveAndFlush(inviteParticipantEntity);
-  }
-
   public void cleanUp() {
     getAppPermissionRepository().deleteAll();
     getStudyPermissionRepository().deleteAll();
     getSitePermissionRepository().deleteAll();
     getStudyConsentRepository().deleteAll();
-    getInviteParticipantsEmailRepository().deleteAll();
     getParticipantStudyRepository().deleteAll();
     getParticipantRegistrySiteRepository().deleteAll();
     getSiteRepository().deleteAll();

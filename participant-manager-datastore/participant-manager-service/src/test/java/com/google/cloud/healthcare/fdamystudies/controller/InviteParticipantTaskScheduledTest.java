@@ -82,8 +82,8 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
 
     InviteParticipantEntity inviteParticipantsEmail = new InviteParticipantEntity();
-    inviteParticipantsEmail.setParticipantRegistrySite(participantRegistrySiteEntity);
-    inviteParticipantsEmail.setStudy(siteEntity.getStudy());
+    inviteParticipantsEmail.setParticipantRegistrySite(participantRegistrySiteEntity.getId());
+    inviteParticipantsEmail.setStudy(siteEntity.getStudy().getId());
 
     invitedParticipantsEmailRepository.saveAndFlush(inviteParticipantsEmail);
 

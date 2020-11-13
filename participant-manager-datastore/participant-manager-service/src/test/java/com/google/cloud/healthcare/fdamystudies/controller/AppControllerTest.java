@@ -74,8 +74,6 @@ public class AppControllerTest extends BaseMockIT {
     participantStudyEntity =
         testDataHelper.createParticipantStudyEntity(
             siteEntity, studyEntity, participantRegistrySiteEntity);
-    inviteParticipantEntity =
-        testDataHelper.createInviteParticipantEntity(studyEntity, participantRegistrySiteEntity);
   }
 
   @Test
