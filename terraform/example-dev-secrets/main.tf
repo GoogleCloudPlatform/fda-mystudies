@@ -60,6 +60,7 @@ resource "random_password" "passwords" {
       "sd_response_datastore_password",
       "sd_android_password",
       "sd_ios_password",
+      "auth_server_encryptor_password"
     ],
     formatlist("%s_db_password", local.apps),
     formatlist("%s_secret_key", local.apps))
@@ -94,38 +95,6 @@ module "project" {
     "secretmanager.googleapis.com",
   ]
 }
-
-resource "google_secret_manager_secret" "manual_study_builder_user" {
-  provider = google-beta
-
-  secret_id = "manual-study-builder-user"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
-
-resource "google_secret_manager_secret" "manual_study_builder_password" {
-  provider = google-beta
-
-  secret_id = "manual-study-builder-password"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
 
 resource "google_secret_manager_secret" "manual_mystudies_email_address" {
   provider = google-beta
@@ -415,6 +384,38 @@ resource "google_secret_manager_secret" "manual_ios_certificate_password" {
 }
 
 
+resource "google_secret_manager_secret" "manual_ios_deeplink_url" {
+  provider = google-beta
+
+  secret_id = "manual-ios-deeplink-url"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_android_deeplink_url" {
+  provider = google-beta
+
+  secret_id = "manual-android-deeplink-url"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
 resource "google_secret_manager_secret" "auto_mystudies_sql_default_user_password" {
   provider = google-beta
 
@@ -589,6 +590,28 @@ resource "google_secret_manager_secret_version" "auto_auth_server_secret_key_dat
 
   secret      = google_secret_manager_secret.auto_auth_server_secret_key.id
   secret_data = random_password.passwords["auth_server_secret_key"].result
+}
+
+resource "google_secret_manager_secret" "auto_auth_server_encryptor_password" {
+  provider = google-beta
+
+  secret_id = "auto-auth-server-encryptor-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_auth_server_encryptor_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_auth_server_encryptor_password.id
+  secret_data = random_password.passwords["auth_server_encryptor_password"].result
 }
 
 resource "google_secret_manager_secret" "auto_response_datastore_db_user" {
