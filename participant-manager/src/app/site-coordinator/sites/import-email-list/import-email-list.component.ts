@@ -56,8 +56,10 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
       this.siteDetailsService
         .importParticipants(this.siteId, formData)
         .subscribe((successResponse: ImportParticipantEmailResponse) => {
-          console.log(successResponse);
-          if (successResponse.invalidEmails.length > 0) {
+          if (
+            successResponse.invalidEmails.length > 0 ||
+            successResponse.duplicateEmails.length > 0
+          ) {
             this.toastr.error(
               `The email list was imported with the following issues: <br/>` +
                 String(
