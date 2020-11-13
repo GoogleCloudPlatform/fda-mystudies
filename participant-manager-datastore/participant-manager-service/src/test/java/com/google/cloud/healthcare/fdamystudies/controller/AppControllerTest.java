@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.APP_PARTICIPANT_REGISTRY_VIEWED;
 import static org.hamcrest.CoreMatchers.is;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
@@ -85,6 +87,8 @@ public class AppControllerTest extends BaseMockIT {
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
     participantStudyEntity.setStatus("inProgress");
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
+    userDetailsEntity.setStatus(ACTIVE_STATUS);
+    testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -100,7 +104,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].invitedCount").value(1))
         .andExpect(jsonPath("$.apps[0].enrolledCount").value(1))
         .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(100))
-        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1));
+        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1))
+        .andExpect(jsonPath("$.apps[0].studiesCount").value(1));
 
     verifyTokenIntrospectRequest();
   }
@@ -111,6 +116,8 @@ public class AppControllerTest extends BaseMockIT {
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
     participantStudyEntity.setStatus("inProgress");
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
+    userDetailsEntity.setStatus(ACTIVE_STATUS);
+    testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
 
@@ -463,6 +470,39 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldNotReturnNotEligibleStatusforGetAppParticipants() throws Exception {
+    // Step 1 : Set studyEntity,siteEntity,locationEntity,userDetailsEntity and superAdmin to false
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+    studyEntity.setApp(appEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    participantStudyEntity.setUserDetails(userDetailsEntity);
+    // set status to notEligible
+    participantStudyEntity.setStatus(EnrollmentStatus.NOT_ELIGIBLE.getStatus());
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    // Step 2: Call API to return GET_APPS_PARTICIPANTS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .queryParam("excludeSiteStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participants").isArray())
+        .andExpect(jsonPath("$.participants", hasSize(1)))
+        .andExpect(jsonPath("$.participants[0].enrolledStudies").isArray())
+        .andExpect(jsonPath("$.participants[0].enrolledStudies", hasSize(0)));
 
     verifyTokenIntrospectRequest();
   }

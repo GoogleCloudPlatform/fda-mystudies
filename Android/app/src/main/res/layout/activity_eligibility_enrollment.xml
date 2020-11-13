@@ -113,6 +113,7 @@
                         style="@style/signUpEditText"
                         android:layout_margin="15dp"
                         android:gravity="center"
+                        android:maxLength="8"
                         android:hint="@string/enter_enrollmentid"
                         android:inputType="text" />
                 </RelativeLayout>
