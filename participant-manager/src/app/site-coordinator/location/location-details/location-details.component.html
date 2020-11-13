@@ -7,7 +7,7 @@
           <span class="pl-1">Location Details</span>
         </a>
       </div>
-      <div>
+      <div *ngIf="locationBackup.locationPermission === permission.ViewAndEdit">
         <button
           class="btn font12__light-grey p-none"
           name="edit_location"
