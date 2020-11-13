@@ -18,7 +18,7 @@ export class LocationListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   location$: Observable<ManageLocations> = of();
   manageLocationBackup = {} as ManageLocations;
-  permission=Permission;
+  permission = Permission;
   constructor(
     private readonly locationService: LocationService,
     private readonly router: Router,

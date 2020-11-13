@@ -18,7 +18,7 @@ export class LocationDetailsComponent
   location = {} as Location;
   locationBackup = {} as Location;
   locationId = '';
-  permission=Permission;
+  permission = Permission;
 
   constructor(
     private readonly modalService: BsModalService,
