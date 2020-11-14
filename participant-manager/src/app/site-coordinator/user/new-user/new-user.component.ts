@@ -189,8 +189,8 @@ export class AddNewUserComponent
    superAdminCheckBoxChange():void {
     if (this.user.superAdmin) {
     this.selectedApps = [];
-            this.user.manageLocationsSelected = false;
-            this.user.manageLocations = null;
+    this.user.manageLocationsSelected = false;
+    this.user.manageLocations = null;
   }
 }
 }
