@@ -9,6 +9,7 @@ export interface Study {
   id: string;
   sitesCount: number;
   name?: string;
+  appName?: string;
   sites: Site[];
   studyPermission: number;
   totalSitesCount: number;
