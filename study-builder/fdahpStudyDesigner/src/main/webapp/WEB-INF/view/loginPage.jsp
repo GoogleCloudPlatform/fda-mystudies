@@ -294,14 +294,14 @@
             if (emailAdd == '') {
               if (isIE || isEdge) {
                 $('#email').parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>This is a required field</li></ul>");
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("This is a required field"));
               } else {
                 $('#email').parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field"));
               }
             } else if (!isEmail) {
               $('#email').parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Email address is invalid</li></ul>");
+            		  $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Email address is invalid"));
             }
           }
         });

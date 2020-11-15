@@ -1662,7 +1662,7 @@
         });
         if (!chkVal) {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please select a time that has not yet added.</li></ul>");
+              	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time that has not yet added."));
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").text(
               '');
@@ -2187,7 +2187,8 @@
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
         $('#' + id).parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>End Date and Time Should not be less than Start Date and Time</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                      "End Date and Time Should not be less than Start Date and Time"));
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
         $('#' + id).parent().find(".help-block").text("");
@@ -2770,7 +2771,8 @@
       if (!chkVal) {
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
             'has-error has-danger').find(".help-block").removeClass('with-errors').append(
-            "<ul class='list-unstyled' style='font-size: 10px;'><li>Please ensure that the runs created do not have any overlapping time period.</li></ul>");
+                    $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
+                    "Please ensure that the runs created do not have any overlapping time period."));
       } else {
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass(
             'has-error has-danger').addClass('with-errors').find(".help-block").text('');
@@ -3043,7 +3045,8 @@
     if (dt && (couterRef.val() !== 0)) {
       if (moment(dt, "MM/DD/YYYY").toDate() < serverDateTime()) {
         couterRef.parent().addClass('has-error has-danger').find('.help-block.with-errors').append(
-            "<ul class='list-unstyled'><li>Please ensure the End Date/Time is greater than current date/time.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please ensure the End Date/Time is greater than current date/time."));
         valid = false;
       } else {
         couterRef.parent().removeClass('has-error has-danger').find('.help-block.with-errors').text(

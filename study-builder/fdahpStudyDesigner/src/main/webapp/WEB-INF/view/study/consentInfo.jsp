@@ -372,8 +372,8 @@
                 $('.visualStepDiv')
                     .find(".help-block")
                     .empty()
-                    .append(
-                        "<ul class='list-unstyled'><li>Please choose one visual step</li></ul>");
+                    .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                        "Please choose one visual step"));
                 $("#doneId").prop(
                     'disabled', false);
               }

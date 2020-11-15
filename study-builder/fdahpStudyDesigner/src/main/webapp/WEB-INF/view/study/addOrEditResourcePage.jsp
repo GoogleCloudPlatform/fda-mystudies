@@ -567,7 +567,7 @@
         reader.onload = function () {
           if ($.inArray($(thisAttr).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
             $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please select a pdf file</li></ul>");
+            		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a pdf file"));
             $("#delete").click();
           } else if ($("#uploadImg").val()) {
             $('#pdfClk').attr('href', 'javascript:void(0)').css('cursor', 'default');
@@ -588,7 +588,7 @@
         };
         reader.onerror = function () {
           $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please select a pdf file</li></ul>");
+        		  $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a pdf file"));
           $("#delete").click();
         }
         reader.readAsDataURL(file)
