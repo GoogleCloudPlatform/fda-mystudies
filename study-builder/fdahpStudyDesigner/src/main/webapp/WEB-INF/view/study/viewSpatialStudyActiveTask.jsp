@@ -2292,7 +2292,7 @@
           e.preventDefault();
           $(this).val(newVal);
           $(this).parent().addClass("has-danger has-error");
-          $(this).parent().find(".help-block").empty().text(
+          $(this).parent().find(".help-block").empty().append(
               "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
         }
       }
@@ -2309,7 +2309,7 @@
           e.preventDefault();
           $(this).val(newVal);
           $(this).parent().addClass("has-danger has-error");
-          $(this).parent().find(".help-block").empty().text(
+          $(this).parent().find(".help-block").empty().append(
               "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
         }
       }

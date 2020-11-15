@@ -466,8 +466,8 @@
           '.help-block.with-errors').text('');
       if (dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
-            '.help-block.with-errors').text(
-            '<ul class="list-unstyled"><li>Please select a time that has not already passed for the current date.</li></ul>');
+            '.help-block.with-errors').append(
+            "<ul class='list-unstyled'><li>Please select a time that has not already passed for the current date.</li></ul>");
         valid = false;
       }
     }

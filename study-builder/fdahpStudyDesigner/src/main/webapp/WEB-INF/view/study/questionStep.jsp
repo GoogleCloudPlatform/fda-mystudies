@@ -4348,8 +4348,8 @@
         if (minDate != '' && maxDate != '' && new Date(minDate) >= new Date(maxDate)) {
           $('#maxDateId').data("DateTimePicker").clear();
           $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
-          $('#maxDateId').parent().find(".help-block").text(
-              '<ul class="list-unstyled"><li>Max Date and Time Should not be less than or equal Min Date and Time</li></ul>');
+          $('#maxDateId').parent().find(".help-block").append(
+              "<ul class='list-unstyled'><li>Max Date and Time Should not be less than or equal Min Date and Time</li></ul>");
         } else {
           $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
           $('#maxDateId').parent().find(".help-block").empty();
@@ -4369,8 +4369,8 @@
           } else {
             $("#defaultDate").data("DateTimePicker").clear();
             $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
-            $('#defaultDate').parent().find(".help-block").text(
-                '<ul class="list-unstyled"><li>Enter default date to be shown as selected as per availability of Min and Max</li></ul>');
+            $('#defaultDate').parent().find(".help-block").append(
+                "<ul class='list-unstyled'><li>Enter default date to be shown as selected as per availability of Min and Max</li></ul>");
           }
         }
       });
@@ -4557,15 +4557,15 @@
                 var message = data.message;
                 var formulaResponseJsonObject = data.formulaResponseJsonObject;
                 if (message == "SUCCESS") {
-                  $('#lhsValueId').text("<b>" + formulaResponseJsonObject.lhsData + "</b>");
-                  $('#rhsValueId').text("<b>" + formulaResponseJsonObject.rhsData + "</b>");
+                  $('#lhsValueId').append("<b>" + formulaResponseJsonObject.lhsData + "</b>");
+                  $('#rhsValueId').append("<b>" + formulaResponseJsonObject.rhsData + "</b>");
                   if (formulaResponseJsonObject.outPutData == 'true'
                       || formulaResponseJsonObject.outPutData == 'True') {
-                    $('#outputId').text(
+                    $('#outputId').append(
                         "<span class='gtxtf'><b>" + formulaResponseJsonObject.outPutData
                         + "</b></span>");
                   } else {
-                    $('#outputId').text(
+                    $('#outputId').append(
                         "<span class='rtxtf'><b>" + formulaResponseJsonObject.outPutData
                         + "</b></span>");
                   }

@@ -409,8 +409,8 @@
       if (dt < serverDateTime()) {
         $('#timepicker1').val('');
         $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
-            .text(
-                '<ul class="list-unstyled"><li>Please select a time that has not already passed for the current date.</li></ul>');
+            .append(
+                "<ul class='list-unstyled'><li>Please select a time that has not already passed for the current date.</li></ul>");
         valid = false;
       } else {
         $('.timepicker').parent().removeClass('has-error has-danger').find(
