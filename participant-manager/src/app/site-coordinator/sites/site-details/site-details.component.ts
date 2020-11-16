@@ -19,7 +19,7 @@ import {
 } from '../shared/import-participants';
 import {Permission} from 'src/app/shared/permission-enums';
 import {ParticipantRegistryDetail} from 'src/app/shared/participant-registry-detail';
-const MAXIMUM_USER_COUNT = 10;
+
 @Component({
   selector: 'app-site-details',
   templateUrl: './site-details.component.html',
@@ -143,25 +143,21 @@ export class SiteDetailsComponent
   }
   sendInvitation(): void {
     if (this.userIds.length > 0) {
-      if (this.userIds.length > MAXIMUM_USER_COUNT) {
-        this.toastr.error('Please select less than 10 participants');
-      } else {
-        const sendInvitations = {
-          ids: this.userIds,
-        };
-        this.subs.add(
-          this.particpantDetailService
-            .sendInvitation(this.siteId, sendInvitations)
-            .subscribe((successResponse: UpdateInviteResponse) => {
-              if (getMessage(successResponse.code)) {
-                this.toastr.success(getMessage(successResponse.code));
-              } else {
-                this.toastr.success('success');
-              }
-              this.changeTab(OnboardingStatus.Invited);
-            }),
-        );
-      }
+      const sendInvitations = {
+        ids: this.userIds,
+      };
+      this.subs.add(
+        this.particpantDetailService
+          .sendInvitation(this.siteId, sendInvitations)
+          .subscribe((successResponse: UpdateInviteResponse) => {
+            if (getMessage(successResponse.code)) {
+              this.toastr.success(getMessage(successResponse.code));
+            } else {
+              this.toastr.success('success');
+            }
+            this.changeTab(OnboardingStatus.Invited);
+          }),
+      );
     } else {
       this.toastr.error('Please select at least one participant');
     }
@@ -169,32 +165,28 @@ export class SiteDetailsComponent
 
   toggleInvitation(): void {
     if (this.userIds.length > 0) {
-      if (this.userIds.length > MAXIMUM_USER_COUNT) {
-        this.toastr.error('Please select less than 10 participants');
-      } else {
-        const statusUpdate =
-          this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
-        const invitationUpdate = {
-          ids: this.userIds,
-          status: statusUpdate,
-        };
-        this.subs.add(
-          this.particpantDetailService
-            .toggleInvitation(this.siteId, invitationUpdate)
-            .subscribe((successResponse: ApiResponse) => {
-              if (getMessage(successResponse.code)) {
-                this.toastr.success(getMessage(successResponse.code));
-              } else {
-                this.toastr.success(successResponse.message);
-              }
-              this.changeTab(
-                this.activeTab === OnboardingStatus.Disabled
-                  ? OnboardingStatus.Disabled
-                  : OnboardingStatus.New,
-              );
-            }),
-        );
-      }
+      const statusUpdate =
+        this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
+      const invitationUpdate = {
+        ids: this.userIds,
+        status: statusUpdate,
+      };
+      this.subs.add(
+        this.particpantDetailService
+          .toggleInvitation(this.siteId, invitationUpdate)
+          .subscribe((successResponse: ApiResponse) => {
+            if (getMessage(successResponse.code)) {
+              this.toastr.success(getMessage(successResponse.code));
+            } else {
+              this.toastr.success(successResponse.message);
+            }
+            this.changeTab(
+              this.activeTab === OnboardingStatus.Disabled
+                ? OnboardingStatus.Disabled
+                : OnboardingStatus.New,
+            );
+          }),
+      );
     } else {
       this.toastr.error('Please select at least one participant');
     }
