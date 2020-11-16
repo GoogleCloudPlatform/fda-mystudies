@@ -1249,7 +1249,7 @@ resource "google_secret_manager_secret_version" "auto_sd_response_datastore_toke
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_sd_response_datastore_token.id
-  secret_data = random_password.strings["sd_response_datastore_token"].result
+  secret_data = random_string.strings["sd_response_datastore_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_response_datastore_id" {
@@ -1293,7 +1293,7 @@ resource "google_secret_manager_secret_version" "auto_sd_android_token_data" {
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_sd_android_token.id
-  secret_data = random_password.strings["sd_android_token"].result
+  secret_data = random_string.strings["sd_android_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_android_id" {
@@ -1337,7 +1337,7 @@ resource "google_secret_manager_secret_version" "auto_sd_ios_token_data" {
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_sd_ios_token.id
-  secret_data = random_password.strings["sd_ios_token"].result
+  secret_data = random_string.strings["sd_ios_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_ios_id" {

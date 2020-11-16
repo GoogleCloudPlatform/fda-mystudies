@@ -341,7 +341,7 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-sd-response-datastore-token"
-          secret_data = "$${random_password.strings[\"sd_response_datastore_token\"].result}"
+          secret_data = "$${random_string.strings[\"sd_response_datastore_token\"].result}"
         },
         {
           secret_id   = "auto-sd-response-datastore-id"
@@ -349,7 +349,7 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-sd-android-token"
-          secret_data = "$${random_password.strings[\"sd_android_token\"].result}"
+          secret_data = "$${random_string.strings[\"sd_android_token\"].result}"
         },
         {
           secret_id   = "auto-sd-android-id"
@@ -357,7 +357,7 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-sd-ios-token"
-          secret_data = "$${random_password.strings[\"sd_ios_token\"].result}"
+          secret_data = "$${random_string.strings[\"sd_ios_token\"].result}"
         },
         {
           secret_id   = "auto-sd-ios-id"
