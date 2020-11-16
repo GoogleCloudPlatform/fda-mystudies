@@ -123,6 +123,7 @@ export class SiteDetailsComponent
     if (checkbox.checked) {
       this.userIds.push(checkbox.id);
     } else {
+      this.selectedAll = false;
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
