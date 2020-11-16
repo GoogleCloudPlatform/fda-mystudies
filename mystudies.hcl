@@ -1056,8 +1056,8 @@ resource "kubernetes_secret" "auth_server_secrets" {
 
   data = {
     encryptor_password   = data.google_secret_manager_secret_version.secrets["auto-auth-server-encryptor-password"].secret_data
-    ios_deeplink_url     = data.google_secret_manager_secret_version_secrets["manual-ios-deeplink-url"].secret_data
-    android_deeplink_url = data.google_secret_manager_secret_version_secrets["manual-android-deeplink-url"].secret_data
+    ios_deeplink_url     = data.google_secret_manager_secret_version.secrets["manual-ios-deeplink-url"].secret_data
+    android_deeplink_url = data.google_secret_manager_secret_version.secrets["manual-android-deeplink-url"].secret_data
   }
 }
 
