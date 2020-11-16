@@ -1,5 +1,5 @@
 included:
-  - HPHC 
+  - HPHC
 disabled_rules:
   - type_body_length
   - function_body_length
@@ -28,11 +28,3 @@ line_length:
   ignores_comments: true
   warning: 140
   error: 150
-identifier_name:
-  min_length:
-    error: 1
-    warning: 1
-type_name:
-  min_length:
-    error: 1
-    warning: 1

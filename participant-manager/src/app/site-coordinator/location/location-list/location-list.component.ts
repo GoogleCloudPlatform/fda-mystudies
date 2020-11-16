@@ -7,6 +7,7 @@ import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {SearchService} from 'src/app/shared/search.service';
+import {Permission} from 'src/app/shared/permission-enums';
 
 @Component({
   selector: 'location-list',
@@ -17,6 +18,7 @@ export class LocationListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   location$: Observable<ManageLocations> = of();
   manageLocationBackup = {} as ManageLocations;
+  permission = Permission;
   constructor(
     private readonly locationService: LocationService,
     private readonly router: Router,

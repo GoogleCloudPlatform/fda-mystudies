@@ -7,22 +7,26 @@
 # Script to copy client ids and secret keys from gcloud secret and register them
 # in Hydra.
 # Run like:
-# $ ./scripts/register_clients_in_hydra.sh <prefix> <env>
+# $ ./scripts/register_clients_in_hydra.sh <prefix> <env> <base_url>
+# base_url should your env domain name, e.g. https://mystudies.mydomainname.com
 
 #!/bin/bash
 if [ "$#" -ne 3 ]; then
-  echo 'Please provide deployment prefix and env in the order of <prefix> <env> <location>'
+  echo 'Please provide deployment prefix and env in the order of <prefix> <env> <base_url>'
   exit 1
 fi
 
 PREFIX=${1}
 ENV=${2}
-LOCATION=${3}
-shift 2
+BASE_URL=${3}
+shift 3
 
 set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
+# used by client side applications
+SCIM_AUTH_EXTERNAL_URL="${BASE_URL}/oauth-scim-service"
+# used in server to server calls
 SCIM_AUTH_URL="http://auth-server-np:50000/oauth-scim-service"
 HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
 DATETIME=`date +"%FT%TZ"`
@@ -44,7 +48,7 @@ OUTPUT="curl --location --request POST \"${HYDRA_ADMIN_URL}/clients\" \\
     \"created_at\": \"${DATETIME}\",
     \"grant_types\": [\"authorization_code\",\"refresh_token\",\"client_credentials\"],
     \"token_endpoint_auth_method\": \"client_secret_basic\",
-    \"redirect_uris\": [\"${SCIM_AUTH_URL}/callback\"]
+    \"redirect_uris\": [\"${SCIM_AUTH_EXTERNAL_URL}/callback\", \"${SCIM_AUTH_URL}/callback\"]
   }';
 "
 
@@ -68,7 +72,7 @@ do
     \"created_at\": \"${DATETIME}\",
     \"grant_types\": [\"client_credentials\"],
     \"token_endpoint_auth_method\": \"client_secret_basic\",
-    \"redirect_uris\": [\"${SCIM_AUTH_URL}/callback\"]
+    \"redirect_uris\": [\"${SCIM_AUTH_EXTERNAL_URL}/callback\", \"${SCIM_AUTH_URL}/callback\"]
   }';"
 done
 

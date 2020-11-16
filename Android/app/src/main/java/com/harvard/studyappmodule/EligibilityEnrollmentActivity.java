@@ -103,7 +103,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (!enrollmentID.getText().toString().equalsIgnoreCase("")) {
+            if (!enrollmentID.getText().toString().trim().equalsIgnoreCase("")) {
               callValidateEnrollmentId();
             } else {
               Toast.makeText(
@@ -122,7 +122,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
 
     HashMap<String, String> params = new HashMap<>();
     params.put("studyId", "" + getIntent().getStringExtra("studyId"));
-    params.put("token", enrollmentID.getText().toString());
+    params.put("token", enrollmentID.getText().toString().trim());
 
     HashMap<String, String> header = new HashMap<>();
     header.put(
@@ -175,12 +175,12 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
       if (enrollData != null) {
 
         Intent intent = new Intent(this, EnrollmentValidatedActivity.class);
-        intent.putExtra("enrollId", enrollmentID.getText().toString());
+        intent.putExtra("enrollId", enrollmentID.getText().toString().trim());
         intent.putExtra("studyId", getIntent().getStringExtra("studyId"));
         intent.putExtra("title", getIntent().getStringExtra("title"));
         intent.putExtra("eligibility", getIntent().getStringExtra("eligibility"));
         intent.putExtra("type", getIntent().getStringExtra("type"));
-        enteredId = enrollmentID.getText().toString();
+        enteredId = enrollmentID.getText().toString().trim();
         enrollmentID.setText("");
         if (getIntent().getStringExtra("eligibility").equalsIgnoreCase("combined")) {
           Intent intent1 = new Intent();

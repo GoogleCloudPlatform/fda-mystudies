@@ -1,3 +1,4 @@
+import {Status} from 'src/app/shared/enums';
 import {Site} from './site.model';
 
 export interface Study {
@@ -8,6 +9,7 @@ export interface Study {
   id: string;
   sitesCount: number;
   name?: string;
+  appName?: string;
   sites: Site[];
   studyPermission: number;
   totalSitesCount: number;
@@ -15,6 +17,7 @@ export interface Study {
   logoImageUrl: string;
   invited?: number;
   enrolled?: number;
+  studyStatus: Status;
 }
 
 export interface StudyResponse {

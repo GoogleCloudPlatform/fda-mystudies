@@ -8,7 +8,7 @@ import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {Permission} from 'src/app/shared/permission-enums';
-import {StudyType} from 'src/app/shared/enums';
+import {Status, StudyType} from 'src/app/shared/enums';
 
 @Component({
   selector: 'app-site-list',
@@ -22,6 +22,7 @@ export class SiteListComponent implements OnInit {
   study = {} as Study;
   permission = Permission;
   studyTypes = StudyType;
+  studyStatus = Status;
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
