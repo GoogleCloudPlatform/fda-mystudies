@@ -3,15 +3,23 @@
     <div class="upload-btn-wrapper form-group border-radius__77">
       <button class="primary__btn font__bold">Choose file</button>
       <span class="participant__label ml-sm">{{ fileName }}</span>
-        <input type="file" type="hidden" #importedFile type="file" accept=".xlsx,.xls" class="btn btn-success"
-          id="import_participant_file" (change)="fileChange($event)" />
+      <input
+        type="file"
+        type="hidden"
+        #importedFile
+        type="file"
+        accept=".xlsx,.xls"
+        class="btn btn-success"
+        id="import_participant_file"
+        (change)="fileChange($event)"
+      />
     </div>
   </div>
 </div>
 <div class="p-xlg flex__justify__space-between">
   <div>
     <button
-     [disabled]="fileName===''"
+      [disabled]="fileName === ''"
       name="buttonImport"
       class="primary__btn font__bold btn bt__add mr-sm"
       (click)="importParticipants()"
