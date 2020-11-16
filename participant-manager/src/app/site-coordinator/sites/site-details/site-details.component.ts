@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit, TemplateRef, HostListener} from '@angular/core';
 import {SiteParticipants} from '../shared/site-detail.model';
 import {Router, ActivatedRoute} from '@angular/router';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
@@ -53,6 +53,11 @@ export class SiteDetailsComponent
   ) {
     super();
   }
+
+  @HostListener('click') onClick() {
+    this.toggleDisplay = false;
+  }
+
   openModal(templateRef: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(templateRef);
   }
@@ -67,7 +72,8 @@ export class SiteDetailsComponent
       }),
     );
   }
-  toggleParticipant(): void {
+  toggleParticipant($event: Event): void {
+    $event.stopPropagation();
     this.toggleDisplay = !this.toggleDisplay;
   }
   fetchSiteParticipant(fetchingOption: OnboardingStatus): void {
