@@ -71,9 +71,11 @@
             Enrollment Target:
             {{ studyDetails.participantRegistryDetail.targetEnrollment }}
             <button
-              [disabled]="
+              *ngIf="
                 studyDetails.participantRegistryDetail
-                  .openStudySitePermission === permission.View
+                  .openStudySitePermission === permission.ViewAndEdit ||
+                studyDetails.participantRegistryDetail.sitePermission ===
+                  permission.ViewAndEdit
               "
               class="dropbtn btn pl-none"
               (click)="openModal(template)"

@@ -39,6 +39,7 @@ export class UpdateUserComponent
     '=1': '1 Site',
     'other': '# Sites',
   };
+  selectedAppsIds: string[] = [];
   @ViewChildren('permissionCheckBox')
   selectedPermission: QueryList<ElementRef> = new QueryList();
   constructor(
@@ -70,18 +71,23 @@ export class UpdateUserComponent
           this.user = data.user;
           this.user.manageLocationsSelected =
             this.user.manageLocations !== null;
+          this.selectedApps = this.user.apps;
+          this.selectedAppsIds = this.selectedApps.map(
+            (selectedApp: App) => selectedApp.customId,
+          );
           if (this.user.superAdmin) {
             this.selectedApps = [];
+            this.selectedAppsIds = [];
             this.user.manageLocationsSelected = false;
             this.user.manageLocations = null;
-          } else {
-            this.selectedApps = this.user.apps;
           }
           this.getAllApps();
         }),
     );
   }
-
+  add(event: unknown | App): void {
+    this.selectedApps.push(event as App);
+  }
   getAllApps(): void {
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
@@ -90,7 +96,12 @@ export class UpdateUserComponent
     );
   }
   deleteAppFromList(appId: string): void {
-    this.selectedApps = this.selectedApps.filter((obj) => obj.id !== appId);
+    this.selectedApps = this.selectedApps.filter(
+      (selectedApp: App) => selectedApp.id !== appId,
+    );
+    this.selectedAppsIds = this.selectedApps.map(
+      (selectedApp: App) => selectedApp.customId,
+    );
   }
 
   appCheckBoxChange(app: App): void {

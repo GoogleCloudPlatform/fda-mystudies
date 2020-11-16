@@ -103,6 +103,7 @@
     <div class="p-xlg flex__justify__space-between">
       <div>
         <button
+          [hidden]="statusUpdate.status !== 1"
           type="submit"
           name="update"
           class="btn bt__add mr-sm"
