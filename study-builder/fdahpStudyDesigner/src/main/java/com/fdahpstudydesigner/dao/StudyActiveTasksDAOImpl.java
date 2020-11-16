@@ -75,6 +75,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
   String queryString = "";
   private Transaction transaction = null;
 
+  @Autowired private AuditLogDAO auditLogDAO;
+
   public StudyActiveTasksDAOImpl() {}
 
   @Override
@@ -669,10 +671,20 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           studySequence.setStudyExcActiveTask(false);
         }
         session.saveOrUpdate(studySequence);
-      } else {
+      }
 
+      if (!activeTaskBo
+          .getButtonText()
+          .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
+
+        auditLogDAO.updateDraftToEditedStatus(
+            session,
+            transaction,
+            sesObj.getUserId(),
+            FdahpStudyDesignerConstants.DRAFT_ACTIVETASK,
+            activeTaskBo.getStudyId());
         // Notification Purpose needed Started
-        queryString = " From StudyBo where customStudyId=:customStudyId  and live=1";
+        queryString = " From StudyBo where customStudyId=:customStudyId and live=1";
         StudyBo studyBo =
             (StudyBo)
                 session

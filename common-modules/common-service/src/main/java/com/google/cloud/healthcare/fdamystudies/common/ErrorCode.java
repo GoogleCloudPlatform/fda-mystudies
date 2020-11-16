@@ -72,7 +72,7 @@ public enum ErrorCode {
       "Sorry, an error has occurred and your request could not be processed. Please try again later."),
 
   CURRENT_PASSWORD_INVALID(
-      400, "EC_0010", Constants.BAD_REQUEST, "Current password entered is invalid"),
+      400, "EC_0010", Constants.BAD_REQUEST, "The current password entered is incorrect"),
 
   ENFORCE_PASSWORD_HISTORY(
       400,
@@ -239,6 +239,8 @@ public enum ErrorCode {
 
   APPLICATION_ID_MISSING(
       400, "EC_0056", Constants.BAD_REQUEST, "applicationId is missing in request header"),
+
+  INVALID_FILE_UPLOAD(400, "EC_0057", Constants.BAD_REQUEST, "Please upload a .xls or .xlsx file"),
 
   INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status."),
 

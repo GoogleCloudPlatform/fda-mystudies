@@ -83,7 +83,7 @@ class DashboardResponse {
   }
 
   func appendValues(from dict: JSONDictionary, of responseDate: String) {
-    if let value = dict["value"] as? Float {
+    if let value = dict["value"] as? Double {
       let valueDetail =
         [
           "value": value,

@@ -1,3 +1,9 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
 # This is the solution template for MyStudies. Deployment specific
 # values are to be filled in ./deployment.hcl.
 
@@ -121,12 +127,6 @@ template "project_secrets" {
     resources = {
       secrets = [
         {
-          secret_id = "manual-study-builder-user"
-        },
-        {
-          secret_id = "manual-study-builder-password"
-        },
-        {
           secret_id = "manual-mystudies-email-address"
         },
         {
@@ -186,6 +186,12 @@ template "project_secrets" {
           secret_id = "manual-ios-certificate-password"
         },
         {
+          secret_id = "manual-ios-deeplink-url"
+        },
+        {
+          secret_id = "manual-android-deeplink-url"
+        },
+        {
           secret_id   = "auto-mystudies-sql-default-user-password"
           secret_data = "$${random_password.passwords[\"mystudies_sql_default_user_password\"].result}"
         },
@@ -216,6 +222,10 @@ template "project_secrets" {
         {
           secret_id   = "auto-auth-server-secret-key"
           secret_data = "$${random_password.passwords[\"auth_server_secret_key\"].result}"
+        },
+        {
+          secret_id   = "auto-auth-server-encryptor-password"
+          secret_data = "$${random_password.passwords[\"auth_server_encryptor_password\"].result}"
         },
         {
           secret_id   = "auto-response-datastore-db-user"
@@ -329,6 +339,30 @@ template "project_secrets" {
           secret_id   = "auto-participant-manager-datastore-secret-key"
           secret_data = "$${random_password.passwords[\"participant_manager_datastore_secret_key\"].result}"
         },
+        {
+          secret_id   = "auto-sd-response-datastore-password"
+          secret_data = "$${random_password.passwords[\"sd_response_datastore_password\"].result}"
+        },
+        {
+          secret_id   = "auto-sd-response-datastore-id"
+          secret_data = "$${random_string.strings[\"sd_response_datastore_id\"].result}"
+        },
+        {
+          secret_id   = "auto-sd-android-password"
+          secret_data = "$${random_password.passwords[\"sd_android_password\"].result}"
+        },
+        {
+          secret_id   = "auto-sd-android-id"
+          secret_data = "$${random_string.strings[\"sd_android_id\"].result}"
+        },
+        {
+          secret_id   = "auto-sd-ios-password"
+          secret_data = "$${random_password.passwords[\"sd_ios_password\"].result}"
+        },
+        {
+          secret_id   = "auto-sd-ios-id"
+          secret_data = "$${random_string.strings[\"sd_ios_id\"].result}"
+        },
       ]
     }
     terraform_addons = {
@@ -350,6 +384,9 @@ resource "random_string" "strings" {
   for_each = toset(concat(
     [
       "hydra_db_user",
+      "sd_response_datastore_id",
+      "sd_android_id",
+      "sd_ios_id",
     ],
     formatlist("%s_db_user", local.apps),
     formatlist("%s_client_id", local.apps))
@@ -363,6 +400,10 @@ resource "random_password" "passwords" {
     [
       "mystudies_sql_default_user_password",
       "hydra_db_password",
+      "sd_response_datastore_password",
+      "sd_android_password",
+      "sd_ios_password",
+      "auth_server_encryptor_password"
     ],
     formatlist("%s_db_password", local.apps),
     formatlist("%s_secret_key", local.apps))
@@ -919,8 +960,6 @@ data "google_secret_manager_secret_version" "secrets" {
 
   for_each = toset(concat(
     [
-      "manual-study-builder-user",
-      "manual-study-builder-password",
       "manual-mystudies-email-address",
       "manual-mystudies-email-password",
       "manual-mystudies-contact-email-address",
@@ -939,9 +978,18 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-bundle-id",
       "manual-ios-certificate",
       "manual-ios-certificate-password",
+      "manual-ios-deeplink-url",
+      "manual-android-deeplink-url",
+      "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
       "auto-hydra-system-secret",
+      "auto-sd-response-datastore-password",
+      "auto-sd-response-datastore-id",
+      "auto-sd-android-password",
+      "auto-sd-android-id",
+      "auto-sd-ios-password",
+      "auto-sd-ios-id",
     ],
     formatlist("auto-%s-db-user", local.apps),
     formatlist("auto-%s-db-password", local.apps),
@@ -999,6 +1047,20 @@ resource "kubernetes_secret" "client_side_credentials" {
   }
 }
 
+# Auth-server secrets.
+resource "kubernetes_secret" "auth_server_secrets" {
+
+  metadata {
+    name = "auth-server-secrets"
+  }
+
+  data = {
+    encryptor_password   = data.google_secret_manager_secret_version.secrets["auto-auth-server-encryptor-password"].secret_data
+    ios_deeplink_url     = data.google_secret_manager_secret_version.secrets["manual-ios-deeplink-url"].secret_data
+    android_deeplink_url = data.google_secret_manager_secret_version.secrets["manual-android-deeplink-url"].secret_data
+  }
+}
+
 
 # Hydra credentials.
 resource "kubernetes_secret" "hydra_credentials" {
@@ -1015,16 +1077,18 @@ resource "kubernetes_secret" "hydra_credentials" {
   }
 }
 
-# Study builder connect credentials.
-resource "kubernetes_secret" "study_builder_connect_credentials" {
-
+# Study datastore connect credentials.
+resource "kubernetes_secret" "study_datastore_connect_credentials" {
   metadata {
-    name = "study-builder-connect-credentials"
+    name = "study-datastore-connect-credentials"
   }
-
   data = {
-    username    = data.google_secret_manager_secret_version.secrets["manual-study-builder-user"].secret_data
-    password    = data.google_secret_manager_secret_version.secrets["manual-study-builder-password"].secret_data
+    response_datastore_id         = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-id"].secret_data
+    response_datastore_password   = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-password"].secret_data
+    android_id                    = data.google_secret_manager_secret_version.secrets["auto-sd-android-id"].secret_data
+    android_password              = data.google_secret_manager_secret_version.secrets["auto-sd-android-password"].secret_data
+    ios_id                        = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
+    ios_password                  = data.google_secret_manager_secret_version.secrets["auto-sd-ios-password"].secret_data
   }
 }
 
