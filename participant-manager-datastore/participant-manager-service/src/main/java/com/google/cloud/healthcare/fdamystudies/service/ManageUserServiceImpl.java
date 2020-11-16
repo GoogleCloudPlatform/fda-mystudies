@@ -565,7 +565,9 @@ public class ManageUserServiceImpl implements ManageUserService {
 
       setStudiesSitesCountPerApp(userAppBean, userStudies);
 
-      user.getApps().add(userAppBean);
+      if (userAppBean.getSelectedSitesCount() > 0) {
+        user.getApps().add(userAppBean);
+      }
     }
 
     logger.exit(

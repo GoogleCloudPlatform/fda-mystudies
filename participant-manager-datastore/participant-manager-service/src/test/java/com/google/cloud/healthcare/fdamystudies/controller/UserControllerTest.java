@@ -864,6 +864,33 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldNotReturnAnyAppForGetAdminDetailsAndApps() throws Exception {
+    // Step 1: Set one admin without assigning any permission
+    UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
+
+    testDataHelper.getSitePermissionRepository().deleteAll();
+    testDataHelper.getStudyPermissionRepository().deleteAll();
+    testDataHelper.getAppPermissionRepository().deleteAll();
+
+    // Step 2: Call API and expect MANAGE_USERS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), admin.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.user.id", is(admin.getId())))
+        .andExpect(jsonPath("$.user.apps").isArray())
+        .andExpect(jsonPath("$.user.apps").isEmpty())
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnUserNotFoundErrorForGetAdminDetailsAndApps() throws Exception {
     // Step 1: Set a super admin
     UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();

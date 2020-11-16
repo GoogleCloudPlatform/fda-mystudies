@@ -7,34 +7,35 @@
  */
 
 var fieldErrors = {
-	"email": {
-		"required": "Enter an email",
-		"invalid": "Enter a valid email"
-	},
-	"password": {
-		"required": "Enter a password",
-		"invalid": "Enter a valid password"
-	}
+  "email": {
+	"required": "Enter an email",
+	"invalid": "Enter a valid email"
+  },
+  "password": {
+	"required": "Enter a password",
+	"invalid": "Enter a valid password"
+  }
 }
+
 function validateField(elementId) {
-	var element = document.getElementById(elementId);
-	var isValid = element.checkValidity();
-	var errorDiv = document.getElementById(elementId + "_error");
+  var element = document.getElementById(elementId);
+  var isValid = element.checkValidity();
+  var errorDiv = document.getElementById(elementId + "_error");
 
-	if (element.value === '') {
-		errorDiv.innerHTML = fieldErrors[elementId].required;
-		errorDiv.style.display = "block";
-	} else if (!isValid) {
-		errorDiv.innerHTML = fieldErrors[elementId].invalid;
-		errorDiv.style.display = "block";
-	} else {
-		errorDiv.innerHTML = '';
-		errorDiv.style.display = "none";
-	}
-
-	return isValid;
+  if (element.value === '') {
+	errorDiv.innerHTML = fieldErrors[elementId].required;
+	errorDiv.style.display = "block";
+  } else if (!isValid) {
+	errorDiv.innerHTML = fieldErrors[elementId].invalid;
+	errorDiv.style.display = "block";
+  } else {
+	errorDiv.innerHTML = '';
+	errorDiv.style.display = "none";
+  }
+  
+  return isValid;
 }
 
 function validateform() {
-	return validateField("email") && validateField("password");
+  return validateField("email") && validateField("password");
 }
