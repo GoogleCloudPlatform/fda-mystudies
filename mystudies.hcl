@@ -340,24 +340,24 @@ template "project_secrets" {
           secret_data = "$${random_password.passwords[\"participant_manager_datastore_secret_key\"].result}"
         },
         {
-          secret_id   = "auto-sd-response-datastore-password"
-          secret_data = "$${random_password.passwords[\"sd_response_datastore_password\"].result}"
+          secret_id   = "auto-sd-response-datastore-token"
+          secret_data = "$${random_password.strings[\"sd_response_datastore_token\"].result}"
         },
         {
           secret_id   = "auto-sd-response-datastore-id"
           secret_data = "$${random_string.strings[\"sd_response_datastore_id\"].result}"
         },
         {
-          secret_id   = "auto-sd-android-password"
-          secret_data = "$${random_password.passwords[\"sd_android_password\"].result}"
+          secret_id   = "auto-sd-android-token"
+          secret_data = "$${random_password.strings[\"sd_android_token\"].result}"
         },
         {
           secret_id   = "auto-sd-android-id"
           secret_data = "$${random_string.strings[\"sd_android_id\"].result}"
         },
         {
-          secret_id   = "auto-sd-ios-password"
-          secret_data = "$${random_password.passwords[\"sd_ios_password\"].result}"
+          secret_id   = "auto-sd-ios-token"
+          secret_data = "$${random_password.strings[\"sd_ios_token\"].result}"
         },
         {
           secret_id   = "auto-sd-ios-id"
@@ -385,8 +385,11 @@ resource "random_string" "strings" {
     [
       "hydra_db_user",
       "sd_response_datastore_id",
+      "sd_response_datastore_token",
       "sd_android_id",
+      "sd_android_token",
       "sd_ios_id",
+      "sd_ios_token",
     ],
     formatlist("%s_db_user", local.apps),
     formatlist("%s_client_id", local.apps))
@@ -400,9 +403,6 @@ resource "random_password" "passwords" {
     [
       "mystudies_sql_default_user_password",
       "hydra_db_password",
-      "sd_response_datastore_password",
-      "sd_android_password",
-      "sd_ios_password",
       "auth_server_encryptor_password"
     ],
     formatlist("%s_db_password", local.apps),
@@ -984,11 +984,11 @@ data "google_secret_manager_secret_version" "secrets" {
       "auto-hydra-db-password",
       "auto-hydra-db-user",
       "auto-hydra-system-secret",
-      "auto-sd-response-datastore-password",
+      "auto-sd-response-datastore-token",
       "auto-sd-response-datastore-id",
-      "auto-sd-android-password",
+      "auto-sd-android-token",
       "auto-sd-android-id",
-      "auto-sd-ios-password",
+      "auto-sd-ios-token",
       "auto-sd-ios-id",
     ],
     formatlist("auto-%s-db-user", local.apps),
@@ -1083,12 +1083,12 @@ resource "kubernetes_secret" "study_datastore_connect_credentials" {
     name = "study-datastore-connect-credentials"
   }
   data = {
-    response_datastore_id         = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-id"].secret_data
-    response_datastore_password   = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-password"].secret_data
-    android_id                    = data.google_secret_manager_secret_version.secrets["auto-sd-android-id"].secret_data
-    android_password              = data.google_secret_manager_secret_version.secrets["auto-sd-android-password"].secret_data
-    ios_id                        = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
-    ios_password                  = data.google_secret_manager_secret_version.secrets["auto-sd-ios-password"].secret_data
+    response_datastore_id      = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-id"].secret_data
+    response_datastore_token   = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-token"].secret_data
+    android_id                 = data.google_secret_manager_secret_version.secrets["auto-sd-android-id"].secret_data
+    android_token              = data.google_secret_manager_secret_version.secrets["auto-sd-android-token"].secret_data
+    ios_id                     = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
+    ios_token                  = data.google_secret_manager_secret_version.secrets["auto-sd-ios-token"].secret_data
   }
 }
 
