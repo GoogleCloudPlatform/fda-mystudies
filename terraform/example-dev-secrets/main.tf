@@ -42,11 +42,8 @@ resource "random_string" "strings" {
     [
       "hydra_db_user",
       "sd_response_datastore_id",
-      "sd_response_datastore_token",
       "sd_android_id",
-      "sd_android_token",
       "sd_ios_id",
-      "sd_ios_token",
     ],
     formatlist("%s_db_user", local.apps),
     formatlist("%s_client_id", local.apps))
@@ -67,6 +64,16 @@ resource "random_password" "passwords" {
   )
   length  = 16
   special = true
+}
+
+resource "random_password" "tokens" {
+  for_each = toset([
+    "sd_response_datastore_token",
+    "sd_android_token",
+    "sd_ios_token",
+  ])
+  length  = 16
+  special = false
 }
 
 resource "random_password" "system_secrets" {
@@ -1249,7 +1256,7 @@ resource "google_secret_manager_secret_version" "auto_sd_response_datastore_toke
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_sd_response_datastore_token.id
-  secret_data = random_string.strings["sd_response_datastore_token"].result
+  secret_data = random_password.tokens["sd_response_datastore_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_response_datastore_id" {
@@ -1293,7 +1300,7 @@ resource "google_secret_manager_secret_version" "auto_sd_android_token_data" {
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_sd_android_token.id
-  secret_data = random_string.strings["sd_android_token"].result
+  secret_data = random_password.tokens["sd_android_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_android_id" {
@@ -1337,7 +1344,7 @@ resource "google_secret_manager_secret_version" "auto_sd_ios_token_data" {
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_sd_ios_token.id
-  secret_data = random_string.strings["sd_ios_token"].result
+  secret_data = random_password.tokens["sd_ios_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_ios_id" {

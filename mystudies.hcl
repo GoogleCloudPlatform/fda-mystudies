@@ -341,7 +341,7 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-sd-response-datastore-token"
-          secret_data = "$${random_string.strings[\"sd_response_datastore_token\"].result}"
+          secret_data = "$${random_password.tokens[\"sd_response_datastore_token\"].result}"
         },
         {
           secret_id   = "auto-sd-response-datastore-id"
@@ -349,7 +349,7 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-sd-android-token"
-          secret_data = "$${random_string.strings[\"sd_android_token\"].result}"
+          secret_data = "$${random_password.tokens[\"sd_android_token\"].result}"
         },
         {
           secret_id   = "auto-sd-android-id"
@@ -357,7 +357,7 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-sd-ios-token"
-          secret_data = "$${random_string.strings[\"sd_ios_token\"].result}"
+          secret_data = "$${random_password.tokens[\"sd_ios_token\"].result}"
         },
         {
           secret_id   = "auto-sd-ios-id"
@@ -385,11 +385,8 @@ resource "random_string" "strings" {
     [
       "hydra_db_user",
       "sd_response_datastore_id",
-      "sd_response_datastore_token",
       "sd_android_id",
-      "sd_android_token",
       "sd_ios_id",
-      "sd_ios_token",
     ],
     formatlist("%s_db_user", local.apps),
     formatlist("%s_client_id", local.apps))
@@ -410,6 +407,16 @@ resource "random_password" "passwords" {
   )
   length  = 16
   special = true
+}
+
+resource "random_password" "tokens" {
+  for_each = toset([
+    "sd_response_datastore_token",
+    "sd_android_token",
+    "sd_ios_token",
+  ])
+  length  = 16
+  special = false
 }
 
 resource "random_password" "system_secrets" {
