@@ -17,7 +17,7 @@ public class EmailSentToInviteParticipantsScheduledTask {
 
   // 5min fixed delay and 10s initial delay
   @Scheduled(
-      fixedDelayString = "${invite.participant.initial.delay.ms}",
+      fixedDelayString = "${invite.participant.fixed.delay.ms}",
       initialDelayString = "${invite.participant.initial.delay.ms}")
   public void processEmailRequests() {
     logger.entry("begin processEmailRequests()");
