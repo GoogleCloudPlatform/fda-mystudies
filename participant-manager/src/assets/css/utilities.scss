@@ -142,16 +142,16 @@
     display: block;
   }
   .bg__white {
-    background: var(--white);
+    background: var(--white) !important;
   }
   .bg__green {
-    background-color: var(--light-green);
+    background-color: var(--light-green) !important;
   }
   .txt__green {
-    color: var(--light-green);
+    color: var(--light-green) !important;
   }
   .txt__light-gray {
-    color: var(--light-gray);
+    color: var(--light-gray) !important;
   }
   .visibility__hidden {
     visibility: hidden;
