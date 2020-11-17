@@ -9,7 +9,8 @@ FROM node:latest AS compile-image
 WORKDIR /app
 COPY . ./
 #RUN npm set progress=false
-RUN npm install --prefer-offline
+#RUN npm install --prefer-offline
+#RUN npm install -g npm@latest
 RUN npm install -g @angular/cli
 RUN ng build --aot --prod
 #Stage2
