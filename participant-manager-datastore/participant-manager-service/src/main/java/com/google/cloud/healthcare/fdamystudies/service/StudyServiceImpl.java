@@ -103,7 +103,7 @@ public class StudyServiceImpl implements StudyService {
         sitePermissionRepository.findSitePermissionByUserId(userId);
 
     if (CollectionUtils.isEmpty(sitePermissions)) {
-      throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.NO_STUDIES_FOUND);
     }
 
     Map<StudyEntity, List<SitePermissionEntity>> studyPermissionMap =
