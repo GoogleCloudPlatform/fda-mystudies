@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
+
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantStudyStateStatus;
@@ -22,7 +23,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySi
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -118,27 +118,17 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     logger.info("EnrollmentTokenDaoImpl hasParticipant() - Started ");
     List<Object[]> participantList = null;
     Session session = this.sessionFactory.getCurrentSession();
-    List<String> studyStateStatus = new ArrayList<>();
-    studyStateStatus.add(ParticipantStudyStateStatus.ENROLLED.getValue());
-    studyStateStatus.add(ParticipantStudyStateStatus.WITHDRAWN.getValue());
-    studyStateStatus.add(ParticipantStudyStateStatus.INPROGRESS.getValue());
 
-    List<String> onboardingStatus = new ArrayList<>();
-    onboardingStatus.add(OnboardingStatus.INVITED.getCode());
-    onboardingStatus.add(OnboardingStatus.ENROLLED.getCode());
-    onboardingStatus.add(OnboardingStatus.DISABLED.getCode());
     participantList =
         session
             .createQuery(
                 "from ParticipantStudyEntity PS,StudyEntity SB, ParticipantRegistrySiteEntity PR"
                     + " where SB.id =PS.study.id and PS.participantRegistrySite.id=PR.id"
-                    + " and PS.status in (:studyStateStatus) "
-                    + " and PR.onboardingStatus in (:onboardingStatus)"
-                    + " and upper(trim(PR.enrollmentToken))=:token and SB.customId=:studyId")
-            .setParameter("studyStateStatus", studyStateStatus)
-            .setParameter("onboardingStatus", onboardingStatus)
+                    + " and upper(trim(PR.enrollmentToken))=:token and SB.customId=:studyId and"
+                    + " PR.enrollmentTokenUsed=:tokenUsed")
             .setParameter("token", tokenValue.toUpperCase())
             .setParameter("studyId", studyId)
+            .setParameter("tokenUsed", true)
             .getResultList();
 
     logger.info("EnrollmentTokenDaoImpl hasParticipant() - Ends ");
@@ -280,6 +270,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
             }
             if (StringUtils.isNotEmpty(countAddParticipant)) {
               isUpdated = true;
+              participantRegistry.setEnrollmentTokenUsed(true);
+              participantRegistrySiteRepository.saveAndFlush(participantRegistry);
             }
           }
         }
@@ -298,6 +290,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
                 : participantList.get(0);
 
         participantregistrySite.setEnrollmentToken(tokenValue);
+        participantregistrySite.setEnrollmentTokenUsed(true);
 
         siteCriteria = criteriaBuilder.createQuery(SiteEntity.class);
         siteRoot = siteCriteria.from(SiteEntity.class);
@@ -311,7 +304,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
         participantregistrySite.setInvitationDate(Timestamp.from(Instant.now()));
         participantregistrySite.setEmail(userDetail.getEmail());
-        participantregistrySite.setOnboardingStatus("E");
+        participantregistrySite.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
         participantregistrySite.setStudy(studyEntity);
         countAddregistry = (String) session.save(participantregistrySite);
 

@@ -1,9 +1,11 @@
-/*Copyright 2020 Google LLC
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
  
-  Use of this source code is governed by an MIT-style
-  license that can be found in the LICENSE file or at
-  https://opensource.org/licenses/MIT.*/
-
 .m-none {
   margin: 0 !important;
 }
@@ -130,4 +132,170 @@
 
 .pr-xlg {
   padding-right: 30px !important;
+}
+
+.pr-none {
+  padding-right: 0;
+}
+
+.pr-xlg {
+  padding-right: 30px;
+}
+
+.flex__container {
+  display: flex;
+  justify-content: center;
+}
+
+.flex__ {
+  display: flex;
+}
+
+.flex__unset {
+  display: unset;
+}
+
+.flex__wrap {
+  flex-wrap: wrap;
+}
+
+.flex__wrap__reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.flex__wrap__unset {
+  flex-wrap: inherit;
+}
+
+.flex__row {
+  display: flex;
+  flex-flow: row;
+}
+
+.flex__row__reverse {
+  display: flex;
+  flex-flow: row-reverse;
+}
+
+.flex__justify__space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  outline: none;
+}
+
+.flex__justify__center {
+  justify-content: center;
+}
+
+.align__items__baseline {
+  align-items: baseline;
+}
+
+.align__items__center {
+  align-items: center;
+}
+
+.show {
+  display: block;
+}
+
+.bg__white {
+  background: var(- -white) !important;
+}
+
+.bg__green {
+  background-color: var(- -light-green) !important;
+}
+
+.txt__green {
+  color: var(- -light-green) !important;
+}
+
+.txt__light-gray {
+  color: var(- -light-gray) !important;
+}
+
+.visibility__hidden {
+  visibility: hidden;
+}
+
+.visibility__visibile {
+  visibility: visible;
+}
+
+a:hover, a:active, a:focus {
+  text-decoration: none;
+}
+
+.inline__block {
+  display: inline-block;
+}
+
+.display__none {
+  display: none;
+}
+
+.vis__hidden {
+  visibility: hidden;
+}
+
+.cursor__pointer {
+  cursor: pointer;
+}
+
+.cursor__none {
+  cursor: default;
+}
+
+.float__right {
+  float: right;
+}
+
+.float__left {
+  float: left;
+}
+
+.position__relative {
+  position: relative;
+}
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.display-flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.error__msg {
+  color: var(- -orange-red);
+  font-size: 75%;
+  text-align: left;
+  visibility: visible;
+}
+
+.overflow__auto {
+  overflow: auto;
+}
+
+.display-inline-flex {
+  display: inline-flex;
+}
+
+.width__auto {
+  width: auto;
+}
+
+.width__100 {
+  width: 100%;
+}
+
+.width__0 {
+  width: 0;
+}
+
+.background__trans {
+  background: transparent;
 }
