@@ -80,13 +80,12 @@ export class SetUpAccountComponent
     this.setUpAccountService.get(this.setUpCode).subscribe(
       (user) => {
         if (user.redirectTo === 'login') {
-          void this.router.navigate(['/pagenotfound']);
+          void this.router.navigate(['/error/EC_0034']);
         }
         this.setupAccountForm.patchValue(user);
       },
-      (err) => {
-        console.log(err);
-        void this.router.navigate(['/login']);
+      () => {
+        void this.router.navigate(['/error/EC_0034']);
       },
     );
   }
