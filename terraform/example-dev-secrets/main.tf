@@ -57,9 +57,6 @@ resource "random_password" "passwords" {
     [
       "mystudies_sql_default_user_password",
       "hydra_db_password",
-      "sd_response_datastore_password",
-      "sd_android_password",
-      "sd_ios_password",
       "auth_server_encryptor_password"
     ],
     formatlist("%s_db_password", local.apps),
@@ -67,6 +64,16 @@ resource "random_password" "passwords" {
   )
   length  = 16
   special = true
+}
+
+resource "random_password" "tokens" {
+  for_each = toset([
+    "sd_response_datastore_token",
+    "sd_android_token",
+    "sd_ios_token",
+  ])
+  length  = 16
+  special = false
 }
 
 resource "random_password" "system_secrets" {
@@ -1230,10 +1237,10 @@ resource "google_secret_manager_secret_version" "auto_participant_manager_datast
   secret_data = random_password.passwords["participant_manager_datastore_secret_key"].result
 }
 
-resource "google_secret_manager_secret" "auto_sd_response_datastore_password" {
+resource "google_secret_manager_secret" "auto_sd_response_datastore_token" {
   provider = google-beta
 
-  secret_id = "auto-sd-response-datastore-password"
+  secret_id = "auto-sd-response-datastore-token"
   project   = module.project.project_id
 
   replication {
@@ -1245,11 +1252,11 @@ resource "google_secret_manager_secret" "auto_sd_response_datastore_password" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_sd_response_datastore_password_data" {
+resource "google_secret_manager_secret_version" "auto_sd_response_datastore_token_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_sd_response_datastore_password.id
-  secret_data = random_password.passwords["sd_response_datastore_password"].result
+  secret      = google_secret_manager_secret.auto_sd_response_datastore_token.id
+  secret_data = random_password.tokens["sd_response_datastore_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_response_datastore_id" {
@@ -1274,10 +1281,10 @@ resource "google_secret_manager_secret_version" "auto_sd_response_datastore_id_d
   secret_data = random_string.strings["sd_response_datastore_id"].result
 }
 
-resource "google_secret_manager_secret" "auto_sd_android_password" {
+resource "google_secret_manager_secret" "auto_sd_android_token" {
   provider = google-beta
 
-  secret_id = "auto-sd-android-password"
+  secret_id = "auto-sd-android-token"
   project   = module.project.project_id
 
   replication {
@@ -1289,11 +1296,11 @@ resource "google_secret_manager_secret" "auto_sd_android_password" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_sd_android_password_data" {
+resource "google_secret_manager_secret_version" "auto_sd_android_token_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_sd_android_password.id
-  secret_data = random_password.passwords["sd_android_password"].result
+  secret      = google_secret_manager_secret.auto_sd_android_token.id
+  secret_data = random_password.tokens["sd_android_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_android_id" {
@@ -1318,10 +1325,10 @@ resource "google_secret_manager_secret_version" "auto_sd_android_id_data" {
   secret_data = random_string.strings["sd_android_id"].result
 }
 
-resource "google_secret_manager_secret" "auto_sd_ios_password" {
+resource "google_secret_manager_secret" "auto_sd_ios_token" {
   provider = google-beta
 
-  secret_id = "auto-sd-ios-password"
+  secret_id = "auto-sd-ios-token"
   project   = module.project.project_id
 
   replication {
@@ -1333,11 +1340,11 @@ resource "google_secret_manager_secret" "auto_sd_ios_password" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_sd_ios_password_data" {
+resource "google_secret_manager_secret_version" "auto_sd_ios_token_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_sd_ios_password.id
-  secret_data = random_password.passwords["sd_ios_password"].result
+  secret      = google_secret_manager_secret.auto_sd_ios_token.id
+  secret_data = random_password.tokens["sd_ios_token"].result
 }
 
 resource "google_secret_manager_secret" "auto_sd_ios_id" {
