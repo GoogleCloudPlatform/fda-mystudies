@@ -28,12 +28,22 @@ export class AuthService {
 
   initlocalStorage(): void {
     localStorage.setItem('correlationId', uuidv4());
-    getPkce(this.pkceLength, (error, {verifier, challenge}) => {
-      if (!error) {
-        localStorage.setItem('pkceVerifier', verifier);
-        localStorage.setItem('pkceChallenge', challenge);
-      }
-    });
+    // getPkce(this.pkceLength, (error, {verifier, challenge}) => {
+    //   if (!error) {
+    //     localStorage.setItem('pkceVerifier', verifier);
+    //     localStorage.setItem('pkceChallenge', challenge);
+    //   }
+    // });
+     // TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
+
+    sessionStorage.setItem(
+      'pkceVerifier',
+      'IIZLcGtmuoCgXhazHneHoXVMmPRM1tkjfUs2yJ4uXvv3nVswiv',
+    );
+    sessionStorage.setItem(
+      'pkceChallenge',
+      'wR4RMz7BGMNNXf6H9lWjV-2l8OiUQ47UOU8wHWOxVC4',
+    );
   }
 
   beginLoginConsentFlow(): void {
