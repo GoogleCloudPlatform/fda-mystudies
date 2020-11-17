@@ -7,12 +7,10 @@
 # Installing all the dependencies and creating Dist file or building angular application
 FROM node:latest AS compile-image
 WORKDIR /app
-COPY . ./
-#RUN npm set progress=false
+COPY package.json package-lock.json ./
 RUN npm install --prefer-offline
-RUN npm install -g npm@7.0.11
-#RUN npm install latest-version
 RUN npm install -g @angular/cli
+COPY . ./
 RUN ng build --aot --prod
 #Stage2
 #copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
