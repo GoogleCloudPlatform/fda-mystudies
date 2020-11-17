@@ -17,7 +17,7 @@ FROM tomcat:9.0.33-jdk11-openjdk
 # Creates mounted path for gcsfuse
 RUN mkdir /usr/local/tomcat/webapps/study-resources
 RUN chmod a+w /usr/local/tomcat/webapps/study-resources
-RUN mkdir /usr/local/tomcat/webapps/study-resources/resources
+RUN mkdir /usr/local/tomcat/webapps/study-resources/studyResources
 
 # Installs gcsfuse
 ENV GCSFUSE_REPO gcsfuse-stretch

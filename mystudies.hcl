@@ -871,14 +871,7 @@ EOF
           ]
         },
         {
-          name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
-          iam_members = [{
-            role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-          }]
-        },
-        {
-          name = "{{.prefix}}-{{.env}}-mystudies-fda-resources"
+          name = "{{.prefix}}-{{.env}}-mystudies-study-resources"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
