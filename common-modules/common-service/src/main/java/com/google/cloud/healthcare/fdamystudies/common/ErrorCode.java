@@ -287,7 +287,19 @@ public enum ErrorCode {
   LOCATION_NAME_EXISTS(
       400, "EC_0068", Constants.BAD_REQUEST, "Sorry, a location with this name already exists"),
 
-  NO_SITES_FOUND(404, "EC_0070", HttpStatus.NOT_FOUND.toString(), "No sites found");
+  NO_SITES_FOUND(404, "EC_0070", HttpStatus.NOT_FOUND.toString(), "No sites found"),
+
+  NO_STUDIES_FOUND(
+      404,
+      "EC_0071",
+      HttpStatus.NOT_FOUND.toString(),
+      "This view displays study-wise enrollment if you manage multiple sites."),
+
+  NO_APPS_FOUND(
+      404,
+      "EC_0072",
+      HttpStatus.NOT_FOUND.toString(),
+      "This view displays app-wise enrollment if you manage multiple studies.");
 
   private final int status;
   private final String code;

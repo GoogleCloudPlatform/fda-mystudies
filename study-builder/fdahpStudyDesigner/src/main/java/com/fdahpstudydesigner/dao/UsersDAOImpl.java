@@ -144,12 +144,13 @@ public class UsersDAOImpl implements UsersDAO {
               .setParameter("userId", userId);
       userBO2 = (UserBO) query.uniqueResult();
       if (!permissions.isEmpty()) {
+        List<String> permissionList = Arrays.asList(permissions.split(","));
         permissionSet =
             new HashSet<UserPermissions>(
                 session
                     .createQuery(
                         "FROM UserPermissions UPBO WHERE UPBO.permissions IN ( :permissions )")
-                    .setParameterList("permissions", Arrays.asList(permissions))
+                    .setParameterList("permissions", permissionList)
                     .list());
         userBO2.setPermissionList(permissionSet);
         userBO2.setAccessLevel(FdahpStudyDesignerUtil.getUserAccessLevel(permissionSet));
