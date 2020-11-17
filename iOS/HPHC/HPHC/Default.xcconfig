@@ -53,7 +53,7 @@ AUTH_PASSWORD = xxxxxxxxxxxx
 // These values should match the ones set in study datastore server.
 // see: study-datastore/src/main/resources/authorizationResource.properties
 // In the terraform deployment, these should be set to the value of `auto-sd-ios-id`
-// and `auto-sd-ios-password` secrets in your GCP secrets project.
+// and `auto-sd-ios-token` secrets in your GCP secrets project.
 REGISTRATIONSERVER_API_KEY = xxxxxxxx
 
 // SHA-256 of the byte representation of the secret used by mobile apps.
