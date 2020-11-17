@@ -61,7 +61,6 @@ import {environment} from '@environment';
     BsModalRef,
     httpInterceptorProviders,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     {provide: APP_BASE_HREF, useValue: environment.baseHref},
   ],
   bootstrap: [AppComponent],
