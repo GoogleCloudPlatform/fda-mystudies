@@ -131,15 +131,20 @@ extension UIViewController {
 
 extension UIViewController {
 
-  public func addBackBarButton() {
+  /// Adds a custom back button to navigation bar.
+  /// - Returns: Instance of child `UIButton`
+  @discardableResult
+  public func addBackBarButton() -> UIButton {
 
-    let customView = UIView.init(frame: CGRect.init(x: -15, y: 0, width: 46, height: 36))
+    let customView = UIView(frame: CGRect(x: -15, y: 0, width: 46, height: 36))
 
     let backbutton: UIButton = UIButton.init(frame: customView.frame)
     backbutton.setImage(#imageLiteral(resourceName: "backIcon"), for: .normal)
     backbutton.addTarget(self, action: #selector(self.popController), for: .touchUpInside)
     customView.addSubview(backbutton)
-    navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: customView)
+    let backBarButton = UIBarButtonItem(customView: customView)
+    navigationItem.leftBarButtonItem = backBarButton
+    return backbutton
   }
 
   public func addHomeButton() {

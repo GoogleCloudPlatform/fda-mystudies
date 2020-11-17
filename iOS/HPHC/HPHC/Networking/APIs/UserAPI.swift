@@ -42,4 +42,31 @@ struct UserAPI {
     }
   }
 
+  /// Creates a request to change the `User` password
+  /// - Parameters:
+  ///   - oldPassword: Old password of the `User `
+  ///   - newPassword: New password of the `User `
+  ///   - completion: Request status handler
+  static func changePassword(
+    oldPassword: String,
+    newPassword: String,
+    completion: @escaping StatusHandler
+  ) {
+
+    let params = [
+      kUserOldPassword: oldPassword,
+      kUserNewPassword: newPassword,
+    ]
+    let userID = User.currentUser.userId ?? ""
+
+    APIService.instance
+      .requestForData(with: AuthRouter.changePassword(params: params, userID: userID)) { (_, status, error) in
+        if status {
+          let user = User.currentUser
+          UserDefaults.standard.set(user.userId, forKey: kUserId)
+        }
+        completion(status, error)
+      }
+  }
+
 }
