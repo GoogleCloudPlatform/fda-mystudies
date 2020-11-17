@@ -48,7 +48,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: study-datastore-connect-credentials
-                  key: response_datastore_password
+                  key: response_datastore_token
             - name: RESPONSE_SERVER_BUNDLE_ID
               valueFrom:
                 secretKeyRef:
@@ -58,7 +58,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: study-datastore-connect-credentials
-                  key: android_password
+                  key: android_token
             - name: ANDROID_BUNDLE_ID
               valueFrom:
                 secretKeyRef:
@@ -68,7 +68,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: study-datastore-connect-credentials
-                  key: ios_password
+                  key: ios_token
             - name: IOS_BUNDLE_ID
               valueFrom:
                 secretKeyRef:
@@ -98,6 +98,8 @@ spec:
             httpGet:
               path: /study-datastore/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

@@ -4,7 +4,7 @@
 	"lastName": "mockit_user_lastname",
 	"superAdmin": false,
 	"id": null,
-	"manageLocations": 1,
+	"manageLocations": null,
 	"apps": [
 		{
 			"id": "58641e381737a4b6901737a5e73d94635",

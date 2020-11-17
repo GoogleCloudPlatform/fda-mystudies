@@ -101,7 +101,7 @@ public class StudyServiceImpl implements StudyService {
     List<StudyInfo> studyDetails = studyRepository.getStudyDetails(userId);
 
     if (CollectionUtils.isEmpty(studyDetails)) {
-      throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.NO_STUDIES_FOUND);
     }
 
     List<EnrolledInvitedCountForStudy> enrolledInvitedCountList =

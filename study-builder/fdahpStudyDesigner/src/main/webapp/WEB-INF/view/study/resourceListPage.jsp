@@ -194,10 +194,9 @@
             "${_csrf.parameterName}": "${_csrf.token}",
           },
           success: function consentInfo(data) {
-            var jsonobject = eval(data);
-            var message = jsonobject.message;
+            var message = data.message;
             if (message == "SUCCESS") {
-              reloadResourceDataTable(jsonobject.resourceList, null);
+              reloadResourceDataTable(data.resourceList, null);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').html(
                   "Reorder done successfully.");
@@ -283,11 +282,10 @@
         "${_csrf.parameterName}": "${_csrf.token}",
       },
       success: function status(data, status) {
-        var jsonobject = eval(data);
-        var message = jsonobject.message;
-        var markAsComplete = jsonobject.markAsComplete;
+        var message = data.message;
+        var markAsComplete = data.markAsComplete;
         if (message == "SUCCESS") {
-          reloadResourceDataTable(jsonobject.resourceList, markAsComplete);
+          reloadResourceDataTable(data.resourceList, markAsComplete);
         }
       },
       error: function status(data, status) {

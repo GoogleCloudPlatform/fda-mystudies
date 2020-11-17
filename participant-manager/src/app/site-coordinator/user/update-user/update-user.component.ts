@@ -39,6 +39,7 @@ export class UpdateUserComponent
     '=1': '1 Site',
     'other': '# Sites',
   };
+  selectedAppsIds: string[] = [];
   @ViewChildren('permissionCheckBox')
   selectedPermission: QueryList<ElementRef> = new QueryList();
   constructor(
@@ -70,18 +71,23 @@ export class UpdateUserComponent
           this.user = data.user;
           this.user.manageLocationsSelected =
             this.user.manageLocations !== null;
+          this.selectedApps = this.user.apps;
+          this.selectedAppsIds = this.selectedApps.map(
+            (selectedApp: App) => selectedApp.customId,
+          );
           if (this.user.superAdmin) {
             this.selectedApps = [];
+            this.selectedAppsIds = [];
             this.user.manageLocationsSelected = false;
             this.user.manageLocations = null;
-          } else {
-            this.selectedApps = this.user.apps;
           }
           this.getAllApps();
         }),
     );
   }
-
+  add(event: unknown | App): void {
+    this.selectedApps.push(event as App);
+  }
   getAllApps(): void {
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
@@ -90,7 +96,12 @@ export class UpdateUserComponent
     );
   }
   deleteAppFromList(appId: string): void {
-    this.selectedApps = this.selectedApps.filter((obj) => obj.id !== appId);
+    this.selectedApps = this.selectedApps.filter(
+      (selectedApp: App) => selectedApp.id !== appId,
+    );
+    this.selectedAppsIds = this.selectedApps.map(
+      (selectedApp: App) => selectedApp.customId,
+    );
   }
 
   appCheckBoxChange(app: App): void {
@@ -213,21 +224,34 @@ export class UpdateUserComponent
       return;
     }
   }
-  changeStatus(): void {
-    const statusUpdateRequest: UpdateStatusRequest = {
-      status: this.user.status === this.userStatus.Deactivated ? 1 : 0,
-    };
-    this.userService
-      .updateStatus(statusUpdateRequest, this.adminId)
-      .subscribe((successResponse: ApiResponse) => {
-        if (getMessage(successResponse.code)) {
-          this.toastr.success(getMessage(successResponse.code));
-        } else this.toastr.success('Success');
-        this.user.status =
-          this.user.status === this.userStatus.Deactivated
-            ? this.userStatus.Active
-            : this.userStatus.Deactivated;
-      });
+  changeStatus(userStatus: Status | undefined): void {
+    if (userStatus === Status.Invited) {
+      this.userService
+        .deleteInvitation(this.adminId)
+        .subscribe((successResponse: ApiResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else {
+            this.toastr.success('Success');
+          }
+          void this.router.navigate(['coordinator/users']);
+        });
+    } else {
+      const statusUpdateRequest: UpdateStatusRequest = {
+        status: this.user.status === this.userStatus.Deactivated ? 1 : 0,
+      };
+      this.userService
+        .updateStatus(statusUpdateRequest, this.adminId)
+        .subscribe((successResponse: ApiResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else this.toastr.success('Success');
+          this.user.status =
+            this.user.status === this.userStatus.Deactivated
+              ? this.userStatus.Active
+              : this.userStatus.Deactivated;
+        });
+    }
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.status;
@@ -254,6 +278,14 @@ export class UpdateUserComponent
       return 'txt__light-gray';
     } else {
       return 'txt__space-gray';
+    }
+  }
+  superAdminCheckBoxChange(): void {
+    if (this.user.superAdmin) {
+      this.selectedApps = [];
+      this.selectedAppsIds = [];
+      this.user.manageLocationsSelected = false;
+      this.user.manageLocations = null;
     }
   }
 }
