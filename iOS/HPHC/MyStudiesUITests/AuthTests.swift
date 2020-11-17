@@ -12,33 +12,4 @@ class MyStudiesUITests: XCTestCase {
     // In UI tests it is usually best to stop immediately when a failure occurs.
     continueAfterFailure = false
   }
-
-  func testRegistrationFlow() {
-
-    let app = XCUIApplication()
-    app.launch()
-
-    app.buttons["New User?"].tap()
-
-    let tablesQuery2 = app.tables
-    let tablesQuery = tablesQuery2
-
-    let emailField = tablesQuery.textFields["enter email"]
-    emailField.tap()
-    emailField.typeText("test@xyz.la")
-
-    let passwordField = tablesQuery.secureTextFields["add password"]
-    passwordField.tap()
-    passwordField.typeText("Test@124")
-
-    let confirmPasswordField = tablesQuery.secureTextFields["confirm password"]
-    confirmPasswordField.tap()
-    confirmPasswordField.typeText("Test@124")
-
-    app.tables.buttons["notChecked"].tap()
-    app.tap()
-    app.buttons["Submit"].tap()
-
-  }
-
 }
