@@ -434,6 +434,29 @@ public class LocationControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnLocationNameExistsForUpdateLocation() throws Exception {
+    locationEntity.setName(LOCATION_NAME_VALUE);
+    locationEntity.setCustomId(CUSTOM_ID_VALUE + RandomStringUtils.randomAlphabetic(2));
+    locationRepository.saveAndFlush(locationEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    UpdateLocationRequest updateLocationRequest = getUpdateLocationRequest();
+    updateLocationRequest.setName(LOCATION_NAME_VALUE);
+    mockMvc
+        .perform(
+            put(ApiEndpoint.UPDATE_LOCATION.getPath(), locationEntity.getId())
+                .content(asJsonString(updateLocationRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(LOCATION_NAME_EXISTS.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnForbiddenForLocationAccessDeniedOfGetLocations() throws Exception {
     // Step 1: change editPermission to null
     userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());

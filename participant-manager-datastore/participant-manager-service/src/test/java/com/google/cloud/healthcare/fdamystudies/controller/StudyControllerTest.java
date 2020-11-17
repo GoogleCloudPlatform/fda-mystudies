@@ -216,7 +216,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
-            jsonPath("$.error_description").value(ErrorCode.STUDY_NOT_FOUND.getDescription()));
+            jsonPath("$.error_description").value(ErrorCode.NO_STUDIES_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }

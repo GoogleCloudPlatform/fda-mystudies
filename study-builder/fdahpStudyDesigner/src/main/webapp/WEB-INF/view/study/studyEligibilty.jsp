@@ -338,8 +338,7 @@
                               },
                               success: function consentInfo(
                                   data) {
-                                var jsonobject = eval(data);
-                                var message = jsonobject.message;
+                                var message = data.message;
                                 if (message == "SUCCESS") {
                                   $(
                                       "#alertMsg")
