@@ -260,12 +260,11 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function (data) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
+          var message = data.message;
           if (message == "SUCCESS") {
             $("#preShortTitleId").val(shortTitle);
-            var instructionId = jsonobject.instructionId;
-            var stepId = jsonobject.stepId;
+            var instructionId = data.instructionId;
+            var stepId = data.stepId;
             $("#id").val(instructionId);
             $("#stepId").val(stepId);
             $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
