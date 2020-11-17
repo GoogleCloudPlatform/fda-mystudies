@@ -37,10 +37,12 @@ CONSENT_DATASTORE_URL = xxxxxx
 AUTH_URL = xxxxxx
 
 // URL of Hydra server.
-// e.g. mystudiesdeployment.com/hydra
+// e.g. mystudiesdeployment.com
 HYDRA_BASE_URL = xxxxx
 
 // HYDRA_CLIENT_ID is a client ID for OAuth.
+// In the terraform deployment, this should be set to the value of
+// `auto-auth-server-client-id` secret in your GCP secrets project.
 HYDRA_CLIENT_ID = xxxx
 
 // This is used to generate base64 basic Authorization token for WCP WS validation.
@@ -50,6 +52,8 @@ AUTH_PASSWORD = xxxxxxxxxxxx
 // API_KEY is <bundleid>:<apptoken>
 // These values should match the ones set in study datastore server.
 // see: study-datastore/src/main/resources/authorizationResource.properties
+// In the terraform deployment, these should be set to the value of `auto-sd-ios-id`
+// and `auto-sd-ios-password` secrets in your GCP secrets project.
 REGISTRATIONSERVER_API_KEY = xxxxxxxx
 
 // SHA-256 of the byte representation of the secret used by mobile apps.
@@ -62,7 +66,8 @@ REGISTRATIONSERVER_API_SECERET = xxxxxxxxxxx
 // AppID of this application.
 // Study builder would use this appID to match studies to apps.
 //
-// should be max 15 character, human readable and URL safe.
+// Should be max 15 character, human readable and URL safe.
 // If following terraform deployment steps, these APP_ID and ORG_ID
-// should match the ones you manually set in GCP secret manager.
+// should match the ones you manually set in GCP secret manager,
+// i.e. `manual-mobile-app-appid`.
 APP_ID = xxxxxx

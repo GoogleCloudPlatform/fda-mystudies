@@ -182,6 +182,12 @@ public class LocationServiceImpl implements LocationService {
       return ErrorCode.LOCATION_NOT_FOUND;
     }
 
+    Optional<LocationEntity> optLocationEntityForName =
+        locationRepository.findByName(locationRequest.getName());
+    if (optLocationEntityForName.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_NAME_EXISTS);
+    }
+
     LocationEntity locationEntity = optLocation.get();
     if (locationEntity.isDefault()) {
       return ErrorCode.DEFAULT_SITE_MODIFY_DENIED;
