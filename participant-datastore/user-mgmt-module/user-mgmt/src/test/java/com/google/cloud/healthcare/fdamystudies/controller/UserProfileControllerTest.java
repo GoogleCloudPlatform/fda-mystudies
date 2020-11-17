@@ -23,6 +23,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VER
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -189,6 +190,45 @@ public class UserProfileControllerTest extends BaseMockIT {
     boolean remote =
         JsonPath.read(result.getResponse().getContentAsString(), "$.settings.remoteNotifications");
     assertTrue(remote);
+
+    verifyTokenIntrospectRequest(2);
+  }
+
+  @Test
+  public void updateUserProfileWithoutSettingsBeanSuccess() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
+
+    UserRequestBean userRequestBean = new UserRequestBean(null, new InfoBean());
+    String requestJson = getObjectMapper().writeValueAsString(userRequestBean);
+    mockMvc
+        .perform(
+            post(UPDATE_USER_PROFILE_PATH)
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString(String.valueOf(HttpStatus.OK.value()))));
+
+    verifyTokenIntrospectRequest(1);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_PROFILE_UPDATED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_PROFILE_UPDATED);
+
+    MvcResult result =
+        mockMvc
+            .perform(get(USER_PROFILE_PATH).headers(headers).contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+    String emailId = JsonPath.read(result.getResponse().getContentAsString(), "$.profile.emailId");
+    assertEquals(Constants.USER_EMAIL, emailId);
 
     verifyTokenIntrospectRequest(2);
   }
