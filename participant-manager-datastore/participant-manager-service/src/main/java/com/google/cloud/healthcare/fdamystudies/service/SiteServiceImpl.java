@@ -917,6 +917,11 @@ public class SiteServiceImpl implements SiteService {
       AuditLogEventRequest auditRequest) {
     logger.entry("begin importParticipants()");
 
+    if (!(StringUtils.endsWith(multipartFile.getOriginalFilename(), ".xlsx")
+        || StringUtils.endsWith(multipartFile.getOriginalFilename(), ".xls"))) {
+      throw new ErrorCodeException(ErrorCode.INVALID_FILE_UPLOAD);
+    }
+
     // Validate site type, status and access permission
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
 

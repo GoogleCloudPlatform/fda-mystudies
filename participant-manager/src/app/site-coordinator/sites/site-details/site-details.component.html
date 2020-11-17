@@ -537,10 +537,10 @@
                 <td *ngIf="activeTab == onBoardingStatus.All">
                   <div
                     [ngClass]="{
-                      participant__label:
+                      'txt__green':
                         participant.onboardingStatus ==
                         onBoardingStatus.Invited,
-                      inactive__text:
+                      'txt__light-gray':
                         participant.onboardingStatus ==
                         onBoardingStatus.Disabled
                     }"
@@ -624,9 +624,8 @@
                 <td *ngIf="activeTab != onBoardingStatus.New">
                   <div
                     [ngClass]="{
-                      participant__label:
-                        participant.enrollmentStatus == 'Enrolled',
-                      inactive__text:
+                      'txt__green': participant.enrollmentStatus == 'Enrolled',
+                      'txt__light-gray':
                         participant.enrollmentStatus == 'Withdrawn'
                     }"
                   >
@@ -639,6 +638,14 @@
                 </td>
               </tr>
             </tbody>
+            <div
+              *ngIf="
+                siteParticipants.participantRegistryDetail.registryParticipants
+                  .length === 0
+              "
+            >
+              No records found
+            </div>
             <tfoot>
               <tr>
                 <td colspan="4">
