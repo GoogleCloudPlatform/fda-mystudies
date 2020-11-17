@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,17 +52,17 @@ spec:
                 secretKeyRef:
                   name: response-datastore-credentials
                   key: secret_key
-            # STUDY BUILDER AUTHENTICATION
-            - name: STUDY_BUILDER_USER
+            # STUDY DATASTORE AUTHENTICATION
+            - name: STUDY_DATASTORE_ID
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-connect-credentials
-                  key: username
-            - name: STUDY_BUILDER_PASS
+                  name: study-datastore-connect-credentials
+                  key: response_datastore_id
+            - name: STUDY_DATASTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-connect-credentials
-                  key: password
+                  name: study-datastore-connect-credentials
+                  key: response_datastore_password
             # SERVER CALLS
             - name: AUTH_SERVER_URL
               value: "http://auth-server-np:50000/oauth-scim-service"
@@ -90,6 +95,8 @@ spec:
             httpGet:
               path: /response-datastore/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

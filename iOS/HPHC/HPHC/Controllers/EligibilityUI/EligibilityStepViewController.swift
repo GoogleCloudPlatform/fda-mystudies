@@ -143,8 +143,7 @@ class EligibilityStepViewController: ORKStepViewController {
         handler: nil
       )
     )
-
-    self.navigationController?.present(alert, animated: true, completion: nil)
+    self.present(alert, animated: true, completion: nil)
   }
 
   // MARK: - Action

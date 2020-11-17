@@ -280,6 +280,7 @@ class ResponseServices: NSObject {
         if let dataDictArr = rowDetail["data"] as? [JSONDictionary] {
           // created date
           let data = dataDictArr[safe: 2] ?? [:]
+          let dataCount = dataDictArr[safe: 3] ?? [:]
           var date: String = ""
 
           if let createdDict = dataDictArr[safe: 1],
@@ -289,12 +290,12 @@ class ResponseServices: NSObject {
           }
 
           // FetalKick
-          if data["count"] != nil && data["duration"] != nil {
+          if dataCount["count"] != nil && data["duration"] != nil {
 
             // for responseData in dashBoardResponse{
             let responseData = dashBoardResponse.first
             // count
-            let countDetail = data["count"] as? [String: Any]
+            let countDetail = dataCount["count"] as? [String: Any]
             let count = (countDetail?["value"] as? Float)!
 
             // duration
@@ -308,7 +309,9 @@ class ResponseServices: NSObject {
                 "date": date,
               ] as [String: Any]
 
-            responseData?.values.append(valueDetail)
+            let responseData1 = DashboardResponse(with: activityId, and: "duration")
+            responseData1.values.append(valueDetail)
+            dashBoardResponse.append(responseData1)
 
           } else if data["NumberofFailures"] != nil && data["NumberofGames"] != nil
             && data[

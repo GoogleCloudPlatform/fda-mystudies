@@ -72,6 +72,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
+  @Autowired private AuditLogDAO auditLogDAO;
+
   @Autowired private HttpServletRequest request;
 
   HibernateTemplate hibernateTemplate;
@@ -3916,6 +3918,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       }
 
       if ((questionnaireBo != null) && questionnaireBo.getStatus()) {
+        auditLogDAO.updateDraftToEditedStatus(
+            session,
+            transaction,
+            sessionObject.getUserId(),
+            FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE,
+            questionnaireBo.getStudyId());
 
         // Notification Purpose needed Started
         queryString = " From StudyBo where customStudyId=:customStudyId and live=1";
@@ -4663,7 +4671,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if (!stepType.isEmpty()) {
         if (stepType.equalsIgnoreCase(FdahpStudyDesignerConstants.QUESTION_STEP)) {
           searchQuery =
-              "select q.anchor_date_id from questions q,questionnaires_steps qsq,questionnaires qq  where q.id=qsq.instruction_form_id and qsq.step_type='Question' "
+              "select q.anchor_date_id from questions q,questionnaires_steps qsq,questionnaires qq where q.id=qsq.instruction_form_id and qsq.step_type='Question' "
                   + "and qsq.active=1 and qsq.questionnaires_id=qq.id and qq.id=:questionnaireId "
                   + " and q.id=:stepId "
                   + " and qq.active=1 and q.active=1"
@@ -4711,7 +4719,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if ((stepId == null) && (questionnaireId != null)) {
         // checking in the question step anchor date is selected or not
         searchQuery =
-            "select q.anchor_date_id from questions q,questionnaires_steps qsq,questionnaires qq  where q.id=qsq.instruction_form_id and qsq.step_type='Question'"
+            "select q.anchor_date_id from questions q,questionnaires_steps qsq,questionnaires qq where q.id=qsq.instruction_form_id and qsq.step_type='Question'"
                 + " and qsq.active=1 and qsq.questionnaires_id=qq.id and qq.id=:questionnaireId "
                 + " and qq.active=1 and q.active=1"
                 + " and q.anchor_date_id IS NOT NULL;";
@@ -4795,6 +4803,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .executeUpdate();
               if (count1 > 0) {
                 studySequence.setStudyExcQuestionnaries(false);
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    sessionObject.getUserId(),
+                    FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE,
+                    studyId);
               }
               int count2 =
                   session
@@ -4808,6 +4822,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .executeUpdate();
               if (count2 > 0) {
                 studySequence.setStudyExcActiveTask(false);
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    sessionObject.getUserId(),
+                    FdahpStudyDesignerConstants.DRAFT_ACTIVETASK,
+                    studyId);
               }
               int count3 =
                   session
@@ -4819,6 +4839,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
               if (count3 > 0) {
                 studySequence.setMiscellaneousResources(false);
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    sessionObject.getUserId(),
+                    FdahpStudyDesignerConstants.DRAFT_STUDY,
+                    studyId);
               }
               session.saveOrUpdate(studySequence);
             }

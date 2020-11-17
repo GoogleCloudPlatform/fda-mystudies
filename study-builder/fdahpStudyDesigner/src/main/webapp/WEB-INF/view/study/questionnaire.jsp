@@ -2083,8 +2083,7 @@
             "${_csrf.parameterName}": "${_csrf.token}",
           },
           success: function consentInfo(data) {
-            var jsonobject = eval(data);
-            var status = jsonobject.message;
+            var status = data.message;
 
             if (status == "SUCCESS") {
 
@@ -2092,8 +2091,8 @@
               $("#alertMsg").removeClass('e-box').addClass('s-box').html(
                   "Reorder done successfully");
 
-              var questionnaireSteps = jsonobject.questionnaireJsonObject;
-              var isDone = jsonobject.isDone;
+              var questionnaireSteps = data.questionnaireJsonObject;
+              var isDone = data.isDone;
               reloadQuestionnaireStepData(questionnaireSteps, isDone);
               if ($('.sixthQuestionnaires').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
@@ -3555,12 +3554,11 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function (data) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
+          var message = data.message;
           if (message == "SUCCESS") {
             $("#preShortTitleId").val(short_title);
-            var questionnaireId = jsonobject.questionnaireId;
-            var questionnaireFrequenceId = jsonobject.questionnaireFrequenceId;
+            var questionnaireId = data.questionnaireId;
+            var questionnaireFrequenceId = data.questionnaireFrequenceId;
             $("#id").val(questionnaireId);
             $("#questionnaireId").val(questionnaireId);
             var anchorList = "${anchorTypeList}";
@@ -3606,7 +3604,7 @@
               callback(true);
           } else {
             $("body").removeClass("loading");
-            var errMsg = jsonobject.errMsg;
+            var errMsg = data.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
               showErrMsg(errMsg);
             } else {
@@ -3797,21 +3795,20 @@
                 "${_csrf.parameterName}": "${_csrf.token}",
               },
               success: function deleteConsentInfo(data) {
-                var jsonobject = eval(data);
-                var status = jsonobject.message;
+                var status = data.message;
                 if (status == "SUCCESS") {
                   $("#alertMsg").removeClass('e-box').addClass('s-box').html(
                       "Questionnaire step deleted successfully");
                   $('#alertMsg').show();
-                  var questionnaireSteps = jsonobject.questionnaireJsonObject;
-                  var isDone = jsonobject.isDone;
+                  var questionnaireSteps = data.questionnaireJsonObject;
+                  var isDone = data.isDone;
                   reloadQuestionnaireStepData(questionnaireSteps, isDone);
                   if ($('.sixthQuestionnaires').find('span').hasClass(
                       'sprites-icons-2 tick pull-right mt-xs')) {
                     $('.sixthQuestionnaires').find('span').removeClass(
                         'sprites-icons-2 tick pull-right mt-xs');
                   }
-                  var isAnchorQuestionnaire = jsonobject.isAnchorQuestionnaire;
+                  var isAnchorQuestionnaire = data.isAnchorQuestionnaire;
                   if (isAnchorQuestionnaire) {
                     $('#anchorspanId').prop('title',
                         'This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it.');
@@ -4140,13 +4137,12 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function getResponse(data) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
+          var message = data.message;
           if ('SUCCESS' != message) {
             callback(true);
           } else {
             callback(false);
-            var questionnaireSteps = jsonobject.questionnaireJsonObject;
+            var questionnaireSteps = data.questionnaireJsonObject;
             if (typeof questionnaireSteps != 'undefined' && questionnaireSteps != null
                 && questionnaireSteps != '') {
               reloadQuestionnaireStepData(questionnaireSteps, null);

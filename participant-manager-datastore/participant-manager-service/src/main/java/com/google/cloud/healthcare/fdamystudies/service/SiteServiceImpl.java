@@ -860,7 +860,7 @@ public class SiteServiceImpl implements SiteService {
 
       participantRegistrySiteEntity.setInvitationCount(
           participantRegistrySiteEntity.getInvitationCount() + 1);
-
+      participantRegistrySiteEntity.setEnrollmentTokenUsed(false);
       participantRegistrySiteEntity.setEnrollmentTokenExpiry(
           new Timestamp(
               Instant.now()
@@ -916,6 +916,11 @@ public class SiteServiceImpl implements SiteService {
       MultipartFile multipartFile,
       AuditLogEventRequest auditRequest) {
     logger.entry("begin importParticipants()");
+
+    if (!(StringUtils.endsWith(multipartFile.getOriginalFilename(), ".xlsx")
+        || StringUtils.endsWith(multipartFile.getOriginalFilename(), ".xls"))) {
+      throw new ErrorCodeException(ErrorCode.INVALID_FILE_UPLOAD);
+    }
 
     // Validate site type, status and access permission
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
