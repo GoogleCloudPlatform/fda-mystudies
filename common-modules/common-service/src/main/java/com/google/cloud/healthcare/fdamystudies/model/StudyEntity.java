@@ -72,7 +72,7 @@ public class StudyEntity implements Serializable {
   @Column(name = "custom_id", nullable = false, length = XS_LENGTH)
   private String customId;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "app_info_id")
   private AppEntity app;
 
