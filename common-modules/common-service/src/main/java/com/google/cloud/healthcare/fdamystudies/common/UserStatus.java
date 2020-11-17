@@ -16,7 +16,7 @@ public enum UserStatus {
   ACTIVE(1, "Active"),
   INVITED(2, "Invited"),
   DEACTIVATE_PENDING(3, "Deactivate request pending"),
-  PENDING_EMAIL_CONFIRMATION(4, "Pending email confirmation");
+  PENDING_EMAIL_CONFIRMATION(4, "Pending Activation");
 
   private Integer value;
 

@@ -42,8 +42,10 @@ export class SiteCoordinatorComponent implements OnInit {
       },
     );
   }
-  public onKeyDown(event: KeyboardEvent): void {
+  public onKeyUp(event: KeyboardEvent): void {
     if (event.key === 'Enter' && this.searchBar) {
+      void this.searchBar.search(this.filterQuery);
+    } else if (this.searchBar && this.filterQuery === '') {
       void this.searchBar.search(this.filterQuery);
     }
   }
