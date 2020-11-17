@@ -18,12 +18,14 @@
       </div>
       <div class="col-xs-12 col-md-6 pl-none text-right pr-none">
         <button
-          (click)="changeStatus()"
+          (click)="changeStatus(user.status)"
           class="btn banner__default__btn pad__5__13 bt__font12__pad113 ml-sm"
         >
           {{
             user.status === userStatus.Deactivated
               ? "Activate User"
+              : user.status === userStatus.Invited
+              ? "Delete User"
               : "Deactivate User"
           }}
         </button>
@@ -140,12 +142,14 @@
                 [(ngModel)]="user.superAdmin"
                 name="superAdminCheckBox"
                 #superAdminCheckBox="ngModel"
+                (change)="superAdminCheckBoxChange()"
               />
               <label class="mt-xs" for="role">
                 Super Admin
                 <span
                   class="tool"
-                  data-tip="A superadmin user has application-wide permissions; can manage users and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only."
+                  data-tip="A superadmin user has application-wide permissions.
+Superadmins can manage users of this Particpant Manager and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only. "
                   tabindex="1"
                 >
                   <i class="fa fa-info-circle ml-sm" aria-hidden="true"></i>
@@ -222,11 +226,13 @@
                 [clearable]="false"
                 [multiple]="true"
                 bindLabel="name"
+                bindValue="customId"
                 class="form-control select__form-control"
                 placeholder="Enter App ID or Name"
                 [hideSelected]="true"
-                [(ngModel)]="selectedApps"
+                [(ngModel)]="selectedAppsIds"
                 [ngModelOptions]="{standalone: true}"
+                (add)="add($event)"
               ></ng-select>
             </label>
           </div>
