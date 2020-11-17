@@ -13,15 +13,6 @@ class MyStudiesUITests: XCTestCase {
     continueAfterFailure = false
   }
 
-  func testLaunchPerformance() throws {
-    if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-      // This measures how long it takes to launch your application.
-      measure(metrics: [XCTOSSignpostMetric.applicationLaunch]) {
-        XCUIApplication().launch()
-      }
-    }
-  }
-
   func testRegistrationFlow() {
 
     let app = XCUIApplication()
@@ -45,8 +36,7 @@ class MyStudiesUITests: XCTestCase {
     confirmPasswordField.typeText("Test@124")
 
     app.tables.buttons["notChecked"].tap()
-
-    app.toolbars["Toolbar"].buttons["Done"].tap()
+    app.tap()
     app.buttons["Submit"].tap()
 
   }
