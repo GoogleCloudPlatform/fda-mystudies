@@ -54,9 +54,10 @@ export class LoginCallbackComponent implements OnInit {
                 params.accountStatus === '3' ||
                 params.accountStatus === '2'
               ) {
-                void this.router.navigate([
-                  '/coordinator/accounts/change-password',
-                ]);
+                void this.router.navigate(
+                  ['/coordinator/accounts/change-password'],
+                  {queryParams: {action: 'passwordsetup'}},
+                );
               } else {
                 void this.router.navigate(['/coordinator/studies/sites']);
               }
