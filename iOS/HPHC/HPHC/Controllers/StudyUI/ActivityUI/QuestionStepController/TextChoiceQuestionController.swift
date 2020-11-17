@@ -129,7 +129,11 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
           "otherValue": otherChoice.value,
         ]
       } else {
-        otherChoiceDict = ["other": otherChoice.otherTitle, "otherValue": otherChoice.value]
+        otherChoiceDict = [
+          "other": otherChoice.otherTitle,
+          "otherValue": otherChoice.value,
+          "text": otherChoice.otherChoiceText,
+        ]
       }
       choices.append(otherChoiceDict as Any)
       choices.append(otherChoice.value)
@@ -532,7 +536,8 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   override func goForward() {
 
     if self.otherChoice.otherChoiceText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-      self.isOtherCellSelected
+      self.isOtherCellSelected,
+      self.otherChoice.isMandatory
     {
 
       let alertVC = UIAlertController(
@@ -640,6 +645,8 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
 
         if self.otherChoice.isShowOtherField {
           cell.updateOtherView(isShow: true)
+        } else {
+          cell.updateOtherView(isShow: false)
         }
       } else {
         cell.didSelected = false
@@ -782,7 +789,7 @@ extension TextChoiceQuestionController: UISearchBarDelegate {
 
   func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
 
-    navigationController?.navigationBar.prefersLargeTitles = true
+    navigationController?.navigationBar.prefersLargeTitles = false
     searchBar.text = ""
     self.searchChoices = []
     self.isSearching = false

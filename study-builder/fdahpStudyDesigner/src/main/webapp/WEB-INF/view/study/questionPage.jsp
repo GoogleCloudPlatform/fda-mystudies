@@ -4051,13 +4051,12 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function (data) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
+          var message = data.message;
           if (message == "SUCCESS") {
             $("body").removeClass("loading");
             $("#preShortTitleId").val(short_title);
-            var questionId = jsonobject.questionId;
-            var questionResponseId = jsonobject.questionResponseId;
+            var questionId = data.questionId;
+            var questionResponseId = data.questionResponseId;
 
             $("#questionId").val(questionId);
             $("#questionResponseTypeId").val(questionResponseId);
@@ -4079,7 +4078,7 @@
                   'sprites-icons-2 tick pull-right mt-xs');
             }
           } else {
-            var errMsg = jsonobject.errMsg;
+            var errMsg = data.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
               $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
             } else {

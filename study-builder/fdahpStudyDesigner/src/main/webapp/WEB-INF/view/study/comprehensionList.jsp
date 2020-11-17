@@ -360,10 +360,9 @@
         "${_csrf.parameterName}": "${_csrf.token}",
       },
       success: function status(data, status) {
-        var jsonobject = eval(data);
-        var message = jsonobject.message;
+        var message = data.message;
         if (message == "SUCCESS") {
-          reloadComprehensionQuestionDataTable(jsonobject.comprehensionTestQuestionList);
+          reloadComprehensionQuestionDataTable(data.comprehensionTestQuestionList);
         }
       },
       error: function status(data, status) {
@@ -503,10 +502,9 @@
             xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
           },
           success: function (data) {
-            var jsonobject = eval(data);
-            var message = jsonobject.message;
+            var message = data.message;
             if (message == "SUCCESS") {
-              var consentId = jsonobject.consentId;
+              var consentId = data.consentId;
 
               $("#consentId").val(consentId);
               $("#addQuestionId").attr("disabled", false);
