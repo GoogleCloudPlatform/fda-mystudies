@@ -8,3 +8,9 @@
   pointer-events: none;
   border-color: #656565 transparent transparent transparent;
 }
+
+@-moz-document url-prefix() {
+  .form-item__element--select {
+    margin-left: -4px !important;
+  }
+}
