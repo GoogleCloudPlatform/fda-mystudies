@@ -123,7 +123,6 @@
 		6F214B9424603EFE008F2742 /* WKWebView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */; };
 		6F214B9624603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */; };
 		6F2392DE2423E0F300013AC0 /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
-		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
 		6F4B51B7250644A200DC5991 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51B6250644A200DC5991 /* SessionService.swift */; };
 		6F4B51B92506562D00DC5991 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51B82506562D00DC5991 /* URL+Extensions.swift */; };
 		6F4B51BB250659DB00DC5991 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51BA250659DB00DC5991 /* APIService.swift */; };
@@ -439,7 +438,6 @@
 		6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherTextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C21225F410500420A7B /* TextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C27225F416C00420A7B /* Cell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cell+Extensions.swift"; sourceTree = "<group>"; };
-		6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegistrationServerKeys.swift; path = ../RegistrationServerKeys.swift; sourceTree = "<group>"; };
 		6FD1E15623F18228009DACAE /* ConsentServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServices.swift; sourceTree = "<group>"; };
 		6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServerConfiguration.swift; sourceTree = "<group>"; };
 		6FD1E15923F18239009DACAE /* APIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIConfiguration.swift; sourceTree = "<group>"; };
@@ -1040,7 +1038,6 @@
 			isa = PBXGroup;
 			children = (
 				6FD1E15923F18239009DACAE /* APIConfiguration.swift */,
-				6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */,
 				6F83039424864431009409A5 /* APIError.swift */,
 			);
 			path = Environment;
@@ -2232,7 +2229,6 @@
 				6ED1B2241E54254900BF463F /* ActivityResult.swift in Sources */,
 				48567FE11F14FB3C00857193 /* StudyFilterViewController.swift in Sources */,
 				9432C2FB1E4C9EF8005984EC /* UserServices.swift in Sources */,
-				6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */,
 				94FF031F1E952B0A009F191B /* ReachoutOptionCell.swift in Sources */,
 				4884E3521E825E7D002DA0B9 /* FeedBackViewController.swift in Sources */,
 				94B3DD4F1E6ED8E500327AE5 /* PageViewController.swift in Sources */,
