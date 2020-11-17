@@ -43,7 +43,7 @@
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.required"
               >
-                Please fill out this field.
+                Enter a first name.
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -77,7 +77,7 @@
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.required"
               >
-                Please fill out this field.
+                Enter a last name.
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -113,13 +113,13 @@
                 class="help-block with-errors error__msg"
                 *ngIf="emailText.errors?.required"
               >
-                Please fill out this field.
+                Enter an email.
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="emailText.errors?.pattern"
               >
-                Email is invalid.
+                Enter a valid email.
               </span>
             </div>
           </div>
@@ -134,12 +134,14 @@
                 [(ngModel)]="user.superAdmin"
                 name="superAdminCheckBox"
                 #superAdminCheckBox="ngModel"
+                (change)="superAdminCheckBoxChange()"
               />
               <label class="mt-xs" for="role">
                 Super Admin
                 <span
                   class="tool"
-                  data-tip="A superadmin user has application-wide permissions; can manage users and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only."
+                  data-tip="A superadmin user has application-wide permissions.
+Superadmins can manage users of this Particpant Manager and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only. "
                   tabindex="1"
                 >
                   <i
@@ -237,6 +239,7 @@
                         <div class="custom__labels">
                           <input
                             type="checkbox"
+                            #permissionCheckBox
                             id="appCheckBox{{ app.id }}"
                             [(ngModel)]="app.selected"
                             [ngModelOptions]="{standalone: true}"
@@ -313,6 +316,7 @@
                               <div>
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="studyCheckBoxChange(study, app)"
                                     [disabled]="app.selected"
                                     type="checkbox"
@@ -394,6 +398,7 @@
                               >
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="
                                       siteCheckBoxChange(site, study, app)
                                     "

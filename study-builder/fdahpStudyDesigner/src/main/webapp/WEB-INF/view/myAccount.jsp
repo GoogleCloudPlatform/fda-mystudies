@@ -390,8 +390,7 @@
               "${_csrf.parameterName}": "${_csrf.token}"
             },
             success: function getResponse(data, status) {
-              var jsonObj = eval(data);
-              var message = jsonObj.message;
+              var message = data.message;
               if ('SUCCESS' == message) {
                 showSucMsg('Password updated successfully.');
                 $("#cancelBtn").click();

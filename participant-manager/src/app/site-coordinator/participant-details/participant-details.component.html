@@ -69,7 +69,10 @@
               class="mr-sm"
               *ngIf="
                 participant.participantDetails.onboardingStatus !==
-                onBoardingStatus.Disabled
+                  onBoardingStatus.Disabled &&
+                participant.participantDetails.studyStatus !==
+                  studyStatus.Deactivated &&
+                participant.participantDetails.siteStatus !== 0
               "
             >
               <button
@@ -83,7 +86,13 @@
                 {{ sendResend }}
               </button>
             </div>
-            <div>
+            <div
+              *ngIf="
+                participant.participantDetails.studyStatus !==
+                  studyStatus.Deactivated &&
+                participant.participantDetails.siteStatus !== 0
+              "
+            >
               <button
                 [disabled]="
                   hasCompletedEnrollment(participant.participantDetails)
@@ -109,7 +118,10 @@
   <section
     *ngIf="
       participant.participantDetails.studyType !== studyTypes.Open &&
-      participant.participantDetails.sitePermission === permission.ViewAndEdit
+      participant.participantDetails.sitePermission ===
+        permission.ViewAndEdit &&
+      participant.participantDetails.studyStatus !== studyStatus.Deactivated &&
+      participant.participantDetails.siteStatus !== 0
     "
     class="subheader p-none pl-none mobile__view border-top__c4d1e6"
   >
@@ -159,7 +171,14 @@
                 *ngIf="
                   participant.participantDetails.studyType !== studyTypes.Open
                 "
-                class="participant__label"
+                [ngClass]="{
+                  'txt__green':
+                    participant.participantDetails.onboardingStatus ==
+                    onBoardingStatus.Invited,
+                  'txt__light-gray':
+                    participant.participantDetails.onboardingStatus ==
+                    onBoardingStatus.Disabled
+                }"
               >
                 {{ participant.participantDetails.onboardingStatus }}
               </div>
@@ -199,7 +218,16 @@
             >
               <div>
                 <div class="blue__text__md">Enrollment Status</div>
-                <div class="inactive__text">
+                <div
+                  [ngClass]="{
+                    'txt__green':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Enrolled,
+                    'txt__light-gray':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Withdrawn
+                  }"
+                >
                   {{ enrollmentDetails.enrollmentStatus }}
                 </div>
               </div>
@@ -228,7 +256,7 @@
         class="table table-striped"
         [mfData]="participant.participantDetails.consentHistory"
         #mf="mfDataTable"
-        [mfRowsOnPage]="10"
+        [mfRowsOnPage]="5"
       >
         <thead>
           <tr>
@@ -289,6 +317,9 @@
             </td>
           </tr>
         </tbody>
+        <div *ngIf="participant.participantDetails.consentHistory.length === 0">
+          No records found
+        </div>
         <tfoot>
           <tr>
             <td colspan="4">

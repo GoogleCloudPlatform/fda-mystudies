@@ -632,9 +632,8 @@
           "${_csrf.parameterName}": "${_csrf.token}",
         },
         success: function platformValid(data, status) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
-          var errorMessage = jsonobject.errorMessage;
+          var message = data.message;
+          var errorMessage = data.errorMessage;
           $("body").removeClass("loading");
           if (message == "SUCCESS") {
             $('#completedId').removeAttr('disabled');
