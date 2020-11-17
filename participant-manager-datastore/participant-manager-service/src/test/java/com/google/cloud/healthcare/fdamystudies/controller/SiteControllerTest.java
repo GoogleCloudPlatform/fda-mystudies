@@ -1435,6 +1435,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
         .andExpect(jsonPath("$.participantDetails.siteId", notNullValue()))
         .andExpect(jsonPath("$.participantDetails.studyType", is(CLOSE_STUDY)))
+        .andExpect(jsonPath("$.participantDetails.studyStatus", is("Active")))
+        .andExpect(jsonPath("$.participantDetails.siteStatus", is(1)))
         .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
         .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(1)))
         .andExpect(
