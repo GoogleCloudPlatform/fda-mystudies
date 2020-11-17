@@ -317,6 +317,9 @@
             </td>
           </tr>
         </tbody>
+        <div *ngIf="participant.participantDetails.consentHistory.length === 0">
+          No records found
+        </div>
         <tfoot>
           <tr>
             <td colspan="4">
