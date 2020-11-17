@@ -56,9 +56,7 @@
                 </mfDefaultSorter>
               </th>
               <th>
-                <mfDefaultSorter by="Enrolled">
-                  Studies
-                </mfDefaultSorter>
+                <mfDefaultSorter by="Enrolled">Studies</mfDefaultSorter>
               </th>
             </tr>
           </thead>
@@ -66,7 +64,7 @@
             <tr *ngFor="let applists of mf.data">
               <td [routerLink]="['/coordinator/participant', applists.id]">
                 <span class="tbl__td__label">Participant Email:</span>
-                <span class="no_st_en">{{ applists.email }}</span>
+                <span>{{ applists.email }}</span>
               </td>
               <td>
                 <span class="tbl__td__label">App Registration Date:</span>
@@ -100,9 +98,9 @@
               </td>
             </tr>
           </tbody>
-            <div *ngIf="appDetails.participants.length === 0">
-              No records found
-            </div>
+          <div *ngIf="appDetails.participants.length === 0">
+            No records found
+          </div>
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">

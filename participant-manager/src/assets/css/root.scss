@@ -1012,11 +1012,11 @@ pre {
   border-radius: 0.25em;
   top: 100%;
   content: attr(data-tip);
-  margin-left: -14.75em;
+  margin-left: -30em;
   padding: 1em;
   transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
   transform: scale(0.6) translateY(50%);
-  width: 17.5em;
+  width: 30em;
   color: var(--bold-gray);
   font-size: 75%;
   text-align: left;
