@@ -74,9 +74,6 @@ class ChangePasswordViewController: UIViewController {
     )
     self.tableView?.addGestureRecognizer(tapGesture)
 
-    // unhide navigationbar
-    self.navigationController?.setNavigationBarHidden(false, animated: true)
-
     if temporaryPassword.count > 0 {
       oldPassword = temporaryPassword
       tableViewRowDetails?.removeObject(at: 0)
@@ -88,14 +85,24 @@ class ChangePasswordViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    self.addBackBarButton()
+    self.navigationController?.setNavigationBarHidden(false, animated: true)
+    addBackButton()
   }
 
   override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
     // hide navigationbar
     if viewLoadFrom == .login {
       self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
+  }
+
+  // MARK: - UI
+
+  fileprivate func addBackButton() {
+    let backBarButton = addBackBarButton()
+    backBarButton.removeTarget(self, action: nil, for: .allEvents)
+    backBarButton.addTarget(self, action: #selector(goBack), for: .touchUpInside)
   }
 
   // MARK: - Utility Methods
@@ -108,6 +115,13 @@ class ChangePasswordViewController: UIViewController {
     )
   }
 
+  @objc private func goBack() {
+    if self.viewLoadFrom == .login {
+      self.navigationController?.popToRootViewController(animated: true)
+    } else {
+      self.navigationController?.popViewController(animated: true)
+    }
+  }
   /// Dismiss key board when clicked on Background.
   @objc func dismissKeyboard() {
     self.view.endEditing(true)
@@ -115,11 +129,18 @@ class ChangePasswordViewController: UIViewController {
 
   /// Api Call to Change Password.
   func requestToChangePassword() {
-    AuthServices().changePassword(
+    self.addProgressIndicator()
+    UserAPI.changePassword(
       oldPassword: self.oldPassword,
-      newPassword: self.newPassword,
-      delegate: self
-    )
+      newPassword: self.newPassword
+    ) { (status, error) in
+      self.removeProgressIndicator()
+      if status {
+        self.changePasswordSuccess()
+      } else if let error = error {
+        self.changePasswordfailed(with: error)
+      }
+    }
   }
 
   /// Seting menu View using `FDASlideMenuViewController` and Gateway Storyboard.
@@ -254,15 +275,9 @@ extension ChangePasswordViewController: UITextFieldDelegate {
   }
 }
 
-// MARK: - Webservice delegates
-extension ChangePasswordViewController: NMWebServiceDelegate {
+extension ChangePasswordViewController {
 
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    self.addProgressIndicator()
-  }
-
-  func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    self.removeProgressIndicator()
+  func changePasswordSuccess() {
 
     if viewLoadFrom == .profile {
 
@@ -272,57 +287,42 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
         buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
         viewControllerUsed: self
       ) {
-
         _ = self.navigationController?.popViewController(animated: true)
-
       }
     } else if viewLoadFrom == .menuLogin {
-
-      // Updating Key & Vector
-      let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
-      appDelegate.updateKeyAndInitializationVector()
-
-      let ud = UserDefaults.standard
-
-      ud.set(true, forKey: kPasscodeIsPending)
-      ud.synchronize()
-      StudyFilterHandler.instance.previousAppliedFilters = []
-
-      // do not create menu
-
-      let leftController = (slideMenuController()?.leftViewController as? LeftMenuViewController)!
-      leftController.createLeftmenuItems()
-      leftController.changeViewController(.studyList)
-
+      User.currentUser.saveAuthenticatedUserToDB()
+      let leftController = slideMenuController()?.leftViewController as? LeftMenuViewController
+      leftController?.createLeftmenuItems()
+      leftController?.changeViewController(.studyList)
     } else if viewLoadFrom == .login {
-      //  create menu
-
+      User.currentUser.saveAuthenticatedUserToDB()
+      //  Create menu
       self.createMenuView()
     } else if viewLoadFrom == .joinStudy {
-
-      let leftController = (slideMenuController()?.leftViewController as? LeftMenuViewController)!
-      leftController.createLeftmenuItems()
+      User.currentUser.saveAuthenticatedUserToDB()
+      let leftController = slideMenuController()?.leftViewController as? LeftMenuViewController
+      leftController?.createLeftmenuItems()
       self.performSegue(withIdentifier: "unwindStudyHomeSegue", sender: self)
     }
   }
 
-  func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    self.removeProgressIndicator()
+  func changePasswordfailed(with error: ApiError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
-      UIUtilities.showAlertMessageWithActionHandler(
-        kErrorTitle,
-        message: error.localizedDescription,
-        buttonTitle: kTitleOk,
-        viewControllerUsed: self,
+    if error.code == .forbidden {  // Unauthorized
+      self.presentDefaultAlertWithError(
+        error: error,
+        animated: true,
         action: {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-        }
+        },
+        completion: nil
       )
     } else {
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-        message: error.localizedDescription as NSString
+      self.presentDefaultAlertWithError(
+        error: error,
+        animated: true,
+        action: nil,
+        completion: nil
       )
     }
   }
