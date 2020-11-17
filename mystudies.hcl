@@ -649,7 +649,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # }
 
 # resource "google_cloudbuild_trigger" "server_build_triggers" {
-#   for_each = locals.apps_dependencies
+#   for_each = local.apps_dependencies
 
 #   provider = google-beta
 #   project  = module.project.project_id
