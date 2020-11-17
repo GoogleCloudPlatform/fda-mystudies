@@ -299,7 +299,9 @@ public enum ErrorCode {
       404,
       "EC_0072",
       HttpStatus.NOT_FOUND.toString(),
-      "This view displays app-wise enrollment if you manage multiple studies.");
+      "This view displays app-wise enrollment if you manage multiple studies."),
+
+  USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists");
 
   private final int status;
   private final String code;
