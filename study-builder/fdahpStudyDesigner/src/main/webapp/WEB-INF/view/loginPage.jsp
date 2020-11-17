@@ -293,14 +293,14 @@
             isEmail = regEX.test(emailAdd);
             if (emailAdd == '') {
               if (isIE || isEdge) {
-                $('#email').parent().find(".help-block").append(
+                $('#email').parent().find(".help-block").empty().append(
                         $("<ul><li> </li></ul>").attr("class","list-unstyled").text("This is a required field"));
               } else {
-                $('#email').parent().find(".help-block").append(
+                $('#email').parent().find(".help-block").empty().append(
                         $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field"));
               }
             } else if (!isEmail) {
-              $('#email').parent().find(".help-block").append(
+              $('#email').parent().find(".help-block").empty().append(
             		  $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Email address is invalid"));
             }
           }

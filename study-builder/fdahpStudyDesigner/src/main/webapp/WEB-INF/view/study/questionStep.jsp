@@ -4348,7 +4348,7 @@
         if (minDate != '' && maxDate != '' && new Date(minDate) >= new Date(maxDate)) {
           $('#maxDateId').data("DateTimePicker").clear();
           $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
-          $('#maxDateId').parent().find(".help-block").append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          $('#maxDateId').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               "Max Date and Time Should not be less than or equal Min Date and Time"));
         } else {
           $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
@@ -4369,7 +4369,7 @@
           } else {
             $("#defaultDate").data("DateTimePicker").clear();
             $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
-            $('#defaultDate').parent().find(".help-block").append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            $('#defaultDate').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                 "Enter default date to be shown as selected as per availability of Min and Max"));
           }
         }
@@ -4557,17 +4557,15 @@
                 var message = data.message;
                 var formulaResponseJsonObject = data.formulaResponseJsonObject;
                 if (message == "SUCCESS") {
-                  $('#lhsValueId').append("<b>" + formulaResponseJsonObject.lhsData + "</b>");
-                  $('#rhsValueId').append("<b>" + formulaResponseJsonObject.rhsData + "</b>");
+                  $('#lhsValueId').empty().append($("<B> </B>").text(formulaResponseJsonObject.lhsData));
+                  $('#rhsValueId').empty().append($("<B> </B>").text(formulaResponseJsonObject.rhsData));
                   if (formulaResponseJsonObject.outPutData == 'true'
                       || formulaResponseJsonObject.outPutData == 'True') {
-                    $('#outputId').append(
-                        "<span class='gtxtf'><b>" + formulaResponseJsonObject.outPutData
-                        + "</b></span>");
+                    $('#outputId').empty().append(
+                            $("<font> </font>").attr("class","gtxtf").append($("<B> </B>").text(formulaResponseJsonObject.outPutData)));
                   } else {
-                    $('#outputId').append(
-                        "<span class='rtxtf'><b>" + formulaResponseJsonObject.outPutData
-                        + "</b></span>");
+                    $('#outputId').empty().append(
+                            $("<font> </font>").attr("class","rtxtf").append($("<B> </B>").text(formulaResponseJsonObject.outPutData)));
                   }
                 } else {
                   if (typeof formulaResponseJsonObject != 'undefined'

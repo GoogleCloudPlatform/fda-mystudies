@@ -2397,7 +2397,7 @@
           }
         });
         if (!chkVal) {
-          thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
+          thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Duplicate times cannot be set."));
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").text(
@@ -3068,7 +3068,7 @@
       var endDate = $('#' + id).val();
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
-        $('#' + id).parent().find(".help-block").append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+        $('#' + id).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             "End Date and Time Should not be less than Start Date and Time"));
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -3669,7 +3669,7 @@
       }
       if (!chkVal) {
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
-            'has-error has-danger').find(".help-block").removeClass('with-errors').append(
+            'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
                    "Please ensure that the runs created do not have any overlapping time period."));
       } else {
