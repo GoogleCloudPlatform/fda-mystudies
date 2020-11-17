@@ -864,7 +864,7 @@
             '<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
       } else {
         $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#newDocumentDivId').parent().find(".help-block").text("");
+        $('#newDocumentDivId').parent().find(".help-block").empty();
       }
     } else {
       isValideditor = false;
@@ -891,7 +891,7 @@
             '<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
       } else {
         $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#learnMoreTextId').parent().find(".help-block").text("");
+        $('#learnMoreTextId').parent().find(".help-block").empty();
       }
     } else {
       isValid = false;
