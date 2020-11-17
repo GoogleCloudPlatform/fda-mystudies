@@ -41,7 +41,6 @@ class ResponseServices: NSObject {
     static let applicationId = "applicationId"
     static let studyVersion = "studyVersion"
     static let tokenIdentifier = "tokenIdentifier"
-    static let orgID = "orgId"
     static let siteID = "siteId"
     static let appID = "appId"
     static let studyID = "studyId"
