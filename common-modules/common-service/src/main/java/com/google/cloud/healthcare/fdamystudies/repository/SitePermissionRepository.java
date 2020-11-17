@@ -57,4 +57,8 @@ public interface SitePermissionRepository extends JpaRepository<SitePermissionEn
   @Query(
       "SELECT sp FROM SitePermissionEntity sp WHERE sp.urAdminUser.id = :userId and sp.study.id = :studyId")
   public List<SitePermissionEntity> findByUserIdAndStudyId(String userId, String studyId);
+
+  @Query(
+      "SELECT sp FROM SitePermissionEntity sp WHERE sp.urAdminUser.id = :userId and sp.study.id = :studyId")
+  public Optional<SitePermissionEntity> findByUserAdminIdAndStudyId(String userId, String studyId);
 }

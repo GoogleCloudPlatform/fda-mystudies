@@ -861,7 +861,7 @@ public class SiteServiceImpl implements SiteService {
 
       participantRegistrySiteEntity.setInvitationCount(
           participantRegistrySiteEntity.getInvitationCount() + 1);
-
+      participantRegistrySiteEntity.setEnrollmentTokenUsed(false);
       participantRegistrySiteEntity.setEnrollmentTokenExpiry(
           new Timestamp(
               Instant.now()
@@ -1157,7 +1157,7 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findSitePermissionByUserId(userId);
 
     if (CollectionUtils.isEmpty(studyPermissions) && CollectionUtils.isEmpty(sitePermissions)) {
-      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.NO_SITES_FOUND);
     }
 
     Map<String, StudyPermissionEntity> studyPermissionsByStudyId = new HashMap<>();
@@ -1382,18 +1382,17 @@ public class SiteServiceImpl implements SiteService {
       Optional<StudyEntity> optStudy = studyRepository.findById(enrollmentRequest.getStudyId());
       study = optStudy.orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND));
     } else {
-      Optional<StudyPermissionEntity> optStudyPermission =
-          studyPermissionRepository.findByStudyIdAndUserId(
-              enrollmentRequest.getStudyId(), enrollmentRequest.getUserId());
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserAdminIdAndStudyId(
+              enrollmentRequest.getUserId(), enrollmentRequest.getStudyId());
+      SitePermissionEntity sitePermission =
+          optSitePermission.orElseThrow(
+              () -> new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED));
 
-      StudyPermissionEntity studyPermission =
-          optStudyPermission.orElseThrow(
-              () -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED));
-
-      if (Permission.VIEW == studyPermission.getEdit()) {
+      if (Permission.VIEW == sitePermission.getCanEdit()) {
         throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
       }
-      study = studyPermission.getStudy();
+      study = sitePermission.getStudy();
     }
 
     if (CLOSE_STUDY.equalsIgnoreCase(study.getType())) {
