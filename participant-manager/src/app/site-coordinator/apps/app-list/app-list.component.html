@@ -75,7 +75,17 @@
                     </span>
                     <span *ngIf="app.invitedCount == 0">N/A</span>
                   </div>
-                  <div class="text-grey__sm">Enrolled / Invited</div>
+                  <span
+                    class="tool"
+                    data-tip="Represents the Enrollment Progress for all studies in this app, across the Sites you have permissions to view or manage. This is calculated considering the number of enrolled participants versus how many were invited or what the target was (in case of open studies). Studies for which targets are yet to be defined are not included in this number."
+                    tabindex="1"
+                  >
+                    <div class="text-grey__sm">Enrollment Progress</div>
+                    <!-- <i
+                                      class="fa fa-info-circle add_user_info_icon ml-sm"
+                                      aria-hidden="true"
+                                    ></i> -->
+                  </span>
                 </div>
               </div>
             </div>
