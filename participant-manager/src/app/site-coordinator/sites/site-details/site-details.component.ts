@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit, TemplateRef, HostListener} from '@angular/core';
 import {SiteParticipants} from '../shared/site-detail.model';
 import {Router, ActivatedRoute} from '@angular/router';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
@@ -19,7 +19,7 @@ import {
 } from '../shared/import-participants';
 import {Permission} from 'src/app/shared/permission-enums';
 import {ParticipantRegistryDetail} from 'src/app/shared/participant-registry-detail';
-const MAXIMUM_USER_COUNT = 10;
+
 @Component({
   selector: 'app-site-details',
   templateUrl: './site-details.component.html',
@@ -53,6 +53,11 @@ export class SiteDetailsComponent
   ) {
     super();
   }
+
+  @HostListener('click') onClick() {
+    this.toggleDisplay = false;
+  }
+
   openModal(templateRef: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(templateRef);
   }
@@ -67,7 +72,8 @@ export class SiteDetailsComponent
       }),
     );
   }
-  toggleParticipant(): void {
+  toggleParticipant($event: Event): void {
+    $event.stopPropagation();
     this.toggleDisplay = !this.toggleDisplay;
   }
   fetchSiteParticipant(fetchingOption: OnboardingStatus): void {
@@ -123,6 +129,7 @@ export class SiteDetailsComponent
     if (checkbox.checked) {
       this.userIds.push(checkbox.id);
     } else {
+      this.selectedAll = false;
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
@@ -143,25 +150,21 @@ export class SiteDetailsComponent
   }
   sendInvitation(): void {
     if (this.userIds.length > 0) {
-      if (this.userIds.length > MAXIMUM_USER_COUNT) {
-        this.toastr.error('Please select less than 10 participants');
-      } else {
-        const sendInvitations = {
-          ids: this.userIds,
-        };
-        this.subs.add(
-          this.particpantDetailService
-            .sendInvitation(this.siteId, sendInvitations)
-            .subscribe((successResponse: UpdateInviteResponse) => {
-              if (getMessage(successResponse.code)) {
-                this.toastr.success(getMessage(successResponse.code));
-              } else {
-                this.toastr.success('success');
-              }
-              this.changeTab(OnboardingStatus.Invited);
-            }),
-        );
-      }
+      const sendInvitations = {
+        ids: this.userIds,
+      };
+      this.subs.add(
+        this.particpantDetailService
+          .sendInvitation(this.siteId, sendInvitations)
+          .subscribe((successResponse: UpdateInviteResponse) => {
+            if (getMessage(successResponse.code)) {
+              this.toastr.success(getMessage(successResponse.code));
+            } else {
+              this.toastr.success('success');
+            }
+            this.changeTab(OnboardingStatus.Invited);
+          }),
+      );
     } else {
       this.toastr.error('Please select at least one participant');
     }
@@ -169,32 +172,28 @@ export class SiteDetailsComponent
 
   toggleInvitation(): void {
     if (this.userIds.length > 0) {
-      if (this.userIds.length > MAXIMUM_USER_COUNT) {
-        this.toastr.error('Please select less than 10 participants');
-      } else {
-        const statusUpdate =
-          this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
-        const invitationUpdate = {
-          ids: this.userIds,
-          status: statusUpdate,
-        };
-        this.subs.add(
-          this.particpantDetailService
-            .toggleInvitation(this.siteId, invitationUpdate)
-            .subscribe((successResponse: ApiResponse) => {
-              if (getMessage(successResponse.code)) {
-                this.toastr.success(getMessage(successResponse.code));
-              } else {
-                this.toastr.success(successResponse.message);
-              }
-              this.changeTab(
-                this.activeTab === OnboardingStatus.Disabled
-                  ? OnboardingStatus.Disabled
-                  : OnboardingStatus.New,
-              );
-            }),
-        );
-      }
+      const statusUpdate =
+        this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
+      const invitationUpdate = {
+        ids: this.userIds,
+        status: statusUpdate,
+      };
+      this.subs.add(
+        this.particpantDetailService
+          .toggleInvitation(this.siteId, invitationUpdate)
+          .subscribe((successResponse: ApiResponse) => {
+            if (getMessage(successResponse.code)) {
+              this.toastr.success(getMessage(successResponse.code));
+            } else {
+              this.toastr.success(successResponse.message);
+            }
+            this.changeTab(
+              this.activeTab === OnboardingStatus.Disabled
+                ? OnboardingStatus.Disabled
+                : OnboardingStatus.New,
+            );
+          }),
+      );
     } else {
       this.toastr.error('Please select at least one participant');
     }
