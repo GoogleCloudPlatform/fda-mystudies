@@ -47,6 +47,11 @@ export class UserService {
     );
   }
 
+  deleteInvitation(adminId: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(
+      `${environment.baseUrl}/users/${adminId}/`,
+    );
+  }
   getUsers(): Observable<ManageUsers> {
     return this.http.get<ManageUsers>(`${environment.baseUrl}/users`);
   }
