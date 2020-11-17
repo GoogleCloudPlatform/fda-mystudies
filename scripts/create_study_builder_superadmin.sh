@@ -43,6 +43,7 @@ ACCESS_CODE=`cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1
 DATETIME=`date +"%F %T"`
 EXPIRY_DATETIME=`date -v +90d +"%F %T"`
 
+echo "DELETE FROM user_permission_mapping WHERE user_id=1;" >> ${TMPFILE}
 echo "REPLACE into users
 (
   user_id, first_name, last_name, email, password, role_id, created_by,
@@ -57,7 +58,7 @@ VALUES
   '${TOKEN}', '${EXPIRY_DATETIME}', 0, 'N', 'SUPERADMIN');
 " >> ${TMPFILE}
 
-echo "REPLACE INTO user_permission_mapping (user_id, permission_id) VALUES
+echo "INSERT INTO user_permission_mapping (user_id, permission_id) VALUES
 	(1, 1),
 	(1, 2),
 	(1, 4),
