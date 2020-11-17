@@ -30,6 +30,8 @@ import org.springframework.http.HttpHeaders;
 
 public class ParticipantInformationControllerTest extends BaseMockIT {
 
+  private static final String PARTICIPANT_ID = "3";
+
   @Autowired private ParticipantInformationController controller;
 
   @Autowired private ParticipantInformationService participantInfoService;
@@ -50,15 +52,15 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.PARTICIPANT_INFO.getPath())
                 .headers(headers)
-                .param("participantId", Constants.PARTICIPANT_ID)
-                .param("studyId", Constants.STUDY_ID_OF_PARTICIPANT)
+                .param("participantId", PARTICIPANT_ID)
+                .param("studyId", Constants.STUDYOF_HEALTH_CLOSE)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setParticipantId(Constants.PARTICIPANT_ID);
-    auditRequest.setStudyId(Constants.STUDY_ID_OF_PARTICIPANT);
+    auditRequest.setParticipantId(PARTICIPANT_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS.getEventCode(), auditRequest);
