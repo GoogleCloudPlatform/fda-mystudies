@@ -43,6 +43,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
@@ -1827,6 +1828,7 @@ public class SiteControllerTest extends BaseMockIT {
     assertNotNull(optParticipantRegistrySite);
     assertEquals(
         OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
+    assertFalse(optParticipantRegistrySite.get().isEnrollmentTokenUsed());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());

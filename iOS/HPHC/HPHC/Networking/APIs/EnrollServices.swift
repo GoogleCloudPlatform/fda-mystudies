@@ -116,7 +116,7 @@ class EnrollServices: NSObject {
     let method = EnrollmentMethods.enroll.method
 
     let params = [
-      kEnrollmentToken: token,
+      kEnrollmentToken: token.trimmingCharacters(in: .whitespacesAndNewlines),
       kStudyId: studyId,
     ]
     let headers: [String: String] = [

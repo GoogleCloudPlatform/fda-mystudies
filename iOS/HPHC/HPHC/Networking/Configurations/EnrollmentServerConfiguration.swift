@@ -100,6 +100,17 @@ class EnrollmentServerConfiguration: NetworkConfiguration {
       error = NSError(domain: message, code: code, userInfo: errorResponse)
     }
 
+    if let code = errorResponse[RegistrationServerConfiguration.JSONKey.status] as? Int {
+      let message =
+        errorResponse[RegistrationServerConfiguration.JSONKey.error] as? String
+        ?? errorResponse[RegistrationServerConfiguration.JSONKey.errorDesc] as? String ?? ""
+      return NSError(
+        domain: NSURLErrorDomain,
+        code: code,
+        userInfo: [NSLocalizedDescriptionKey: message]
+      )
+    }
+
     return error
   }
 }
