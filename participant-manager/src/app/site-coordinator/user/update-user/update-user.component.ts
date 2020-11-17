@@ -224,21 +224,34 @@ export class UpdateUserComponent
       return;
     }
   }
-  changeStatus(): void {
-    const statusUpdateRequest: UpdateStatusRequest = {
-      status: this.user.status === this.userStatus.Deactivated ? 1 : 0,
-    };
-    this.userService
-      .updateStatus(statusUpdateRequest, this.adminId)
-      .subscribe((successResponse: ApiResponse) => {
-        if (getMessage(successResponse.code)) {
-          this.toastr.success(getMessage(successResponse.code));
-        } else this.toastr.success('Success');
-        this.user.status =
-          this.user.status === this.userStatus.Deactivated
-            ? this.userStatus.Active
-            : this.userStatus.Deactivated;
-      });
+  changeStatus(userStatus: Status | undefined): void {
+    if (userStatus === Status.Invited) {
+      this.userService
+        .deleteInvitation(this.adminId)
+        .subscribe((successResponse: ApiResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else {
+            this.toastr.success('Success');
+          }
+          void this.router.navigate(['coordinator/users']);
+        });
+    } else {
+      const statusUpdateRequest: UpdateStatusRequest = {
+        status: this.user.status === this.userStatus.Deactivated ? 1 : 0,
+      };
+      this.userService
+        .updateStatus(statusUpdateRequest, this.adminId)
+        .subscribe((successResponse: ApiResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else this.toastr.success('Success');
+          this.user.status =
+            this.user.status === this.userStatus.Deactivated
+              ? this.userStatus.Active
+              : this.userStatus.Deactivated;
+        });
+    }
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.status;
