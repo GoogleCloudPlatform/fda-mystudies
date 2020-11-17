@@ -8,7 +8,7 @@
 FROM node:latest AS compile-image
 WORKDIR /app
 COPY . ./
-RUN npm set progress=false
+#RUN npm set progress=false
 RUN npm install --prefer-offline
 RUN npm install -g npm@7.0.11
 #RUN npm install latest-version
