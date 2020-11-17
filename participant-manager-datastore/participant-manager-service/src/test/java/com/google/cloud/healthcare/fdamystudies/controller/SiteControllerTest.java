@@ -2340,11 +2340,8 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isForbidden())
-        .andExpect(
-            jsonPath(
-                "$.error_description",
-                is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.NO_SITES_FOUND.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
