@@ -118,12 +118,19 @@ public class AppServiceImpl implements AppService {
             .stream()
             .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
 
+    List<AppCount> appEnrolledWithoutTarget = appRepository.findEnrolledWithoutTarget(userId);
+    Map<String, AppCount> appEnrolledWithoutTargetMap =
+        appEnrolledWithoutTarget
+            .stream()
+            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
     return prepareAppResponse(
         appStudyInfoList,
         appPermissionsByAppInfoId,
         appIdbyUsersCount,
         appInvitedCountMap,
         appEnrolledCountMap,
+        appEnrolledWithoutTargetMap,
         optUserRegAdminEntity.get());
   }
 
@@ -150,6 +157,12 @@ public class AppServiceImpl implements AppService {
             .stream()
             .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
 
+    List<AppCount> appEnrolledWithoutTarget = appRepository.findEnrolledWithoutTarget();
+    Map<String, AppCount> appEnrolledWithoutTargetMap =
+        appEnrolledWithoutTarget
+            .stream()
+            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
     List<AppEntity> apps = appRepository.findAll();
     List<AppDetails> appDetailsList = new ArrayList<>();
     for (AppEntity app : apps) {
@@ -170,12 +183,13 @@ public class AppServiceImpl implements AppService {
       Long invitedCount = getCount(appInvitedCountMap, app.getId());
       appDetails.setEnrolledCount(enrolledCount);
       appDetails.setInvitedCount(invitedCount);
-      double percentage = 0;
-      if (appDetails.getInvitedCount() != 0
-          && appDetails.getInvitedCount() >= appDetails.getEnrolledCount()) {
-        percentage =
-            (Double.valueOf(appDetails.getEnrolledCount()) * 100)
-                / Double.valueOf(appDetails.getInvitedCount());
+      if (appEnrolledWithoutTargetMap.containsKey(appDetails.getId())) {
+        enrolledCount =
+            enrolledCount - appEnrolledWithoutTargetMap.get(appDetails.getId()).getCount();
+      }
+
+      if (invitedCount != 0) {
+        double percentage = (Double.valueOf(enrolledCount) * 100) / Double.valueOf(invitedCount);
         appDetails.setEnrollmentPercentage(percentage);
       }
       appDetailsList.add(appDetails);
@@ -197,6 +211,7 @@ public class AppServiceImpl implements AppService {
       Map<String, Long> appIdbyUsersCount,
       Map<String, AppCount> siteWithInvitedParticipantCountMap,
       Map<String, AppCount> siteWithEnrolledParticipantCountMap,
+      Map<String, AppCount> appEnrolledWithoutTargetMap,
       UserRegAdminEntity userRegAdminEntity) {
     List<AppDetails> apps = new ArrayList<>();
     for (AppStudyInfo appStudyInfo : appStudyInfoList) {
@@ -217,7 +232,10 @@ public class AppServiceImpl implements AppService {
       }
 
       calculateEnrollmentPercentage(
-          appDetails, siteWithInvitedParticipantCountMap, siteWithEnrolledParticipantCountMap);
+          appDetails,
+          siteWithInvitedParticipantCountMap,
+          siteWithEnrolledParticipantCountMap,
+          appEnrolledWithoutTargetMap);
       apps.add(appDetails);
     }
 
@@ -237,17 +255,21 @@ public class AppServiceImpl implements AppService {
   private void calculateEnrollmentPercentage(
       AppDetails appDetails,
       Map<String, AppCount> siteWithInvitedParticipantCountMap,
-      Map<String, AppCount> siteWithEnrolledParticipantCountMap) {
+      Map<String, AppCount> siteWithEnrolledParticipantCountMap,
+      Map<String, AppCount> appEnrolledWithoutTargetMap) {
     long appInvitedCount = getCount(siteWithInvitedParticipantCountMap, appDetails.getId());
     long appEnrolledCount = getCount(siteWithEnrolledParticipantCountMap, appDetails.getId());
     appDetails.setEnrolledCount(appEnrolledCount);
     appDetails.setInvitedCount(appInvitedCount);
-    double percentage = 0;
-    if (appDetails.getInvitedCount() != 0
-        && appDetails.getInvitedCount() >= appDetails.getEnrolledCount()) {
-      percentage =
-          (Double.valueOf(appDetails.getEnrolledCount()) * 100)
-              / Double.valueOf(appDetails.getInvitedCount());
+
+    if (appEnrolledWithoutTargetMap.containsKey(appDetails.getId())) {
+      appEnrolledCount =
+          appEnrolledCount - appEnrolledWithoutTargetMap.get(appDetails.getId()).getCount();
+    }
+
+    if (appInvitedCount != 0) {
+      double percentage =
+          (Double.valueOf(appEnrolledCount) * 100) / Double.valueOf(appInvitedCount);
       appDetails.setEnrollmentPercentage(percentage);
     }
   }
