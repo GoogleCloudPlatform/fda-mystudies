@@ -280,4 +280,12 @@ export class UpdateUserComponent
       return 'txt__space-gray';
     }
   }
+  superAdminCheckBoxChange(): void {
+    if (this.user.superAdmin) {
+      this.selectedApps = [];
+      this.selectedAppsIds = [];
+      this.user.manageLocationsSelected = false;
+      this.user.manageLocations = null;
+    }
+  }
 }
