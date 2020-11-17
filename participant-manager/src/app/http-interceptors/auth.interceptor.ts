@@ -74,10 +74,6 @@ export class AuthInterceptor implements HttpInterceptor {
       },
       (error: unknown) => {
         if (error instanceof HttpErrorResponse) {
-          const customError = error.error as ApiResponse;
-          if (getMessage(customError.error_code)) {
-            this.toasterService.error('Session Expired');
-          }
           localStorage.clear();
           void this.router.navigate(['/']);
         }
@@ -136,6 +132,10 @@ export class AuthInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
             this.handle401Error(request, next);
+          } else if (err.url === `${environment.authServerUrl}/oauth2/token`) {
+            this.toasterService.error(
+              'Your session has expired and have been loged out successfully',
+            );
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
           } else {
