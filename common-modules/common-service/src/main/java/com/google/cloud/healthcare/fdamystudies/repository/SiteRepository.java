@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.repository;
 import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCount;
 import com.google.cloud.healthcare.fdamystudies.model.SiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudySiteInfo;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -91,4 +92,33 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
 
   @Query("SELECT site from SiteEntity site where site.study.id= :studyId")
   public List<SiteEntity> findSitesByStudyId(String studyId);
+
+  @Query(
+      value =
+          "SELECT study_created AS studyCreatedTimeStamp, site_created AS siteCreatedTimeStamp, study_id AS studyId, site_id AS siteId, IFNULL(target_enrollment, 0) AS targetEnrollment, site_name AS siteName, custom_id AS customId, study_name AS studyName, TYPE AS studyType, custom_app_id AS customAppId, app_id AS appId, app_name AS appName, logo_image_url AS logoImageUrl, STATUS AS studyStatus, edit AS editPermission, study_permission AS studyPermission "
+              + "FROM( "
+              + "SELECT DISTINCT stu.created_time AS study_created, si.created_time AS site_created, sp.study_id, si.id AS site_id, si.target_enrollment AS target_enrollment, loc.name AS site_name,stu.custom_id AS custom_id,stu.name AS study_name, stu.type AS TYPE, ai.custom_app_id AS custom_app_id, ai.id AS app_id, ai.app_name AS app_name,stu.logo_image_url AS logo_image_url,stu.status AS STATUS, sp.edit AS edit, TRUE AS study_permission "
+              + "FROM sites_permissions sp, sites si, locations loc, study_info stu, app_info ai "
+              + "WHERE si.id=sp.site_id AND si.location_id=loc.id AND stu.id= sp.study_id AND stu.app_info_id =ai.id AND sp.ur_admin_user_id =:userId AND sp.study_id IN ( "
+              + "SELECT study_id "
+              + "FROM study_permissions "
+              + "WHERE ur_admin_user_id =:userId) UNION ALL "
+              + "SELECT DISTINCT stu.created_time AS study_created, si.created_time AS site_created, sp.study_id, si.id AS site_id, si.target_enrollment AS target_enrollment, loc.name AS site_name,stu.custom_id AS custom_id,stu.name AS study_name, stu.type AS TYPE, ai.custom_app_id AS custom_app_id, ai.id AS app_id, ai.app_name AS app_name,stu.logo_image_url AS logo_image_url,stu.status AS STATUS, sp.edit AS edit, FALSE AS study_permission "
+              + "FROM sites_permissions sp, sites si, locations loc, study_info stu, app_info ai "
+              + "WHERE si.id=sp.site_id AND si.location_id=loc.id AND si.status=1 AND stu.id= sp.study_id AND stu.app_info_id =ai.id AND sp.ur_admin_user_id =:userId AND sp.study_id NOT IN ( "
+              + "SELECT study_id "
+              + "FROM study_permissions "
+              + "WHERE ur_admin_user_id =:userId)) rstAlias "
+              + "ORDER BY study_created, site_created, study_id DESC ",
+      nativeQuery = true)
+  public List<StudySiteInfo> getStudySiteDetails(String userId);
+
+  @Query(
+      value =
+          "SELECT si.id AS siteId, IFNULL(COUNT(psi.site_id), 0) AS enrolledCount "
+              + "FROM sites si , participant_study_info psi "
+              + "WHERE si.id=psi.site_id AND psi.status='inProgress' "
+              + "GROUP BY si.id ",
+      nativeQuery = true)
+  public List<EnrolledInvitedCount> findEnrolledCountForOpenStudy();
 }
