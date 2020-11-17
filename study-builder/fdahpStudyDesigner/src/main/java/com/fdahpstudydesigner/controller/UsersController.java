@@ -222,14 +222,14 @@ public class UsersController {
         }
         if (!"".equals(manageUsers)) {
           if ("0".equals(manageUsers)) {
-            permissions += count > 1 ? ",'ROLE_MANAGE_USERS_VIEW'" : "'ROLE_MANAGE_USERS_VIEW'";
+            permissions += count > 1 ? ",ROLE_MANAGE_USERS_VIEW" : "ROLE_MANAGE_USERS_VIEW";
             count++;
             permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW);
           } else if ("1".equals(manageUsers)) {
-            permissions += count > 1 ? ",'ROLE_MANAGE_USERS_VIEW'" : "'ROLE_MANAGE_USERS_VIEW'";
+            permissions += count > 1 ? ",ROLE_MANAGE_USERS_VIEW" : "ROLE_MANAGE_USERS_VIEW";
             count++;
             permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW);
-            permissions += count > 1 ? ",'ROLE_MANAGE_USERS_EDIT'" : "'ROLE_MANAGE_USERS_EDIT'";
+            permissions += count > 1 ? ",ROLE_MANAGE_USERS_EDIT" : "ROLE_MANAGE_USERS_EDIT";
             permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT);
           }
         }
@@ -237,32 +237,32 @@ public class UsersController {
           if ("0".equals(manageNotifications)) {
             permissions +=
                 count > 1
-                    ? ",'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW'"
-                    : "'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW'";
+                    ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW"
+                    : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW";
             count++;
             permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW);
           } else if ("1".equals(manageNotifications)) {
             permissions +=
                 count > 1
-                    ? ",'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW'"
-                    : "'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW'";
+                    ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW"
+                    : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW";
             count++;
             permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW);
             permissions +=
                 count > 1
-                    ? ",'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT'"
-                    : "'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT'";
+                    ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT"
+                    : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT";
             permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT);
           }
         }
         if (!"".equals(manageStudies)) {
           if ("1".equals(manageStudies)) {
-            permissions += count > 1 ? ",'ROLE_MANAGE_STUDIES'" : "'ROLE_MANAGE_STUDIES'";
+            permissions += count > 1 ? ",ROLE_MANAGE_STUDIES" : "ROLE_MANAGE_STUDIES";
             count++;
             permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_STUDIES);
             if (!"".equals(addingNewStudy) && "1".equals(addingNewStudy)) {
               permissions +=
-                  count > 1 ? ",'ROLE_CREATE_MANAGE_STUDIES'" : "'ROLE_CREATE_MANAGE_STUDIES'";
+                  count > 1 ? ",ROLE_CREATE_MANAGE_STUDIES" : "ROLE_CREATE_MANAGE_STUDIES";
               permissionList.add(FdahpStudyDesignerConstants.ROLE_CREATE_MANAGE_STUDIES);
             }
           } else {

@@ -254,6 +254,15 @@ extension ContactUsViewController: UITextFieldDelegate {
         return true
       }
     }
+    if var text = textField.text,
+      range.location == text.count,
+      string == " "
+    {
+      let noBreakSpace: Character = "\u{00a0}"
+      text.append(noBreakSpace)
+      textField.text = text
+      return false
+    }
     return true
   }
 
