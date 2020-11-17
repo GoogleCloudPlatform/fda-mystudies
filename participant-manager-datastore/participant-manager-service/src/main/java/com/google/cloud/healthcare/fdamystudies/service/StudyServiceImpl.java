@@ -25,14 +25,15 @@ import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLo
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
-import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyAppDetails;
 import com.google.cloud.healthcare.fdamystudies.model.StudyCount;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyParticipantDetails;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
@@ -51,12 +52,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -335,132 +334,59 @@ public class StudyServiceImpl implements StudyService {
       Integer page,
       Integer limit) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
-    auditRequest.setUserId(userId);
-
     // validations
-    Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
-    if (!optStudy.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
-    }
 
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
-    if (!optUserRegAdminEntity.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
-    }
+    UserRegAdminEntity user =
+        optUserRegAdminEntity.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
 
-    StudyPermissionEntity studyPermissionEntity = null;
-    AppEntity app = null;
-    if (optUserRegAdminEntity.get().isSuperAdmin()) {
-      StudyEntity study = optStudy.get();
-      Optional<AppEntity> optApp = appRepository.findById(study.getApp().getId());
-      app = optApp.orElseThrow(() -> new ErrorCodeException(ErrorCode.APP_NOT_FOUND));
+    Optional<StudyAppDetails> optStudyAppDetails = null;
+    if (user.isSuperAdmin()) {
+      optStudyAppDetails = studyRepository.getStudyParticipantForSuperAdmin(studyId);
     } else {
-      Optional<StudyPermissionEntity> optStudyPermission =
-          studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
-      StudyEntity study = optStudy.get();
-      if (study.getType().equals(OPEN_STUDY) && !optStudyPermission.isPresent()) {
-        List<SitePermissionEntity> sitePermissions =
-            sitePermissionRepository.findByUserIdAndStudyId(userId, studyId);
-        if (CollectionUtils.isEmpty(sitePermissions)) {
-          throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
-        }
-        app = study.getApp();
-      } else {
-        app =
-            optStudyPermission
-                .orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED))
-                .getApp();
-        studyPermissionEntity = optStudyPermission.get();
-      }
-
-      if (app == null) {
-        throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
-      }
+      optStudyAppDetails = studyRepository.getStudyParticipant(studyId, userId);
     }
+
+    StudyAppDetails studyAppDetails =
+        optStudyAppDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND));
+
+    if (StringUtils.isEmpty(studyAppDetails.getAppName())) {
+      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+    }
+
+    ParticipantRegistryDetail participantRegistryDetail =
+        ParticipantMapper.fromStudyAppDetails(studyAppDetails, user);
 
     return prepareRegistryParticipantResponse(
-        optStudy.get(),
-        app,
-        studyPermissionEntity,
-        optUserRegAdminEntity.get(),
-        auditRequest,
-        page,
-        limit);
+        participantRegistryDetail, userId, studyId, auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
-      StudyEntity study,
-      AppEntity app,
-      StudyPermissionEntity studyPermissionEntity,
-      UserRegAdminEntity user,
-      AuditLogEventRequest auditRequest,
-      Integer page,
-      Integer limit) {
-    ParticipantRegistryDetail participantRegistryDetail =
-        ParticipantMapper.fromStudyAndApp(study, app);
-
-    if (OPEN_STUDY.equalsIgnoreCase(study.getType())) {
-      Optional<SiteEntity> optSiteEntity =
-          siteRepository.findByStudyIdAndType(study.getId(), study.getType());
-      if (optSiteEntity.isPresent()) {
-        participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
-      }
-
-      if (user.isSuperAdmin()) {
-        participantRegistryDetail.setOpenStudySitePermission(Permission.EDIT.value());
-      } else if (studyPermissionEntity != null) {
-        participantRegistryDetail.setOpenStudySitePermission(
-            studyPermissionEntity.getEdit().value());
-      }
-    }
-
-    List<ParticipantRegistrySiteEntity> participantSiteList = null;
-    if (page != null && limit != null) {
-      Page<ParticipantRegistrySiteEntity> participantSitePage =
-          participantRegistrySiteRepository.findByStudyIdForPagination(
-              study.getId(), PageRequest.of(page, limit, Sort.by("created").descending()));
-      participantSiteList = participantSitePage.getContent();
-    } else {
-      participantSiteList = participantRegistrySiteRepository.findByStudyId(study.getId());
-    }
+      ParticipantRegistryDetail participantRegistryDetail,
+      String userId,
+      String studyId,
+      AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
-    List<String> registryIds =
-        CollectionUtils.emptyIfNull(participantSiteList)
-            .stream()
-            .map(ParticipantRegistrySiteEntity::getId)
-            .collect(Collectors.toList());
-
-    List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
-    // Check not empty for Ids to avoid SQLSyntaxErrorException
-    if (CollectionUtils.isNotEmpty(registryIds)) {
-      participantStudies =
-          (List<ParticipantStudyEntity>)
-              CollectionUtils.emptyIfNull(
-                  participantStudyRepository.findParticipantsByParticipantRegistrySite(
-                      registryIds));
+    List<StudyParticipantDetails> studyParticipantDetails =
+        studyRepository.getStudyParticipantDetails(studyId);
+    for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
+      ParticipantDetail participantDetail =
+          ParticipantMapper.fromParticipantStudy(participantDetails);
+      registryParticipants.add(participantDetail);
     }
-
-    if (CollectionUtils.isNotEmpty(participantSiteList)) {
-      for (ParticipantRegistrySiteEntity participantSite : participantSiteList) {
-        ParticipantDetail participantDetail =
-            ParticipantMapper.fromParticipantStudy(participantSite, participantStudies);
-
-        registryParticipants.add(participantDetail);
-      }
-    }
-
     participantRegistryDetail.setRegistryParticipants(registryParticipants);
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
-    Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(study.getId());
+    Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(studyId);
     participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
 
-    auditRequest.setStudyId(study.getId());
-    auditRequest.setAppId(app.getId());
+    auditRequest.setUserId(userId);
+    auditRequest.setStudyId(studyId);
+    auditRequest.setAppId(participantRegistryDetail.getAppId());
     participantManagerHelper.logEvent(STUDY_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
 
     logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
