@@ -7,7 +7,7 @@
 # Installing all the dependencies and creating Dist file or building angular application
 FROM node:latest AS compile-image
 WORKDIR /app
-COPY package.json ./
+COPY package.json package-lock.json ./
 RUN npm install --prefer-offline
 RUN npm install -g @angular/cli@9.1.12
 COPY . ./
