@@ -60,7 +60,7 @@ import {environment} from '@environment';
     EntityService,
     BsModalRef,
     httpInterceptorProviders,
-    // {provide: LocationStrategy, useClass: HashLocationStrategy},
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: APP_BASE_HREF, useValue: environment.baseHref},
   ],
   bootstrap: [AppComponent],
