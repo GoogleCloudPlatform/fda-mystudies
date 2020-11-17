@@ -92,7 +92,7 @@ public class AppServiceImpl implements AppService {
 
     List<AppStudyInfo> appStudyInfoList = appRepository.findAppsByUserId(userId);
     if (CollectionUtils.isEmpty(appStudyInfoList)) {
-      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.NO_APPS_FOUND);
     }
 
     List<String> appIds =
