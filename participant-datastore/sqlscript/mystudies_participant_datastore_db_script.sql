@@ -157,6 +157,7 @@ CREATE TABLE IF NOT EXISTS `participant_registry_site` (
   `onboarding_status` varchar(3) DEFAULT NULL,
   `site_id` varchar(255) DEFAULT NULL,
   `study_info_id` varchar(255) DEFAULT NULL,
+  `enrollment_token_used` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `participant_registry_site_email_study_info_token_uidx` (`email`,`study_info_id`,`enrollment_token`),
   UNIQUE KEY `UK_f8207wc2n5trl8demmfsvxis1` (`enrollment_token`),

@@ -860,7 +860,7 @@ public class SiteServiceImpl implements SiteService {
 
       participantRegistrySiteEntity.setInvitationCount(
           participantRegistrySiteEntity.getInvitationCount() + 1);
-
+      participantRegistrySiteEntity.setEnrollmentTokenUsed(false);
       participantRegistrySiteEntity.setEnrollmentTokenExpiry(
           new Timestamp(
               Instant.now()
@@ -1156,7 +1156,7 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findSitePermissionByUserId(userId);
 
     if (CollectionUtils.isEmpty(studyPermissions) && CollectionUtils.isEmpty(sitePermissions)) {
-      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.NO_SITES_FOUND);
     }
 
     Map<String, StudyPermissionEntity> studyPermissionsByStudyId = new HashMap<>();
