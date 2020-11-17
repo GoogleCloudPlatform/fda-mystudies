@@ -205,9 +205,24 @@ public final class ParticipantMapper {
   }
 
   public static void addEnrollments(
-      ParticipantDetail participantDetail, List<ParticipantStudyEntity> participantsEnrollments) {
+      ParticipantDetail participantDetail,
+      List<ParticipantStudyEntity> participantsEnrollments,
+      String onboardingStatus) {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
+      if ((OnboardingStatus.INVITED.getStatus().equals(onboardingStatus)
+              || OnboardingStatus.NEW.getStatus().equals(onboardingStatus))
+          && EnrollmentStatus.WITHDRAWN.getStatus().equals(participantsEnrollment.getStatus())) {
+        enrollment.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
+        enrollment.setParticipantId(participantsEnrollment.getParticipantId());
+        enrollment.setEnrollmentDate(NOT_APPLICABLE);
+        enrollment.setWithdrawalDate(NOT_APPLICABLE);
+        participantDetail.getEnrollments().add(enrollment);
+        // TODO: (Issue #1454) Separate records should be displayed for each time of the user
+        // enrollment process
+        // current implementation has single record, so added below return;
+        return;
+      }
       String enrollmentStatus =
           EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantsEnrollment.getStatus())
               ? EnrollmentStatus.ENROLLED.getStatus()
