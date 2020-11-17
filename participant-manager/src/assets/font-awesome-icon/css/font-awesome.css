@@ -1,16 +1,4 @@
-/*
-  Copyright 2020 Google LLC
- 
-  Use of this source code is governed by an MIT LICENSE
-  that can be found in the LICENSE file or at
-  URL: http://opensource.org/licenses/mit-license.html */
-
-/*!
- *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
- *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
- */
-/* FONT PATH
- * -------------------------- */
+/*Copyright 2020 Google LLC Use of this source code is governed by an MIT LICENSE that can be found in the LICENSE file or at URL: http://opensource.org/licenses/mit-license.html */
 @font-face {
   font-family: "FontAwesome";
   src: url("../fonts/fontawesome-webfont.eot?v=4.7.0");
