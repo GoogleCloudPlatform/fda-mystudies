@@ -195,8 +195,9 @@ class SignInViewController: UIViewController {
         User.currentUser.verified = false
         navigateToVerifyController()
       case .tempPassword:
+        User.currentUser.verified = true
         User.currentUser.isLoggedInWithTempPassword = true
-        self.userDidLoggedIn()
+        grantVerifiedUser(with: code)
       }
     }
   }
@@ -308,7 +309,6 @@ class SignInViewController: UIViewController {
     } else {
       changePassword.viewLoadFrom = .login
     }
-    changePassword.temporaryPassword = User.currentUser.password!
     self.navigationController?.pushViewController(changePassword, animated: true)
   }
 
