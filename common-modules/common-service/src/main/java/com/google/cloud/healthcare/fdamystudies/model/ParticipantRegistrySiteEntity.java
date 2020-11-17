@@ -111,6 +111,9 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   @UpdateTimestamp
   private Timestamp modified;
 
+  @Column(name = "enrollment_token_used", columnDefinition = "TINYINT(1) default 0")
+  private boolean enrollmentTokenUsed;
+
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,
