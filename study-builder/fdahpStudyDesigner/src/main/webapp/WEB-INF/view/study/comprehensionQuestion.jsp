@@ -399,15 +399,14 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function (data) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
+          var message = data.message;
           if (message == "SUCCESS") {
-            var questionId = jsonobject.questionId;
+            var questionId = data.questionId;
             $("#id").val(questionId);
             $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft");
             $('#alertMsg').show();
           } else {
-            var errMsg = jsonobject.errMsg;
+            var errMsg = data.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
               $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
             } else {

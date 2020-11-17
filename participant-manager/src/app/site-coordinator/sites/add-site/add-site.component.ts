@@ -33,7 +33,10 @@ export class AddSiteComponent
   ngOnInit(): void {
     this.newSite.customId = this.study.customId;
     this.newSite.appId = this.study.appId;
+    this.newSite.name = this.study.name;
+    this.newSite.appName = this.study.appName;
     this.site.studyId = String(this.study.id);
+    this.site.locationId = '';
     this.getLocation(this.site.studyId);
   }
   getLocation(studyId: string): void {

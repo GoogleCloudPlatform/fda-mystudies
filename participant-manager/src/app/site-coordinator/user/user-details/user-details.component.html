@@ -60,7 +60,9 @@
             </div>
             <div>
               <div class="blue__text__md">Status</div>
-              <div class="participant__label">{{ user.status }}</div>
+              <div [ngClass]="statusColour(user.status)">
+                {{ user.status }}
+              </div>
             </div>
           </div>
         </div>
@@ -171,7 +173,10 @@
                   >
                     <div class="orange__text__sm pb-sm"></div>
                     <div *ngFor="let study of app.studies">
-                      <div class="card" *ngIf="study.selectedSitesCount != 0">
+                      <div
+                        class="card"
+                        *ngIf="study.selectedSitesCount != 0 || study.selected"
+                      >
                         <div class="card-header">
                           <div
                             class="mb-0 flex__justify__space-between card__header__study__block"
