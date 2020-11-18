@@ -1014,7 +1014,7 @@ extension StudyListViewController: searchBarDelegate {
     // filter by searched Text
     var searchTextFilteredStudies: [Study]! = []
     if text.count > 0 {
-      searchTextFilteredStudies = allStudyList.filter {
+      searchTextFilteredStudies = studiesList.filter {
         $0.name!.containsIgnoringCase(text) || $0.category!.containsIgnoringCase(text)
           || $0.description!.containsIgnoringCase(text)
           || $0.sponserName!.containsIgnoringCase(text)
