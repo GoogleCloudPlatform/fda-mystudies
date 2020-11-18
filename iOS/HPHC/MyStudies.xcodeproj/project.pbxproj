@@ -450,7 +450,7 @@
 		6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		782AF87B221D247D000025CF /* StudyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTest.swift; sourceTree = "<group>"; };
 		7878B30E221574D80052FC23 /* StandaloneStudy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandaloneStudy.swift; sourceTree = "<group>"; };
-		7878B31A2216C6E10052FC23 /* HPHCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HPHCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7878B31A2216C6E10052FC23 /* MyStudiesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyStudiesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7878B31C2216C6E20052FC23 /* HPHCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPHCTests.swift; sourceTree = "<group>"; };
 		7878B31E2216C6E20052FC23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7BDC002620C7855C409516D3 /* Pods-HPHC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPHC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPHC/Pods-HPHC.debug.xcconfig"; sourceTree = "<group>"; };
@@ -667,7 +667,7 @@
 			isa = PBXGroup;
 			children = (
 				6E7D2D561E433E8700763D4C /* FDA MyStudies.app */,
-				7878B31A2216C6E10052FC23 /* HPHCTests.xctest */,
+				7878B31A2216C6E10052FC23 /* MyStudiesTests.xctest */,
 				6FEE49532521CFD000DD9696 /* MyStudiesUITests.xctest */,
 			);
 			name = Products;
@@ -1748,9 +1748,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6E7D2D551E433E8700763D4C /* HPHC */ = {
+		6E7D2D551E433E8700763D4C /* MyStudies */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6E7D2D7E1E433E8800763D4C /* Build configuration list for PBXNativeTarget "HPHC" */;
+			buildConfigurationList = 6E7D2D7E1E433E8800763D4C /* Build configuration list for PBXNativeTarget "MyStudies" */;
 			buildPhases = (
 				E6A210CE88E5E2E81D293918 /* [CP] Check Pods Manifest.lock */,
 				6E7D2D521E433E8700763D4C /* Sources */,
@@ -1765,7 +1765,7 @@
 			dependencies = (
 				89EDB46F2271EFDF0070F16C /* PBXTargetDependency */,
 			);
-			name = HPHC;
+			name = MyStudies;
 			productName = FDA;
 			productReference = 6E7D2D561E433E8700763D4C /* FDA MyStudies.app */;
 			productType = "com.apple.product-type.application";
@@ -1788,9 +1788,9 @@
 			productReference = 6FEE49532521CFD000DD9696 /* MyStudiesUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		7878B3192216C6E10052FC23 /* HPHCTests */ = {
+		7878B3192216C6E10052FC23 /* MyStudiesTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7878B3252216C6E20052FC23 /* Build configuration list for PBXNativeTarget "HPHCTests" */;
+			buildConfigurationList = 7878B3252216C6E20052FC23 /* Build configuration list for PBXNativeTarget "MyStudiesTests" */;
 			buildPhases = (
 				A67BC0596189D42D1A4574F6 /* [CP] Check Pods Manifest.lock */,
 				7878B3162216C6E10052FC23 /* Sources */,
@@ -1803,9 +1803,9 @@
 			dependencies = (
 				7878B3202216C6E20052FC23 /* PBXTargetDependency */,
 			);
-			name = HPHCTests;
+			name = MyStudiesTests;
 			productName = HPHCTests;
-			productReference = 7878B31A2216C6E10052FC23 /* HPHCTests.xctest */;
+			productReference = 7878B31A2216C6E10052FC23 /* MyStudiesTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -1849,7 +1849,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6E7D2D511E433E8700763D4C /* Build configuration list for PBXProject "HPHC" */;
+			buildConfigurationList = 6E7D2D511E433E8700763D4C /* Build configuration list for PBXProject "MyStudies" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1906,8 +1906,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				6E7D2D551E433E8700763D4C /* HPHC */,
-				7878B3192216C6E10052FC23 /* HPHCTests */,
+				6E7D2D551E433E8700763D4C /* MyStudies */,
+				7878B3192216C6E10052FC23 /* MyStudiesTests */,
 				6FEE49522521CFD000DD9696 /* MyStudiesUITests */,
 			);
 		};
@@ -2317,12 +2317,12 @@
 /* Begin PBXTargetDependency section */
 		6FEE49592521CFD000DD9696 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6E7D2D551E433E8700763D4C /* HPHC */;
+			target = 6E7D2D551E433E8700763D4C /* MyStudies */;
 			targetProxy = 6FEE49582521CFD000DD9696 /* PBXContainerItemProxy */;
 		};
 		7878B3202216C6E20052FC23 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6E7D2D551E433E8700763D4C /* HPHC */;
+			target = 6E7D2D551E433E8700763D4C /* MyStudies */;
 			targetProxy = 7878B31F2216C6E20052FC23 /* PBXContainerItemProxy */;
 		};
 		89EDB46F2271EFDF0070F16C /* PBXTargetDependency */ = {
@@ -2630,7 +2630,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6E7D2D511E433E8700763D4C /* Build configuration list for PBXProject "HPHC" */ = {
+		6E7D2D511E433E8700763D4C /* Build configuration list for PBXProject "MyStudies" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6E7D2D7C1E433E8800763D4C /* Debug */,
@@ -2639,7 +2639,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6E7D2D7E1E433E8800763D4C /* Build configuration list for PBXNativeTarget "HPHC" */ = {
+		6E7D2D7E1E433E8800763D4C /* Build configuration list for PBXNativeTarget "MyStudies" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6E7D2D7F1E433E8800763D4C /* Debug */,
@@ -2657,7 +2657,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7878B3252216C6E20052FC23 /* Build configuration list for PBXNativeTarget "HPHCTests" */ = {
+		7878B3252216C6E20052FC23 /* Build configuration list for PBXNativeTarget "MyStudiesTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7878B3212216C6E20052FC23 /* Debug */,

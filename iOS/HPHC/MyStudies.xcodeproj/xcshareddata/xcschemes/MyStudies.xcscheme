@@ -88,10 +88,19 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6E7D2D551E433E8700763D4C"
             BuildableName = "FDA MyStudies.app"
+            BlueprintName = "MyStudies"
+            ReferencedContainer = "container:MyStudies.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6E7D2D551E433E8700763D4C"
+            BuildableName = "FDA MyStudies.app"
             BlueprintName = "HPHC"
             ReferencedContainer = "container:HPHC.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"
