@@ -60,12 +60,24 @@ class ChangePasswordViewController: UIViewController {
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
     // load plist info
-    let plistPath = Bundle.main.path(
-      forResource: "ChangePasswordData",
-      ofType: ".plist",
-      inDirectory: nil
-    )
-    tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
+    var plistPath: String?
+    if viewLoadFrom == .profile {
+      plistPath = Bundle.main.path(
+        forResource: "ChangePasswordData",
+        ofType: ".plist",
+        inDirectory: nil
+      )
+    } else {
+      plistPath = Bundle.main.path(
+        forResource: "TemporaryPasswordData",
+        ofType: ".plist",
+        inDirectory: nil
+      )
+    }
+
+    if let path = plistPath {
+      tableViewRowDetails = NSMutableArray(contentsOfFile: path)
+    }
 
     // Used for background tap dismiss keyboard
     let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer.init(
@@ -74,9 +86,7 @@ class ChangePasswordViewController: UIViewController {
     )
     self.tableView?.addGestureRecognizer(tapGesture)
 
-    if temporaryPassword.count > 0 {
-      oldPassword = temporaryPassword
-      tableViewRowDetails?.removeObject(at: 0)
+    if viewLoadFrom != .profile {
       self.title = NSLocalizedString(kCreatePasswordTitleText, comment: "")
     } else {
       self.title = NSLocalizedString(kChangePasswordTitleText, comment: "")
@@ -117,6 +127,7 @@ class ChangePasswordViewController: UIViewController {
 
   @objc private func goBack() {
     if self.viewLoadFrom == .login {
+      User.resetCurrentUser()
       self.navigationController?.popToRootViewController(animated: true)
     } else {
       self.navigationController?.popViewController(animated: true)
@@ -188,8 +199,7 @@ class ChangePasswordViewController: UIViewController {
 extension ChangePasswordViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-    return (self.tableViewRowDetails?.count)!
+    return self.tableViewRowDetails?.count ?? 0
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -308,7 +318,7 @@ extension ChangePasswordViewController {
 
   func changePasswordfailed(with error: ApiError) {
 
-    if error.code == .forbidden {  // Unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  // Unauthorized
       self.presentDefaultAlertWithError(
         error: error,
         animated: true,

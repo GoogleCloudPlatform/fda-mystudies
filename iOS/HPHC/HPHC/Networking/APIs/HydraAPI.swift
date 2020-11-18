@@ -21,6 +21,7 @@ struct HydraAPI {
   static func loginRequest() -> URLRequest? {
 
     let parameters: JSONDictionary = [
+      "source": "MOBILE APPS",
       "client_id": API.authClientID,
       "scope": "offline_access",
       "response_type": "code",
@@ -72,6 +73,39 @@ struct HydraAPI {
         }
       } else {
         completion(false, error)
+      }
+    }
+  }
+
+  static func refreshToken(completion: @escaping StatusHandler) {
+    APIService.instance.isTokenRefreshing = true
+    let params: StringDictionary = [
+      "grant_type": "refresh_token",
+      "redirect_uri": AuthRouter.redirectURL,
+      "client_id": API.authClientID,
+      "refresh_token": User.currentUser.refreshToken,
+      "userId": User.currentUser.userId,
+    ]
+
+    let headers: [String: String] = [
+      "Content-Type": "application/x-www-form-urlencoded"
+    ]
+
+    let router = AuthRouter.codeGrant(params: params, headers: headers)
+    APIService.instance.requestForData(with: router) { (data, status, error) in
+      if status {
+        if let authDict = data?.toJSONDictionary() {
+          User.currentUser.tokenUpdate(with: authDict)
+          completion(true, nil)
+        } else {
+          completion(false, .unwrapError)
+        }
+      } else {
+        if error?.code == HTTPError.internalServerError.rawValue {
+          completion(false, ApiError.sessionExpiredError)
+        } else {
+          completion(false, error)
+        }
       }
     }
   }
