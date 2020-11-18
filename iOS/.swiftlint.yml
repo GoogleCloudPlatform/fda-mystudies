@@ -22,7 +22,9 @@ disabled_rules:
   - colon
   - closure_parameter_position
   - type_name
-  - large_tuple 
+  - large_tuple
+  - shorthand_operator
+  - force_try 
 line_length:
   ignores_interpolated_strings: true
   ignores_comments: true
