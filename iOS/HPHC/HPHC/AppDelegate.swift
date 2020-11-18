@@ -1220,10 +1220,7 @@ extension AppDelegate: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     // Remove Progress
     self.addAndRemoveProgress(add: false)
-    if requestName as String == AuthServerMethods.logout.method.methodName {
-      self.addAndRemoveProgress(add: false)
-
-    } else if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
+    if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
       self.popViewControllerAfterConsentDisagree()
     }
   }
