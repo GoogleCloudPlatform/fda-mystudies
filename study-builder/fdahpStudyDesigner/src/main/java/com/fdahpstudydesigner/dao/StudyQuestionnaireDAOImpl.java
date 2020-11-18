@@ -433,7 +433,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             session.createQuery(
                 "From QuestionsBo QBO where QBO.id IN (select QSBO.instructionFormId from QuestionnairesStepsBo QSBO where QSBO.questionnairesId IN (select id from QuestionnaireBo Q where Q.studyId=:studyId "
                     + " ) and QSBO.stepType=:stepType "
-                    + FdahpStudyDesignerConstants.QUESTION_STEP
                     + " and QSBO.active=1) and QBO.statShortName=:shortTitle ");
         questionsBo =
             query
