@@ -1,4 +1,4 @@
-import {EnrollmentStatus, StudyType} from '../shared/enums';
+import {EnrollmentStatus, Status, StudyType} from '../shared/enums';
 import {
   StatusUpdate,
   InviteSend,
@@ -10,13 +10,14 @@ import {RegistryParticipant} from '../shared/participant';
 import {SiteParticipants} from '../site-coordinator/sites/shared/site-detail.model';
 import {AddEmailResponse} from '../site-coordinator/sites/shared/add-email';
 import {ImportParticipantEmailResponse} from '../site-coordinator/sites/shared/import-participants';
+import {Permission} from '../shared/permission-enums';
 
 export const expectedSiteParticipantDetails = {
   participantRegistryDetail: {
     studyId: '2',
     customStudyId: 'TestStudy002',
     studyName: 'pqr',
-    studyType: 'OPEN',
+    studyType: StudyType.Close,
     appId: 'Studies',
     customAppId: 'Studies',
     appName: 'My-Studies',
@@ -24,7 +25,8 @@ export const expectedSiteParticipantDetails = {
     customLocationId: 'Location1',
     locationName: 'Location1',
     targetEnrollment: 1,
-
+    studyStatus: Status.Active,
+    studyPermission: Permission.ViewAndEdit,
     registryParticipants: [
       {
         customLocationId: '',
@@ -41,6 +43,7 @@ export const expectedSiteParticipantDetails = {
         consentHistory: [],
         newlyCreatedUser: true,
         studyType: StudyType.Close,
+        sitePermission: Permission.ViewAndEdit,
       },
       {
         customLocationId: '',
@@ -56,9 +59,9 @@ export const expectedSiteParticipantDetails = {
         enrollments: [],
         consentHistory: [],
         studyType: StudyType.Close,
+        sitePermission: Permission.ViewAndEdit,
       },
     ],
-
     countByStatus: {
       /* eslint-disable @typescript-eslint/naming-convention */
       A: 1,
@@ -66,7 +69,6 @@ export const expectedSiteParticipantDetails = {
       E: 1,
       I: 12,
       N: 21,
-      /* eslint-disable @typescript-eslint/naming-convention */
     },
   },
   status: 200,

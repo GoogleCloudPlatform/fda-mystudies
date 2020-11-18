@@ -28,8 +28,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
+import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
@@ -67,6 +71,8 @@ public class StudiesControllerTest extends BaseMockIT {
   @Autowired private UserRegAdminRepository userRegAdminUserRepository;
 
   @Autowired private ObjectMapper objectMapper;
+
+  @Autowired private SitePermissionRepository sitePermissionRepository;
 
   @Test
   public void contextLoads() {
@@ -157,6 +163,46 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void addStudyMetadataSuccessForPermission() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    StudyMetadataBean studyMetaDataBean = createStudyMetadataBean();
+    studyMetaDataBean.setStudyId(Constants.STUDY_ID_1);
+    studyMetaDataBean.setAppId(Constants.APP_ID_VALUE);
+    String requestJson = getObjectMapper().writeValueAsString(studyMetaDataBean);
+    performPost(
+        STUDY_METADATA_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
+
+    List<AppPermissionEntity> appPermissionList = appPermissionRepository.findAll();
+    List<StudyPermissionEntity> studyPermissionList = studyPermissionRepository.findAll();
+    List<SitePermissionEntity> sitePermissionList = sitePermissionRepository.findAll();
+
+    AppPermissionEntity appPermission =
+        appPermissionList
+            .stream()
+            .filter(x -> x.getApp().getAppId().equals(Constants.APP_ID_VALUE))
+            .findFirst()
+            .orElse(null);
+    StudyPermissionEntity studyPermission =
+        studyPermissionList
+            .stream()
+            .filter(x -> x.getStudy().getCustomId().equals(Constants.STUDY_ID_1))
+            .findFirst()
+            .orElse(null);
+    SitePermissionEntity sitePermission =
+        sitePermissionList
+            .stream()
+            .filter(x -> x.getStudy().getType().equals(Constants.STUDY_TYPE))
+            .findFirst()
+            .orElse(null);
+
+    assertNotNull(appPermission);
+    assertNotNull(studyPermission);
+    assertNotNull(sitePermission);
+    assertEquals(appPermission.getEdit(), studyPermission.getEdit());
+    assertEquals(Constants.STUDY_TYPE, sitePermission.getStudy().getType());
+  }
+
+  @Test
   public void addUpdateStudyMetadataBadRequest() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
@@ -242,7 +288,6 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
-  // TODO(#668) Remove @Disabled when Github test case failed issue fix
   public void sendNotificationSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();
 

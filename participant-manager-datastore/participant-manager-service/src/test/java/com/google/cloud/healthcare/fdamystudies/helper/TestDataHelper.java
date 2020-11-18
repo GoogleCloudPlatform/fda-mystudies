@@ -12,7 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.AC
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOGO_IMAGE_URL;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
@@ -51,7 +50,9 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import lombok.Getter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,7 +194,7 @@ public class TestDataHelper {
     LocationEntity locationEntity = new LocationEntity();
     locationEntity.setCustomId(CUSTOM_ID_VALUE);
     locationEntity.setDescription(LOCATION_DESCRIPTION_VALUE);
-    locationEntity.setName(LOCATION_NAME_VALUE);
+    locationEntity.setName(RandomStringUtils.randomAlphanumeric(8));
     locationEntity.setStatus(ACTIVE_STATUS);
     locationEntity.setIsDefault(NO);
     return locationEntity;
@@ -358,6 +359,39 @@ public class TestDataHelper {
     sitePermission.setSite(siteEntity);
     sitePermission.setUrAdminUser(superAdmin);
     sitePermissionRepository.saveAndFlush(sitePermission);
+  }
+
+  public List<StudyEntity> createMultipleStudyEntity(AppEntity appEntity) {
+    List<StudyEntity> studyList = new ArrayList<>();
+    for (int i = 1; i <= 2; i++) {
+      StudyEntity studyEntity = newStudyEntity();
+      studyEntity.setType("CLOSE");
+      studyEntity.setName("COVID Study" + i);
+      studyEntity.setCustomId("CovidStudy" + i);
+      studyEntity.setApp(appEntity);
+      studyEntity.setLogoImageUrl(LOGO_IMAGE_URL);
+      StudyEntity study = studyRepository.saveAndFlush(studyEntity);
+      studyList.add(study);
+    }
+    return studyList;
+  }
+
+  public SiteEntity createMultipleSiteEntityWithPermission(
+      StudyEntity studyEntity,
+      UserRegAdminEntity urAdminUser,
+      AppEntity appEntity,
+      LocationEntity locationEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setName(siteEntity.getName() + RandomStringUtils.random(2));
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setStudy(studyEntity);
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(urAdminUser);
+    sitePermissionEntity.setApp(appEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
   }
 
   public void cleanUp() {

@@ -117,7 +117,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
 
-    if isProfileEdited {
+    if isProfileEdited,
+      User.currentUser.userType == UserType.loggedInUser {
       isProfileEdited = false
       UserServices().updateUserProfile(self)
     }
@@ -315,7 +316,20 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Api Call to SignOut.
   func sendRequestToSignOut() {
-    AuthServices().logoutUser(self)
+    addProgressIndicator()
+    UserAPI.logout { (status, error) in
+      self.removeProgressIndicator()
+      if status {
+        self.handleSignoutResponse()
+      } else if let error = error {
+        self.presentDefaultAlertWithError(
+          error: error,
+          animated: true,
+          action: nil,
+          completion: nil
+        )
+      }
+    }
   }
 
   /// Api call to delete account.
@@ -773,9 +787,7 @@ extension ProfileViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     self.removeProgressIndicator()
-    if requestName as String == AuthServerMethods.logout.description {
-      self.handleSignoutResponse()
-    } else if requestName as String == RegistrationMethods.userProfile.description {
+    if requestName as String == RegistrationMethods.userProfile.description {
       self.tableViewProfile?.reloadData()
 
       if (user.settings?.leadTime?.count)! > 0 {
@@ -798,7 +810,7 @@ extension ProfileViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     self.removeProgressIndicator()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  //unauthorized
 
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,

@@ -2,7 +2,7 @@ INSERT INTO `app_info` (`id`, `custom_app_id`, `created_time`, `app_name`, `crea
 
 INSERT INTO `study_info` (`id`, `custom_id`, `app_info_id`, `name`, `description`, `type`,`created_by`, `created_time`, `updated_time`) VALUES (1, 'StudyID001', 1, 'name', 'description', 'OPEN', 0, '2020-03-12 15:23:41', '2020-03-12 15:24:42'), (2, 'studyId1', 1, 'name', 'description', 'OPEN', 0, '2020-03-12 15:23:41', '2020-03-12 15:24:42'), (3, 'custom-id-2', 1, 'name-2', 'description', 'CLOSED', 0, '2020-03-12 15:23:44', '2020-03-12 15:24:45'), (4, '132', 1, 'name', 'description', 'OPEN', 0, '2020-03-12 15:23:41', '2020-03-12 15:24:42');
 
-INSERT INTO `locations` (`id`, `created_time`, `created_by`, `custom_id`, `description`, `is_default`, `name`, `status`) VALUES (2, '2020-03-17 18:59:15', 1, '-customId130.53', 'location-descp-updated', 'N', 'name -1-updated000', '1');
+INSERT INTO `locations` (`id`, `created_time`, `created_by`, `custom_id`, `description`, `is_default`, `name`, `status`) VALUES (2, '2020-03-17 18:59:15', 1, '-customId130.53', 'location-descp-updated', 'Y', 'name -1-updated000', '1');
 
 INSERT INTO `sites` (`id`, `study_id`, `location_id`, `status`, `target_enrollment`, `name`, `created_time`, `created_by`) VALUES (1, 1, 2, 1, 10, 'test-site', '2020-03-17 20:19:42', 0), (2, 2, 2, 0, 15, 'test-site', '2020-03-12 15:19:38', 0), (3, 2, 2, 1, 45, 'test site', '2020-03-13 15:26:56', 0);
 
@@ -15,3 +15,11 @@ INSERT INTO `participant_study_info` (`id`, `participant_id`, `study_info_id`, `
 INSERT INTO `auth_info` (`id`, `app_info_id`, `created_time`, `device_token`, `device_type`, `ios_app_version`, `updated_time`, `remote_notification_flag`, `user_details_id`) VALUES (222, 1, '2020-03-22 17:12:23', '7B3F1433E1157D370EE8A6BA2E612B27EC2C0081771FC8BA1ECFCBB07BBA5A17', 'ios', '1.0.1', '2020-03-27 11:28:58', 1, 44), (223, 1, '2020-03-22 17:12:23', 'd3FncrcvPbw:APA91bHYlhS69KhhxIx8uoD152GT6JdfzF-bpmJiS04E9wVJapS5ELJwhwthRlDKPHR3OrAEap13-TxLc5EIc4OGME1iDRi04W3LYRtYkCdPQ76h5rTj1RTVT7q4SMASMVozESR2-gZl', 'android', '', '2020-03-27 11:28:58', 1, 44);
 
 INSERT INTO `user_app_details` (`id`, `app_info_id`, `created_time`, `user_details_id`) VALUES (20, 1, '2020-03-21 08:49:38', 44);
+
+INSERT INTO `ur_admin_user` (`id`, `created_time`, `email`, `first_name`, `last_name`, `super_admin`) VALUES ('1', '2020-08-05 18:51:37', 'mock@gmail.com', 'test', 'user', '0');
+
+INSERT INTO `app_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:42:42', '0','1', '1', '1');
+
+INSERT INTO `study_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `study_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:43:33', '0', '1', '1', '1', '1');
+
+INSERT INTO `sites_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `study_id`, `site_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:43:33', '0', '1', '1', '1', '1');

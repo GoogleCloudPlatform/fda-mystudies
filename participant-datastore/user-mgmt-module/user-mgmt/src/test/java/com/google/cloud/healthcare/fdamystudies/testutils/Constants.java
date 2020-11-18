@@ -16,7 +16,7 @@ public final class Constants {
   public static final String APP_ID_HEADER = "appId";
   public static final String STUDY_ID = "studyId1";
   public static final String STUDY_TITLE = "studyTitle";
-  public static final String STUDY_TYPE = "open";
+  public static final String STUDY_TYPE = "OPEN";
   public static final String STUDY_STATUS = "Active";
   public static final String STUDY_CATEGORY = "Public Health";
   public static final String STUDY_TAGLINE = "Basics of Study";
@@ -67,4 +67,7 @@ public final class Constants {
 
   public static final String LOGO_IMAGE_URL =
       "http://localhost:8098/fdaResources/studylogo/example.jpg";
+  public static final String STUDY_INFO_ID = "2";
+  public static final String STUDY_ID_1 = "study-1";
+  public static final String USER_EMAIL = "cdash93@gmail.com";
 }

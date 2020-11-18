@@ -1,0 +1,69 @@
+{
+  "monthly": [
+    {
+      "runId": 1,
+      "startDate": "2020-10-20T11:40:17.000+0530",
+      "endDate": "2020-11-20T11:29:59.000+0530",
+      "activityId": "MonthlyTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 2,
+      "startDate": "2020-11-20T11:30:00.000+0530",
+      "endDate": "2020-12-20T11:29:59.000+0530",
+      "activityId": "MonthlyTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 3,
+      "startDate": "2020-12-20T11:30:00.000+0530",
+      "endDate": "2020-01-21T11:29:59.000+0530",
+      "activityId": "MonthlyTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 4,
+      "startDate": "2021-01-20T11:30:00.000+0530",
+      "endDate": "2021-02-20T11:29:59.000+0530",
+      "activityId": "MonthlyTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 5,
+      "startDate": "2021-02-20T11:30:00.000+0530",
+      "endDate": "2021-03-20T11:29:59.000+0530",
+      "activityId": "MonthlyTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 6,
+      "startDate": "2021-03-20T11:30:00.000+0530",
+      "endDate": "2021-04-20T11:29:59.000+0530",
+      "activityId": "MonthlyTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId": 7,
+      "startDate": "2021-04-20T11:30:00.000+0530",
+      "endDate": "2021-05-20T11:29:59.000+0530",
+      "activityId": "MonthlyTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    },
+    {
+      "runId":8,
+      "startDate": "2021-05-20T11:30:00.000+0530",
+      "endDate": "2021-06-20T11:29:59.000+0530",
+      "activityId": "MonthlyTest",
+      "studyId": "REGteststudy",
+      "isCompleted": false
+    }
+  ]
+}
+

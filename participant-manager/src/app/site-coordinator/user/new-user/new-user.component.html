@@ -2,9 +2,12 @@
   <div class="max__w__850 m-none">
     <div class="row">
       <div class="col-xs-12 col-md-12 pl-none">
-        <a routerLink="/coordinator/users" class="subheader__title">
-          <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
-          <span class="ml-xs">Add New User</span>
+        <a
+          routerLink="/coordinator/users"
+          class="subheader__title cursor__pointer"
+        >
+          <img src="assets/svgs/back-arrow.svg" alt="Go Back" />
+          <span class="pl-2">Add New User</span>
         </a>
       </div>
     </div>
@@ -40,7 +43,7 @@
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.required"
               >
-                Please fill out this field.
+                Enter a first name.
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -74,7 +77,7 @@
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.required"
               >
-                Please fill out this field.
+                Enter a last name.
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -110,13 +113,13 @@
                 class="help-block with-errors error__msg"
                 *ngIf="emailText.errors?.required"
               >
-                Please fill out this field.
+                Enter an email.
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="emailText.errors?.pattern"
               >
-                Email is invalid.
+                Enter a valid email.
               </span>
             </div>
           </div>
@@ -131,15 +134,20 @@
                 [(ngModel)]="user.superAdmin"
                 name="superAdminCheckBox"
                 #superAdminCheckBox="ngModel"
+                (change)="superAdminCheckBoxChange()"
               />
               <label class="mt-xs" for="role">
                 Super Admin
                 <span
                   class="tool"
-                  data-tip="A superadmin user has application-wide permissions; can manage users and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only."
+                  data-tip="A superadmin user has application-wide permissions.
+Superadmins can manage users of this Particpant Manager and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only. "
                   tabindex="1"
                 >
-                  <i class="fa fa-info-circle ml-sm" aria-hidden="true"></i>
+                  <i
+                    class="fa fa-info-circle add_user_info_icon ml-sm"
+                    aria-hidden="true"
+                  ></i>
                 </span>
               </label>
             </div>
@@ -204,22 +212,20 @@
       </section>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="form-group">
-          <div class="user__card__title pb-xlg">Sites, Studies and Apps</div>
+          <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
           <div class="select__form-control__parent">
-            <label class="wrap">
-              Add an app
-              <ng-select
-                [items]="appDetails.apps"
-                [clearable]="false"
-                [multiple]="true"
-                bindLabel="name"
-                class="form-control select__form-control"
-                placeholder="Enter App ID or Name"
-                [hideSelected]="true"
-                [(ngModel)]="selectedApps"
-                [ngModelOptions]="{standalone: true}"
-              ></ng-select>
-            </label>
+            <label class="wrap">Add an app</label>
+            <ng-select
+              [items]="appDetails.apps"
+              [clearable]="false"
+              [multiple]="true"
+              bindLabel="name"
+              class="form-control select__form-control"
+              placeholder="Enter App ID or Name"
+              [hideSelected]="true"
+              [(ngModel)]="selectedApps"
+              [ngModelOptions]="{standalone: true}"
+            ></ng-select>
           </div>
         </div>
         <div class="form-group pt-none">
@@ -233,14 +239,17 @@
                         <div class="custom__labels">
                           <input
                             type="checkbox"
+                            #permissionCheckBox
                             id="appCheckBox{{ app.id }}"
                             [(ngModel)]="app.selected"
                             [ngModelOptions]="{standalone: true}"
                             (change)="appCheckBoxChange(app)"
                           />
                           <label for="appCheckBox{{ app.id }}">
-                            {{ app.name }}({{ app.customId }})
-                            <span class="app__id ml-xs"></span>
+                            {{ app.name }}
+                            <span class="app__id ml-xs">
+                              ({{ app.customId }})
+                            </span>
                             <span>
                               {{
                                 app.selectedSitesCount
@@ -307,6 +316,7 @@
                               <div>
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="studyCheckBoxChange(study, app)"
                                     [disabled]="app.selected"
                                     type="checkbox"
@@ -382,9 +392,13 @@
                                     | i18nPlural: sitesMessageMapping
                                 }}
                               </div>
-                              <div *ngFor="let site of study.sites">
+                              <div
+                                *ngFor="let site of study.sites"
+                                class="pb-sm"
+                              >
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="
                                       siteCheckBoxChange(site, study, app)
                                     "
@@ -440,7 +454,10 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn" (click)="deleteAppFromList(app.id)">
+                <button
+                  class="btn btn p-none pull-right"
+                  (click)="deleteAppFromList(app.id)"
+                >
                   <img src="assets/svgs/delete.svg" alt="Delete" />
                 </button>
               </div>
@@ -454,7 +471,7 @@
         [disabled]="!addUserForm.form.valid || disableButton"
         type="submit"
         name="add"
-        class="btn bt__add bt__add__auto mr-lg"
+        class="btn bt__add bt__add__auto mr-sm"
       >
         Add user and invite
       </button>

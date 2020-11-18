@@ -2268,7 +2268,7 @@
 
       var frequence_id = $("#oneTimeFreId").val();
       var frequency_date = $("#chooseDate").val();
-      var freQuence_time = $("#selectTime").val();
+      var freQuence_time = $("#selectTime1").val();
       if ($('#isLaunchStudy').is(':checked')) {
         var isLaunch_study = true;
       }
@@ -2649,11 +2649,10 @@
             xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
           },
           success: function (data) {
-            var jsonobject = eval(data);
-            var message = jsonobject.message;
+            var message = data.message;
             if (message == "SUCCESS") {
-              var activeTaskId = jsonobject.activeTaskId;
-              var activeTaskFrequenceId = jsonobject.activeTaskFrequenceId;
+              var activeTaskId = data.activeTaskId;
+              var activeTaskFrequenceId = data.activeTaskFrequenceId;
               $("#activeTaskId, #taskId,#taskContentId,.activeTaskIdClass").val(activeTaskId);
               $("#previousFrequency").val(frequency_text);
               if (frequency_text == 'One time') {
@@ -2692,11 +2691,10 @@
             xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
           },
           success: function (data) {
-            var jsonobject = eval(data);
-            var message = jsonobject.message;
+            var message = data.message;
             if (message == "SUCCESS") {
-              var activeTaskId = jsonobject.activeTaskId;
-              var activeTaskFrequenceId = jsonobject.activeTaskFrequenceId;
+              var activeTaskId = data.activeTaskId;
+              var activeTaskFrequenceId = data.activeTaskFrequenceId;
               $("#activeTaskId, #taskId,#taskContentId,.activeTaskIdClass").val(activeTaskId);
               $("#previousFrequency").val(frequency_text);
               if (frequency_text == 'One time') {

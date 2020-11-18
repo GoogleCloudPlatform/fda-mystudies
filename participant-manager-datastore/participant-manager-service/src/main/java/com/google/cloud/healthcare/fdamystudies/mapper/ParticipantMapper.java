@@ -66,22 +66,29 @@ public final class ParticipantMapper {
         idMap.put(participantStudy.getParticipantRegistrySite().getId(), participantStudy);
       }
     }
+
     ParticipantStudyEntity participantStudy = idMap.get(participantSite.getId());
     if (participantStudy != null) {
-      String enrollmentStatus =
-          EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantStudy.getStatus())
-              ? EnrollmentStatus.ENROLLED.getStatus()
-              : participantStudy.getStatus();
-      participantDetail.setEnrollmentStatus(enrollmentStatus);
-      String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
-      participantDetail.setEnrollmentDate(
-          StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-    }
+      if (EnrollmentStatus.WITHDRAWN.getStatus().equalsIgnoreCase(participantStudy.getStatus())
+          && (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
+              || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode))) {
+        participantDetail.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
+        participantDetail.setEnrollmentDate(null);
+      } else {
+        String enrollmentStatus =
+            EnrollmentStatus.IN_PROGRESS.getStatus().equalsIgnoreCase(participantStudy.getStatus())
+                ? EnrollmentStatus.ENROLLED.getStatus()
+                : participantStudy.getStatus();
+        participantDetail.setEnrollmentStatus(enrollmentStatus);
+        String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
+        participantDetail.setEnrollmentDate(
+            StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+      }
 
-    if (OnboardingStatus.INVITED.getCode().equalsIgnoreCase(onboardingStatusCode)
-        || OnboardingStatus.NEW.getCode().equalsIgnoreCase(onboardingStatusCode)) {
+    } else {
       participantDetail.setEnrollmentStatus(YET_TO_ENROLL);
     }
+
     return participantDetail;
   }
 
@@ -119,6 +126,7 @@ public final class ParticipantMapper {
       participants.setStudyName(study.getName());
       participants.setCustomStudyId(study.getCustomId());
       participants.setSitePermission(permission.value());
+      participants.setStudyStatus(study.getStatus());
       setParticipantRegistryAppInfo(participants, study);
       setParticipantRegistryLocation(site, participants);
     }
@@ -176,14 +184,13 @@ public final class ParticipantMapper {
         participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
       }
     } else {
-      if (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
-          || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode)) {
-        participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
-      }
+      participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
     }
 
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    String disabledDate = DateTimeUtils.format(participantRegistrySite.getDisabledDate());
+    participant.setDisabledDate(StringUtils.defaultIfEmpty(disabledDate, NOT_APPLICABLE));
     return participant;
   }
 
@@ -198,9 +205,24 @@ public final class ParticipantMapper {
   }
 
   public static void addEnrollments(
-      ParticipantDetail participantDetail, List<ParticipantStudyEntity> participantsEnrollments) {
+      ParticipantDetail participantDetail,
+      List<ParticipantStudyEntity> participantsEnrollments,
+      String onboardingStatus) {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
+      if ((OnboardingStatus.INVITED.getStatus().equals(onboardingStatus)
+              || OnboardingStatus.NEW.getStatus().equals(onboardingStatus))
+          && EnrollmentStatus.WITHDRAWN.getStatus().equals(participantsEnrollment.getStatus())) {
+        enrollment.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
+        enrollment.setParticipantId(participantsEnrollment.getParticipantId());
+        enrollment.setEnrollmentDate(NOT_APPLICABLE);
+        enrollment.setWithdrawalDate(NOT_APPLICABLE);
+        participantDetail.getEnrollments().add(enrollment);
+        // TODO: (Issue #1454) Separate records should be displayed for each time of the user
+        // enrollment process
+        // current implementation has single record, so added below return;
+        return;
+      }
       String enrollmentStatus =
           EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantsEnrollment.getStatus())
               ? EnrollmentStatus.ENROLLED.getStatus()
@@ -225,9 +247,11 @@ public final class ParticipantMapper {
     participantDetail.setCustomAppId(participantRegistry.getStudy().getApp().getAppId());
     participantDetail.setStudyName(participantRegistry.getStudy().getName());
     participantDetail.setStudyType(participantRegistry.getStudy().getType());
+    participantDetail.setStudyStatus(participantRegistry.getStudy().getStatus());
     participantDetail.setCustomStudyId(participantRegistry.getStudy().getCustomId());
     participantDetail.setLocationName(participantRegistry.getSite().getLocation().getName());
     participantDetail.setSiteId(participantRegistry.getSite().getId());
+    participantDetail.setSiteStatus(participantRegistry.getSite().getStatus());
     participantDetail.setCustomLocationId(
         participantRegistry.getSite().getLocation().getCustomId());
     participantDetail.setEmail(participantRegistry.getEmail());

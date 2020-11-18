@@ -37,6 +37,8 @@ public class ParticipantDetail {
 
   private String invitedDate;
 
+  private String disabledDate;
+
   private String siteId;
 
   private String locationName;
@@ -66,6 +68,10 @@ public class ParticipantDetail {
   private String registrationDate;
 
   private Integer sitePermission;
+
+  private String studyStatus;
+
+  private Integer siteStatus;
 
   private List<AppStudyDetails> enrolledStudies = new ArrayList<>();
 

@@ -604,14 +604,13 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function (data) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
+          var message = data.message;
           if (message == "SUCCESS") {
 
             $("#preShortTitleId").val(shortTitle);
 
-            var stepId = jsonobject.stepId;
-            var formId = jsonobject.formId;
+            var stepId = data.stepId;
+            var formId = data.formId;
 
             $("#stepId").val(stepId);
             $("#formId").val(formId);
@@ -637,7 +636,7 @@
             if (callback)
               callback(true);
           } else {
-            var errMsg = jsonobject.errMsg;
+            var errMsg = data.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
               $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
             } else {
@@ -696,15 +695,14 @@
                 "${_csrf.parameterName}": "${_csrf.token}",
               },
               success: function deleteConsentInfo(data) {
-                var jsonobject = eval(data);
-                var status = jsonobject.message;
+                var status = data.message;
                 if (status == "SUCCESS") {
                   $("#alertMsg").removeClass('e-box').addClass('s-box').html(
                       "Questionnaire step deleted successfully");
                   $('#alertMsg').show();
 
-                  var questionnaireSteps = jsonobject.questionnaireJsonObject;
-                  var isDone = jsonobject.isDone;
+                  var questionnaireSteps = data.questionnaireJsonObject;
+                  var isDone = data.isDone;
                   reloadQuestionsData(questionnaireSteps, isDone);
                   if ($('.sixthQuestionnaires').find('span').hasClass(
                       'sprites-icons-2 tick pull-right mt-xs')) {

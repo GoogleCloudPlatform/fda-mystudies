@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -53,7 +58,9 @@ spec:
         readinessProbe:
           httpGet:
             port: 4444
-            path: /hydra/health/ready
+            path: /health/ready
+          initialDelaySeconds: 40
+          periodSeconds: 20
         volumeMounts:
         - name: gcloud-key-volume
           mountPath: /secrets/gcloud_key
@@ -70,4 +77,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: hydra-gcloud-key
+          secretName: hydra-gke-sa-gcloud-key

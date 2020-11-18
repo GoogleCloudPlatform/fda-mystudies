@@ -1857,7 +1857,7 @@
                            id="textChoiceSubTypeValueId${subtype.index}"
                            name="questionResponseSubTypeList[${subtype.index}].responseSubTypeValueId"
                            value="${questionResponseSubType.responseSubTypeValueId}">
-                    <div class="col-md-3 pl-none">
+                    <div class="col-md-4 pl-none">
                       <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
                         <span
                             class="requiredStar">*
@@ -1940,7 +1940,7 @@
               <c:otherwise>
                 <!-- Section Start -->
                 <div class="text-choice mt-xlg" id="0">
-                  <div class="col-md-3 pl-none">
+                  <div class="col-md-4 pl-none">
                     <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
                       <span
                           class="requiredStar">*
@@ -2022,7 +2022,7 @@
                 </div>
                 <!-- Section End -->
                 <div class="text-choice mt-xlg" id="1">
-                  <div class="col-md-3 pl-none">
+                  <div class="col-md-4 pl-none">
                     <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
                       <span
                           class="requiredStar">*
@@ -4051,13 +4051,12 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function (data) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
+          var message = data.message;
           if (message == "SUCCESS") {
             $("body").removeClass("loading");
             $("#preShortTitleId").val(short_title);
-            var questionId = jsonobject.questionId;
-            var questionResponseId = jsonobject.questionResponseId;
+            var questionId = data.questionId;
+            var questionResponseId = data.questionResponseId;
 
             $("#questionId").val(questionId);
             $("#questionResponseTypeId").val(questionResponseId);
@@ -4079,7 +4078,7 @@
                   'sprites-icons-2 tick pull-right mt-xs');
             }
           } else {
-            var errMsg = jsonobject.errMsg;
+            var errMsg = data.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
               $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
             } else {
@@ -4313,8 +4312,8 @@
     choiceCount = choiceCount + 1;
     var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
     var newTextChoice = "<div class='text-choice mt-xlg' id='" + choiceCount + "'>" +
-        "<div class='col-md-3 pl-none'>" +
-        "   <div class='gray-xs-f mb-xs'>Display Text (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
+        "<div class='col-md-4 pl-none'>" +
+        "   <div class='gray-xs-f mb-xs'>Display Text (1 to 100 characters) <span class='requiredStar'>*</span> </div>"
         +
         "   <div class='form-group mb-none'>" +
         "   <input type='text' class='form-control TextChoiceRequired' name='questionResponseSubTypeList["

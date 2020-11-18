@@ -24,6 +24,7 @@ export class SiteCoordinatorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.showSearchBar = false;
     this.user = this.userService.getUserProfile();
     this.userState.currentUserName$.subscribe((upadtedUsername) => {
       this.userName = upadtedUsername;
@@ -33,14 +34,18 @@ export class SiteCoordinatorComponent implements OnInit {
     }
     this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
-        this.showSearchBar = true;
-        this.filterQuery = '';
-        this.searchPlaceholder = updatedPlaceHolder;
+        if (updatedPlaceHolder) {
+          this.showSearchBar = true;
+          this.filterQuery = '';
+          this.searchPlaceholder = updatedPlaceHolder;
+        }
       },
     );
   }
-  public onKeyDown(event: KeyboardEvent): void {
+  public onKeyUp(event: KeyboardEvent): void {
     if (event.key === 'Enter' && this.searchBar) {
+      void this.searchBar.search(this.filterQuery);
+    } else if (this.searchBar && this.filterQuery === '') {
       void this.searchBar.search(this.filterQuery);
     }
   }

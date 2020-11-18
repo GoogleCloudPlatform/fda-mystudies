@@ -47,8 +47,9 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
 
   @Query(
       "SELECT COUNT(ps.id) FROM ParticipantStudyEntity ps  "
-          + "WHERE ps.status IN(:status) AND ps.study.id=:studyId")
-  public Optional<Long> findByStudyIdAndStatus(List<String> status, String studyId);
+          + "WHERE ps.status IN(:status) AND ps.study.id=:studyId AND ps.site.id=:siteId")
+  public Optional<Long> findByStudyIdSiteIdAndStatus(
+      List<String> status, String studyId, String siteId);
 
   @Query(
       "SELECT participantStudy from ParticipantStudyEntity participantStudy "
@@ -80,4 +81,9 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
           "SELECT ps.site_id AS siteId, COUNT(ps.site_id) AS enrolledCount FROM participant_study_info ps WHERE ps.status='inProgress' AND ps.site_id IN (:siteIds) GROUP BY ps.site_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> getEnrolledCountForOpenStudy(List<String> siteIds);
+
+  @Query(
+      "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId AND ps.userDetails.id = :userId")
+  public Optional<ParticipantStudyEntity> findByStudyIdAndUserId(
+      @Param("studyId") String studyId, @Param("userId") String userId);
 }

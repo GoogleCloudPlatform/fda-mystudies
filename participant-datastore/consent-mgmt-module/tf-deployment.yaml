@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,7 +54,9 @@ spec:
                   key: secret_key
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000/oauth-scim-service"
             # MISC
             - name: GCP_BUCKET_NAME
               valueFrom:
@@ -69,6 +76,8 @@ spec:
             httpGet:
               path: /participant-consent-datastore/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
@@ -85,4 +94,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-consent-datastore-gcloud-key
+          secretName: consent-datastore-gke-sa-gcloud-key

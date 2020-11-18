@@ -9,6 +9,7 @@ package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -77,8 +78,9 @@ public interface ParticipantRegistrySiteRepository
 
   @Modifying
   @Query(
-      "update ParticipantRegistrySiteEntity pr set pr.onboardingStatus=:status where pr.id IN (:ids)")
-  public void updateOnboardingStatus(@Param("status") String status, List<String> ids);
+      "update ParticipantRegistrySiteEntity pr set pr.onboardingStatus=:status, pr.disabledDate=:disabledDate where pr.id IN (:ids)")
+  public void updateOnboardingStatus(
+      @Param("status") String status, List<String> ids, Timestamp disabledDate);
 
   @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id=:studyId")
   public List<ParticipantRegistrySiteEntity> findByStudyId(String studyId);
@@ -91,4 +93,6 @@ public interface ParticipantRegistrySiteRepository
       "SELECT pr.id FROM ParticipantRegistrySiteEntity pr WHERE (pr.onboardingStatus='N' OR pr.onboardingStatus='I') AND pr.study.id =:studyId AND pr.email IN (:emails)")
   public Optional<ParticipantRegistrySiteEntity> findExistingRecordByStudyIdAndEmails(
       String studyId, List<String> emails);
+
+  public Optional<ParticipantRegistrySiteEntity> findByEnrollmentToken(String enrollmentToken);
 }

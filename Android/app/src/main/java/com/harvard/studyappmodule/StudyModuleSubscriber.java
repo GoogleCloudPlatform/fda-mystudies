@@ -36,67 +36,67 @@ import com.harvard.usermodule.event.GetTermsAndConditionEvent;
 
 public class StudyModuleSubscriber extends BaseSubscriber {
   public void onEvent(GetUserStudyInfoEvent getUserStudyInfoEvent) {
-    FdaEventBus.postEvent(getUserStudyInfoEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getUserStudyInfoEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(GetConsentMetaDataEvent getConsentMetaDataEvent) {
-    FdaEventBus.postEvent(getConsentMetaDataEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getConsentMetaDataEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(VerifyEnrollmentIdEvent verifyEnrollmentIdEvent) {
-    FdaEventBus.postEvent(verifyEnrollmentIdEvent.registrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(verifyEnrollmentIdEvent.participantEnrollmentDatastoreConfigEvent());
   }
 
   public void onEvent(GetUserStudyListEvent getUserStudyListEvent) {
-    FdaEventBus.postEvent(getUserStudyListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getUserStudyListEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(GetTermsAndConditionEvent getTermsAndConditionEvent) {
-    FdaEventBus.postEvent(getTermsAndConditionEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getTermsAndConditionEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(EnrollIdEvent enrollIdEvent) {
-    FdaEventBus.postEvent(enrollIdEvent.getRegistrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(enrollIdEvent.getParticipantEnrollmentDatastoreConfigEvent());
   }
 
   public void onEvent(GetActivityListEvent getActivityListEvent) {
-    FdaEventBus.postEvent(getActivityListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getActivityListEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(GetActivityInfoEvent getActivityInfoEvent) {
-    FdaEventBus.postEvent(getActivityInfoEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getActivityInfoEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(ContactUsEvent contactUsEvent) {
-    FdaEventBus.postEvent(contactUsEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(contactUsEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(FeedbackEvent feedbackEvent) {
-    FdaEventBus.postEvent(feedbackEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(feedbackEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(GetResourceListEvent getResourceListEvent) {
-    FdaEventBus.postEvent(getResourceListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getResourceListEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent) {
     FdaEventBus.postEvent(
-        updateEligibilityConsentStatusEvent.getRegistrationServerConsentConfigEvent());
+        updateEligibilityConsentStatusEvent.getParticipantConsentDatastoreConfigEvent());
   }
 
   public void onEvent(ProcessResponseEvent processResponseEvent) {
-    FdaEventBus.postEvent(processResponseEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(processResponseEvent.getResponseDatastoreConfigEvent());
   }
 
   public void onEvent(WithdrawFromStudyEvent withdrawFromStudyEvent) {
-    FdaEventBus.postEvent(withdrawFromStudyEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(withdrawFromStudyEvent.getResponseDatastoreConfigEvent());
   }
 
   public void onEvent(ProcessResponseDataEvent processResponseDataEvent) {
-    FdaEventBus.postEvent(processResponseDataEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(processResponseDataEvent.getResponseDatastoreConfigEvent());
   }
 
   public void onEvent(ActivityStateEvent activityStateEvent) {
-    FdaEventBus.postEvent(activityStateEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(activityStateEvent.getResponseDatastoreConfigEvent());
   }
 }

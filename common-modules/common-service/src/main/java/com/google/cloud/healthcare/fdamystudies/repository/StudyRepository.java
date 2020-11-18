@@ -51,9 +51,10 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT app.id AS appId, COUNT(study.id) AS count "
+          "SELECT app.id AS appId, IFNULL(COUNT(study.id), 0) AS COUNT "
               + "FROM study_info study, app_info app "
-              + "WHERE app.id = study.app_info_id GROUP BY app.id ",
+              + "WHERE app.id = study.app_info_id AND (select count(si.id) from sites si where si.study_id=study.id) >0 "
+              + "GROUP BY app.id",
       nativeQuery = true)
   public List<AppCount> findAppStudiesCount();
 

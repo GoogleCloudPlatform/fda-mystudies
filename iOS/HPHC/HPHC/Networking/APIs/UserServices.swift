@@ -95,7 +95,10 @@ class UserServices: NSObject {
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
   var method: Method!
-  var failedRequestServices = FailedUserServices()
+
+  struct JSONKey {
+    static let tempRegID = "tempRegId"
+  }
 
   // MARK: - Requests
 
@@ -110,7 +113,6 @@ class UserServices: NSObject {
     let params = [
       kUserEmailId: user.emailId!,
       kUserPassword: user.password!,
-      "appId": Utilities.getBundleIdentifier(),
     ]
 
     let method = RegistrationMethods.register.method
@@ -187,7 +189,7 @@ class UserServices: NSObject {
     let headerParams =
       [
         kUserId: user.userId ?? "",
-      ] as [String: String]
+      ]
 
     let params = [kDeactivateAccountDeleteData: studiesDict]
     let method = RegistrationMethods.deactivate.method
@@ -282,7 +284,7 @@ class UserServices: NSObject {
       [
         kUserId: user.userId!,
         kUserAuthToken: user.authToken,
-      ] as [String: String]
+      ] as? [String: String]
 
     let method = RegistrationMethods.userPreferences.method
 
@@ -322,19 +324,30 @@ class UserServices: NSObject {
     self.delegate = delegate
   }
 
+  func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {
+    HydraAPI.refreshToken { (status, error) in
+      if status {
+        self.handleUpdateTokenResponse()
+      } else if let error = error {
+        self.delegate?.failedRequest(
+          manager,
+          requestName:
+            requestName,
+          error:
+            error.toNSError()
+        )
+      }
+    }
+  }
+
   // MARK: Parsers
 
   /// Handles registration response
   /// - Parameter response: Webservice response
   func handleUserRegistrationResponse(response: [String: Any]) {
-
     let user = User.currentUser
-    user.userId = (response[kUserId] as? String)!
-    user.verified = (response[kUserVerified] as? Bool)!
-    user.authToken = (response[kUserAuthToken] as? String)!
-    user.refreshToken = (response[kRefreshToken] as? String)!
+    user.userId = response[kUserId] as? String ?? ""
     StudyFilterHandler.instance.previousAppliedFilters = []
-
   }
 
   /// Handles registration confirmation response
@@ -362,26 +375,9 @@ class UserServices: NSObject {
   /// Handles email verification response
   /// - Parameter response: Webservice response
   func handleEmailVerifyResponse(response: [String: Any]) {
-
     let user = User.currentUser
     user.verified = true
-
-    if user.verified {
-
-      if user.authToken != nil {
-
-        user.userType = UserType.loggedInUser
-
-        FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
-        FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
-
-        let ud = UserDefaults.standard
-        ud.set(true, forKey: kPasscodeIsPending)
-        ud.synchronize()
-
-        DBHandler().saveCurrentUser(user: user)
-      }
-    }
+    user.tempRegID = response[JSONKey.tempRegID] as? String
   }
 
   /// handles `User` profile response
@@ -423,6 +419,14 @@ class UserServices: NSObject {
       }
     }
 
+  }
+
+  func handleUpdateTokenResponse() {
+    self.sendRequestWith(
+      method: self.method,
+      params: self.requestParams ?? [:],
+      headers: self.headerParams
+    )
   }
 
   /// Handles `Study` status response
@@ -537,41 +541,16 @@ extension UserServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
-      delegate?.failedRequest(manager, requestName: requestName, error: error)
-    } else if error.code == 401 {
-
-      self.failedRequestServices.headerParams = self.headerParams
-      self.failedRequestServices.requestParams = self.requestParams
-      self.failedRequestServices.method = self.method
-
-      if User.currentUser.refreshToken == ""
-        && requestName as String
-          != AuthServerMethods
-          .login
-          .description
-      {
-        // Unauthorized Access
-        let errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
-        let localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
-        delegate?.failedRequest(manager, requestName: requestName, error: localError)
-
-      } else {
-        // Update Refresh Token
-        AuthServices().updateToken(delegate: self)
-      }
-
+    if error.code == HTTPError.tokenExpired.rawValue {
+      // Update Refresh Token
+      updateToken(manager: manager, requestName: requestName, error: error)
     } else {
-
       var errorInfo = error.userInfo
       var localError = error
-      if error.code == 403 {
-        errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
+      if error.code == HTTPError.forbidden.rawValue {
+        errorInfo = ["NSLocalizedDescription": LocalizableString.sessionExpired.localizedString]
         localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
       }
-
-      delegate?.failedRequest(manager, requestName: requestName, error: localError)
-
       // handle failed request due to network connectivity
       if requestName
         as String == ResponseMethods.updateActivityState.description
@@ -587,6 +566,7 @@ extension UserServices: NMWebServiceDelegate {
           )
         }
       }
+      delegate?.failedRequest(manager, requestName: requestName, error: localError)
     }
   }
 }

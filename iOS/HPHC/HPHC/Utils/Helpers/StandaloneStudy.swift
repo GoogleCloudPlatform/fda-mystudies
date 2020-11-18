@@ -107,7 +107,7 @@ extension StandaloneStudy: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if error.code == 403 {  // unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  // unauthorized
       self.createStudyForStandalone()
     } else if error.code < 0 {  // No Network
       switch requestName as String {

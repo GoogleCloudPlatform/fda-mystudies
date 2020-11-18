@@ -63,17 +63,23 @@
         </div>
         <div
           *ngIf="
-            studyDetails.participantRegistryDetail.studyType ===
-              studyTypes.Open &&
-            studyDetails.participantRegistryDetail.openStudySitePermission ===
-              permission.ViewAndEdit
+            studyDetails.participantRegistryDetail.studyType === studyTypes.Open
           "
           class="pr-xlg"
         >
           <div class="enrollment-label">
             Enrollment Target:
             {{ studyDetails.participantRegistryDetail.targetEnrollment }}
-            <button class="dropbtn btn pl-none" (click)="openModal(template)">
+            <button
+              *ngIf="
+                studyDetails.participantRegistryDetail
+                  .openStudySitePermission === permission.ViewAndEdit ||
+                studyDetails.participantRegistryDetail.sitePermission ===
+                  permission.ViewAndEdit
+              "
+              class="dropbtn btn pl-none"
+              (click)="openModal(template)"
+            >
               <img src="assets/svgs/edit.svg" alt="edit" />
             </button>
           </div>
@@ -145,9 +151,9 @@
               >
                 <div
                   [ngClass]="{
-                    participant__label:
+                    'txt__green':
                       lists.onboardingStatus === onboardingStatus.Invited,
-                    inactive__text:
+                    'txt__light-gray':
                       lists.onboardingStatus === onboardingStatus.Disabled
                   }"
                 >
@@ -157,9 +163,9 @@
               <td>
                 <div
                   [ngClass]="{
-                    participant__label:
+                    'txt__green':
                       lists.enrollmentStatus === enrollmentStatus.Enrolled,
-                    inactive__text:
+                    'txt__light-gray':
                       lists.enrollmentStatus === enrollmentStatus.Withdrawn
                   }"
                 >
@@ -169,6 +175,14 @@
               <td>{{ lists.enrollmentDate }}</td>
             </tr>
           </tbody>
+          <div
+            *ngIf="
+              studyDetails.participantRegistryDetail.registryParticipants
+                .length === 0
+            "
+          >
+            No records found
+          </div>
           <tfoot>
             <tr>
               <td colspan="5">

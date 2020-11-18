@@ -9,11 +9,13 @@ import {getMessage} from 'src/app/shared/success.codes.enum';
 import {
   EnrollmentStatus,
   OnboardingStatus,
+  Status,
   StudyType,
 } from 'src/app/shared/enums';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Location} from '@angular/common';
 import {RegistryParticipant} from 'src/app/shared/participant';
+import {Permission} from 'src/app/shared/permission-enums';
 @Component({
   selector: 'app-participant-details',
   templateUrl: './participant-details.component.html',
@@ -28,6 +30,9 @@ export class ParticipantDetailsComponent
   participant$: Observable<Participant> = of();
   onBoardingStatus = OnboardingStatus;
   studyTypes = StudyType;
+  permission = Permission;
+  studyStatus = Status;
+  enrollmentStatus = EnrollmentStatus;
   constructor(
     private readonly locationLibrary: Location,
     private readonly participantDetailsService: ParticipantDetailsService,

@@ -33,6 +33,7 @@ enum SignInLoadFrom: Int {
   case gatewayOverview
   case joinStudy
   case menu
+  case signUp
 }
 
 private enum SignInScheme: String {
@@ -41,6 +42,12 @@ private enum SignInScheme: String {
   case terms
   case privacyPolicy
   case callback
+  case activation
+}
+
+protocol SignInViewControllerDelegate: class {
+  func didLogInCompleted()
+  func didFailLogIn()
 }
 
 class SignInViewController: UIViewController {
@@ -52,6 +59,8 @@ class SignInViewController: UIViewController {
 
   /// Progress view reflecting the current loading progress of the web view.
   let progressView = UIProgressView(progressViewStyle: .default)
+
+  weak var delegate: SignInViewControllerDelegate?
 
   /// The observation object for the progress of the web view (we only receive notifications until it is deallocated).
   private var estimatedProgressObserver: NSKeyValueObservation?
@@ -67,11 +76,9 @@ class SignInViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    SessionService.resetSession()
     setupNavigation()
-    setupProgressView()
-    setupEstimatedProgressObserver()
     DispatchQueue.main.async {
-      self.webKitView.navigationDelegate = self
       self.load()
       self.initializeTermsAndPolicy()
     }
@@ -81,12 +88,18 @@ class SignInViewController: UIViewController {
     super.viewWillAppear(animated)
     // unhide navigationbar
     self.navigationController?.setNavigationBarHidden(false, animated: true)
-
-    User.resetCurrentUser()
+    self.webKitView.navigationDelegate = self
+    setupProgressView()
+    setupEstimatedProgressObserver()
+    if viewLoadFrom != .signUp {
+      User.resetCurrentUser()
+    }
     user = User.currentUser
 
     if viewLoadFrom == .gatewayOverview || viewLoadFrom == .joinStudy {
       self.addBackBarButton()
+    } else if viewLoadFrom == .signUp {
+      addCloseBarBtn()
     } else {
       self.setNavigationBarItem()
     }
@@ -101,16 +114,22 @@ class SignInViewController: UIViewController {
     }
   }
 
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    self.webKitView.navigationDelegate = nil
+    progressView.removeFromSuperview()
+  }
   // MARK: - UI Utils
 
   private func setupNavigation() {
+    self.title = NSLocalizedString(kSignInTitleText, comment: "")
+    guard viewLoadFrom != .signUp else { return }  // No need to show info icon for auto login with registration.
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(
       image: UIImage(named: "info"),
       style: .done,
       target: self,
       action: #selector(self.buttonInfoAction(_:))
     )
-    self.title = NSLocalizedString(kSignInTitleText, comment: "")
   }
 
   private func setupProgressView() {
@@ -124,6 +143,16 @@ class SignInViewController: UIViewController {
       progressView.bottomAnchor.constraint(equalTo: navigationBar.bottomAnchor),
       progressView.heightAnchor.constraint(equalToConstant: 2.0),
     ])
+  }
+
+  private func addCloseBarBtn() {
+    let closeBtn = UIBarButtonItem(
+      image: UIImage(named: "close_1"),
+      style: .plain,
+      target: self,
+      action: #selector(dismissSignUpNavigation)
+    )
+    self.navigationItem.leftBarButtonItem = closeBtn
   }
 
   // MARK: - Utils
@@ -160,27 +189,14 @@ class SignInViewController: UIViewController {
       switch accountStatus {
       case .verified:
         User.currentUser.verified = true
-        HydraAPI.grant(user: User.currentUser, with: code) { [weak self] (status, error) in
-          if status {
-            self?.userDidLoggedIn()
-          } else if let error = error {
-            self?.presentDefaultAlertWithError(
-              error: error,
-              animated: true,
-              action: {
-                SessionService.resetSession()  // Reset the session.
-                self?.load()  // Load the login again.
-              },
-              completion: nil
-            )
-          }
-        }
+        grantVerifiedUser(with: code)
       case .pending:
         User.currentUser.verified = false
         navigateToVerifyController()
-      case .tempPassword:
+      case .tempPassword, .accountLocked:
+        User.currentUser.verified = true
         User.currentUser.isLoggedInWithTempPassword = true
-        self.userDidLoggedIn()
+        grantVerifiedUser(with: code)
       }
     }
   }
@@ -198,6 +214,34 @@ class SignInViewController: UIViewController {
       didLoadPrivacyOrTerms(title: kNavigationTitlePrivacyPolicy, link: link)
     case .callback:
       handleDataCallback(url)
+    case .activation:
+      User.currentUser.emailId = url["email"]
+      User.currentUser.verified = false
+      navigateToVerifyController()
+    }
+  }
+
+  /// Grants the user for access token.
+  /// - Parameter code: Login authentication code from callback.
+  private func grantVerifiedUser(with code: String) {
+    HydraAPI.grant(user: User.currentUser, with: code) { [weak self] (status, error) in
+      if status {
+        if self?.viewLoadFrom == .signUp {
+          self?.signUpCompleted()
+        } else {
+          self?.userDidLoggedIn()
+        }
+      } else if let error = error {
+        self?.presentDefaultAlertWithError(
+          error: error,
+          animated: true,
+          action: {
+            SessionService.resetSession()  // Reset the session.
+            self?.load()  // Load the login again.
+          },
+          completion: nil
+        )
+      }
     }
   }
 
@@ -229,6 +273,16 @@ class SignInViewController: UIViewController {
     )
   }
 
+  /// Closes the navigation of Auto Login In.
+  @objc private func dismissSignUpNavigation() {
+    self.navigationController?.dismiss(
+      animated: true,
+      completion: {
+        self.delegate?.didFailLogIn()  // User closes while auto login with temp ID.
+      }
+    )
+  }
+
   /// Dismiss key board when clicked on Background.
   @objc func dismissKeyboard() {
     self.view.endEditing(true)
@@ -254,7 +308,6 @@ class SignInViewController: UIViewController {
     } else {
       changePassword.viewLoadFrom = .login
     }
-    changePassword.temporaryPassword = User.currentUser.password!
     self.navigationController?.pushViewController(changePassword, animated: true)
   }
 
@@ -353,6 +406,14 @@ extension SignInViewController {
     }
   }
 
+  private func signUpCompleted() {
+    self.navigationController?.dismiss(animated: true) {
+      DispatchQueue.main.async {
+        self.delegate?.didLogInCompleted()
+      }
+    }
+  }
+
 }
 
 extension SignInViewController: WKNavigationDelegate {
@@ -402,7 +463,6 @@ extension SignInViewController: WKNavigationDelegate {
     didFailProvisionalNavigation navigation: WKNavigation!,
     withError error: Error
   ) {
-    self.view.makeToast(error.localizedDescription)
     UIView.animate(
       withDuration: 0.33,
       animations: {
