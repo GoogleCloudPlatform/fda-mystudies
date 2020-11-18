@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY app_name "App Name">
+    <!ENTITY app_name "com.google.FDAMyStudies">
     <!ENTITY package_name "com.google.FDAMyStudies" >
     ]>
 
@@ -11,9 +11,9 @@
     <string name="websitetxt">App Website</string>
     <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
     <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
-    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
-    <string name="delete_message">Are you sure you wish to permanently delete your FDA MyStudies Gateway app account?  You will need to register again if you wish to join a study.</string>
-    <string name="studie_your_enrolled">It\'s been a while since you visited the App Name app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
+    <string name="delete_account_content">You have chosen to delete your &app_name; Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
+    <string name="delete_message">Are you sure you wish to permanently delete your &app_name; Gateway app account?  You will need to register again if you wish to join a study.</string>
+    <string name="studie_your_enrolled">It\'s been a while since you visited the &app_name; app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
     <string name="termsurl"></string>
     <string name="privacyurl"></string>
     <string name="view_consent">View Consent</string>
