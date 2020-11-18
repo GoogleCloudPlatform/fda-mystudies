@@ -62,7 +62,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: study-datastore-connect-credentials
-                  key: response_datastore_password
+                  key: response_datastore_token
             # SERVER CALLS
             - name: AUTH_SERVER_URL
               value: "http://auth-server-np:50000/oauth-scim-service"

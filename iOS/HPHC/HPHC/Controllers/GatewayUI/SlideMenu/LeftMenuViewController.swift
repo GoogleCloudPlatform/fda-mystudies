@@ -635,7 +635,7 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,
@@ -645,7 +645,9 @@ extension LeftMenuViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
-    } else if requestName as String == AuthServerMethods.logout.description && error.code == 403 {
+    } else if requestName as String == AuthServerMethods.logout.description
+      && error.code == HTTPError.forbidden.rawValue
+    {
       self.signout()
     } else {
       UIUtilities.showAlertWithTitleAndMessage(

@@ -1017,7 +1017,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
   func failedRequest(_: NetworkManager, requestName: NSString, error: NSError) {
     removeProgressIndicator()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // unauthorized Access
+    if error.code == HTTPError.forbidden.rawValue {  // unauthorized Access
       let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appdelegate.window?.removeProgressIndicatorFromWindow()
       UIUtilities.showAlertMessageWithActionHandler(
