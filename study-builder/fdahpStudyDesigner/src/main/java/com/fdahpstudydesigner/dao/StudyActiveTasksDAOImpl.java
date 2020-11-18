@@ -230,13 +230,12 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                       session
                           .createSQLQuery(
                               "select count(*) from active_task_attrtibutes_values at "
-                                  + "where at.identifier_name_stat='"
-                                  + activeTaskAtrributeValuesBo.getIdentifierNameStat()
-                                  + "'"
+                                  + "where at.identifier_name_stat=:identifierNameStat "
                                   + "and  at.active_task_id in "
                                   + "(select a.id from active_task a where a.custom_study_id=:customStudyId"
                                   + " and a.active=1 and a.is_live=1)")
                           .setParameter("customStudyId", customStudyId)
+                          .setParameter("identifierNameStat", activeTaskAtrributeValuesBo.getIdentifierNameStat())
                           .uniqueResult();
               if ((statTitleCount != null) && (statTitleCount.intValue() > 0)) {
                 activeTaskAtrributeValuesBo.setIsIdentifierNameStatDuplicate(
