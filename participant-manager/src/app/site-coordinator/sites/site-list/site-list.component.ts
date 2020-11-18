@@ -45,6 +45,11 @@ export class SiteListComponent implements OnInit {
     this.modalRef.hide();
     this.getStudies();
   }
+
+  cancel():void {
+        this.modalRef.hide();
+  }
+
   getStudies(): void {
     this.study$ = combineLatest(
       this.studiesService.getStudiesWithSites(),
