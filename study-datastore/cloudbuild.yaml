@@ -5,5 +5,5 @@
 # https://opensource.org/licenses/MIT.
 steps:
   - name: 'maven'
-    args: ['mvn', '-B', 'package', 'com.google.cloud.tools:jib-maven-plugin:2.5.2:build', '-Dimage=gcr.io/$PROJECT_ID/study-datastore']
+    args: ['mvn', '-B', 'package', 'com.google.cloud.tools:jib-maven-plugin:2.6.0:build', '-Dimage=gcr.io/$PROJECT_ID/jibstudy-datastore']
     dir: "study-datastore"
