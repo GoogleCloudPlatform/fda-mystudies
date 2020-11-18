@@ -5,22 +5,6 @@
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
-      <BuildActionEntries>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6E7D2D551E433E8700763D4C"
-               BuildableName = "FDA MyStudies.app"
-               BlueprintName = "HPHC"
-               ReferencedContainer = "container:HPHC.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
@@ -49,25 +33,23 @@
       </CodeCoverageTargets>
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7878B3192216C6E10052FC23"
-               BuildableName = "HPHCTests.xctest"
-               BlueprintName = "HPHCTests"
-               ReferencedContainer = "container:HPHC.xcodeproj">
+               BuildableName = "MyStudiesTests.xctest"
+               BlueprintName = "MyStudiesTests"
+               ReferencedContainer = "container:MyStudies.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6FEE49412521CBD500DD9696"
+               BlueprintIdentifier = "6FEE49522521CFD000DD9696"
                BuildableName = "MyStudiesUITests.xctest"
                BlueprintName = "MyStudiesUITests"
-               ReferencedContainer = "container:HPHC.xcodeproj">
+               ReferencedContainer = "container:MyStudies.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -92,15 +74,6 @@
             ReferencedContainer = "container:MyStudies.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6E7D2D551E433E8700763D4C"
-            BuildableName = "FDA MyStudies.app"
-            BlueprintName = "HPHC"
-            ReferencedContainer = "container:HPHC.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"
@@ -115,16 +88,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6E7D2D551E433E8700763D4C"
-            BuildableName = "FDA MyStudies.app"
-            BlueprintName = "HPHC"
-            ReferencedContainer = "container:HPHC.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
