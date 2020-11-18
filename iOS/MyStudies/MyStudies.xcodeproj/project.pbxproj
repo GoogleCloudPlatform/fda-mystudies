@@ -654,7 +654,7 @@
 			children = (
 				6F4E1B2A24223C210051D3E2 /* README.md */,
 				6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */,
-				6E7D2D581E433E8700763D4C /* HPHC */,
+				6E7D2D581E433E8700763D4C /* MyStudies */,
 				7878B31B2216C6E20052FC23 /* HPHCTests */,
 				6FEE49542521CFD000DD9696 /* MyStudiesUITests */,
 				6E7D2D571E433E8700763D4C /* Products */,
@@ -673,7 +673,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6E7D2D581E433E8700763D4C /* HPHC */ = {
+		6E7D2D581E433E8700763D4C /* MyStudies */ = {
 			isa = PBXGroup;
 			children = (
 				6FA930DF2519CC6E00611C3E /* Hydra.xcconfig */,
@@ -690,7 +690,7 @@
 				94878B861EC982C30064E1D4 /* FDA.entitlements */,
 				6E7D2D651E433E8800763D4C /* Info.plist */,
 			);
-			path = HPHC;
+			path = MyStudies;
 			sourceTree = "<group>";
 		};
 		6E7D2D881E433FE400763D4C /* UserModel */ = {
@@ -2484,7 +2484,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = YES;
-				INFOPLIST_FILE = HPHC/Info.plist;
+				INFOPLIST_FILE = MyStudies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
@@ -2516,7 +2516,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = YES;
-				INFOPLIST_FILE = HPHC/Info.plist;
+				INFOPLIST_FILE = MyStudies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
