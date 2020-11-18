@@ -602,6 +602,19 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   }
 #
 #   filename = "$${each.key}/cloudbuild.yaml"
+#
+#   "roles/logging.logWriter " = [
+#         "serviceAccount:$${google_service_account.auth_server_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.hydra-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.response-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.study-builder-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.study-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.consent-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.enroll-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.user-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.participant-manager-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.triggers-pubsub-handler-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#       ]
 # }
 EOF
     }
@@ -737,19 +750,6 @@ EOF
       # }]
       iam_members = {
         "roles/cloudsql.client" = [
-          "serviceAccount:bastion@{{$prefix}}-{{$env}}-networks.iam.gserviceaccount.com",
-          "serviceAccount:auth-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:response-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:study-builder-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:study-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:enroll-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:user-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        ]
-        "roles/logging.logWriter " = [
           "serviceAccount:bastion@{{$prefix}}-{{$env}}-networks.iam.gserviceaccount.com",
           "serviceAccount:auth-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
