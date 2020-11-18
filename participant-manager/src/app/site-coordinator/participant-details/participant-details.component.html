@@ -37,7 +37,7 @@
                   class="pr-xlg"
                 >
                   <div class="banner__label">SITE</div>
-                  <div class="banner__text">NA</div>
+                  <div class="banner__text">NA (Open study)</div>
                 </div>
                 <div class="pr-xlg">
                   <div class="banner__label">
@@ -58,12 +58,12 @@
               </div>
             </div>
           </div>
-          
+
           <section
             *ngIf="
               participant.participantDetails.studyType !== studyTypes.Open &&
               participant.participantDetails.sitePermission ===
-                permission.ViewAndEdit 
+                permission.ViewAndEdit
             "
             class="desk__view"
           >
@@ -72,8 +72,11 @@
                 class="mr-sm"
                 *ngIf="
                   participant.participantDetails.onboardingStatus !==
-                  onBoardingStatus.Disabled  && participant.participantDetails.studyStatus !== studyStatus.Deactivated
-                 && participant.participantDetails.siteStatus !== 0"
+                    onBoardingStatus.Disabled &&
+                  participant.participantDetails.studyStatus !==
+                    studyStatus.Deactivated &&
+                  participant.participantDetails.siteStatus !== 0
+                "
               >
                 <button
                   [disabled]="
@@ -89,7 +92,11 @@
                 </button>
               </div>
               <div
-               *ngIf="participant.participantDetails.studyStatus !== studyStatus.Deactivated && participant.participantDetails.siteStatus !== 0"
+                *ngIf="
+                  participant.participantDetails.studyStatus !==
+                    studyStatus.Deactivated &&
+                  participant.participantDetails.siteStatus !== 0
+                "
               >
                 <button
                   [disabled]="
@@ -116,8 +123,12 @@
     <section
       *ngIf="
         participant.participantDetails.studyType !== studyTypes.Open &&
-        participant.participantDetails.sitePermission === permission.ViewAndEdit &&  participant.participantDetails.studyStatus !== studyStatus.Deactivated
-       && participant.participantDetails.siteStatus !== 0"
+        participant.participantDetails.sitePermission ===
+          permission.ViewAndEdit &&
+        participant.participantDetails.studyStatus !==
+          studyStatus.Deactivated &&
+        participant.participantDetails.siteStatus !== 0
+      "
       class="subheader p-none pl-none mobile__view border-top__c4d1e6"
     >
       <div class="flex__ flex__justify__center">
@@ -176,7 +187,7 @@
           </thead>
           <tbody>
             <tr>
-              <td>
+              <td class="font14">
                 <span
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -201,7 +212,7 @@
                   NA
                 </span>
               </td>
-              <td>
+              <td class="font14">
                 <span
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -227,23 +238,24 @@
                     .enrollments
                 "
               >
-                <td >
-                  <span 
+                <td class="font14">
+                  <span
                     [ngClass]="{
-                    'txt__green':
-                      enrollmentDetails.enrollmentStatus ==
-                      enrollmentStatus.Enrolled,
-                    'txt__light-gray':
-                      enrollmentDetails.enrollmentStatus ==
-                      enrollmentStatus.Withdrawn
-                  }"
-                  
-                  >{{ enrollmentDetails.enrollmentStatus }}</span>
+                      'txt__green':
+                        enrollmentDetails.enrollmentStatus ==
+                        enrollmentStatus.Enrolled,
+                      'txt__light-gray':
+                        enrollmentDetails.enrollmentStatus ==
+                        enrollmentStatus.Withdrawn
+                    }"
+                  >
+                    {{ enrollmentDetails.enrollmentStatus }}
+                  </span>
                 </td>
-                <td class="mb__mt-sm inactive__text">
+                <td class="mb__mt-sm inactive__text font14">
                   <span>{{ enrollmentDetails.enrollmentDate }}</span>
                 </td>
-                <td class="mb__mt-sm inactive__text">
+                <td class="mb__mt-sm inactive__text font14">
                   <span>{{ enrollmentDetails.withdrawalDate }}</span>
                 </td>
               </table>
@@ -322,8 +334,9 @@
               </td>
             </tr>
           </tbody>
-          <div *ngIf="participant.participantDetails.consentHistory.length === 0
-                                      ">
+          <div
+            *ngIf="participant.participantDetails.consentHistory.length === 0"
+          >
             No records found
           </div>
           <tfoot class="custom__tfoot">
