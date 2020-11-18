@@ -2362,6 +2362,146 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnDecommissionedSitesforUserHavingStudyLevelViewAndEditPermission()
+      throws Exception {
+    // Step 1: set the data needed to get studies with sites
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
+
+    // Deleted app level permission
+    testDataHelper.getAppPermissionRepository().deleteAll();
+
+    List<SitePermissionEntity> sitePermissionList =
+        testDataHelper.getSitePermissionRepository().findAll();
+    // Assign a non super admin site level permission
+    SitePermissionEntity sitePermission = sitePermissionList.get(0);
+    sitePermission.setUrAdminUser(admin);
+    SiteEntity site = sitePermission.getSite();
+    site.setStatus(0); // Decommissioned the active site
+    sitePermission.setSite(site);
+    testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermission);
+
+    // Assign a non super admin study level permission
+    List<StudyPermissionEntity> studyPermissionList =
+        testDataHelper.getStudyPermissionRepository().findAll();
+    StudyPermissionEntity studyPermission = studyPermissionList.get(0);
+    studyPermission.setUrAdminUser(admin);
+    testDataHelper.getStudyPermissionRepository().saveAndFlush(studyPermission);
+
+    // Step 2: call API and expect GET_SITES_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, admin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].sites").isArray())
+        .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.studies[0].logoImageUrl", is(studyEntity.getLogoImageUrl())))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldNotReturnDecommissionedSitesforUserHavingOnlySiteLevelPermission()
+      throws Exception {
+    // Step 1: set the data needed to get studies with sites
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
+
+    // Deleting app and study level permission
+    // so that the user can have only site level permission
+    testDataHelper.getAppPermissionRepository().deleteAll();
+    testDataHelper.getStudyPermissionRepository().deleteAll();
+
+    List<SitePermissionEntity> sitePermissionList =
+        testDataHelper.getSitePermissionRepository().findAll();
+    // Assign a non super admin site level permission
+    SitePermissionEntity sitePermission = sitePermissionList.get(0);
+    sitePermission.setUrAdminUser(admin);
+    SiteEntity site = sitePermission.getSite();
+    site.setStatus(0); // Decommissioned the active site
+    sitePermission.setSite(site);
+    testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermission);
+
+    // Step 2: call API and expect GET_SITES_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, admin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(0)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnSitesforUserHavingMultipleSitesPermissionForDifferentStudies()
+      throws Exception {
+    // Step 1: set the data needed to get studies with sites
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
+
+    // Delete app level permission
+    testDataHelper.getAppPermissionRepository().deleteAll();
+
+    // Assign a non super admin study level permission
+    List<StudyPermissionEntity> studyPermissionList =
+        testDataHelper.getStudyPermissionRepository().findAll();
+    StudyPermissionEntity studyPermission = studyPermissionList.get(0);
+    studyPermission.setUrAdminUser(admin);
+    testDataHelper.getStudyPermissionRepository().saveAndFlush(studyPermission);
+
+    // Assign a non super admin site level permission
+    List<SitePermissionEntity> sitePermissionList =
+        testDataHelper.getSitePermissionRepository().findAll();
+    SitePermissionEntity sitePermission = sitePermissionList.get(0);
+    sitePermission.setUrAdminUser(admin);
+    testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermission);
+
+    // create few more studies and associated sites
+    List<StudyEntity> studyList = testDataHelper.createMultipleStudyEntity(appEntity);
+    for (StudyEntity study : studyList) {
+      testDataHelper.createMultipleSiteEntityWithPermission(
+          study, admin, appEntity, locationEntity);
+    }
+
+    // Step 2: call API and expect GET_SITES_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, admin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(3)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].sites").isArray())
+        .andExpect(jsonPath("$.studies[0].sites", hasSize(1)))
+        .andExpect(jsonPath("$.studies[1].sites", hasSize(1)))
+        .andExpect(jsonPath("$.studies[2].sites", hasSize(1)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnSitesForUserHavingSitePermission() throws Exception {
     // Step 1: set the data needed to get studies with sites
     UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
