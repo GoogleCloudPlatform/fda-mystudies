@@ -740,7 +740,7 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized  // unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  //unauthorized  // unauthorized
       self.removeProgressIndicator()
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,

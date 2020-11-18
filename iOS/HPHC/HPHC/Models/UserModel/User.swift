@@ -66,6 +66,9 @@ enum AccountStatus: Int {
   /// User account not verified
   case pending = 1
 
+  /// User account is locked
+  case accountLocked = 2
+
   /// Logged In with temporary password
   case tempPassword = 3
 }
@@ -516,6 +519,19 @@ class User {
 
     StudyFilterHandler.instance.previousAppliedFilters = []
   }
+
+  /// Stores the updated refresh token and access token to keychain.
+  /// - Parameter dict: JSON response of the tokens.
+  func tokenUpdate(with dict: JSONDictionary) {
+    let tokenType = dict[JSONKey.tokenType] as? String ?? ""
+    let accessToken = dict[JSONKey.accessToken] as? String ?? ""
+    authToken = tokenType.capitalized + " " + accessToken
+    refreshToken = dict[JSONKey.refreshToken] as? String ?? ""
+    FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
+    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
+    DBHandler().saveCurrentUser(user: self)
+  }
+
 }
 
 // MARK: User Settings
