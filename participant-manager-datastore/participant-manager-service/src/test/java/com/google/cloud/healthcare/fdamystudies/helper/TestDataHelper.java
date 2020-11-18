@@ -376,6 +376,24 @@ public class TestDataHelper {
     return studyList;
   }
 
+  public SiteEntity createMultipleSiteEntityWithPermission(
+      StudyEntity studyEntity,
+      UserRegAdminEntity urAdminUser,
+      AppEntity appEntity,
+      LocationEntity locationEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setName(siteEntity.getName() + RandomStringUtils.random(2));
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setStudy(studyEntity);
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(urAdminUser);
+    sitePermissionEntity.setApp(appEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
+  }
+
   public void cleanUp() {
     getAppPermissionRepository().deleteAll();
     getStudyPermissionRepository().deleteAll();

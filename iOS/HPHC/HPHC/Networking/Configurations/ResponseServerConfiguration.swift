@@ -90,8 +90,7 @@ class ResponseServerConfiguration: NetworkConfiguration {
 
     let header = [
       "appId": AppConfiguration.appID,
-      "orgId": AppConfiguration.orgID,
-      kUserAuthToken: User.currentUser.authToken ?? "",
+      kAuthorization: User.currentUser.authToken ?? "",
     ]
     return header
   }

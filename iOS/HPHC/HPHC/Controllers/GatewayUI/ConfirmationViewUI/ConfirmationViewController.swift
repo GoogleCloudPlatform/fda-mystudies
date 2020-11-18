@@ -318,7 +318,7 @@ extension ConfirmationViewController: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if error.code == 403 {  //unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  //unauthorized
       self.removeProgressIndicator()
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
