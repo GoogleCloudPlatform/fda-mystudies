@@ -80,12 +80,12 @@ export class SetUpAccountComponent
     this.setUpAccountService.get(this.setUpCode).subscribe(
       (user) => {
         if (user.redirectTo === 'login') {
-          void this.router.navigate(['/pagenotfound']);
+          void this.router.navigate(['/error/EC_0034']);
         }
         this.setupAccountForm.patchValue(user);
       },
       () => {
-        void this.router.navigate(['/login']);
+        void this.router.navigate(['/error/EC_0034']);
       },
     );
   }
@@ -102,9 +102,9 @@ export class SetUpAccountComponent
         .setUpAccount(updatedUser)
         .subscribe((successResponse: SetUpResponse) => {
           this.toastr.success(getMessage(successResponse.code));
-          localStorage.setItem('tempRegId', successResponse.tempRegId);
-          localStorage.setItem('userId', successResponse.userId);
-          this.authService.initlocalStorage();
+          sessionStorage.setItem('tempRegId', successResponse.tempRegId);
+          sessionStorage.setItem('userId', successResponse.userId);
+          this.authService.initSessionStorage();
           setTimeout(() => {
             this.authService.beginLoginConsentFlow();
           }, 1000);

@@ -64,8 +64,11 @@ export class AuthInterceptor implements HttpInterceptor {
     return this.authService.refreshToken().subscribe(
       (authServerResponse: AccessToken) => {
         this.refreshTokenSubject.next(authServerResponse);
-        localStorage.setItem('accessToken', authServerResponse.access_token);
-        localStorage.setItem('refreshToken', authServerResponse.refresh_token);
+        sessionStorage.setItem('accessToken', authServerResponse.access_token);
+        sessionStorage.setItem(
+          'refreshToken',
+          authServerResponse.refresh_token,
+        );
         return next.handle(this.setHeaders(request)).pipe(
           catchError((error: unknown) => {
             return throwError(error);
@@ -74,7 +77,7 @@ export class AuthInterceptor implements HttpInterceptor {
       },
       (error: unknown) => {
         if (error instanceof HttpErrorResponse) {
-          localStorage.clear();
+          sessionStorage.clear();
           void this.router.navigate(['/']);
         }
       },
@@ -84,7 +87,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (req.url.includes(`${environment.authServerUrl}`)) {
       let headers = req.headers
         .set('Accept', 'application/json')
-        .set('correlationId', localStorage.getItem('correlationId') || '')
+        .set('correlationId', sessionStorage.getItem('correlationId') || '')
         .set('appId', this.authService.appId)
         .set('mobilePlatform', this.authService.mobilePlatform)
         .set('Access-Control-Allow-Origin', '*')
@@ -94,7 +97,7 @@ export class AuthInterceptor implements HttpInterceptor {
         )
         .set(
           'Authorization',
-          `Bearer ${localStorage.getItem('accessToken') || ''} `,
+          `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
       if (!req.headers.has('Content-Type')) {
         headers = headers.append(
@@ -105,7 +108,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return req.clone({headers});
     } else {
       let headers = req.headers
-        .set('userId', localStorage.getItem('userId') || '')
+        .set('userId', sessionStorage.getItem('userId') || '')
         .set('Access-Control-Allow-Origin', '*')
         .set(
           'Access-Control-Allow-Headers',
@@ -113,7 +116,7 @@ export class AuthInterceptor implements HttpInterceptor {
         )
         .set(
           'Authorization',
-          `Bearer ${localStorage.getItem('accessToken') || ''} `,
+          `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
 
       if (!req.headers.get('skipIfUpload')) {

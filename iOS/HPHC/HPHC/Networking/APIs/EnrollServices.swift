@@ -243,10 +243,6 @@ extension EnrollServices: NMWebServiceDelegate {
     case EnrollmentMethods.enroll.description as String:
       self.handleEnrollForStudy(response: response as? [String: Any] ?? [:])
 
-    case AuthServerMethods.getRefreshedToken.description as String:
-      self.handleUpdateTokenResponse()
-      return
-
     default: break
     }
     delegate?.finishedRequest(manager, requestName: requestName, response: response)

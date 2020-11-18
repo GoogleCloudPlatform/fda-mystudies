@@ -41,7 +41,6 @@ class ResponseServices: NSObject {
     static let applicationId = "applicationId"
     static let studyVersion = "studyVersion"
     static let tokenIdentifier = "tokenIdentifier"
-    static let orgID = "orgId"
     static let siteID = "siteId"
     static let appID = "appId"
     static let studyID = "studyId"
@@ -452,9 +451,6 @@ extension ResponseServices: NMWebServiceDelegate {
     switch requestName {
     case ResponseMethods.getParticipantResponse.description as String:
       self.handleGetParticipantResponse(response: response as! [String: Any])
-    case AuthServerMethods.getRefreshedToken.description as String:
-      self.handleUpdateTokenResponse()
-      return
     case ResponseMethods.processResponse.description as String: break
     case ResponseMethods.updateActivityState.description as String: break
     case ResponseMethods.activityState.description as String:
