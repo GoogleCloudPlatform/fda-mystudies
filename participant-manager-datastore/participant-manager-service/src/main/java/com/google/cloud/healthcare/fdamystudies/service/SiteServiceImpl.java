@@ -332,7 +332,7 @@ public class SiteServiceImpl implements SiteService {
                 .getOnboardingStatus()
                 .equals(OnboardingStatus.DISABLED.getCode())
             || participantRegistrySite.getSite().equals(site)) {
-          return ErrorCode.EMAIL_EXISTS;
+          return ErrorCode.USER_EMAIL_EXIST;
         }
       }
     }

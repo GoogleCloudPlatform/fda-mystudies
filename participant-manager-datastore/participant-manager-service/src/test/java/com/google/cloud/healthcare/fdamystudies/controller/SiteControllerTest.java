@@ -18,12 +18,12 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PAGE_NO;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_EMAIL_EXIST;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
@@ -403,7 +403,7 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnEmailExistForAddNewParticipant() throws Exception {
+  public void shouldReturnUserEmailExistForAddNewParticipant() throws Exception {
     // Step 1: set emailId
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(newParticipantRequest().getEmail());
@@ -420,8 +420,8 @@ public class SiteControllerTest extends BaseMockIT {
                 .content(asJsonString(newParticipantRequest()))
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isConflict())
-        .andExpect(jsonPath("$.error_description", is(EMAIL_EXISTS.getDescription())));
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(USER_EMAIL_EXIST.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
