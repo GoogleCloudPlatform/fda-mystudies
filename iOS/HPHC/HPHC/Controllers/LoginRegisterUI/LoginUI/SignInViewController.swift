@@ -463,6 +463,9 @@ extension SignInViewController: WKNavigationDelegate {
     didFailProvisionalNavigation navigation: WKNavigation!,
     withError error: Error
   ) {
+    if (error as NSError).code != 102 {  // Ignore frame load error
+      self.view.makeToast(error.localizedDescription)
+    }
     UIView.animate(
       withDuration: 0.33,
       animations: {
@@ -491,9 +494,9 @@ extension SignInViewController: WKNavigationDelegate {
     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
   ) {
     if let url = navigationAction.request.url, url.scheme == "app" {
+      decisionHandler(.cancel)
       // Handle the callbacks
       handleScheme(for: url)
-      decisionHandler(.cancel)
     } else {
       decisionHandler(.allow)
     }
