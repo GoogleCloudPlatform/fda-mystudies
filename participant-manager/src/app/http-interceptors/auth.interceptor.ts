@@ -18,6 +18,10 @@ import {environment} from 'src/environments/environment';
 import {CookieService} from 'ngx-cookie-service';
 import {AccessToken} from '../entity/access-token';
 import {Router} from '@angular/router';
+import {
+  GenericErrorCode,
+  getGenericMessage,
+} from '../shared/generic.error.codes.enum';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
@@ -73,14 +77,8 @@ export class AuthInterceptor implements HttpInterceptor {
       },
       (error: unknown) => {
         if (error instanceof HttpErrorResponse) {
-          const customError = error.error as ApiResponse;
-          if (getMessage(customError.error_code)) {
-            this.toasterService.error(getMessage(customError.error_code));
-          }
-          if (error.status === 401) {
-            sessionStorage.clear();
-            void this.router.navigate(['/']);
-          }
+          sessionStorage.clear();
+          void this.router.navigate(['/']);
         }
       },
     );
@@ -135,14 +133,22 @@ export class AuthInterceptor implements HttpInterceptor {
     return catchError(
       (err: unknown): Observable<T> => {
         if (err instanceof HttpErrorResponse) {
-          if (err.status === 401 || err.status === 500) {
+          if (err.status === 401) {
             this.handle401Error(request, next);
+          } else if (err.url === `${environment.authServerUrl}/oauth2/token`) {
+            this.toasterService.error(
+              'Your session has expired and have been loged out successfully',
+            );
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
           } else {
             const customError = err.error as ApiResponse;
             if (getMessage(customError.error_code)) {
               this.toasterService.error(getMessage(customError.error_code));
+            } else if (
+              getGenericMessage(customError.error_code as GenericErrorCode)
+            ) {
+              void this.router.navigate(['/error/', customError.error_code]);
             } else {
               this.toasterService.error(
                 `Error Code: ${err.status}\nMessage: ${err.message}`,

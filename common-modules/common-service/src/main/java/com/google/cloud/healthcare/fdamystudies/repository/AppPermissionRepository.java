@@ -42,4 +42,10 @@ public interface AppPermissionRepository extends JpaRepository<AppPermissionEnti
 
   @Query("SELECT ap from AppPermissionEntity ap where ap.urAdminUser.id=:adminId")
   public List<AppPermissionEntity> findByAdminUserId(String adminId);
+
+  @Query(
+      "SELECT ap FROM AppPermissionEntity ap where ap.urAdminUser.id in (:siteAdminIdList) and ap.app.id in (:appIdList)")
+  public List<AppPermissionEntity> findByUserIdsAndAppIds(
+      @Param("siteAdminIdList") List<String> siteAdminIdList,
+      @Param("appIdList") List<String> appIdList);
 }

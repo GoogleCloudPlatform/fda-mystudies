@@ -37,6 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,7 +188,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     AuthUserRequest userRequest =
         new AuthUserRequest(
-            "PARTICIPANT MANAGER",
+            "Participant Manager",
             setUpAccountRequest.getEmail(),
             setUpAccountRequest.getPassword(),
             UserAccountStatus.ACTIVE.getStatus());
@@ -227,7 +228,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     UserRegAdminEntity user = optUser.get();
-    if (UserStatus.ACTIVE == userStatus || UserStatus.DEACTIVATED == userStatus) {
+    if (StringUtils.isNotEmpty(user.getUrAdminAuthId())) {
       updateUserAccountStatusInAuthServer(user.getUrAdminAuthId(), statusRequest.getStatus());
     }
 
@@ -277,5 +278,29 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     logger.exit(
         String.format("status=%d", ((BaseResponse) responseEntity.getBody()).getHttpStatusCode()));
+  }
+
+  @Override
+  public void deleteInvitation(String signedInUserId, String userId) {
+    logger.entry("deleteInvitation()");
+
+    Optional<UserRegAdminEntity> optSuperAdmin = userRegAdminRepository.findById(signedInUserId);
+    UserRegAdminEntity admin =
+        optSuperAdmin.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+    if (!admin.isSuperAdmin()) {
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
+    }
+
+    Optional<UserRegAdminEntity> optUser = userRegAdminRepository.findById(userId);
+    UserRegAdminEntity user =
+        optUser.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+
+    if (user.getStatus() != UserStatus.INVITED.getValue()) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_DELETE_INVITATION);
+    }
+
+    userRegAdminRepository.delete(user);
+
+    logger.exit("Sucessfully deleted invitation");
   }
 }

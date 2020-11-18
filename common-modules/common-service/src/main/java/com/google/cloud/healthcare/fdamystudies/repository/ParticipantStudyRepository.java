@@ -7,6 +7,7 @@
  */
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCount;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import java.util.List;
 import java.util.Optional;
@@ -46,8 +47,9 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
 
   @Query(
       "SELECT COUNT(ps.id) FROM ParticipantStudyEntity ps  "
-          + "WHERE ps.status IN(:status) AND ps.study.id=:studyId")
-  public Optional<Long> findByStudyIdAndStatus(List<String> status, String studyId);
+          + "WHERE ps.status IN(:status) AND ps.study.id=:studyId AND ps.site.id=:siteId")
+  public Optional<Long> findByStudyIdSiteIdAndStatus(
+      List<String> status, String studyId, String siteId);
 
   @Query(
       "SELECT participantStudy from ParticipantStudyEntity participantStudy "
@@ -55,10 +57,9 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
   public List<ParticipantStudyEntity> findBySiteIdAndStatus(String siteId, String status);
 
   @Query(
-      "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id in (:appsStudyInfoIds) AND ps.userDetails.id in (:userDetailsIds)")
-  public List<ParticipantStudyEntity> findByAppIdAndUserId(
-      @Param("appsStudyInfoIds") List<String> appsStudyInfoIds,
-      @Param("userDetailsIds") List<String> userDetailsIds);
+      "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id in (:studyIds) AND ps.userDetails.id in (:userIds)")
+  public List<ParticipantStudyEntity> findByStudyIdsAndUserIds(
+      @Param("studyIds") List<String> studyIds, @Param("userIds") List<String> userIds);
 
   @Query(
       "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.participantRegistrySite.id = :participantRegistrySiteId")
@@ -74,4 +75,15 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
 
   @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.participantId = :participantId")
   public Optional<ParticipantStudyEntity> findByParticipantId(String participantId);
+
+  @Query(
+      value =
+          "SELECT ps.site_id AS siteId, COUNT(ps.site_id) AS enrolledCount FROM participant_study_info ps WHERE ps.status='inProgress' AND ps.site_id IN (:siteIds) GROUP BY ps.site_id ",
+      nativeQuery = true)
+  public List<EnrolledInvitedCount> getEnrolledCountForOpenStudy(List<String> siteIds);
+
+  @Query(
+      "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId AND ps.userDetails.id = :userId")
+  public Optional<ParticipantStudyEntity> findByStudyIdAndUserId(
+      @Param("studyId") String studyId, @Param("userId") String userId);
 }

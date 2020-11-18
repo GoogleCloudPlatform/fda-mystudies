@@ -229,7 +229,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                 studyStateDao.getEnrollTokenForParticipant(
                     participantStudiesBO.getParticipantRegistrySite().getId());
             studyStateBean.setHashedToken(
-                EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
+                EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
           }
           if (participantStudiesBO.getStudy() != null) {
             studyStateBean.setStudyId(participantStudiesBO.getStudy().getCustomId());
@@ -273,7 +273,10 @@ public class StudyStateServiceImpl implements StudyStateService {
               participantStudy.get().getParticipantRegistrySite().getId());
       ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
       participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+      participantRegistrySite.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+      participantStudy.get().setParticipantId(null);
+      participantStudyRepository.saveAndFlush(participantStudy.get());
 
       enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete);
       respBean = new WithDrawFromStudyRespBean();

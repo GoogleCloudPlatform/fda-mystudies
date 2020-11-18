@@ -5,6 +5,7 @@ import {UserService} from '../shared/user.service';
 import {User} from 'src/app/entity/user';
 import {ManageUserDetails} from '../shared/manage-user-details';
 import {Permission} from 'src/app/shared/permission-enums';
+import {Status} from 'src/app/shared/enums';
 
 @Component({
   selector: 'user-details',
@@ -21,6 +22,7 @@ export class UserDetailsComponent
     '=1': '1 Site',
     'other': '# Sites',
   };
+  onBoardingStatus = Status;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -46,7 +48,18 @@ export class UserDetailsComponent
         .getUserDetails(this.adminId)
         .subscribe((data: ManageUserDetails) => {
           this.user = data.user;
+          this.user.manageLocationsSelected =
+            this.user.manageLocations !== null;
         }),
     );
+  }
+  statusColour(status: string | undefined): string {
+    if (status === this.onBoardingStatus.Active) {
+      return 'txt__green';
+    } else if (status === this.onBoardingStatus.Deactivated) {
+      return 'txt__light-gray';
+    } else {
+      return 'txt__space-gray';
+    }
   }
 }

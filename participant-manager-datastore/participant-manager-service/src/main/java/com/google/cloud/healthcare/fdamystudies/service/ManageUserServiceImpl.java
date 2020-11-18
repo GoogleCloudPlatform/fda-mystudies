@@ -32,6 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyPermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
@@ -52,6 +53,9 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -123,16 +127,16 @@ public class ManageUserServiceImpl implements ManageUserService {
     return userResponse;
   }
 
-  private EmailResponse sendInvitationEmail(UserRequest user, String securityCode) {
+  private EmailResponse sendInvitationEmail(String email, String firstName, String securityCode) {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("ORG_NAME", appConfig.getOrgName());
-    templateArgs.put("FIRST_NAME", user.getFirstName());
+    templateArgs.put("FIRST_NAME", firstName);
     templateArgs.put("ACTIVATION_LINK", appConfig.getUserDetailsLink() + securityCode);
     templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmail(),
-            new String[] {user.getEmail()},
+            new String[] {email},
             null,
             null,
             appConfig.getRegisterUserSubject(),
@@ -154,8 +158,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       return ErrorCode.NOT_SUPER_ADMIN_ACCESS;
     }
 
-    if (!user.isSuperAdmin()
-        && (CollectionUtils.isEmpty(user.getApps()) || !hasAtleastOnePermission(user))) {
+    if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
       return ErrorCode.PERMISSION_MISSING;
     }
 
@@ -166,6 +169,12 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private boolean hasAtleastOnePermission(UserRequest user) {
     logger.entry("hasAtleastOnePermission()");
+    if (user.getManageLocations() != Permission.NO_PERMISSION.value()) {
+      return true;
+    } else if (CollectionUtils.isEmpty(user.getApps())) {
+      return false;
+    }
+
     Predicate<UserAppPermissionRequest> appPredicate = app -> app.isSelected();
     Predicate<UserStudyPermissionRequest> studyPredicate = study -> study.isSelected();
     Predicate<UserSitePermissionRequest> sitePredicate = site -> site.isSelected();
@@ -208,30 +217,33 @@ public class ManageUserServiceImpl implements ManageUserService {
         UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
-    Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
-        user.getApps()
-            .stream()
-            .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
+    if (CollectionUtils.isNotEmpty(user.getApps())) {
+      Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
+          user.getApps()
+              .stream()
+              .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
 
-    // save permissions for selected apps
-    for (UserAppPermissionRequest app :
-        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
-      saveAppStudySitePermissions(user, adminDetails, app);
-    }
+      // save permissions for selected apps
+      for (UserAppPermissionRequest app :
+          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
+        saveAppStudySitePermissions(user, adminDetails, app);
+      }
 
-    // save permissions for unselected apps
-    for (UserAppPermissionRequest app :
-        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
-      for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
-        if (study.isSelected()) {
-          saveStudySitePermissions(user, adminDetails, study);
-        } else if (CollectionUtils.isNotEmpty(study.getSites())) {
-          saveSitePermissions(user, adminDetails, study);
+      // save permissions for unselected apps
+      for (UserAppPermissionRequest app :
+          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
+        for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
+          if (study.isSelected()) {
+            saveStudySitePermissions(user, adminDetails, study);
+          } else if (CollectionUtils.isNotEmpty(study.getSites())) {
+            saveSitePermissions(user, adminDetails, study);
+          }
         }
       }
     }
 
-    EmailResponse emailResponse = sendInvitationEmail(user, adminDetails.getSecurityCode());
+    EmailResponse emailResponse =
+        sendInvitationEmail(user.getEmail(), user.getFirstName(), adminDetails.getSecurityCode());
     logger.debug(
         String.format("send add new user email status=%s", emailResponse.getHttpStatusCode()));
 
@@ -330,7 +342,9 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     superAdminDetails = userAdminRepository.saveAndFlush(superAdminDetails);
 
-    EmailResponse emailResponse = sendInvitationEmail(user, superAdminDetails.getSecurityCode());
+    EmailResponse emailResponse =
+        sendInvitationEmail(
+            user.getEmail(), user.getFirstName(), superAdminDetails.getSecurityCode());
     logger.debug(
         String.format("send add new user email status=%s", emailResponse.getHttpStatusCode()));
 
@@ -390,6 +404,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
       return ErrorCode.PERMISSION_MISSING;
     }
+
     logger.exit("Successfully validated user request");
     return null;
   }
@@ -407,6 +422,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
 
     userAdminRepository.saveAndFlush(adminDetails);
+
+    deleteAppStudySiteLevelPermissions(user.getId());
 
     EmailResponse emailResponse = sendUserUpdatedEmail(user);
     logger.debug(String.format("send update email status=%s", emailResponse.getHttpStatusCode()));
@@ -454,29 +471,30 @@ public class ManageUserServiceImpl implements ManageUserService {
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
     userAdminRepository.saveAndFlush(adminDetails);
 
-    deleteAllPermissions(user.getId());
+    deleteAppStudySiteLevelPermissions(user.getId());
 
-    user.setSuperAdminUserId(superAdminUserId);
+    if (CollectionUtils.isNotEmpty(user.getApps())) {
+      user.setSuperAdminUserId(superAdminUserId);
+      Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
+          user.getApps()
+              .stream()
+              .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
 
-    Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
-        user.getApps()
-            .stream()
-            .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
+      // save permissions for selected apps
+      for (UserAppPermissionRequest app :
+          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
+        saveAppStudySitePermissions(user, adminDetails, app);
+      }
 
-    // save permissions for selected apps
-    for (UserAppPermissionRequest app :
-        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
-      saveAppStudySitePermissions(user, adminDetails, app);
-    }
-
-    // save permissions for unselected apps
-    for (UserAppPermissionRequest app :
-        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
-      for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
-        if (study.isSelected()) {
-          saveStudySitePermissions(user, adminDetails, study);
-        } else if (CollectionUtils.isNotEmpty(study.getSites())) {
-          saveSitePermissions(user, adminDetails, study);
+      // save permissions for unselected apps
+      for (UserAppPermissionRequest app :
+          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
+        for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
+          if (study.isSelected()) {
+            saveStudySitePermissions(user, adminDetails, study);
+          } else if (CollectionUtils.isNotEmpty(study.getSites())) {
+            saveSitePermissions(user, adminDetails, study);
+          }
         }
       }
     }
@@ -496,7 +514,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
   }
 
-  private void deleteAllPermissions(String userId) {
+  private void deleteAppStudySiteLevelPermissions(String userId) {
     logger.entry("deleteAllPermissions()");
     sitePermissionRepository.deleteByAdminUserId(userId);
     studyPermissionRepository.deleteByAdminUserId(userId);
@@ -547,7 +565,9 @@ public class ManageUserServiceImpl implements ManageUserService {
 
       setStudiesSitesCountPerApp(userAppBean, userStudies);
 
-      user.getApps().add(userAppBean);
+      if (userAppBean.getSelectedSitesCount() > 0 || userAppBean.getSelectedStudiesCount() > 0) {
+        user.getApps().add(userAppBean);
+      }
     }
 
     logger.exit(
@@ -578,13 +598,23 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     for (StudyEntity existingStudy : CollectionUtils.emptyIfNull(app.getStudies())) {
       UserStudyDetails studyResponse = UserMapper.toUserStudyDetails(existingStudy);
-      setSelectedAndStudyPermission(adminDetails, app.getId(), studyResponse);
+      if (adminDetails.isSuperAdmin()) {
+        studyResponse.setPermission(Permission.EDIT.value());
+        studyResponse.setSelected(true);
+      } else {
+        setSelectedAndStudyPermission(adminDetails, app.getId(), studyResponse);
+      }
       List<UserSiteDetails> userSites = new ArrayList<>();
       List<SiteEntity> sites = existingStudy.getSites();
       for (SiteEntity site : CollectionUtils.emptyIfNull(sites)) {
         UserSiteDetails siteResponse = UserMapper.toUserSiteDetails(site);
-        setSelectedAndSitePermission(
-            site.getId(), adminDetails, app.getId(), siteResponse, studyResponse.getStudyId());
+        if (adminDetails.isSuperAdmin()) {
+          siteResponse.setPermission(Permission.EDIT.value());
+          siteResponse.setSelected(true);
+        } else {
+          setSelectedAndSitePermission(
+              site.getId(), adminDetails, app.getId(), siteResponse, studyResponse.getStudyId());
+        }
         userSites.add(siteResponse);
       }
 
@@ -680,5 +710,52 @@ public class ManageUserServiceImpl implements ManageUserService {
     participantManagerHelper.logEvent(USER_REGISTRY_VIEWED, auditRequest);
     logger.exit(String.format("total users=%d", adminList.size()));
     return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, userAdminRepository.count());
+  }
+
+  @Override
+  @Transactional
+  public AdminUserResponse sendInvitation(String userId, String superAdminUserId) {
+
+    validateInviteRequest(superAdminUserId);
+
+    Optional<UserRegAdminEntity> optUser = userAdminRepository.findById(userId);
+    UserRegAdminEntity user =
+        optUser.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+
+    Timestamp now = new Timestamp(Instant.now().toEpochMilli());
+    if (now.before(user.getSecurityCodeExpireDate())) {
+      logger.info("Valid security code found, skip send invite email");
+      return new AdminUserResponse(MessageCode.INVITATION_SENT_SUCCESSFULLY, user.getId());
+    }
+
+    user.setSecurityCode(IdGenerator.id());
+    user.setSecurityCodeExpireDate(
+        new Timestamp(
+            Instant.now()
+                .plus(Long.valueOf(appConfig.getSecurityCodeExpireDate()), ChronoUnit.MINUTES)
+                .toEpochMilli()));
+    user = userAdminRepository.saveAndFlush(user);
+
+    EmailResponse emailResponse =
+        sendInvitationEmail(user.getEmail(), user.getFirstName(), user.getSecurityCode());
+
+    if (!MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+        .getMessage()
+        .equals(emailResponse.getMessage())) {
+      throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
+    }
+    return new AdminUserResponse(MessageCode.INVITATION_SENT_SUCCESSFULLY, user.getId());
+  }
+
+  private void validateInviteRequest(String superAdminUserId) {
+    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
+
+    UserRegAdminEntity loggedInUserDetails =
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+
+    if (!loggedInUserDetails.isSuperAdmin()) {
+      logger.error("Signed in user is not having super admin privileges");
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
+    }
   }
 }

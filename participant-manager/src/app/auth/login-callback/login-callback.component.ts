@@ -45,27 +45,23 @@ export class LoginCallbackComponent implements OnInit {
                 return this.accountService.fetchUserProfile();
               }),
             )
-            .subscribe(
-              (userProfile: Profile) => {
-                this.userState.setCurrentUserName(userProfile.firstName);
-                sessionStorage.setItem('userId', userProfile.userId);
-                sessionStorage.setItem('user', JSON.stringify(userProfile));
+            .subscribe((userProfile: Profile) => {
+              this.userState.setCurrentUserName(userProfile.firstName);
+              sessionStorage.setItem('userId', userProfile.userId);
+              sessionStorage.setItem('user', JSON.stringify(userProfile));
 
-                if (
-                  params.accountStatus === '3' ||
-                  params.accountStatus === '2'
-                ) {
-                  void this.router.navigate([
-                    '/coordinator/accounts/change-password',
-                  ]);
-                } else {
-                  void this.router.navigate(['/coordinator/studies/sites']);
-                }
-              },
-              (error) => {
-                this.toastr.error(error);
-              },
-            );
+              if (
+                params.accountStatus === '3' ||
+                params.accountStatus === '2'
+              ) {
+                void this.router.navigate(
+                  ['/coordinator/accounts/change-password'],
+                  {queryParams: {action: 'passwordsetup'}},
+                );
+              } else {
+                void this.router.navigate(['/coordinator/studies/sites']);
+              }
+            });
         }
       },
       () => {

@@ -84,7 +84,7 @@ class ActivitiesViewController: UIViewController {
 
     self.tableView?.estimatedRowHeight = 126
     self.tableView?.rowHeight = UITableView.automaticDimension
-
+    self.tableView?.tableFooterView = UIView()
     self.navigationItem.title = NSLocalizedString("Study Activities", comment: "")
     self.tableView?.sectionHeaderHeight = 30
 
@@ -475,9 +475,9 @@ class ActivitiesViewController: UIViewController {
 
   /// Updates Activity Run Status.
   /// - Parameter status: Status of the Activity.
-  func updateActivityRun(status: UserActivityStatus.ActivityStatus) {
+  func updateActivityRun(status: UserActivityStatus.ActivityStatus, alert: Bool = true) {
 
-    let activity = Study.currentActivity!
+    guard let activity = Study.currentActivity else { return }
 
     let activityStatus = User.currentUser.updateActivityStatus(
       studyId: activity.studyId!,
@@ -505,7 +505,7 @@ class ActivitiesViewController: UIViewController {
     DBHandler.updateParticipationStatus(for: activity)
 
     if status == .completed {
-      self.updateCompletionAdherence()
+      self.updateCompletionAdherence(with: alert)
     }
 
   }
@@ -516,7 +516,7 @@ class ActivitiesViewController: UIViewController {
   ///     adherence =  (totalCompletedRuns*100) / (totalCompletedRuns + totalIncompletedRuns)
   ///
   /// Also alerts the user about the study Completion Status.
-  func updateCompletionAdherence() {
+  func updateCompletionAdherence(with alert: Bool = true) {
 
     var totalRuns = 0
     var totalCompletedRuns = 0
@@ -574,8 +574,7 @@ class ActivitiesViewController: UIViewController {
       }
 
     }
-
-    if completion == 100 {
+    if completion == 100 && alert {
 
       if !(ud.bool(forKey: fullCompletionKey)) {
         let message =
@@ -619,8 +618,8 @@ class ActivitiesViewController: UIViewController {
   }
 
   /// To update Activity Status To Complete.
-  func updateActivityStatusToComplete() {
-    self.updateActivityRun(status: .completed)
+  func updateActivityStatusToComplete(alert: Bool) {
+    self.updateActivityRun(status: .completed, alert: alert)
   }
 
   /// Schedules AD resources with activity response.
@@ -646,7 +645,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   /// Save completed staus in database.
-  func updateRunStatusToComplete() {
+  func updateRunStatusToComplete(with alert: Bool = true) {
     guard let currentActivity = Study.currentActivity,
       let activityID = currentActivity.actvityId,
       let studyID = currentActivity.studyId
@@ -658,7 +657,7 @@ class ActivitiesViewController: UIViewController {
       activityId: activityID,
       studyId: studyID
     )
-    self.updateActivityStatusToComplete()
+    self.updateActivityStatusToComplete(alert: alert)
     let activityResponse = self.lastActivityResponse ?? [:]
     lastActivityResponse = [:]
     let isActivitylifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
@@ -1049,7 +1048,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
       self.removeProgressIndicator()
-      self.updateRunStatusToComplete()
+      self.updateRunStatusToComplete(with: false)
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
@@ -1072,8 +1071,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
 
       self.checkForActivitiesUpdates()
-    } else if requestName as String == AuthServerMethods.getRefreshedToken.method.methodName {
-      self.removeProgressIndicator()
     } else if requestName as String == WCPMethods.resources.method.methodName {
       DispatchQueue.main.async {
         ResourcesViewController.refreshNotifications()
@@ -1088,22 +1085,22 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
       self.refreshControl?.endRefreshing()
     }
+    if error.code == HTTPError.forbidden.rawValue {
+      UIUtilities.showAlertMessageWithActionHandler(
+        kErrorTitle,
+        message: error.localizedDescription,
+        buttonTitle: kTitleOk,
+        viewControllerUsed: self,
+        action: {
+          self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
+        }
+      )
+      return
+    }
     let requestName = requestName as String
 
     switch requestName {
 
-    case AuthServerMethods.getRefreshedToken.description:
-      if error.code == 401 {
-        UIUtilities.showAlertMessageWithActionHandler(
-          kErrorTitle,
-          message: error.localizedDescription,
-          buttonTitle: kTitleOk,
-          viewControllerUsed: self,
-          action: {
-            self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-          }
-        )
-      }
     case ResponseMethods.activityState.method.methodName:
       if error.code != kNoNetworkErrorCode {
         self.loadActivitiesFromDatabase()
@@ -1119,7 +1116,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       }
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
-        self.updateRunStatusToComplete()
+        self.updateRunStatusToComplete(with: false)
       } else {
         self.lastActivityResponse = nil
       }
@@ -1273,10 +1270,10 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
                 let activity = Study.currentActivity
 
                 // Create the stats for FetalKick
-                if fetalKickResult != nil {
+                if let result = fetalKickResult {
 
-                  let value = Float((fetalKickResult?.duration)!) / 60
-                  let kickcount = Float((fetalKickResult?.totalKickCount)!)
+                  let value = Float(result.duration)
+                  let kickcount = Float(result.totalKickCount)
                   let dict = ActivityBuilder.currentActivityBuilder.activity?
                     .steps?.first!
                   let key = (dict?[kActivityStepKey] as? String)!

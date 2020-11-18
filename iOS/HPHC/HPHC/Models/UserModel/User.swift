@@ -64,10 +64,13 @@ enum AccountStatus: Int {
   case verified = 0
 
   /// User account not verified
-  case pending
+  case pending = 1
+
+  /// User account is locked
+  case accountLocked = 2
 
   /// Logged In with temporary password
-  case tempPassword
+  case tempPassword = 3
 }
 
 let kUserValueForOS = "ios"
@@ -88,6 +91,8 @@ class User {
   var password: String? = ""
   var refreshToken: String! = ""
 
+  /// Temporary ID to Auto login the user after successfull verification.
+  var tempRegID: String?
   var verified: Bool = false
   var authToken: String!
   var participatedStudies: [UserStudyStatus]! = []
@@ -262,8 +267,8 @@ class User {
     -> UserStudyStatus
   {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
 
       study.adherence = adherence
       study.completion = completion
@@ -289,8 +294,8 @@ class User {
   /// - Returns: Boolean state of  `Study` bookmarked
   func isStudyBookmarked(studyId: String) -> Bool {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       return study.bookmarked
     }
     return false
@@ -302,8 +307,8 @@ class User {
   /// - Returns: An object of `UserStudyStatus`
   func bookmarkStudy(studyId: String) -> UserStudyStatus {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       study.bookmarked = true
       return study
     } else {
@@ -321,8 +326,8 @@ class User {
   /// - Returns: An object of `UserStudyStatus`
   func removeBookbarkStudy(studyId: String) -> UserStudyStatus? {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       study.bookmarked = false
       return study
     }
@@ -338,8 +343,8 @@ class User {
   /// - Returns: Boolean state of `Activity` bookmarked
   func isActivityBookmarked(studyId: String, activityId: String) -> Bool {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+    let activityes = self.participatedActivites
+    if let activity = activityes?.filter({ $0.studyId == studyId && $0.activityId == activityId })
       .first
     {
       return activity.bookmarked
@@ -355,8 +360,8 @@ class User {
   /// - Returns: An object of `UserActivityStatus`
   func bookmarkActivity(studyId: String, activityId: String) -> UserActivityStatus {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+    let activities = self.participatedActivites
+    if let activity = activities?.filter({ $0.studyId == studyId && $0.activityId == activityId })
       .first
     {
       activity.bookmarked = true
@@ -378,8 +383,8 @@ class User {
   ///   - activityId: ActivityId to filter `UserActivityStatus`
   func removeBookbarkActivity(studyId: String, activityId: String) {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.studyId == studyId && $0.activityId == activityId })
+    let activities = self.participatedActivites
+    if let activity = activities?.filter({ $0.studyId == studyId && $0.activityId == activityId })
       .first
     {
       activity.bookmarked = true
@@ -395,8 +400,8 @@ class User {
   /// - Returns: Object of `UserStudyStatus`
   func updateStudyStatus(studyId: String, status: UserStudyStatus.StudyStatus) -> UserStudyStatus {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       study.status = status
       return study
     } else {
@@ -414,8 +419,8 @@ class User {
   ///   - participantId:
   func updateParticipantId(studyId: String, participantId: String) -> UserStudyStatus {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       study.participantId = participantId
       return study
     } else {
@@ -432,8 +437,8 @@ class User {
   /// - Returns: Study status
   func getStudyStatus(studyId: String) -> UserStudyStatus.StudyStatus {
 
-    let studies = self.participatedStudies as [UserStudyStatus]
-    if let study = studies.filter({ $0.studyId == studyId }).first {
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
       return study.status
     }
     return .yetToJoin
@@ -455,8 +460,8 @@ class User {
     status: UserActivityStatus.ActivityStatus
   ) -> UserActivityStatus {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.activityId == activityId && $0.activityRunId == runId }
+    let activities = self.participatedActivites
+    if let activity = activities?.filter({ $0.activityId == activityId && $0.activityRunId == runId }
     ).first {
       activity.status = status
       return activity
@@ -479,8 +484,8 @@ class User {
     -> UserActivityStatus.ActivityStatus?
   {
 
-    let activityes = self.participatedActivites as [UserActivityStatus]
-    if let activity = activityes.filter({ $0.activityId == activityId }).first {
+    let activities = self.participatedActivites
+    if let activity = activities?.filter({ $0.activityId == activityId }).first {
       return activity.status
     }
     return .yetToJoin
@@ -494,23 +499,39 @@ class User {
     refreshToken = dict[JSONKey.refreshToken] as? String ?? ""
 
     if self.verified && !self.isLoggedInWithTempPassword {
-
-      // Set user type & save current user to DB
-      userType = UserType.loggedInUser
-      DBHandler().saveCurrentUser(user: self)
-
-      // Updating Key & Vector
-      let appDelegate = UIApplication.shared.delegate as? AppDelegate
-      appDelegate?.updateKeyAndInitializationVector()
-
-      FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
-      FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
-
-      UserDefaults.standard.set(true, forKey: kPasscodeIsPending)  // For passcode setup
-
-      StudyFilterHandler.instance.previousAppliedFilters = []
+      saveAuthenticatedUserToDB()
     }
   }
+
+  func saveAuthenticatedUserToDB() {
+    // Set user type & save current user to DB
+    userType = UserType.loggedInUser
+    DBHandler().saveCurrentUser(user: self)
+
+    // Updating Key & Vector
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    appDelegate?.updateKeyAndInitializationVector()
+
+    FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
+    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
+
+    UserDefaults.standard.set(true, forKey: kPasscodeIsPending)  // For passcode setup
+
+    StudyFilterHandler.instance.previousAppliedFilters = []
+  }
+
+  /// Stores the updated refresh token and access token to keychain.
+  /// - Parameter dict: JSON response of the tokens.
+  func tokenUpdate(with dict: JSONDictionary) {
+    let tokenType = dict[JSONKey.tokenType] as? String ?? ""
+    let accessToken = dict[JSONKey.accessToken] as? String ?? ""
+    authToken = tokenType.capitalized + " " + accessToken
+    refreshToken = dict[JSONKey.refreshToken] as? String ?? ""
+    FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
+    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
+    DBHandler().saveCurrentUser(user: self)
+  }
+
 }
 
 // MARK: User Settings

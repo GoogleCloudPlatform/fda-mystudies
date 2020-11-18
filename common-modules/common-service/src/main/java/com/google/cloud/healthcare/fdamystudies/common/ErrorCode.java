@@ -35,7 +35,7 @@ public enum ErrorCode {
       401,
       "EC_0002",
       HttpStatus.UNAUTHORIZED.toString(),
-      "Your temporary password is expired. Please use the forgot password link to reset your password."),
+      "The temporary password entered is either invalid or expired. Please use the Forgot Password link to get password help."),
 
   ACCOUNT_DEACTIVATED(403, "EC_0003", Constants.BAD_REQUEST, "Your account has been deactivated"),
 
@@ -72,7 +72,7 @@ public enum ErrorCode {
       "Sorry, an error has occurred and your request could not be processed. Please try again later."),
 
   CURRENT_PASSWORD_INVALID(
-      400, "EC_0010", Constants.BAD_REQUEST, "Current password entered is invalid"),
+      400, "EC_0010", Constants.BAD_REQUEST, "The current password entered is incorrect"),
 
   ENFORCE_PASSWORD_HISTORY(
       400,
@@ -92,7 +92,7 @@ public enum ErrorCode {
       400,
       "EC_0016",
       Constants.BAD_REQUEST,
-      "This location is being used as an active site in one or more studies and cannot be decomissioned"),
+      "This location is being used as an active site in one or more studies and cannot be decommissioned"),
 
   NOT_SUPER_ADMIN_ACCESS(
       403,
@@ -240,6 +240,8 @@ public enum ErrorCode {
   APPLICATION_ID_MISSING(
       400, "EC_0056", Constants.BAD_REQUEST, "applicationId is missing in request header"),
 
+  INVALID_FILE_UPLOAD(400, "EC_0057", Constants.BAD_REQUEST, "Please upload a .xls or .xlsx file"),
+
   INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status."),
 
   INVALID_SOURCE_NAME(400, "EC_0121", Constants.BAD_REQUEST, "Invalid 'source' value"),
@@ -256,7 +258,62 @@ public enum ErrorCode {
   TEMP_PASSWORD_INVALID(400, "EC_0122", Constants.BAD_REQUEST, "Temporary password is invalid"),
 
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
-      403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study");
+      403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study"),
+
+  CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION(
+      403,
+      "EC_0126",
+      HttpStatus.FORBIDDEN.toString(),
+      "Cannot activate the site as the location is decommissioned"),
+
+  LOCATION_DECOMMISSIONED(
+      400,
+      "EC_0069",
+      Constants.BAD_REQUEST,
+      "This site cannot be activated as the associated location is decommissioned"),
+
+  CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_STUDY(
+      403,
+      "EC_0127",
+      HttpStatus.FORBIDDEN.toString(),
+      "Cannot activate the site as the study is deactivated"),
+
+  CANNOT_ENABLE_PARTICIPANT(
+      403,
+      "EC_0125",
+      HttpStatus.FORBIDDEN.toString(),
+      "Invitation cannot be enabled as participant record is enabled in another site within the same study."),
+
+  CANNOT_DELETE_INVITATION(
+      403,
+      "EC_0065",
+      HttpStatus.FORBIDDEN.toString(),
+      "The user’s account is already active. Please try deactivating the user instead."),
+
+  TOKEN_EXPIRED(
+      410,
+      "EC_0066",
+      HttpStatus.GONE.toString(),
+      "The token entered is no longer valid. Please contact the site coordinator for assistance."),
+
+  LOCATION_NAME_EXISTS(
+      400, "EC_0068", Constants.BAD_REQUEST, "Sorry, a location with this name already exists"),
+
+  NO_SITES_FOUND(404, "EC_0070", HttpStatus.NOT_FOUND.toString(), "No sites found"),
+
+  NO_STUDIES_FOUND(
+      404,
+      "EC_0071",
+      HttpStatus.NOT_FOUND.toString(),
+      "This view displays study-wise enrollment if you manage multiple sites."),
+
+  NO_APPS_FOUND(
+      404,
+      "EC_0072",
+      HttpStatus.NOT_FOUND.toString(),
+      "This view displays app-wise enrollment if you manage multiple studies."),
+
+  USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists");
 
   private final int status;
   private final String code;

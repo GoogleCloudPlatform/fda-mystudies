@@ -33,12 +33,25 @@ export class UserService {
       updateStatusRequest,
     );
   }
+
+  resendInvitation(adminId: string): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${environment.baseUrl}/users/${adminId}/invite`,
+      {},
+    );
+  }
+
   getUserDetails(adminId: string): Observable<ManageUserDetails> {
     return this.http.get<ManageUserDetails>(
       `${environment.baseUrl}/users/admin/${adminId}`,
     );
   }
 
+  deleteInvitation(adminId: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(
+      `${environment.baseUrl}/users/${adminId}/`,
+    );
+  }
   getUsers(): Observable<ManageUsers> {
     return this.http.get<ManageUsers>(`${environment.baseUrl}/users`);
   }

@@ -263,7 +263,7 @@ class LocalNotification: NSObject {
       [
         kStudyId: run.studyId,
         kActivityId: run.activityId,
-      ] as [String: String]
+      ] as? [String: String]
 
     // create App local notification object
     var id = String(run.runId) + run.activityId + run.studyId

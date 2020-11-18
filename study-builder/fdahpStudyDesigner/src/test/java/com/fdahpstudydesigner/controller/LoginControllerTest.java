@@ -12,8 +12,8 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCO
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SESSION_EXPIRY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.junit.Assert.assertTrue;
@@ -76,6 +76,7 @@ public class LoginControllerTest extends BaseMockIT {
         .andExpect(view().name("redirect:login.do"));
 
     verifyAuditEventCall(USER_SIGNOUT_SUCCEEDED);
+    verifyAuditEventCall(SESSION_EXPIRY);
   }
 
   @Test
@@ -168,22 +169,6 @@ public class LoginControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldValidateSecurityToken() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    mockMvc
-        .perform(
-            get(PathMappingUri.SECURITY_TOKEN_VALIDATION.getPath())
-                .param("securityToken", "NK7zYrc0F")
-                .headers(headers)
-                .sessionAttrs(getSessionAttributes()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(view().name("userPasswordReset"));
-
-    verifyAuditEventCall(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
-  }
-
-  @Test
   public void shouldActivateNewUserAccount() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
@@ -225,6 +210,34 @@ public class LoginControllerTest extends BaseMockIT {
         post(PathMappingUri.ADD_PASSWORD.getPath())
             .param("accessCode", "jf47Ll")
             .param("password", "Password@1234")
+            .param("securityToken", "N8K7zYrc0F")
+            .param("_csrf", "")
+            .headers(headers)
+            .sessionAttrs(getSessionAttributes());
+
+    addParams(requestBuilder, userBO);
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:createPassword.do?securityToken=N8K7zYrc0F"));
+
+    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE);
+  }
+
+  @Test
+  public void shouldNotAddPasswordForInvalidAccessCodeWithXSS() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    UserBO userBO = new UserBO();
+    userBO.setFirstName("<scrpt>alert('xss')</script><p>updated_first_name</p>");
+    userBO.setLastName("updated_last_name");
+    userBO.setPhoneNumber("654665146432");
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.ADD_PASSWORD.getPath())
+            .param("accessCode", "jf47Ll")
+            .param("password", "password@1234")
             .param("securityToken", "N8K7zYrc0F")
             .param("_csrf", "")
             .headers(headers)

@@ -8,7 +8,7 @@ import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {Permission} from 'src/app/shared/permission-enums';
-import {StudyType} from 'src/app/shared/enums';
+import {Status, StudyType} from 'src/app/shared/enums';
 
 @Component({
   selector: 'app-site-list',
@@ -22,6 +22,7 @@ export class SiteListComponent implements OnInit {
   study = {} as Study;
   permission = Permission;
   studyTypes = StudyType;
+  studyStatus = Status;
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
@@ -65,12 +66,15 @@ export class SiteListComponent implements OnInit {
     this.query$.next(query.trim().toLowerCase());
   }
   progressBarColor(site: Site): string {
-    if (site.enrollmentPercentage < 30) {
-      return 'red__text__sm';
-    } else if (site.enrollmentPercentage < 70) {
+    if (site.enrollmentPercentage && site.enrollmentPercentage > 70) {
+      return 'green__text__sm';
+    } else if (
+      site.enrollmentPercentage &&
+      (site.enrollmentPercentage >= 30 || site.enrollmentPercentage <= 70)
+    ) {
       return 'orange__text__sm';
     } else {
-      return 'green__text__sm';
+      return 'red__text__sm';
     }
   }
   openAddSiteModal(template: TemplateRef<unknown>, study: Study): void {

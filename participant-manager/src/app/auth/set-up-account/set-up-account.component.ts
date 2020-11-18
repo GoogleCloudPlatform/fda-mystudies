@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {SetUpUser} from '../../entity/user';
@@ -30,6 +30,7 @@ export class SetUpAccountComponent
     private readonly authService: AuthService,
     private readonly route: ActivatedRoute,
     private readonly toastr: ToastrService,
+    private readonly router: Router,
   ) {
     super();
     this.setupAccountForm = fb.group(
@@ -76,9 +77,17 @@ export class SetUpAccountComponent
   }
 
   getPreStoredDetails(): void {
-    this.setUpAccountService.get(this.setUpCode).subscribe((user) => {
-      this.setupAccountForm.patchValue(user);
-    });
+    this.setUpAccountService.get(this.setUpCode).subscribe(
+      (user) => {
+        if (user.redirectTo === 'login') {
+          void this.router.navigate(['/error/EC_0034']);
+        }
+        this.setupAccountForm.patchValue(user);
+      },
+      () => {
+        void this.router.navigate(['/error/EC_0034']);
+      },
+    );
   }
 
   registerUser(): void {

@@ -268,8 +268,7 @@
             "${_csrf.parameterName}": "${_csrf.token}"
           },
           success: function (data) {
-            var jsonObj = eval(data);
-            var message = jsonObj.message;
+            var message = data.message;
             if (message == 'SUCCESS') {
               if (status == 1) {
                 showSucMsg('User successfully deactivated.');

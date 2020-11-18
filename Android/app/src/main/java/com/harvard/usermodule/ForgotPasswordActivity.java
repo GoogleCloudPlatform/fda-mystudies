@@ -23,6 +23,8 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import com.harvard.AppConfig;
+import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.usermodule.event.ForgotPasswordEvent;
 import com.harvard.usermodule.webservicemodel.ForgotPasswordData;
@@ -135,9 +137,14 @@ public class ForgotPasswordActivity extends AppCompatActivity
   }
 
   private void callForgotPasswordWebService() {
+    HashMap<String, String> headers = new HashMap<>();
+    headers.put("correlationId", FdaApplication.getRandomString());
+    headers.put("appId", AppConfig.APP_ID_VALUE);
+    headers.put("mobilePlatform", "ANDROID");
 
     HashMap<String, String> params = new HashMap<>();
-    params.put("emailId", email.getText().toString());
+    params.put("email", email.getText().toString());
+    params.put("appId", AppConfig.APP_ID_VALUE);
 
     ForgotPasswordEvent forgotPasswordEvent = new ForgotPasswordEvent();
     AuthServerConfigEvent authServerConfigEvent =
@@ -148,7 +155,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
             ForgotPasswordActivity.this,
             ForgotPasswordData.class,
             params,
-            null,
+            headers,
             null,
             false,
             ForgotPasswordActivity.this);

@@ -37,26 +37,29 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 #
 # The following content should be initially commented out if the above manual step is not completed.
+# locals {
+#   apps_dependencies = {
+#     "study-builder"                             = ["study-builder/**"]
+#     "study-datastore"                           = ["study-datastore/**"]
+#     "hydra"                                     = ["hydra/**"]
+#     "oauth-scim-module"                         = ["oauth-scim-module/**", "common-modules/**"]
+#     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
+#     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
+#     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
+#     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
+#     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
+#     "participant-manager"                       = ["participant-manager/**"]
+#   }
+# }
 
 # resource "google_cloudbuild_trigger" "server_build_triggers" {
-#   for_each = toset([
-#     "study-builder",
-#     "study-datastore",
-#     "oauth-scim-module",
-#     "participant-datastore/consent-mgmt-module",
-#     "participant-datastore/enroll-mgmt-module",
-#     "participant-datastore/user-mgmt-module",
-#     "response-datastore",
-#     "participant-manager-datastore",
-#     "hydra",
-#     "participant-manager",
-#   ])
-#
+#   for_each = local.apps_dependencies
+
 #   provider = google-beta
 #   project  = module.project.project_id
 #   name     = replace(each.key, "/", "-")
 #
-#   included_files = ["${each.key}/**"]
+#   included_files = each.value
 #
 #   github {
 #     owner = "GoogleCloudPlatform"
@@ -184,8 +187,8 @@ module "example_dev_gke_cluster" {
   master_ipv4_cidr_block = "192.168.0.0/28"
   master_authorized_networks = [
     {
-      cidr_block   = "104.132.0.0/14"
-      display_name = "Google Offices/Campuses/CorpDC"
+      cidr_block   = "0.0.0.0/0"
+      display_name = "Example diplay name"
     },
   ]
   istio                   = true

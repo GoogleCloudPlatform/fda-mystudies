@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,7 +10,7 @@ metadata:
   labels:
     app: auth-server
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: auth-server
@@ -63,34 +68,75 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: smtp_hostname
+            - name: MAIL_CONTACT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: contact_email_address
+            - name: MAIL_FROM_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: from_email_address
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
             - name: HYDRA_PUBLIC_URL
-              value: "http://hydra-np:4444"
+              value: "http://hydra-np:50000"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/oauth-scim-service"
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: base_url
+            - name: IOS_DEEPLINK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: ios_deeplink_url
+            - name: ANDROID_DEEPLINK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: android_deeplink_url
+            - name: ENCRYPTOR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: encryptor_password
             # MISC
             - name: LOG_PATH
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
+            - name: TEMP_REGID_EXPIRY_MINUTES
+              value: "30"
+            - name: ORG_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: org_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /oauth-scim-module/healthCheck
+              path: /oauth-scim-service/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
             readOnly: true
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ['/cloud_sql_proxy', '-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306', '-credential_file=/secrets/gcloud_key/key.json']
+          command: ["/cloud_sql_proxy",
+                    "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+                    "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
@@ -98,4 +144,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: auth-server-gcloud-key
+          secretName: auth-server-gke-sa-gcloud-key

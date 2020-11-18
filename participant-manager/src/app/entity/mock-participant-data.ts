@@ -6,12 +6,15 @@ import {
 } from '../site-coordinator/participant-details/participant-details';
 import {ApiResponse} from './api.response.model';
 import {RegistryParticipant} from '../shared/participant';
+import {EnrollmentStatus} from '../shared/enums';
+import {StudyType} from '../shared/enums';
+import {Permission} from '../shared/permission-enums';
 
 export const expectedParticipantDetails = {
   participantDetails: {
     id: '1',
     email: 'test@grr.la',
-    enrollmentStatus: 'Enrolled',
+    enrollmentStatus: EnrollmentStatus.YetToEnroll,
     enrollmentDate: '28/06/1952',
     invitedDate: '28/06/1952',
     siteId: 'LocaA',
@@ -29,11 +32,13 @@ export const expectedParticipantDetails = {
     studiesEnrolled: '2',
     registrationDate: '28/06/1952',
     enrolledStudies: [],
+    studyType: StudyType.Close,
+    sitePermission: Permission.ViewAndEdit,
     enrollments: [
       {
         participantId: '23',
         withdrawalDate: '08/10/2020',
-        enrollmentStatus: 'Enrolled',
+        enrollmentStatus: EnrollmentStatus.YetToEnroll,
         enrollmentDate: '08/10/2020',
       },
     ],

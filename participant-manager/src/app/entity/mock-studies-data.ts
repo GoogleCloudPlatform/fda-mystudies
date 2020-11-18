@@ -6,7 +6,8 @@ import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
 import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
-import {EnrollmentStatus} from '../shared/enums';
+import {EnrollmentStatus, Status, StudyType} from '../shared/enums';
+import {Permission} from '../shared/permission-enums';
 
 export const expectedSitesList = {
   studies: [
@@ -115,10 +116,11 @@ export const expectedStudiesDetails = {
     studyName: 'COVID study',
     studyType: 'OPEN',
     appId: '4028617973be410f0173be41229e0001',
-
     customAppId: 'mystudies-id-1',
     appName: 'mystudies-1',
     targetEnrollment: 1,
+    studyStatus: Status.Active,
+    studyPermission: Permission.ViewAndEdit,
     registryParticipants: [
       {
         customLocationId: '',
@@ -133,6 +135,8 @@ export const expectedStudiesDetails = {
         enrolledStudies: [],
         enrollments: [],
         consentHistory: [],
+        studyType: StudyType.Close,
+        sitePermission: Permission.ViewAndEdit,
       },
       {
         customLocationId: '',
@@ -147,6 +151,8 @@ export const expectedStudiesDetails = {
         enrolledStudies: [],
         enrollments: [],
         consentHistory: [],
+        studyType: StudyType.Close,
+        sitePermission: Permission.ViewAndEdit,
       },
       {
         customLocationId: '',
@@ -161,6 +167,8 @@ export const expectedStudiesDetails = {
         enrolledStudies: [],
         enrollments: [],
         consentHistory: [],
+        studyType: StudyType.Close,
+        sitePermission: Permission.ViewAndEdit,
       },
     ],
     countByStatus: {
@@ -170,7 +178,6 @@ export const expectedStudiesDetails = {
       E: 1,
       I: 12,
       N: 21,
-      /* eslint-disable @typescript-eslint/naming-convention */
     },
   },
 

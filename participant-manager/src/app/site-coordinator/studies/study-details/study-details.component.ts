@@ -63,15 +63,26 @@ export class StudyDetailsComponent
       this.query$,
     ).pipe(
       map(([studyDetails, query]) => {
-        this.studyDetailsBackup = {...studyDetails};
+        this.studyDetailsBackup = JSON.parse(
+          JSON.stringify(studyDetails),
+        ) as StudyDetails;
+        if (
+          this.studyDetailsBackup.participantRegistryDetail.studyType ===
+            StudyType.Open &&
+          query === ''
+        ) {
+          this.sharedService.updateSearchPlaceHolder(
+            'Search by Participant Email',
+          );
+        }
         this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
-            participant.email?.toLowerCase().includes(query.toLowerCase()) ||
-            participant.locationName
-              ?.toLowerCase()
-              .includes(query.toLowerCase()),
+            participant.enrollmentStatus !== EnrollmentStatus.NotEligile &&
+            (participant.email?.toLowerCase().includes(query.toLowerCase()) ||
+              participant.locationName
+                ?.toLowerCase()
+                .includes(query.toLowerCase())),
         );
-
         return this.studyDetailsBackup;
       }),
     );

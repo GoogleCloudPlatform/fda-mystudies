@@ -49,8 +49,8 @@ import org.hibernate.annotations.UpdateTimestamp;
     },
     uniqueConstraints = {
       @UniqueConstraint(
-          columnNames = {"email", "study_info_id"},
-          name = "participant_registry_site_email_study_info_id_uidx"),
+          columnNames = {"email", "study_info_id", "enrollment_token"},
+          name = "participant_registry_site_email_study_info_token_uidx"),
     })
 public class ParticipantRegistrySiteEntity implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -79,7 +79,6 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   private String name;
 
   @Column(name = "invitation_time")
-  @CreationTimestamp
   private Timestamp invitationDate;
 
   @Column(name = "invitation_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
@@ -111,6 +110,9 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   @Column(name = "updated_time")
   @UpdateTimestamp
   private Timestamp modified;
+
+  @Column(name = "enrollment_token_used", columnDefinition = "TINYINT(1) default 0")
+  private boolean enrollmentTokenUsed;
 
   @OneToMany(
       cascade = CascadeType.ALL,

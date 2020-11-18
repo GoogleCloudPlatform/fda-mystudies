@@ -5,7 +5,11 @@ import {AppRoutingModule} from './app-routing.module';
 import {LoginComponent} from './auth/login/login.component';
 import {SetUpAccountComponent} from './auth/set-up-account/set-up-account.component';
 import {ForgotPasswordComponent} from './auth/forgot-password/forgot-password.component';
-import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {
+  HashLocationStrategy,
+  LocationStrategy,
+  APP_BASE_HREF,
+} from '@angular/common';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {EntityService} from './service/entity.service';
 import {httpInterceptorProviders} from './http-interceptors';
@@ -17,6 +21,10 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ModalModule, BsModalRef} from 'ngx-bootstrap/modal';
 import {LoginCallbackComponent} from './auth/login-callback/login-callback.component';
 import {CookieService} from 'ngx-cookie-service';
+import {ErrorComponent} from './error/error.component';
+import {TermsComponent} from './terms/terms.component';
+import {AboutComponent} from './about/about.component';
+import {environment} from '@environment';
 
 @NgModule({
   declarations: [
@@ -26,6 +34,9 @@ import {CookieService} from 'ngx-cookie-service';
     AppComponent,
     PageNotFoundComponent,
     LoginCallbackComponent,
+    ErrorComponent,
+    TermsComponent,
+    AboutComponent,
   ],
   imports: [
     ModalModule.forRoot(),
@@ -40,6 +51,7 @@ import {CookieService} from 'ngx-cookie-service';
       positionClass: 'toast-top-center',
       preventDuplicates: true,
       enableHtml: true,
+      maxOpened: 1,
     }),
   ],
   providers: [
@@ -49,6 +61,8 @@ import {CookieService} from 'ngx-cookie-service';
     BsModalRef,
     httpInterceptorProviders,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    {provide: APP_BASE_HREF, useValue: environment.baseHref},
   ],
   bootstrap: [AppComponent],
 })

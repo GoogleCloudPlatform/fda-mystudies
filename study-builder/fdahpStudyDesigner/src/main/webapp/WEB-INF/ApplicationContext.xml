@@ -20,6 +20,15 @@
 
     <bean id="restTemplate"
           class="org.springframework.web.client.RestTemplate">
+      <property name="interceptors">
+        <list>
+          <ref bean="authTokenInterceptor" />
+        </list>
+      </property>
+    </bean>
+    
+    <bean id="authTokenInterceptor"
+          class="com.fdahpstudydesigner.util.RestTemplateAuthTokenModifierInterceptor">
     </bean>
 
     <context:component-scan
@@ -37,8 +46,8 @@
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName"
-                  value="com.mysql.cj.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://${db.url}"/>
+                  value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="${db.url}"/>
         <property name="username" value="${db.username}"/>
         <property name="password" value="${db.password}"/>
     </bean>

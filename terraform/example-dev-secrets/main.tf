@@ -24,53 +24,56 @@ terraform {
   }
 }
 
+locals {
+  apps = [
+    "auth_server",
+    "response_datastore",
+    "study_builder",
+    "study_datastore",
+    "participant_consent_datastore",
+    "participant_enroll_datastore",
+    "participant_user_datastore",
+    "participant_manager_datastore",
+  ]
+}
+
 resource "random_string" "strings" {
-  for_each = toset([
-    "auth_server_db_user",
-    "auth_server_client_id",
-    "response_datastore_db_user",
-    "response_datastore_client_id",
-    "study_builder_db_user",
-    "study_builder_client_id",
-    "study_datastore_db_user",
-    "study_datastore_client_id",
-    "participant_consent_datastore_db_user",
-    "participant_consent_datastore_client_id",
-    "participant_enroll_datastore_db_user",
-    "participant_enroll_datastore_client_id",
-    "participant_user_datastore_db_user",
-    "participant_user_datastore_client_id",
-    "participant_manager_datastore_db_user",
-    "participant_manager_datastore_client_id",
-    "hydra_db_user",
-  ])
+  for_each = toset(concat(
+    [
+      "hydra_db_user",
+      "sd_response_datastore_id",
+      "sd_android_id",
+      "sd_ios_id",
+    ],
+    formatlist("%s_db_user", local.apps),
+    formatlist("%s_client_id", local.apps))
+  )
+  length  = 16
+  special = false
+}
+
+resource "random_password" "passwords" {
+  for_each = toset(concat(
+    [
+      "mystudies_sql_default_user_password",
+      "hydra_db_password",
+      "auth_server_encryptor_password"
+    ],
+    formatlist("%s_db_password", local.apps),
+    formatlist("%s_secret_key", local.apps))
+  )
   length  = 16
   special = true
 }
 
-resource "random_password" "passwords" {
+resource "random_password" "tokens" {
   for_each = toset([
-    "mystudies_sql_default_user_password",
-    "auth_server_db_password",
-    "auth_server_secret_key",
-    "response_datastore_db_password",
-    "response_datastore_secret_key",
-    "study_builder_db_password",
-    "study_builder_secret_key",
-    "study_datastore_db_password",
-    "study_datastore_secret_key",
-    "participant_consent_datastore_db_password",
-    "participant_consent_datastore_secret_key",
-    "participant_enroll_datastore_db_password",
-    "participant_enroll_datastore_secret_key",
-    "participant_user_datastore_db_password",
-    "participant_user_datastore_secret_key",
-    "participant_manager_datastore_db_password",
-    "participant_manager_datastore_secret_key",
-    "hydra_db_password",
+    "sd_response_datastore_token",
+    "sd_android_token",
+    "sd_ios_token",
   ])
   length  = 16
-  special = true
+  special = false
 }
 
 resource "random_password" "system_secrets" {
@@ -99,38 +102,6 @@ module "project" {
     "secretmanager.googleapis.com",
   ]
 }
-
-resource "google_secret_manager_secret" "manual_study_builder_user" {
-  provider = google-beta
-
-  secret_id = "manual-study-builder-user"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
-
-resource "google_secret_manager_secret" "manual_study_builder_password" {
-  provider = google-beta
-
-  secret_id = "manual-study-builder-password"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
 
 resource "google_secret_manager_secret" "manual_mystudies_email_address" {
   provider = google-beta
@@ -420,6 +391,38 @@ resource "google_secret_manager_secret" "manual_ios_certificate_password" {
 }
 
 
+resource "google_secret_manager_secret" "manual_ios_deeplink_url" {
+  provider = google-beta
+
+  secret_id = "manual-ios-deeplink-url"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_android_deeplink_url" {
+  provider = google-beta
+
+  secret_id = "manual-android-deeplink-url"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
 resource "google_secret_manager_secret" "auto_mystudies_sql_default_user_password" {
   provider = google-beta
 
@@ -594,6 +597,28 @@ resource "google_secret_manager_secret_version" "auto_auth_server_secret_key_dat
 
   secret      = google_secret_manager_secret.auto_auth_server_secret_key.id
   secret_data = random_password.passwords["auth_server_secret_key"].result
+}
+
+resource "google_secret_manager_secret" "auto_auth_server_encryptor_password" {
+  provider = google-beta
+
+  secret_id = "auto-auth-server-encryptor-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_auth_server_encryptor_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_auth_server_encryptor_password.id
+  secret_data = random_password.passwords["auth_server_encryptor_password"].result
 }
 
 resource "google_secret_manager_secret" "auto_response_datastore_db_user" {
@@ -1210,4 +1235,136 @@ resource "google_secret_manager_secret_version" "auto_participant_manager_datast
 
   secret      = google_secret_manager_secret.auto_participant_manager_datastore_secret_key.id
   secret_data = random_password.passwords["participant_manager_datastore_secret_key"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_response_datastore_token" {
+  provider = google-beta
+
+  secret_id = "auto-sd-response-datastore-token"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_response_datastore_token_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_response_datastore_token.id
+  secret_data = random_password.tokens["sd_response_datastore_token"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_response_datastore_id" {
+  provider = google-beta
+
+  secret_id = "auto-sd-response-datastore-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_response_datastore_id_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_response_datastore_id.id
+  secret_data = random_string.strings["sd_response_datastore_id"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_android_token" {
+  provider = google-beta
+
+  secret_id = "auto-sd-android-token"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_android_token_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_android_token.id
+  secret_data = random_password.tokens["sd_android_token"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_android_id" {
+  provider = google-beta
+
+  secret_id = "auto-sd-android-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_android_id_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_android_id.id
+  secret_data = random_string.strings["sd_android_id"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_ios_token" {
+  provider = google-beta
+
+  secret_id = "auto-sd-ios-token"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_ios_token_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_ios_token.id
+  secret_data = random_password.tokens["sd_ios_token"].result
+}
+
+resource "google_secret_manager_secret" "auto_sd_ios_id" {
+  provider = google-beta
+
+  secret_id = "auto-sd-ios-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_sd_ios_id_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_sd_ios_id.id
+  secret_data = random_string.strings["sd_ios_id"].result
 }

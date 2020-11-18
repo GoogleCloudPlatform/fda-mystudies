@@ -104,8 +104,8 @@ class ForgotPasswordViewController: UIViewController {
 
     } else if !(Utilities.isValidEmail(testStr: (textFieldEmail?.text)!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
-    } else {
-      AuthServices().forgotPassword(email: (textFieldEmail?.text)!, delegate: self)
+    } else if let email = textFieldEmail?.text {
+      requestPassword(with: email)
     }
   }
 
@@ -125,6 +125,40 @@ class ForgotPasswordViewController: UIViewController {
       verifyController.emailId = textFieldEmail?.text
     }
   }
+
+  // MARK: - APIs
+
+  /// Requests for temporary password.
+  /// - Parameter email: Registered email ID to recieve the password.
+  fileprivate func requestPassword(with email: String) {
+    self.addProgressIndicator()
+    UserAPI.forgotPassword(email: email) { (status, error) in
+      self.removeProgressIndicator()
+      if status {
+        UIUtilities.showAlertMessageWithActionHandler(
+          NSLocalizedString(kTitleMessage, comment: ""),
+          message: NSLocalizedString(kForgotPasswordResponseMessage, comment: ""),
+          buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
+          viewControllerUsed: self
+        ) {
+          _ = self.navigationController?.popViewController(animated: true)
+        }
+      } else if let error = error {
+        if error.code == HTTPError.forbidden.rawValue {
+          // User not verified
+          self.navigateToVerifyViewController()
+        } else {
+          self.presentDefaultAlertWithError(
+            error: error,
+            animated: true,
+            action: nil,
+            completion: nil
+          )
+        }
+      }
+    }
+  }
+
 }
 
 // MARK: - Webservices Delegates
@@ -135,41 +169,22 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-
     self.removeProgressIndicator()
-
-    if requestName as String == AuthServerMethods.forgotPassword.description {
-      UIUtilities.showAlertMessageWithActionHandler(
-        NSLocalizedString(kTitleMessage, comment: ""),
-        message: NSLocalizedString(kForgotPasswordResponseMessage, comment: ""),
-        buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
-        viewControllerUsed: self
-      ) {
-        _ = self.navigationController?.popViewController(animated: true)
-      }
-    } else {
-      // for resend email
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
-        message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
-      )
-
-    }
+    // for resend email
+    UIUtilities.showAlertWithTitleAndMessage(
+      title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
+      message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
+    )
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
     self.removeProgressIndicator()
-
-    if requestName as String == AuthServerMethods.forgotPassword.description && error.code == 403 {
-      self.navigateToVerifyViewController()
-    } else {
-      // if resend email fails
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: NSLocalizedString(kTitleError, comment: "") as NSString,
-        message: error.localizedDescription as NSString
-      )
-    }
+    // if resend email fails
+    UIUtilities.showAlertWithTitleAndMessage(
+      title: NSLocalizedString(kTitleError, comment: "") as NSString,
+      message: error.localizedDescription as NSString
+    )
   }
 }
 

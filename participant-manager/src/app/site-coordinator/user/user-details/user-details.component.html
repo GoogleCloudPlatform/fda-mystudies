@@ -2,7 +2,10 @@
   <div class="max__w__850 m-none">
     <div class="flex__justify__space-between">
       <div>
-        <a routerLink="/coordinator/users" class="subheader__title">
+        <a
+          routerLink="/coordinator/users"
+          class="subheader__title cursor__pointer"
+        >
           <img
             class="mr-sm"
             src="../assets/svgs/back-arrow.svg"
@@ -17,7 +20,9 @@
           [routerLink]="['/coordinator/users', adminId, 'edit']"
         >
           <img class="mr-xs" src="assets/svgs/edit.svg" alt="Edit" />
-          <span class="text__deco font12__light-grey">Edit User Details</span>
+          <span class="text__deco font12__light-grey">
+            Edit user details and permissions
+          </span>
         </button>
       </div>
     </div>
@@ -55,7 +60,9 @@
             </div>
             <div>
               <div class="blue__text__md">Status</div>
-              <div class="participant__label">{{ user.status }}</div>
+              <div [ngClass]="statusColour(user.status)">
+                {{ user.status }}
+              </div>
             </div>
           </div>
         </div>
@@ -67,7 +74,7 @@
 
   <section class="bg__white card__inside__pad box__shadow-cmn m-none">
     <div class="row">
-      <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+      <div class="col-xs-12 col-md-6 p-none">
         <div class="form-group">
           <div class="custom__labels">
             <input
@@ -78,11 +85,17 @@
             />
             <label for="locations">Allow access to locations</label>
           </div>
-          <div class="pl-lg text-grey__sm pt-xs">
-            <span *ngIf="user.manageLocations == permission.View">
+          <div class="pl-lg text-grey__sm">
+            <span
+              *ngIf="user.manageLocations == permission.View"
+              class="txt__green font12"
+            >
               View Only
             </span>
-            <span *ngIf="user.manageLocations == permission.ViewAndEdit">
+            <span
+              *ngIf="user.manageLocations == permission.ViewAndEdit"
+              class="txt__green font12"
+            >
               View And Edit
             </span>
           </div>
@@ -95,6 +108,7 @@
     <div class="form-group">
       <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
     </div>
+
     <div class="form-group pt-none">
       <div class="accordion" id="accordionExample">
         <div *ngFor="let app of user.apps" class="card">
@@ -111,32 +125,40 @@
                         [value]="app.selected"
                       />
                       <label for="appCheckBox{{ app.id }}">
-                        {{ app.name }}({{ app.customId }})
-                        <span class="app__id ml-xs"></span>
-                        <span>
-                          {{
-                            app.selectedSitesCount
-                              | i18nPlural: sitesMessageMapping
-                          }}
-                        </span>
+                        {{ app.name }}
+                        <span class="app__id ml-xs">({{ app.customId }})</span>
                       </label>
                     </div>
-                    <div class="pl-xl pt-xs">
-                      <span *ngIf="app.permission == permission.View">
+                    <div class="pl-xl">
+                      <span
+                        *ngIf="app.permission == permission.View"
+                        class="txt__green font12"
+                      >
                         View Only
                       </span>
-                      <span *ngIf="app.permission == permission.ViewAndEdit">
+                      <span
+                        *ngIf="app.permission == permission.ViewAndEdit"
+                        class="txt__green font12"
+                      >
                         View And Edit
                       </span>
                     </div>
                   </div>
-                  <div
-                    class="fa__plus__minus"
-                    type="button"
-                    data-toggle="collapse"
-                    [attr.data-target]="'#collapse' + app.id"
-                    aria-expanded="false"
-                  ></div>
+
+                  <div class="app__id_num flex__justify__space-between">
+                    <div class="pr-2">
+                      {{
+                        app.selectedSitesCount | i18nPlural: sitesMessageMapping
+                      }}
+                    </div>
+                    <div
+                      class="fa__plus__minus"
+                      type="button"
+                      data-toggle="collapse"
+                      [attr.data-target]="'#collapse' + app.id"
+                      aria-expanded="false"
+                    ></div>
+                  </div>
                 </div>
               </div>
               <div
@@ -151,7 +173,10 @@
                   >
                     <div class="orange__text__sm pb-sm"></div>
                     <div *ngFor="let study of app.studies">
-                      <div class="card" *ngIf="study.selectedSitesCount != 0">
+                      <div
+                        class="card"
+                        *ngIf="study.selectedSitesCount != 0 || study.selected"
+                      >
                         <div class="card-header">
                           <div
                             class="mb-0 flex__justify__space-between card__header__study__block"
@@ -164,13 +189,17 @@
                                   disabled
                                   [value]="study.selected"
                                 />
-                                <label for="studyCheckBox{{ study.studyId }}">
+                                <label
+                                  for="studyCheckBox{{ study.studyId }}"
+                                  class="font14"
+                                >
                                   {{ study.studyName }}
                                 </label>
                               </div>
                               <div class="custom__labels__radio">
                                 <span
                                   *ngIf="study.permission == permission.View"
+                                  class="txt__green font12"
                                 >
                                   View Only
                                 </span>
@@ -178,6 +207,7 @@
                                   *ngIf="
                                     study.permission == permission.ViewAndEdit
                                   "
+                                  class="txt__green font12"
                                 >
                                   View And Edit
                                 </span>
@@ -207,8 +237,11 @@
                                 | i18nPlural: sitesMessageMapping
                             }}
                           </div>
-                          <div *ngFor="let site of study.sites">
-                            <div *ngIf="site.selected">
+                          <div
+                            *ngFor="let site of study.sites"
+                            class="display-flex-center"
+                          >
+                            <span *ngIf="site.selected">
                               <div class="custom__labels">
                                 <input
                                   type="checkbox"
@@ -216,23 +249,30 @@
                                   disabled
                                   [value]="site.selected"
                                 />
-                                <label for="siteCheckBox{{ site.siteId }}">
+                                <label
+                                  for="siteCheckBox{{ site.siteId }}"
+                                  class="font12"
+                                >
                                   {{ site.locationName }}
                                 </label>
                               </div>
-                            </div>
-                            <div class="custom__labels__radio">
-                              <span *ngIf="site.permission == permission.View">
-                                View Only
+                            </span>
+                            <span class="custom__labels__radio pl-2 pr-2">
+                              <span
+                                *ngIf="site.permission == permission.View"
+                                class="txt__green font12"
+                              >
+                                ( View Only )
                               </span>
                               <span
                                 *ngIf="
                                   site.permission == permission.ViewAndEdit
                                 "
+                                class="txt__green font12"
                               >
-                                View And Edit
+                                ( View And Edit )
                               </span>
-                            </div>
+                            </span>
                           </div>
                         </div>
                       </div>

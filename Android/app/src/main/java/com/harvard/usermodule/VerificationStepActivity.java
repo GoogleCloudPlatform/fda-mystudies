@@ -18,7 +18,10 @@ package com.harvard.usermodule;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
@@ -35,7 +38,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 
 public class VerificationStepActivity extends AppCompatActivity
@@ -183,13 +186,10 @@ public class VerificationStepActivity extends AppCompatActivity
               AppController.getHelperProgressDialog()
                   .showProgress(VerificationStepActivity.this, "", "", false);
 
-              header.put("userId", userId);
-              header.put("accessToken", auth);
-
               params.put("emailId", emailId);
               params.put("code", verificationCode.getText().toString());
-              RegistrationServerConfigEvent registrationServerConfigEvent =
-                  new RegistrationServerConfigEvent(
+              ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+                  new ParticipantDatastoreConfigEvent(
                       "post",
                       Urls.CONFIRM_REGISTER_USER,
                       CONFIRM_REGISTER_USER_RESPONSE,
@@ -200,7 +200,7 @@ public class VerificationStepActivity extends AppCompatActivity
                       null,
                       false,
                       VerificationStepActivity.this);
-              verifyUserEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+              verifyUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
               UserModulePresenter userModulePresenter = new UserModulePresenter();
               userModulePresenter.performVerifyRegistration(verifyUserEvent);
             }
@@ -218,8 +218,8 @@ public class VerificationStepActivity extends AppCompatActivity
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("emailId", emailId);
-            RegistrationServerConfigEvent registrationServerConfigEvent =
-                new RegistrationServerConfigEvent(
+            ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+                new ParticipantDatastoreConfigEvent(
                     "post",
                     Urls.RESEND_CONFIRMATION,
                     RESEND_CONFIRMATION,
@@ -230,7 +230,7 @@ public class VerificationStepActivity extends AppCompatActivity
                     null,
                     false,
                     VerificationStepActivity.this);
-            resendEmailEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+            resendEmailEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
             UserModulePresenter userModulePresenter = new UserModulePresenter();
             userModulePresenter.performResendEmail(resendEmailEvent);
           }
@@ -247,50 +247,28 @@ public class VerificationStepActivity extends AppCompatActivity
     AppController.getHelperProgressDialog().dismissDialog();
     if (responseCode == CONFIRM_REGISTER_USER_RESPONSE) {
       LoginData loginData = (LoginData) response;
-      if (from != null && from.equalsIgnoreCase(ForgotPasswordActivity.FROM)) {
-        Toast.makeText(
-                this, getResources().getString(R.string.account_verification), Toast.LENGTH_SHORT)
-            .show();
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
-        finish();
-      } else if (from != null && from.equalsIgnoreCase("StudyInfo")) {
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                VerificationStepActivity.this, getString(R.string.userid), "" + userId);
-        AppController.getHelperSharedPreference()
-            .writePreference(VerificationStepActivity.this, getString(R.string.auth), "" + auth);
-        AppController.getHelperSharedPreference()
-            .writePreference(VerificationStepActivity.this, getString(R.string.verified), "true");
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                VerificationStepActivity.this, getString(R.string.email), "" + emailId);
-
-        Intent intent = new Intent(VerificationStepActivity.this, NewPasscodeSetupActivity.class);
-        intent.putExtra("from", "StudyInfo");
-        startActivityForResult(intent, JOIN_STUDY_RESPONSE);
-
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                VerificationStepActivity.this, getString(R.string.initialpasscodeset), "NO");
-      } else {
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                VerificationStepActivity.this, getString(R.string.userid), "" + userId);
-        AppController.getHelperSharedPreference()
-            .writePreference(VerificationStepActivity.this, getString(R.string.auth), "" + auth);
-        AppController.getHelperSharedPreference()
-            .writePreference(VerificationStepActivity.this, getString(R.string.verified), "true");
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                VerificationStepActivity.this, getString(R.string.email), "" + emailId);
-
-        Intent intent = new Intent(VerificationStepActivity.this, NewPasscodeSetupActivity.class);
-        startActivity(intent);
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                VerificationStepActivity.this, getString(R.string.initialpasscodeset), "NO");
+      SharedPreferenceHelper.writePreference(
+          VerificationStepActivity.this, getString(R.string.logintype), "signUp");
+      CustomTabsIntent customTabsIntent =
+          new CustomTabsIntent.Builder()
+              .setToolbarColor(getResources().getColor(R.color.colorAccent))
+              .setShowTitle(true)
+              .setCloseButtonIcon(
+                  BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+              .setStartAnimations(
+                  VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+              .setExitAnimations(
+                  VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+              .build();
+      StringBuilder loginUrl = new StringBuilder();
+      loginUrl.append(Urls.LOGIN_URL);
+      if (getIntent().getStringExtra("type") != null
+          && !getIntent().getStringExtra("type").equalsIgnoreCase("ForgotPasswordActivity")
+          && loginData.getTempRegId() != null) {
+        loginUrl.append("&tempRegId=").append(loginData.getTempRegId());
       }
+      customTabsIntent.intent.setData(Uri.parse(loginUrl.toString()));
+      startActivity(customTabsIntent.intent);
     } else if (responseCode == RESEND_CONFIRMATION) {
       Toast.makeText(this, getResources().getString(R.string.resend_success), Toast.LENGTH_SHORT)
           .show();
@@ -300,7 +278,7 @@ public class VerificationStepActivity extends AppCompatActivity
   @Override
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
     AppController.getHelperProgressDialog().dismissDialog();
-    if (responseCode == CONFIRM_REGISTER_USER_RESPONSE) {
+    if (responseCode == CONFIRM_REGISTER_USER_RESPONSE || responseCode == RESEND_CONFIRMATION) {
       if (statusCode.equalsIgnoreCase("401")) {
         Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
         if (from != null && from.equalsIgnoreCase("Activity")) {
@@ -330,7 +308,7 @@ public class VerificationStepActivity extends AppCompatActivity
   public void onBackPressed() {
     super.onBackPressed();
     SharedPreferences settings =
-            SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
+        SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
     settings.edit().clear().apply();
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");

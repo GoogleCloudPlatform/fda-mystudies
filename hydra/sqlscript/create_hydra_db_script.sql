@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS `hydra`;
+CREATE DATABASE `hydra`;
+USE `hydra`;

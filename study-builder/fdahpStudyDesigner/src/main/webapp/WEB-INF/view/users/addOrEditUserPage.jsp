@@ -437,6 +437,7 @@
       $('#inlineCheckbox5').val('');
       $('#inlineCheckbox5').prop('checked', false);
       $('.changeView').prop('disabled', true);
+      $('.changeView').selectpicker('refresh');
       $('.changeView1').prop('disabled', true);
     }
     var role = '${userBO.roleName}';
@@ -568,6 +569,7 @@
       if ($(this).prop("checked") == true) {
         $(this).val(1);
         $('.changeView').prop('disabled', false);
+        $('.changeView').selectpicker('refresh');
         var element = $("#roleId option:selected").text();
         if (element == 'Org-level Admin') {
           $('.changeView1').prop('disabled', true);
@@ -579,6 +581,7 @@
         $('#inlineCheckbox5').val('');
         $('#inlineCheckbox5').prop('checked', false);
         $('.changeView').prop('disabled', true);
+        $('.changeView').selectpicker('refresh');
         $('.changeView1').prop('disabled', true);
       }
     });
@@ -839,6 +842,8 @@
       $('#ownUser').val('1');
       </c:if>
       $('.addUpdate').parents('form').submit();
+    } else {
+      $("body").removeClass("loading");
     }
   }
 

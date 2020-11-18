@@ -32,6 +32,8 @@ public class StudyDetails {
 
   private String appId;
 
+  private String appName;
+
   private Long invited;
 
   private Long enrolled;
@@ -39,4 +41,8 @@ public class StudyDetails {
   private Double enrollmentPercentage;
 
   private Integer studyPermission;
+
+  private String logoImageUrl;
+
+  private String studyStatus;
 }

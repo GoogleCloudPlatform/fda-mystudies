@@ -16,6 +16,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ALREADY_
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.CANNOT_REACTIVATE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.DEFAULT_SITE_MODIFY_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.LOCATION_ACCESS_DENIED;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.LOCATION_NAME_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.LOCATION_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
@@ -159,6 +160,28 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())))
+        .andReturn();
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnLocationNameExists() throws Exception {
+    locationEntity.setName(LOCATION_NAME_VALUE);
+    locationEntity.setCustomId(CUSTOM_ID_VALUE + RandomStringUtils.randomAlphabetic(2));
+    locationRepository.saveAndFlush(locationEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ADD_NEW_LOCATION.getPath())
+                .content(asJsonString(getLocationRequest()))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(LOCATION_NAME_EXISTS.getDescription())))
         .andReturn();
 
     verifyTokenIntrospectRequest();
@@ -411,6 +434,29 @@ public class LocationControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnLocationNameExistsForUpdateLocation() throws Exception {
+    locationEntity.setName(LOCATION_NAME_VALUE);
+    locationEntity.setCustomId(CUSTOM_ID_VALUE + RandomStringUtils.randomAlphabetic(2));
+    locationRepository.saveAndFlush(locationEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    UpdateLocationRequest updateLocationRequest = getUpdateLocationRequest();
+    updateLocationRequest.setName(LOCATION_NAME_VALUE);
+    mockMvc
+        .perform(
+            put(ApiEndpoint.UPDATE_LOCATION.getPath(), locationEntity.getId())
+                .content(asJsonString(updateLocationRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(LOCATION_NAME_EXISTS.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnForbiddenForLocationAccessDeniedOfGetLocations() throws Exception {
     // Step 1: change editPermission to null
     userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
@@ -453,6 +499,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations[0].studyNames").isArray())
         .andExpect(jsonPath("$.locations[0].studyNames[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.totalLocationsCount", is(1)))
+        .andExpect(jsonPath("$.locationPermission", is(Permission.EDIT.value())))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();
@@ -526,30 +573,6 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)));
 
     verifyTokenIntrospectRequest(3);
-  }
-
-  @Test
-  public void shouldReturnForbiddenForLocationForSiteAccessDenied() throws Exception {
-    // Step 1: change editPermission to null
-    userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
-    userRegAdminRepository.saveAndFlush(userRegAdminEntity);
-
-    // Step 2: Call API and expect error message LOCATION_ACCESS_DENIED
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_LOCATIONS.getPath())
-                .queryParam("excludeStudyId", studyEntity.getId())
-                .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
-                .content(asJsonString(getLocationRequest()))
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isForbidden())
-        .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -673,6 +696,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studyNames").isArray())
         .andExpect(jsonPath("$.studyNames", hasSize(1)))
         .andExpect(jsonPath("$.studyNames[0]", is("LIMITJP001")))
+        .andExpect(jsonPath("$.locationPermission", is(Permission.EDIT.value())))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();

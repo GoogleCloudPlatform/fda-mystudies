@@ -64,13 +64,25 @@
             </div>
           </div>
           <div class="desk__view">
-            <div class="flex__justify__space-between">
-              <div>
+            <div
+              [hidden]="
+                siteParticipants.participantRegistryDetail.sitePermission !==
+                permission.ViewAndEdit
+              "
+              class="flex__justify__space-between"
+            >
+              <div
+                [hidden]="
+                  siteParticipants.participantRegistryDetail.studyStatus ===
+                    studyStatus.Deactivated ||
+                  siteParticipants.participantRegistryDetail.siteStatus === 0
+                "
+              >
                 <div class="dropdown">
                   <button
                     name="btnToggleParticipant"
                     class="dropbtn btn banner__primary__btn mr-sm tnsb"
-                    (click)="toggleParticipant()"
+                    (click)="toggleParticipant($event)"
                   >
                     Add Participants
                     <i class="fa fa-caret-down"></i>
@@ -110,11 +122,21 @@
                   </div>
                 </div>
               </div>
-              <div>
+              <div
+                [hidden]="
+                  siteParticipants.participantRegistryDetail.studyPermission !==
+                    permission.ViewAndEdit ||
+                  (siteParticipants.participantRegistryDetail.studyStatus ===
+                    studyStatus.Deactivated &&
+                    siteParticipants.participantRegistryDetail.siteStatus === 0)
+                "
+              >
                 <button
                   name="buttonDecommision"
                   class="btn banner__default__btn flex__row__reverse pad__5__13"
-                  (click)="decommissionSite()"
+                  (click)="
+                    decommissionSite(siteParticipants.participantRegistryDetail)
+                  "
                 >
                   {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
@@ -131,14 +153,26 @@
 
     <!-- ForMobile View  -->
     <div class="mobile__view yel__tabs">
-      <div class="p-md pb-none">
+      <div
+        [hidden]="
+          siteParticipants.participantRegistryDetail.sitePermission !==
+          permission.ViewAndEdit
+        "
+        class="p-md pb-none"
+      >
         <div class="flex__ flex__justify__center">
-          <div>
+          <div
+            [hidden]="
+              siteParticipants.participantRegistryDetail.studyStatus ===
+                studyStatus.Deactivated ||
+              siteParticipants.participantRegistryDetail.siteStatus === 0
+            "
+          >
             <div class="dropdown">
               <button
                 name="btnToggleParticipant"
                 class="dropbtn btn banner__primary__btn mr-sm font12"
-                (click)="toggleParticipant()"
+                (click)="toggleParticipant($event)"
               >
                 Add Participants
                 <i class="fa fa-caret-down"></i>
@@ -178,13 +212,27 @@
               </div>
             </div>
           </div>
-          <div>
+          <div
+            [hidden]="
+              siteParticipants.participantRegistryDetail.studyPermission !==
+                permission.ViewAndEdit ||
+              (siteParticipants.participantRegistryDetail.studyStatus ===
+                studyStatus.Deactivated &&
+                siteParticipants.participantRegistryDetail.siteStatus === 0)
+            "
+          >
             <button
               name="buttonDecommision"
               class="btn banner__default__btn flex__row__reverse pad__5__13 font12"
-              (click)="decommissionSite()"
+              (click)="
+                decommissionSite(siteParticipants.participantRegistryDetail)
+              "
             >
-              Decommission Site for Study
+              {{
+                siteParticipants.participantRegistryDetail.siteStatus === 1
+                  ? "Decommission Site for Study"
+                  : "Activate Site for Study"
+              }}
             </button>
           </div>
         </div>
@@ -239,7 +287,16 @@
         </ul>
       </div>
       <div class="sred">
-        <div class="flex__ flex__justify__center">
+        <div
+          [hidden]="
+            siteParticipants.participantRegistryDetail.sitePermission !==
+              permission.ViewAndEdit ||
+            siteParticipants.participantRegistryDetail.studyStatus ===
+              studyStatus.Deactivated ||
+            siteParticipants.participantRegistryDetail.siteStatus === 0
+          "
+          class="flex__ flex__justify__center"
+        >
           <div
             *ngIf="
               activeTab == onBoardingStatus.New ||
@@ -339,7 +396,16 @@
             </ul>
           </div>
           <div class="pr-xlg">
-            <div class="flex__justify__space-between mb-xs">
+            <div
+              [hidden]="
+                siteParticipants.participantRegistryDetail.sitePermission !==
+                  permission.ViewAndEdit ||
+                siteParticipants.participantRegistryDetail.studyStatus ===
+                  studyStatus.Deactivated ||
+                siteParticipants.participantRegistryDetail.siteStatus === 0
+              "
+              class="flex__justify__space-between mb-xs"
+            >
               <div
                 *ngIf="
                   activeTab == onBoardingStatus.New ||
@@ -401,7 +467,15 @@
                       [(ngModel)]="selectedAll"
                       (change)="selectAll()"
                     />
-                    <label for="css"></label>
+                    <label
+                      *ngIf="
+                        siteParticipants.participantRegistryDetail
+                          .sitePermission === permission.ViewAndEdit &&
+                        siteParticipants.participantRegistryDetail
+                          .siteStatus !== 0
+                      "
+                      for="css"
+                    ></label>
                   </span>
                   <mfDefaultSorter by="email">
                     Participant Email
@@ -454,27 +528,34 @@
                         [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
-                      <label for="{{ participant.id }}">
-                        <span
-                          class="no_st_en"
-                          [routerLink]="[
-                            '/coordinator/participant',
-                            participant.id
-                          ]"
-                        >
-                          {{ participant.email }}
-                        </span>
-                      </label>
+                      <label
+                        *ngIf="
+                          siteParticipants.participantRegistryDetail
+                            .sitePermission === permission.ViewAndEdit &&
+                          siteParticipants.participantRegistryDetail
+                            .siteStatus !== 0
+                        "
+                        for="{{ participant.id }}"
+                      ></label>
+                      <span
+                        class="no_st_en cursor__pointer outline__none"
+                        [routerLink]="[
+                          '/coordinator/participant',
+                          participant.id
+                        ]"
+                      >
+                        {{ participant.email }}
+                      </span>
                     </div>
                   </div>
                 </td>
                 <td *ngIf="activeTab == onBoardingStatus.All">
                   <div
                     [ngClass]="{
-                      participant__label:
+                      'txt__green':
                         participant.onboardingStatus ==
                         onBoardingStatus.Invited,
-                      inactive__text:
+                      'txt__light-gray':
                         participant.onboardingStatus ==
                         onBoardingStatus.Disabled
                     }"
@@ -497,22 +578,30 @@
                           (change)="rowCheckBoxChange($event)"
                         />
 
-                        <label for="{{ participant.id }}">
-                          <span
-                            class="no_st_en"
-                            [routerLink]="[
-                              '/coordinator/participant',
-                              participant.id
-                            ]"
-                          >
-                            {{ participant.email }}
-                          </span>
-                        </label>
+                        <label
+                          *ngIf="
+                            siteParticipants.participantRegistryDetail
+                              .sitePermission === permission.ViewAndEdit &&
+                            siteParticipants.participantRegistryDetail
+                              .siteStatus !== 0
+                          "
+                          for="{{ participant.id }}"
+                        ></label>
+                        <span
+                          class="no_st_en cursor__pointer outline__none"
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
+                        >
+                          {{ participant.email }}
+                        </span>
                       </div>
                       <div
                         *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
                       >
                         <span
+                          class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
                             participant.id
@@ -537,17 +626,24 @@
                         [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
-                      <label for="{{ participant.id }}">
-                        <span
-                          class="no_st_en"
-                          [routerLink]="[
-                            '/coordinator/participant',
-                            participant.id
-                          ]"
-                        >
-                          {{ participant.email }}
-                        </span>
-                      </label>
+                      <label
+                        *ngIf="
+                          siteParticipants.participantRegistryDetail
+                            .sitePermission === permission.ViewAndEdit &&
+                          siteParticipants.participantRegistryDetail
+                            .siteStatus !== 0
+                        "
+                        for="{{ participant.id }}"
+                      ></label>
+                      <span
+                        class="no_st_en cursor__pointer outline__none"
+                        [routerLink]="[
+                          '/coordinator/participant',
+                          participant.id
+                        ]"
+                      >
+                        {{ participant.email }}
+                      </span>
                     </div>
                   </div>
                 </td>
@@ -558,9 +654,8 @@
                 <td *ngIf="activeTab != onBoardingStatus.New">
                   <div
                     [ngClass]="{
-                      participant__label:
-                        participant.enrollmentStatus == 'Enrolled',
-                      inactive__text:
+                      'txt__green': participant.enrollmentStatus == 'Enrolled',
+                      'txt__light-gray':
                         participant.enrollmentStatus == 'Withdrawn'
                     }"
                   >
@@ -573,6 +668,14 @@
                 </td>
               </tr>
             </tbody>
+            <div
+              *ngIf="
+                siteParticipants.participantRegistryDetail.registryParticipants
+                  .length === 0
+              "
+            >
+              No records found
+            </div>
             <tfoot>
               <tr>
                 <td colspan="4">

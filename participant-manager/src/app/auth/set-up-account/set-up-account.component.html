@@ -56,7 +56,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.firstName.errors?.required"
                   >
-                    Please fill out this field.
+                    Enter a first name.
                   </span>
                 </div>
               </div>
@@ -82,7 +82,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.lastName.errors?.required"
                   >
-                    Please fill out this field.
+                    Enter a last name.
                   </span>
                 </div>
               </div>
@@ -118,6 +118,12 @@
                   Your password must be 8 to 64 characters long with lower
                   case,upper case,number and special character.
                 </span>
+                <span
+                  class="help-block with-errors error__msg"
+                  *ngIf="f.password.errors?.required"
+                >
+                  Enter a password.
+                </span>
               </div>
             </div>
           </div>
@@ -148,7 +154,7 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.confirmPassword.errors?.mustMatch"
                 >
-                  Passwords must match.
+                  Passwords do not match.
                 </span>
               </div>
             </div>
@@ -165,7 +171,12 @@
           >
             Submit
           </button>
-          <button name="cancel" type="button" class="btn bt__cancel">
+          <button
+            routerLink="/login"
+            name="cancel"
+            type="button"
+            class="btn bt__cancel"
+          >
             Cancel
           </button>
         </div>

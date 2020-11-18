@@ -1,17 +1,17 @@
-<div class="subheader p-none pl-none">
+<section class="subheader p-none pl-none">
   <div class="max__w__850 m-none">
     <div class="row">
       <div>
         <a routerLink="/coordinator/locations" class="subheader__title">
           <img src="assets/svgs/back-arrow.svg" alt="" />
-          <span>Add New Location</span>
+          <span class="pl-2">Add New Location</span>
         </a>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="max__w__850 add__location">
+<section class="max__w__850 add__location">
   <form
     ngForm
     #addLocationForm="ngForm"
@@ -33,33 +33,34 @@
               name="customId"
               #customId="ngModel"
             />
-          </div>
-          <div
-            class="validation-error"
-            *ngIf="customId.invalid && (customId.dirty || customId.touched)"
-          >
-            <span
-              class="help-block with-errors error__msg"
-              *ngIf="customId.errors?.required"
+
+            <div
+              class="validation-error"
+              *ngIf="customId.invalid && (customId.dirty || customId.touched)"
             >
-              Location ID is required.
-            </span>
-            <span
-              class="help-block with-errors error__msg"
-              *ngIf="customId.errors?.maxlength"
-            >
-              Location ID exceeds max length (15 characters).
-            </span>
-            <span
-              class="help-block with-errors error__msg"
-              *ngIf="
-                customId.errors &&
-                !customId.errors.required &&
-                !customId.errors.maxlength
-              "
-            >
-              Location ID is invalid.
-            </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="customId.errors?.required"
+              >
+                Enter a location ID.
+              </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="customId.errors?.maxlength"
+              >
+                Location ID exceeds max length (15 characters).
+              </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="
+                  customId.errors &&
+                  !customId.errors.required &&
+                  !customId.errors.maxlength
+                "
+              >
+                Location ID is invalid.
+              </span>
+            </div>
           </div>
         </div>
         <div class="col-xs-12 col-md-6 p-none">
@@ -75,31 +76,32 @@
               maxlength="200"
               #name="ngModel"
             />
-          </div>
-          <div
-            class="validation-error"
-            *ngIf="name.invalid && (name.dirty || name.touched)"
-          >
-            <span
-              class="help-block with-errors error__msg"
-              *ngIf="name.errors?.required"
+
+            <div
+              class="validation-error"
+              *ngIf="name.invalid && (name.dirty || name.touched)"
             >
-              Location Name is required.
-            </span>
-            <span
-              class="help-block with-errors error__msg"
-              *ngIf="name.errors?.maxlength"
-            >
-              Location Name exceeds max length (200 characters).
-            </span>
-            <span
-              class="help-block with-errors error__msg"
-              *ngIf="
-                name.errors && !name.errors.required && !name.errors.maxlength
-              "
-            >
-              Location Name is invalid.
-            </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="name.errors?.required"
+              >
+                Enter a location name.
+              </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="name.errors?.maxlength"
+              >
+                Location Name exceeds max length (200 characters).
+              </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="
+                  name.errors && !name.errors.required && !name.errors.maxlength
+                "
+              >
+                Location Name is invalid.
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -117,35 +119,37 @@
               maxlength="500"
               #description="ngModel"
             />
-          </div>
-          <div
-            class="validation-error"
-            *ngIf="
-              description.invalid && (description.dirty || description.touched)
-            "
-          >
-            <span
-              class="help-block with-errors error__msg"
-              *ngIf="description.errors?.required"
-            >
-              Location Description is required.
-            </span>
-            <span
-              class="help-block with-errors error__msg"
-              *ngIf="description.errors?.maxlength"
-            >
-              Location Description exceeds max length (500 characters).
-            </span>
-            <span
-              class="help-block with-errors error__msg"
+
+            <div
+              class="validation-error"
               *ngIf="
-                description.errors &&
-                !description.errors.required &&
-                !description.errors.maxlength
+                description.invalid &&
+                (description.dirty || description.touched)
               "
             >
-              Location Description is invalid.
-            </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="description.errors?.required"
+              >
+                Enter a location description.
+              </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="description.errors?.maxlength"
+              >
+                Location Description exceeds max length (500 characters).
+              </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="
+                  description.errors &&
+                  !description.errors.required &&
+                  !description.errors.maxlength
+                "
+              >
+                Location Description is invalid.
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -169,4 +173,4 @@
       </button>
     </div>
   </form>
-</div>
+</section>

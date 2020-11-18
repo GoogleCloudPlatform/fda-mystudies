@@ -117,12 +117,12 @@
 		6EF2FCEF1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */; };
 		6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */; };
 		6F02217A2264729E00A2DBC8 /* OtherTextChoiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */; };
+		6F04F526254C7B4500F4E74A /* TemporaryPasswordData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F04F523254C7B4500F4E74A /* TemporaryPasswordData.plist */; };
 		6F07148C2428DCE2002749DA /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07148B2428DCE2002749DA /* Collection+Extensions.swift */; };
 		6F209F02242E5E96005DD23F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F209F01242E5E96005DD23F /* Data+Extensions.swift */; };
 		6F214B9424603EFE008F2742 /* WKWebView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */; };
 		6F214B9624603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */; };
 		6F2392DE2423E0F300013AC0 /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
-		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
 		6F4B51B7250644A200DC5991 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51B6250644A200DC5991 /* SessionService.swift */; };
 		6F4B51B92506562D00DC5991 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51B82506562D00DC5991 /* URL+Extensions.swift */; };
 		6F4B51BB250659DB00DC5991 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51BA250659DB00DC5991 /* APIService.swift */; };
@@ -147,6 +147,8 @@
 		6FD4F67A244F2EE900584C0C /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4F679244F2EE900584C0C /* DateHelper.swift */; };
 		6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */; };
 		6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */; };
+		6FEE495F2521CFE500DD9696 /* AuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEE495D2521CFE500DD9696 /* AuthTests.swift */; };
+		6FEFEEB82510DE7A007BF1CE /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */; };
 		7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
 		7878B31D2216C6E20052FC23 /* HPHCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B31C2216C6E20052FC23 /* HPHCTests.swift */; };
 		847A25102518C93800BCB50A /* UtilitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A250F2518C93800BCB50A /* UtilitiesTest.swift */; };
@@ -160,8 +162,6 @@
 		89893F0622B1125300A846CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D601E433E8800763D4C /* Assets.xcassets */; };
 		89893F0722B112A000A846CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D621E433E8800763D4C /* LaunchScreen.storyboard */; };
 		89903062224A502C00B3A85C /* AnchorDateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89903061224A502C00B3A85C /* AnchorDateHandler.swift */; };
-		89AD25AA23D7241900F9450C /* AuthServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD25A923D7241900F9450C /* AuthServerConfiguration.swift */; };
-		89AD25AC23D7295A00F9450C /* AuthServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD25AB23D7295A00F9450C /* AuthServices.swift */; };
 		89EDB46C2271EFDF0070F16C /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF0BC3C2223D1D6004F2357 /* ResearchKit.framework */; };
 		89EDB46D2271EFDF0070F16C /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF0BC3C2223D1D6004F2357 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		940577A81E767AC60043215C /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940577A71E767AC60043215C /* ChangePasswordViewController.swift */; };
@@ -249,6 +249,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
 			remoteInfo = ResearchKitTests;
+		};
+		6FEE49582521CFD000DD9696 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E7D2D4E1E433E8700763D4C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6E7D2D551E433E8700763D4C;
+			remoteInfo = HPHC;
 		};
 		7878B31F2216C6E20052FC23 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -405,6 +412,7 @@
 		6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftMenuResourceTableViewCell.swift; sourceTree = "<group>"; };
 		6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextChoiceCell.xib; sourceTree = "<group>"; };
 		6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OtherTextChoiceCell.xib; sourceTree = "<group>"; };
+		6F04F523254C7B4500F4E74A /* TemporaryPasswordData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TemporaryPasswordData.plist; sourceTree = "<group>"; };
 		6F07148824279452002749DA /* Default.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Default.xcconfig; sourceTree = "<group>"; };
 		6F07148B2428DCE2002749DA /* Collection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
 		6F209F01242E5E96005DD23F /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
@@ -430,13 +438,16 @@
 		6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherTextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C21225F410500420A7B /* TextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C27225F416C00420A7B /* Cell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cell+Extensions.swift"; sourceTree = "<group>"; };
-		6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegistrationServerKeys.swift; path = ../RegistrationServerKeys.swift; sourceTree = "<group>"; };
 		6FD1E15623F18228009DACAE /* ConsentServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServices.swift; sourceTree = "<group>"; };
 		6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentServerConfiguration.swift; sourceTree = "<group>"; };
 		6FD1E15923F18239009DACAE /* APIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIConfiguration.swift; sourceTree = "<group>"; };
 		6FD4F679244F2EE900584C0C /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AnonymousFilterData.plist; sourceTree = "<group>"; };
 		6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySchedules.swift; sourceTree = "<group>"; };
+		6FEE49532521CFD000DD9696 /* MyStudiesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyStudiesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FEE495D2521CFE500DD9696 /* AuthTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthTests.swift; sourceTree = "<group>"; };
+		6FEE495E2521CFE500DD9696 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		782AF87B221D247D000025CF /* StudyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTest.swift; sourceTree = "<group>"; };
 		7878B30E221574D80052FC23 /* StandaloneStudy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandaloneStudy.swift; sourceTree = "<group>"; };
 		7878B31A2216C6E10052FC23 /* HPHCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HPHCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -449,8 +460,6 @@
 		8905592923016852005FB284 /* UITestingHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestingHelpers.swift; sourceTree = "<group>"; };
 		8926D7E92383F25C00558F4E /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
 		89903061224A502C00B3A85C /* AnchorDateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnchorDateHandler.swift; sourceTree = "<group>"; };
-		89AD25A923D7241900F9450C /* AuthServerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServerConfiguration.swift; sourceTree = "<group>"; };
-		89AD25AB23D7295A00F9450C /* AuthServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServices.swift; sourceTree = "<group>"; };
 		89CD64B92244CAA600008178 /* ResourceAnchorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceAnchorTest.swift; sourceTree = "<group>"; };
 		940577A71E767AC60043215C /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		940577AB1E767C8D0043215C /* ChangePasswordData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ChangePasswordData.plist; sourceTree = "<group>"; };
@@ -538,6 +547,13 @@
 				972663AD23F7242B537B8E82 /* Pods_HPHC.framework in Frameworks */,
 				89EDB46C2271EFDF0070F16C /* ResearchKit.framework in Frameworks */,
 				041AEB90AC42096B113333ED /* (null) in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6FEE49502521CFD000DD9696 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,6 +656,7 @@
 				6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */,
 				6E7D2D581E433E8700763D4C /* HPHC */,
 				7878B31B2216C6E20052FC23 /* HPHCTests */,
+				6FEE49542521CFD000DD9696 /* MyStudiesUITests */,
 				6E7D2D571E433E8700763D4C /* Products */,
 				62CD35D6D8DE746AB43D70D6 /* Pods */,
 				5E6053B2479953DCC93BD8D4 /* Frameworks */,
@@ -651,6 +668,7 @@
 			children = (
 				6E7D2D561E433E8700763D4C /* FDA MyStudies.app */,
 				7878B31A2216C6E10052FC23 /* HPHCTests.xctest */,
+				6FEE49532521CFD000DD9696 /* MyStudiesUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1020,7 +1038,6 @@
 			isa = PBXGroup;
 			children = (
 				6FD1E15923F18239009DACAE /* APIConfiguration.swift */,
-				6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */,
 				6F83039424864431009409A5 /* APIError.swift */,
 			);
 			path = Environment;
@@ -1180,6 +1197,7 @@
 		6FE00CDB238FEEDA0067A7B8 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				6F04F523254C7B4500F4E74A /* TemporaryPasswordData.plist */,
 				6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */,
 				6EE93DB71E93C8850027A5DC /* Activities.plist */,
 				940577AB1E767C8D0043215C /* ChangePasswordData.plist */,
@@ -1443,7 +1461,6 @@
 				94CD96EE1E4B16D900946477 /* WCPConfiguration.swift */,
 				9432C2F61E4C483D005984EC /* RegistrationServerConfiguration.swift */,
 				9432C2F81E4C4993005984EC /* ResponseServerConfiguration.swift */,
-				89AD25A923D7241900F9450C /* AuthServerConfiguration.swift */,
 				6F9975612423B7EA0044944E /* EnrollmentServerConfiguration.swift */,
 			);
 			path = Configurations;
@@ -1456,11 +1473,20 @@
 				94C602301E51C7D500CB72F7 /* WCPServices.swift */,
 				9432C2FA1E4C9EF8005984EC /* UserServices.swift */,
 				9487102B1E54870000246109 /* ResponseServices.swift */,
-				89AD25AB23D7295A00F9450C /* AuthServices.swift */,
 				6F2392DD2423E0F300013AC0 /* EnrollServices.swift */,
 				6F55B9BD250239DA00A052A9 /* HydraAPI.swift */,
+				6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */,
 			);
 			path = APIs;
+			sourceTree = "<group>";
+		};
+		6FEE49542521CFD000DD9696 /* MyStudiesUITests */ = {
+			isa = PBXGroup;
+			children = (
+				6FEE495E2521CFE500DD9696 /* Info.plist */,
+				6FEE495D2521CFE500DD9696 /* AuthTests.swift */,
+			);
+			path = MyStudiesUITests;
 			sourceTree = "<group>";
 		};
 		7878B31B2216C6E20052FC23 /* HPHCTests */ = {
@@ -1744,6 +1770,24 @@
 			productReference = 6E7D2D561E433E8700763D4C /* FDA MyStudies.app */;
 			productType = "com.apple.product-type.application";
 		};
+		6FEE49522521CFD000DD9696 /* MyStudiesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6FEE495A2521CFD000DD9696 /* Build configuration list for PBXNativeTarget "MyStudiesUITests" */;
+			buildPhases = (
+				6FEE494F2521CFD000DD9696 /* Sources */,
+				6FEE49502521CFD000DD9696 /* Frameworks */,
+				6FEE49512521CFD000DD9696 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6FEE49592521CFD000DD9696 /* PBXTargetDependency */,
+			);
+			name = MyStudiesUITests;
+			productName = MyStudiesUITests;
+			productReference = 6FEE49532521CFD000DD9696 /* MyStudiesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		7878B3192216C6E10052FC23 /* HPHCTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7878B3252216C6E20052FC23 /* Build configuration list for PBXNativeTarget "HPHCTests" */;
@@ -1770,7 +1814,7 @@
 		6E7D2D4E1E433E8700763D4C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
+				LastSwiftUpdateCheck = 1170;
 				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = Google;
 				TargetAttributes = {
@@ -1790,6 +1834,12 @@
 								enabled = 1;
 							};
 						};
+					};
+					6FEE49522521CFD000DD9696 = {
+						CreatedOnToolsVersion = 11.7;
+						DevelopmentTeam = 3485DDCN2M;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 6E7D2D551E433E8700763D4C;
 					};
 					7878B3192216C6E10052FC23 = {
 						CreatedOnToolsVersion = 10.1;
@@ -1858,6 +1908,7 @@
 			targets = (
 				6E7D2D551E433E8700763D4C /* HPHC */,
 				7878B3192216C6E10052FC23 /* HPHCTests */,
+				6FEE49522521CFD000DD9696 /* MyStudiesUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1922,6 +1973,7 @@
 				6E14F2031F0224AD00EA8D1E /* Notification.json in Resources */,
 				6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */,
 				89893F0522B1115300A846CE /* Main.storyboard in Resources */,
+				6F04F526254C7B4500F4E74A /* TemporaryPasswordData.plist in Resources */,
 				6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */,
 				484ACBFC1F28A82B00BCC819 /* FilterData.plist in Resources */,
 				6EE93DC91E93C8850027A5DC /* Activities.plist in Resources */,
@@ -1934,6 +1986,13 @@
 				94B3DD441E6ED8E500327AE5 /* Profile.plist in Resources */,
 				6E7D2D8C1E4340B200763D4C /* UserProfile.plist in Resources */,
 				6E7D2D901E43526100763D4C /* Register.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6FEE49512521CFD000DD9696 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2108,6 +2167,7 @@
 				6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */,
 				6F99755F242387300044944E /* AppConfiguration.swift in Sources */,
 				6ED86F641EA6498D00365AF0 /* RepeatableFormStepViewController.m in Sources */,
+				6FEFEEB82510DE7A007BF1CE /* UserAPI.swift in Sources */,
 				9491F7F81E825F5D0018C15E /* DBHandler.swift in Sources */,
 				6ED134361E5EB0370090C976 /* ConsentStep.swift in Sources */,
 				6EE93DCA1E93C8850027A5DC /* ActivitiesTableViewCell.swift in Sources */,
@@ -2150,7 +2210,6 @@
 				6EED7B3D1E65752C002C1FA3 /* FetalKickCounterTask.swift in Sources */,
 				6FB89C24225F410500420A7B /* OtherTextChoiceCell.swift in Sources */,
 				6E183AB51E966230005D7A27 /* AKUtility.swift in Sources */,
-				89AD25AC23D7295A00F9450C /* AuthServices.swift in Sources */,
 				6FD1E15B23F18239009DACAE /* APIConfiguration.swift in Sources */,
 				6EA889BE1E6FD20000F160A1 /* ConfirmationTableViewCell.swift in Sources */,
 				6F4B51BB250659DB00DC5991 /* APIService.swift in Sources */,
@@ -2170,7 +2229,6 @@
 				6ED1B2241E54254900BF463F /* ActivityResult.swift in Sources */,
 				48567FE11F14FB3C00857193 /* StudyFilterViewController.swift in Sources */,
 				9432C2FB1E4C9EF8005984EC /* UserServices.swift in Sources */,
-				6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */,
 				94FF031F1E952B0A009F191B /* ReachoutOptionCell.swift in Sources */,
 				4884E3521E825E7D002DA0B9 /* FeedBackViewController.swift in Sources */,
 				94B3DD4F1E6ED8E500327AE5 /* PageViewController.swift in Sources */,
@@ -2214,7 +2272,6 @@
 				6F214B9624603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift in Sources */,
 				94B3DD4D1E6ED8E500327AE5 /* FirstGatewayOverviewViewController.swift in Sources */,
 				6E2B25F31EAE3F1D00E2DFB2 /* ResearchContainerSegue.swift in Sources */,
-				89AD25AA23D7241900F9450C /* AuthServerConfiguration.swift in Sources */,
 				94C602311E51C7D500CB72F7 /* WCPServices.swift in Sources */,
 				9487102C1E54870000246109 /* ResponseServices.swift in Sources */,
 				6E183AB41E966230005D7A27 /* FileDownloadModel.swift in Sources */,
@@ -2237,6 +2294,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6FEE494F2521CFD000DD9696 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FEE495F2521CFE500DD9696 /* AuthTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7878B3162216C6E10052FC23 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2250,6 +2315,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6FEE49592521CFD000DD9696 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6E7D2D551E433E8700763D4C /* HPHC */;
+			targetProxy = 6FEE49582521CFD000DD9696 /* PBXContainerItemProxy */;
+		};
 		7878B3202216C6E20052FC23 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6E7D2D551E433E8700763D4C /* HPHC */;
@@ -2461,6 +2531,51 @@
 			};
 			name = Release;
 		};
+		6FEE495B2521CFD000DD9696 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3485DDCN2M;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = MyStudiesUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.btc.MyStudiesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HPHC;
+			};
+			name = Debug;
+		};
+		6FEE495C2521CFD000DD9696 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3485DDCN2M;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = MyStudiesUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.btc.MyStudiesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HPHC;
+			};
+			name = Release;
+		};
 		7878B3212216C6E20052FC23 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D8009EF16382C7D8C349B5A9 /* Pods-HPHCTests.debug.xcconfig */;
@@ -2529,6 +2644,15 @@
 			buildConfigurations = (
 				6E7D2D7F1E433E8800763D4C /* Debug */,
 				6E7D2D801E433E8800763D4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6FEE495A2521CFD000DD9696 /* Build configuration list for PBXNativeTarget "MyStudiesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FEE495B2521CFD000DD9696 /* Debug */,
+				6FEE495C2521CFD000DD9696 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

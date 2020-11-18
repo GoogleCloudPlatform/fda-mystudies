@@ -117,9 +117,11 @@ CREATE TABLE IF NOT EXISTS `locations` (
   `is_default` varchar(1) NOT NULL DEFAULT 'N',
   `updated_time` datetime DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
   `status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_a1m10y1e7v3wu2497hh138k5i` (`custom_id`),
+  UNIQUE KEY `name` (`name`),
   KEY `locations_status_idx` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -155,8 +157,9 @@ CREATE TABLE IF NOT EXISTS `participant_registry_site` (
   `onboarding_status` varchar(3) DEFAULT NULL,
   `site_id` varchar(255) DEFAULT NULL,
   `study_info_id` varchar(255) DEFAULT NULL,
+  `enrollment_token_used` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `participant_registry_site_email_study_info_id_uidx` (`email`,`study_info_id`),
+  UNIQUE KEY `participant_registry_site_email_study_info_token_uidx` (`email`,`study_info_id`,`enrollment_token`),
   UNIQUE KEY `UK_f8207wc2n5trl8demmfsvxis1` (`enrollment_token`),
   KEY `FKa0f0un45iyajvjfqq6ok42lqc` (`site_id`),
   KEY `FKrtseodvj7n9yjtwfqiixtviec` (`study_info_id`),

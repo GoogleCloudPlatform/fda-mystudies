@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit, TemplateRef, HostListener} from '@angular/core';
 import {SiteParticipants} from '../shared/site-detail.model';
 import {Router, ActivatedRoute} from '@angular/router';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
@@ -11,13 +11,15 @@ import {UpdateInviteResponse} from '../../participant-details/participant-detail
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {OnboardingStatus} from 'src/app/shared/enums';
+import {EnrollmentStatus, OnboardingStatus, Status} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
 import {
   ImportParticipantEmailResponse,
   Participant,
 } from '../shared/import-participants';
-const MAXIMUM_USER_COUNT = 10;
+import {Permission} from 'src/app/shared/permission-enums';
+import {ParticipantRegistryDetail} from 'src/app/shared/participant-registry-detail';
+
 @Component({
   selector: 'app-site-details',
   templateUrl: './site-details.component.html',
@@ -30,7 +32,7 @@ export class SiteDetailsComponent
   siteParticipants$: Observable<SiteParticipants> = of();
   siteDetailsBackup = {} as SiteParticipants;
   siteId = '';
-
+  permission = Permission;
   sendResend = '';
   enableDisable = '';
   toggleDisplay = false;
@@ -39,6 +41,7 @@ export class SiteDetailsComponent
   activeTab = OnboardingStatus.All;
   newlyImportedParticipants: Participant[] = [];
   selectedAll = false;
+  studyStatus = Status;
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -50,6 +53,11 @@ export class SiteDetailsComponent
   ) {
     super();
   }
+
+  @HostListener('click') onClick() {
+    this.toggleDisplay = false;
+  }
+
   openModal(templateRef: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(templateRef);
   }
@@ -64,7 +72,8 @@ export class SiteDetailsComponent
       }),
     );
   }
-  toggleParticipant(): void {
+  toggleParticipant($event: Event): void {
+    $event.stopPropagation();
     this.toggleDisplay = !this.toggleDisplay;
   }
   fetchSiteParticipant(fetchingOption: OnboardingStatus): void {
@@ -120,14 +129,17 @@ export class SiteDetailsComponent
     if (checkbox.checked) {
       this.userIds.push(checkbox.id);
     } else {
+      this.selectedAll = false;
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
-  decommissionSite(): void {
+  decommissionSite(participantRegistryDetail: ParticipantRegistryDetail): void {
     this.subs.add(
       this.particpantDetailService
         .siteDecommission(this.siteId)
         .subscribe((successResponse: ApiResponse) => {
+          participantRegistryDetail.siteStatus =
+            participantRegistryDetail.siteStatus === 1 ? 0 : 1;
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {
@@ -138,25 +150,21 @@ export class SiteDetailsComponent
   }
   sendInvitation(): void {
     if (this.userIds.length > 0) {
-      if (this.userIds.length > MAXIMUM_USER_COUNT) {
-        this.toastr.error('Please select less than 10 participants');
-      } else {
-        const sendInvitations = {
-          ids: this.userIds,
-        };
-        this.subs.add(
-          this.particpantDetailService
-            .sendInvitation(this.siteId, sendInvitations)
-            .subscribe((successResponse: UpdateInviteResponse) => {
-              if (getMessage(successResponse.code)) {
-                this.toastr.success(getMessage(successResponse.code));
-              } else {
-                this.toastr.success('success');
-              }
-              this.changeTab(OnboardingStatus.Invited);
-            }),
-        );
-      }
+      const sendInvitations = {
+        ids: this.userIds,
+      };
+      this.subs.add(
+        this.particpantDetailService
+          .sendInvitation(this.siteId, sendInvitations)
+          .subscribe((successResponse: UpdateInviteResponse) => {
+            if (getMessage(successResponse.code)) {
+              this.toastr.success(getMessage(successResponse.code));
+            } else {
+              this.toastr.success('success');
+            }
+            this.changeTab(OnboardingStatus.Invited);
+          }),
+      );
     } else {
       this.toastr.error('Please select at least one participant');
     }
@@ -164,38 +172,35 @@ export class SiteDetailsComponent
 
   toggleInvitation(): void {
     if (this.userIds.length > 0) {
-      if (this.userIds.length > MAXIMUM_USER_COUNT) {
-        this.toastr.error('Please select less than 10 participants');
-      } else {
-        const statusUpdate =
-          this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
-        const invitationUpdate = {
-          ids: this.userIds,
-          status: statusUpdate,
-        };
-        this.subs.add(
-          this.particpantDetailService
-            .toggleInvitation(this.siteId, invitationUpdate)
-            .subscribe((successResponse: ApiResponse) => {
-              if (getMessage(successResponse.code)) {
-                this.toastr.success(getMessage(successResponse.code));
-              } else {
-                this.toastr.success(successResponse.message);
-              }
-              this.changeTab(
-                this.activeTab === OnboardingStatus.Disabled
-                  ? OnboardingStatus.Disabled
-                  : OnboardingStatus.New,
-              );
-            }),
-        );
-      }
+      const statusUpdate =
+        this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
+      const invitationUpdate = {
+        ids: this.userIds,
+        status: statusUpdate,
+      };
+      this.subs.add(
+        this.particpantDetailService
+          .toggleInvitation(this.siteId, invitationUpdate)
+          .subscribe((successResponse: ApiResponse) => {
+            if (getMessage(successResponse.code)) {
+              this.toastr.success(getMessage(successResponse.code));
+            } else {
+              this.toastr.success(successResponse.message);
+            }
+            this.changeTab(
+              this.activeTab === OnboardingStatus.Disabled
+                ? OnboardingStatus.Disabled
+                : OnboardingStatus.New,
+            );
+          }),
+      );
     } else {
       this.toastr.error('Please select at least one participant');
     }
   }
 
   onSucceedAddEmail(event: Participant[]): void {
+    this.userIds = [];
     this.newlyImportedParticipants = event;
     this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
       this.userIds.push(newlyCreatedparticpants.id),
@@ -209,6 +214,7 @@ export class SiteDetailsComponent
   }
 
   onFileImportSuccess(event: ImportParticipantEmailResponse): void {
+    this.userIds = [];
     this.newlyImportedParticipants = event.participants;
     this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
       this.userIds.push(newlyCreatedparticpants.id),
@@ -226,8 +232,15 @@ export class SiteDetailsComponent
     if (this.selectedAll) {
       for (const participants of this.siteDetailsBackup
         .participantRegistryDetail.registryParticipants) {
-        participants.newlyCreatedUser = this.selectedAll;
-        this.userIds.push(participants.id);
+        if (this.activeTab === OnboardingStatus.Invited) {
+          if (participants.enrollmentStatus === EnrollmentStatus.YetToEnroll) {
+            participants.newlyCreatedUser = this.selectedAll;
+            this.userIds.push(participants.id);
+          }
+        } else {
+          participants.newlyCreatedUser = this.selectedAll;
+          this.userIds.push(participants.id);
+        }
       }
     } else {
       for (const participants of this.siteDetailsBackup

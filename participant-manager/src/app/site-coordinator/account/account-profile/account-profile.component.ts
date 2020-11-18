@@ -56,14 +56,9 @@ export class AccountProfileComponent
   }
 
   getProfileDetails(): void {
-    this.accountService.fetchUserProfile().subscribe(
-      (data) => {
-        this.profileForm.patchValue(data);
-      },
-      (error) => {
-        this.toastr.error(error);
-      },
-    );
+    this.accountService.fetchUserProfile().subscribe((data) => {
+      this.profileForm.patchValue(data);
+    });
   }
 
   updateProfile(): void {

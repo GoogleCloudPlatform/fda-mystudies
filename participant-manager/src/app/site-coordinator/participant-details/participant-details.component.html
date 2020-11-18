@@ -15,13 +15,27 @@
           <div>
             <div class="mb-xs">Participant Details</div>
             <div class="display-inline-flex overflow__auto">
-              <div class="pr-xlg">
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                class="pr-xlg"
+              >
                 <div class="banner__label">
                   {{ participant.participantDetails.customLocationId }}
                 </div>
                 <div class="banner__text">
                   {{ participant.participantDetails.locationName }}
                 </div>
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="pr-xlg"
+              >
+                <div class="banner__label">SITE</div>
+                <div class="banner__text">NA</div>
               </div>
               <div class="pr-xlg">
                 <div class="banner__label">
@@ -42,16 +56,29 @@
             </div>
           </div>
         </div>
-        <section class="desk__view">
+        <section
+          *ngIf="
+            participant.participantDetails.studyType !== studyTypes.Open &&
+            participant.participantDetails.sitePermission ===
+              permission.ViewAndEdit
+          "
+          class="desk__view"
+        >
           <div class="flex__justify__space-between">
             <div
               class="mr-sm"
               *ngIf="
                 participant.participantDetails.onboardingStatus !==
-                onBoardingStatus.Disabled
+                  onBoardingStatus.Disabled &&
+                participant.participantDetails.studyStatus !==
+                  studyStatus.Deactivated &&
+                participant.participantDetails.siteStatus !== 0
               "
             >
               <button
+                [disabled]="
+                  hasCompletedEnrollment(participant.participantDetails)
+                "
                 name="sendInvite"
                 class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
                 (click)="sendInvitation(participant.participantDetails.siteId)"
@@ -59,8 +86,17 @@
                 {{ sendResend }}
               </button>
             </div>
-            <div>
+            <div
+              *ngIf="
+                participant.participantDetails.studyStatus !==
+                  studyStatus.Deactivated &&
+                participant.participantDetails.siteStatus !== 0
+              "
+            >
               <button
+                [disabled]="
+                  hasCompletedEnrollment(participant.participantDetails)
+                "
                 name="toggleInvite"
                 class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
                 (click)="
@@ -79,9 +115,19 @@
     </div>
   </section>
 
-  <section class="subheader p-none pl-none mobile__view border-top__c4d1e6">
+  <section
+    *ngIf="
+      participant.participantDetails.studyType !== studyTypes.Open &&
+      participant.participantDetails.sitePermission ===
+        permission.ViewAndEdit &&
+      participant.participantDetails.studyStatus !== studyStatus.Deactivated &&
+      participant.participantDetails.siteStatus !== 0
+    "
+    class="subheader p-none pl-none mobile__view border-top__c4d1e6"
+  >
     <div class="flex__ flex__justify__center">
       <button
+        [disabled]="hasCompletedEnrollment(participant.participantDetails)"
         name="sendInvite"
         class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
         (click)="sendInvitation(participant.participantDetails.siteId)"
@@ -89,6 +135,7 @@
         {{ sendResend }}
       </button>
       <button
+        [disabled]="hasCompletedEnrollment(participant.participantDetails)"
         name="toggleInvite"
         class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
         (click)="
@@ -120,14 +167,47 @@
           <div class="flex__justify__space-between flex__wrap">
             <div>
               <div class="blue__text__md">Onboarding Status</div>
-              <div class="participant__label">
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                [ngClass]="{
+                  'txt__green':
+                    participant.participantDetails.onboardingStatus ==
+                    onBoardingStatus.Invited,
+                  'txt__light-gray':
+                    participant.participantDetails.onboardingStatus ==
+                    onBoardingStatus.Disabled
+                }"
+              >
                 {{ participant.participantDetails.onboardingStatus }}
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="participant__label"
+              >
+                NA
               </div>
             </div>
             <div>
               <div class="blue__text__md">Last Invitation Sent</div>
-              <div class="inactive__text">
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                class="inactive__text"
+              >
                 {{ participant.participantDetails.invitationDate }}
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="inactive__text"
+              >
+                NA
               </div>
             </div>
             <div
@@ -138,7 +218,16 @@
             >
               <div>
                 <div class="blue__text__md">Enrollment Status</div>
-                <div class="inactive__text">
+                <div
+                  [ngClass]="{
+                    'txt__green':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Enrolled,
+                    'txt__light-gray':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Withdrawn
+                  }"
+                >
                   {{ enrollmentDetails.enrollmentStatus }}
                 </div>
               </div>
@@ -167,7 +256,7 @@
         class="table table-striped"
         [mfData]="participant.participantDetails.consentHistory"
         #mf="mfDataTable"
-        [mfRowsOnPage]="10"
+        [mfRowsOnPage]="5"
       >
         <thead>
           <tr>
@@ -228,6 +317,9 @@
             </td>
           </tr>
         </tbody>
+        <div *ngIf="participant.participantDetails.consentHistory.length === 0">
+          No records found
+        </div>
         <tfoot>
           <tr>
             <td colspan="4">

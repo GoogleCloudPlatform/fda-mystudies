@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,28 +30,28 @@ spec:
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
+                  name: participant-manager-datastore-credentials
                   key: dbname
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
-                  key: username
+                  name: participant-manager-datastore-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
-                  key: password
+                  name: participant-manager-datastore-credentials
+                  key: dbpassword
             # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-secrets
+                  name: participant-manager-datastore-credentials
                   key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-secrets
+                  name: participant-manager-datastore-credentials
                   key: secret_key
             # MAIL SERVER
             - name: MAIL_USERNAME
@@ -76,9 +81,9 @@ spec:
                   key: from_email_address
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+              value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
+              value: "http://auth-server-np:50000/oauth-scim-service"
             # MISC
             - name: BASE_URL
               valueFrom:
@@ -109,6 +114,8 @@ spec:
             httpGet:
               path: /participant-manager-datastore/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
@@ -126,4 +133,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-manager-datastore-gcloud-key
+          secretName: participant-manager-gke-sa-gcloud-key

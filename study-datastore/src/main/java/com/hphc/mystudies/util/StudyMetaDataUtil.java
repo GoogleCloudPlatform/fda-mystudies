@@ -447,15 +447,15 @@ public class StudyMetaDataUtil {
           final String bundleId = tokenizer.nextToken();
           final String appToken = tokenizer.nextToken();
 
-          if (authPropMap.containsKey(bundleId) && authPropMap.containsKey(appToken)) {
+          if (authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)) {
             String appBundleId = "";
             String appTokenId = "";
             for (Map.Entry<String, String> map : authPropMap.entrySet()) {
-              if (map.getKey().equals(appToken)) {
+              if (map.getValue().equals(appToken)) {
                 appTokenId = map.getValue();
               }
 
-              if (map.getKey().equals(bundleId)) {
+              if (map.getValue().equals(bundleId)) {
                 appBundleId = map.getValue();
               }
             }
@@ -504,12 +504,19 @@ public class StudyMetaDataUtil {
   public static HashMap getAuthorizationProperties() {
     LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Starts");
     HashMap hashMap = new HashMap<String, String>();
-    ResourceBundle rb = ResourceBundle.getBundle("authorizationResource");
-    Enumeration<String> keys = rb.getKeys();
-    while (keys.hasMoreElements()) {
-      String key = keys.nextElement();
-      String value = rb.getString(key);
-      hashMap.put(key, value);
+    Enumeration<String> keys = null;
+    Enumeration<Object> objectKeys = null;
+    try {
+      Properties prop =
+          PropertiesUtil.makePropertiesWithEnvironmentVariables("authorizationResource.properties");
+      objectKeys = prop.keys();
+      while (objectKeys.hasMoreElements()) {
+        String key = (String) objectKeys.nextElement();
+        String value = prop.getProperty(key);
+        hashMap.put(key, value);
+      }
+    } catch (Exception e) {
+      LOGGER.error("StudyMetaDataUtil - getAuthorizationProperties() - ERROR ", e);
     }
     LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Ends");
     return hashMap;

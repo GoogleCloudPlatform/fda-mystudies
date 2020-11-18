@@ -10,8 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATION_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETION_FAILED;
 
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
@@ -117,29 +117,6 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       if (user.getSettings() != null) {
         if (user.getSettings().getRemoteNotifications() != null) {
           userDetails.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
-
-          authInfo = userProfileManagementDao.getAuthInfo(userDetails);
-          if (authInfo != null) {
-            authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
-
-            if ((user.getInfo().getOs() != null) && !StringUtils.isEmpty(user.getInfo().getOs())) {
-              authInfo.setDeviceType(user.getInfo().getOs());
-            }
-            if ((user.getInfo().getOs() != null)
-                && !StringUtils.isEmpty(user.getInfo().getOs())
-                && (user.getInfo().getOs().equalsIgnoreCase("IOS")
-                    || user.getInfo().getOs().equalsIgnoreCase("I"))) {
-              authInfo.setIosAppVersion(user.getInfo().getAppVersion());
-            } else {
-              authInfo.setAndroidAppVersion(user.getInfo().getAppVersion());
-            }
-            if ((user.getInfo().getDeviceToken() != null)
-                && !StringUtils.isEmpty(user.getInfo().getDeviceToken())) {
-              authInfo.setDeviceToken(user.getInfo().getDeviceToken());
-            }
-
-            authInfo.setModified(Timestamp.from(Instant.now()));
-          }
         }
         if (user.getSettings().getLocalNotifications() != null) {
           userDetails.setLocalNotificationFlag(user.getSettings().getLocalNotifications());
@@ -159,6 +136,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
           userDetails.setLocale(user.getSettings().getLocale());
         }
       }
+      authInfo = authInfoDetails(userDetails, user);
       errorBean = userProfileManagementDao.updateUserProfile(userId, userDetails, authInfo);
     }
 
@@ -337,9 +315,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userProfileManagementDao.deactivateUserAccount(userId);
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
 
-      userMgmntAuditHelper.logEvent(USER_ACCOUNT_DEACTIVATED, auditRequest);
+      userMgmntAuditHelper.logEvent(USER_DELETED, auditRequest);
     } else {
-      userMgmntAuditHelper.logEvent(USER_ACCOUNT_DEACTIVATION_FAILED, auditRequest);
+      userMgmntAuditHelper.logEvent(USER_DELETION_FAILED, auditRequest);
     }
 
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Ends");
@@ -387,5 +365,34 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             templateArgs);
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Ends");
     return emailService.sendMimeMail(emailRequest);
+  }
+
+  private AuthInfoEntity authInfoDetails(UserDetailsEntity userDetails, UserRequestBean user) {
+    AuthInfoEntity authInfo = null;
+    authInfo = userProfileManagementDao.getAuthInfo(userDetails);
+    if (authInfo != null) {
+      if (user.getSettings() != null && user.getSettings().getRemoteNotifications() != null) {
+        authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
+      }
+      if (user.getInfo() != null) {
+        if (!StringUtils.isBlank(user.getInfo().getOs())) {
+          authInfo.setDeviceType(user.getInfo().getOs());
+        }
+        if (!StringUtils.isBlank(user.getInfo().getOs())
+            && (user.getInfo().getOs().equalsIgnoreCase("IOS")
+                || user.getInfo().getOs().equalsIgnoreCase("I"))) {
+          authInfo.setIosAppVersion(user.getInfo().getAppVersion());
+        } else {
+          authInfo.setAndroidAppVersion(user.getInfo().getAppVersion());
+        }
+        if (!StringUtils.isBlank(user.getInfo().getDeviceToken())) {
+          authInfo.setDeviceToken(user.getInfo().getDeviceToken());
+        } else if (!StringUtils.isBlank(authInfo.getDeviceToken())) {
+          authInfo.setDeviceToken(null);
+        }
+      }
+      authInfo.setModified(Timestamp.from(Instant.now()));
+    }
+    return authInfo;
   }
 }

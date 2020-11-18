@@ -42,16 +42,16 @@ enum API {
     }
   }
 
-  static var wcpURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "WCP_URL")) ?? "")
+  static var studyDataStoreURL: String {
+    return AppProtocol.value + ((try? Configuration.value(for: "STUDY_DATASTORE_URL")) ?? "") + "/"
   }
 
   static var responseURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "RESPONSE_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "RESPONSE_DATASTORE_URL")) ?? "") + "/"
   }
 
   static var registrationURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "REGISTRATION_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "USER_DATASTORE_URL")) ?? "") + "/"
   }
 
   static var authURL: String {
@@ -61,21 +61,17 @@ enum API {
   static var hydraURL: String {
     return AppProtocol.value + ((try? Configuration.value(for: "HYDRA_BASE_URL")) ?? "")
   }
-  
+
   static var enrollmentURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "ENROLLMENT_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "ENROLLMENT_DATASTORE_URL")) ?? "") + "/"
   }
 
   static var consentMgmtURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "CONSENTMGMT_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "CONSENT_DATASTORE_URL")) ?? "") + "/"
   }
 
-  static var authUsername: String {
-    return (try? Configuration.value(for: "AUTH_USERNAME")) ?? ""
-  }
-
-  static var authPassword: String {
-    return (try? Configuration.value(for: "AUTH_PASSWORD")) ?? ""
+  static var apiKey: String {
+    return (try? Configuration.value(for: "API_KEY")) ?? ""
   }
 
   static var authClientID: String {

@@ -6,7 +6,7 @@ import {BehaviorSubject, Observable, of, combineLatest} from 'rxjs';
 import {AppDetails, Participant, EnrolledStudy} from '../shared/app-details';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {map} from 'rxjs/operators';
-import {Status} from 'src/app/shared/enums';
+import {Status, StudyType} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
 
 @Component({
@@ -23,6 +23,7 @@ export class AppDetailsComponent
   appDetailsBackup = {} as AppDetails;
   statusEnum = Status;
   enrolledStudies: EnrolledStudy[] = [];
+  studyTypes = StudyType;
 
   constructor(
     private readonly modalService: BsModalService,
@@ -62,7 +63,9 @@ export class AppDetailsComponent
       this.query$,
     ).pipe(
       map(([appDetails, query]) => {
-        this.appDetailsBackup = appDetails;
+        this.appDetailsBackup = JSON.parse(
+          JSON.stringify(appDetails),
+        ) as AppDetails;
         this.appDetailsBackup.participants = this.appDetailsBackup.participants.filter(
           (participant: Participant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()),

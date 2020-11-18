@@ -11,13 +11,17 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -88,12 +92,10 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setApp(appInfo);
       studyInfo.setModifiedBy(String.valueOf(0));
       studyInfo.setModified(Timestamp.from(Instant.now()));
+      studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
       session.update(studyInfo);
-      if (studyInfo.getStatus().equalsIgnoreCase("Deactivated")) {
-        decommisionSiteFromStudy(session, studyInfo);
-      }
     } else {
-
+      List<AppPermissionEntity> appPermissionList = new ArrayList<>();
       if (appInfo == null) {
         appInfo = new AppEntity();
         appInfo.setAppId(studyMetadataBean.getAppId());
@@ -101,8 +103,16 @@ public class StudiesDaoImpl implements StudiesDao {
         appInfo.setAppDescription(studyMetadataBean.getAppDescription());
         appInfo.setCreatedBy(String.valueOf(0));
         appInfo.setCreated(Timestamp.from(Instant.now()));
-
         session.save(appInfo);
+      } else {
+        CriteriaQuery<AppPermissionEntity> appPermissionCriteria =
+            builder.createQuery(AppPermissionEntity.class);
+        Root<AppPermissionEntity> appPermissionRoot =
+            appPermissionCriteria.from(AppPermissionEntity.class);
+        Predicate[] appPermissionPredicate = new Predicate[1];
+        appPermissionPredicate[0] = builder.equal(appPermissionRoot.get("app"), appInfo);
+        appPermissionCriteria.select(appPermissionRoot).where(appPermissionPredicate);
+        appPermissionList = session.createQuery(appPermissionCriteria).getResultList();
       }
 
       studyInfo = new StudyEntity();
@@ -118,13 +128,25 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setApp(appInfo);
       studyInfo.setCreatedBy(String.valueOf(0));
       studyInfo.setCreated(Timestamp.from(Instant.now()));
+      studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
       String generatedStudyid = (String) session.save(studyInfo);
+
+      for (AppPermissionEntity appPermission : appPermissionList) {
+        StudyPermissionEntity studyPermission = new StudyPermissionEntity();
+        studyPermission.setApp(appInfo);
+        studyPermission.setStudy(studyInfo);
+        studyPermission.setUrAdminUser(appPermission.getUrAdminUser());
+        studyPermission.setEdit(appPermission.getEdit());
+        studyPermission.setCreated(Timestamp.from(Instant.now()));
+        studyPermission.setCreatedBy(appPermission.getCreatedBy());
+        session.save(studyPermission);
+      }
 
       if (!StringUtils.isBlank(studyMetadataBean.getStudyType())
           && studyMetadataBean.getStudyType().equals(AppConstants.OPEN_STUDY)) {
         LocationEntity defaultLocation =
             (LocationEntity)
-                session.createQuery("from LocationBo where isdefault='Y'").getSingleResult();
+                session.createQuery("from LocationEntity where isDefault='Y'").getSingleResult();
         if (defaultLocation != null) {
           StudyEntity studyInfoCreated = session.get(StudyEntity.class, generatedStudyid);
           SiteEntity site = new SiteEntity();
@@ -134,6 +156,18 @@ public class StudiesDaoImpl implements StudiesDao {
           site.setStatus(1);
           site.setTargetEnrollment(0);
           session.save(site);
+
+          for (AppPermissionEntity appPermission : appPermissionList) {
+            SitePermissionEntity sitePermission = new SitePermissionEntity();
+            sitePermission.setApp(appInfo);
+            sitePermission.setStudy(studyInfo);
+            sitePermission.setSite(site);
+            sitePermission.setUrAdminUser(appPermission.getUrAdminUser());
+            sitePermission.setCanEdit(appPermission.getEdit());
+            sitePermission.setCreated(Timestamp.from(Instant.now()));
+            sitePermission.setCreatedBy(appPermission.getCreatedBy());
+            session.save(sitePermission);
+          }
         }
       }
     }
@@ -141,29 +175,5 @@ public class StudiesDaoImpl implements StudiesDao {
     errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
     logger.info("StudiesDaoImpl - saveStudyMetadata() : ends");
     return errorBean;
-  }
-
-  private void decommisionSiteFromStudy(Session session, StudyEntity study) {
-    logger.info("StudiesDaoImpl - decommisionSiteFromStudy() : Starts");
-    CriteriaBuilder builder = null;
-    CriteriaQuery<SiteEntity> siteCriteria = null;
-    Root<SiteEntity> siteRoot = null;
-    Predicate[] sitePredicate = new Predicate[1];
-    List<SiteEntity> siteList = null;
-    builder = session.getCriteriaBuilder();
-    siteCriteria = builder.createQuery(SiteEntity.class);
-    siteRoot = siteCriteria.from(SiteEntity.class);
-    sitePredicate[0] = builder.equal(siteRoot.get("study"), study);
-    siteCriteria.select(siteRoot).where(sitePredicate);
-    siteList = session.createQuery(siteCriteria).getResultList();
-    if (!siteList.isEmpty()) {
-      for (SiteEntity site : siteList) {
-        site.setStatus(0);
-        site.setModifiedBy(String.valueOf(0));
-        site.setModified(Timestamp.from(Instant.now()));
-        session.update(site);
-      }
-    }
-    logger.info("StudiesDaoImpl - decommisionSiteFromStudy() : ends");
   }
 }

@@ -1777,7 +1777,7 @@
               "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span  </li></ul>");
         }
       }
-    );
+    });
 
     $("#maximumspanId").blur(function () {
       var value = $(this).val();
@@ -1799,7 +1799,7 @@
               "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
         }
       }
-    );
+    });
 
     $("#playspeedId").blur(function () {
       var value = $(this).val();
@@ -1828,7 +1828,7 @@
               "<ul class='list-unstyled'><li>Play Speed should be <= 20 seconds</li></ul>");
         }
       }
-    );
+    });
     $("#maximumtestId").blur(function () {
       var value = $(this).val();
       $(this).parent().removeClass("has-danger").removeClass("has-error");
@@ -2428,8 +2428,7 @@
               "${_csrf.parameterName}": "${_csrf.token}",
             },
             success: function emailValid(data, status) {
-              var jsonobject = eval(data);
-              var message = jsonobject.message;
+              var message = data.message;
               if ('SUCCESS' != message) {
                 $(thisAttr).validator('validate');
                 $('.statShortTitleClass').parent().removeClass("has-danger").removeClass(
@@ -2484,8 +2483,7 @@
                 "${_csrf.parameterName}": "${_csrf.token}",
               },
               success: function emailValid(data, status) {
-                var jsonobject = eval(data);
-                var message = jsonobject.message;
+                var message = data.message;
                 if ('SUCCESS' != message) {
                   $(thisAttr).validator('validate');
                   $(thisAttr).parent().find('.statShortTitleClass').removeClass(
@@ -2588,9 +2586,8 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function emailValid(data, status) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
-          var staticInfoList = jsonobject.statisticsInfoList;
+          var message = data.message;
+          var staticInfoList = data.statisticsInfoList;
           if ('SUCCESS' == message) {
             if (typeof staticInfoList != 'undefined' && staticInfoList != null
                 && staticInfoList.length > 0) {
@@ -2694,9 +2691,8 @@
             xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
           },
           success: function emailValid(data, status) {
-            var jsonobject = eval(data);
-            var message = jsonobject.message;
-            var staticInfoList = jsonobject.statisticsInfoList;
+            var message = data.message;
+            var staticInfoList = data.statisticsInfoList;
             if ('SUCCESS' == message) {
               if (typeof staticInfoList != 'undefined' && staticInfoList != null
                   && staticInfoList.length > 0) {

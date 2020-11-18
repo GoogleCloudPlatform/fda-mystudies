@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var parentViewControllerForAlert: UIViewController?
 
-  var iscomingFromForgotPasscode: Bool? = false
+  var iscomingFromForgotPasscode: Bool = false
 
   var isAppLaunched: Bool? = false
 
@@ -461,7 +461,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   /// Webservice request call to SignOut
   func sendRequestToSignOut() {
-    AuthServices().logoutUser(self as NMWebServiceDelegate)
+    UserAPI.logout { (status, error) in
+      if status {
+        if self.iscomingFromForgotPasscode {
+          self.handleSignoutAfterLogoutResponse()
+        } else {
+          self.handleSignoutResponse()
+        }
+      } else if let error = error {
+        // error
+        self.window?.topMostController()?.presentDefaultAlertWithError(
+          error: error,
+          animated: true,
+          action: nil,
+          completion: nil
+        )
+      }
+    }
   }
 
   /// Check the  current Consent Status for Updated Version
@@ -1182,13 +1198,6 @@ extension AppDelegate: NMWebServiceDelegate {
     } else if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
       self.createEligibilityConsentTask()
 
-    } else if requestName as String == AuthServerMethods.logout.method.methodName {
-
-      if iscomingFromForgotPasscode! {
-        self.handleSignoutAfterLogoutResponse()
-      } else {
-        self.handleSignoutResponse()
-      }
     } else if requestName as String
       == ConsentServerMethods.updateEligibilityConsentStatus.method
       .methodName
@@ -1211,10 +1220,7 @@ extension AppDelegate: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     // Remove Progress
     self.addAndRemoveProgress(add: false)
-    if requestName as String == AuthServerMethods.logout.method.methodName {
-      self.addAndRemoveProgress(add: false)
-
-    } else if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
+    if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
       self.popViewControllerAfterConsentDisagree()
     }
   }
