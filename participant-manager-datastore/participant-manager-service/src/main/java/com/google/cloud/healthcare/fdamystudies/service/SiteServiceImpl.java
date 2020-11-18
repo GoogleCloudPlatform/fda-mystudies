@@ -333,7 +333,7 @@ public class SiteServiceImpl implements SiteService {
                 .getOnboardingStatus()
                 .equals(OnboardingStatus.DISABLED.getCode())
             || participantRegistrySite.getSite().equals(site)) {
-          return ErrorCode.EMAIL_EXISTS;
+          return ErrorCode.USER_EMAIL_EXIST;
         }
       }
     }
@@ -1152,7 +1152,6 @@ public class SiteServiceImpl implements SiteService {
     }
 
     List<StudySiteInfo> studySiteDetails = siteRepository.getStudySiteDetails(userId);
-
     if (CollectionUtils.isEmpty(studySiteDetails)) {
       throw new ErrorCodeException(ErrorCode.NO_SITES_FOUND);
     }
@@ -1174,7 +1173,6 @@ public class SiteServiceImpl implements SiteService {
             .collect(Collectors.toMap(EnrolledInvitedCount::getSiteId, Function.identity()));
 
     enrolledInvitedCountMap.putAll(enrolledInvitedCountMapOfOpenStudy);
-
     Map<String, StudyDetails> studiesMap = new LinkedHashMap<>();
 
     for (StudySiteInfo studySiteInfo : studySiteDetails) {

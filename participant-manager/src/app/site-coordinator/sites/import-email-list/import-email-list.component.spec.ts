@@ -66,7 +66,7 @@ describe('ImportEmailListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the profile when  button is submitted', fakeAsync(async () => {
+  it('should update the email participants when  button is submitted', fakeAsync(async () => {
     const importSpy = spyOn(component, 'importParticipants');
     const importButton = importParticipantButton.nativeElement as HTMLInputElement;
     fixture.detectChanges();
