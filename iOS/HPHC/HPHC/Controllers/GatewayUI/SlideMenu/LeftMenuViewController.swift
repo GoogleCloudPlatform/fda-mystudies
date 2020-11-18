@@ -626,16 +626,13 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    if requestName as String == AuthServerMethods.logout.description {
-      self.signout()
-    }
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,
@@ -645,8 +642,6 @@ extension LeftMenuViewController: NMWebServiceDelegate {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
-    } else if requestName as String == AuthServerMethods.logout.description && error.code == 403 {
-      self.signout()
     } else {
       UIUtilities.showAlertWithTitleAndMessage(
         title: NSLocalizedString(kErrorTitle, comment: "") as NSString,

@@ -86,7 +86,7 @@ The bucket is named `<prefix>-<env>-mystudies-sql-import`; for example,
 Upload the SQL files to the bucket:
 
 ```bash
-$ gsutil cp \
+gsutil cp \
   ./study-builder/sqlscript/* \
   ./response-datastore/sqlscript/mystudies_response_server_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
@@ -154,6 +154,11 @@ Do the following:
     `gcr.io/<project>` part with `gcr.io/<prefix>-<env>-apps`
 * For the cloudsql-proxy container, set the `-instances` flag with
     `-instances=<cloudsq-instance-connection-name>=tcp:3306`
+
+In the ./study-builder/tf-deployment.yaml:
+
+Change the gcs_fuse mount path to your study-resources bucket name. 
+i.e, `{PREFIX}-{ENV}-mystudies-study-resources`.
 
 In the ./kubernetes/cert.yaml file:
 

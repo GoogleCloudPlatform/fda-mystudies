@@ -66,6 +66,9 @@ enum AccountStatus: Int {
   /// User account not verified
   case pending = 1
 
+  /// User account is locked
+  case accountLocked = 2
+
   /// Logged In with temporary password
   case tempPassword = 3
 }
@@ -496,23 +499,39 @@ class User {
     refreshToken = dict[JSONKey.refreshToken] as? String ?? ""
 
     if self.verified && !self.isLoggedInWithTempPassword {
-
-      // Set user type & save current user to DB
-      userType = UserType.loggedInUser
-      DBHandler().saveCurrentUser(user: self)
-
-      // Updating Key & Vector
-      let appDelegate = UIApplication.shared.delegate as? AppDelegate
-      appDelegate?.updateKeyAndInitializationVector()
-
-      FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
-      FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
-
-      UserDefaults.standard.set(true, forKey: kPasscodeIsPending)  // For passcode setup
-
-      StudyFilterHandler.instance.previousAppliedFilters = []
+      saveAuthenticatedUserToDB()
     }
   }
+
+  func saveAuthenticatedUserToDB() {
+    // Set user type & save current user to DB
+    userType = UserType.loggedInUser
+    DBHandler().saveCurrentUser(user: self)
+
+    // Updating Key & Vector
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    appDelegate?.updateKeyAndInitializationVector()
+
+    FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
+    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
+
+    UserDefaults.standard.set(true, forKey: kPasscodeIsPending)  // For passcode setup
+
+    StudyFilterHandler.instance.previousAppliedFilters = []
+  }
+
+  /// Stores the updated refresh token and access token to keychain.
+  /// - Parameter dict: JSON response of the tokens.
+  func tokenUpdate(with dict: JSONDictionary) {
+    let tokenType = dict[JSONKey.tokenType] as? String ?? ""
+    let accessToken = dict[JSONKey.accessToken] as? String ?? ""
+    authToken = tokenType.capitalized + " " + accessToken
+    refreshToken = dict[JSONKey.refreshToken] as? String ?? ""
+    FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
+    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
+    DBHandler().saveCurrentUser(user: self)
+  }
+
 }
 
 // MARK: User Settings

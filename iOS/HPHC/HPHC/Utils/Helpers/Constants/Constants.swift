@@ -138,8 +138,8 @@ let kMessageNewPasswordBlank = "Please enter your new password."
 let kMessageValidateChangePassword = "New password and old password are same."
 
 // MARK: - ChangePassword Constants
-let kChangePasswordTitleText = "Change Password"
-let kCreatePasswordTitleText = "Create Password"
+let kChangePasswordTitleText = "CHANGE PASSWORD"
+let kCreatePasswordTitleText = "SET UP PASSWORD"
 let kChangePawwordCellIdentifer = "changePasswordCell"
 let kChangePasswordResponseMessage = "Your password has been changed successfully"
 

@@ -1,3 +1,9 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
 # Package WCP/fdahpStudyDesigner
 FROM maven:3.6.3-jdk-11-openj9 AS maven_builder
 COPY fdahpStudyDesigner/pom.xml /app/
@@ -11,7 +17,7 @@ FROM tomcat:9.0.33-jdk11-openjdk
 # Creates mounted path for gcsfuse
 RUN mkdir /usr/local/tomcat/webapps/study-resources
 RUN chmod a+w /usr/local/tomcat/webapps/study-resources
-RUN mkdir /usr/local/tomcat/webapps/study-resources/resources
+RUN mkdir /usr/local/tomcat/webapps/study-resources/studyResources
 
 # Installs gcsfuse
 ENV GCSFUSE_REPO gcsfuse-stretch

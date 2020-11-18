@@ -216,7 +216,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
-            jsonPath("$.error_description").value(ErrorCode.STUDY_NOT_FOUND.getDescription()));
+            jsonPath("$.error_description").value(ErrorCode.NO_STUDIES_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
@@ -875,7 +875,7 @@ public class StudyControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
-            patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
+            patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), IdGenerator.id())
                 .headers(headers)
                 .content(asJsonString(targetEnrollmentRequest))
                 .contextPath(getContextPath()))
@@ -884,7 +884,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED.getDescription())));
+                is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
 
     verifyTokenIntrospectRequest();
   }

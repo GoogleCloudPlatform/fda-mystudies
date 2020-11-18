@@ -24,6 +24,9 @@ enum LocalizableString: String {
   // MARK: - Consent
   case learnMore = "Learn more"
 
+  // MARK: - Errors
+  case sessionExpired = "Your Session is Expired"
+
   // MARK: - Force Upgrade
   case blockerScreenLabelText = "Please update to the latest version of the app to continue."
   case appStoreUpdateText = "Please go to AppStore to update to the latest version of the app."

@@ -69,4 +69,5 @@ public final class Constants {
       "http://localhost:8098/fdaResources/studylogo/example.jpg";
   public static final String STUDY_INFO_ID = "2";
   public static final String STUDY_ID_1 = "study-1";
+  public static final String USER_EMAIL = "cdash93@gmail.com";
 }
