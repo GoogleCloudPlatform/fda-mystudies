@@ -10,12 +10,10 @@ jobs:
     runs-on: macOS-latest
     strategy:
         matrix:
-          destination: ['platform=iOS Simulator,OS=14.0,name=iPhone 11']
+          destination: ['platform=iOS Simulator,OS=13.7,name=iPhone 11']
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Force XCode 12.0
-        run: sudo xcode-select -switch /Applications/Xcode_12.app
       - name: Build
         run: |
           cd iOS/HPHC
