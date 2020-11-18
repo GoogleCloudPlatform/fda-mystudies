@@ -94,7 +94,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "FROM app_info ai, study_info si, sites st,sites_permissions stp "
               + "WHERE ai.id=si.app_info_id AND st.study_id=si.id AND si.id=:studyId AND stp.study_id=si.id AND stp.ur_admin_user_id=:userId ",
       nativeQuery = true)
-  public Optional<StudyAppDetails> getStudyParticipant(String studyId, String userId);
+  public Optional<StudyAppDetails> getStudyAppDetails(String studyId, String userId);
 
   @Query(
       value =
@@ -104,7 +104,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "FROM app_info ai, study_info si, sites st "
               + "WHERE ai.id=si.app_info_id AND st.study_id=si.id AND si.id=:studyId ",
       nativeQuery = true)
-  public Optional<StudyAppDetails> getStudyParticipantForSuperAdmin(String studyId);
+  public Optional<StudyAppDetails> getStudyAppDetailsForSuperAdmin(String studyId);
 
   @Query(
       value =

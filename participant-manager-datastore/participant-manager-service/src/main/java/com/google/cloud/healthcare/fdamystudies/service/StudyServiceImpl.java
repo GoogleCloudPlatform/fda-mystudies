@@ -342,9 +342,9 @@ public class StudyServiceImpl implements StudyService {
 
     Optional<StudyAppDetails> optStudyAppDetails = null;
     if (user.isSuperAdmin()) {
-      optStudyAppDetails = studyRepository.getStudyParticipantForSuperAdmin(studyId);
+      optStudyAppDetails = studyRepository.getStudyAppDetailsForSuperAdmin(studyId);
     } else {
-      optStudyAppDetails = studyRepository.getStudyParticipant(studyId, userId);
+      optStudyAppDetails = studyRepository.getStudyAppDetails(studyId, userId);
     }
 
     StudyAppDetails studyAppDetails =
