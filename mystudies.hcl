@@ -674,15 +674,15 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #
 #   "roles/logging.logWriter " = [
 #         "serviceAccount:$${google_service_account.auth_server_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.hydra-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.response-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.study-builder-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.study-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.consent-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.enroll-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.user-datastore-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.participant-manager-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-#         "serviceAccount:$${google_service_account.triggers-pubsub-handler-gke-sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.hydra_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.response_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.study_builder_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.study_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.consent_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.enroll_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.user_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+#         "serviceAccount:$${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
 #       ]
 # }
 EOF
