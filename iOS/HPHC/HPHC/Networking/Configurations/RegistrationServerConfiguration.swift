@@ -25,6 +25,7 @@ enum RegistrationMethods: String {
   case confirmRegistration
   case userProfile
   case updateUserProfile
+  case updateAppVersion
   case userPreferences
   case updatePreferences
   case resendConfirmation

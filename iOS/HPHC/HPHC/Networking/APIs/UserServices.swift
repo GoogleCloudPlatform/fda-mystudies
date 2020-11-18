@@ -241,6 +241,25 @@ class UserServices: NSObject {
 
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
+  
+  /// Creates a request to update App Version
+  /// - Parameter delegate: Class object to receive response
+  func updateAppVersion(_ delegate: NMWebServiceDelegate) {
+    
+    self.delegate = delegate
+    let user = User.currentUser
+    let headerParams = [kUserId: user.userId ?? ""]
+    let version = Utilities.getAppVersion()
+    
+    let params =
+      [
+        kAppVersion: version,
+        kOSType: "ios",
+      ] as [String: Any]
+    let method = RegistrationMethods.updateAppVersion.method
+    
+    self.sendRequestWith(method: method, params: params, headers: headerParams)
+  }
 
   /// Creates a request to update `User` profile
   /// - Parameters:
