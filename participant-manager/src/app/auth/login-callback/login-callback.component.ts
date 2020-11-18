@@ -32,13 +32,13 @@ export class LoginCallbackComponent implements OnInit {
             .getToken(params.code, params.userId)
             .pipe(
               switchMap((authServerResponse: AccessToken) => {
-                localStorage.setItem('code', params.code);
-                localStorage.setItem('authUserId', params.userId);
-                localStorage.setItem(
+                sessionStorage.setItem('code', params.code);
+                sessionStorage.setItem('authUserId', params.userId);
+                sessionStorage.setItem(
                   'accessToken',
                   authServerResponse.access_token,
                 );
-                localStorage.setItem(
+                sessionStorage.setItem(
                   'refreshToken',
                   authServerResponse.refresh_token,
                 );
@@ -47,8 +47,8 @@ export class LoginCallbackComponent implements OnInit {
             )
             .subscribe((userProfile: Profile) => {
               this.userState.setCurrentUserName(userProfile.firstName);
-              localStorage.setItem('userId', userProfile.userId);
-              localStorage.setItem('user', JSON.stringify(userProfile));
+              sessionStorage.setItem('userId', userProfile.userId);
+              sessionStorage.setItem('user', JSON.stringify(userProfile));
 
               if (
                 params.accountStatus === '3' ||

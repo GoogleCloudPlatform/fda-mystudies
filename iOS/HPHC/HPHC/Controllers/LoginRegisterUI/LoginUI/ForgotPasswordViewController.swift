@@ -169,43 +169,22 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-
     self.removeProgressIndicator()
-
-    if requestName as String == AuthServerMethods.forgotPassword.description {
-      UIUtilities.showAlertMessageWithActionHandler(
-        NSLocalizedString(kTitleMessage, comment: ""),
-        message: NSLocalizedString(kForgotPasswordResponseMessage, comment: ""),
-        buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
-        viewControllerUsed: self
-      ) {
-        _ = self.navigationController?.popViewController(animated: true)
-      }
-    } else {
-      // for resend email
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
-        message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
-      )
-
-    }
+    // for resend email
+    UIUtilities.showAlertWithTitleAndMessage(
+      title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
+      message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
+    )
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
     self.removeProgressIndicator()
-
-    if requestName as String == AuthServerMethods.forgotPassword.description
-      && error.code == HTTPError.forbidden.rawValue
-    {
-      self.navigateToVerifyViewController()
-    } else {
-      // if resend email fails
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: NSLocalizedString(kTitleError, comment: "") as NSString,
-        message: error.localizedDescription as NSString
-      )
-    }
+    // if resend email fails
+    UIUtilities.showAlertWithTitleAndMessage(
+      title: NSLocalizedString(kTitleError, comment: "") as NSString,
+      message: error.localizedDescription as NSString
+    )
   }
 }
 
