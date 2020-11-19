@@ -602,19 +602,22 @@ template "project_apps" {
         { account_id = "participant-manager-gke-sa" },
         { account_id = "triggers-pubsub-handler-gke-sa" },
       ]
-      # Adding Logs Writer permission to service accounts for application level audit logs
-      "roles/logging.logWriter " = [
-        "serviceAccount:$${google_service_account.auth_server_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.hydra_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.response_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.study_builder_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.study_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.consent_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.enroll_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.user_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-        "serviceAccount:$${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-      ]
+      # Step 5.7: uncomment and re-run the engine once all previous steps have been completed.
+      # iam_members = {
+      #  Adding Logs Writer permission to service accounts for application level audit logs
+      #   "roles/logging.logWriter" = [
+      #     "serviceAccount:$${google_service_account.auth_server_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.hydra_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.response_datastore_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.study_builder_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.study_datastore_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.consent_datastore_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.enroll_datastore_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.user_datastore_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #     "serviceAccount:$${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+      #   ]
+      # }
       # Binary Authorization resources.
       # Simple configuration for now. Future
       # See https://cloud.google.com/binary-authorization/docs/overview
@@ -629,7 +632,15 @@ template "project_apps" {
         domain = "{{.prefix}}-{{.env}}.{{.domain}}."
         type   = "public"
         record_sets = [{
-          name = "{{.prefix}}-{{.env}}"
+          name = "participants"
+          type = "A"
+          ttl  = 30
+          records = [
+            "$${google_compute_global_address.ingress_static_ip.address}",
+          ]
+        },
+        {
+          name = "studies"
           type = "A"
           ttl  = 30
           records = [
@@ -1023,7 +1034,8 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     gcp_bucket_name                   = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
-    base_url                          = "https://{{.prefix}}-{{.env}}.{{.domain}}."
+    base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
+    studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"
     firestore_project_id              = "{{.prefix}}-{{.env}}-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
