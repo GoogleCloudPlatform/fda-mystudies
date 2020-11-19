@@ -15,6 +15,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,6 +29,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
@@ -35,7 +37,9 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -530,6 +534,92 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldDeleteInvitedUser() throws Exception {
+    // Step 1: Set the super admin user in Header
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
+
+    // Step 2: Creating non super admin with invited status
+    // and Call the API and expect INVITATION_DELETED_SUCCESSFULLY message
+    userRegAdminEntity = testDataHelper.createNonSuperAdmin();
+    userRegAdminEntity.setSuperAdmin(false);
+    userRegAdminEntity.setStatus(CommonConstants.INVITED_STATUS);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), userRegAdminEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+            jsonPath("$.message").value(MessageCode.INVITATION_DELETED_SUCCESSFULLY.getMessage()))
+        .andReturn();
+  }
+
+  @Test
+  public void shouldNotDeleteActiveUserForDeleteInvitationRequest() throws Exception {
+    // Step 1: Set the super admin user in Header
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
+
+    // Step 2: Creating non super admin with active status
+    // and Call the API and expect CANNOT_DELETE_INVITATION error
+    userRegAdminEntity = testDataHelper.createNonSuperAdmin();
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), userRegAdminEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.CANNOT_DELETE_INVITATION.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnNotSuperAdminAccess() throws Exception {
+    // Step 1: set user non super admin
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    // Step 2: Call the API and expect NOT_SUPER_ADMIN_ACCESS error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), userRegAdminEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description", is(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForDeleteInvitation() throws Exception {
+    // Call the API and expect USER_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), IdGenerator.id())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
   }
 
   @AfterEach

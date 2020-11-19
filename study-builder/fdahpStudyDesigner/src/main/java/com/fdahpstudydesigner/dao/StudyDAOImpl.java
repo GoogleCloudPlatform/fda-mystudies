@@ -2207,8 +2207,8 @@ public class StudyDAOImpl implements StudyDAO {
               // get the Category, Research Sponsor name of the
               // study from categoryIds
               query =
-                  session.createQuery(
-                      "from ReferenceTablesBo where id in(" + bean.getCategory() + ")");
+                  session.createQuery("from ReferenceTablesBo where id in(:category)")
+                    .setParameter("category", bean.getCategory());
               referenceTablesBos = query.list();
               if ((referenceTablesBos != null) && !referenceTablesBos.isEmpty()) {
                 bean.setCategory(referenceTablesBos.get(0).getValue());
@@ -2219,9 +2219,8 @@ public class StudyDAOImpl implements StudyDAO {
                   (StudyBo)
                       session
                           .createQuery(
-                              "from StudyBo where customStudyId='"
-                                  + bean.getCustomStudyId()
-                                  + "' and live=1")
+                              "from StudyBo where customStudyId=:studyId and live=1")
+                          .setParameter("studyId", bean.getCustomStudyId())
                           .uniqueResult();
               if (liveStudy != null) {
                 bean.setLiveStudyId(liveStudy.getId());
@@ -2234,7 +2233,9 @@ public class StudyDAOImpl implements StudyDAO {
             if ((bean.getId() != null) && (bean.getLiveStudyId() != null)) {
               studyBo =
                   (StudyBo)
-                      session.createQuery("from StudyBo where id=" + bean.getId()).uniqueResult();
+                      session.createQuery("from StudyBo where id=:id")
+                          .setParameter("id", bean.getId())
+                          .uniqueResult();
               if (studyBo.getHasStudyDraft() == 1) {
                 bean.setFlag(true);
               }
@@ -2245,9 +2246,9 @@ public class StudyDAOImpl implements StudyDAO {
                   (String)
                       session
                           .createQuery(
-                              "SELECT  u.firstName from StudyPermissionBO s , UserBO u where s.studyId="
-                                  + bean.getId()
+                              "SELECT  u.firstName from StudyPermissionBO s , UserBO u where s.studyId=:id"
                                   + " and s.userId=u.userId and s.projectLead=1")
+                          .setParameter("id", bean.getId())
                           .setMaxResults(1)
                           .uniqueResult();
               if (StringUtils.isNotEmpty(userInfo)) {

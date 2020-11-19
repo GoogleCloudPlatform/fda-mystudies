@@ -280,39 +280,7 @@ class StudyHomeViewController: UIViewController {
       object: nil
     )
   }
-
-  private func logout() {
-    if User.currentUser.authToken != nil, User.currentUser.authToken.count > 0 {
-      // logout
-
-      let user = User.currentUser
-      let headerParams = [kUserId: user.userId!]
-      let params = [kUserLogoutReason: user.logoutReason.rawValue]
-
-      let method = AuthServerMethods.logout.method
-      NetworkManager.sharedInstance().composeRequest(
-        RegistrationServerConfiguration.configuration,
-        method: method,
-        params: params as NSDictionary,
-        headers: headerParams as NSDictionary,
-        delegate: self
-      )
-
-      let appDomain = Bundle.main.bundleIdentifier!
-      UserDefaults.standard.removePersistentDomain(forName: appDomain)
-      UserDefaults.standard.synchronize()
-
-      // Delete from database
-      DBHandler.deleteCurrentUser()
-
-      // reset user object
-      User.resetCurrentUser()
-
-      // remove passcode
-      ORKPasscodeViewController.removePasscodeFromKeychain()
-    }
-  }
-
+  
   /// Loads test data from StudyOverview plist file.
   private func loadTestData() {
 
@@ -917,10 +885,7 @@ extension StudyHomeViewController: PageViewControllerDelegate {
 
 extension StudyHomeViewController: NMWebServiceDelegate {
   func startedRequest(_: NetworkManager, requestName: NSString) {
-    if requestName as String == AuthServerMethods.logout.method.methodName {
-    } else {
-      addProgressIndicator()
-    }
+    addProgressIndicator()
   }
 
   func finishedRequest(_: NetworkManager, requestName: NSString, response: AnyObject?) {

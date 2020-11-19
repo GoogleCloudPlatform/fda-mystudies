@@ -54,9 +54,9 @@ export class AuthService {
       .set('response_type', 'code')
       .set('mobilePlatform', this.mobilePlatform)
       .set('code_challenge_method', 'S256')
-      .set('code_challenge', localStorage.getItem('pkceChallenge') || '')
-      .set('correlationId', localStorage.getItem('correlationId') || '')
-      .set('tempRegId', localStorage.getItem('tempRegId') || '')
+      .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
+      .set('correlationId', sessionStorage.getItem('correlationId') || '')
+      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.redirectUrl)
       .set('state', uuidv4())
       .set('source', this.source)
@@ -65,18 +65,18 @@ export class AuthService {
   }
 
   hasCredentials(): boolean {
-    return 'accessToken' in localStorage;
+    return 'accessToken' in sessionStorage;
   }
 
   getUserAccessToken(): string {
-    return localStorage.getItem('accessToken') || '';
+    return sessionStorage.getItem('accessToken') || '';
   }
   getAuthUserId(): string {
-    return localStorage.getItem('authUserId') || '';
+    return sessionStorage.getItem('authUserId') || '';
   }
 
   getUserId(): string {
-    return localStorage.getItem('userId') || '';
+    return sessionStorage.getItem('userId') || '';
   }
 
   getToken(code: string, userId: string): Observable<AccessToken> {
@@ -85,7 +85,7 @@ export class AuthService {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
-        'correlationId': localStorage.getItem('correlationId') || '',
+        'correlationId': sessionStorage.getItem('correlationId') || '',
         'appId': this.appId,
         'mobilePlatform': this.mobilePlatform,
       }),
@@ -96,7 +96,7 @@ export class AuthService {
       .set('code', code)
       .set('redirect_uri', environment.redirectUrl)
       .set('userId', userId)
-      .set('code_verifier', localStorage.getItem('pkceVerifier') || '');
+      .set('code_verifier', sessionStorage.getItem('pkceVerifier') || '');
     return this.http.post<AccessToken>(
       `${environment.authServerUrl}/oauth2/token`,
       params.toString(),
@@ -110,7 +110,7 @@ export class AuthService {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
-        'correlationId': localStorage.getItem('correlationId') || '',
+        'correlationId': sessionStorage.getItem('correlationId') || '',
         'appId': this.appId,
         'mobilePlatform': this.mobilePlatform,
       }),
@@ -131,7 +131,7 @@ export class AuthService {
   }
 
   private getRefreshToken() {
-    return localStorage.getItem('refreshToken') || '';
+    return sessionStorage.getItem('refreshToken') || '';
   }
 
   getUserDetails(): void {
@@ -142,7 +142,7 @@ export class AuthService {
   }
 
   logOutUser(): void {
-    localStorage.clear();
+    sessionStorage.clear();
     this.cookieService.deleteAll();
   }
 }

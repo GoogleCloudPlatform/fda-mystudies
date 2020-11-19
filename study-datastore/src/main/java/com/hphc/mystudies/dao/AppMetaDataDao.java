@@ -125,15 +125,15 @@ public class AppMetaDataDao {
         notificationStudyTypeQuery =
             "from NotificationDto NDTO"
                 + " where NDTO.notificationSubType in (:notificationTypeList) "
-                + " and NDTO.appId='"
-                + appId
-                + "' or NDTO.appId is null and NDTO.notificationSent=true"
+                + " and NDTO.appId=:appId"
+                + " or NDTO.appId is null and NDTO.notificationSent=true"
                 + " ORDER BY NDTO.scheduleDate DESC";
 
         notificationList =
             session
                 .createQuery(notificationStudyTypeQuery)
                 .setParameterList("notificationTypeList", notificationTypeList)
+                .setParameter("appId", appId)
                 .setFirstResult(Integer.parseInt(skip))
                 .setMaxResults(20)
                 .list();
@@ -538,24 +538,6 @@ public class AppMetaDataDao {
     }
     LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Ends");
     return updateAppVersionResponse;
-  }
-
-  public String interceptorDataBaseQuery(String dbQuery) throws DAOException {
-    Session session = null;
-    String message = StudyMetaDataConstants.FAILURE;
-    try {
-      session = sessionFactory.openSession();
-      query = session.createSQLQuery(dbQuery);
-      query.executeUpdate();
-      message = StudyMetaDataConstants.SUCCESS;
-    } catch (Exception e) {
-      LOGGER.warn(e);
-    } finally {
-      if (session != null) {
-        session.close();
-      }
-    }
-    return message;
   }
 
   public AppVersionInfo getAppVersionInfo(String appId) {

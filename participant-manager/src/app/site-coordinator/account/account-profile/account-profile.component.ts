@@ -77,7 +77,7 @@ export class AccountProfileComponent
         this.user.lastName = String(
           this.profileForm.controls['lastName'].value,
         );
-        localStorage.setItem('user', JSON.stringify(this.user));
+        sessionStorage.setItem('user', JSON.stringify(this.user));
         this.userState.setCurrentUserName(
           this.profileForm.controls['firstName'].value,
         );
@@ -101,7 +101,7 @@ export class AccountProfileComponent
         if (getMessage(successResponse.code)) {
           this.toastr.error(getMessage(successResponse.code));
         }
-        localStorage.clear();
+        sessionStorage.clear();
         void this.router.navigate(['/']);
       },
       (errorResponse: ApiResponse) => {

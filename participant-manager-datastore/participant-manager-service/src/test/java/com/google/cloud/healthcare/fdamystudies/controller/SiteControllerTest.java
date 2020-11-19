@@ -18,12 +18,12 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PAGE_NO;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_EMAIL_EXIST;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
@@ -403,7 +403,7 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnEmailExistForAddNewParticipant() throws Exception {
+  public void shouldReturnUserEmailExistForAddNewParticipant() throws Exception {
     // Step 1: set emailId
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(newParticipantRequest().getEmail());
@@ -420,8 +420,8 @@ public class SiteControllerTest extends BaseMockIT {
                 .content(asJsonString(newParticipantRequest()))
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isConflict())
-        .andExpect(jsonPath("$.error_description", is(EMAIL_EXISTS.getDescription())));
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(USER_EMAIL_EXIST.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
@@ -2356,6 +2356,107 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
         .andExpect(jsonPath("$.studies[0].logoImageUrl", is(studyEntity.getLogoImageUrl())))
         .andExpect(jsonPath("$.studies[0].appName").value(appEntity.getAppName()))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnDecommissionedSitesforUserHavingStudyLevelViewAndEditPermission()
+      throws Exception {
+    // Step 1: set the data needed to get studies with sites
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
+
+    // Deleted app level permission
+    testDataHelper.getAppPermissionRepository().deleteAll();
+
+    List<SitePermissionEntity> sitePermissionList =
+        testDataHelper.getSitePermissionRepository().findAll();
+    // Assign a non super admin site level permission
+    SitePermissionEntity sitePermission = sitePermissionList.get(0);
+    sitePermission.setUrAdminUser(admin);
+    SiteEntity site = sitePermission.getSite();
+    site.setStatus(0); // Decommissioned the active site
+    sitePermission.setSite(site);
+    testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermission);
+
+    // Assign a non super admin study level permission
+    List<StudyPermissionEntity> studyPermissionList =
+        testDataHelper.getStudyPermissionRepository().findAll();
+    StudyPermissionEntity studyPermission = studyPermissionList.get(0);
+    studyPermission.setUrAdminUser(admin);
+    testDataHelper.getStudyPermissionRepository().saveAndFlush(studyPermission);
+
+    // Step 2: call API and expect GET_SITES_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, admin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].sites").isArray())
+        .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.studies[0].logoImageUrl", is(studyEntity.getLogoImageUrl())))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnSitesforUserHavingMultipleSitesPermissionForDifferentStudies()
+      throws Exception {
+    // Step 1: set the data needed to get studies with sites
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
+
+    // Delete app level permission
+    testDataHelper.getAppPermissionRepository().deleteAll();
+
+    // Assign a non super admin study level permission
+    List<StudyPermissionEntity> studyPermissionList =
+        testDataHelper.getStudyPermissionRepository().findAll();
+    StudyPermissionEntity studyPermission = studyPermissionList.get(0);
+    studyPermission.setUrAdminUser(admin);
+    testDataHelper.getStudyPermissionRepository().saveAndFlush(studyPermission);
+
+    // Assign a non super admin site level permission
+    List<SitePermissionEntity> sitePermissionList =
+        testDataHelper.getSitePermissionRepository().findAll();
+    SitePermissionEntity sitePermission = sitePermissionList.get(0);
+    sitePermission.setUrAdminUser(admin);
+    testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermission);
+
+    // create few more studies and associated sites
+    List<StudyEntity> studyList = testDataHelper.createMultipleStudyEntity(appEntity);
+    for (StudyEntity study : studyList) {
+      testDataHelper.createMultipleSiteEntityWithPermission(
+          study, admin, appEntity, locationEntity);
+    }
+
+    // Step 2: call API and expect GET_SITES_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, admin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(3)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].sites").isArray())
+        .andExpect(jsonPath("$.studies[0].sites", hasSize(1)))
+        .andExpect(jsonPath("$.studies[1].sites", hasSize(1)))
+        .andExpect(jsonPath("$.studies[2].sites", hasSize(1)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();
