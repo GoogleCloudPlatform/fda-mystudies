@@ -20,7 +20,7 @@
 import Mockingjay
 import XCTest
 
-@testable import HPHC
+@testable import MyStudies
 
 class ResourceAnchorTest: XCTestCase {
 

@@ -9,7 +9,7 @@
 //
 // Server configuration
 // By default App will connect to network over HTTPS, in order to connect over HTTP
-// Change the settings in HPHC/Networking/Configurations/Environment/APIConfiguration.swift
+// Change the settings in MyStudies/Networking/Configurations/Environment/APIConfiguration.swift
 // Update the enum `AppProtocol` getter value for Debug and Release.
 //
 // Update the App Transport Security Settings in info.plist
