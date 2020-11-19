@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AppInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
@@ -40,4 +41,6 @@ public interface UserManagementProfileService {
       String applicationId, String securityToken, String emailId);
 
   public ErrorBean removeDeviceToken(String userId);
+
+  public ErrorBean updateAppVersion(AppInfoBean appInfoBean, String userId);
 }

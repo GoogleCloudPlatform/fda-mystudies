@@ -8,12 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import java.util.List;
 
 public interface UserProfileManagementDao {
 
@@ -37,6 +37,8 @@ public interface UserProfileManagementDao {
   public UserDetailsBO getParticipantDetails(String id);
 
   public boolean deActivateAcct(String userId, List<String> deleteData, Integer userDetailsId);
-  
+
   public ErrorBean removeDeviceToken(int userId);
+
+  public ErrorBean updateAppVersion(AuthInfoBO authInfo);
 }
