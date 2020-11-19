@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudySiteInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,18 +74,17 @@ public final class StudyMapper {
     return appStudyDetailsList;
   }
 
-  public static StudyDetails toStudyDetails(StudyEntity study) {
+  public static StudyDetails toStudyDetails(StudySiteInfo studySiteInfo) {
     StudyDetails studyDetail = new StudyDetails();
-    studyDetail.setId(study.getId());
-    studyDetail.setCustomId(study.getCustomId());
-    studyDetail.setName(study.getName());
-    studyDetail.setType(study.getType());
-    studyDetail.setAppId(study.getApp().getAppId());
-    studyDetail.setAppInfoId(study.getApp().getId());
-    studyDetail.setAppName(study.getApp().getAppName());
-    studyDetail.setLogoImageUrl(study.getLogoImageUrl());
-    studyDetail.setStudyStatus(study.getStatus());
-
+    studyDetail.setId(studySiteInfo.getStudyId());
+    studyDetail.setCustomId(studySiteInfo.getCustomId());
+    studyDetail.setName(studySiteInfo.getStudyName());
+    studyDetail.setType(studySiteInfo.getStudyType());
+    studyDetail.setAppId(studySiteInfo.getCustomAppId());
+    studyDetail.setAppInfoId(studySiteInfo.getAppId());
+    studyDetail.setAppName(studySiteInfo.getAppName());
+    studyDetail.setLogoImageUrl(studySiteInfo.getLogoImageUrl());
+    studyDetail.setStudyStatus(studySiteInfo.getStudyStatus());
     return studyDetail;
   }
 }

@@ -1,5 +1,5 @@
 included:
-  - HPHC
+  - MyStudies
 disabled_rules:
   - type_body_length
   - function_body_length
