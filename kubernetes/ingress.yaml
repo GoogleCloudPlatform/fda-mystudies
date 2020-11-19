@@ -9,7 +9,7 @@ metadata:
   name: fda-mystudies-dev
   annotations:
     kubernetes.io/ingress.global-static-ip-name: mystudies-ingress-ip
-    networking.gke.io/managed-certificates: fda-mystudies-cert
+    networking.gke.io/managed-certificates: fda-mystudies-cert-participants,fda-mystudies-cert-studies
 spec:
   rules:
     - http:

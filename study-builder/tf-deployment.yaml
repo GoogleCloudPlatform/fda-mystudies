@@ -95,7 +95,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: base_url
+                  key: studies_base_url
             - name: PARTICIPANT_USER_DATASTORE_URL
               value: "http://participant-user-datastore-np:50000/participant-user-datastore"
             - name: RESPONSE_DATASTORE_URL
