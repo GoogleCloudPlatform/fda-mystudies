@@ -602,7 +602,7 @@ template "project_apps" {
         { account_id = "participant-manager-gke-sa" },
         { account_id = "triggers-pubsub-handler-gke-sa" },
       ]
-
+      # Adding Logs Writer permission to service accounts for application level audit logs
       "roles/logging.logWriter " = [
         "serviceAccount:$${google_service_account.auth_server_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         "serviceAccount:$${google_service_account.hydra_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
