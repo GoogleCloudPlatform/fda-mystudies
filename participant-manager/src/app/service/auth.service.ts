@@ -27,11 +27,11 @@ export class AuthService {
   ) {}
 
   initlocalStorage(): void {
-    localStorage.setItem('correlationId', uuidv4());
+    sessionStorage.setItem('correlationId', uuidv4());
     // getPkce(this.pkceLength, (error, {verifier, challenge}) => {
     //   if (!error) {
-    //     localStorage.setItem('pkceVerifier', verifier);
-    //     localStorage.setItem('pkceChallenge', challenge);
+    //     sessionStorage.setItem('pkceVerifier', verifier);
+    //     sessionStorage.setItem('pkceChallenge', challenge);
     //   }
     // });
      // TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
