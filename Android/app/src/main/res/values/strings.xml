@@ -571,5 +571,5 @@
     <string name="login_studyinfo_enroll">login_studyinfo_enroll</string>
     <string name="login_studyinfo_rejoin">login_studyinfo_rejoin</string>
     <string name="login_studyinfo_about_this_study">login_studyinfo_about_this_study</string>
-
+    <string name="invalid_client">Invalid Client</string>
 </resources>
