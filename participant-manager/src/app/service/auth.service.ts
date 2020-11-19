@@ -26,7 +26,7 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  initlocalStorage(): void {
+  initSessionStorage(): void {
     sessionStorage.setItem('correlationId', uuidv4());
     // getPkce(this.pkceLength, (error, {verifier, challenge}) => {
     //   if (!error) {
