@@ -564,7 +564,8 @@
               $(thisAttr).val();
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
-                  '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please upload image as per provided guidelines."));
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             }
           } else {
@@ -580,7 +581,8 @@
               $(thisAttr).val();
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
-                  '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please upload image as per provided guidelines."));
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             }
           }
@@ -590,7 +592,8 @@
           $(thisAttr).val();
           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
           $(thisAttr).parent().find(".help-block").empty().append(
-              '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+        	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please upload image as per provided guidelines."));
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);

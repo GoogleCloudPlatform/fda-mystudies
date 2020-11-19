@@ -309,7 +309,7 @@
       if (dt != '' && dt != moment(serverDate()).format("MM/DD/YYYY")) {
         $('.timepicker').data("DateTimePicker").minDate(false);
         $('.timepicker').parent().removeClass('has-error has-danger').find(
-            '.help-block.with-errors').text('');
+            '.help-block.with-errors').empty();
       } else {
         $('.timepicker').data("DateTimePicker").minDate(serverDateTime());
       }
@@ -318,7 +318,7 @@
     $('#inlineRadio2').on('click', function () {
       $('#datetimepicker, #timepicker1').removeAttr('required');
       $("#datetimepicker, #timepicker1").parent().removeClass('has-error has-danger');
-      $("#datetimepicker, #timepicker1").parent().find(".help-block").text("");
+      $("#datetimepicker, #timepicker1").parent().find(".help-block").empty();
       $('.add_notify_option').addClass('dis-none');
       resetValidation('.mandatoryForStudyNotification');
     });
@@ -463,7 +463,7 @@
       dt.setHours(thisDate.getHours());
       dt.setMinutes(thisDate.getMinutes());
       $('.timepicker').parent().removeClass('has-error has-danger').find(
-          '.help-block.with-errors').text('');
+          '.help-block.with-errors').empty();
       if (dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
             '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(

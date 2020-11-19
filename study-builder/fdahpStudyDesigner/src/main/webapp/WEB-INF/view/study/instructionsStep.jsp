@@ -202,15 +202,16 @@
             if ('SUCCESS' != message) {
               $(thisAttr).validator('validate');
               $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-              $(thisAttr).parent().find(".help-block").text("");
+              $(thisAttr).parent().find(".help-block").empty();
               callback(true);
             } else {
               $(thisAttr).val('');
               $(thisAttr).parent().addClass("has-danger").addClass("has-error");
               $(thisAttr).parent().find(".help-block").empty();
               $(thisAttr).parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>'" + shortTitle
-                  + "' has already been used in the past.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  shortTitle
+                  + " has already been used in the past."));
               callback(false);
             }
           },
@@ -294,8 +295,8 @@
       $('#shortTitleId').validator('destroy').validator();
       if (!$('#shortTitleId')[0].checkValidity()) {
         $("#shortTitleId").parent().addClass('has-error has-danger').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "This is a required field."));
       }
     }
   }

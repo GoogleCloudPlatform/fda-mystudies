@@ -476,8 +476,8 @@
             .parent()
             .find(".help-block")
             .empty()
-            .append(
-                '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+            .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "This is a required field."));
         setTimeout(hideDisplayMessage, 4000);
       }
 
@@ -612,12 +612,13 @@
           isValid = false;
         }
         $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Maximum 15000 characters are allowed.</li></ul>');
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 15000 characters are allowed."));
 
       } else {
         $('#elaboratedRTE').parent().removeClass("has-danger")
             .removeClass("has-error");
-        $('#elaboratedRTE').parent().find(".help-block").html("");
+        $('#elaboratedRTE').parent().find(".help-block").empty();
       }
     } else {
       isValid = false;
@@ -626,8 +627,8 @@
           .addClass('has-error has-danger')
           .find(".help-block")
           .empty()
-          .append(
-              '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please fill out this field."));
 
     }
     return isValid;
