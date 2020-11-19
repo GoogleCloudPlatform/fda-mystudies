@@ -1,3 +1,8 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -79,8 +84,6 @@ spec:
               value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/oauth-scim-service"
-            - name: PARTICIPANT_MANAGER_URL
-              value: "http://participant-manager-np:50000"
             # MISC
             - name: BASE_URL
               valueFrom:
@@ -111,6 +114,8 @@ spec:
             httpGet:
               path: /participant-manager-datastore/healthCheck
               port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

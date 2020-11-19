@@ -1036,8 +1036,7 @@
                   "${_csrf.parameterName}": "${_csrf.token}",
                 },
                 success: function emailValid(data, status) {
-                  var jsonobject = eval(data);
-                  var message = jsonobject.message;
+                  var message = data.message;
                   if ('SUCCESS' != message) {
                     $("#identifierId").validator('validate');
                     $("#identifierId").parent().removeClass("has-danger").removeClass("has-error");
@@ -1081,8 +1080,7 @@
                 "${_csrf.parameterName}": "${_csrf.token}",
               },
               success: function emailValid(data, status) {
-                var jsonobject = eval(data);
-                var message = jsonobject.message;
+                var message = data.message;
                 if ('SUCCESS' != message) {
                   $(thisAttr).validator('validate');
                   $('.statShortTitleClass').parent().removeClass("has-danger").removeClass(

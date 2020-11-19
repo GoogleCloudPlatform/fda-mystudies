@@ -159,7 +159,7 @@ public class LoginControllerTest extends BaseMockIT {
         .andExpect(model().attribute(PRIVACY_POLICY_LINK, nullValue()))
         .andExpect(model().attribute(TERMS_LINK, termsRedirectUrl))
         .andExpect(model().attribute(ABOUT_LINK, aboutRedirectUrl))
-        .andExpect(content().string(containsString("<title>Login</title>")))
+        .andExpect(content().string(containsString("<title>Sign in</title>")))
         .andReturn();
   }
 
@@ -192,7 +192,7 @@ public class LoginControllerTest extends BaseMockIT {
         .andExpect(model().attribute(SIGNUP_LINK, signupRedirectUrl))
         .andExpect(model().attribute(TERMS_LINK, termsRedirectUrl))
         .andExpect(model().attribute(PRIVACY_POLICY_LINK, privacyPolicyRedirectUrl))
-        .andExpect(content().string(containsString("<title>Login</title>")))
+        .andExpect(content().string(containsString("<title>Sign in</title>")))
         .andReturn();
   }
 

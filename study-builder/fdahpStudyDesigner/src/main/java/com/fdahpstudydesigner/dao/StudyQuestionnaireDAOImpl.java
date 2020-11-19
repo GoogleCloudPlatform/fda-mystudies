@@ -72,6 +72,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
+  @Autowired private AuditLogDAO auditLogDAO;
+
   @Autowired private HttpServletRequest request;
 
   HibernateTemplate hibernateTemplate;
@@ -431,7 +433,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             session.createQuery(
                 "From QuestionsBo QBO where QBO.id IN (select QSBO.instructionFormId from QuestionnairesStepsBo QSBO where QSBO.questionnairesId IN (select id from QuestionnaireBo Q where Q.studyId=:studyId "
                     + " ) and QSBO.stepType=:stepType "
-                    + FdahpStudyDesignerConstants.QUESTION_STEP
                     + " and QSBO.active=1) and QBO.statShortName=:shortTitle ");
         questionsBo =
             query
@@ -3189,27 +3190,26 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           }
           String questionResponseQuery =
               "update response_sub_type_value rs,questionnaires_steps q set rs.destination_step_id = NULL "
-                  + "where rs.response_type_id=q.instruction_form_id and q.step_type='"
-                  + FdahpStudyDesignerConstants.QUESTION_STEP
-                  + "' and q.questionnaires_id=:questionnaireId "
+                  + "where rs.response_type_id=q.instruction_form_id and q.step_type=:type"
+                  + " and q.questionnaires_id=:questionnaireId "
                   + " and rs.active=1 and q.active=1";
           query =
               session
                   .createSQLQuery(questionResponseQuery)
+                  .setParameter("type", FdahpStudyDesignerConstants.QUESTION_STEP)
                   .setInteger("questionnaireId", questionnaireId);
           query.executeUpdate();
 
           String questionConditionResponseQuery =
               "update questions qs,questionnaires_steps q,response_type_value rs  set qs.status = 0 where"
-                  + " rs.questions_response_type_id=q.instruction_form_id and q.step_type='"
-                  + FdahpStudyDesignerConstants.QUESTION_STEP
-                  + "'"
+                  + " rs.questions_response_type_id=q.instruction_form_id and q.step_type=:type"
                   + " and q.questionnaires_id=:questionnaireId "
                   + " and qs.id=q.instruction_form_id and qs.active=1 and rs.active=1 and q.active=1 and rs.formula_based_logic='Yes'";
 
           query =
               session
                   .createSQLQuery(questionConditionResponseQuery)
+                  .setParameter("type", FdahpStudyDesignerConstants.QUESTION_STEP)
                   .setInteger("questionnaireId", questionnaireId);
           query.executeUpdate();
         }
@@ -3342,11 +3342,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String updateQuery =
               "update QuestionnairesStepsBo QSBO set QSBO.destinationStep=:stepId"
                   + " where "
-                  + "QSBO.destinationStep=0 and QSBO.sequenceNo="
-                  + (count - 1)
+                  + "QSBO.destinationStep=0 and QSBO.sequenceNo=:sequenceNo"
                   + " and QSBO.questionnairesId=:questionnairesId ";
           session
               .createQuery(updateQuery)
+              .setInteger("sequenceNo", (count - 1))
               .setInteger(
                   "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId())
               .setInteger("stepId", addOrUpdateQuestionnairesStepsBo.getStepId())
@@ -3481,7 +3481,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .createQuery(updateQuery)
               .setInteger("stepId", questionnairesStepsBo.getStepId())
               .setInteger("questionnairesId", instructionsBo.getQuestionnaireId())
-              .setInteger("sequenceNo", count - 1)
+              .setInteger("sequenceNo", (count - 1))
               .executeUpdate();
         }
       }
@@ -3916,6 +3916,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       }
 
       if ((questionnaireBo != null) && questionnaireBo.getStatus()) {
+        auditLogDAO.updateDraftToEditedStatus(
+            session,
+            transaction,
+            sessionObject.getUserId(),
+            FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE,
+            questionnaireBo.getStudyId());
 
         // Notification Purpose needed Started
         queryString = " From StudyBo where customStudyId=:customStudyId and live=1";
@@ -4290,11 +4296,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String updateQuery =
               "update QuestionnairesStepsBo QSBO set QSBO.destinationStep=:stepId "
                   + " where "
-                  + "QSBO.destinationStep=0 and QSBO.sequenceNo="
-                  + (count - 1)
+                  + "QSBO.destinationStep=0 and QSBO.sequenceNo=:sequenceNo"
                   + " and QSBO.questionnairesId=:questionnairesId ";
           session
               .createQuery(updateQuery)
+              .setInteger("sequenceNo", (count - 1))
               .setInteger("stepId", addOrUpdateQuestionnairesStepsBo.getStepId())
               .setInteger(
                   "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId())
@@ -4663,7 +4669,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if (!stepType.isEmpty()) {
         if (stepType.equalsIgnoreCase(FdahpStudyDesignerConstants.QUESTION_STEP)) {
           searchQuery =
-              "select q.anchor_date_id from questions q,questionnaires_steps qsq,questionnaires qq  where q.id=qsq.instruction_form_id and qsq.step_type='Question' "
+              "select q.anchor_date_id from questions q,questionnaires_steps qsq,questionnaires qq where q.id=qsq.instruction_form_id and qsq.step_type='Question' "
                   + "and qsq.active=1 and qsq.questionnaires_id=qq.id and qq.id=:questionnaireId "
                   + " and q.id=:stepId "
                   + " and qq.active=1 and q.active=1"
@@ -4699,10 +4705,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       // Question level deletion
       if (questionId != null) {
         searchQuery =
-            "select q.anchor_date_id from questions q where q.active=1 and q.id="
-                + questionId
+            "select q.anchor_date_id from questions q where q.active=1 and q.id=:id"
                 + " and q.anchor_date_id IS NOT NULL;";
-        List<Integer> aIds = session.createSQLQuery(searchQuery).list();
+        List<Integer> aIds = session.createSQLQuery(searchQuery)
+            .setParameter("id", questionId)
+            .list();
         if ((aIds != null) && (aIds.size() > 0)) {
           anchorIds.addAll(aIds);
         }
@@ -4711,7 +4718,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if ((stepId == null) && (questionnaireId != null)) {
         // checking in the question step anchor date is selected or not
         searchQuery =
-            "select q.anchor_date_id from questions q,questionnaires_steps qsq,questionnaires qq  where q.id=qsq.instruction_form_id and qsq.step_type='Question'"
+            "select q.anchor_date_id from questions q,questionnaires_steps qsq,questionnaires qq where q.id=qsq.instruction_form_id and qsq.step_type='Question'"
                 + " and qsq.active=1 and qsq.questionnaires_id=qq.id and qq.id=:questionnaireId "
                 + " and qq.active=1 and q.active=1"
                 + " and q.anchor_date_id IS NOT NULL;";
@@ -4738,20 +4745,22 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       }
       if (!anchorIds.isEmpty() && (anchorIds.size() > 0)) {
         searchQuery =
-            "select q.id from questionnaires q where q.schedule_type='"
-                + FdahpStudyDesignerConstants.SCHEDULETYPE_ANCHORDATE
-                + "' and q.anchor_date_id in( :anchorIds )";
+            "select q.id from questionnaires q where q.schedule_type=:type"
+                + " and q.anchor_date_id in( :anchorIds )";
         anchorExistIds =
-            session.createSQLQuery(searchQuery).setParameterList("anchorIds", anchorIds).list();
+            session.createSQLQuery(searchQuery)
+                .setParameter("type", FdahpStudyDesignerConstants.SCHEDULETYPE_ANCHORDATE)
+                .setParameterList("anchorIds", anchorIds).list();
         if (!anchorExistIds.isEmpty() && (anchorExistIds.size() > 0)) {
           isAnchorUsed = true;
         } else {
           searchQuery =
-              "select q.id from active_task q where q.schedule_type='"
-                  + FdahpStudyDesignerConstants.SCHEDULETYPE_ANCHORDATE
-                  + "' and q.anchor_date_id in( :anchorIds )";
+              "select q.id from active_task q where q.schedule_type=:type"
+                  + " and q.anchor_date_id in( :anchorIds )";
           anchorExistIds =
-              session.createSQLQuery(searchQuery).setParameterList("anchorIds", anchorIds).list();
+              session.createSQLQuery(searchQuery)
+                  .setParameter("type", FdahpStudyDesignerConstants.SCHEDULETYPE_ANCHORDATE)
+                  .setParameterList("anchorIds", anchorIds).list();
           if (!anchorExistIds.isEmpty() && (anchorExistIds.size() > 0)) {
             isAnchorUsed = true;
           } else {
@@ -4795,6 +4804,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .executeUpdate();
               if (count1 > 0) {
                 studySequence.setStudyExcQuestionnaries(false);
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    sessionObject.getUserId(),
+                    FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE,
+                    studyId);
               }
               int count2 =
                   session
@@ -4808,6 +4823,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .executeUpdate();
               if (count2 > 0) {
                 studySequence.setStudyExcActiveTask(false);
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    sessionObject.getUserId(),
+                    FdahpStudyDesignerConstants.DRAFT_ACTIVETASK,
+                    studyId);
               }
               int count3 =
                   session
@@ -4819,6 +4840,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
               if (count3 > 0) {
                 studySequence.setMiscellaneousResources(false);
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    sessionObject.getUserId(),
+                    FdahpStudyDesignerConstants.DRAFT_STUDY,
+                    studyId);
               }
               session.saveOrUpdate(studySequence);
             }

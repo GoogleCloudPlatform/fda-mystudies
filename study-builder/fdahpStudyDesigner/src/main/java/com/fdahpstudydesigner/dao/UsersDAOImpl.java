@@ -144,12 +144,13 @@ public class UsersDAOImpl implements UsersDAO {
               .setParameter("userId", userId);
       userBO2 = (UserBO) query.uniqueResult();
       if (!permissions.isEmpty()) {
+        List<String> permissionList = Arrays.asList(permissions.split(","));
         permissionSet =
             new HashSet<UserPermissions>(
                 session
                     .createQuery(
                         "FROM UserPermissions UPBO WHERE UPBO.permissions IN ( :permissions )")
-                    .setParameterList("permissions", Arrays.asList(permissions))
+                    .setParameterList("permissions", permissionList)
                     .list());
         userBO2.setPermissionList(permissionSet);
         userBO2.setAccessLevel(FdahpStudyDesignerUtil.getUserAccessLevel(permissionSet));
@@ -428,7 +429,7 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
-                  + "u.password,u.email_changed FROM users u,roles r WHERE r.role_id = u.role_id and u.user_id "
+                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id and u.user_id "
                   + "not in (select upm.user_id from user_permission_mapping upm where "
                   + "upm.permission_id = (select up.permission_id from user_permissions up "
                   + "where up.permissions ='ROLE_SUPERADMIN')) ORDER BY u.user_id DESC ");

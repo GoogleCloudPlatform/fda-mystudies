@@ -1,4 +1,10 @@
-# Taken from https://github.com/istio/istio/issues/6806#issuecomment-406230278
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
+# Based on https://github.com/istio/istio/issues/6806#issuecomment-406230278
 
 # Istio containers need to run as root with a pretty loose policy.
 # See: https://github.com/istio/istio/issues/6806
@@ -13,13 +19,14 @@ metadata:
 spec:
   privileged: false
   allowedCapabilities:
-  - '*'
+  - 'NET_ADMIN'
+  - 'NET_RAW'
   volumes:
   - '*'
   # Required to prevent escalations to root.
-  allowPrivilegeEscalation: true
+  allowPrivilegeEscalation: false
   runAsUser:
-    rule: 'RunAsAny'
+    rule: 'MustRunAsNonRoot'
   seLinux:
     rule: 'RunAsAny'
   supplementalGroups:

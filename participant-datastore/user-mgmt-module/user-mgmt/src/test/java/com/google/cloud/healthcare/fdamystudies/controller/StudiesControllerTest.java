@@ -29,9 +29,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
@@ -69,6 +71,8 @@ public class StudiesControllerTest extends BaseMockIT {
   @Autowired private UserRegAdminRepository userRegAdminUserRepository;
 
   @Autowired private ObjectMapper objectMapper;
+
+  @Autowired private SitePermissionRepository sitePermissionRepository;
 
   @Test
   public void contextLoads() {
@@ -170,6 +174,7 @@ public class StudiesControllerTest extends BaseMockIT {
 
     List<AppPermissionEntity> appPermissionList = appPermissionRepository.findAll();
     List<StudyPermissionEntity> studyPermissionList = studyPermissionRepository.findAll();
+    List<SitePermissionEntity> sitePermissionList = sitePermissionRepository.findAll();
 
     AppPermissionEntity appPermission =
         appPermissionList
@@ -183,10 +188,18 @@ public class StudiesControllerTest extends BaseMockIT {
             .filter(x -> x.getStudy().getCustomId().equals(Constants.STUDY_ID_1))
             .findFirst()
             .orElse(null);
+    SitePermissionEntity sitePermission =
+        sitePermissionList
+            .stream()
+            .filter(x -> x.getStudy().getType().equals(Constants.STUDY_TYPE))
+            .findFirst()
+            .orElse(null);
 
     assertNotNull(appPermission);
     assertNotNull(studyPermission);
+    assertNotNull(sitePermission);
     assertEquals(appPermission.getEdit(), studyPermission.getEdit());
+    assertEquals(Constants.STUDY_TYPE, sitePermission.getStudy().getType());
   }
 
   @Test

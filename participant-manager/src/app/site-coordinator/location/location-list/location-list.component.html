@@ -1,92 +1,98 @@
-<div class="subheader p-none">
-  <div class="max__w__1280 m-none">
-    <div class="flex__justify__space-between">
-      <div class="subheader__title">Locations</div>
-      <button
-        id="addLocation"
-        (click)="addLocation()"
-        class="btn btn-primary width__auto blue__btn font14"
-      >
-        Add Location
-      </button>
-    </div>
-  </div>
-</div>
-<div class="max__w__1280 m-none">
-  <ng-container *ngIf="location$ | async as manageLocations">
-    <div *ngIf="manageLocations.locations.length != 0">
-      <div class="cards1 m-none">
-        <table
-          class="table table-striped custom__table"
-          [mfData]="manageLocations.locations"
-          #mf="mfDataTable"
-          [mfRowsOnPage]="10"
+<div *ngIf="location$ | async as manageLocations">
+  <div class="subheader p-none">
+    <div class="max__w__1280 m-none">
+      <div class="flex__justify__space-between">
+        <div class="subheader__title">Locations</div>
+        <button
+          *ngIf="manageLocations.locationPermission === permission.ViewAndEdit"
+          id="addLocation"
+          (click)="addLocation()"
+          class="btn btn-primary width__auto blue__btn font14"
         >
-          <thead class="custom__thead">
-            <tr>
-              <span
-                class="text__387fea__12 mobile__view mr-sm"
-                style="background: transparent"
-              >
-                Sort By:
-              </span>
-              <th>
-                <mfDefaultSorter by="customId">Location ID</mfDefaultSorter>
-              </th>
-              <th>
-                <mfDefaultSorter by="name">Location Name</mfDefaultSorter>
-              </th>
-              <th>
-                <mfDefaultSorter by="studiesCount">
-                  Associated Studies
-                </mfDefaultSorter>
-              </th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody class="custom__tbody">
-            <tr
-              class="location_row border__bottom__red border-top__c4d1e6 progress__bar"
-              *ngFor="let location of mf.data"
-            >
-              <td>
-                <span class="tbl__td__label">Location ID:</span>
-                <span
-                  (click)="locationDetails(location.locationId)"
-                  class="no_st_en"
-                >
-                  {{ location.customId }}
-                </span>
-              </td>
-              <td>
-                <span class="tbl__td__label">Location Name:</span>
-                {{ location.name }}
-              </td>
-              <td>
-                <span class="tbl__td__label">Associated Studies:</span>
-                {{ location.studyNames?.length }}
-              </td>
-              <td>
-                <span class="tbl__td__label">Status:</span>
-                <span
-                  [ngClass]="
-                    location.status === 1 ? ' txt__green' : 'txt__light-gray'
-                  "
-                >
-                  {{ location.status == 1 ? "Active" : "Deactivated" }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot class="custom__tfoot">
-            <tr>
-              <td colspan="4">
-                <mfBootstrapPaginator></mfBootstrapPaginator>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+          Add Location
+        </button>
       </div>
     </div>
-  </ng-container>
+  </div>
+  <div class="max__w__1280 m-none">
+    <ng-container>
+      <div>
+        <div class="cards1 m-none">
+          <table
+            class="table table-striped custom__table"
+            [mfData]="manageLocations.locations"
+            #mf="mfDataTable"
+            [mfRowsOnPage]="10"
+          >
+            <thead class="custom__thead">
+              <tr>
+                <span
+                  class="text__387fea__12 mobile__view mr-sm"
+                  style="background: transparent"
+                >
+                  Sort By:
+                </span>
+                <th>
+                  <mfDefaultSorter by="customId">Location ID</mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="name">Location Name</mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="studiesCount">
+                    Associated Studies
+                  </mfDefaultSorter>
+                </th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody class="custom__tbody">
+              <tr
+                class="location_row border__bottom__red border-top__c4d1e6 progress__bar"
+                *ngFor="let location of mf.data"
+              >
+                <td>
+                  <span class="tbl__td__label">Location ID:</span>
+                  <span
+                    (click)="locationDetails(location.locationId)"
+                    class="no_st_en"
+                  >
+                    {{ location.customId }}
+                  </span>
+                </td>
+                <td>
+                  <span class="tbl__td__label">Location Name:</span>
+                  {{ location.name }}
+                </td>
+                <td>
+                  <span class="tbl__td__label">Associated Studies:</span>
+                  {{ location.studyNames?.length }}
+                </td>
+                <td>
+                  <span class="tbl__td__label">Status:</span>
+                  <span
+                    [ngClass]="
+                      location.status === 1 ? ' txt__green' : 'txt__light-gray'
+                    "
+                  >
+                    {{ location.status == 1 ? "Active" : "Deactivated" }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+            <div *ngIf="manageLocations.locations.length === 0">
+              No records found
+            </div>
+            <tfoot class="custom__tfoot">
+              <tr>
+                <td colspan="4">
+                  <mfBootstrapPaginator></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 </div>

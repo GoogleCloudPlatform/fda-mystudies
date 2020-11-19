@@ -182,6 +182,12 @@ public class LocationServiceImpl implements LocationService {
       return ErrorCode.LOCATION_NOT_FOUND;
     }
 
+    Optional<LocationEntity> optLocationEntityForName =
+        locationRepository.findByName(locationRequest.getName());
+    if (optLocationEntityForName.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_NAME_EXISTS);
+    }
+
     LocationEntity locationEntity = optLocation.get();
     if (locationEntity.isDefault()) {
       return ErrorCode.DEFAULT_SITE_MODIFY_DENIED;
@@ -243,6 +249,7 @@ public class LocationServiceImpl implements LocationService {
     LocationResponse locationResponse =
         new LocationResponse(MessageCode.GET_LOCATION_SUCCESS, locationDetailsList);
     locationResponse.setTotalLocationsCount(locationRepository.count());
+    locationResponse.setLocationPermission(adminUser.getLocationPermission());
     logger.exit(String.format("locations size=%d", locationResponse.getLocations().size()));
     return locationResponse;
   }
@@ -289,7 +296,7 @@ public class LocationServiceImpl implements LocationService {
     if (!StringUtils.isEmpty(studyNames)) {
       locationResponse.getStudyNames().addAll(Arrays.asList(studyNames.split(",")));
     }
-
+    locationResponse.setLocationPermission(adminUser.getLocationPermission());
     logger.exit(String.format("locationId=%s", locationEntity.getId()));
     return locationResponse;
   }

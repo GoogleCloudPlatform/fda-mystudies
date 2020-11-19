@@ -115,6 +115,8 @@ public class StudyDAOImpl implements StudyDAO {
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
+  @Autowired private AuditLogDAO auditLogDAO;
+
   HibernateTemplate hibernateTemplate;
   private Query query = null;
   String queryString = "";
@@ -2205,8 +2207,8 @@ public class StudyDAOImpl implements StudyDAO {
               // get the Category, Research Sponsor name of the
               // study from categoryIds
               query =
-                  session.createQuery(
-                      "from ReferenceTablesBo where id in(" + bean.getCategory() + ")");
+                  session.createQuery("from ReferenceTablesBo where id in(:category)")
+                    .setParameter("category", bean.getCategory());
               referenceTablesBos = query.list();
               if ((referenceTablesBos != null) && !referenceTablesBos.isEmpty()) {
                 bean.setCategory(referenceTablesBos.get(0).getValue());
@@ -2217,9 +2219,8 @@ public class StudyDAOImpl implements StudyDAO {
                   (StudyBo)
                       session
                           .createQuery(
-                              "from StudyBo where customStudyId='"
-                                  + bean.getCustomStudyId()
-                                  + "' and live=1")
+                              "from StudyBo where customStudyId=:studyId and live=1")
+                          .setParameter("studyId", bean.getCustomStudyId())
                           .uniqueResult();
               if (liveStudy != null) {
                 bean.setLiveStudyId(liveStudy.getId());
@@ -2232,7 +2233,9 @@ public class StudyDAOImpl implements StudyDAO {
             if ((bean.getId() != null) && (bean.getLiveStudyId() != null)) {
               studyBo =
                   (StudyBo)
-                      session.createQuery("from StudyBo where id=" + bean.getId()).uniqueResult();
+                      session.createQuery("from StudyBo where id=:id")
+                          .setParameter("id", bean.getId())
+                          .uniqueResult();
               if (studyBo.getHasStudyDraft() == 1) {
                 bean.setFlag(true);
               }
@@ -2243,9 +2246,9 @@ public class StudyDAOImpl implements StudyDAO {
                   (String)
                       session
                           .createQuery(
-                              "SELECT  u.firstName from StudyPermissionBO s , UserBO u where s.studyId="
-                                  + bean.getId()
+                              "SELECT  u.firstName from StudyPermissionBO s , UserBO u where s.studyId=:id"
                                   + " and s.userId=u.userId and s.projectLead=1")
+                          .setParameter("id", bean.getId())
                           .setMaxResults(1)
                           .uniqueResult();
               if (StringUtils.isNotEmpty(userInfo)) {
@@ -2391,6 +2394,14 @@ public class StudyDAOImpl implements StudyDAO {
         count = query.executeUpdate();
 
       } else if (markCompleted.equals(FdahpStudyDesignerConstants.RESOURCE)) {
+        if (flag) {
+          auditLogDAO.updateDraftToEditedStatus(
+              session,
+              transaction,
+              sesObj.getUserId(),
+              FdahpStudyDesignerConstants.DRAFT_STUDY,
+              studyId);
+        }
 
         query =
             session.createQuery(
@@ -2406,6 +2417,13 @@ public class StudyDAOImpl implements StudyDAO {
         query.setParameter("studyId", studyId);
         count = query.executeUpdate();
 
+        auditLogDAO.updateDraftToEditedStatus(
+            session,
+            transaction,
+            sesObj.getUserId(),
+            FdahpStudyDesignerConstants.DRAFT_CONSCENT,
+            studyId);
+
       } else if (markCompleted.equalsIgnoreCase(FdahpStudyDesignerConstants.CONESENT_REVIEW)) {
         query =
             session.createQuery(
@@ -2413,6 +2431,13 @@ public class StudyDAOImpl implements StudyDAO {
         query.setParameter("flag", flag);
         query.setParameter("studyId", studyId);
         count = query.executeUpdate();
+
+        auditLogDAO.updateDraftToEditedStatus(
+            session,
+            transaction,
+            sesObj.getUserId(),
+            FdahpStudyDesignerConstants.DRAFT_CONSCENT,
+            studyId);
 
       } else if (markCompleted.equalsIgnoreCase(FdahpStudyDesignerConstants.CHECK_LIST)) {
         query =
@@ -2429,6 +2454,13 @@ public class StudyDAOImpl implements StudyDAO {
         query.setParameter("studyId", studyId);
         count = query.executeUpdate();
 
+        auditLogDAO.updateDraftToEditedStatus(
+            session,
+            transaction,
+            sesObj.getUserId(),
+            FdahpStudyDesignerConstants.DRAFT_ACTIVETASK,
+            studyId);
+
       } else if (markCompleted.equalsIgnoreCase(FdahpStudyDesignerConstants.QUESTIONNAIRE)) {
         query =
             session.createQuery(
@@ -2437,6 +2469,13 @@ public class StudyDAOImpl implements StudyDAO {
         query.setParameter("studyId", studyId);
         count = query.executeUpdate();
 
+        auditLogDAO.updateDraftToEditedStatus(
+            session,
+            transaction,
+            sesObj.getUserId(),
+            FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE,
+            studyId);
+
       } else if (markCompleted.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPREHENSION_TEST)) {
         query =
             session.createQuery(
@@ -2444,6 +2483,13 @@ public class StudyDAOImpl implements StudyDAO {
         query.setParameter("flag", flag);
         query.setParameter("studyId", studyId);
         count = query.executeUpdate();
+
+        auditLogDAO.updateDraftToEditedStatus(
+            session,
+            transaction,
+            sesObj.getUserId(),
+            FdahpStudyDesignerConstants.DRAFT_CONSCENT,
+            studyId);
       }
       if (count > 0) {
         msg = FdahpStudyDesignerConstants.SUCCESS;
@@ -4148,6 +4194,13 @@ public class StudyDAOImpl implements StudyDAO {
             }
             session.update(studySequence);
           }
+          message =
+              auditLogDAO.updateDraftToEditedStatus(
+                  session,
+                  transaction,
+                  studyPageBean.getUserId(),
+                  FdahpStudyDesignerConstants.DRAFT_STUDY,
+                  Integer.parseInt(studyPageBean.getStudyId()));
         }
       }
       transaction.commit();
@@ -4307,6 +4360,13 @@ public class StudyDAOImpl implements StudyDAO {
         }
         session.update(studySequenceBo);
       }
+      message =
+          auditLogDAO.updateDraftToEditedStatus(
+              session,
+              transaction,
+              studyBo.getUserId(),
+              FdahpStudyDesignerConstants.DRAFT_STUDY,
+              studyBo.getId());
 
       auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
 
@@ -4371,7 +4431,7 @@ public class StudyDAOImpl implements StudyDAO {
         }
 
         result =
-            updateDraftToEditedStatus(
+            auditLogDAO.updateDraftToEditedStatus(
                 session,
                 transaction,
                 (updateFlag ? eligibilityBo.getModifiedBy() : eligibilityBo.getCreatedBy()),
@@ -4643,6 +4703,14 @@ public class StudyDAOImpl implements StudyDAO {
         }
 
         /* admin section ends */
+
+        result =
+            auditLogDAO.updateDraftToEditedStatus(
+                session,
+                transaction,
+                studyBo.getUserId(),
+                FdahpStudyDesignerConstants.DRAFT_STUDY,
+                studyBo.getId());
 
         if (result.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS) && ownUserForceLogout) {
           result = FdahpStudyDesignerConstants.WARNING;
@@ -6844,6 +6912,13 @@ public class StudyDAOImpl implements StudyDAO {
                       .executeUpdate();
               if (count1 > 0) {
                 studySequence.setStudyExcQuestionnaries(false);
+
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    updatedStudy.getModifiedBy(),
+                    FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE,
+                    oldStudy.getId());
               }
               int count2 =
                   session
@@ -6855,6 +6930,13 @@ public class StudyDAOImpl implements StudyDAO {
                       .executeUpdate();
               if (count2 > 0) {
                 studySequence.setStudyExcActiveTask(false);
+
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    updatedStudy.getModifiedBy(),
+                    FdahpStudyDesignerConstants.DRAFT_ACTIVETASK,
+                    oldStudy.getId());
               }
               int count3 =
                   session
@@ -6866,6 +6948,13 @@ public class StudyDAOImpl implements StudyDAO {
 
               if (count3 > 0) {
                 studySequence.setMiscellaneousResources(false);
+
+                auditLogDAO.updateDraftToEditedStatus(
+                    session,
+                    transaction,
+                    updatedStudy.getModifiedBy(),
+                    FdahpStudyDesignerConstants.DRAFT_STUDY,
+                    oldStudy.getId());
               }
               session.saveOrUpdate(studySequence);
               message = FdahpStudyDesignerConstants.SUCCESS;
@@ -7061,72 +7150,6 @@ public class StudyDAOImpl implements StudyDAO {
     }
     logger.info("StudyDAOImpl - getStudy() - Ends");
     return study;
-  }
-
-  @Override
-  public String updateDraftToEditedStatus(
-      Session session,
-      Transaction transaction,
-      Integer userId,
-      String actionType,
-      Integer studyId) {
-    logger.info("AuditLogDAOImpl - updateDraftToEditedStatus() - Starts");
-    String message = FdahpStudyDesignerConstants.FAILURE;
-    Session newSession = null;
-    String queryString = "";
-    try {
-      if (session == null) {
-        newSession = hibernateTemplate.getSessionFactory().openSession();
-        transaction = newSession.beginTransaction();
-      }
-      if ((userId != null) && (studyId != null)) {
-        if ((actionType != null) && (FdahpStudyDesignerConstants.DRAFT_STUDY).equals(actionType)) {
-          queryString =
-              " Update StudyBo set hasStudyDraft = 1 , modifiedBy =:userId , modifiedOn = now() where id = :studyId ";
-        } else if ((actionType != null)
-            && (FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE).equals(actionType)) {
-          queryString =
-              " Update StudyBo set hasQuestionnaireDraft = 1, hasStudyDraft = 1  , modifiedBy =:userId , modifiedOn = now() where id = :studyId ";
-        } else if ((actionType != null)
-            && (FdahpStudyDesignerConstants.DRAFT_ACTIVETASK).equals(actionType)) {
-          queryString =
-              " Update StudyBo set hasActivetaskDraft = 1, hasStudyDraft = 1 , modifiedBy =:userId , modifiedOn = now() where id = :studyId ";
-        } else if ((actionType != null)
-            && (FdahpStudyDesignerConstants.DRAFT_CONSCENT).equals(actionType)) {
-          queryString =
-              " Update StudyBo set hasConsentDraft = 1, hasActivetaskDraft = 1, hasQuestionnaireDraft=1, hasStudyDraft = 1 , modifiedBy =:userId , modifiedOn = now() where id = :studyId ";
-        }
-        if (newSession != null) {
-          newSession
-              .createQuery(queryString)
-              .setInteger("userId", userId)
-              .setInteger("studyId", studyId)
-              .executeUpdate();
-        } else {
-          session
-              .createQuery(queryString)
-              .setInteger("userId", userId)
-              .setInteger("studyId", studyId)
-              .executeUpdate();
-        }
-        message = FdahpStudyDesignerConstants.SUCCESS;
-      }
-      if (session == null) {
-        transaction.commit();
-      }
-
-    } catch (Exception e) {
-      if ((session == null) && (null != transaction)) {
-        transaction.rollback();
-      }
-      logger.error("AuditLogDAOImpl - updateDraftToEditedStatus - ERROR", e);
-    } finally {
-      if (null != newSession) {
-        newSession.close();
-      }
-    }
-    logger.info("AuditLogDAOImpl - updateDraftToEditedStatus - Ends");
-    return message;
   }
 
   public List<String> getStudyIdAsList(String statusId) {

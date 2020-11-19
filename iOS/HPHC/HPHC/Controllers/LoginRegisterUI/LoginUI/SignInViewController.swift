@@ -76,11 +76,9 @@ class SignInViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    SessionService.resetSession()
     setupNavigation()
-    setupProgressView()
-    setupEstimatedProgressObserver()
     DispatchQueue.main.async {
-      self.webKitView.navigationDelegate = self
       self.load()
       self.initializeTermsAndPolicy()
     }
@@ -90,7 +88,9 @@ class SignInViewController: UIViewController {
     super.viewWillAppear(animated)
     // unhide navigationbar
     self.navigationController?.setNavigationBarHidden(false, animated: true)
-
+    self.webKitView.navigationDelegate = self
+    setupProgressView()
+    setupEstimatedProgressObserver()
     if viewLoadFrom != .signUp {
       User.resetCurrentUser()
     }
@@ -112,7 +112,6 @@ class SignInViewController: UIViewController {
     if viewLoadFrom == .gatewayOverview || Utilities.isStandaloneApp() {
       self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
-    SessionService.resetSession()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -194,9 +193,10 @@ class SignInViewController: UIViewController {
       case .pending:
         User.currentUser.verified = false
         navigateToVerifyController()
-      case .tempPassword:
+      case .tempPassword, .accountLocked:
+        User.currentUser.verified = true
         User.currentUser.isLoggedInWithTempPassword = true
-        self.userDidLoggedIn()
+        grantVerifiedUser(with: code)
       }
     }
   }
@@ -308,7 +308,6 @@ class SignInViewController: UIViewController {
     } else {
       changePassword.viewLoadFrom = .login
     }
-    changePassword.temporaryPassword = User.currentUser.password!
     self.navigationController?.pushViewController(changePassword, animated: true)
   }
 
@@ -464,7 +463,9 @@ extension SignInViewController: WKNavigationDelegate {
     didFailProvisionalNavigation navigation: WKNavigation!,
     withError error: Error
   ) {
-    self.view.makeToast(error.localizedDescription)
+    if (error as NSError).code != 102 {  // Ignore frame load error
+      self.view.makeToast(error.localizedDescription)
+    }
     UIView.animate(
       withDuration: 0.33,
       animations: {
@@ -493,9 +494,9 @@ extension SignInViewController: WKNavigationDelegate {
     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
   ) {
     if let url = navigationAction.request.url, url.scheme == "app" {
+      decisionHandler(.cancel)
       // Handle the callbacks
       handleScheme(for: url)
-      decisionHandler(.cancel)
     } else {
       decisionHandler(.allow)
     }

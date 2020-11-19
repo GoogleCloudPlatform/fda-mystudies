@@ -265,7 +265,7 @@ extension VerificationViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
     self.removeProgressIndicator()
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  //unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,

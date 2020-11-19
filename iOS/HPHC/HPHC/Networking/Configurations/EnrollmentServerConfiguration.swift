@@ -64,7 +64,6 @@ class EnrollmentServerConfiguration: NetworkConfiguration {
 
     let header = [
       "appId": AppConfiguration.appID,
-      "orgId": AppConfiguration.orgID,
       kAuthorization: User.currentUser.authToken ?? "",
     ]
     return header
@@ -98,6 +97,17 @@ class EnrollmentServerConfiguration: NetworkConfiguration {
     if let code = errorResponse["status"] as? Int {
       let message = errorResponse["message"] as? String ?? ""
       error = NSError(domain: message, code: code, userInfo: errorResponse)
+    }
+
+    if let code = errorResponse[RegistrationServerConfiguration.JSONKey.status] as? Int {
+      let message =
+        errorResponse[RegistrationServerConfiguration.JSONKey.error] as? String
+        ?? errorResponse[RegistrationServerConfiguration.JSONKey.errorDesc] as? String ?? ""
+      return NSError(
+        domain: NSURLErrorDomain,
+        code: code,
+        userInfo: [NSLocalizedDescriptionKey: message]
+      )
     }
 
     return error
