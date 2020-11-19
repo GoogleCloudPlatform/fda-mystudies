@@ -340,24 +340,24 @@ template "project_secrets" {
           secret_data = "$${random_password.passwords[\"participant_manager_datastore_secret_key\"].result}"
         },
         {
-          secret_id   = "auto-sd-response-datastore-password"
-          secret_data = "$${random_password.passwords[\"sd_response_datastore_password\"].result}"
+          secret_id   = "auto-sd-response-datastore-token"
+          secret_data = "$${random_password.tokens[\"sd_response_datastore_token\"].result}"
         },
         {
           secret_id   = "auto-sd-response-datastore-id"
           secret_data = "$${random_string.strings[\"sd_response_datastore_id\"].result}"
         },
         {
-          secret_id   = "auto-sd-android-password"
-          secret_data = "$${random_password.passwords[\"sd_android_password\"].result}"
+          secret_id   = "auto-sd-android-token"
+          secret_data = "$${random_password.tokens[\"sd_android_token\"].result}"
         },
         {
           secret_id   = "auto-sd-android-id"
           secret_data = "$${random_string.strings[\"sd_android_id\"].result}"
         },
         {
-          secret_id   = "auto-sd-ios-password"
-          secret_data = "$${random_password.passwords[\"sd_ios_password\"].result}"
+          secret_id   = "auto-sd-ios-token"
+          secret_data = "$${random_password.tokens[\"sd_ios_token\"].result}"
         },
         {
           secret_id   = "auto-sd-ios-id"
@@ -400,9 +400,6 @@ resource "random_password" "passwords" {
     [
       "mystudies_sql_default_user_password",
       "hydra_db_password",
-      "sd_response_datastore_password",
-      "sd_android_password",
-      "sd_ios_password",
       "auth_server_encryptor_password"
     ],
     formatlist("%s_db_password", local.apps),
@@ -410,6 +407,16 @@ resource "random_password" "passwords" {
   )
   length  = 16
   special = true
+}
+
+resource "random_password" "tokens" {
+  for_each = toset([
+    "sd_response_datastore_token",
+    "sd_android_token",
+    "sd_ios_token",
+  ])
+  length  = 16
+  special = false
 }
 
 resource "random_password" "system_secrets" {
@@ -633,26 +640,29 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 #
 # The following content should be initially commented out if the above manual step is not completed.
+# locals {
+#   apps_dependencies = {
+#     "study-builder"                             = ["study-builder/**"]
+#     "study-datastore"                           = ["study-datastore/**"]
+#     "hydra"                                     = ["hydra/**"]
+#     "oauth-scim-module"                         = ["oauth-scim-module/**", "common-modules/**"]
+#     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
+#     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
+#     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
+#     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
+#     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
+#     "participant-manager"                       = ["participant-manager/**"]
+#   }
+# }
 
 # resource "google_cloudbuild_trigger" "server_build_triggers" {
-#   for_each = toset([
-#     "study-builder",
-#     "study-datastore",
-#     "oauth-scim-module",
-#     "participant-datastore/consent-mgmt-module",
-#     "participant-datastore/enroll-mgmt-module",
-#     "participant-datastore/user-mgmt-module",
-#     "response-datastore",
-#     "participant-manager-datastore",
-#     "hydra",
-#     "participant-manager",
-#   ])
-#
+#   for_each = local.apps_dependencies
+
 #   provider = google-beta
 #   project  = module.project.project_id
 #   name     = replace(each.key, "/", "-")
 #
-#   included_files = ["$${each.key}/**"]
+#   included_files = each.value
 #
 #   github {
 #     owner = "{{.github_owner}}"
@@ -861,14 +871,7 @@ EOF
           ]
         },
         {
-          name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
-          iam_members = [{
-            role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-          }]
-        },
-        {
-          name = "{{.prefix}}-{{.env}}-mystudies-fda-resources"
+          name = "{{.prefix}}-{{.env}}-mystudies-study-resources"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
@@ -984,11 +987,11 @@ data "google_secret_manager_secret_version" "secrets" {
       "auto-hydra-db-password",
       "auto-hydra-db-user",
       "auto-hydra-system-secret",
-      "auto-sd-response-datastore-password",
+      "auto-sd-response-datastore-token",
       "auto-sd-response-datastore-id",
-      "auto-sd-android-password",
+      "auto-sd-android-token",
       "auto-sd-android-id",
-      "auto-sd-ios-password",
+      "auto-sd-ios-token",
       "auto-sd-ios-id",
     ],
     formatlist("auto-%s-db-user", local.apps),
@@ -1056,8 +1059,8 @@ resource "kubernetes_secret" "auth_server_secrets" {
 
   data = {
     encryptor_password   = data.google_secret_manager_secret_version.secrets["auto-auth-server-encryptor-password"].secret_data
-    ios_deeplink_url     = data.google_secret_manager_secret_version_secrets["manual-ios-deeplink-url"].secret_data
-    android_deeplink_url = data.google_secret_manager_secret_version_secrets["manual-android-deeplink-url"].secret_data
+    ios_deeplink_url     = data.google_secret_manager_secret_version.secrets["manual-ios-deeplink-url"].secret_data
+    android_deeplink_url = data.google_secret_manager_secret_version.secrets["manual-android-deeplink-url"].secret_data
   }
 }
 
@@ -1083,12 +1086,12 @@ resource "kubernetes_secret" "study_datastore_connect_credentials" {
     name = "study-datastore-connect-credentials"
   }
   data = {
-    response_datastore_id         = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-id"].secret_data
-    response_datastore_password   = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-password"].secret_data
-    android_id                    = data.google_secret_manager_secret_version.secrets["auto-sd-android-id"].secret_data
-    android_password              = data.google_secret_manager_secret_version.secrets["auto-sd-android-password"].secret_data
-    ios_id                        = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
-    ios_password                  = data.google_secret_manager_secret_version.secrets["auto-sd-ios-password"].secret_data
+    response_datastore_id      = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-id"].secret_data
+    response_datastore_token   = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-token"].secret_data
+    android_id                 = data.google_secret_manager_secret_version.secrets["auto-sd-android-id"].secret_data
+    android_token              = data.google_secret_manager_secret_version.secrets["auto-sd-android-token"].secret_data
+    ios_id                     = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
+    ios_token                  = data.google_secret_manager_secret_version.secrets["auto-sd-ios-token"].secret_data
   }
 }
 

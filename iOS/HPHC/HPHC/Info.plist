@@ -2,14 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>API_KEY</key>
+	<string>$(API_KEY)</string>
 	<key>HYDRA_CLIENT_ID</key>
 	<string>$(HYDRA_CLIENT_ID)</string>
-	<key>AUTH_PASSWORD</key>
-	<string>$(AUTH_PASSWORD)</string>
 	<key>AUTH_URL</key>
 	<string>$(AUTH_URL)</string>
-	<key>AUTH_USERNAME</key>
-	<string>$(AUTH_USERNAME)</string>
 	<key>ApplicationID</key>
 	<string>$(APP_ID)</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -67,10 +65,6 @@
 	<string>$(PRODUCT_NAME) would like to use Motion data for the task to give more accurate result.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use Speech Recognition for the task to give more accurate result.</string>
-	<key>REGISTRATIONSERVER_API_KEY</key>
-	<string>$(REGISTRATIONSERVER_API_KEY)</string>
-	<key>REGISTRATIONSERVER_API_SECERET</key>
-	<string>$(REGISTRATIONSERVER_API_SECERET)</string>
 	<key>USER_DATASTORE_URL</key>
 	<string>$(USER_DATASTORE_URL)</string>
 	<key>RESPONSE_DATASTORE_URL</key>

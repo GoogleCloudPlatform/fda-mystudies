@@ -51,7 +51,9 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import lombok.Getter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -360,6 +362,39 @@ public class TestDataHelper {
     sitePermission.setSite(siteEntity);
     sitePermission.setUrAdminUser(superAdmin);
     sitePermissionRepository.saveAndFlush(sitePermission);
+  }
+
+  public List<StudyEntity> createMultipleStudyEntity(AppEntity appEntity) {
+    List<StudyEntity> studyList = new ArrayList<>();
+    for (int i = 1; i <= 2; i++) {
+      StudyEntity studyEntity = newStudyEntity();
+      studyEntity.setType("CLOSE");
+      studyEntity.setName("COVID Study" + i);
+      studyEntity.setCustomId("CovidStudy" + i);
+      studyEntity.setApp(appEntity);
+      studyEntity.setLogoImageUrl(LOGO_IMAGE_URL);
+      StudyEntity study = studyRepository.saveAndFlush(studyEntity);
+      studyList.add(study);
+    }
+    return studyList;
+  }
+
+  public SiteEntity createMultipleSiteEntityWithPermission(
+      StudyEntity studyEntity,
+      UserRegAdminEntity urAdminUser,
+      AppEntity appEntity,
+      LocationEntity locationEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setName(siteEntity.getName() + RandomStringUtils.random(2));
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setStudy(studyEntity);
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(urAdminUser);
+    sitePermissionEntity.setApp(appEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
   }
 
   public void cleanUp() {
