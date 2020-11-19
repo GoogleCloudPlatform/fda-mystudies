@@ -602,6 +602,19 @@ template "project_apps" {
         { account_id = "participant-manager-gke-sa" },
         { account_id = "triggers-pubsub-handler-gke-sa" },
       ]
+      # Adding Logs Writer permission to service accounts for application level audit logs
+      "roles/logging.logWriter " = [
+        "serviceAccount:$${google_service_account.auth_server_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.hydra_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.response_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.study_builder_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.study_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.consent_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.enroll_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.user_datastore_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+        "serviceAccount:$${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+      ]
       # Binary Authorization resources.
       # Simple configuration for now. Future
       # See https://cloud.google.com/binary-authorization/docs/overview
