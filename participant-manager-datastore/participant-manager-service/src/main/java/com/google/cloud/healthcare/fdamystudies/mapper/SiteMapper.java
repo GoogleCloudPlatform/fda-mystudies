@@ -14,13 +14,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
+import com.google.cloud.healthcare.fdamystudies.model.AppSiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
-import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class SiteMapper {
@@ -43,33 +39,20 @@ public class SiteMapper {
     return appSiteResponse;
   }
 
-  public static List<AppSiteDetails> toParticipantSiteList(
-      Entry<StudyEntity, List<ParticipantStudyEntity>> entry, String[] excludeSiteStatus) {
-    List<AppSiteDetails> sites = new ArrayList<>();
-    for (ParticipantStudyEntity enrollment : entry.getValue()) {
-      if (ArrayUtils.contains(excludeSiteStatus, enrollment.getStatus())) {
-        continue;
-      }
+  public static AppSiteDetails toAppSiteDetails(
+      AppSiteInfo appSiteInfo, AppParticipantsInfo appParticipantsInfo) {
+    AppSiteDetails appSiteDetails = new AppSiteDetails();
+    appSiteDetails.setSiteId(appSiteInfo.getSiteId());
+    appSiteDetails.setCustomSiteId(appSiteInfo.getLocationCustomId());
+    appSiteDetails.setSiteName(appSiteInfo.getLocationName());
+    appSiteDetails.setSiteStatus(appParticipantsInfo.getParticipantStudyStatus());
 
-      AppSiteDetails studiesEnrollment = new AppSiteDetails();
+    String withdrawalDate = DateTimeUtils.format(appParticipantsInfo.getWithdrawalTime());
+    appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
 
-      if (enrollment.getSite() != null) {
-        studiesEnrollment.setCustomSiteId(enrollment.getSite().getLocation().getCustomId());
-        studiesEnrollment.setSiteId(enrollment.getSite().getId());
-        studiesEnrollment.setSiteName(enrollment.getSite().getLocation().getName());
-      }
-      studiesEnrollment.setSiteStatus(enrollment.getStatus());
+    String enrollmentDate = DateTimeUtils.format(appParticipantsInfo.getEnrolledTime());
+    appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
 
-      String withdrawalDate = DateTimeUtils.format(enrollment.getWithdrawalDate());
-      studiesEnrollment.setWithdrawlDate(
-          StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
-
-      String enrollmentDate = DateTimeUtils.format(enrollment.getEnrolledDate());
-      studiesEnrollment.setEnrollmentDate(
-          StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-
-      sites.add(studiesEnrollment);
-    }
-    return sites;
+    return appSiteDetails;
   }
 }
