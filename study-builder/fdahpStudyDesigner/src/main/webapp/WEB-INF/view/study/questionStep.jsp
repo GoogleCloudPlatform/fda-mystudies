@@ -5634,7 +5634,7 @@
     var choiceCount = $('.text-choice').length;
 
     function addTextChoice() {
-      choiceCount = choiceCount + 1;
+      choiceCount = parseInt(choiceCount) + 1;
       var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
       var newTextChoice = "<div class='mt-xlg text-choice' id='" + choiceCount + "'>" +
           "<div class='col-md-3 pl-none'>" +
@@ -6123,7 +6123,7 @@
     }
 
     function addFunctions(item) {
-      var index = $(item).attr('index');
+      var index = parseInt($(item).attr('index'));
 
       var value = $(item).val();
       var isValid = true;
@@ -6451,7 +6451,7 @@
       var count = parseInt(
           $("#rootId" + parent_index + " .numeric__row").last().find('select').attr("count"));
       var v = total + 1;
-      count = count + 1;
+      count = parseInt(count) + 1;
       var addVar = "<div class='numeric__row display__flex__base' id='" + v + "'>" +
           "   <span>V" + v + " =</span>" +
           "   <div class='form-group sm-selection' style=''>" +
