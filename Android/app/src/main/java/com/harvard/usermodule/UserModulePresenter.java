@@ -27,6 +27,7 @@ import com.harvard.usermodule.event.LoginEvent;
 import com.harvard.usermodule.event.LogoutEvent;
 import com.harvard.usermodule.event.RegisterUserEvent;
 import com.harvard.usermodule.event.ResendEmailEvent;
+import com.harvard.usermodule.event.UpdateAppVersionEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.event.UpdateUserProfileEvent;
 import com.harvard.usermodule.event.VerifyUserEvent;
@@ -58,6 +59,10 @@ public class UserModulePresenter {
 
   public void performUpdateUserProfile(UpdateUserProfileEvent updateUserProfileEvent) {
     FdaEventBus.postEvent(updateUserProfileEvent);
+  }
+
+  public void performUpdateAppVersion(UpdateAppVersionEvent updateAppVersionEvent) {
+    FdaEventBus.postEvent(updateAppVersionEvent);
   }
 
   public void performUpdateUserPreference(UpdatePreferenceEvent updatePreferenceEvent) {
