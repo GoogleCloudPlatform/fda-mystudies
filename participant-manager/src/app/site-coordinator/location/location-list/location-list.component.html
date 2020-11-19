@@ -59,7 +59,12 @@
                 </td>
                 <td>
                   <span class="tbl__td__label">Location Name:</span>
-                  {{ location.name }}
+                  <span
+                    (click)="locationDetails(location.locationId)"
+                    class="no_st_en"
+                  >
+                    {{ location.name }}
+                  </span>
                 </td>
                 <td>
                   <span class="tbl__td__label">Associated Studies:</span>
