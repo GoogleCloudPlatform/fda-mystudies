@@ -60,6 +60,9 @@ class StudyListViewController: UIViewController {
     DispatchQueue.main.async { [weak self] in
       self?.setupStudyListTableView()
     }
+    if User.currentUser.userType != .anonymousUser {
+      UserServices().updateAppVersion(self)
+    }
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -1077,8 +1080,14 @@ extension StudyListViewController: NMWebServiceDelegate {
         UserDefaults.standard.set(false, forKey: kPasscodeIsPending)
         UserDefaults.standard.synchronize()
       }
+      if User.currentUser.userType != .anonymousUser {
+        UserServices().updateAppVersion(self)  
+      }
 
     } else if requestName as String == EnrollmentMethods.updateStudyState.description {
+      appdelegate.window?.removeProgressIndicatorFromWindow()
+      
+    } else if requestName as String == RegistrationMethods.updateAppVersion.description {
       appdelegate.window?.removeProgressIndicatorFromWindow()
     }
   }
