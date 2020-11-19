@@ -165,10 +165,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                 .setParameter("studyId", studyId);
         query.executeUpdate();
 
-        /*
-         * query = session.createQuery(deleteQuery); query.executeUpdate();
-         */
-
         message = FdahpStudyDesignerConstants.SUCCESS;
         auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
 
@@ -234,13 +230,12 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                       session
                           .createSQLQuery(
                               "select count(*) from active_task_attrtibutes_values at "
-                                  + "where at.identifier_name_stat='"
-                                  + activeTaskAtrributeValuesBo.getIdentifierNameStat()
-                                  + "'"
+                                  + "where at.identifier_name_stat=:identifierNameStat "
                                   + "and  at.active_task_id in "
                                   + "(select a.id from active_task a where a.custom_study_id=:customStudyId"
                                   + " and a.active=1 and a.is_live=1)")
                           .setParameter("customStudyId", customStudyId)
+                          .setParameter("identifierNameStat", activeTaskAtrributeValuesBo.getIdentifierNameStat())
                           .uniqueResult();
               if ((statTitleCount != null) && (statTitleCount.intValue() > 0)) {
                 activeTaskAtrributeValuesBo.setIsIdentifierNameStatDuplicate(
@@ -354,17 +349,15 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
       // to get only "Fetal Kick Counter" type of active task based on
       // Android platform
+      Query query = null;
       if (StringUtils.isNotEmpty(platformType) && platformType.contains("A")) {
-        queryString =
-            "from ActiveTaskListBo a where a.taskName not in('"
-                + FdahpStudyDesignerConstants.TOWER_OF_HANOI
-                + "','"
-                + FdahpStudyDesignerConstants.SPATIAL_SPAN_MEMORY
-                + "')";
+        query = session.createQuery(
+            "from ActiveTaskListBo a where a.taskName not in(:towerOfHanoi, :spatialSpanMemory)")
+            .setParameter("towerOfHanoi", FdahpStudyDesignerConstants.TOWER_OF_HANOI)
+            .setParameter("spatialSpanMemory", FdahpStudyDesignerConstants.SPATIAL_SPAN_MEMORY);
       } else {
-        queryString = "from ActiveTaskListBo";
+        query = session.createQuery("from ActiveTaskListBo");
       }
-      query = session.createQuery(queryString);
       activeTaskListBos = query.list();
     } catch (Exception e) {
       logger.error("StudyActiveTasksDAOImpl - getAllActiveTaskTypes() - ERROR ", e);
@@ -832,13 +825,12 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               // questionnaire
               queryString =
                   "From QuestionsBo QBO where QBO.id IN (select QSBO.instructionFormId from QuestionnairesStepsBo QSBO where QSBO.questionnairesId IN (select id from QuestionnaireBo Q where Q.studyId in(select id From StudyBo SBO WHERE customStudyId= :customStudyId"
-                      + ")) and QSBO.stepType='"
-                      + FdahpStudyDesignerConstants.QUESTION_STEP
-                      + "') and QBO.statShortName=:activeTaskAttIdVal";
+                      + ")) and QSBO.stepType=:type) and QBO.statShortName=:activeTaskAttIdVal";
 
               query =
                   session
                       .createQuery(queryString)
+                      .setParameter("type", FdahpStudyDesignerConstants.QUESTION_STEP)
                       .setParameter("customStudyId", customStudyId)
                       .setParameter("activeTaskAttIdVal", activeTaskAttIdVal);
               questionnairesStepsBo = query.list();
@@ -911,12 +903,11 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               // questionnaire
               queryString =
                   "From QuestionsBo QBO where QBO.id IN (select QSBO.instructionFormId from QuestionnairesStepsBo QSBO where QSBO.questionnairesId IN (select id from QuestionnaireBo Q where Q.studyId=:studyId"
-                      + ") and QSBO.stepType='"
-                      + FdahpStudyDesignerConstants.QUESTION_STEP
-                      + "') and QBO.statShortName=:activeTaskAttIdVal";
+                      + ") and QSBO.stepType=:type) and QBO.statShortName=:activeTaskAttIdVal";
               query =
                   session
                       .createQuery(queryString)
+                      .setParameter("type", FdahpStudyDesignerConstants.QUESTION_STEP)
                       .setParameter("studyId", studyId)
                       .setParameter("activeTaskAttIdVal", activeTaskAttIdVal);
               questionnairesStepsBo = query.list();
