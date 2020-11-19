@@ -18,7 +18,7 @@
 
 import XCTest
 
-@testable import HPHC
+@testable import MyStudies
 
 class ActivityTest: XCTestCase {
 
