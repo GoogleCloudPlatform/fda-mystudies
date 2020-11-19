@@ -20,7 +20,7 @@ Response Datastore stores users’ responses to all study activities.
 Handles authentication of the App with different backends.
 
 #### Creating Build Configuration Files
-1. To create a build configuration file, open HPHC.xcworkspace, select the “File > New File…” menu item (⌘n), scroll down to the section labeled “Other”, and select the Configuration Settings File template. Next, save it somewhere in your project directory, making sure to add it to your desired targets.
+1. To create a build configuration file, open MyStudies.xcworkspace, select the “File > New File…” menu item (⌘n), scroll down to the section labeled “Other”, and select the Configuration Settings File template. Next, save it somewhere in your project directory, making sure to add it to your desired targets.
 2. Once you’ve created an xcconfig file, you can assign it to one or more build configurations for their associated targets.
 3. Go to project info settings.
 4. Under build configuration, select the configuration settings file for project(not for any target) you created in Step 1.
