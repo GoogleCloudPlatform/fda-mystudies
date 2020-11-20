@@ -6,7 +6,15 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: fda-mystudies-cert
+  name: fda-mystudies-cert-participants
 spec:
   domains:
-    - fda-mystudies.domain.com
+    - participants.fda-mystudies.domain.com
+---
+apiVersion: networking.gke.io/v1beta1
+kind: ManagedCertificate
+metadata:
+  name: fda-mystudies-cert-studies
+spec:
+  domains:
+    - studies.fda-mystudies.domain.com

@@ -18,13 +18,13 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_11.7.app
       - name: Build
         run: |
-          cd iOS/HPHC
-          xcodebuild clean build -workspace HPHC.xcworkspace -scheme HPHC -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=YES
+          cd iOS/MyStudies
+          xcodebuild clean build -workspace MyStudies.xcworkspace -scheme MyStudies -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=YES
         env: 
          destination: ${{ matrix.destination }}
       - name: Test
         run: |
-          cd iOS/HPHC
-          xcodebuild test -workspace HPHC.xcworkspace -scheme HPHC -destination "${destination}"
+          cd iOS/MyStudies
+          xcodebuild test -workspace MyStudies.xcworkspace -scheme MyStudies -destination "${destination}"
         env: 
          destination: ${{ matrix.destination }}
