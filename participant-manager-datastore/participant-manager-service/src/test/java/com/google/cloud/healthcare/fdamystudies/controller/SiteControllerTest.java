@@ -257,14 +257,14 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnStudyNotFoundForAddNewSite() throws Exception {
-    // Step 1: Set study type to open
+    // Step 1: Set study id to invalid
     SiteRequest siteRequest = newSiteRequest();
     siteRequest.setStudyId(IdGenerator.id());
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
-    // Step 2: Call API and expect CANNOT_ADD_SITE_FOR_OPEN_STUDY error
+    // Step 2: Call API and expect STUDY_NOT_FOUND error
     mockMvc
         .perform(
             post(ApiEndpoint.ADD_NEW_SITE.getPath())
