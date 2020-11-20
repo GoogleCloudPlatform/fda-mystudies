@@ -3,14 +3,14 @@ name: lint-oauth-scim
 on:
   pull_request:
     paths:
-    - 'oauth-scim-module/oauth-scim-service/**'
+    - 'auth-server/oauth-scim-service/**'
     - '.github/workflows/lint-oauth-scim-service.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /oauth-scim-module/oauth-scim-service
+        working-directory: /auth-server/oauth-scim-service
     name: Checkstyle job
     steps:
     - name: Checkout
@@ -21,5 +21,5 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: 'github-pr-review'
         level: error
-        workdir: ./oauth-scim-module/oauth-scim-service
+        workdir: ./auth-server/oauth-scim-service
         tool_name: auth-server Checks
