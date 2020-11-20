@@ -85,7 +85,7 @@
                   <button
                     name="btnToggleParticipant"
                     class="dropbtn btn banner__primary__btn mr-sm tnsb"
-                    (click)="toggleParticipant()"
+                    (click)="toggleParticipant($event)"
                   >
                     Add Participants
                     <i class="fa fa-caret-down arrow_clr__white"></i>
@@ -175,7 +175,7 @@
               <button
                 name="btnToggleParticipant"
                 class="dropbtn btn banner__primary__btn mr-sm font12"
-                (click)="toggleParticipant()"
+                (click)="toggleParticipant($event)"
               >
                 Add Participants
                 <i class="fa fa-caret-down arrow_clr__white"></i>
@@ -470,7 +470,15 @@
                       [(ngModel)]="selectedAll"
                       (change)="selectAll()"
                     />
-                    <label for="css"></label>
+                    <label
+                      *ngIf="
+                        siteParticipants.participantRegistryDetail
+                          .sitePermission === permission.ViewAndEdit &&
+                        siteParticipants.participantRegistryDetail
+                          .siteStatus !== 0
+                      "
+                      for="css"
+                    ></label>
                   </span>
                   <mfDefaultSorter by="email">
                     Participant Email
@@ -528,7 +536,15 @@
                         [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
-                      <label for="{{ participant.id }}"></label>
+                      <label
+                        *ngIf="
+                          siteParticipants.participantRegistryDetail
+                            .sitePermission === permission.ViewAndEdit &&
+                          siteParticipants.participantRegistryDetail
+                            .siteStatus !== 0
+                        "
+                        for="{{ participant.id }}"
+                      ></label>
                       <span
                         class="no_st_en cursor__pointer outline__none"
                         [routerLink]="[
@@ -570,22 +586,30 @@
                           (change)="rowCheckBoxChange($event)"
                         />
 
-                        <label for="{{ participant.id }}">
-                          <span
-                            class="no_st_en cursor__pointer outline__none"
-                            [routerLink]="[
-                              '/coordinator/participant',
-                              participant.id
-                            ]"
-                          >
-                            {{ participant.email }}
-                          </span>
-                        </label>
+                        <label
+                          *ngIf="
+                            siteParticipants.participantRegistryDetail
+                              .sitePermission === permission.ViewAndEdit &&
+                            siteParticipants.participantRegistryDetail
+                              .siteStatus !== 0
+                          "
+                          for="{{ participant.id }}"
+                        ></label>
+                        <span
+                          class="no_st_en cursor__pointer outline__none"
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
+                        >
+                          {{ participant.email }}
+                        </span>
                       </div>
                       <div
                         *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
                       >
                         <span
+                          class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
                             participant.id
@@ -610,17 +634,24 @@
                         [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
-                      <label for="{{ participant.id }}">
-                        <span
-                          class="no_st_en cursor__pointer outline__none"
-                          [routerLink]="[
-                            '/coordinator/participant',
-                            participant.id
-                          ]"
-                        >
-                          {{ participant.email }}
-                        </span>
-                      </label>
+                      <label
+                        *ngIf="
+                          siteParticipants.participantRegistryDetail
+                            .sitePermission === permission.ViewAndEdit &&
+                          siteParticipants.participantRegistryDetail
+                            .siteStatus !== 0
+                        "
+                        for="{{ participant.id }}"
+                      ></label>
+                      <span
+                        class="no_st_en cursor__pointer outline__none"
+                        [routerLink]="[
+                          '/coordinator/participant',
+                          participant.id
+                        ]"
+                      >
+                        {{ participant.email }}
+                      </span>
                     </div>
                   </div>
                 </td>

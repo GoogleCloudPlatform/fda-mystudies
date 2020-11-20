@@ -268,7 +268,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_UNAUTHORIZED) {
         response = "session expired";
 
-        if (!this.urlPassed.contains(Urls.LOGIN)) {
+        if (!this.serverType.equalsIgnoreCase("WCP")) {
 
           HashMap<String, String> refreshTokenJsonData = new HashMap();
           refreshTokenJsonData.put(
@@ -336,6 +336,9 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
             responseModel.setResponseCode("401");
             responseModel.setServermsg("session expired");
           }
+        } else {
+          responseModel.setResponseCode(String.valueOf(HttpURLConnection.HTTP_FORBIDDEN));
+          responseModel.setServermsg(context.getString(R.string.invalid_client));
         }
       } else if (Integer.parseInt(responseCode) >= HttpURLConnection.HTTP_OK
           && Integer.parseInt(responseCode) < HttpURLConnection.HTTP_MULT_CHOICE

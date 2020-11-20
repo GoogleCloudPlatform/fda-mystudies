@@ -127,5 +127,9 @@
   </div>
 </div>
 <ng-template #template>
-  <add-site [study]="study" (closeModalEvent)="closeModal()"></add-site>
+  <add-site
+    [study]="study"
+    (cancelEvent)="cancel()"
+    (closeModalEvent)="closeModal()"
+  ></add-site>
 </ng-template>

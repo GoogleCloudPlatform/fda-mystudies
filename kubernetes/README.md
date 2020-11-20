@@ -155,6 +155,11 @@ Do the following:
 * For the cloudsql-proxy container, set the `-instances` flag with
     `-instances=<cloudsq-instance-connection-name>=tcp:3306`
 
+In the ./study-builder/tf-deployment.yaml:
+
+Change the gcs_fuse mount path to your study-resources bucket name. 
+i.e, `{PREFIX}-{ENV}-mystudies-study-resources`.
+
 In the ./kubernetes/cert.yaml file:
 
 * Change the name and domain to match your organization.
@@ -165,7 +170,9 @@ In the ./kubernetes/ingress.yaml file:
     name in ./kubernetes/cert.yaml.
 * Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
-    
+* Change the hosts to match your deployed env and what you have updated in 
+    ./kubernetes/cert.yaml.
+
 In ./participant-manager/src/environments/environment.prod.ts
 
 * Change the domain name to match your organization.

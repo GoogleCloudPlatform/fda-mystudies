@@ -165,10 +165,9 @@ public class SiteController {
 
     inviteParticipantRequest.setSiteId(siteId);
     inviteParticipantRequest.setUserId(userId);
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     InviteParticipantResponse inviteParticipantResponse =
-        siteService.inviteParticipants(inviteParticipantRequest, auditRequest);
+        siteService.inviteParticipants(inviteParticipantRequest);
 
     logger.exit(String.format(STATUS_LOG, inviteParticipantResponse.getHttpStatusCode()));
     return ResponseEntity.status(inviteParticipantResponse.getHttpStatusCode())
