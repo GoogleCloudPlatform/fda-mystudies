@@ -271,6 +271,67 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldCreateAdminHavingLocationAsPermissionRole() throws Exception {
+    // Step 1: Setting up the request for super admin
+    UserRequest userRequest = newUserRequest();
+    userRequest.setSuperAdmin(false);
+    userRequest.setManageLocations(Permission.VIEW.value());
+
+    // Step 2: Call the API and expect ADD_NEW_USER_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(CommonConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.ADD_NEW_USER.getPath())
+                    .content(asJsonString(userRequest))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.message").value(MessageCode.ADD_NEW_USER_SUCCESS.getMessage()))
+            .andExpect(jsonPath("$.userId", notNullValue()))
+            .andReturn();
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
+    auditEventMap.put(NEW_USER_INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED, NEW_USER_INVITATION_EMAIL_SENT);
+
+    String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    String subject = getMailSubject();
+    String body = getMailBody(optUserRegAdminEntity.get());
+    verifyMimeMessage(
+        TestConstants.USER_EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
+  }
+
+  @Test
+  public void shouldNotCreateAdminWithoutAnyPermission() throws Exception {
+    // Step 1: Setting up the request for super admin
+    UserRequest userRequest = newUserRequest();
+    userRequest.setSuperAdmin(false);
+    userRequest.setManageLocations(Permission.NO_PERMISSION.value());
+
+    // Step 2: Call the API and expect ADD_NEW_USER_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(CommonConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ADD_NEW_USER.getPath())
+                .content(asJsonString(userRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.PERMISSION_MISSING.getDescription()));
+  }
+
+  @Test
   public void shouldCreateAdminUserForSitePermission() throws Exception {
     // Step 1: Setting up the request for site permission
     DocumentContext json = JsonPath.parse(adminUserRequestJson);
@@ -453,6 +514,70 @@ public class UserControllerTest extends BaseMockIT {
     assertSitePermissionDetailsForSuperAdmin(adminforUpdate.getId());
 
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldUpdateAdminHavingLocationAsPermissionRole() throws Exception {
+    // Step 1: Creating a super admin
+    adminforUpdate = testDataHelper.createSuperAdmin();
+
+    // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    UserRequest userRequest = newUserRequestForUpdate();
+    userRequest.setSuperAdmin(false);
+    userRequest.setManageLocations(Permission.EDIT.value());
+    userRequest.setId(adminforUpdate.getId());
+    mockMvc
+        .perform(
+            put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())
+                .content(asJsonString(userRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_SUCCESS.getMessage()))
+        .andExpect(jsonPath("$.userId", notNullValue()));
+
+    String subject = getMailSubjectForUpdate();
+    String body = getMailBodyForUpdate();
+    verifyMimeMessage(NON_SUPER_ADMIN_EMAIL_ID, appPropertyConfig.getFromEmail(), subject, body);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    auditEventMap.put(ACCOUNT_UPDATE_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED, ACCOUNT_UPDATE_EMAIL_SENT);
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldNotUpdateAdminWithoutAnyPermission() throws Exception {
+    // Step 1: Creating a non super admin
+    adminforUpdate = testDataHelper.createNonSuperAdmin();
+
+    // Step 2: Call the API and expect PERMISSION_MISSING message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    UserRequest userRequest = newUserRequestForUpdate();
+    userRequest.setSuperAdmin(false);
+    userRequest.setManageLocations(Permission.NO_PERMISSION.value());
+    userRequest.setId(adminforUpdate.getId());
+    mockMvc
+        .perform(
+            put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())
+                .content(asJsonString(userRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.PERMISSION_MISSING.getDescription()));
   }
 
   @Test

@@ -967,9 +967,11 @@ public class StudyMetaDataDao {
                     "availabilityType", StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE);
                 String searchQuery = "";
                 searchQuery =
-                    "from AnchorDateTypeDto a where a.id=" + resourcesDto.getAnchorDateId();
+                    "from AnchorDateTypeDto a where a.id=:id";
                 AnchorDateTypeDto anchorDateTypeDto =
-                    (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
+                    (AnchorDateTypeDto) session.createQuery(searchQuery)
+                        .setParameter("id", resourcesDto.getAnchorDateId())
+                        .uniqueResult();
                 if (anchorDateTypeDto != null) {
                   if (!anchorDateTypeDto
                       .getName()

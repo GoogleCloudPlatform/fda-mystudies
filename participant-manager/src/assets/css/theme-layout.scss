@@ -78,7 +78,7 @@
   }
   .progress-bar-next__title {
     color: var(--pigeon-gray);
-    font-size: 312.5%;
+    font-size: 250%;
   }
   .subheader__menu {
     justify-content: center;
@@ -319,6 +319,10 @@
 }
 
 @media (min-width: 1020px) {
+  .modal {
+    top: 0% !important;
+  }
+
   #mobile-menu {
     display: none;
   }
@@ -458,5 +462,8 @@
   }
   .modal.show .modal-dialog {
     width: 600px;
+  }
+  .modal {
+    top: 0% !important;
   }
 }

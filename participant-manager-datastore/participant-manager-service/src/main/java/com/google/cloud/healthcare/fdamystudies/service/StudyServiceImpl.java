@@ -23,6 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
@@ -231,7 +232,6 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setCustomId(entry.getKey().getCustomId());
       studyDetail.setName(entry.getKey().getName());
       studyDetail.setType(entry.getKey().getType());
-      studyDetail.setSitesCount((long) entry.getValue().size());
       studyDetail.setCustomId(study.getCustomId());
       studyDetail.setName(study.getName());
       studyDetail.setType(study.getType());
@@ -254,7 +254,23 @@ public class StudyServiceImpl implements StudyService {
           siteWithEnrolledParticipantCountMap,
           entry,
           studyDetail);
-      studies.add(studyDetail);
+      if (studyPermissionsByStudyInfoId.containsKey(studyId)) {
+        studies.add(studyDetail);
+      } else {
+        SitePermissionEntity activeSitePermission =
+            permissions
+                .stream()
+                .filter(
+                    sitePermissionEntity ->
+                        SiteStatus.ACTIVE
+                            .value()
+                            .equals(sitePermissionEntity.getSite().getStatus()))
+                .findAny()
+                .orElse(null);
+        if (activeSitePermission != null) {
+          studies.add(studyDetail);
+        }
+      }
     }
 
     StudyResponse studyResponse =

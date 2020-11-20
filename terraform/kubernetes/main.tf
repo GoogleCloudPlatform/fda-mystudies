@@ -108,11 +108,11 @@ data "google_secret_manager_secret_version" "secrets" {
       "auto-hydra-db-password",
       "auto-hydra-db-user",
       "auto-hydra-system-secret",
-      "auto-sd-response-datastore-password",
+      "auto-sd-response-datastore-token",
       "auto-sd-response-datastore-id",
-      "auto-sd-android-password",
+      "auto-sd-android-token",
       "auto-sd-android-id",
-      "auto-sd-ios-password",
+      "auto-sd-ios-token",
       "auto-sd-ios-id",
     ],
     formatlist("auto-%s-db-user", local.apps),
@@ -131,7 +131,8 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     gcp_bucket_name                   = "example-dev-mystudies-consent-documents"
     institution_resources_bucket_name = "example-dev-mystudies-institution-resources"
-    base_url                          = "https://example-dev.example.com."
+    base_url                          = "https://participants.example-dev.example.com"
+    studies_base_url                  = "https://studies.example-dev.example.com"
     firestore_project_id              = "example-dev-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
@@ -207,12 +208,12 @@ resource "kubernetes_secret" "study_datastore_connect_credentials" {
     name = "study-datastore-connect-credentials"
   }
   data = {
-    response_datastore_id       = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-id"].secret_data
-    response_datastore_password = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-password"].secret_data
-    android_id                  = data.google_secret_manager_secret_version.secrets["auto-sd-android-id"].secret_data
-    android_password            = data.google_secret_manager_secret_version.secrets["auto-sd-android-password"].secret_data
-    ios_id                      = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
-    ios_password                = data.google_secret_manager_secret_version.secrets["auto-sd-ios-password"].secret_data
+    response_datastore_id    = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-id"].secret_data
+    response_datastore_token = data.google_secret_manager_secret_version.secrets["auto-sd-response-datastore-token"].secret_data
+    android_id               = data.google_secret_manager_secret_version.secrets["auto-sd-android-id"].secret_data
+    android_token            = data.google_secret_manager_secret_version.secrets["auto-sd-android-token"].secret_data
+    ios_id                   = data.google_secret_manager_secret_version.secrets["auto-sd-ios-id"].secret_data
+    ios_token                = data.google_secret_manager_secret_version.secrets["auto-sd-ios-token"].secret_data
   }
 }
 
