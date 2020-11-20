@@ -14,7 +14,6 @@ import {ToastrModule} from 'ngx-toastr';
 
 describe('StudyDetailsService', () => {
   let studyDetailsService: StudyDetailsService;
-  let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -45,7 +44,7 @@ describe('StudyDetailsService', () => {
       'EntityService',
       {get: of(expectedResult.expectedStudiesDetails)},
     );
-      const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       get: of(expectedResult.expectedStudiesDetails),
     });
     studyDetailsService = new StudyDetailsService(
@@ -71,13 +70,12 @@ describe('StudyDetailsService', () => {
       message: 'Bad Request',
     } as ApiResponse;
 
-
     const entitiyServiceSpy = jasmine.createSpyObj<EntityService<StudyDetails>>(
       'EntityService',
       {get: throwError(errorResponses)},
     );
 
-     const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       get: throwError(errorResponses),
     });
     studyDetailsService = new StudyDetailsService(
