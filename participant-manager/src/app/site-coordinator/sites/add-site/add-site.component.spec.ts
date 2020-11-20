@@ -91,7 +91,7 @@ describe('AddSiteComponent', () => {
   }));
 
   it('should click on cancel button and check service is called', fakeAsync(() => {
-    const cancelSpy = spyOn(component, 'closeModal');
+    const cancelSpy = spyOn(component, 'cancel');
     const cancelButton = cancelSite.nativeElement as HTMLInputElement;
     cancelButton.click();
     expect(cancelSpy).toHaveBeenCalledTimes(1);
