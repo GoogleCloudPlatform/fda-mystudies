@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
-  <artifactId>oauth-scim-module</artifactId>
+  <artifactId>auth-server</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>oauth-scim-module</name>
+  <name>auth-server</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
