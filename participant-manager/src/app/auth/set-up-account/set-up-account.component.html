@@ -3,7 +3,11 @@
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
         <a href="#" class="navbar-brand">
-          <img class="mr-sm" src="assets/images/landing-logo.gif" alt="logo" />
+          <img
+            class="mr-sm width__auto"
+            src="../../../assets/images/landing-logo.png"
+            alt="main logo"
+          />
         </a>
       </nav>
     </div>
@@ -122,7 +126,7 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.password.errors?.required"
                 >
-                  Enter a password.
+                  Please fill out this field.
                 </span>
               </div>
             </div>
@@ -148,7 +152,7 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.confirmPassword.errors?.required"
                 >
-                  Please confirm password.
+                  Please fill out this field.
                 </span>
                 <span
                   class="help-block with-errors error__msg"
