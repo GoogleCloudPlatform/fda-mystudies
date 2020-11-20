@@ -2884,8 +2884,9 @@
             $(timeId).data("DateTimePicker").date(null);
             $(timeId).data("DateTimePicker").date(serverDateTime());
             $(timeId).parent().addClass("has-danger").addClass("has-error");
-            $(timeId).parent().find(".help-block").text(
-                '<ul class="list-unstyled"><li>Time reset to current time. </li></ul>');
+            $(timeId).parent().find(".help-block").empty().append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Time reset to current time. "));
           }
         } else {
           $(timeId).data("DateTimePicker").minDate(false);
@@ -3041,8 +3042,9 @@
       var endDate = $("#EndDate" + count).val();
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
-        $("#" + id).parent().find(".help-block").text(
-            '<ul class="list-unstyled"><li>Start Date and Time Should not be greater than End Date and Time</li></ul>');
+        $("#" + id).parent().find(".help-block").empty().append(
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Start Date and Time Should not be greater than End Date and Time"));
       } else {
         $("#id").parent().removeClass("has-danger").removeClass("has-error");
         $("#id").parent().find(".help-block").empty();
@@ -4172,13 +4174,15 @@
             $(this).data("DateTimePicker").date(serverDateTime());
             dt = dateRef.val();
             $(this).parent().addClass('has-error has-danger');
-            $(this).parent().find(".help-block").text(
-                '<ul class="list-unstyled"><li>Date reset to current date. </li></ul>');
+            $(this).parent().find(".help-block").empty().append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Date reset to current date. "));
           } else {
             $(this).data("DateTimePicker").clear();
             $(this).parent().addClass('has-error has-danger');
-            $(this).parent().find(".help-block").text(
-                '<ul class="list-unstyled"><li>Please select a valid date.</li></ul>');
+            $(this).parent().find(".help-block").empty().append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please select a valid date."));
           }
         } else {
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4192,8 +4196,9 @@
               if (dt < serverDateTime()) {
                 $(this).data("DateTimePicker").date(serverDateTime());
                 $(this).parent().addClass("has-danger").addClass("has-error");
-                $(this).parent().find(".help-block").text(
-                    '<ul class="list-unstyled"><li>Time reset to current time. </li></ul>');
+                $(this).parent().find(".help-block").empty().append(
+                    $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Time reset to current time. "));
               }
             } else {
               if (dt < serverDateTime()) {
