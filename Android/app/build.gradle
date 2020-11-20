@@ -19,12 +19,12 @@ def apikeyPropertiesFile = rootProject.file("api.properties");
 def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "30.0.2"
     defaultConfig {
 
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
@@ -75,8 +75,8 @@ android {
         fda {
             dimension 'version'
             applicationId "com.validcare.research"
-            versionCode 226100
-            versionName "2.26.0"
+            versionCode 228100
+            versionName "2.28.0"
         }
     }
 }

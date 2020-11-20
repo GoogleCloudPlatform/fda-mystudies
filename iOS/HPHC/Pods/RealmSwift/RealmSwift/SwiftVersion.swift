@@ -1,1 +1,1 @@
-let swiftLanguageVersion = "5.2.4"
+let swiftLanguageVersion = "5.3.1"
