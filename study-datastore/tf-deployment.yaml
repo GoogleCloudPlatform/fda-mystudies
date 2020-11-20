@@ -79,7 +79,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: base_url
+                  key: studies_base_url
             - name: TERMS_AND_CONDITION_URL
               valueFrom:
                 secretKeyRef:

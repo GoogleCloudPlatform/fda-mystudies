@@ -27,13 +27,11 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_EMA
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.INVITATION_EMAIL_SENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANTS_EMAIL_LIST_IMPORTED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANTS_EMAIL_LIST_IMPORT_PARTIAL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_EMAIL_ADDED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_DISABLED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_EMAIL_RESENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_ENABLED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_ACTIVATED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_DECOMMISSIONED_FOR_STUDY;
@@ -46,9 +44,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -102,7 +97,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -1829,8 +1823,6 @@ public class SiteControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
             .andReturn();
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
-
     // Step 4: verify updated values
     String id =
         JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
@@ -1841,15 +1833,6 @@ public class SiteControllerTest extends BaseMockIT {
     assertEquals(
         OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(PARTICIPANT_INVITATION_EMAIL_RESENT.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, PARTICIPANT_INVITATION_EMAIL_RESENT);
     verifyTokenIntrospectRequest();
   }
 
@@ -1888,7 +1871,6 @@ public class SiteControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
             .andReturn();
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
     // Step 3: verify updated values
     String id =
         JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
@@ -1900,15 +1882,6 @@ public class SiteControllerTest extends BaseMockIT {
         OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
     assertFalse(optParticipantRegistrySite.get().isEnrollmentTokenUsed());
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, INVITATION_EMAIL_SENT);
     verifyTokenIntrospectRequest();
   }
 
@@ -2404,45 +2377,6 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].sites").isArray())
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
         .andExpect(jsonPath("$.studies[0].logoImageUrl", is(studyEntity.getLogoImageUrl())))
-        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
-
-    verifyTokenIntrospectRequest();
-  }
-
-  @Test
-  public void shouldNotReturnDecommissionedSitesforUserHavingOnlySiteLevelPermission()
-      throws Exception {
-    // Step 1: set the data needed to get studies with sites
-    siteEntity.setLocation(locationEntity);
-    testDataHelper.getSiteRepository().save(siteEntity);
-
-    UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
-
-    // Deleting app and study level permission
-    // so that the user can have only site level permission
-    testDataHelper.getAppPermissionRepository().deleteAll();
-    testDataHelper.getStudyPermissionRepository().deleteAll();
-
-    List<SitePermissionEntity> sitePermissionList =
-        testDataHelper.getSitePermissionRepository().findAll();
-    // Assign a non super admin site level permission
-    SitePermissionEntity sitePermission = sitePermissionList.get(0);
-    sitePermission.setUrAdminUser(admin);
-    SiteEntity site = sitePermission.getSite();
-    site.setStatus(0); // Decommissioned the active site
-    sitePermission.setSite(site);
-    testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermission);
-
-    // Step 2: call API and expect GET_SITES_SUCCESS message
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, admin.getId());
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.studies").isArray())
-        .andExpect(jsonPath("$.studies", hasSize(0)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();

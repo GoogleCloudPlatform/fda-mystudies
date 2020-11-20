@@ -81,4 +81,7 @@ export class SiteListComponent implements OnInit {
     this.modalRef = this.modalService.show(template);
     this.study = study;
   }
+  cancel(): void {
+    this.modalRef.hide();
+  }
 }
