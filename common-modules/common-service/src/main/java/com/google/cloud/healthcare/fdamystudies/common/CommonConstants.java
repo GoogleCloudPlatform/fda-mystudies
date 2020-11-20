@@ -21,6 +21,8 @@ public final class CommonConstants {
 
   public static final Integer INACTIVE_STATUS = 0;
 
+  public static final Integer INVITED_STATUS = 2;
+
   public static final String DEACTIVATED = "Deactivated";
 
   public static final String IN_PROGRESS = "inProgress";

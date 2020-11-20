@@ -37,26 +37,29 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 #
 # The following content should be initially commented out if the above manual step is not completed.
+# locals {
+#   apps_dependencies = {
+#     "study-builder"                             = ["study-builder/**"]
+#     "study-datastore"                           = ["study-datastore/**"]
+#     "hydra"                                     = ["hydra/**"]
+#     "oauth-scim-module"                         = ["oauth-scim-module/**", "common-modules/**"]
+#     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
+#     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
+#     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
+#     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
+#     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
+#     "participant-manager"                       = ["participant-manager/**"]
+#   }
+# }
 
 # resource "google_cloudbuild_trigger" "server_build_triggers" {
-#   for_each = toset([
-#     "study-builder",
-#     "study-datastore",
-#     "oauth-scim-module",
-#     "participant-datastore/consent-mgmt-module",
-#     "participant-datastore/enroll-mgmt-module",
-#     "participant-datastore/user-mgmt-module",
-#     "response-datastore",
-#     "participant-manager-datastore",
-#     "hydra",
-#     "participant-manager",
-#   ])
-#
+#   for_each = local.apps_dependencies
+
 #   provider = google-beta
 #   project  = module.project.project_id
 #   name     = replace(each.key, "/", "-")
 #
-#   included_files = ["${each.key}/**"]
+#   included_files = each.value
 #
 #   github {
 #     owner = "GoogleCloudPlatform"
@@ -157,7 +160,13 @@ module "example_dev" {
 
   recordsets = [
     {
-      name    = "example-dev"
+      name    = "participants"
+      records = ["${google_compute_global_address.ingress_static_ip.address}"]
+      ttl     = 30
+      type    = "A"
+    },
+    {
+      name    = "studies"
       records = ["${google_compute_global_address.ingress_static_ip.address}"]
       ttl     = 30
       type    = "A"
@@ -193,6 +202,29 @@ module "example_dev_gke_cluster" {
   enable_private_endpoint = false
   release_channel         = "STABLE"
 
+}
+
+module "project_iam_members" {
+  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+  version = "~> 6.3.0"
+
+  projects = [module.project.project_id]
+  mode     = "additive"
+
+  bindings = {
+    "roles/logging.logWriter" = [
+      "serviceAccount:${google_service_account.auth_server_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.hydra_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.response_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_builder_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.consent_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.enroll_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.user_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.participant_manager_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+    ],
+  }
 }
 
 resource "google_service_account" "auth_server_gke_sa" {

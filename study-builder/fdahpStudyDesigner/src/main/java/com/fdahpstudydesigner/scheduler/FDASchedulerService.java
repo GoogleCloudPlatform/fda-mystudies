@@ -40,6 +40,7 @@ import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -53,7 +54,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -68,6 +69,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -204,25 +206,26 @@ public class FDASchedulerService {
         HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
         HttpConnectionParams.setSoTimeout(httpParams, 30000);
         HttpClient client = new DefaultHttpClient(httpParams);
-        HttpPost post =
-            new HttpPost(
-                FdahpStudyDesignerUtil.getAppProperties().get("fda.registration.root.url")
-                    + FdahpStudyDesignerUtil.getAppProperties().get("push.notification.uri"));
 
-        post.setHeader("Content-type", "application/json");
-        post.setHeader("Authorization", "Bearer " + oauthService.getAccessToken());
+        HttpResponse response =
+            invokePushNotificationApi(json, client, oauthService.getAccessToken());
+        if (response.getStatusLine().getStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
+          // Below method is called to indicate that the content of this entity is no longer
+          // required.This will fix the error
+          // Invalid use of BasicClientConnManager: connection still allocated.
+          // Make sure to release the connection before allocating another one.
+          response.getEntity().consumeContent();
+          response = invokePushNotificationApi(json, client, oauthService.getNewAccessToken());
+        }
 
-        StringEntity requestEntity =
-            new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
-        post.setEntity(requestEntity);
-        client.execute(post);
-        client.execute(post);
-        HttpResponse response = client.execute(post);
-        StatusLine statusLine = response.getStatusLine();
-        if (statusLine.getStatusCode() == 200) {
-          logSendNotificationFailedEvent(NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
-        } else {
+        if (response.getStatusLine().getStatusCode() != HttpStatus.OK.value()) {
+          logger.error(
+              String.format(
+                  "Push notification API failed with status=%d",
+                  response.getStatusLine().getStatusCode()));
           logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
+        } else {
+          logSendNotificationFailedEvent(NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
         }
       }
     } catch (Exception e) {
@@ -243,5 +246,20 @@ public class FDASchedulerService {
     auditRequest.setEventCode(eventEnum.getEventCode());
     auditRequest.setOccurred(new Timestamp(Instant.now().toEpochMilli()));
     auditLogEventHelper.logEvent(eventEnum, auditRequest);
+  }
+
+  private HttpResponse invokePushNotificationApi(
+      JSONObject json, HttpClient client, String accessToken)
+      throws IOException, ClientProtocolException {
+    HttpPost post =
+        new HttpPost(
+            FdahpStudyDesignerUtil.getAppProperties().get("fda.registration.root.url")
+                + FdahpStudyDesignerUtil.getAppProperties().get("push.notification.uri"));
+    post.setHeader("Authorization", "Bearer " + accessToken);
+    post.setHeader("Content-type", "application/json");
+
+    StringEntity requestEntity = new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
+    post.setEntity(requestEntity);
+    return client.execute(post);
   }
 }
