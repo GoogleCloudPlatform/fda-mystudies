@@ -16,7 +16,7 @@ module.exports = {
     Atomics: 'readonly',
     // eslint-disable-next-line @typescript-eslint/naming-convention
     SharedArrayBuffer: 'readonly',
-    localStorage: true,
+    sessionStorage: true,
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {

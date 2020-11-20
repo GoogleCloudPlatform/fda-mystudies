@@ -1,5 +1,5 @@
 included:
-  - iOS/HPHC/HPHC
+  - iOS/MyStudies/MyStudies
 disabled_rules:
   - type_body_length
   - function_body_length

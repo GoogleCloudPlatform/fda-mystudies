@@ -22,6 +22,8 @@ public enum ApiEndpoint {
 
   PATCH_USER("http://localhost:8080/participant-manager-datastore/users/{userId}"),
 
+  DELETE_USER("http://localhost:8080/participant-manager-datastore/users/{userId}"),
+
   GET_APPS("http://localhost:8080/participant-manager-datastore/apps"),
 
   GET_STUDIES("http://localhost:8080/participant-manager-datastore/studies"),
