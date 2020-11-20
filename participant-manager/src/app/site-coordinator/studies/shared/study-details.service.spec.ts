@@ -45,9 +45,12 @@ describe('StudyDetailsService', () => {
       'EntityService',
       {get: of(expectedResult.expectedStudiesDetails)},
     );
+      const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedResult.expectedStudiesDetails),
+    });
     studyDetailsService = new StudyDetailsService(
       entityServiceSpy,
-      httpServiceSpyObj,
+      httpServicespyobj,
     );
 
     studyDetailsService
@@ -60,7 +63,7 @@ describe('StudyDetailsService', () => {
           ),
         fail,
       );
-    expect(entityServiceSpy.get).toHaveBeenCalledTimes(1);
+    expect(httpServicespyobj.get).toHaveBeenCalledTimes(1);
   }));
 
   it('should return an error when the server returns a 400', fakeAsync(() => {
@@ -68,13 +71,18 @@ describe('StudyDetailsService', () => {
       message: 'Bad Request',
     } as ApiResponse;
 
+
     const entitiyServiceSpy = jasmine.createSpyObj<EntityService<StudyDetails>>(
       'EntityService',
       {get: throwError(errorResponses)},
     );
+
+     const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: throwError(errorResponses),
+    });
     studyDetailsService = new StudyDetailsService(
       entitiyServiceSpy,
-      httpServiceSpyObj,
+      httpServicespyobj,
     );
 
     tick(40);

@@ -29,6 +29,7 @@ export interface RegistryParticipant {
   siteStatus?: number;
   studyType: StudyType;
   sitePermission: Permission;
+    disabledDate:string;
 }
 export interface Site {
   siteId: string;
