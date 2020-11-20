@@ -17,14 +17,14 @@ def main_pods
   pod 'Alamofire'
 end
 
-target 'HPHC' do
+target 'MyStudies' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
   main_pods
   
 end
 
-target 'HPHCTests' do
+target 'MyStudiesTests' do
   use_frameworks!
   inherit! :search_paths
   pod 'Mockingjay', '3.0.0-alpha.1'
