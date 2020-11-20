@@ -21,8 +21,10 @@
           >
             <div>
               <div class="flex__ flex__row align__items__center">
-                <div class="img__container__left" *ngIf="study.logoImageUrl">
-                  <img [src]="study.logoImageUrl" alt="" />
+                <div class="img__container__left">
+                  <div class="deafult__img">
+                    <img [src]="study.logoImageUrl" alt="" />
+                  </div>
                 </div>
                 <div>
                   <div class="blue__text__md text-capitalize">

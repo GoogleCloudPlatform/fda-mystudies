@@ -19,6 +19,7 @@ export class AddSiteComponent
   implements OnInit {
   @Input() study = {} as Study;
   @Output() closeModalEvent = new EventEmitter();
+  @Output() cancelEvent = new EventEmitter();
   newSite = {} as Study;
   site = {} as AddSiteRequest;
   location$: Observable<ManageLocations> = of();
@@ -64,5 +65,8 @@ export class AddSiteComponent
   }
   closeModal(): void {
     this.closeModalEvent.next();
+  }
+  cancel(): void {
+    this.cancelEvent.next();
   }
 }
