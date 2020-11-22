@@ -100,7 +100,7 @@
     if (activeTaskInfoId) {
       $('.targetOption').prop('disabled', true);
       $('.targetOption').addClass('linkDis');
-      $('.activeText').append(
+      $('.activeText').empty().append(
           'This task records fetal activity for a given duration of time,').append($("<br>")).append('in terms of the number of times the woman experiences kicks.');
       $('.scheduleTaskClass').prop('disabled', false);
       $('.scheduleTaskClass').removeClass('linkDis');
@@ -119,7 +119,7 @@
       console.log($(this).val());
       var taskId = $(this).val();
       if (taskId == 1) {
-        $('.activeText').append(
+        $('.activeText').empty().append(
             'This task records fetal activity for a given duration of time,').append($("<br>")).append('in terms of the number of times the woman experiences kicks.');
       } else if (taskId == 2) {
         $('.activeText').text("This task measures a person's problem-solving skills.");
@@ -129,7 +129,7 @@
       }
       var typeOfActiveTask = $(this).val();
       var activeTaskInfoId = $(this).attr('taskId');
-      $('.changeContent').text('');
+      $('.changeContent').empty();
       $(document).find('#saveId,#doneId').unbind();
       loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType);
       $('.actBut').show();

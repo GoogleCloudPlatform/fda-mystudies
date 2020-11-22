@@ -37,6 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.InviteParticipantsEmailRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
@@ -100,6 +101,8 @@ public class TestDataHelper {
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private StudyConsentRepository studyConsentRepository;
+
+  @Autowired private InviteParticipantsEmailRepository invitedParticipantsEmailRepository;
 
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -376,6 +379,24 @@ public class TestDataHelper {
     return studyList;
   }
 
+  public SiteEntity createMultipleSiteEntityWithPermission(
+      StudyEntity studyEntity,
+      UserRegAdminEntity urAdminUser,
+      AppEntity appEntity,
+      LocationEntity locationEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setName(siteEntity.getName() + RandomStringUtils.random(2));
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setStudy(studyEntity);
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(urAdminUser);
+    sitePermissionEntity.setApp(appEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
+  }
+
   public void cleanUp() {
     getAppPermissionRepository().deleteAll();
     getStudyPermissionRepository().deleteAll();
@@ -389,5 +410,6 @@ public class TestDataHelper {
     getUserRegAdminRepository().deleteAll();
     getLocationRepository().deleteAll();
     getUserDetailsRepository().deleteAll();
+    getInvitedParticipantsEmailRepository().deleteAll();
   }
 }

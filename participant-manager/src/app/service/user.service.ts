@@ -13,7 +13,7 @@ export class UserService {
   }
 
   getUserProfile(): Profile {
-    const userObject = localStorage.getItem('user');
+    const userObject = sessionStorage.getItem('user');
     let user = {} as Profile;
     if (userObject) user = JSON.parse(userObject) as Profile;
     return user;

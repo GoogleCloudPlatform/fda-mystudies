@@ -2454,7 +2454,7 @@
       $('.useAnchorDateName').hide();
       $("#anchorTextId").attr('required', false);
       $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
-      $("#anchorTextId").parent().find(".help-block").text("");
+      $("#anchorTextId").parent().find(".help-block").empty();
     }
 
     $('#useAnchorDateId').click(function () {
@@ -2465,7 +2465,7 @@
         $('.useAnchorDateName').hide();
         $("#anchorTextId").attr('required', false);
         $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
-        $("#anchorTextId").parent().find(".help-block").text("");
+        $("#anchorTextId").parent().find(".help-block").empty();
       }
     });
 
@@ -2531,13 +2531,15 @@
               $("#numericMaxValueId").parent().addClass("has-danger").addClass("has-error");
               $("#numericMaxValueId").parent().find(".help-block").empty();
               $("#numericMaxValueId").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+            	 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please fill out this field"));
             }
             if (minValue == '') {
               $("#numericMinValueId").parent().addClass("has-danger").addClass("has-error");
               $("#numericMinValueId").parent().find(".help-block").empty();
               $("#numericMinValueId").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please fill out this field"));
             }
             isValid = false;
             $("#doneId").attr("disabled", false);
@@ -2565,12 +2567,14 @@
                     "has-error");
                 $("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
                 $("#continuesScaleMaxDescriptionId").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please fill out this field"));
               } else {
                 $("#scaleMaxDescriptionId").parent().addClass("has-danger").addClass("has-error");
                 $("#scaleMaxDescriptionId").parent().find(".help-block").empty();
                 $("#scaleMaxDescriptionId").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please fill out this field"));
               }
             }
             if (minValue == '') {
@@ -2579,12 +2583,14 @@
                     "has-error");
                 $("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
                 $("#continuesScaleMinDescriptionId").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please fill out this field"));
               } else {
                 $("#scaleMinDescriptionId").parent().addClass("has-danger").addClass("has-error");
                 $("#scaleMinDescriptionId").parent().find(".help-block").empty();
                 $("#scaleMinDescriptionId").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please fill out this field"));
               }
             }
             isValid = false;
@@ -2622,12 +2628,14 @@
                     "has-error");
                 $("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
                 $("#continuesScaleMaxImagePathId").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please fill out this field"));
               } else {
                 $("#scaleMaxImagePathId").parent().addClass("has-danger").addClass("has-error");
                 $("#scaleMaxImagePathId").parent().find(".help-block").empty();
                 $("#scaleMaxImagePathId").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please fill out this field"));
               }
             }
             if (minImagePath == '' && (minImageFile == '' || typeof minImageFile == 'undefined'
@@ -2637,12 +2645,14 @@
                     "has-error");
                 $("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
                 $("#continuesScaleMinImagePathId").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please fill out this field"));
               } else {
                 $("#scaleMinImagePathId").parent().addClass("has-danger").addClass("has-error");
                 $("#scaleMinImagePathId").parent().find(".help-block").empty();
                 $("#scaleMinImagePathId").parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please fill out this field"));
               }
             }
             isImageValid = false;
@@ -2904,7 +2914,8 @@
               $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
               $("#scaleMinValueId").parent().find(".help-block").empty();
               $("#scaleMinValueId").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000)</li></ul>");
+            	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter an integer number in the range (Min, 10000)"));
             } else {
               $("#scaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
               $("#scaleMinValueId").parent().find(".help-block").empty();
@@ -2914,7 +2925,8 @@
             $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
             $("#scaleMinValueId").parent().find(".help-block").empty();
             $("#scaleMinValueId").parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer number in the range (Min, 10000) "));
           }
         }
       } else {
@@ -2927,7 +2939,8 @@
             $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
             $("#scaleMinValueId").parent().find(".help-block").empty();
             $("#scaleMinValueId").parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer number in the range (Min, 10000) "));
           }
         }
       }
@@ -2948,14 +2961,16 @@
               $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
               $("#scaleMaxValueId").parent().find(".help-block").empty();
               $("#scaleMaxValueId").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000)</li></ul>");
+            	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter an integer number in the range (Min+1, 10000)"));
             }
           } else {
             $("#scaleMaxValueId").val('');
             $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
             $("#scaleMaxValueId").parent().find(".help-block").empty();
             $("#scaleMaxValueId").parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer number in the range (Min+1, 10000) "));
           }
         }
       } else {
@@ -2968,7 +2983,8 @@
             $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
             $("#scaleMaxValueId").parent().find(".help-block").empty();
             $("#scaleMaxValueId").parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer number in the range (Min+1, 10000) "));
           }
         }
       }
@@ -2998,10 +3014,12 @@
             $("#displayStepsCount").parent().find(".help-block").empty();
             if (parseInt(stepsCount) < 1) {
               $("#displayStepsCount").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Please enter  a smaller step size.</li></ul>");
+                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter  a smaller step size."));
             } else {
               $("#displayStepsCount").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Please enter a larger step size.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter a larger step size."));
             }
 
           }
@@ -3011,7 +3029,8 @@
           $("#displayStepsCount").parent().addClass("has-danger").addClass("has-error");
           $("#displayStepsCount").parent().find(".help-block").empty();
           $("#displayStepsCount").parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>(Max-Min) value should be exactly divisisble by the step size.</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "(Max-Min) value should be exactly divisisble by the step size."));
         }
       }
     });
@@ -3034,7 +3053,8 @@
         $(this).parent().addClass("has-danger").addClass("has-error");
         $(this).parent().find(".help-block").empty();
         $(this).parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30).</li></ul>");
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30)."));
       }
     });
     var dt = new Date();
@@ -3049,8 +3069,8 @@
       if (durationTime && durationTime == '00:00') {
         durationFlag = false;
         $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+               "Please select a non-zero Duration value."));
       } else {
         durationFlag = true;
         $('#timeIntervalDefaultId').parent().find(".help-block").empty();
@@ -3075,7 +3095,8 @@
           $("#textScalePositionId").parent().addClass("has-danger").addClass("has-error");
           $("#textScalePositionId").parent().find(".help-block").empty();
           $("#textScalePositionId").parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please enter choice from 1 to number of choices </li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please enter choice from 1 to number of choices "));
         }
       }
     });
@@ -3093,7 +3114,8 @@
           $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
           $("#scaleDefaultValueId").parent().find(".help-block").empty();
           $("#scaleDefaultValueId").parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please enter an integer from 0 to number of steps</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please enter an integer from 0 to number of steps"));
         }
       } else {
         if (value != '') {
@@ -3101,7 +3123,8 @@
           $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
           $("#scaleDefaultValueId").parent().find(".help-block").empty();
           $("#scaleDefaultValueId").parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please enter an step size first </li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please enter an step size first "));
         }
       }
     });
@@ -3118,7 +3141,8 @@
               $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
               $("#continuesScaleMinValueId").parent().find(".help-block").empty();
               $("#continuesScaleMinValueId").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000)</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter an integer number in the range (Min, 10000)"));
             } else {
 
               $("#continuesScaleMinValueId").parent().removeClass("has-danger").removeClass(
@@ -3130,7 +3154,8 @@
             $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
             $("#continuesScaleMinValueId").parent().find(".help-block").empty();
             $("#continuesScaleMinValueId").parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer number in the range (Min, 10000) "));
           }
         }
       } else {
@@ -3144,7 +3169,8 @@
             $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
             $("#continuesScaleMinValueId").parent().find(".help-block").empty();
             $("#continuesScaleMinValueId").parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer number in the range (Min, 10000) "));
           }
         }
       }
@@ -3166,14 +3192,16 @@
               $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
               $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
               $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000)</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter an integer number in the range (Min+1, 10000)"));
             }
           } else {
             $("#continuesScaleMaxValueId").val('');
             $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
             $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
             $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer number in the range (Min+1, 10000) "));
           }
         }
       } else {
@@ -3187,7 +3215,8 @@
             $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
             $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
             $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer number in the range (Min+1, 10000) "));
           }
         }
       }
@@ -3207,7 +3236,8 @@
           $("#continuesScaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
           $("#continuesScaleDefaultValueId").parent().find(".help-block").empty();
           $("#continuesScaleDefaultValueId").parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please enter an integer between the minimum and maximum  "));
         }
       }
     });
@@ -3222,7 +3252,8 @@
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please enter an value number less than Maximum</li></ul>");
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please enter an value number less than Maximum"));
         } else {
           $(this).parent().removeClass("has-danger").removeClass("has-error");
           $(this).parent().find(".help-block").empty();
@@ -3240,7 +3271,8 @@
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please enter an value number greater than Minimum</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please enter an value number greater than Minimum"));
         } else {
           $(this).parent().removeClass("has-danger").removeClass("has-error");
           $(this).parent().find(".help-block").empty();
@@ -3283,7 +3315,7 @@
       if (minDate != '' && maxDate != '' && new Date(minDate) >= new Date(maxDate)) {
         $('#maxDateId').data("DateTimePicker").clear();
         $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
-        $('#maxDateId').parent().find(".help-block").append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+        $('#maxDateId').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             "Max Date and Time Should not be less than or equal Min Date and Time"));
       } else {
         $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
@@ -3304,7 +3336,7 @@
         } else {
           $("#defaultDate").data("DateTimePicker").clear();
           $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
-          $('#defaultDate').parent().find(".help-block").append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          $('#defaultDate').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               "Enter default date to be shown as selected as per availability of Min and Max"));
         }
       }
@@ -3391,7 +3423,7 @@
             $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
             $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
             $(thisAttr).parent().find(".help-block").empty().append(
-                '<ul class="list-unstyled"><li>File incorrect.</li></ul>');
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text("File incorrect."));
             $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             var id = $(thisAttr).next().attr("id");
             $("#" + id).val('');
@@ -3406,7 +3438,7 @@
           $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
           $(thisAttr).parent().find(".help-block").empty().append(
-              '<ul class="list-unstyled"><li>File incorrect.</li></ul>');
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File incorrect."));
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
@@ -4101,8 +4133,8 @@
         $('#questionTextId').validator('destroy').validator();
         if (!$('#questionTextId')[0].checkValidity()) {
           $("#questionTextId").parent().addClass('has-error has-danger').find(
-              ".help-block").empty().append(
-              '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+              ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "This is a required field."));
           $('.questionLevel a').tab('show');
         }
       }
@@ -4111,7 +4143,7 @@
         if (!$('#shortTitle')[0].checkValidity()) {
           $("#shortTitle").parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-              '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("This is a required field."));
           $('.questionLevel a').tab('show');
         }
       }
@@ -4170,7 +4202,7 @@
   var count = $('.value-picker').length;
 
   function addValuePicker() {
-    count = count + 1;
+    count = parseInt(count) + 1;
     var newValuePicker = "<div class='value-picker row form-group mb-xs' id=" + count + ">" +
         "	<div class='col-md-3 pl-none'>" +
         "   <div class='form-group'>" +
@@ -4196,7 +4228,7 @@
         "</div>";
     $(".value-picker:last").after(newValuePicker);
     $(".value-picker").parent().removeClass("has-danger").removeClass("has-error");
-    $(".value-picker").parent().find(".help-block").text('');
+    $(".value-picker").parent().find(".help-block").empty();
     $(".value-picker").parents("form").validator("destroy");
     $(".value-picker").parents("form").validator();
 
@@ -4213,7 +4245,7 @@
 
       $(param).parents(".value-picker").remove();
       $(".value-picker").parent().removeClass("has-danger").removeClass("has-error");
-      $(".value-picker").parent().find(".help-block").text('');
+      $(".value-picker").parent().find(".help-block").empty();
       $(".value-picker").parents("form").validator("destroy");
       $(".value-picker").parents("form").validator();
       if ($('.value-picker').length > 2) {
@@ -4227,7 +4259,7 @@
   var scaleCount = $('.text-scale').length;
 
   function addTextScale() {
-    scaleCount = scaleCount + 1;
+    scaleCount = parseInt(scaleCount) + 1;
     if ($('.text-scale').length < 8) {
       var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
           "	<div class='col-md-3 pl-none'>" +
@@ -4309,7 +4341,7 @@
   var choiceCount = $('.text-choice').length;
 
   function addTextChoice() {
-    choiceCount = choiceCount + 1;
+    choiceCount = parseInt(choiceCount) + 1;
     var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
     var newTextChoice = "<div class='text-choice mt-xlg' id='" + choiceCount + "'>" +
         "<div class='col-md-4 pl-none'>" +
@@ -4401,7 +4433,7 @@
   var imageCount = $('.image-choice').length;
 
   function addImageChoice() {
-    imageCount = imageCount + 1;
+    imageCount = parseInt(imageCount) + 1;
     var newImageChoice = "<div class='image-choice row' id='" + imageCount + "'>" +
         "	   <div class='col-md-2 pl-none col-smthumb-2'>" +
         "   <div class='form-group'>" +
@@ -4518,8 +4550,9 @@
               $("#statShortNameId").parent().addClass("has-danger").addClass("has-error");
               $("#statShortNameId").parent().find(".help-block").empty();
               $("#statShortNameId").parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>'" + short_title
-                  + "' has already been used in the past.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  short_title
+                  + " has already been used in the past."));
               if (callback)
                 callback(false);
 
@@ -4577,8 +4610,9 @@
               $(thisAttr).parent().addClass("has-danger").addClass("has-error");
               $(thisAttr).parent().find(".help-block").empty();
               $(thisAttr).parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>'" + shortTitle
-                  + "' has already been used in the past.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  shortTitle
+                  + " has already been used in the past."));
               callback(false);
             }
           },
@@ -4587,7 +4621,7 @@
       } else {
         callback(true);
         $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-        $(thisAttr).parent().find(".help-block").text("");
+        $(thisAttr).parent().find(".help-block").empty();
       }
     } else {
       callback(false);
@@ -4650,14 +4684,16 @@
           $(item).parent().addClass("has-danger").addClass("has-error");
           $(item).parent().find(".help-block").empty();
           $(item).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please enter a value in the range (0,x).</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please enter a value in the range (0,x)."));
         }
       } else {
         $(item).val('');
         $(item).parent().addClass("has-danger").addClass("has-error");
         $(item).parent().find(".help-block").empty();
         $(item).parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>Please enter an minimum and maximum values </li></ul>");
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Please enter an minimum and maximum values "));
       }
     }
   }
@@ -4678,7 +4714,8 @@
             $("#displayTextSclValue" + id).parent().addClass("has-danger").addClass("has-error");
             $("#displayTextSclValue" + id).parent().find(".help-block").empty();
             $("#displayTextSclValue" + id).parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "The value should be unique "));
           } else
             valueArray.push(diaplay_value.toLowerCase());
         } else {
@@ -4702,7 +4739,8 @@
             $("#displayValPickValue" + id).parent().addClass("has-danger").addClass("has-error");
             $("#displayValPickValue" + id).parent().find(".help-block").empty();
             $("#displayValPickValue" + id).parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "The value should be unique "));
 
           } else
             valueArray.push(diaplay_value.toLowerCase());
@@ -4728,7 +4766,8 @@
                 "has-error");
             $("#displayImageChoiceValue" + id).parent().find(".help-block").empty();
             $("#displayImageChoiceValue" + id).parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "The value should be unique "));
           } else
             valueArray.push(diaplay_value.toLowerCase());
         } else {
@@ -4753,7 +4792,8 @@
             $("#displayTextChoiceValue" + id).parent().addClass("has-danger").addClass("has-error");
             $("#displayTextChoiceValue" + id).parent().find(".help-block").empty();
             $("#displayTextChoiceValue" + id).parent().find(".help-block").append(
-                "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "The value should be unique "));
           } else
             valueArray.push(diaplay_value.toLowerCase());
         } else {
@@ -4787,8 +4827,9 @@
         $(thisAttr).parent().addClass("has-danger").addClass("has-error");
         $(thisAttr).parent().find(".help-block").empty();
         $(thisAttr).parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>'" + anchordateText
-            + "' has already been used in the past.</li></ul>");
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            anchordateText
+            + " has already been used in the past."));
         callback(false);
       } else {
         $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
@@ -4818,8 +4859,9 @@
               $(thisAttr).parent().addClass("has-danger").addClass("has-error");
               $(thisAttr).parent().find(".help-block").empty();
               $(thisAttr).parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>'" + anchordateText
-                  + "' has already been used in the past.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  anchordateText
+                  + " has already been used in the past."));
               callback(false);
             }
           },
@@ -4829,7 +4871,7 @@
     } else {
       callback(true);
       $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-      $(thisAttr).parent().find(".help-block").text("");
+      $(thisAttr).parent().find(".help-block").empty();
     }
   }
 </script>

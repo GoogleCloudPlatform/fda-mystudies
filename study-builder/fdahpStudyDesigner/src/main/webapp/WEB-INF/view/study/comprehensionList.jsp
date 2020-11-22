@@ -290,7 +290,8 @@
         $("#comprehensionTestMinimumScore").parent().addClass("has-danger").addClass("has-error");
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>The value should not be more than no of questions or zero</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "The value should not be more than no of questions or zero"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");
@@ -485,7 +486,8 @@
         $("#comprehensionTestMinimumScore").parent().addClass("has-danger").addClass("has-error");
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>The value should not be more than no of questions or zero</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "The value should not be more than no of questions or zero"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");

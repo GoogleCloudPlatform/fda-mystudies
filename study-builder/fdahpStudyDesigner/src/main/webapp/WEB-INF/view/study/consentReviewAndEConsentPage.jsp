@@ -531,8 +531,8 @@
                     } else {
                       $("#newDocumentDivId").parent().find(".help-block").empty();
                       $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
-                          ".help-block").append(
-                          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+                          ".help-block").empty().append(
+                          $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
                     }
                   }
 
@@ -860,8 +860,8 @@
           isValideditor = false;
         }
         $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 70000 characters are allowed."));
       } else {
         $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
         $('#newDocumentDivId').parent().find(".help-block").empty();
@@ -870,8 +870,8 @@
       isValideditor = false;
       $('#newDocumentDivId').attr('required', true);
       $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
-          ".help-block").empty().append(
-          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+          ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          "Please fill out this field."));
 
     }
 
@@ -887,8 +887,8 @@
           isValid = false;
         }
         $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 70000 characters are allowed."));
       } else {
         $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
         $('#learnMoreTextId').parent().find(".help-block").empty();
@@ -897,8 +897,8 @@
       isValid = false;
       $('#learnMoreTextId').attr('required', true);
       $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
-          ".help-block").empty().append(
-          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+          ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          "Please fill out this field."));
 
     }
 

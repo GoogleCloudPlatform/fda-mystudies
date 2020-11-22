@@ -426,7 +426,7 @@
         $("#repeatableText").val('');
         $("#repeatableText").validator('validate');
         $("#repeatableText").parent().removeClass("has-danger").removeClass("has-error");
-        $("#repeatableText").parent().find(".help-block").text("");
+        $("#repeatableText").parent().find(".help-block").empty();
       }
     });
 
@@ -833,7 +833,7 @@
     var questionnaireShortTitle = $("#questionnaireShortId").val();
     if (shortTitle != null && shortTitle != '' && typeof shortTitle != 'undefined') {
       $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-      $(thisAttr).parent().find(".help-block").text("");
+      $(thisAttr).parent().find(".help-block").empty();
       if (existedKey != shortTitle) {
         $.ajax({
           url: "/studybuilder/adminStudies/validateQuestionnaireStepKey.do?_S=${param._S}",
@@ -854,15 +854,16 @@
             if ('SUCCESS' != message) {
               $(thisAttr).validator('validate');
               $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-              $(thisAttr).parent().find(".help-block").text("");
+              $(thisAttr).parent().find(".help-block").empty();
               callback(true);
             } else {
               $(thisAttr).val('');
               $(thisAttr).parent().addClass("has-danger").addClass("has-error");
               $(thisAttr).parent().find(".help-block").empty();
               $(thisAttr).parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>'" + shortTitle
-                  + "' has already been used in the past.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  shortTitle
+                  + " has already been used in the past."));
               callback(false);
             }
           },
@@ -871,7 +872,7 @@
       } else {
         callback(true);
         $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-        $(thisAttr).parent().find(".help-block").text("");
+        $(thisAttr).parent().find(".help-block").empty();
       }
     } else {
       callback(false);

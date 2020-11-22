@@ -273,7 +273,7 @@
   var ansCount = $(".ans-opts").length;
 
   function addAns() {
-    ansCount = ansCount + 1;
+    ansCount = parseInt(ansCount) + 1;
     var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
         + "'><div class='col-md-6 pl-none'>"
         + "<div class='form-group'>"
@@ -426,8 +426,8 @@
       $('#questionText').validator('destroy').validator();
       if (!$('#questionText')[0].checkValidity()) {
         $("#questionText").parent().addClass('has-error has-danger').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "This is a required field."));
       }
     }
   }
@@ -465,7 +465,7 @@
           $("#responseOptionId" + id).parent().addClass("has-danger").addClass("has-error");
           $("#responseOptionId" + id).parent().find(".help-block").empty();
           $("#responseOptionId" + id).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+        	 $("<ul><li> </li></ul>").attr("class","list-unstyled").text("The value should be unique "));
         } else
           valueArray.push(diaplay_value.toLowerCase());
       } else {
