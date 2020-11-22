@@ -21,6 +21,9 @@ public class AppPropertyConfig implements Serializable {
 
   private static final long serialVersionUID = 5755215378945331532L;
 
+  @Value("${security.xsrf.enabled}")
+  private boolean isXsrfEnabled;
+
   @Value("${securityCodeExpireDate}")
   private String securityCodeExpireDate;
 
