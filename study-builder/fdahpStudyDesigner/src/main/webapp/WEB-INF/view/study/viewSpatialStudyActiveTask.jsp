@@ -1722,7 +1722,7 @@
         $('.chartSection').show();
       if (frequencyType && frequencyType == 'Manually Schedule') {
         $('.activeaddToChartText').show();
-        $('.activeaddToChartText').html(
+        $('.activeaddToChartText').text(
             'A max of x runs will be displayed in each view of the chart.');
       }
     }
@@ -1736,14 +1736,16 @@
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Initial Span must be >= 2</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Initial Span must be >= 2"));
         }
         if (parseInt($(this).val()) > 20) {
           $(this).val('');
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Initial Span should be <= 20  </li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Initial Span should be <= 20  "));
         }
         var minimumSpanVal = $('#minimumspanId').val();
         if (minimumSpanVal && (parseInt(minimumSpanVal) > parseInt($(this).val()))) {
@@ -1751,7 +1753,8 @@
           $('#minimumspanId').parent().addClass("has-danger").addClass("has-error");
           $('#minimumspanId').parent().find(".help-block").empty();
           $('#minimumspanId').parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Minimum Span should be always <= Initial Span"));
         }
         var maxmimumSpanVal = $('#maximumspanId').val();
         if (maxmimumSpanVal && (parseInt(maxmimumSpanVal) < parseInt($(this).val()))) {
@@ -1759,7 +1762,8 @@
           $('#maximumspanId').parent().addClass("has-danger").addClass("has-error");
           $('#maximumspanId').parent().find(".help-block").empty();
           $('#maximumspanId').parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Maximum Span should be always >= Initial Span"));
         }
       }
     });
@@ -1774,7 +1778,8 @@
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Minimum Span should be always <= Initial Span  </li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Minimum Span should be always <= Initial Span  "));
         }
       }
     });
@@ -1790,13 +1795,15 @@
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Maximum Span should be <= 20  </li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Maximum Span should be <= 20  "));
         } else if (parseInt($(this).val()) < parseInt(initialSpanVal)) {
           $(this).val('');
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Maximum Span should be always >= Initial Span</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Maximum Span should be always >= Initial Span"));
         }
       }
     });
@@ -1812,20 +1819,23 @@
           $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
           $("#playspeedId").parent().find(".help-block").empty();
           $("#playspeedId").parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Please enter a valid number</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please enter a valid number"));
         } else if (parseFloat(value) < 0.5) {
           $("#playspeedId").val('');
           $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
           $("#playspeedId").parent().find(".help-block").empty();
           $("#playspeedId").parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Play Speed should be >= 0.5 seconds  </li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Play Speed should be >= 0.5 seconds  "));
         }
         if (parseFloat(value) > parseFloat(20)) {
           $("#playspeedId").val('');
           $("#playspeedId").parent().addClass("has-danger").addClass("has-error");
           $("#playspeedId").parent().find(".help-block").empty();
           $("#playspeedId").parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>Play Speed should be <= 20 seconds</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Play Speed should be <= 20 seconds"));
         }
       }
     });
@@ -1838,7 +1848,8 @@
         $(this).parent().addClass("has-danger").addClass("has-error");
         $(this).parent().find(".help-block").empty();
         $(this).parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>Maximum Tests should be >= 1</li></ul>");
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum Tests should be >= 1"));
       }
       var maximumFailure = $('#maximumFailureId').val();
       if (value && parseInt(maximumFailure) >= parseInt($(this).val())) {
@@ -1846,7 +1857,8 @@
         $('#maximumFailureId').parent().addClass("has-danger").addClass("has-error");
         $('#maximumFailureId').parent().find(".help-block").empty();
         $('#maximumFailureId').parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>Maximum Consecutive Failures should be always < Maximum tests</li></ul>");
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum Consecutive Failures should be always < Maximum tests"));
       }
     });
     $("#maximumFailureId").blur(function () {
@@ -1859,14 +1871,16 @@
         $(this).parent().addClass("has-danger").addClass("has-error");
         $(this).parent().find(".help-block").empty();
         $(this).parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>Maximum Tests should be >= 1</li></ul>");
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum Tests should be >= 1"));
       }
       if (maxmimunTestVal && parseInt($(this).val()) >= parseInt(maxmimunTestVal)) {
         $(this).val('');
         $(this).parent().addClass("has-danger").addClass("has-error");
         $(this).parent().find(".help-block").empty();
         $(this).parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>Maximum Consecutive Failures should be always < Maximum tests</li></ul>");
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum Consecutive Failures should be always < Maximum tests"));
       }
     });
 
@@ -2152,7 +2166,8 @@
       } else if (!$('#shortTitleId')[0].checkValidity()) {
         $("#shortTitleId").parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "This is a required field."));
         showErrMsg("Please fill in all mandatory fields.");
         $('.contentClass a').tab('show');
         $("body").removeClass('loading');
@@ -2292,8 +2307,8 @@
           e.preventDefault();
           $(this).val(newVal);
           $(this).parent().addClass("has-danger has-error");
-          $(this).parent().find(".help-block").empty().html(
-              "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
+          $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Special characters such as #^}{ are not allowed."));
         }
       }
     });
@@ -2309,8 +2324,8 @@
           e.preventDefault();
           $(this).val(newVal);
           $(this).parent().addClass("has-danger has-error");
-          $(this).parent().find(".help-block").empty().html(
-              "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
+          $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "The characters like (< >) are not allowed."));
         }
       }
     });
@@ -2353,8 +2368,9 @@
               $('.shortTitleClass').parent().addClass("has-danger").addClass("has-error");
               $('.shortTitleClass').parent().find(".help-block").empty();
               $(thisAttr).parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>'" + shortTitle
-                  + "' has already been used in the past.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  shortTitle
+                  + " has already been used in the past."));
               callback(false);
             }
           },
@@ -2363,7 +2379,7 @@
       } else {
         callback(true);
         $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-        $('.shortTitleClass').parent().find(".help-block").html("");
+        $('.shortTitleClass').parent().find(".help-block").empty();
       }
     } else {
       callback(false);
@@ -2406,8 +2422,9 @@
             "has-error");
         $(thisAttr).parent().find('.statShortTitleClass').parent().find(".help-block").empty();
         $(thisAttr).parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-            + "' has already been used in the past.</li></ul>");
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            activeTaskAttIdVal
+            + " has already been used in the past."));
         showErrMsg("Please fill in all mandatory fields.");
         $('.contentClass a').tab('show');
         shortTitleStatFlag = false;
@@ -2443,8 +2460,9 @@
                 $(thisAttr).parent().find('.statShortTitleClass').parent().find(
                     ".help-block").empty();
                 $(thisAttr).parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-                    + "' has already been used in the past.</li></ul>");
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    activeTaskAttIdVal
+                    + " has already been used in the past."));
                 showErrMsg("Please fill in all mandatory fields.");
                 $('.contentClass a').tab('show');
                 if (callback)
@@ -2499,8 +2517,9 @@
                   $(thisAttr).parent().find('.statShortTitleClass').parent().find(
                       ".help-block").empty();
                   $(thisAttr).parent().find(".help-block").append(
-                      "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-                      + "' has already been used in the past.</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                      activeTaskAttIdVal
+                      + " has already been used in the past."));
                   $(thisAttr).focus();
                   showErrMsg("Please fill in all mandatory fields.");
                   $('.contentClass a').tab('show');
@@ -2561,7 +2580,8 @@
           $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
               "has-error");
           $("#" + shortSatId).parent().find(".help-block").empty().append(
-              "<ul class='list-unstyled'><li>Please fill out this field.</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please fill out this field."));
         } else {
           $("#" + shortSatId).val('');
           $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
@@ -2569,8 +2589,9 @@
           $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
               "has-error");
           $("#" + shortSatId).parent().find(".help-block").empty().append(
-              "<ul class='list-unstyled'><li>'" + shortSatIdVal
-              + "' has already been used in the past.</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              shortSatIdVal
+              + " has already been used in the past."));
         }
       }
       callback(false);
@@ -2600,8 +2621,9 @@
                   $("#" + obj.id).parent().find('.statShortTitleClass').addClass(
                       "has-danger").addClass("has-error");
                   $("#" + obj.id).parent().find(".help-block").empty().append(
-                      "<ul class='list-unstyled'><li>'" + obj.idVal
-                      + "' has already been used in the past.</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                      obj.idVal
+                      + " has already been used in the past."));
                 }
               });
 
@@ -2651,7 +2673,8 @@
           $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
               "has-error");
           $("#" + shortSatId).parent().find(".help-block").empty().append(
-              "<ul class='list-unstyled'><li>Please fill out this field.</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please fill out this field."));
         } else {
           $("#" + shortSatId).val('');
           $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
@@ -2659,8 +2682,9 @@
           $("#" + shortSatId).parent().find('.statShortTitleClass').addClass("has-danger").addClass(
               "has-error");
           $("#" + shortSatId).parent().find(".help-block").empty().append(
-              "<ul class='list-unstyled'><li>'" + shortSatIdVal
-              + "' has already been used in the past.</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              shortSatIdVal
+              + " has already been used in the past."));
         }
       }
       callback(false);
@@ -2705,8 +2729,9 @@
                     $("#" + obj.id).parent().find('.statShortTitleClass').addClass(
                         "has-danger").addClass("has-error");
                     $("#" + obj.id).parent().find(".help-block").empty().append(
-                        "<ul class='list-unstyled'><li>'" + obj.idVal
-                        + "' has already been used in the past.</li></ul>");
+                    	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                        obj.idVal
+                        + " has already been used in the past."));
                   }
                 });
 

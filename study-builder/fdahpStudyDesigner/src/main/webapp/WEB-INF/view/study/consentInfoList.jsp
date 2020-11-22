@@ -191,7 +191,7 @@
             if (message == "SUCCESS") {
               reloadConsentInfoDataTable(data.consentInfoList, null);
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                   "Reorder done successfully");
               if ($('.fifthConsent').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
@@ -205,13 +205,13 @@
               }
             } else {
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
             setTimeout(hideDisplayMessage, 4000);
           },
           error: function (xhr, status, error) {
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
             setTimeout(hideDisplayMessage, 4000);
           }
         });
@@ -241,7 +241,7 @@
             success: function deleteConsentInfo(data) {
               var status = data.message;
               if (status == "SUCCESS") {
-                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                     "Consent Section deleted successfully.");
                 $('#alertMsg').show();
                 reloadData(studyId);
@@ -256,14 +256,14 @@
                       'sprites-icons-2 tick pull-right mt-xs');
                 }
               } else {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Unable to delete consent");
                 $('#alertMsg').show();
               }
               setTimeout(hideDisplayMessage, 4000);
             },
             error: function (xhr, status, error) {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
               setTimeout(hideDisplayMessage, 4000);
             }
           });

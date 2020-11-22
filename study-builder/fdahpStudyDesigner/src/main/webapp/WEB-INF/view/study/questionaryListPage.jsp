@@ -211,7 +211,7 @@
                 var markAsComplete = data.markAsComplete;
                 var activityMsg = data.activityMsg;
                 if (status == "SUCCESS") {
-                  $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                  $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                       "Questionnaire deleted successfully");
                   $('#alertMsg').show();
                   var questionnaireList = data.questionnaireList;
@@ -230,10 +230,10 @@
                   }
                 } else {
                   if (status == 'FAILUREanchorused') {
-                    $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                    $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                         "Questionnaire already live anchorbased.unable to delete");
                   } else {
-                    $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                    $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                         "Unable to delete consent");
 
                   }
@@ -242,7 +242,7 @@
                 setTimeout(hideDisplayMessage, 4000);
               },
               error: function (xhr, status, error) {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
                 setTimeout(hideDisplayMessage, 4000);
               }
             });

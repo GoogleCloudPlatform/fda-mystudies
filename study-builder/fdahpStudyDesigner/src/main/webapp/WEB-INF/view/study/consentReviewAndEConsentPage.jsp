@@ -528,8 +528,8 @@
                     } else {
                       $("#newDocumentDivId").parent().find(".help-block").empty();
                       $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
-                          ".help-block").append(
-                          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+                          ".help-block").empty().append(
+                          $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
                     }
                   }
 
@@ -542,11 +542,11 @@
             var slaCount = $('.custom-form').find('.has-error.has-danger').length;
             var qlaCount = $('#menu2').find('.has-error.has-danger').length;
             var rlaCount = $('#menu3').find('.has-error.has-danger').length;
-            if (parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").html()
+            if (parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").text()
                 != '') {
               $('.shareData a').tab('show');
             } else if (parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(
-                ".help-block").html() != '') {
+                ".help-block").text() != '') {
               $('.consentReview a').tab('show');
             } else if (parseInt(rlaCount) >= 1) {
               $('.econsentForm a').tab('show');
@@ -560,7 +560,7 @@
         if (parseInt(slaCount) >= 1) {
           $('.shareData a').tab('show');
         } else if (parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(
-            ".help-block").html() != '') {
+            ".help-block").text() != '') {
           $('.consentReview a').tab('show');
         } else if (parseInt(rlaCount) >= 1) {
           $('.econsentForm a').tab('show');
@@ -796,7 +796,7 @@
               a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
               document.body.appendChild(a).click();
             } else {
-              $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
               if ($('.fifthConsentReview').find('span').hasClass(
@@ -806,7 +806,7 @@
               }
             }
           } else {
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             $('#alertMsg').show();
           }
           setTimeout(hideDisplayMessage, 4000);
@@ -857,18 +857,18 @@
           isValideditor = false;
         }
         $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 70000 characters are allowed."));
       } else {
         $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#newDocumentDivId').parent().find(".help-block").html("");
+        $('#newDocumentDivId').parent().find(".help-block").empty();
       }
     } else {
       isValideditor = false;
       $('#newDocumentDivId').attr('required', true);
       $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
-          ".help-block").empty().append(
-          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+          ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          "Please fill out this field."));
 
     }
 
@@ -884,18 +884,18 @@
           isValid = false;
         }
         $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 70000 characters are allowed."));
       } else {
         $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#learnMoreTextId').parent().find(".help-block").html("");
+        $('#learnMoreTextId').parent().find(".help-block").empty();
       }
     } else {
       isValid = false;
       $('#learnMoreTextId').attr('required', true);
       $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
-          ".help-block").empty().append(
-          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+          ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          "Please fill out this field."));
 
     }
 
@@ -907,7 +907,7 @@
     var tagline_description = $("#taglineDescriptionId").val();
     var short_description = $("#shortDescriptionId").val();
     var long_descriptionId = $("#longDescriptionId").val();
-    $('.force-overflow__').html('');
+    $('.force-overflow__').empty();
     var data = '<div class="pp__title" id="titleModalId">';
     if (titleText != '' && titleText != null && typeof titleText != 'undefined') {
       data += titleText + '</div>';
@@ -977,7 +977,7 @@
   function previewLearnMore() {
     $('#cancelButtonId').hide();
     $('#doneButtonId').show();
-    $('.force-overflow__').html('');
+    $('.force-overflow__').empty();
     var learn_more_desc = $('learnMoreTextId').summernote('code');
     var data = '<div class="pp__title">Learn more</div>'
         + '<div class="pp__ul mt-xlg">';
