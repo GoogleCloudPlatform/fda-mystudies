@@ -170,7 +170,9 @@ In the ./kubernetes/ingress.yaml file:
     name in ./kubernetes/cert.yaml.
 * Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
-    
+* Change the hosts to match your deployed env and what you have updated in 
+    ./kubernetes/cert.yaml.
+
 In ./participant-manager/src/environments/environment.prod.ts
 
 * Change the domain name to match your organization.

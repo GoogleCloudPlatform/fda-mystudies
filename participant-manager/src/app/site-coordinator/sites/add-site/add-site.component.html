@@ -1,15 +1,15 @@
 <div class="modal-body modal__body">
-  <div class="row border__bottom__c4d1e6 background__dfe4ec">
+  <div class="row border__bottom__c4d1e6 background__dfe4ec p-xlg">
     <div class="col-xs-12 col-md-5 p-none">
-      <div name="customId" class="mb-lg">
+      <div name="customId">
         <label>study</label>
         <div>{{ newSite.name }}</div>
       </div>
     </div>
     <div class="col-xs-12 col-md-7 p-none">
-      <div name="appId" class="mb-lg">
+      <div name="appId">
         <label>app</label>
-        <div>{{ newSite.appName }}</div>
+        <div class="font14">{{ newSite.appName }}</div>
       </div>
     </div>
   </div>
@@ -22,13 +22,14 @@
         <div class="form-group">
           <div class="form-item">
             <label>Location</label>
-            <div class="select-wrap">
+            <div class="select-wrap select select-fancy select-fancy-noimage">
               <select
-                class="form-item__element form-item__element--select"
+                class="form-item__element form-item__element--select width__100 background__trans cursor__pointer"
                 [(ngModel)]="site.locationId"
                 required
                 name="location"
                 #location="ngModel"
+                placeholder="Enter App ID or Name"
               >
                 <option value="" disabled selected>Select Location</option>
                 <option
@@ -70,7 +71,7 @@
         type="button"
         name="cancel"
         class="btn bt__cancel"
-        (click)="closeModal()"
+        (click)="cancel()"
       >
         Cancel
       </button>
