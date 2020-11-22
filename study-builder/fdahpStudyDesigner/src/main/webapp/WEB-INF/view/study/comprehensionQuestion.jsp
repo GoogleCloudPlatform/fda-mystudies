@@ -273,7 +273,7 @@
   var ansCount = $(".ans-opts").length;
 
   function addAns() {
-    ansCount = ansCount + 1;
+    ansCount = parseInt(ansCount) + 1;
     var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
         + "'><div class='col-md-6 pl-none'>"
         + "<div class='form-group'>"

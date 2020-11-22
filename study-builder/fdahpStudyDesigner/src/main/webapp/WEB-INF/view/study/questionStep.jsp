@@ -6492,7 +6492,7 @@
       var count = parseInt(
           $("#rootId" + parent_index + " .numeric__row").last().find('select').attr("count"));
       var v = total + 1;
-      count = count + 1;
+      count = parseInt(count) + 1;
       var addVar = "<div class='numeric__row display__flex__base' id='" + v + "'>" +
           "   <span>V" + v + " =</span>" +
           "   <div class='form-group sm-selection' style=''>" +
