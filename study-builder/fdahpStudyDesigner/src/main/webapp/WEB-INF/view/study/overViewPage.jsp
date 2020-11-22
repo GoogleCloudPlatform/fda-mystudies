@@ -335,8 +335,8 @@
     });
     </c:if>
 
-    $('body').find('a[aria-expanded=true]').find('.imageBg').html(
-        '<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
+    $('body').find('a[aria-expanded=true]').find('.imageBg').empty().append($("<img />").attr(
+          "id","slideDownId2").attr("class", "arrow").attr("src","/studybuilder/images/icons/slide-up.png"));
     $(".menuNav li.active").removeClass('active');
     $(".menuNav li.third").addClass('active');
 
@@ -480,20 +480,18 @@
     });
     $(document).on('show.bs.collapse', '.panel-collapse', function () {
       $('.panel-collapse').not(this).collapse('hide').removeClass('in');
-      $('body').not(this).find('.imageBg').html(
-          '<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
-
+      $('body').not(this).find('.imageBg').empty().append($("<img />").attr("id","slideDownId2").attr(
+            "class", "arrow").attr("src","/studybuilder/images/icons/slide-down.png"));
     });
     $(document).on('hide.bs.collapse', '.panel-collapse', function () {
-      $('body').not('a[aria-expanded=true]').find('.imageBg').html(
-          '<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
-
+      $('body').not('a[aria-expanded=true]').find('.imageBg').empty().append($("<img />").attr(
+            "id","slideDownId2").attr("class", "arrow").attr("src","/studybuilder/images/icons/slide-down.png"));
     });
     $(document).on('shown.bs.collapse', '.panel-collapse', function () {
       var $panel = $(this).parent().ScrollTo();
-      $('body').find('a[aria-expanded=true]').find('.imageBg').html(
-          '<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
-    });
+      $('body').find('a[aria-expanded=true]').find('.imageBg').empty().append($("<img />").attr(
+            "id","slideDownId2").attr("class", "arrow").attr("src","/studybuilder/images/icons/slide-up.png"));
+      });
     $('.submitEle').click(function (e) {
       $('#actTy').remove();
       $('<input />').attr('type', 'hidden').attr('name', "actionType").attr('value',
