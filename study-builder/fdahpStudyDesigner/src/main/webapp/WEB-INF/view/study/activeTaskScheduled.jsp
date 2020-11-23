@@ -2931,7 +2931,6 @@
         $('#lineChartId2').val('');
 
         $('#lineChartId,lineChartId1,lineChartId2').val('');
-
         $("#chartId,#chartId1,#chartId2").empty();
         $("#chartId,#chartId1,#chartId2").attr('required', 'required').prop('required', 'required');
         $('.rollbackRadioClass').prop('checked', true);
