@@ -42,6 +42,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -237,6 +238,7 @@ public class StudyServiceImpl implements StudyService {
   public ParticipantRegistryResponse getStudyParticipants(
       String userId,
       String studyId,
+      String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
       Integer page,
       Integer limit) {
@@ -265,13 +267,14 @@ public class StudyServiceImpl implements StudyService {
         ParticipantMapper.fromStudyAppDetails(studyAppDetails, user);
 
     return prepareRegistryParticipantResponse(
-        participantRegistryDetail, userId, studyId, auditRequest);
+        participantRegistryDetail, userId, studyId, excludeParticipantStudyStatus, auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
       ParticipantRegistryDetail participantRegistryDetail,
       String userId,
       String studyId,
+      String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
@@ -279,6 +282,10 @@ public class StudyServiceImpl implements StudyService {
     List<StudyParticipantDetails> studyParticipantDetails =
         studyRepository.getStudyParticipantDetails(studyId);
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
+      if (ArrayUtils.contains(
+          excludeParticipantStudyStatus, participantDetails.getEnrolledStatus())) {
+        continue;
+      }
       ParticipantDetail participantDetail =
           ParticipantMapper.fromParticipantStudy(participantDetails);
       registryParticipants.add(participantDetail);

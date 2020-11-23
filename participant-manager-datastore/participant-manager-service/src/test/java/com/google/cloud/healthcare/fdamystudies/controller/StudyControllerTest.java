@@ -535,6 +535,48 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldNotReturnRegisteredParticipantWithYetToJoinStudyStatus() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    locationEntity = testDataHelper.createLocation();
+    studyEntity.setType(OPEN_STUDY);
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setTargetEnrollment(0);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
+    participantStudyEntity.setStudy(studyEntity);
+    participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_JOIN.getStatus());
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .queryParam(
+                    "excludeParticipantStudyStatus", EnrollmentStatus.YET_TO_JOIN.getStatus())
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(0)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnUserNotFoundForStudyParticipants() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, IdGenerator.id());
