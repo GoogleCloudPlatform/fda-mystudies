@@ -329,13 +329,13 @@
 
           var errMsg = '${errMsg}';
           if (errMsg.length > 0) {
-            $("#errMsg").html(errMsg);
+            $("#errMsg").text(errMsg);
             $("#errMsg").show("fast");
             setTimeout(hideDisplayMessage, 4000);
           }
           var sucMsg = '${sucMsg}';
           if (sucMsg.length > 0) {
-            $("#sucMsg").html(sucMsg);
+            $("#sucMsg").text(sucMsg);
             $("#sucMsg").show("fast");
             $("#errMsg").hide("fast");
             setTimeout(hideDisplayMessage, 4000);
