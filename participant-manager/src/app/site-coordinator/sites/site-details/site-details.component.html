@@ -495,7 +495,7 @@
                   </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.Disabled">
-                  <mfDefaultSorter by="invitedDate">
+                  <mfDefaultSorter by="disabledDate">
                     Date Disabled
                   </mfDefaultSorter>
                 </th>
@@ -656,7 +656,7 @@
                   </div>
                 </td>
                 <td *ngIf="activeTab === onBoardingStatus.Disabled">
-                  {{ participant.invitedDate }}
+                  {{ participant.disabledDate }}
                 </td>
                 <!-- Belongs to all and invited and disabled  -->
                 <td *ngIf="activeTab != onBoardingStatus.New">

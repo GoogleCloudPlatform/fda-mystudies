@@ -100,8 +100,8 @@
     if (activeTaskInfoId) {
       $('.targetOption').prop('disabled', true);
       $('.targetOption').addClass('linkDis');
-      $('.activeText').html(
-          'This task records fetal activity for a given duration of time, <br>in terms of the number of times the woman experiences kicks.');
+      $('.activeText').empty().append(
+          'This task records fetal activity for a given duration of time,').append($("<br>")).append('in terms of the number of times the woman experiences kicks.');
       $('.scheduleTaskClass').prop('disabled', false);
       $('.scheduleTaskClass').removeClass('linkDis');
     } else {
@@ -119,17 +119,17 @@
       console.log($(this).val());
       var taskId = $(this).val();
       if (taskId == 1) {
-        $('.activeText').html(
-            'This task records fetal activity for a given duration of time, <br>in terms of the number of times the woman experiences kicks.');
+        $('.activeText').empty().append(
+            'This task records fetal activity for a given duration of time,').append($("<br>")).append('in terms of the number of times the woman experiences kicks.');
       } else if (taskId == 2) {
-        $('.activeText').html("This task measures a person's problem-solving skills.");
+        $('.activeText').text("This task measures a person's problem-solving skills.");
       } else if (taskId == 3) {
-        $('.activeText').html(
+        $('.activeText').text(
             "The task collects data that can be used to assess visuospatial memory and executive function.");
       }
       var typeOfActiveTask = $(this).val();
       var activeTaskInfoId = $(this).attr('taskId');
-      $('.changeContent').html('');
+      $('.changeContent').empty();
       $(document).find('#saveId,#doneId').unbind();
       loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType);
       $('.actBut').show();
