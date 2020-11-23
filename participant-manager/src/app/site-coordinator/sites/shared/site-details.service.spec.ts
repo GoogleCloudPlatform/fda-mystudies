@@ -15,7 +15,6 @@ import {expectedSiteParticipantDetails} from '../../../entity/mock-sitedetail-da
 import {OnboardingStatus} from 'src/app/shared/enums';
 describe('SiteDetailsService', () => {
   let participantDetailsService: SiteDetailsService;
-  let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
