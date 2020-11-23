@@ -566,12 +566,12 @@
     if (allowRejoin != "") {
       if (allowRejoin == 'Yes') {
         $('.rejointextclassYes').show();
-        $('#rejoin_comment_no').text('');
+        $('#rejoin_comment_no').empty();
         $('.rejointextclassNo').hide();
       } else {
         $('.rejointextclassNo').show();
         $('.rejointextclassYes').hide();
-        $('#rejoin_comment_yes').text('');
+        $('#rejoin_comment_yes').empty();
       }
     }
     $("[data-toggle=tooltip]").tooltip();
