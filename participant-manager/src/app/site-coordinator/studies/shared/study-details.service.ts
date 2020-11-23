@@ -24,7 +24,8 @@ return this.http.get<StudyDetails>(
       {
         params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
       },
-    );}
+    );
+}
   updateTargetEnrollment(
     updateTargetEnrollment: UpdateTargetEnrollmentRequest,
     studyId: string,
