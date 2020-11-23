@@ -19,14 +19,14 @@ import lombok.NoArgsConstructor;
 public class StudyResponse extends BaseResponse {
   private List<StudyDetails> studies = new ArrayList<>();
 
-  private int sitePermissionCount;
+  private long sitePermissionCount;
 
   private boolean superAdmin;
 
   public StudyResponse(
       MessageCode messageCode,
       List<StudyDetails> studies,
-      int sitePermissionCount,
+      long sitePermissionCount,
       boolean superAdmin) {
     super(messageCode);
     this.studies.addAll(studies);

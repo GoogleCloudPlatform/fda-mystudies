@@ -137,4 +137,22 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "GROUP BY si.id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> findEnrolledCountForOpenStudy();
+
+  @Query(
+      value =
+          "SELECT distinct invites.study_id AS siteId, invites.invitedCount , IFNULL(enrolled.enrolledCount, 0) AS enrolledCount "
+              + "FROM ( "
+              + "SELECT si.study_id, si.target_enrollment AS invitedCount "
+              + "FROM sites si, study_info st, sites_permissions sp "
+              + "WHERE si.study_id=st.id AND sp.ur_admin_user_id=:userId "
+              + "AND sp.study_id=si.study_id AND st.type='OPEN' "
+              + ") AS invites "
+              + "LEFT JOIN ( "
+              + "SELECT ps.study_info_id, COUNT(ps.study_info_id) AS enrolledCount "
+              + "FROM participant_study_info ps, sites_permissions sp "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' AND sp.ur_admin_user_id =:userId "
+              + "GROUP BY ps.study_info_id) AS enrolled ON invites.study_id=enrolled.study_info_id ",
+      nativeQuery = true)
+  public List<EnrolledInvitedCount> getInvitedEnrolledCountForOpenStudy(
+      @Param("userId") String userId);
 }

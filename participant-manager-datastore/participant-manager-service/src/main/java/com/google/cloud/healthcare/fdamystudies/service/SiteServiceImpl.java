@@ -1112,7 +1112,7 @@ public class SiteServiceImpl implements SiteService {
             .collect(Collectors.toMap(EnrolledInvitedCount::getSiteId, Function.identity()));
 
     List<EnrolledInvitedCount> enrolledInvitedCountListForOpenStudy =
-        studyRepository.getInvitedEnrolledCountForOpenStudyForStudies(userId);
+        siteRepository.getInvitedEnrolledCountForOpenStudy(userId);
 
     Map<String, EnrolledInvitedCount> enrolledInvitedCountMapOfOpenStudy =
         CollectionUtils.emptyIfNull(enrolledInvitedCountListForOpenStudy)
