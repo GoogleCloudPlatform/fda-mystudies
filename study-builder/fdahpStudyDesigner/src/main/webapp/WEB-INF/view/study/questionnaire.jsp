@@ -2921,7 +2921,7 @@
   }
 
   function addTime() {
-    count = count + 1;
+    count = parseInt(count) + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
         "  <input id='time" + count + "' type='text' required name='questionnairesFrequenciesList["
@@ -2963,7 +2963,7 @@
   }
 
   function addDate() {
-    customCount = customCount + 1;
+    customCount = parseInt(customCount) + 1;
     var newDateCon = "<div class='manually-option mb-md form-group' id='" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
@@ -3859,11 +3859,11 @@
         } else {
           var dynamicTable = '';
           if (value.stepType == 'Instruction') {
-            datarow.push('<span id="' + key + '" class="round blue-round">' + key + '</span>');
+            datarow.push('<span id="' + parseInt(key) + '" class="round blue-round">' + parseInt(key) + '</span>');
           } else if (value.stepType == 'Question') {
-            datarow.push('<span id="' + key + '" class="round green-round">' + key + '</span>');
+            datarow.push('<span id="' + parseInt(key) + '" class="round green-round">' + parseInt(key) + '</span>');
           } else {
-            dynamicTable += '<span id="' + key + '" class="round teal-round">' + key + '</span>';
+            dynamicTable += '<span id="' + parseInt(key) + '" class="round teal-round">' + parseInt(key) + '</span>';
             datarow.push(dynamicTable);
           }
         }
@@ -3873,20 +3873,20 @@
           var title = "";
           if (value.stepType == 'Form') {
             $.each(value.fromMap, function (key, value) {
-              title += '<div class="dis-ellipsis" >' + value.title + '</div><br/>';
+              title += '<div class="dis-ellipsis" >' + DOMPurify.sanitize(value.title) + '</div><br/>';
             });
           } else {
-            title += '<div class="dis-ellipsis" >' + value.title + '</div>';
+            title += '<div class="dis-ellipsis" >' + DOMPurify.sanitize(value.title) + '</div>';
           }
           datarow.push(title);
         }
         if ($("#branchingId").is(':checked')) {
           datarow.push(
               '<div class="destinationStep questionnaireStepClass" style="display: block;">'
-              + value.destinationText + '</div>');
+              + DOMPurify.sanitize(value.destinationText) + '</div>');
         } else {
           datarow.push('<div class="destinationStep questionnaireStepClass" style="display: none;">'
-              + value.destinationText + '</div>');
+              + DOMPurify.sanitize(value.destinationText) + '</div>');
         }
         var dynamicAction = '<div>' +
             '<div class="text-right pos-relative">';
@@ -3905,17 +3905,17 @@
         }
         dynamicAction += '<span class="ellipse" onmouseenter="ellipseHover(this);"></span>' +
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
-            '  <span class="sprites_icon preview-g mr-sm" onclick="viewStep(' + value.stepId
-            + ',&#34;' + value.stepType + '&#34;)"></span>';
+            '  <span class="sprites_icon preview-g mr-sm" onclick="viewStep(' + parseInt(value.stepId)
+            + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         if (value.status) {
           dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editStep('
-              + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>';
+              + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         } else {
           dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editStep('
-              + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>';
+              + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         }
         dynamicAction += '  <span class="sprites_icon delete deleteStepButton" onclick="deletStep('
-            + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>' +
+            + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>' +
             '</div>' +
             '</div>';
 
@@ -4250,7 +4250,7 @@
   }
 
   function addDateAnchor() {
-    customAnchorCount = $('.manually-anchor-option').length;
+    customAnchorCount = parseInt($('.manually-anchor-option').length);
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor Date </span></span>"

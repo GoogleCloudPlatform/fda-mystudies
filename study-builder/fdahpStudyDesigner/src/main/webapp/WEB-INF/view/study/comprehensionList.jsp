@@ -408,14 +408,14 @@
         if (typeof obj.questionText === "undefined" && typeof obj.questionText === "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push("<div class='dis-ellipsis'>" + obj.questionText + "</div>");
+          datarow.push("<div class='dis-ellipsis'>" + DOMPurify.sanitize(obj.questionText) + "</div>");
         }
         var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
-            + obj.id + ");'></span>"
-            + "<span class='sprites_icon edit-g mr-lg' onclick='editComprehensionQuestion(" + obj.id
+            + parseInt(obj.id) + ");'></span>"
+            + "<span class='sprites_icon edit-g mr-lg' onclick='editComprehensionQuestion(" + parseInt(obj.id)
             + ");'>"
             + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
-            + obj.id + ");'>"
+            + parseInt(obj.id) + ");'>"
             + "</span>";
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);

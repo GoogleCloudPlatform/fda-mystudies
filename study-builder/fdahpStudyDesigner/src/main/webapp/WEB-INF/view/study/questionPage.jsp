@@ -4202,7 +4202,7 @@
   var count = $('.value-picker').length;
 
   function addValuePicker() {
-    count = count + 1;
+    count = parseInt(count) + 1;
     var newValuePicker = "<div class='value-picker row form-group mb-xs' id=" + count + ">" +
         "	<div class='col-md-3 pl-none'>" +
         "   <div class='form-group'>" +
@@ -4259,7 +4259,7 @@
   var scaleCount = $('.text-scale').length;
 
   function addTextScale() {
-    scaleCount = scaleCount + 1;
+    scaleCount = parseInt(scaleCount) + 1;
     if ($('.text-scale').length < 8) {
       var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
           "	<div class='col-md-3 pl-none'>" +
@@ -4341,7 +4341,7 @@
   var choiceCount = $('.text-choice').length;
 
   function addTextChoice() {
-    choiceCount = choiceCount + 1;
+    choiceCount = parseInt(choiceCount) + 1;
     var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
     var newTextChoice = "<div class='text-choice mt-xlg' id='" + choiceCount + "'>" +
         "<div class='col-md-4 pl-none'>" +
@@ -4433,7 +4433,7 @@
   var imageCount = $('.image-choice').length;
 
   function addImageChoice() {
-    imageCount = imageCount + 1;
+    imageCount = parseInt(imageCount) + 1;
     var newImageChoice = "<div class='image-choice row' id='" + imageCount + "'>" +
         "	   <div class='col-md-2 pl-none col-smthumb-2'>" +
         "   <div class='form-group'>" +

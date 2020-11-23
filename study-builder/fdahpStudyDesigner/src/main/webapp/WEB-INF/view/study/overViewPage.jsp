@@ -403,7 +403,7 @@
 
       $(".panel-collapse").collapse('hide').removeClass('in');
       $(".delete").show();
-      var count = $("#accordion").find('.panel-default').length + 1;
+      var count = parseInt($("#accordion").find('.panel-default').length) + 1;
       $("#accordion").append("<!-- Start panel-->" +
           "<div class='panel panel-default'> <input type='hidden' name='pageId'>" +
           "<div class='panel-heading'>" +
