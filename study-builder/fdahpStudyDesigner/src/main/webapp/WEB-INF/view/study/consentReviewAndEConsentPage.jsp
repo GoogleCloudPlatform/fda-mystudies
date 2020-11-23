@@ -340,20 +340,22 @@
                     <div class="pp__tagline" id="tagLineDescriptionModalId">-
                       NA -
                     </div>
-                    <div class="pp__learnmore">
+                    <div id="learnMoreId" class="pp__learnmore">
                       <a href="javascript:void(0)" data-toggle="modal"
                          onclick="previewLearnMore();">Learn more
                       </a>
                     </div>
-                    <div class="pp__ul mt-xlg">
+                    <div id="mainOverviewPanel" class="pp__ul mt-xlg">
+                      <ul id="accordianNA" style="display: none;"><li id="shortDescriptionModalId" style="font-weight: bold;"> - NA - </li></ul>
+                      
                       <div class="panel-group overview-panel" id="accordion">
                         <div class="panel panel-default">
                           <div class="panel-heading">
-                            <div class="panel-title">
+                            <div class="panel-title" style="font-weight: bold;">
                               <a data-toggle="collapse" data-parent="#accordion"
                                  href="#collapse1" aria-expanded="true">
                                 <div class="text-left dis-inline pull-left">
-                                  <span class="ellipsis__">dis-ellipsis
+                                  <span id="accordionEllipsis" class="ellipsis__">dis-ellipsis
                                     dis-ellipsis dis-ellipsis dis-ellipsisdis-ellipsis
                                     dis-ellipsis dis-ellipsis dis-ellipsisdis-ellipsis
                                     dis-ellipsis dis-ellipsis dis-ellipsisdis-ellipsis
@@ -372,20 +374,21 @@
                             </div>
                           </div>
                           <div id="collapse1" class="panel-collapse collapse">
-                            <div class="panel-body">kfjdf;ljhdlfhjd;lhjb
+                            <div id="accordionCollapse1" class="panel-body">kfjdf;ljhdlfhjd;lhjb
                               dskfdsjfnhslkdnghlkdsfglkd bfdskjfbkjd
                             </div>
                           </div>
                         </div>
                       </div>
+                      <ul id="accordian1NA" style="display: none;"><li id="shortDescriptionModalId" style="font-weight: bold;"> - NA - </li></ul>
                       <div class="panel-group overview-panel" id="accordion1">
                         <div class="panel panel-default">
                           <div class="panel-heading">
-                            <div class="panel-title">
+                            <div class="panel-title" style="font-weight: bold;">
                               <a data-toggle="collapse" data-parent="#accordion1"
                                  href="#collapse2" aria-expanded="true">
                                 <div class="text-left dis-inline pull-left">
-                                  <span class="ellipsis__">ronalin sahoo
+                                  <span id="accordion1Ellipsis" class="ellipsis__">ronalin sahoo
                                     ejrerhewuirew ronalinefewf
                                   </span>
                                 </div>
@@ -397,7 +400,7 @@
                             </div>
                           </div>
                           <div id="collapse2" class="panel-collapse collapse">
-                            <div class="panel-body">kfjdf;ljhdlfhjd;lhjb
+                            <div id="accordion1Collapse2" class="panel-body">kfjdf;ljhdlfhjd;lhjb
                               dskfdsjfnhslkdnghlkdsfglkd bfdskjfbkjd
                             </div>
                           </div>
@@ -528,8 +531,8 @@
                     } else {
                       $("#newDocumentDivId").parent().find(".help-block").empty();
                       $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
-                          ".help-block").append(
-                          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+                          ".help-block").empty().append(
+                          $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
                     }
                   }
 
@@ -542,11 +545,11 @@
             var slaCount = $('.custom-form').find('.has-error.has-danger').length;
             var qlaCount = $('#menu2').find('.has-error.has-danger').length;
             var rlaCount = $('#menu3').find('.has-error.has-danger').length;
-            if (parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").html()
+            if (parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").text()
                 != '') {
               $('.shareData a').tab('show');
             } else if (parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(
-                ".help-block").html() != '') {
+                ".help-block").text() != '') {
               $('.consentReview a').tab('show');
             } else if (parseInt(rlaCount) >= 1) {
               $('.econsentForm a').tab('show');
@@ -560,7 +563,7 @@
         if (parseInt(slaCount) >= 1) {
           $('.shareData a').tab('show');
         } else if (parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(
-            ".help-block").html() != '') {
+            ".help-block").text() != '') {
           $('.consentReview a').tab('show');
         } else if (parseInt(rlaCount) >= 1) {
           $('.econsentForm a').tab('show');
@@ -796,7 +799,7 @@
               a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
               document.body.appendChild(a).click();
             } else {
-              $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
               if ($('.fifthConsentReview').find('span').hasClass(
@@ -806,7 +809,7 @@
               }
             }
           } else {
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             $('#alertMsg').show();
           }
           setTimeout(hideDisplayMessage, 4000);
@@ -857,18 +860,18 @@
           isValideditor = false;
         }
         $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 70000 characters are allowed."));
       } else {
         $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#newDocumentDivId').parent().find(".help-block").html("");
+        $('#newDocumentDivId').parent().find(".help-block").empty();
       }
     } else {
       isValideditor = false;
       $('#newDocumentDivId').attr('required', true);
       $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
-          ".help-block").empty().append(
-          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+          ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          "Please fill out this field."));
 
     }
 
@@ -884,18 +887,18 @@
           isValid = false;
         }
         $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Maximum 70000 characters are allowed.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 70000 characters are allowed."));
       } else {
         $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#learnMoreTextId').parent().find(".help-block").html("");
+        $('#learnMoreTextId').parent().find(".help-block").empty();
       }
     } else {
       isValid = false;
       $('#learnMoreTextId').attr('required', true);
       $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
-          ".help-block").empty().append(
-          '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+          ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          "Please fill out this field."));
 
     }
 
@@ -907,66 +910,52 @@
     var tagline_description = $("#taglineDescriptionId").val();
     var short_description = $("#shortDescriptionId").val();
     var long_descriptionId = $("#longDescriptionId").val();
-    $('.force-overflow__').html('');
-    var data = '<div class="pp__title" id="titleModalId">';
-    if (titleText != '' && titleText != null && typeof titleText != 'undefined') {
-      data += titleText + '</div>';
-    } else {
-      data += ' -NA-</div>';
+    $("#learnMoreId").show();
+    $("#tagLineDescriptionModalId").show();
+    if (titleText == '' || titleText == null || typeof titleText == 'undefined') {
+    	titleText = ' -NA-';
     }
-    data += '<div class="pp__tagline" id="tagLineDescriptionModalId">';
-    if (tagline_description != '' && tagline_description != null && typeof tagline_description
-        != 'undefined') {
-      data += tagline_description + '</div>';
-    } else {
-      data += ' -NA-</div>';
+    $("#titleModalId").text(titleText);
+    
+    if (tagline_description == '' || tagline_description == null || typeof tagline_description
+        == 'undefined') {
+    	tagline_description = ' -NA-';
     }
+    
+    $("#tagLineDescriptionModalId").text(tagline_description);
 
-    data += '<div class="pp__learnMore"><a href="javascript:void(0)" data-toggle="modal" onclick="previewLearnMore();">Learn more</a>'
-        + '</div>'
-        + '<div class="pp__ul mt-xlg">';
     if (short_description != '' && short_description != null && typeof short_description
         != 'undefined') {
-      data += '<div class="panel-group overview-panel" id="accordion">'
-          + '<div class="panel panel-default">'
-          + '<div class="panel-heading">'
-          + '<div class="panel-title" style="font-weight: bold;">'
-          + '<a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">'
-          + '<div class="text-left dis-inline pull-left">'
-          + '<span class="ellipsis__">' + 'Share my data with ' + short_description
-          + ' and qualified researchers worldwide' + '</span>'
-          + '</div>'
-          + '<div class="text-right dis-inline pull-right"><span class="glyphicon glyphicon-chevron-right"></span>'
-          + '</div><div class="clearfix"></div></a></div></div>'
-          + '<div id="collapse1" class="panel-collapse collapse"><div class="panel-body">'
-          + 'Share my data with ' + short_description + ' and qualified researchers worldwide'
-          + '</div></div></div></div>';
-
+      short_description = 'Share my data with ' + short_description + ' and qualified researchers worldwide';
+      $("#accordionEllipsis").text(short_description);
+      $("#accordionCollapse1").text(short_description);
+      $("#accordianNA").hide();
+      $("#accordion").show();
     } else {
-      data += '<ul class=""><li id="shortDescriptionModalId" style="font-weight: bold;"> - NA - </li></ul>';
+      short_description = '';
+      $("#accordionEllipsis").text(short_description);
+      $("#accordionCollapse1").text(short_description);
+      $("#shortDescriptionModalId").text(' - NA - ');
+      $("#accordianNA").show();
+      $("#accordion").hide();
     }
 
     if (long_descriptionId != '' && long_descriptionId != null && typeof long_descriptionId
         != 'undefined') {
-      data += '<div class="panel-group overview-panel" id="accordion1">'
-          + '<div class="panel panel-default">'
-          + '<div class="panel-heading">'
-          + '<div class="panel-title" style="font-weight: bold;">'
-          + '<a data-toggle="collapse" data-parent="#accordion1" href="#collapse2" aria-expanded="true">'
-          + '<div class="text-left dis-inline pull-left">'
-          + '<span class="ellipsis__">' + 'Only share my data with ' + long_descriptionId
-          + '</span>'
-          + '</div>'
-          + '<div class="text-right dis-inline pull-right"><span class="glyphicon glyphicon-chevron-right"></span>'
-          + '</div><div class="clearfix"></div></a></div></div>'
-          + '<div id="collapse2" class="panel-collapse collapse"><div class="panel-body">'
-          + 'Only share my data with ' + long_descriptionId + '</div></div></div></div>';
+     long_descriptionId = 'Only share my data with ' + long_descriptionId;
+   	 $("#accordion1Ellipsis").text(long_descriptionId);
+   	 $("#accordion1Collapse2").text(long_descriptionId);
+   	 $("#accordian1NA").hide();
+   	 $("#accordion1").show();
     } else {
-      data += '<ul class=""><li id="longDescriptionModalId" style="font-weight: bold;"> - NA - </li></ul>';
-    }
-    data += '</div>';
+     long_descriptionId = '';
+   	 $("#accordion1Ellipsis").text(long_descriptionId);
+   	 $("#accordion1Collapse2").text(long_descriptionId);
+     $("#shortDescriptionModalId").text(' - NA - ');
+     $("#accordian1NA").show();
+     $("#accordion1").hide();
+   }
 
-    $('.force-overflow__').html(data);
     $('.scrollbar__').scrollTop(0);
     colapseUpAndDown();
     $('#cancelButtonId').show();
@@ -977,29 +966,34 @@
   function previewLearnMore() {
     $('#cancelButtonId').hide();
     $('#doneButtonId').show();
-    $('.force-overflow__').html('');
     var learn_more_desc = $('learnMoreTextId').summernote('code');
-    var data = '<div class="pp__title">Learn more</div>'
-        + '<div class="pp__ul mt-xlg">';
+
+    $("#titleModalId").text("Learn more");
     if (learn_more_desc != ' ' && learn_more_desc != '' && learn_more_desc != null
         && typeof learn_more_desc != 'undefined') {
-      data += '<div class="panel-group overview-panel" id="accordion1">'
-          + '<div class="panel panel-default">'
-          + '<div class="panel-heading">'
-          + '<div class="panel-title" style="font-weight: bold;">'
-          + '<a data-toggle="collapse" data-parent="#accordion1" href="#collapse2" aria-expanded="true">'
-          + '<div class="text-left dis-inline pull-left">'
-          + '<span class="ellipsis__">' + learn_more_desc + '</span>'
-          + '</div>'
-          + '<div class="text-right dis-inline pull-right"><span class="glyphicon glyphicon-chevron-right"></span>'
-          + '</div><div class="clearfix"></div></a></div></div>'
-          + '<div id="collapse2" class="panel-collapse collapse"><div class="panel-body">'
-          + learn_more_desc + '</div></div></div></div>';
-    } else {
-      data += '<ul class=""><li id="learnMoreDescId" style="font-weight: bold;"> - NA - </li></ul>';
-    }
-    data += '</div>';
-    $('.force-overflow__').html(data);
+        $("#accordionEllipsis").text(learn_more_desc);
+        $("#accordionCollapse1").text(learn_more_desc);
+        $("#accordianNA").hide();
+        $("#accordion").show();
+        
+        $("#accordian1NA").hide();
+        $("#accordion1").hide();
+        $("#learnMoreId").hide();
+        $("#tagLineDescriptionModalId").hide();
+      } else {
+    	learn_more_desc = '';
+        $("#accordionEllipsis").text(learn_more_desc);
+        $("#accordionCollapse1").text(learn_more_desc);
+        $("#shortDescriptionModalId").text(' - NA - ');
+        $("#accordianNA").show();
+        $("#accordion").hide();
+        
+        $("#accordian1NA").hide();
+        $("#accordion1").hide();
+        $("#learnMoreId").hide();
+        $("#tagLineDescriptionModalId").hide();
+      }
+   
     $('.scrollbar__').scrollTop(0);
     colapseUpAndDown();
   }

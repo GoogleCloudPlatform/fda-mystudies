@@ -44,6 +44,7 @@ export const expectedSiteParticipantDetails = {
         newlyCreatedUser: true,
         studyType: StudyType.Close,
         sitePermission: Permission.ViewAndEdit,
+        disabledDate: '06/05/2020',
       },
       {
         customLocationId: '',
