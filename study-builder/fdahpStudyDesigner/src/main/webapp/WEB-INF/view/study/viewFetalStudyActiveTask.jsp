@@ -606,10 +606,11 @@
           if (fetalKick == 0) {
             console.log("inside 0");
             $('#fetalKickId').val('');
-            $('.timeDurationClass').find('.help-block').html(
-                '<ul class="list-unstyled"><li>Number of kicks should be greater than zero.</li></ul>');
+            $('.timeDurationClass').find('.help-block').empty().append(
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Number of kicks should be greater than zero."));
           } else {
-            $('.timeDurationClass').find('.help-block').html('');
+            $('.timeDurationClass').find('.help-block').empty();
           }
         }
       });
@@ -620,7 +621,7 @@
           $('.chartSection').show();
         if (frequencyType && frequencyType == 'Manually Schedule') {
           $('.activeaddToChartText').show();
-          $('.activeaddToChartText').html(
+          $('.activeaddToChartText').text(
               'A max of x runs will be displayed in each view of the chart.');
         }
       }
@@ -635,7 +636,8 @@
           durationFlag = false;
           $('#inputClockId').parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-              '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please select a non-zero Duration value."));
         } else {
           durationFlag = true;
           $('#inputClockId').parent().find(".help-block").empty();
@@ -737,12 +739,14 @@
             if (statId && statId == 'identifierId') {
               $("#identifierId").parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
-                  '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "This is a required field."));
               $('#identifierId').focus();
             } else {
               $("#static").parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
-                  '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                   "This is a required field."));
               $('#static').focus();
             }
             statFlag = false;
@@ -798,7 +802,8 @@
             if (clock)
               $('#inputClockId').parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
-                  '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please select a non-zero Duration value."));
           } else {
             $('#inputClockId').parent().find(".help-block").empty();
             var dt = new Date();
@@ -854,11 +859,13 @@
                         if (statId && statId == 'identifierId') {
                           $("#identifierId").parent().addClass('has-error has-danger').find(
                               ".help-block").empty().append(
-                              '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+                                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                                "This is a required field."));
                         } else {
                           $("#static").parent().addClass('has-error has-danger').find(
                               ".help-block").empty().append(
-                              '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+                              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                              "This is a required field."));
                         }
                         $("#doneId").attr("disabled", false);
                         $("body").removeClass('loading');
@@ -878,7 +885,8 @@
                   } else {
                     $('#inputClockId').parent().addClass('has-error has-danger').find(
                         ".help-block").empty().append(
-                        '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                        "Please select a non-zero Duration value."));
                     $("#doneId").attr("disabled", false);
                     $("body").removeClass('loading');
                   }
@@ -904,7 +912,8 @@
             if (clock)
               $('#inputClockId').parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
-                  '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please select a non-zero Duration value."));
           }
           showErrMsg("Please fill in all mandatory fields.");
           $('.contentClass a').tab('show');
@@ -921,7 +930,8 @@
         } else if (!$('#shortTitleId')[0].checkValidity()) {
           $("#shortTitleId").parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-              '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "This is a required field."));
           showErrMsg("Please fill in all mandatory fields.");
           $('.contentClass a').tab('show');
           $("body").removeClass('loading');
@@ -932,7 +942,8 @@
               if (!durationFlag) {
                 $('#inputClockId').parent().addClass('has-error has-danger').find(
                     ".help-block").empty().append(
-                    '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
+                    $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    "Please select a non-zero Duration value."));
                 $('#inputClockId').focus();
                 showErrMsg("Please fill in all mandatory fields.");
                 $('.contentClass a').tab('show');
@@ -1057,8 +1068,8 @@
             e.preventDefault();
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
-            $(this).parent().find(".help-block").empty().html(
-                "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
+            $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Special characters such as #^}{ are not allowed."));
           }
         }
       });
@@ -1074,8 +1085,8 @@
             e.preventDefault();
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
-            $(this).parent().find(".help-block").empty().html(
-                "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
+            $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "The characters like (< >) are not allowed."));
           }
         }
       });
@@ -1118,8 +1129,9 @@
                 $('.shortTitleClass').parent().addClass("has-danger").addClass("has-error");
                 $('.shortTitleClass').parent().find(".help-block").empty();
                 $(thisAttr).parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>'" + shortTitle
-                    + "' has already been used in the past.</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    shortTitle
+                    + " has already been used in the past."));
                 callback(false);
               }
             },
@@ -1128,7 +1140,7 @@
         } else {
           callback(true);
           $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-          $('.shortTitleClass').parent().find(".help-block").html("");
+          $('.shortTitleClass').parent().find(".help-block").empty();
         }
       } else {
         callback(false);
@@ -1171,8 +1183,9 @@
                   $('#identifierId').parent().addClass("has-danger").addClass("has-error");
                   $('#identifierId').parent().find(".help-block").empty();
                   $('#identifierId').parent().find(".help-block").append(
-                      "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-                      + "' has already been used in the past.</li></ul>");
+                	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                      activeTaskAttIdVal
+                      + " has already been used in the past."));
                   $('#identifierId').focus();
                   showErrMsg("Please fill in all mandatory fields.");
                   $('.contentClass a').tab('show');
@@ -1189,7 +1202,7 @@
           } else {
             callback(true);
             $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
-            $('.shortTitleClass').parent().find(".help-block").html("");
+            $('.shortTitleClass').parent().find(".help-block").empty();
           }
         } else {
           $.ajax({
@@ -1216,8 +1229,9 @@
                 $('.statShortTitleClass').parent().addClass("has-danger").addClass("has-error");
                 $('.statShortTitleClass').parent().find(".help-block").empty();
                 $(thisAttr).parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>'" + activeTaskAttIdVal
-                    + "' has already been used in the past.</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                    activeTaskAttIdVal
+                    + " has already been used in the past."));
                 if (callback)
                   callback(false);
 

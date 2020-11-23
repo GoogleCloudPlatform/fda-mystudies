@@ -198,7 +198,7 @@
             if (message == "SUCCESS") {
               reloadResourceDataTable(data.resourceList, null);
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                   "Reorder done successfully.");
               if ($('.eighthResources').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
@@ -207,13 +207,13 @@
               }
             } else {
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent.");
             }
             setTimeout(hideDisplayMessage, 4000);
           },
           error: function (xhr, status, error) {
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
             setTimeout(hideDisplayMessage, 4000);
           }
         });
@@ -250,19 +250,19 @@
                   $('#markAsComp').prop('disabled', false);
                   $('[data-toggle="tooltip"]').tooltip('destroy');
                 }
-                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                     "Resource deleted successfully.");
                 $('#alertMsg').show();
                 reloadData(studyId);
               } else {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Unable to delete resource.");
                 $('#alertMsg').show();
               }
               setTimeout(hideDisplayMessage, 4000);
             },
             error: function (xhr, status, error) {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
               setTimeout(hideDisplayMessage, 4000);
             }
           });

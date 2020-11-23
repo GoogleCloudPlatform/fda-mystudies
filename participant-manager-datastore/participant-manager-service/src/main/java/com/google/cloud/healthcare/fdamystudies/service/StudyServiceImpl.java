@@ -7,7 +7,6 @@
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.STUDY_PARTICIPANT_REGISTRY_VIEWED;
 
@@ -17,37 +16,27 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
-import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
-import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCountForStudy;
 import com.google.cloud.healthcare.fdamystudies.model.SiteCount;
-import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
-import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyAppDetails;
 import com.google.cloud.healthcare.fdamystudies.model.StudyCount;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyInfo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyParticipantDetails;
-import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -64,15 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class StudyServiceImpl implements StudyService {
   private XLogger logger = XLoggerFactory.getXLogger(StudyServiceImpl.class.getName());
 
-  @Autowired private StudyPermissionRepository studyPermissionRepository;
-
-  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
-
   @Autowired private ParticipantStudyRepository participantStudyRepository;
-
-  @Autowired private SitePermissionRepository sitePermissionRepository;
-
-  @Autowired private AppRepository appRepository;
 
   @Autowired private StudyRepository studyRepository;
 
@@ -99,46 +80,35 @@ public class StudyServiceImpl implements StudyService {
       return studyResponse;
     }
 
-    List<SitePermissionEntity> sitePermissions =
-        sitePermissionRepository.findSitePermissionByUserId(userId);
+    List<StudyInfo> studyDetails = studyRepository.getStudyDetails(userId);
 
-    if (CollectionUtils.isEmpty(sitePermissions)) {
+    if (CollectionUtils.isEmpty(studyDetails)) {
       throw new ErrorCodeException(ErrorCode.NO_STUDIES_FOUND);
     }
 
-    Map<StudyEntity, List<SitePermissionEntity>> studyPermissionMap =
-        sitePermissions.stream().collect(Collectors.groupingBy(SitePermissionEntity::getStudy));
-
-    List<String> usersStudyIds =
-        sitePermissions
+    List<EnrolledInvitedCountForStudy> enrolledInvitedCountList =
+        studyRepository.getEnrolledInvitedCountByUserId(userId);
+    Map<String, EnrolledInvitedCountForStudy> enrolledInvitedCountMap =
+        CollectionUtils.emptyIfNull(enrolledInvitedCountList)
             .stream()
-            .distinct()
-            .map(studyEntity -> studyEntity.getStudy().getId())
-            .collect(Collectors.toList());
+            .collect(
+                Collectors.toMap(EnrolledInvitedCountForStudy::getStudyId, Function.identity()));
 
-    Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId =
-        getStudyPermissionsByStudyInfoId(userId, usersStudyIds);
-
-    List<String> usersSiteIds =
-        sitePermissions
+    List<EnrolledInvitedCountForStudy> enrolledInvitedCountListForOpenStudy =
+        studyRepository.getInvitedEnrolledCountForOpenStudyForStudies(userId);
+    Map<String, EnrolledInvitedCountForStudy> enrolledInvitedCountMapOfOpenStudy =
+        CollectionUtils.emptyIfNull(enrolledInvitedCountListForOpenStudy)
             .stream()
-            .map(s -> s.getSite().getId())
-            .distinct()
-            .collect(Collectors.toList());
+            .collect(
+                Collectors.toMap(EnrolledInvitedCountForStudy::getStudyId, Function.identity()));
+    enrolledInvitedCountMap.putAll(enrolledInvitedCountMapOfOpenStudy);
 
-    Map<String, Long> siteWithInvitedParticipantCountMap =
-        getSiteWithInvitedParticipantCountMap(usersSiteIds);
-
-    Map<String, Long> siteWithEnrolledParticipantCountMap =
-        getSiteWithEnrolledParticipantCountMap(usersSiteIds);
+    List<StudyCount> siteCounts = studyRepository.getSiteCount(userId);
+    Map<String, StudyCount> sitesCountMap =
+        siteCounts.stream().collect(Collectors.toMap(StudyCount::getStudyId, Function.identity()));
 
     return prepareStudyResponse(
-        sitePermissions,
-        studyPermissionsByStudyInfoId,
-        studyPermissionMap,
-        siteWithInvitedParticipantCountMap,
-        siteWithEnrolledParticipantCountMap,
-        optUserRegAdminEntity.get());
+        studyDetails, sitesCountMap, enrolledInvitedCountMap, optUserRegAdminEntity.get());
   }
 
   private StudyResponse getStudiesForSuperAdmin(UserRegAdminEntity userRegAdminEntity) {
@@ -162,8 +132,7 @@ public class StudyServiceImpl implements StudyService {
     List<StudyEntity> studies = studyRepository.findAll();
     List<StudyDetails> studyDetailsList = new ArrayList<>();
     for (StudyEntity study : studies) {
-      List<SiteEntity> sites = siteRepository.findSitesByStudyId(study.getId());
-      if (CollectionUtils.isNotEmpty(sites)) {
+      if (sitesPerStudyMap.containsKey(study.getId())) {
         StudyDetails studyDetail = new StudyDetails();
         studyDetail.setId(study.getId());
         studyDetail.setCustomId(study.getCustomId());
@@ -201,111 +170,55 @@ public class StudyServiceImpl implements StudyService {
     return 0L;
   }
 
-  private Map<String, StudyPermissionEntity> getStudyPermissionsByStudyInfoId(
-      String userId, List<String> usersStudyIds) {
-    List<StudyPermissionEntity> studyPermissions =
-        studyPermissionRepository.findByStudyIds(usersStudyIds, userId);
-
-    Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId = new HashMap<>();
-    if (CollectionUtils.isNotEmpty(studyPermissions)) {
-      studyPermissionsByStudyInfoId =
-          studyPermissions
-              .stream()
-              .collect(Collectors.toMap(e -> e.getStudy().getId(), Function.identity()));
-    }
-    return studyPermissionsByStudyInfoId;
-  }
-
   private StudyResponse prepareStudyResponse(
-      List<SitePermissionEntity> sitePermissions,
-      Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId,
-      Map<StudyEntity, List<SitePermissionEntity>> studyPermissionMap,
-      Map<String, Long> siteWithInvitedParticipantCountMap,
-      Map<String, Long> siteWithEnrolledParticipantCountMap,
+      List<StudyInfo> studyList,
+      Map<String, StudyCount> sitesCountMap,
+      Map<String, EnrolledInvitedCountForStudy> enrolledInvitedCountMap,
       UserRegAdminEntity userRegAdminEntity) {
     List<StudyDetails> studies = new ArrayList<>();
-    for (Map.Entry<StudyEntity, List<SitePermissionEntity>> entry : studyPermissionMap.entrySet()) {
+    for (StudyInfo study : studyList) {
       StudyDetails studyDetail = new StudyDetails();
-      StudyEntity study = entry.getKey();
-      String studyId = study.getId();
-      studyDetail.setId(studyId);
-      studyDetail.setCustomId(entry.getKey().getCustomId());
-      studyDetail.setName(entry.getKey().getName());
-      studyDetail.setType(entry.getKey().getType());
+      studyDetail.setId(study.getStudyId());
       studyDetail.setCustomId(study.getCustomId());
-      studyDetail.setName(study.getName());
+      studyDetail.setName(study.getStudyName());
       studyDetail.setType(study.getType());
       studyDetail.setLogoImageUrl(study.getLogoImageUrl());
-      List<SitePermissionEntity> permissions = entry.getValue();
-      studyDetail.setSitesCount((long) permissions.size());
+      studyDetail.setStudyPermission(study.getEdit());
+      studyDetail.setSitesCount(
+          sitesCountMap.containsKey(study.getStudyId())
+              ? sitesCountMap.get(study.getStudyId()).getCount()
+              : 0L);
 
-      if (studyPermissionsByStudyInfoId.get(studyId) != null) {
-        Integer studyEditPermission =
-            studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit().value();
-        studyDetail.setStudyPermission(
-            studyEditPermission == Permission.NO_PERMISSION.value()
-                ? Permission.VIEW.value()
-                : Permission.EDIT.value());
-        studyDetail.setStudyPermission(studyEditPermission);
-      }
-
-      calculateEnrollmentPercentage(
-          siteWithInvitedParticipantCountMap,
-          siteWithEnrolledParticipantCountMap,
-          entry,
-          studyDetail);
-      if (studyPermissionsByStudyInfoId.containsKey(studyId)) {
-        studies.add(studyDetail);
-      } else {
-        SitePermissionEntity activeSitePermission =
-            permissions
-                .stream()
-                .filter(
-                    sitePermissionEntity ->
-                        SiteStatus.ACTIVE
-                            .value()
-                            .equals(sitePermissionEntity.getSite().getStatus()))
-                .findAny()
-                .orElse(null);
-        if (activeSitePermission != null) {
-          studies.add(studyDetail);
-        }
-      }
+      calculateEnrollmentPercentage(enrolledInvitedCountMap, study, studyDetail);
+      studies.add(studyDetail);
     }
+
+    LongSummaryStatistics totalSitePermission =
+        sitesCountMap.values().stream().mapToLong(StudyCount::getCount).summaryStatistics();
 
     StudyResponse studyResponse =
         new StudyResponse(
             MessageCode.GET_STUDIES_SUCCESS,
             studies,
-            sitePermissions.size(),
+            totalSitePermission.getSum(),
             userRegAdminEntity.isSuperAdmin());
     logger.exit(String.format("total studies=%d", studyResponse.getStudies().size()));
     return studyResponse;
   }
 
   private void calculateEnrollmentPercentage(
-      Map<String, Long> siteWithInvitedParticipantCountMap,
-      Map<String, Long> siteWithEnrolledParticipantCountMap,
-      Map.Entry<StudyEntity, List<SitePermissionEntity>> entry,
+      Map<String, EnrolledInvitedCountForStudy> enrolledInvitedCountMap,
+      StudyInfo study,
       StudyDetails studyDetail) {
     long studyInvitedCount = 0L;
     Long studyEnrolledCount = 0L;
-    for (SitePermissionEntity sitePermission : entry.getValue()) {
-      String siteId = sitePermission.getSite().getId();
-      String studyType = entry.getKey().getType();
-      if (siteWithInvitedParticipantCountMap.containsKey(siteId) && studyType.equals(CLOSE_STUDY)) {
-        studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
-      }
 
-      if (sitePermission.getSite().getTargetEnrollment() != null
-          && entry.getKey().getType().equals(OPEN_STUDY)) {
-        studyInvitedCount = sitePermission.getSite().getTargetEnrollment();
-      }
+    EnrolledInvitedCountForStudy enrolledInvitedCount =
+        enrolledInvitedCountMap.get(study.getStudyId());
 
-      if (siteWithEnrolledParticipantCountMap.containsKey(siteId)) {
-        studyEnrolledCount +=
-            siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
-      }
+    if (enrolledInvitedCount != null) {
+      studyInvitedCount = enrolledInvitedCount.getInvitedCount();
+      studyEnrolledCount = enrolledInvitedCount.getEnrolledCount();
     }
 
     studyDetail.setEnrolled(studyEnrolledCount);
@@ -318,28 +231,6 @@ public class StudyServiceImpl implements StudyService {
               / Double.valueOf(studyDetail.getInvited());
       studyDetail.setEnrollmentPercentage(percentage);
     }
-  }
-
-  private Map<String, Long> getSiteWithEnrolledParticipantCountMap(List<String> usersSiteIds) {
-    List<ParticipantStudyEntity> participantsEnrollments =
-        participantStudyRepository.findParticipantEnrollmentsBySiteIds(usersSiteIds);
-
-    return participantsEnrollments
-        .stream()
-        .filter(e -> e.getStatus().equals(EnrollmentStatus.IN_PROGRESS.getStatus()))
-        .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
-  }
-
-  private Map<String, Long> getSiteWithInvitedParticipantCountMap(List<String> usersSiteIds) {
-    List<ParticipantRegistrySiteEntity> participantRegistry =
-        (List<ParticipantRegistrySiteEntity>)
-            CollectionUtils.emptyIfNull(
-                participantRegistrySiteRepository.findBySiteIds(usersSiteIds));
-
-    return participantRegistry
-        .stream()
-        .filter(e -> e.getOnboardingStatus().equals(OnboardingStatus.INVITED.getCode()))
-        .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
   }
 
   @Override

@@ -157,7 +157,7 @@
         addPasswordPopup();
         var errMsg = '${errMsg}';
         if (errMsg.length > 0) {
-          $("#errMsg").html(errMsg);
+          $("#errMsg").text(errMsg);
           $("#errMsg").show("fast");
           setTimeout(hideDisplayMessage, 4000);
         }

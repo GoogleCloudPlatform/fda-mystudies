@@ -2510,9 +2510,9 @@ option {
 }
 
 .pp__learnMore {
-  color: #000;
-  font-weight: 500;
-  font-size: 17px;
+  color: #337ab7 !important;
+  font-weight: 600 !important;
+  font-size: 17px !important;
   word-wrap: break-word;
 }
 
@@ -2524,9 +2524,9 @@ option {
 }
 
 .pp__learnmore a {
-  color: #000;
-  font-weight: 600;
-  font-size: 13px;
+  color: #337ab7 !important;
+  font-weight: 600 !important;
+  font-size: 17px !important;
 }
 
 .pp__scroll {
