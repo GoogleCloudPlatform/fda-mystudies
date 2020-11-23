@@ -20,6 +20,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @ConditionalOnProperty(
@@ -93,6 +94,17 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
   @Query("SELECT site from SiteEntity site where site.study.id= :studyId")
   public List<SiteEntity> findSitesByStudyId(String studyId);
 
+  @Modifying
+  @Transactional
+  @Query(
+      value =
+          "INSERT INTO sites_permissions (id, ur_admin_user_id, study_id, app_info_id, edit, created_by, created_time, site_id) "
+              + "SELECT CONCAT(SUBSTRING(MD5(RAND()) FROM 1 FOR 8), SUBSTRING(MD5(RAND()) FROM 1 FOR 32)), ur_admin_user_id, study_id, app_info_id, edit, created_by, NOW(), :siteId "
+              + "FROM study_permissions "
+              + "WHERE study_id=:studyId",
+      nativeQuery = true)
+  public void addSitePermissions(String studyId, String siteId);
+  
   @Query(
       value =
           "SELECT study_created AS studyCreatedTimeStamp, site_created AS siteCreatedTimeStamp, study_id AS studyId, site_id AS siteId, IFNULL(target_enrollment, 0) AS targetEnrollment, site_name AS siteName, custom_id AS customId, study_name AS studyName, TYPE AS studyType, custom_app_id AS customAppId, app_id AS appId, app_name AS appName, logo_image_url AS logoImageUrl, STATUS AS studyStatus, edit AS editPermission, study_permission AS studyPermission "
