@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.APP_PARTICIPANT_REGISTRY_VIEWED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
@@ -18,6 +19,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -25,7 +27,6 @@ import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AppMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
-import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.StudyMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -441,7 +442,18 @@ public class AppServiceImpl implements AppService {
               appParticipantsInfo.getUserDetailsId() + appParticipantsInfo.getStudyId());
 
       if (appSite != null) {
-        AppSiteDetails appSiteDetails = SiteMapper.toAppSiteDetails(appSite, appParticipantsInfo);
+        AppSiteDetails appSiteDetails = new AppSiteDetails();
+        appSiteDetails.setSiteId(appSite.getSiteId());
+        appSiteDetails.setCustomLocationId(appSite.getLocationCustomId());
+        appSiteDetails.setLocationName(appSite.getLocationName());
+        appSiteDetails.setParticipantStudyStatus(appParticipantsInfo.getParticipantStudyStatus());
+
+        String withdrawalDate = DateTimeUtils.format(appParticipantsInfo.getWithdrawalTime());
+        appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
+
+        String enrollmentDate = DateTimeUtils.format(appParticipantsInfo.getEnrolledTime());
+        appSiteDetails.setEnrollmentDate(
+            StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
         appStudyDetails.getSites().add(appSiteDetails);
       }
 

@@ -155,9 +155,11 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
 
   @Query(
       value =
-          "SELECT ud.id AS userDetailsId, psi.site_id as siteId, psi.study_info_id AS studyId, loc.custom_id AS locationCustomId, loc.name AS locationName "
+          "SELECT ud.id AS userDetailsId, psi.site_id as siteId, psi.study_info_id AS studyId, "
+              + "loc.custom_id AS locationCustomId, loc.name AS locationName "
               + "FROM participant_study_info psi, locations loc, sites s, user_details ud "
-              + "WHERE ud.id=psi.user_details_id AND psi.study_info_id=s.study_id AND psi.site_id=s.id AND loc.id=s.location_id AND "
+              + "WHERE ud.id=psi.user_details_id AND psi.study_info_id=s.study_id "
+              + "AND psi.site_id=s.id AND loc.id=s.location_id AND "
               + "ud.app_info_id=:appId AND psi.status NOT IN (:excludeParticipantStudyStatus) "
               + "AND ud.id IN (:userIds)",
       nativeQuery = true)
