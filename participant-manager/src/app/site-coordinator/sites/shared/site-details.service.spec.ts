@@ -38,6 +38,10 @@ describe('SiteDetailsService', () => {
     const entityServiceSpy = jasmine.createSpyObj<
       EntityService<SiteParticipants>
     >('EntityService', {get: of(expectedSiteParticipantDetails)});
+
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedSiteParticipantDetails),
+    });
     participantDetailsService = new SiteDetailsService(
       entityServiceSpy,
       httpServiceSpyObj,
@@ -52,7 +56,7 @@ describe('SiteDetailsService', () => {
           ),
         fail,
       );
-    expect(entityServiceSpy.get).toHaveBeenCalledTimes(1);
+    expect(httpServiceSpyObj.get).toHaveBeenCalledTimes(1);
   }));
 
   it('should change the status Enable/Disable invitation', () => {
