@@ -3084,7 +3084,7 @@
   }
 
   function addDateAnchor() {
-    customAnchorCount = parseInt($('.manually-anchor-option').length);
+    customAnchorCount = $('.manually-anchor-option').length;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor Date </span></span>"
