@@ -32,7 +32,7 @@ const routes: Routes = [
   {path: 'about', component: AboutComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'pagenotfound', component: PageNotFoundComponent},
-  {path: '**', redirectTo: 'pagenotfound'},
+  {path: '**', pathMatch: 'full', redirectTo: 'pagenotfound'},
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

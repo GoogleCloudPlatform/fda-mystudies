@@ -131,7 +131,8 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     gcp_bucket_name                   = "example-dev-mystudies-consent-documents"
     institution_resources_bucket_name = "example-dev-mystudies-institution-resources"
-    base_url                          = "https://example-dev.example.com."
+    base_url                          = "https://participants.example-dev.example.com"
+    studies_base_url                  = "https://studies.example-dev.example.com"
     firestore_project_id              = "example-dev-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
