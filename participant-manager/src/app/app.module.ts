@@ -16,7 +16,7 @@ import {httpInterceptorProviders} from './http-interceptors';
 import {ToastrModule} from 'ngx-toastr';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgxSpinnerModule} from 'ngx-spinner';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ModalModule, BsModalRef} from 'ngx-bootstrap/modal';
 import {LoginCallbackComponent} from './auth/login-callback/login-callback.component';
@@ -46,6 +46,7 @@ import {environment} from '@environment';
     ReactiveFormsModule,
     NgxSpinnerModule,
     HttpClientModule,
+    HttpClientXsrfModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-center',
