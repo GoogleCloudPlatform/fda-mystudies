@@ -15,7 +15,7 @@ export class LoginComponent {
 
   ngOnInit(): void {
     if (this.authService.getUserId() === '') {
-      this.authService.initlocalStorage();
+      this.authService.initSessionStorage();
       setTimeout(() => {
         this.authService.beginLoginConsentFlow();
       }, 1000);

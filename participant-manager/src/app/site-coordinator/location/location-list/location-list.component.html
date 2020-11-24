@@ -16,7 +16,7 @@
   </div>
   <div class="max__w__1280 m-none">
     <ng-container>
-      <div *ngIf="manageLocations.locations.length != 0">
+      <div>
         <div class="cards1 m-none">
           <table
             class="table table-striped custom__table"
@@ -62,7 +62,12 @@
                 </td>
                 <td>
                   <span class="tbl__td__label">Location Name:</span>
-                  {{ location.name }}
+                  <span
+                    (click)="locationDetails(location.locationId)"
+                    class="no_st_en"
+                  >
+                    {{ location.name }}
+                  </span>
                 </td>
                 <td>
                   <span class="tbl__td__label">Associated Studies:</span>
@@ -80,6 +85,9 @@
                 </td>
               </tr>
             </tbody>
+            <div *ngIf="manageLocations.locations.length === 0">
+              No records found
+            </div>
             <tfoot class="custom__tfoot">
               <tr>
                 <td colspan="4">

@@ -94,9 +94,6 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setModified(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
       session.update(studyInfo);
-      if (studyInfo.getStatus().equalsIgnoreCase("Deactivated")) {
-        decommisionSiteFromStudy(session, studyInfo);
-      }
     } else {
       List<AppPermissionEntity> appPermissionList = new ArrayList<>();
       if (appInfo == null) {
@@ -178,29 +175,5 @@ public class StudiesDaoImpl implements StudiesDao {
     errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
     logger.info("StudiesDaoImpl - saveStudyMetadata() : ends");
     return errorBean;
-  }
-
-  private void decommisionSiteFromStudy(Session session, StudyEntity study) {
-    logger.info("StudiesDaoImpl - decommisionSiteFromStudy() : Starts");
-    CriteriaBuilder builder = null;
-    CriteriaQuery<SiteEntity> siteCriteria = null;
-    Root<SiteEntity> siteRoot = null;
-    Predicate[] sitePredicate = new Predicate[1];
-    List<SiteEntity> siteList = null;
-    builder = session.getCriteriaBuilder();
-    siteCriteria = builder.createQuery(SiteEntity.class);
-    siteRoot = siteCriteria.from(SiteEntity.class);
-    sitePredicate[0] = builder.equal(siteRoot.get("study"), study);
-    siteCriteria.select(siteRoot).where(sitePredicate);
-    siteList = session.createQuery(siteCriteria).getResultList();
-    if (!siteList.isEmpty()) {
-      for (SiteEntity site : siteList) {
-        site.setStatus(0);
-        site.setModifiedBy(String.valueOf(0));
-        site.setModified(Timestamp.from(Instant.now()));
-        session.update(site);
-      }
-    }
-    logger.info("StudiesDaoImpl - decommisionSiteFromStudy() : ends");
   }
 }

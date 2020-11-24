@@ -1,5 +1,5 @@
 <ng-container *ngIf="siteParticipants$ | async as siteParticipants">
-  <div>
+  <div class="site__details">
     <div class="subheader p-none pl-none">
       <div class="max__w__1280 m-none">
         <div class="flex__justify__space-between">
@@ -7,11 +7,14 @@
             class="subheader__title flex__justify__space-between align__items__baseline"
           >
             <div>
-              <a routerLink="/coordinator/studies/sites">
+              <a
+                routerLink="/coordinator/studies/sites"
+                class="cursor__pointer"
+              >
                 <img src="assets/svgs/back-arrow.svg" alt="" />
               </a>
             </div>
-            <div>
+            <div class="pl-1">
               <div class="mb-xs">
                 Site Participant Registry
                 <span
@@ -82,10 +85,10 @@
                   <button
                     name="btnToggleParticipant"
                     class="dropbtn btn banner__primary__btn mr-sm tnsb"
-                    (click)="toggleParticipant()"
+                    (click)="toggleParticipant($event)"
                   >
                     Add Participants
-                    <i class="fa fa-caret-down"></i>
+                    <i class="fa fa-caret-down arrow_clr__white"></i>
                   </button>
                   <div
                     [ngClass]="toggleDisplay ? 'show' : ''"
@@ -109,7 +112,7 @@
                         </button>
                       </div>
                     </div>
-                    <div class="flex__row__reverse">
+                    <div class="flex__row__reverse pr-3">
                       <a
                         download="Email_Import_Template"
                         target="_blank"
@@ -172,10 +175,10 @@
               <button
                 name="btnToggleParticipant"
                 class="dropbtn btn banner__primary__btn mr-sm font12"
-                (click)="toggleParticipant()"
+                (click)="toggleParticipant($event)"
               >
                 Add Participants
-                <i class="fa fa-caret-down"></i>
+                <i class="fa fa-caret-down arrow_clr__white"></i>
               </button>
               <div
                 [ngClass]="toggleDisplay ? 'show' : ''"
@@ -444,14 +447,14 @@
       <div class="tab-content site__table">
         <div>
           <table
-            class="table table-striped"
+            class="table table-striped custom__table"
             [mfData]="
               siteParticipants.participantRegistryDetail.registryParticipants
             "
             #mf="mfDataTable"
             [mfRowsOnPage]="10"
           >
-            <thead>
+            <thead class="custom__thead">
               <tr>
                 <span
                   class="sort__by__text mobile__view mr-sm"
@@ -467,7 +470,15 @@
                       [(ngModel)]="selectedAll"
                       (change)="selectAll()"
                     />
-                    <label for="css"></label>
+                    <label
+                      *ngIf="
+                        siteParticipants.participantRegistryDetail
+                          .sitePermission === permission.ViewAndEdit &&
+                        siteParticipants.participantRegistryDetail
+                          .siteStatus !== 0
+                      "
+                      for="css"
+                    ></label>
                   </span>
                   <mfDefaultSorter by="email">
                     Participant Email
@@ -484,7 +495,7 @@
                   </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.Disabled">
-                  <mfDefaultSorter by="invitedDate">
+                  <mfDefaultSorter by="disabledDate">
                     Date Disabled
                   </mfDefaultSorter>
                 </th>
@@ -500,14 +511,19 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let participant of mf.data">
+            <tbody class="custom__tbody">
+              <tr
+                *ngFor="let participant of mf.data"
+                class="border__bottom__red border-top__c4d1e6 progress__bar"
+              >
                 <!-- for all Selected -->
                 <td
                   *ngIf="activeTab == onBoardingStatus.All"
                   [routerLink]="['/coordinator/participant', participant.id]"
                 >
-                  <span class="no_st_en">{{ participant.email }}</span>
+                  <span class="no_st_en cursor__pointer outline__none">
+                    {{ participant.email }}
+                  </span>
                 </td>
 
                 <!-- for New Selected -->
@@ -520,17 +536,24 @@
                         [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
-                      <label for="{{ participant.id }}">
-                        <span
-                          class="no_st_en"
-                          [routerLink]="[
-                            '/coordinator/participant',
-                            participant.id
-                          ]"
-                        >
-                          {{ participant.email }}
-                        </span>
-                      </label>
+                      <label
+                        *ngIf="
+                          siteParticipants.participantRegistryDetail
+                            .sitePermission === permission.ViewAndEdit &&
+                          siteParticipants.participantRegistryDetail
+                            .siteStatus !== 0
+                        "
+                        for="{{ participant.id }}"
+                      ></label>
+                      <span
+                        class="no_st_en cursor__pointer outline__none"
+                        [routerLink]="[
+                          '/coordinator/participant',
+                          participant.id
+                        ]"
+                      >
+                        {{ participant.email }}
+                      </span>
                     </div>
                   </div>
                 </td>
@@ -563,22 +586,30 @@
                           (change)="rowCheckBoxChange($event)"
                         />
 
-                        <label for="{{ participant.id }}">
-                          <span
-                            class="no_st_en"
-                            [routerLink]="[
-                              '/coordinator/participant',
-                              participant.id
-                            ]"
-                          >
-                            {{ participant.email }}
-                          </span>
-                        </label>
+                        <label
+                          *ngIf="
+                            siteParticipants.participantRegistryDetail
+                              .sitePermission === permission.ViewAndEdit &&
+                            siteParticipants.participantRegistryDetail
+                              .siteStatus !== 0
+                          "
+                          for="{{ participant.id }}"
+                        ></label>
+                        <span
+                          class="no_st_en cursor__pointer outline__none"
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
+                        >
+                          {{ participant.email }}
+                        </span>
                       </div>
                       <div
                         *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
                       >
                         <span
+                          class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
                             participant.id
@@ -603,22 +634,29 @@
                         [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
-                      <label for="{{ participant.id }}">
-                        <span
-                          class="no_st_en"
-                          [routerLink]="[
-                            '/coordinator/participant',
-                            participant.id
-                          ]"
-                        >
-                          {{ participant.email }}
-                        </span>
-                      </label>
+                      <label
+                        *ngIf="
+                          siteParticipants.participantRegistryDetail
+                            .sitePermission === permission.ViewAndEdit &&
+                          siteParticipants.participantRegistryDetail
+                            .siteStatus !== 0
+                        "
+                        for="{{ participant.id }}"
+                      ></label>
+                      <span
+                        class="no_st_en cursor__pointer outline__none"
+                        [routerLink]="[
+                          '/coordinator/participant',
+                          participant.id
+                        ]"
+                      >
+                        {{ participant.email }}
+                      </span>
                     </div>
                   </div>
                 </td>
                 <td *ngIf="activeTab === onBoardingStatus.Disabled">
-                  {{ participant.invitedDate }}
+                  {{ participant.disabledDate }}
                 </td>
                 <!-- Belongs to all and invited and disabled  -->
                 <td *ngIf="activeTab != onBoardingStatus.New">
@@ -638,7 +676,15 @@
                 </td>
               </tr>
             </tbody>
-            <tfoot>
+            <div
+              *ngIf="
+                siteParticipants.participantRegistryDetail.registryParticipants
+                  .length === 0
+              "
+            >
+              No records found
+            </div>
+            <tfoot class="custom__tfoot">
               <tr>
                 <td colspan="4">
                   <mfBootstrapPaginator></mfBootstrapPaginator>

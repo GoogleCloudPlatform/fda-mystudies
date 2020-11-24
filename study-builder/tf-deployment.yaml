@@ -24,6 +24,18 @@ spec:
       containers:
         - name: study-builder
           image: gcr.io/fda-mystudies-dev-apps/study-builder:latest
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+          lifecycle:
+            postStart:
+              exec:
+                command: ["gcsfuse", "-o", "nonempty", "fda-mystudies-dev-mystudies-study-resources", "/usr/local/tomcat/webapps/study-resources"]
+            preStop:
+              exec:
+                command: ["fusermount", "-u", "/usr/local/tomcat/webapps/study-resources"]
           env:
             # DB ACCESS
             - name: DB_USER
@@ -83,7 +95,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: base_url
+                  key: studies_base_url
             - name: PARTICIPANT_USER_DATASTORE_URL
               value: "http://participant-user-datastore-np:50000/participant-user-datastore"
             - name: RESPONSE_DATASTORE_URL

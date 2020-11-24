@@ -19,13 +19,14 @@ metadata:
 spec:
   privileged: false
   allowedCapabilities:
-  - '*'
+  - 'NET_ADMIN'
+  - 'NET_RAW'
   volumes:
   - '*'
   # Required to prevent escalations to root.
-  allowPrivilegeEscalation: true
+  allowPrivilegeEscalation: false
   runAsUser:
-    rule: 'RunAsAny'
+    rule: 'MustRunAsNonRoot'
   seLinux:
     rule: 'RunAsAny'
   supplementalGroups:

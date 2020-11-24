@@ -742,10 +742,8 @@ public class ActivityMetaDataDao {
           if (!instructionIdList.isEmpty()) {
             List<InstructionsDto> instructionsDtoList =
                 session
-                    .createQuery(
-                        "from InstructionsDto IDTO"
-                            + " where IDTO.id in (:instructionIdList"
-                            + ") and IDTO.status=true")
+                    .createQuery("from InstructionsDto IDTO"
+                        + " where IDTO.id in (:instructionIdList) and IDTO.status=true")
                     .setParameterList("instructionIdList", instructionIdList)
                     .list();
             if ((instructionsDtoList != null) && !instructionsDtoList.isEmpty()) {
@@ -4085,9 +4083,10 @@ public class ActivityMetaDataDao {
     String searchQuery = "";
     try {
       ActivityAnchorDateBean activityAnchorDateBean = new ActivityAnchorDateBean();
-      searchQuery = "from AnchorDateTypeDto a where a.id=" + questionaire.getAnchorDateId() + "";
+      searchQuery = "from AnchorDateTypeDto a where a.id=:id";
       AnchorDateTypeDto anchorDateTypeDto =
-          (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
+          (AnchorDateTypeDto) session.createQuery(searchQuery)
+              .setParameter("id", questionaire.getAnchorDateId()).uniqueResult();
       if (anchorDateTypeDto != null) {
         if (!anchorDateTypeDto
             .getName()

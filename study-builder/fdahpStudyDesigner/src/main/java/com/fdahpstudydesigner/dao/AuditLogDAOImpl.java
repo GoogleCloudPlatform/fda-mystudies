@@ -71,14 +71,18 @@ public class AuditLogDAOImpl implements AuditLogDAO {
         queryString =
             "Update StudyBo set "
                 + draftColumn
-                + " , modifiedBy ="
-                + userId
-                + " , modifiedOn = now() where id ="
-                + studyId;
+                + " , modifiedBy = :userId"
+                + " , modifiedOn = now() where id = :studyId";
         if (newSession != null) {
-          newSession.createQuery(queryString).executeUpdate();
+          newSession.createQuery(queryString)
+              .setParameter("userId", userId)
+              .setParameter("studyId", studyId)
+              .executeUpdate();
         } else {
-          session.createQuery(queryString).executeUpdate();
+          session.createQuery(queryString)
+              .setParameter("userId", userId)
+              .setParameter("studyId", studyId)
+              .executeUpdate();
         }
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
