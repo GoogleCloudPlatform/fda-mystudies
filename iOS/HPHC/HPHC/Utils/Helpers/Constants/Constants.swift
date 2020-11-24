@@ -296,6 +296,7 @@ let kForceUpdate = "forceUpdate"
 let kMessage = "message"
 let kVisualStepId = "visual"
 let kConfirmation = "Confirmation"
+let kJailbroken = "Jailbroken devices are not allowed to use this app."
 
 public func log<T>(
   _ object: T?,
