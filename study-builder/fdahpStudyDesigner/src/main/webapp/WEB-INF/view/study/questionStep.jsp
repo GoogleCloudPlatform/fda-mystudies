@@ -6492,9 +6492,9 @@
       var count = parseInt(
           $("#rootId" + parent_index + " .numeric__row").last().find('select').attr("count"));
       var v = total + 1;
-      count = parseInt(count) + 1;
-      var addVar = "<div class='numeric__row display__flex__base' id='" + v + "'>" +
-          "   <span>V" + v + " =</span>" +
+      count = count + 1;
+      var addVar = "<div class='numeric__row display__flex__base' id='" + (parseInt(v)) + "'>" +
+          "   <span>V" + (parseInt(v)) + " =</span>" +
           "   <div class='form-group sm-selection' style=''>" +
           "      <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
           + index + "].questionConditionBranchBos[" + count + "].inputType' id='inputTypeId"
@@ -6505,7 +6505,7 @@
           "         <option value='F'>Function</option>" +
           "         <option value='RDE'>Response Data Element (x)</option>" +
           "      </select>" +
-          "		<div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId" + v
+          "		<div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId" + (parseInt(v))
           + "' style='display: none;'></div>" +
           "      <div class='help-block with-errors red-txt'></div>" +
           "      <input type='hidden' name='questionConditionBranchBoList[" + index
@@ -6521,7 +6521,7 @@
           + "' onclick='addVariable(this);' id='addVaraiable" + count + "'>+ Add Variable</div> " +
           "   </div>" +
           "   <div class='form-group sm__in add_var_hide'>" +
-          "      <input type='text' id='constantValId" + v + "' index='" + v
+          "      <input type='text' id='constantValId" + (parseInt(v)) + "' index='" + (parseInt(v))
           + "' class='constant form-control add_var_hide' onkeypress='return isNumberKey(event)'/>"
           +
           "   </div>" +
