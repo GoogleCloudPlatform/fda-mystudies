@@ -123,58 +123,46 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
         <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
       </div>
 
-      <div class="form-group pt-none pt-0">
-        <div class="accordion" id="accordionExample">
-          <div *ngFor="let app of user.apps" class="card">
-            <div class="flex__justify__space-between">
-              <div class="acc__dele">
-                <div class="card-header">
-                  <div class="mb-0 flex__justify__space-between">
-                    <div>
-                      <div class="custom__labels">
-                        <input
-                          type="checkbox"
-                          id="appCheckBox{{ app.id }}"
-                          disabled
-                          [value]="app.selected"
-                        />
-                        <label for="appCheckBox{{ app.id }}">
-                          {{ app.name }}
-                          <span class="app__id ml-xs">
-                            ({{ app.customId }})
-                          </span>
-                        </label>
-                      </div>
-                      <div class="pl-xl">
-                        <span
-                          *ngIf="app.permission == permission.View"
-                          class="txt__green font12"
-                        >
-                          View Only
-                        </span>
-                        <span
-                          *ngIf="app.permission == permission.ViewAndEdit"
-                          class="txt__green font12"
-                        >
-                          View And Edit
-                        </span>
-                      </div>
+    <div class="form-group pt-none pt-0">
+      <div class="accordion" id="accordionExample">
+        <div *ngFor="let app of user.apps" class="card">
+          <div class="flex__justify__space-between">
+            <div class="acc__dele">
+              <div class="card-header">
+                <div class="mb-0 flex__justify__space-between mob_display-flowroot">
+                  <div>
+                    <div class="custom__labels">
+                      <input
+                        type="checkbox"
+                        id="appCheckBox{{ app.id }}"
+                        disabled
+                        [value]="app.selected"
+                      />
+                      <label for="appCheckBox{{ app.id }}">
+                        {{ app.name }}
+                        <span class="app__id ml-xs">({{ app.customId }})</span>
+                      </label>
+                    </div>
+                    <div class="pl-xl">
+                      <span
+                        *ngIf="app.permission == permission.View"
+                        class="txt__green font12"
+                      >
+                        View Only
+                      </span>
+                      <span
+                        *ngIf="app.permission == permission.ViewAndEdit"
+                        class="txt__green font12"
+                      >
+                        View And Edit
+                      </span>
                     </div>
 
-                    <div class="app__id_num flex__justify__space-between">
-                      <div class="pr-2">
-                        {{
-                          app.selectedSitesCount
-                            | i18nPlural: sitesMessageMapping
-                        }}
-                      </div>
-                      <div
-                        class="fa__plus__minus"
-                        type="button"
-                        data-toggle="collapse"
-                        [attr.data-target]="'#collapse' + app.id"
-                        aria-expanded="false"
-                      ></div>
+                  <div class="app__id_num flex__justify__space-between mob_pull_right">
+                    <div class="pr-2">
+                      {{
+                        app.selectedSitesCount | i18nPlural: sitesMessageMapping
+                      }}
                     </div>
                   </div>
                 </div>
