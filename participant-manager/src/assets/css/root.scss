@@ -1235,4 +1235,30 @@ select {
   .acc__dele {
     margin-right: 0px;
   }
+  .mob_pull_right {
+    float: right !important;
+  }
+  .progress-label {
+    margin-top: 5px !important;
+  }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 320px) {
+  .mob_custom_width {
+    width: 300px !important;
+  }
+
+  .card-header {
+    padding: 15px 10px !important;
+  }
+  .mob_display-flowroot {
+    display: flow-root !important;
+  }
+
+  .card-body {
+    padding: 6px 14px !important;
+  }
+  .card-body__pad {
+    padding: 0 0px !important;
+  }
 }
