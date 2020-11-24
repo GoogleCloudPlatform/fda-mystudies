@@ -108,7 +108,7 @@ spec:
               value: "production"
             # SERVER CALLS
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000/oauth-scim-service"
+              value: "http://auth-server-np:50000/auth-server"
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
             - name: RESPONSE_DATASTORE_URL

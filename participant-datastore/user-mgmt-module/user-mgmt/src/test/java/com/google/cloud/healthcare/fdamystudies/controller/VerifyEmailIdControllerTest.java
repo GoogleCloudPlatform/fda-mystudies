@@ -184,7 +184,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     assertNotNull(userDetails);
     assertTrue(VERIFIED_STATUS == userDetails.getStatus());
 
-    verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
+    verify(1, putRequestedFor(urlEqualTo("/auth-server/users/" + Constants.VALID_USER_ID)));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
