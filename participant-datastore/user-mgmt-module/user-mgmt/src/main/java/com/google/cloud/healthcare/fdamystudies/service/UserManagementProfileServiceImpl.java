@@ -345,15 +345,18 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         || appPropertiesDetails.getRegEmailSub().equalsIgnoreCase("")) {
       subject = appConfig.getConfirmationMailSubject();
       content = appConfig.getConfirmationMail();
-      templateArgs.put("securitytoken", securityToken);
     } else {
-      content = appPropertiesDetails.getRegEmailBody().replace("<<< TOKEN HERE >>>", securityToken);
+      content = appPropertiesDetails.getRegEmailBody();
       subject = appPropertiesDetails.getRegEmailSub();
     }
 
+    if (appPropertiesDetails != null) {
+      templateArgs.put("appName", appPropertiesDetails.getAppName());
+    }
     // TODO(#496): replace with actual study's org name.
     templateArgs.put("orgName", appConfig.getOrgName());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmail(),

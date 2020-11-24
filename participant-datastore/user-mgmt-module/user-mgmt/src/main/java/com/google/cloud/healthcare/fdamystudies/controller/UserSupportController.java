@@ -95,6 +95,8 @@ public class UserSupportController {
     try {
       EmailResponse emailResponse =
           supportService.contactUsDetails(
+              // TODO(#2115): remove once the bug is fixed.
+              "PlaceHolder App Name",
               reqBean.getSubject(),
               reqBean.getBody(),
               reqBean.getFirstName(),

@@ -209,6 +209,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     templateArgs.put("securitytoken", verificationCode);
     templateArgs.put("orgName", appConfig.getOrgName());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("appName", userDetails.getApp().getAppName());
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmail(),
