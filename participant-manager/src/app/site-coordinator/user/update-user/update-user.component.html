@@ -246,7 +246,9 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
               <div class="flex__justify__space-between">
                 <div class="acc__dele">
                   <div class="card-header">
-                    <div class="mb-0 flex__justify__space-between">
+                    <div
+                      class="mb-0 flex__justify__space-between mob_display-flowroot"
+                    >
                       <div>
                         <div class="custom__labels">
                           <input
@@ -303,7 +305,9 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                           </span>
                         </div>
                       </div>
-                      <div class="app__id_num flex__justify__space-between">
+                      <div
+                        class="app__id_num flex__justify__space-between mob_pull_right"
+                      >
                         <div class="pr-2">
                           {{
                             app.selectedSitesCount
@@ -311,7 +315,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                           }}
                         </div>
                         <div
-                          class="fa__plus__minus"
+                          class="fa__plus__minus mob_pull_right"
                           type="button"
                           data-toggle="collapse"
                           [attr.data-target]="'#collapse' + app.id"
@@ -334,7 +338,9 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
 
                         <div class="card" *ngFor="let study of app.studies">
                           <div class="card-header">
-                            <div class="mb-0 flex__justify__space-between">
+                            <div
+                              class="mb-0 flex__justify__space-between mob_display-flowroot"
+                            >
                               <div>
                                 <div class="custom__labels">
                                   <input
@@ -397,7 +403,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                                 </div>
                               </div>
                               <div
-                                class="fa__plus__minus"
+                                class="fa__plus__minus mob_pull_right"
                                 type="button"
                                 data-toggle="collapse"
                                 [attr.data-target]="
