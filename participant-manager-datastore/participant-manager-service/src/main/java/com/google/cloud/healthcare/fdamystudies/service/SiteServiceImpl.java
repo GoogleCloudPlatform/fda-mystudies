@@ -762,7 +762,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional
   public InviteParticipantResponse inviteParticipants(
-      InviteParticipantRequest inviteParticipantRequest) {
+      InviteParticipantRequest inviteParticipantRequest, AuditLogEventRequest auditRequest) {
     logger.entry("begin inviteParticipants()");
 
     Optional<SiteEntity> optSiteEntity =
@@ -788,10 +788,13 @@ public class SiteServiceImpl implements SiteService {
 
     List<ParticipantRegistrySiteEntity> participantsList =
         participantRegistrySiteRepository.findByIds(inviteParticipantRequest.getIds());
+
     SiteEntity siteEntity = optSiteEntity.get();
+    auditRequest.setUserId(inviteParticipantRequest.getUserId());
+    auditRequest.setStudyId(siteEntity.getStudyId());
 
     List<ParticipantRegistrySiteEntity> invitedParticipants =
-        findEligibleParticipantsAndInvite(participantsList, siteEntity);
+        findEligibleParticipantsAndInvite(participantsList, siteEntity, auditRequest);
 
     participantsList.removeAll(invitedParticipants);
     List<String> failedParticipantIds =
@@ -815,7 +818,9 @@ public class SiteServiceImpl implements SiteService {
   }
 
   private List<ParticipantRegistrySiteEntity> findEligibleParticipantsAndInvite(
-      List<ParticipantRegistrySiteEntity> participants, SiteEntity siteEntity) {
+      List<ParticipantRegistrySiteEntity> participants,
+      SiteEntity siteEntity,
+      AuditLogEventRequest auditRequest) {
 
     List<ParticipantRegistrySiteEntity> invitedParticipants = new ArrayList<>();
     for (ParticipantRegistrySiteEntity participantRegistrySiteEntity : participants) {
@@ -843,9 +848,10 @@ public class SiteServiceImpl implements SiteService {
                   .plus(appPropertyConfig.getEnrollmentTokenExpiryInHours(), ChronoUnit.HOURS)
                   .toEpochMilli()));
 
-      InviteParticipantEntity inviteParticipantsEmail = new InviteParticipantEntity();
+      InviteParticipantEntity inviteParticipantsEmail =
+          SiteMapper.toInviteParticipantEntity(auditRequest);
       inviteParticipantsEmail.setParticipantRegistrySite(participantRegistrySiteEntity.getId());
-      inviteParticipantsEmail.setStudy(siteEntity.getStudy().getId());
+      inviteParticipantsEmail.setAppId(participantRegistrySiteEntity.getStudy().getAppId());
 
       invitedParticipantsEmailRepository.saveAndFlush(inviteParticipantsEmail);
 

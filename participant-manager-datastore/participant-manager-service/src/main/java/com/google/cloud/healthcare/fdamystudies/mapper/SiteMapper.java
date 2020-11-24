@@ -86,4 +86,16 @@ public class SiteMapper {
     auditRequest.setUserId(inviteParticipantDetails.getUserId());
     return auditRequest;
   }
+
+  public static InviteParticipantEntity toInviteParticipantEntity(
+      AuditLogEventRequest auditRequest) {
+    InviteParticipantEntity inviteParticipantsEmail = new InviteParticipantEntity();
+    inviteParticipantsEmail.setStudy(auditRequest.getStudyId());
+    inviteParticipantsEmail.setAppVersion(auditRequest.getAppVersion());
+    inviteParticipantsEmail.setCorrelationId(auditRequest.getCorrelationId());
+    inviteParticipantsEmail.setSource(auditRequest.getSource());
+    inviteParticipantsEmail.setMobilePlatform(auditRequest.getMobilePlatform());
+    inviteParticipantsEmail.setUserId(auditRequest.getUserId());
+    return inviteParticipantsEmail;
+  }
 }
