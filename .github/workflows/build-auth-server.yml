@@ -2,9 +2,9 @@ on:
   pull_request:
     paths:
     - 'common-modules/**'
-    - 'oauth-scim-module/**'
-    - '.github/workflows/build-oauth-scim-module.yml'
-name: Build-oauth-scim-module
+    - 'auth-server/**'
+    - '.github/workflows/build-auth-server.yml'
+name: Build-auth-server
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,5 +16,5 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-          cd oauth-scim-module
+          cd auth-server
           mvn -B package --file pom.xml        

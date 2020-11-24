@@ -25,9 +25,9 @@ set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 # used by client side applications
-SCIM_AUTH_EXTERNAL_URL="${BASE_URL}/oauth-scim-service"
+SCIM_AUTH_EXTERNAL_URL="${BASE_URL}/auth-server"
 # used in server to server calls
-SCIM_AUTH_URL="http://auth-server-np:50000/oauth-scim-service"
+SCIM_AUTH_URL="http://auth-server-np:50000/auth-server"
 HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
 DATETIME=`date +"%FT%TZ"`
 
