@@ -25,7 +25,7 @@ SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
 TMPFILE=$(mktemp)
 
 # Write user registration server db name to TMPFILE.
-echo "USE \`mystudies_userregistration\`;" >> ${TMPFILE}
+echo "USE \`mystudies_participant_datastore\`;" >> ${TMPFILE}
 
 # Read AppId and OrgId from secrets..
 ANDROID_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-android-bundle-id`
@@ -41,7 +41,7 @@ echo "UPDATE app_info SET
   ios_bundle_id=\"${IOS_BUNDLE_ID}\",
   ios_certificate=\"${IOS_CERTIFICATE}\",
   ios_certificate_password=\"${IOS_CERTIFICATE_PASSWORD}\"
-WHERE app_info_id=1;" >> ${TMPFILE}
+WHERE id=1;" >> ${TMPFILE}
 
 # Upload TMPFILE to GCS.
 GCS_FILE=gs://${SQL_IMPORT_BUCKET}/push_notification_info.sql
