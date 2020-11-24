@@ -34,12 +34,20 @@ export class SiteDetailsService {
           siteId,
         )}/participants`,
         {
-          params: {onboardingStatus: fetchingOptions},
+          params: {
+            onboardingStatus: fetchingOptions,
+            excludeEnrollmentStatus: ['notEligible', 'yetToJoin'],
+          },
         },
       );
     } else {
-      return this.entityService.get(
-        `sites/${encodeURIComponent(siteId)}/participants`,
+      return this.http.get<SiteParticipants>(
+        `${environment.baseUrl}/sites/${encodeURIComponent(
+          siteId,
+        )}/participants`,
+        {
+          params: {excludeEnrollmentStatus: ['notEligible', 'yetToJoin']},
+        },
       );
     }
   }

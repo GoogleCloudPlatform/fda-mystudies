@@ -14,7 +14,6 @@ import {ToastrModule} from 'ngx-toastr';
 
 describe('StudyDetailsService', () => {
   let studyDetailsService: StudyDetailsService;
-  let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -45,9 +44,12 @@ describe('StudyDetailsService', () => {
       'EntityService',
       {get: of(expectedResult.expectedStudiesDetails)},
     );
+    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedResult.expectedStudiesDetails),
+    });
     studyDetailsService = new StudyDetailsService(
       entityServiceSpy,
-      httpServiceSpyObj,
+      httpServicespyobj,
     );
 
     studyDetailsService
@@ -60,7 +62,7 @@ describe('StudyDetailsService', () => {
           ),
         fail,
       );
-    expect(entityServiceSpy.get).toHaveBeenCalledTimes(1);
+    expect(httpServicespyobj.get).toHaveBeenCalledTimes(1);
   }));
 
   it('should return an error when the server returns a 400', fakeAsync(() => {
@@ -72,9 +74,13 @@ describe('StudyDetailsService', () => {
       'EntityService',
       {get: throwError(errorResponses)},
     );
+
+    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: throwError(errorResponses),
+    });
     studyDetailsService = new StudyDetailsService(
       entitiyServiceSpy,
-      httpServiceSpyObj,
+      httpServicespyobj,
     );
 
     tick(40);

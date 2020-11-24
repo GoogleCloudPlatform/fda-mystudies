@@ -264,7 +264,7 @@
   }
 
   function showErrMsg1(message) {
-    $("#alertMsg").removeClass('s-box').addClass('e-box').html(message);
+    $("#alertMsg").removeClass('s-box').addClass('e-box').text(message);
     $('#alertMsg').show('10000');
     setTimeout(hideDisplayMessage, 10000);
   }

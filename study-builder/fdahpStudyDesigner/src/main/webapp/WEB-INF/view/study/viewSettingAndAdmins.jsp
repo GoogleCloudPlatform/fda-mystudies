@@ -566,12 +566,12 @@
     if (allowRejoin != "") {
       if (allowRejoin == 'Yes') {
         $('.rejointextclassYes').show();
-        $('#rejoin_comment_no').text('');
+        $('#rejoin_comment_no').empty();
         $('.rejointextclassNo').hide();
       } else {
         $('.rejointextclassNo').show();
         $('.rejointextclassYes').hide();
-        $('#rejoin_comment_yes').text('');
+        $('#rejoin_comment_yes').empty();
       }
     }
     $("[data-toggle=tooltip]").tooltip();
@@ -772,7 +772,7 @@
     $('#addAdminsToStudyId').attr('disabled', true);
     $('[name=case]:checked').each(function () {
       var name = escapeXml($(this).val());
-      var userId = $(this).attr('userId');
+      var userId = parseInt($(this).attr('userId'));
       $('#user' + userId).removeClass('checkCount').hide();
       $('#settingId').show();
       $(this).prop('checked', false);
@@ -780,7 +780,7 @@
       var domStr = '';
       domStr = domStr + '<tr id="studyAdminRowId' + userId
           + '" role="row" class="studyAdminRowCls" studyUserId="' + userId + '">';
-      domStr = domStr + '<td><span class="dis-ellipsis" title="' + name + '">' + name
+      domStr = domStr + '<td><span class="dis-ellipsis" title="' + DOMPurify.sanitize(name) + '">' + DOMPurify.sanitize(name)
           + '</span></td>';
       domStr = domStr + '<td><span class="radio radio-info radio-inline p-45">' +
           '<input type="radio" id="inlineRadio1' + userId + '" value="0" name="view' + userId
