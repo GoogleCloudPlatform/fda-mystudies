@@ -2207,8 +2207,9 @@ public class StudyDAOImpl implements StudyDAO {
               // get the Category, Research Sponsor name of the
               // study from categoryIds
               query =
-                  session.createQuery("from ReferenceTablesBo where id in(:category)")
-                    .setParameter("category", bean.getCategory());
+                  session
+                      .createQuery("from ReferenceTablesBo where id in(:category)")
+                      .setParameter("category", Integer.parseInt(bean.getCategory()));
               referenceTablesBos = query.list();
               if ((referenceTablesBos != null) && !referenceTablesBos.isEmpty()) {
                 bean.setCategory(referenceTablesBos.get(0).getValue());
@@ -2218,8 +2219,7 @@ public class StudyDAOImpl implements StudyDAO {
               liveStudy =
                   (StudyBo)
                       session
-                          .createQuery(
-                              "from StudyBo where customStudyId=:studyId and live=1")
+                          .createQuery("from StudyBo where customStudyId=:studyId and live=1")
                           .setParameter("studyId", bean.getCustomStudyId())
                           .uniqueResult();
               if (liveStudy != null) {
@@ -2233,7 +2233,8 @@ public class StudyDAOImpl implements StudyDAO {
             if ((bean.getId() != null) && (bean.getLiveStudyId() != null)) {
               studyBo =
                   (StudyBo)
-                      session.createQuery("from StudyBo where id=:id")
+                      session
+                          .createQuery("from StudyBo where id=:id")
                           .setParameter("id", bean.getId())
                           .uniqueResult();
               if (studyBo.getHasStudyDraft() == 1) {
