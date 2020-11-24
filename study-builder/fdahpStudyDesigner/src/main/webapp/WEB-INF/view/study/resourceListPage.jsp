@@ -312,15 +312,15 @@
             datarow.push(obj.title);
           }
           var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewResourceInfo("
-              + obj.id + ");'></span>";
+              + parseInt(obj.id) + ");'></span>";
           if (obj.status) {
-            actions += "<span class='sprites_icon edit-g mr-lg' onclick='editResourceInfo(" + obj.id
+            actions += "<span class='sprites_icon edit-g mr-lg' onclick='editResourceInfo(" + parseInt(obj.id)
                 + ");'></span>"
           } else {
             actions += "<span class='sprites_icon edit-inc-draft mr-lg' onclick='editResourceInfo("
-                + obj.id + ");'></span>";
+                + parseInt(obj.id) + ");'></span>";
           }
-          actions += "<span class='sprites_icon copy delete' onclick='deleteResourceInfo(" + obj.id
+          actions += "<span class='sprites_icon copy delete' onclick='deleteResourceInfo(" + parseInt(obj.id)
               + ");'></span>";
           datarow.push(actions);
           $('#resource_list').DataTable().row.add(datarow);
