@@ -491,7 +491,7 @@
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
-        $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled");
+        $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if (email !== '') {
           $.ajax({
             url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
@@ -605,8 +605,8 @@
       });
 
       $('#multiple :selected').each(function (i, sel) {
-        var selVal = $(sel).val();
-        var selTxt = $(sel).text();
+        var selVal = parseInt($(sel).val());
+        var selTxt = DOMPurify.sanitize($(sel).text());
         var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
             + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
             + "'>"
@@ -660,7 +660,7 @@
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
-        $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled");
+        $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if (email !== '') {
           $("body").addClass("loading");
           $.ajax({

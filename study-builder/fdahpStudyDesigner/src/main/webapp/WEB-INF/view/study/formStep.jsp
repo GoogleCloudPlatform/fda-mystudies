@@ -747,7 +747,7 @@
         if (typeof value.title == "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push('<div class="dis-ellipsis">' + value.title + '</div>');
+          datarow.push('<div class="dis-ellipsis">' + DOMPurify.sanitize(value.title) + '</div>');
         }
         var dynamicAction = '<div><div class="text-right pos-relative">';
         if (value.responseTypeText == 'Double' && (value.lineChart == 'Yes' || value.statData
@@ -766,13 +766,13 @@
             '  <span class="sprites_icon preview-g mr-sm"></span>';
         if (value.status) {
           dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editQuestion('
-              + value.questionInstructionId + ');"></span>';
+              + parseInt(value.questionInstructionId) + ');"></span>';
         } else {
           dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editQuestion('
-              + value.questionInstructionId + ');"></span>';
+              + parseInt(value.questionInstructionId) + ');"></span>';
         }
-        dynamicAction += '<span class="sprites_icon delete" onclick="deletQuestion(' + value.stepId
-            + ',' + value.questionInstructionId + ')"></span>' +
+        dynamicAction += '<span class="sprites_icon delete" onclick="deletQuestion(' + parseInt(value.stepId)
+            + ',' + parseInt(value.questionInstructionId) + ')"></span>' +
             '</div>' +
             '</div></div>';
         datarow.push(dynamicAction);
