@@ -253,10 +253,12 @@ footer ul li:last-child a {
   transform: translate(-50%, -50%);
   animation: cssAnimation 0s 5s forwards;
   opacity: 1; 
+  display: block;
 }
 
 @keyframes cssAnimation {
-  to   { opacity: 0; }
+  to   { opacity: 0; 
+  display:none; }
 }
 
 /* media queries scss */
