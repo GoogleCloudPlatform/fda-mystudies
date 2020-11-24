@@ -79,6 +79,7 @@ public class UserSupportServiceImpl implements UserSupportService {
   @Transactional()
   @Override
   public EmailResponse contactUsDetails(
+      String appName,
       String subject,
       String body,
       String firstName,
@@ -94,6 +95,7 @@ public class UserSupportServiceImpl implements UserSupportService {
     templateArgs.put("subject", subject);
     templateArgs.put("body", body);
     templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("appName", appName);
 
     EmailRequest emailRequest =
         new EmailRequest(
