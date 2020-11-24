@@ -100,11 +100,6 @@
       <version>20.0</version>
     </dependency>
     <dependency>
-      <groupId>com.google.collections</groupId>
-      <artifactId>google-collections</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
       <groupId>org.skyscreamer</groupId>
       <artifactId>jsonassert</artifactId>
     </dependency>
@@ -133,16 +128,22 @@
     </dependency>
   </dependencies>
   <dependencyManagement>
-      <dependencies>
-        <dependency>
-          <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-gcp-dependencies</artifactId>
-          <version>1.2.3.RELEASE</version>
-          <type>pom</type>
-          <scope>import</scope>
-        </dependency>
-      </dependencies>
-    </dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-gcp-dependencies</artifactId>
+				<version>1.2.3.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.collections</groupId>
+						<artifactId>google-collections</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<finalName>participant-manager-datastore</finalName>
 		<resources>
