@@ -116,6 +116,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
@@ -335,7 +336,8 @@ public class SiteServiceImpl implements SiteService {
       String onboardingStatus,
       AuditLogEventRequest auditRequest,
       Integer page,
-      Integer limit) {
+      Integer limit,
+      String[] excludeEnrollmentStatus) {
     logger.info("getParticipants()");
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
 
@@ -407,7 +409,8 @@ public class SiteServiceImpl implements SiteService {
       }
     }
 
-    addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
+    addRegistryParticipants(
+        participantRegistryDetail, participantRegistrySites, excludeEnrollmentStatus);
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
@@ -449,7 +452,8 @@ public class SiteServiceImpl implements SiteService {
 
   private void addRegistryParticipants(
       ParticipantRegistryDetail participantRegistryDetail,
-      List<ParticipantRegistrySiteEntity> participantRegistrySites) {
+      List<ParticipantRegistrySiteEntity> participantRegistrySites,
+      String[] excludeEnrollmentStatus) {
     List<String> registryIds =
         CollectionUtils.emptyIfNull(participantRegistrySites)
             .stream()
@@ -471,7 +475,9 @@ public class SiteServiceImpl implements SiteService {
       participant =
           ParticipantMapper.toParticipantDetails(
               participantStudies, participantRegistrySite, participant);
-      participantRegistryDetail.getRegistryParticipants().add(participant);
+      if (!ArrayUtils.contains(excludeEnrollmentStatus, participant.getEnrollmentStatus())) {
+        participantRegistryDetail.getRegistryParticipants().add(participant);
+      }
     }
   }
 
