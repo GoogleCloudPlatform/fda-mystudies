@@ -603,16 +603,16 @@
                   datarow.push(' ');
                 } else {
                   datarow
-                      .push("<span class='dis-ellipsis' title='" + obj.question + "'>"
-                          + obj.question + "</span>");
+                      .push("<span class='dis-ellipsis' title='" + DOMPurify.sanitize(obj.question) + "'>"
+                          + DOMPurify.sanitize(obj.question) + "</span>");
                 }
                 var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="View" etId="'
-                    + obj.id + '"></span> '
+                    + parseInt(obj.id) + '"></span> '
                     + '<span class="'
-                    + (obj.status ? "edit-inc"
+                    + (DOMPurify.sanitize(obj.status) ? "edit-inc"
                         : "edit-inc-draft")
                     + ' mr-md mr-lg  editIcon" data-toggle="tooltip" data-placement="top" title="Edit"  etId="'
-                    + obj.id
+                    + parseInt(obj.id)
                     + '"></span>'
                     + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns('
                 datarow.push(actions);

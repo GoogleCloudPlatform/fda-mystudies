@@ -267,7 +267,7 @@
           datarow.push(' ');
         } else {
           datarow.push(
-              '<div class="dis-ellipsis pr-100" title="obj.title">' + obj.title + '</div>');
+              '<div class="dis-ellipsis pr-100" title="obj.title">' + DOMPurify.sanitize(obj.title) + '</div>');
         }
         if (typeof obj.frequency === "undefined" && typeof obj.frequency === "undefined") {
           datarow.push(' ');
@@ -275,19 +275,19 @@
           datarow.push(obj.frequency);
         }
         var actionDiv = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewQuestionnaires("
-            + obj.id + ");'></span>";
+            + parseInt(obj.id) + ");'></span>";
         if (obj.status) {
           actionDiv += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editQuestionnaires("
-              + obj.id + ");'></span>";
+              + parseInt(obj.id) + ");'></span>";
         } else {
           actionDiv += "<span class='edit-inc-draft mr-md mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editQuestionnaires("
-              + obj.id + ");'></span>";
+              + parseInt(obj.id) + ");'></span>";
         }
         actionDiv += "<span class='sprites_icon copy  mr-lg' data-toggle='tooltip' data-placement='top' title='Copy' onclick='copyQuestionnaire("
-            + obj.id + ");'></span>";
+            + parseInt(obj.id) + ");'></span>";
 
         actionDiv += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteQuestionnaire("
-            + obj.id + ");'></span>";
+            + parseInt(obj.id) + ");'></span>";
         datarow.push(actionDiv);
         $('#questionnaire_list').DataTable().row.add(datarow);
       });
