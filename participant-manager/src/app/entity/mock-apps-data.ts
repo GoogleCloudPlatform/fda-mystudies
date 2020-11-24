@@ -48,11 +48,11 @@ export const expectedAppDetails = {
           sites: [
             {
               siteId: '4028617973bdef0d0173bdef1e530005',
-              customSiteId: 'OpenStudy02',
-              siteName: 'Marlborough',
+              customLocationId: 'OpenStudy02',
+              locationName: 'Marlborough',
               enrollmentDate: '10/05/2020',
               withdrawlDate: '08/05/2020',
-              siteStatus: 'Active',
+              participantStudyStatus: 'Active',
             },
           ],
         },
@@ -63,11 +63,11 @@ export const expectedAppDetails = {
           sites: [
             {
               siteId: '5602861fdgfg30005',
-              customSiteId: 'TestOpenStudy',
-              siteName: 'Americano',
+              customLocationId: 'TestOpenStudy',
+              locationName: 'Americano',
               enrollmentDate: '11/03/2020',
               withdrawlDate: '28/06/2020',
-              siteStatus: 'Active',
+              participantStudyStatus: 'Active',
             },
           ],
         },
@@ -90,11 +90,11 @@ export const expectedAppDetails = {
           sites: [
             {
               siteId: '617973b45',
-              customSiteId: 'EcternalStudy12',
-              siteName: 'Americano',
+              customLocationId: 'EcternalStudy12',
+              locationName: 'Americano',
               enrollmentDate: '11/05/2020',
               withdrawlDate: '02/08/2020',
-              siteStatus: 'Active',
+              participantStudyStatus: 'Active',
             },
           ],
         },
@@ -105,11 +105,11 @@ export const expectedAppDetails = {
           sites: [
             {
               siteId: '61fdgfg307',
-              customSiteId: 'Local Testdata',
-              siteName: 'Espacino',
+              customLocationId: 'Local Testdata',
+              locationName: 'Espacino',
               enrollmentDate: '29/03/2020',
               withdrawlDate: '16/06/2020',
-              siteStatus: 'Active',
+              participantStudyStatus: 'Active',
             },
           ],
         },
@@ -144,11 +144,11 @@ export const filteredEmail = {
           sites: [
             {
               siteId: '617973b45',
-              customSiteId: 'EcternalStudy12',
-              siteName: 'Americano',
+              customLocationId: 'EcternalStudy12',
+              locationName: 'Americano',
               enrollmentDate: '11/05/2020',
               withdrawlDate: '02/08/2020',
-              siteStatus: 'Active',
+              participantStudyStatus: 'Active',
             },
           ],
         },
@@ -159,11 +159,11 @@ export const filteredEmail = {
           sites: [
             {
               siteId: '61fdgfg307',
-              customSiteId: 'Local Testdata',
-              siteName: 'Espacino',
+              customLocationId: 'Local Testdata',
+              locationName: 'Espacino',
               enrollmentDate: '29/03/2020',
               withdrawlDate: '16/06/2020',
-              siteStatus: 'Active',
+              participantStudyStatus: 'Active',
             },
           ],
         },
