@@ -67,7 +67,7 @@ export class UpdateUserComponent
   getUserDetails(): void {
     this.subs.add(
       this.userService
-        .getUserDetails(this.adminId)
+        .getUserDetailsForEditing(this.adminId)
         .subscribe((data: ManageUserDetails) => {
           this.user = data.user;
           this.user.manageLocationsSelected =
