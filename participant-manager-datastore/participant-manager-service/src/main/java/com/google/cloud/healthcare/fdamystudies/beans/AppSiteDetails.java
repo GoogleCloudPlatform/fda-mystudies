@@ -23,13 +23,13 @@ public class AppSiteDetails {
 
   private String siteId;
 
-  private String customSiteId;
+  private String customLocationId;
 
-  private String siteName;
+  private String locationName;
 
   private String enrollmentDate;
 
   private String withdrawlDate;
 
-  private String siteStatus;
+  private String participantStudyStatus;
 }

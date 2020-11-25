@@ -15,7 +15,7 @@ spec:
     - host: participants.fda-mystudies.domain.com
       http:
         paths:
-          - path: /oauth-scim-service/*
+          - path: /auth-server/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000

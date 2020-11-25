@@ -306,7 +306,7 @@ public class BaseMockIT {
   protected void verifyTokenIntrospectRequest(int times) {
     verify(
         times,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 

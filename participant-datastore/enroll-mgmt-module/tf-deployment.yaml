@@ -58,7 +58,7 @@ spec:
             - name: RESPONSE_DATASTORE_URL
               value: "http://response-datastore-np:50000/response-datastore"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000/oauth-scim-service"
+              value: "http://auth-server-np:50000/auth-server"
             # MISC
             - name: LOG_PATH
               valueFrom:
