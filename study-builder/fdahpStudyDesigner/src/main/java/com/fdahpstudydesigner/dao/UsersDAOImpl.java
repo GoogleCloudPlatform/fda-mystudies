@@ -171,9 +171,7 @@ public class UsersDAOImpl implements UsersDAO {
       if (!"".equals(selectedStudies) && !"".equals(permissionValues)) {
         selectedStudy = selectedStudies.split(",");
         permissionValue = permissionValues.split(",");
-
         List<String> selectedStudiesList = Arrays.asList(selectedStudies.split(","));
-
         if (updateFlag) {
 
           query =
