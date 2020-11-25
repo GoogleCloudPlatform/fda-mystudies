@@ -24,8 +24,8 @@ export DSN="mysql://${DB_USER}:${DB_PASS}@tcp(localhost:3306)/${DB_NAME}?sql_not
 # issuer URL
 export URLS_SELF_ISSUER="${BASE_URL}"
 # Login and consent app
-export URLS_CONSENT="${BASE_URL}/oauth-scim-service/consent"
-export URLS_LOGIN="${BASE_URL}/oauth-scim-service/login"
+export URLS_CONSENT="${BASE_URL}/auth-server/consent"
+export URLS_LOGIN="${BASE_URL}/auth-server/login"
 
 # Setup database for hydra.
 cd /hydra

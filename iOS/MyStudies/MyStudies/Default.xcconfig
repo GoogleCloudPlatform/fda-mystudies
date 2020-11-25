@@ -33,7 +33,7 @@ ENROLLMENT_DATASTORE_URL = xxxxxx
 CONSENT_DATASTORE_URL = xxxxxx
 
 // URL of oauth scim services.
-// e.g. participants.mystudiesdeployment.com/oauth-scim-service
+// e.g. participants.mystudiesdeployment.com/auth-server
 AUTH_URL = xxxxxx
 
 // URL of Hydra server.
