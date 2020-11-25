@@ -128,7 +128,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
+        postRequestedFor(urlEqualTo("/auth-server/users"))
             .withRequestBody(new ContainsPattern(Constants.INVALID_PASSWORD)));
   }
 
@@ -198,7 +198,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
+        postRequestedFor(urlEqualTo("/auth-server/users"))
             .withRequestBody(new ContainsPattern(Constants.PASSWORD)));
 
     Optional<UserAppDetailsEntity> optUserAppDetails =
