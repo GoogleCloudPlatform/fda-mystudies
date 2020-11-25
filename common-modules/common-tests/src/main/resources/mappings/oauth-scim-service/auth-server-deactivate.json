@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "DELETE",
-		"url": "/oauth-scim-service/users/gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk"
+		"url": "/auth-server/users/gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk"
 	},
 	"response": {
 		"status": 200

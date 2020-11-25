@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "PUT",
-		"url": "/oauth-scim-service/users/TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg"
+		"url": "/auth-server/users/TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg"
 	},
 	"response": {
 		"status": 200,

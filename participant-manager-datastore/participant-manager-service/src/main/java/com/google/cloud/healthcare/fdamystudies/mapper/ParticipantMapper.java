@@ -21,13 +21,14 @@ import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyAppDetails;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyParticipantDetails;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import java.util.HashMap;
 import java.util.List;
@@ -176,13 +177,13 @@ public final class ParticipantMapper {
     return participant;
   }
 
-  public static ParticipantDetail toParticipantDetails(UserDetailsEntity userDetailsEntity) {
+  public static ParticipantDetail toParticipantDetails(AppParticipantsInfo appParticipantInfo) {
     ParticipantDetail participant = new ParticipantDetail();
-    participant.setUserDetailsId(userDetailsEntity.getId());
-    participant.setEmail(userDetailsEntity.getEmail());
-    UserStatus userStatus = UserStatus.fromValue(userDetailsEntity.getStatus());
+    participant.setUserDetailsId(appParticipantInfo.getUserDetailsId());
+    participant.setEmail(appParticipantInfo.getEmail());
+    UserStatus userStatus = UserStatus.fromValue(appParticipantInfo.getRegistrationStatus());
     participant.setRegistrationStatus(userStatus.getDescription());
-    participant.setRegistrationDate(DateTimeUtils.format(userDetailsEntity.getVerificationDate()));
+    participant.setRegistrationDate(DateTimeUtils.format(appParticipantInfo.getRegistrationDate()));
     return participant;
   }
 

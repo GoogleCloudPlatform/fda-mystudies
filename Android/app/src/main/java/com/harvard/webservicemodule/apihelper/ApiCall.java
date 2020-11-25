@@ -268,7 +268,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_UNAUTHORIZED) {
         response = "session expired";
 
-        if (!this.serverType.equalsIgnoreCase("WCP")) {
+        if (!this.serverType.equalsIgnoreCase("STUDY_DATASTORE")) {
 
           HashMap<String, String> refreshTokenJsonData = new HashMap();
           refreshTokenJsonData.put(
