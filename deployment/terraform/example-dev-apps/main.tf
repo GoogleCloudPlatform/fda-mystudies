@@ -204,6 +204,29 @@ module "example_dev_gke_cluster" {
 
 }
 
+module "project_iam_members" {
+  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+  version = "~> 6.3.0"
+
+  projects = [module.project.project_id]
+  mode     = "additive"
+
+  bindings = {
+    "roles/logging.logWriter" = [
+      "serviceAccount:${google_service_account.auth_server_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.hydra_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.response_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_builder_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.consent_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.enroll_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.user_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.participant_manager_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+    ],
+  }
+}
+
 resource "google_service_account" "auth_server_gke_sa" {
   account_id = "auth-server-gke-sa"
   project    = module.project.project_id
