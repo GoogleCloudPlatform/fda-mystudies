@@ -8,19 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import com.google.cloud.healthcare.fdamystudies.beans.AppSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudySiteInfo;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -48,30 +44,13 @@ public final class StudyMapper {
     return appStudyResponse;
   }
 
-  public static List<AppStudyDetails> toAppStudyDetailsList(
-      Map<StudyEntity, List<ParticipantStudyEntity>> enrolledStudiesByStudyInfoId,
-      String[] excludeSiteStatus,
-      boolean excludeStudiesWithNoSites) {
-
-    List<AppStudyDetails> appStudyDetailsList = new ArrayList<>();
-
-    for (Entry<StudyEntity, List<ParticipantStudyEntity>> entry :
-        enrolledStudiesByStudyInfoId.entrySet()) {
-      List<AppSiteDetails> sites = SiteMapper.toParticipantSiteList(entry, excludeSiteStatus);
-      if (sites.isEmpty() && excludeStudiesWithNoSites) {
-        continue;
-      }
-
-      AppStudyDetails appStudyDetails = new AppStudyDetails();
-      StudyEntity study = entry.getKey();
-      appStudyDetails.setCustomStudyId(study.getCustomId());
-      appStudyDetails.setStudyName(study.getName());
-      appStudyDetails.setStudyId(study.getId());
-      appStudyDetails.setStudyType(study.getType());
-      appStudyDetails.setSites(sites);
-      appStudyDetailsList.add(appStudyDetails);
-    }
-    return appStudyDetailsList;
+  public static AppStudyDetails toAppStudyDetailsList(AppParticipantsInfo appParticipantsInfo) {
+    AppStudyDetails appStudyDetails = new AppStudyDetails();
+    appStudyDetails.setCustomStudyId(appParticipantsInfo.getCustomStudyId());
+    appStudyDetails.setStudyName(appParticipantsInfo.getStudyName());
+    appStudyDetails.setStudyId(appParticipantsInfo.getStudyId());
+    appStudyDetails.setStudyType(appParticipantsInfo.getStudyType());
+    return appStudyDetails;
   }
 
   public static StudyDetails toStudyDetails(StudySiteInfo studySiteInfo) {
