@@ -197,7 +197,7 @@ gcloud auth application-default login
 Enter the Kubernetes Terraform directory
 
 ```bash
-cd Terraform/kubernetes/
+cd deployment/terraform/kubernetes/
 ```
 
 **Edit the file `terraform.tfvars`. Make sure the projects and cluster

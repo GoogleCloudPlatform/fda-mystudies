@@ -146,7 +146,7 @@ regenerating the Terraform configs several times.
     `$MYSTUDIES_TEMPLATE` is set to `false` or commented out.
 
     ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     ```
 
 #### Devops Project
@@ -256,7 +256,7 @@ regenerating the Terraform configs several times.
 ### Step 5: Deploy additional Firebase resources and Data resources through CICD
 
 1. In `$MYSTUDIES_TEMPLATE`, uncomment the blocks that are marked as *Step
-    5.1*, *Step 5.2*, *Step 5.3*, *Step 5.4*, *Step 5.5*, *Step 5.6* and *5.7*. Then
+    5.1*, *Step 5.2*, *Step 5.3*, *Step 5.4*, *Step 5.5* and *Step 5.6*. Then
     regenerate the Terraform configs:
 
     ```bash
