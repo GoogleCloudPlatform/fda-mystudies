@@ -136,7 +136,7 @@ Examples for how FDA MyStudies can be used include:
 
 This repository contains all code required to setup and run FDA MyStudies. This includes backend services, mobile applications, deployment tools and the necessary documentation. 
 
-There are high-level directories for quick-start guides (`/documentation`) and deployment related files (`/Terraform` and `/kubernetes`). 
+There are high-level directories for quick-start guides (`/documentation`) and deployment related files in `/deployment`. 
 
 The remaining high-level directories are each dedicated to an application component (for example `/Android` and `/iOS` contain code for the mobile applications, while `/auth-server-ws` contains code for the Auth server).
 
@@ -148,7 +148,7 @@ FDA MyStudies is designed so that all data stays within the deploying organizati
 
 The FDA MyStudies platform has been designed to support auditing requirements for compliance with 21 CFR Part 11, allowing the platform to be used for trials under Investigational New Drug (IND) oversight. If an organization chooses to run FDA MyStudies on Google Cloud, a variety of infrastructure options are available that support HIPAA and other compliance requirements. More information about compliance on Google Cloud and an up-to-date list of products covered under BAA can be found [here](https://cloud.google.com/security/compliance/hipaa/).
 
-In addition to the platform, the [tools for deployment](Terraform/README.md) on GCP are designed to assist organizations in their end-to-end compliance journey. Although achieving compliance is the responsibility of the customer, these toolkits enable organizations to deploy FDA MyStudies in a way that will help meet compliance requirements; such as setting up audit logs for retaining data. 
+In addition to the platform, the [tools for deployment](deployment/README.md) on GCP are designed to assist organizations in their end-to-end compliance journey. Although achieving compliance is the responsibility of the customer, these toolkits enable organizations to deploy FDA MyStudies in a way that will help meet compliance requirements; such as setting up audit logs for retaining data. 
 
 Google Cloud can support customer compliance with 21 CFR Part 11 regulations when using GCP services in a prescribed manner to handle related data and workloads. While Google has a cloud technology stack ready for many 21 CFR Part 11 compliant workloads, the ultimate compliance determination depends on configuration choices made by the customer.
 

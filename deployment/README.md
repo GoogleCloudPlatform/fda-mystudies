@@ -146,7 +146,7 @@ regenerating the Terraform configs several times.
     `$MYSTUDIES_TEMPLATE` is set to `false` or commented out.
 
     ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     ```
 
 #### Devops Project
