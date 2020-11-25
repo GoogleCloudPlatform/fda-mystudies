@@ -58,7 +58,7 @@ for deployment in $(find . -name "tf-deployment.yaml"); do
   kubectl apply -f ${deployment}
 done
 
-for service in $(find ../.. -name "tf-service.yaml"); do
+for service in $(find . -name "tf-service.yaml"); do
   echo "=== Applying service ${service} ==="
   read -p "Press enter to continue"
   kubectl apply -f ${service}
