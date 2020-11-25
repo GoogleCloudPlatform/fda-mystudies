@@ -491,7 +491,7 @@
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
-        $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
+        $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if (email !== '') {
           $.ajax({
             url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
@@ -506,14 +506,14 @@
               if ('SUCCESS' !== message) {
                 $('#emailId').validator('validate');
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-                $('#emailId').parent().find(".help-block").html("");
+                $('#emailId').parent().find(".help-block").empty();
               } else {
                 $("body").removeClass("loading");
                 $('#emailId').val('');
                 $('#emailId').parent().addClass("has-danger").addClass("has-error");
                 $('#emailId').parent().find(".help-block").empty();
                 $('#emailId').parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>'" + emailCopy + "' already exists.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(emailCopy + " already exists."));
               }
             }
           });
@@ -521,7 +521,7 @@
       } else {
         $('#emailId').validator('validate');
         $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#emailId').parent().find(".help-block").html("");
+        $('#emailId').parent().find(".help-block").empty();
       }
     });
 
@@ -605,8 +605,8 @@
       });
 
       $('#multiple :selected').each(function (i, sel) {
-        var selVal = $(sel).val();
-        var selTxt = $(sel).text();
+        var selVal = parseInt($(sel).val());
+        var selTxt = DOMPurify.sanitize($(sel).text());
         var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
             + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
             + "'>"
@@ -634,8 +634,8 @@
       var count = $(
           ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
       if (count == tot_items) {
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
-            '<li class="text-center">- All items are already selected -</li>');
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").empty().append(
+        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
       }
 
     });
@@ -660,7 +660,7 @@
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
-        $('#emailId').parent().find(".help-block").html("<ul class='list-unstyled'><li></li></ul>");
+        $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if (email !== '') {
           $("body").addClass("loading");
           $.ajax({
@@ -676,7 +676,7 @@
               if ('SUCCESS' !== message) {
                 $('#emailId').validator('validate');
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-                $('#emailId').parent().find(".help-block").html("");
+                $('#emailId').parent().find(".help-block").empty();
                 saveUser();
               } else {
                 $("body").removeClass("loading");
@@ -685,7 +685,7 @@
                 $('#emailId').parent().addClass("has-danger").addClass("has-error");
                 $('#emailId').parent().find(".help-block").empty();
                 $('#emailId').parent().find(".help-block").append(
-                    "<ul class='list-unstyled'><li>'" + email + "' already exists.</li></ul>");
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists."));
               }
             }
           });
@@ -693,7 +693,7 @@
       } else {
         $('#emailId').validator('validate');
         $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
-        $('#emailId').parent().find(".help-block").html("");
+        $('#emailId').parent().find(".help-block").empty();
         saveUser();
       }
     });

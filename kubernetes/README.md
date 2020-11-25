@@ -21,7 +21,7 @@ All files below are relative to the root of the repo.
   * kubeapply.sh
     * A helper script that applies all resources to the cluster. Not
             required, the manual steps will be described below.
-* oauth-scim-module/
+* auth-server/
   * tf-deployment.yaml
     * A Kubernetes Deployment, deploying the app along with its secrets.
     * This is forked from deployment.yaml with modifications for the Terraform
@@ -32,19 +32,19 @@ All files below are relative to the root of the repo.
     * This is forked from service.yaml with modifications for the Terraform
         setup.
 * response-datastore/
-  * same as oauth-scim-module
+  * same as auth-server
 * study-builder/
-  * same as oauth-scim-module
+  * same as auth-server
 * study-datastore/
-  * same as oauth-scim-module
+  * same as auth-server
 * participant-datastore/consent-mgmt-module
-  * same as oauth-scim-module
+  * same as auth-server
 * participant-datastore/enroll-mgmt-module
-  * same as oauth-scim-module
+  * same as auth-server
 * participant-datastore/user-mgmt-module
-  * same as oauth-scim-module
+  * same as auth-server
 * participant-manager/
-  * same as oauth-scim-module
+  * same as auth-server
 
 ## Setup
 
@@ -137,7 +137,7 @@ organization and deployment.
 In each tf-deployment.yaml file listed below (paths are relative to the
 root of the repo):
 
-1. oauth-scim-module/tf-deployment.yaml
+1. auth-server/tf-deployment.yaml
 1. hydra/tf-deployment.yaml
 1. response-datastore/tf-deployment.yaml
 1. study-builder/tf-deployment.yaml
@@ -170,7 +170,9 @@ In the ./kubernetes/ingress.yaml file:
     name in ./kubernetes/cert.yaml.
 * Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
-    
+* Change the hosts to match your deployed env and what you have updated in 
+    ./kubernetes/cert.yaml.
+
 In ./participant-manager/src/environments/environment.prod.ts
 
 * Change the domain name to match your organization.
@@ -244,7 +246,7 @@ $ kubectl apply \
   -f ./participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
   -f ./participant-datastore/user-mgmt-module/tf-deployment.yaml \
   -f ./study-builder/tf-deployment.yaml \
-  -f ./oauth-scim-module/tf-deployment.yaml \
+  -f ./auth-server/tf-deployment.yaml \
   -f ./participant-manager-datastore/tf-deployment.yaml \
   -f ./hydra/tf-deployment.yaml \
   -f ./participant-manager/tf-deployment.yaml
@@ -260,7 +262,7 @@ $ kubectl apply \
   -f ./participant-datastore/enroll-mgmt-module/tf-service.yaml \
   -f ./participant-datastore/user-mgmt-module/tf-service.yaml \
   -f ./study-builder/tf-service.yaml \
-  -f ./oauth-scim-module/tf-service.yaml \
+  -f ./auth-server/tf-service.yaml \
   -f ./participant-manager-datastore/tf-service.yaml \
   -f ./hydra/tf-service.yaml \
   -f ./participant-manager/tf-service.yaml

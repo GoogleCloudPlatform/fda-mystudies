@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "DELETE",
-		"url": "/oauth-scim-service/users/5bef76a5-8361-43a2-9634-c991e2eeecda"
+		"url": "/auth-server/users/5bef76a5-8361-43a2-9634-c991e2eeecda"
 	},
 	"response": {
 		"status": 404,

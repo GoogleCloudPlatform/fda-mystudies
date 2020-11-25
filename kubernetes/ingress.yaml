@@ -9,12 +9,13 @@ metadata:
   name: fda-mystudies-dev
   annotations:
     kubernetes.io/ingress.global-static-ip-name: mystudies-ingress-ip
-    networking.gke.io/managed-certificates: fda-mystudies-cert
+    networking.gke.io/managed-certificates: fda-mystudies-cert-participants,fda-mystudies-cert-studies
 spec:
   rules:
-    - http:
+    - host: participants.fda-mystudies.domain.com
+      http:
         paths:
-          - path: /oauth-scim-service/*
+          - path: /auth-server/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000
@@ -34,18 +35,6 @@ spec:
             backend:
               serviceName: participant-enroll-datastore-np
               servicePort: 50000
-          - path: /study-datastore/*
-            backend:
-              serviceName: study-datastore-np
-              servicePort: 50000
-          - path: /studybuilder/*
-            backend:
-              serviceName: study-builder-np
-              servicePort: 50000
-          - path: /study-resources/*
-            backend:
-              serviceName: study-builder-np
-              servicePort: 50000
           - path: /oauth2/*
             backend:
               serviceName: hydra-np
@@ -57,4 +46,19 @@ spec:
           - path: /participant-manager-datastore/*
             backend:
               serviceName: participant-manager-datastore-np
+              servicePort: 50000
+    - host: studies.fda-mystudies.domain.com
+      http:
+        paths:
+          - path: /study-datastore/*
+            backend:
+              serviceName: study-datastore-np
+              servicePort: 50000
+          - path: /studybuilder/*
+            backend:
+              serviceName: study-builder-np
+              servicePort: 50000
+          - path: /study-resources/*
+            backend:
+              serviceName: study-builder-np
               servicePort: 50000

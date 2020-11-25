@@ -215,7 +215,7 @@
                     $('#markAsComp').prop('disabled', false);
                     $('#spancomId').removeAttr('data-original-title');
                   }
-                  $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                  $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                       "ActiveTask deleted successfully");
                   $('#alertMsg').show();
                   if ($('.sixthTask').find('span').hasClass(
@@ -224,14 +224,14 @@
                         'sprites-icons-2 tick pull-right mt-xs');
                   }
                 } else {
-                  $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                  $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                       "Unable to delete resource");
                   $('#alertMsg').show();
                 }
                 setTimeout(hideDisplayMessage, 4000);
               },
               error: function (xhr, status, error) {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
                 setTimeout(hideDisplayMessage, 4000);
               }
             });

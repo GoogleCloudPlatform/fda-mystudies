@@ -34,6 +34,8 @@ export const expectedParticipantDetails = {
     enrolledStudies: [],
     studyType: StudyType.Close,
     sitePermission: Permission.ViewAndEdit,
+    disabledDate: '06/05/2020',
+
     enrollments: [
       {
         participantId: '23',

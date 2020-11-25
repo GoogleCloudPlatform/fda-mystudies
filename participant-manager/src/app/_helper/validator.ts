@@ -17,8 +17,7 @@ export function passwordValidator(): ValidatorFn {
     const uppercasePattern = /[A-Z]/g;
     const lowercasePattern = /[a-z]/g;
     const numericPattern = /[0-9]/g;
-    const specialCharsPattern = /^[\w&.-]+$/;
-
+    const specialCharsPattern = /(?=.*[!"#$%&'()*+,:;<=>?@\[\]^_`\-{|}~])/;
     const value = control.value as string;
     if (control.value === '') {
       return {emptyError: true};
@@ -27,7 +26,7 @@ export function passwordValidator(): ValidatorFn {
       value.length > 64 ||
       !uppercasePattern.test(control.value) ||
       !lowercasePattern.test(control.value) ||
-      specialCharsPattern.test(control.value) ||
+      !specialCharsPattern.test(control.value) ||
       !numericPattern.test(control.value)
     ) {
       return {validPassword: true};

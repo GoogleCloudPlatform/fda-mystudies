@@ -63,6 +63,7 @@ public class StudyController {
   public ResponseEntity<ParticipantRegistryResponse> getStudyParticipants(
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @PathVariable String studyId,
+      @RequestParam(required = false) String[] excludeParticipantStudyStatus,
       @RequestParam(required = false) Integer page,
       @RequestParam(required = false) Integer limit,
       HttpServletRequest request) {
@@ -70,7 +71,8 @@ public class StudyController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ParticipantRegistryResponse participantRegistryResponse =
-        studyService.getStudyParticipants(userId, studyId, auditRequest, page, limit);
+        studyService.getStudyParticipants(
+            userId, studyId, excludeParticipantStudyStatus, auditRequest, page, limit);
     logger.exit(String.format(STATUS_LOG, participantRegistryResponse.getHttpStatusCode()));
     return ResponseEntity.status(participantRegistryResponse.getHttpStatusCode())
         .body(participantRegistryResponse);

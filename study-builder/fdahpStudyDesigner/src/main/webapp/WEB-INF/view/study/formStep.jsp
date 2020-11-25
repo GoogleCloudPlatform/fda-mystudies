@@ -328,7 +328,7 @@
               if (!table.data().count()) {
                 $("#doneId").attr("disabled", false);
                 $('#alertMsg').show();
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Add atleast one question");
                 setTimeout(hideDisplayMessage, 4000);
                 $('.formLevel a').tab('show');
@@ -356,7 +356,7 @@
                         if (!table.data().count()) {
                           $("#doneId").attr("disabled", false);
                           $('#alertMsg').show();
-                          $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                          $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                               "Add atleast one question");
                           setTimeout(hideDisplayMessage, 4000);
                           $('.formLevel a').tab('show');
@@ -373,7 +373,7 @@
                     if (!table.data().count()) {
                       $("#doneId").attr("disabled", false);
                       $('#alertMsg').show();
-                      $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                      $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                           "Add atleast one question");
                       setTimeout(hideDisplayMessage, 4000);
                       $('.formLevel a').tab('show');
@@ -426,7 +426,7 @@
         $("#repeatableText").val('');
         $("#repeatableText").validator('validate');
         $("#repeatableText").parent().removeClass("has-danger").removeClass("has-error");
-        $("#repeatableText").parent().find(".help-block").html("");
+        $("#repeatableText").parent().find(".help-block").empty();
       }
     });
 
@@ -493,7 +493,7 @@
             var status = data.message;
             if (status == "SUCCESS") {
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                   "Reorder done successfully");
               if ($('.sixthQuestionnaires').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
@@ -502,13 +502,13 @@
               }
             } else {
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
             setTimeout(hideDisplayMessage, 4000);
           },
           error: function (xhr, status, error) {
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
             setTimeout(hideDisplayMessage, 4000);
           }
         });
@@ -620,7 +620,7 @@
                   'sprites-icons-2 tick pull-right mt-xs');
             }
             $("#addQuestionId").removeClass("cursor-none");
-            $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             if ($("#saveBtn").text() == 'Next') {
@@ -638,9 +638,9 @@
           } else {
             var errMsg = data.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(errMsg);
             } else {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             }
             $('#alertMsg').show();
             if (callback)
@@ -651,7 +651,7 @@
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
-          $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+          $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
           setTimeout(hideDisplayMessage, 4000);
         }
       });
@@ -697,7 +697,7 @@
               success: function deleteConsentInfo(data) {
                 var status = data.message;
                 if (status == "SUCCESS") {
-                  $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                  $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                       "Questionnaire step deleted successfully");
                   $('#alertMsg').show();
 
@@ -711,10 +711,10 @@
                   }
                 } else {
                   if (status == 'FAILUREanchorused') {
-                    $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                    $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                         "Form Step Question already live anchorbased.unable to delete");
                   } else {
-                    $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                    $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                         "Unable to delete questionnaire step");
                   }
                   $('#alertMsg').show();
@@ -722,7 +722,7 @@
                 setTimeout(hideDisplayMessage, 4000);
               },
               error: function (xhr, status, error) {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
                 setTimeout(hideDisplayMessage, 4000);
               }
             });
@@ -747,7 +747,7 @@
         if (typeof value.title == "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push('<div class="dis-ellipsis">' + value.title + '</div>');
+          datarow.push('<div class="dis-ellipsis">' + DOMPurify.sanitize(value.title) + '</div>');
         }
         var dynamicAction = '<div><div class="text-right pos-relative">';
         if (value.responseTypeText == 'Double' && (value.lineChart == 'Yes' || value.statData
@@ -766,13 +766,13 @@
             '  <span class="sprites_icon preview-g mr-sm"></span>';
         if (value.status) {
           dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editQuestion('
-              + value.questionInstructionId + ');"></span>';
+              + parseInt(value.questionInstructionId) + ');"></span>';
         } else {
           dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editQuestion('
-              + value.questionInstructionId + ');"></span>';
+              + parseInt(value.questionInstructionId) + ');"></span>';
         }
-        dynamicAction += '<span class="sprites_icon delete" onclick="deletQuestion(' + value.stepId
-            + ',' + value.questionInstructionId + ')"></span>' +
+        dynamicAction += '<span class="sprites_icon delete" onclick="deletQuestion(' + parseInt(value.stepId)
+            + ',' + parseInt(value.questionInstructionId) + ')"></span>' +
             '</div>' +
             '</div></div>';
         datarow.push(dynamicAction);
@@ -833,7 +833,7 @@
     var questionnaireShortTitle = $("#questionnaireShortId").val();
     if (shortTitle != null && shortTitle != '' && typeof shortTitle != 'undefined') {
       $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-      $(thisAttr).parent().find(".help-block").html("");
+      $(thisAttr).parent().find(".help-block").empty();
       if (existedKey != shortTitle) {
         $.ajax({
           url: "/studybuilder/adminStudies/validateQuestionnaireStepKey.do?_S=${param._S}",
@@ -854,15 +854,16 @@
             if ('SUCCESS' != message) {
               $(thisAttr).validator('validate');
               $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-              $(thisAttr).parent().find(".help-block").html("");
+              $(thisAttr).parent().find(".help-block").empty();
               callback(true);
             } else {
               $(thisAttr).val('');
               $(thisAttr).parent().addClass("has-danger").addClass("has-error");
               $(thisAttr).parent().find(".help-block").empty();
               $(thisAttr).parent().find(".help-block").append(
-                  "<ul class='list-unstyled'><li>'" + shortTitle
-                  + "' has already been used in the past.</li></ul>");
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  shortTitle
+                  + " has already been used in the past."));
               callback(false);
             }
           },
@@ -871,7 +872,7 @@
       } else {
         callback(true);
         $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-        $(thisAttr).parent().find(".help-block").html("");
+        $(thisAttr).parent().find(".help-block").empty();
       }
     } else {
       callback(false);

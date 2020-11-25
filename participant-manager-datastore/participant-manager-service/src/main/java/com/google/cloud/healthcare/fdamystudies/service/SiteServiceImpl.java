@@ -177,11 +177,28 @@ public class SiteServiceImpl implements SiteService {
     logger.entry("begin addSite()");
 
     Optional<UserRegAdminEntity> optUser = userRegAdminRepository.findById(siteRequest.getUserId());
-    if (!optUser.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    UserRegAdminEntity userRegAdmin =
+        optUser.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+
+    Optional<LocationEntity> optLocation = locationRepository.findById(siteRequest.getLocationId());
+    LocationEntity location =
+        optLocation.orElseThrow(() -> new ErrorCodeException(ErrorCode.LOCATION_NOT_FOUND));
+
+    if (location.getStatus().equals(INACTIVE_STATUS)) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION);
     }
 
-    UserRegAdminEntity userRegAdmin = optUser.get();
+    Optional<StudyEntity> optStudyEntity = studyRepository.findById(siteRequest.getStudyId());
+    StudyEntity study =
+        optStudyEntity.orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND));
+
+    if (OPEN_STUDY.equalsIgnoreCase(study.getType())) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_OPEN_STUDY);
+    }
+
+    if (DEACTIVATED.equalsIgnoreCase(study.getStatus())) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY);
+    }
 
     List<SiteEntity> sitesList =
         siteRepository.findByLocationIdAndStudyId(
@@ -190,33 +207,13 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.SITE_EXISTS);
     }
 
-    Optional<LocationEntity> optLocation = locationRepository.findById(siteRequest.getLocationId());
-    if (!optLocation.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.LOCATION_NOT_FOUND);
-    } else if (optLocation.get().getStatus().equals(INACTIVE_STATUS)) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION);
-    }
-
-    Optional<StudyEntity> optStudyEntity = studyRepository.findById(siteRequest.getStudyId());
-    if (OPEN_STUDY.equalsIgnoreCase(optStudyEntity.get().getType())) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_OPEN_STUDY);
-    }
-
-    if (DEACTIVATED.equalsIgnoreCase(optStudyEntity.get().getStatus())) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY);
-    }
-
     if (!userRegAdmin.isSuperAdmin()
         && !isEditPermissionAllowedForStudy(siteRequest.getStudyId(), siteRequest.getUserId())) {
       throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
     SiteResponse siteResponse =
-        saveSiteWithSitePermissions(
-            siteRequest.getStudyId(),
-            siteRequest.getLocationId(),
-            siteRequest.getUserId(),
-            userRegAdmin);
+        saveSiteWithSitePermissions(siteRequest.getUserId(), location, study);
     logger.exit(
         String.format(
             "Site %s added to locationId=%s and studyId=%s",
@@ -225,44 +222,21 @@ public class SiteServiceImpl implements SiteService {
   }
 
   private SiteResponse saveSiteWithSitePermissions(
-      String studyId, String locationId, String userId, UserRegAdminEntity userRegAdmin) {
+      String userId, LocationEntity location, StudyEntity study) {
     logger.entry("saveSiteWithStudyPermission()");
 
     SiteEntity site = new SiteEntity();
     site.setCreatedBy(userId);
     site.setStatus(SiteStatus.ACTIVE.value());
-
-    Optional<StudyEntity> studyInfo = studyRepository.findById(studyId);
-    if (studyInfo.isPresent()) {
-      site.setStudy(studyInfo.get());
-    }
-
-    Optional<LocationEntity> location = locationRepository.findById(locationId);
-    if (location.isPresent()) {
-      site.setLocation(location.get());
-    }
-
-    addSitePermissions(userId, studyId, site);
+    site.setStudy(study);
+    site.setLocation(location);
 
     site = siteRepository.save(site);
 
+    siteRepository.addSitePermissions(study.getId(), site.getId());
+
     logger.exit(String.format("saved siteId=%s", site.getId()));
     return SiteMapper.toSiteResponse(site);
-  }
-
-  private void addSitePermissions(String userId, String studyId, SiteEntity site) {
-    List<StudyPermissionEntity> userStudypermissionList =
-        studyPermissionRepository.findByStudyId(studyId);
-
-    for (StudyPermissionEntity studyPermission : userStudypermissionList) {
-      SitePermissionEntity sitePermission = new SitePermissionEntity();
-      sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
-      sitePermission.setStudy(studyPermission.getStudy());
-      sitePermission.setApp(studyPermission.getApp());
-      sitePermission.setCanEdit(studyPermission.getEdit());
-      sitePermission.setCreatedBy(userId);
-      site.addSitePermissionEntity(sitePermission);
-    }
   }
 
   @Override
@@ -1138,7 +1112,7 @@ public class SiteServiceImpl implements SiteService {
             .collect(Collectors.toMap(EnrolledInvitedCount::getSiteId, Function.identity()));
 
     List<EnrolledInvitedCount> enrolledInvitedCountListForOpenStudy =
-        studyRepository.getInvitedEnrolledCountForOpenStudyForStudies(userId);
+        siteRepository.getInvitedEnrolledCountForOpenStudy(userId);
 
     Map<String, EnrolledInvitedCount> enrolledInvitedCountMapOfOpenStudy =
         CollectionUtils.emptyIfNull(enrolledInvitedCountListForOpenStudy)

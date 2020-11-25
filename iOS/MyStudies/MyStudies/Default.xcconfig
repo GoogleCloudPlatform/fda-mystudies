@@ -17,27 +17,27 @@
 // Set `Allow Arbitrary Loads` to NO and `Allow Arbitrary Loads in Web Content` to NO to connect over HTTPS
 
 // URL of study datastore server.
-// e.g. mystudiesdeployment.com/study-datastore
+// e.g. studies.mystudiesdeployment.com/study-datastore
 STUDY_DATASTORE_URL = xxxxxx
 
 // URL of response datastore.
-// e.g. mystudiesdeployment.com/response-datastore
+// e.g. participants.mystudiesdeployment.com/response-datastore
 RESPONSE_DATASTORE_URL = xxxxxxxxx
 
 // URL of different service bundles within participant datastore.
-// e.g. mystudiesdeployment.com/participant-user-datastore
+// e.g. participants.mystudiesdeployment.com/participant-user-datastore
 USER_DATASTORE_URL = xxxxxxx
-// e.g. mystudiesdeployment.com/participant-enroll-datastore
+// e.g. participants.mystudiesdeployment.com/participant-enroll-datastore
 ENROLLMENT_DATASTORE_URL = xxxxxx
-// e.g. mystudiesdeployment.com/participant-consent-datastore
+// e.g. participants.mystudiesdeployment.com/participant-consent-datastore
 CONSENT_DATASTORE_URL = xxxxxx
 
 // URL of oauth scim services.
-// e.g. mystudiesdeployment.com/oauth-scim-service
+// e.g. participants.mystudiesdeployment.com/auth-server
 AUTH_URL = xxxxxx
 
 // URL of Hydra server.
-// e.g. mystudiesdeployment.com
+// e.g. participants.mystudiesdeployment.com
 HYDRA_BASE_URL = xxxxx
 
 // HYDRA_CLIENT_ID is a client ID for OAuth.
