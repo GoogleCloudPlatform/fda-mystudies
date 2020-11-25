@@ -64,7 +64,7 @@ template "cicd" {
       name  = "{{.github_repo}}"
     }
     branch_name    = "{{.github_branch}}"
-    terraform_root = "terraform"
+    terraform_root = "deployment/terraform"
 
     # Prepare and enable default triggers.
     triggers = {

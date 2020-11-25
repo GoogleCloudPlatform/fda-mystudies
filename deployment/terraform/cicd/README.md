@@ -61,7 +61,7 @@ for your commit to view the Cloud Build job triggered by your merged commit.
 
 The `build_viewers` members can view detailed log output.
 
-The triggers all use a [helper runner script](configs/run.sh) to perform
+The triggers all use a [helper runner script](./configs/run.sh) to perform
 actions. The `MODULES` var within the script lists the modules that are managed
 (relative to the `terraform_root` var) by the triggers and the order they are
 run.
