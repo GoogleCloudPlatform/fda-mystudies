@@ -819,6 +819,14 @@ public class StudyMetaDataDao {
                         .setString("studyId", studyId)
                         .setString("activityVersion", activityVersion)
                         .uniqueResult();
+          } else {
+            studyVersionDto =
+                (StudyVersionDto)
+                    session
+                        .createQuery(studyVersionQuery)
+                        .setMaxResults(1)
+                        .setString("studyId", studyId)
+                        .uniqueResult();
           }
         } else {
           studyVersionDto = new StudyVersionDto();
@@ -966,12 +974,13 @@ public class StudyMetaDataDao {
                 availability.put(
                     "availabilityType", StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE);
                 String searchQuery = "";
-                searchQuery =
-                    "from AnchorDateTypeDto a where a.id=:id";
+                searchQuery = "from AnchorDateTypeDto a where a.id=:id";
                 AnchorDateTypeDto anchorDateTypeDto =
-                    (AnchorDateTypeDto) session.createQuery(searchQuery)
-                        .setParameter("id", resourcesDto.getAnchorDateId())
-                        .uniqueResult();
+                    (AnchorDateTypeDto)
+                        session
+                            .createQuery(searchQuery)
+                            .setParameter("id", resourcesDto.getAnchorDateId())
+                            .uniqueResult();
                 if (anchorDateTypeDto != null) {
                   if (!anchorDateTypeDto
                       .getName()
