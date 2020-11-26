@@ -116,6 +116,10 @@ spec:
               port: 8080
             initialDelaySeconds: 180
             periodSeconds: 20
+          resources:
+            requests:
+              memory: "400Mi"
+              cpu: "50m"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
