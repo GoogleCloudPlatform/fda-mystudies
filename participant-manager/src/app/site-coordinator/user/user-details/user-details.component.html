@@ -6,11 +6,7 @@
           routerLink="/coordinator/users"
           class="subheader__title cursor__pointer"
         >
-          <img
-            class="mr-sm"
-            src="../assets/svgs/back-arrow.svg"
-            alt="Go Back"
-          />
+          <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
           <span>User Details</span>
         </a>
       </div>
@@ -161,138 +157,139 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                           View And Edit
                         </span>
                       </div>
-
-                      <div
-                        class="app__id_num flex__justify__space-between mob_pull_right"
-                      >
-                        <div class="pr-2">
-                          {{
-                            app.selectedSitesCount
-                              | i18nPlural: sitesMessageMapping
-                          }}
-                        </div>
-                      </div>
                     </div>
+
+                    <div class="app__id_num flex__justify__space-between">
+                      <div class="pr-2">
+                        {{
+                          app.selectedSitesCount
+                            | i18nPlural: sitesMessageMapping
+                        }}
+                      </div>
+                      <div
+                        class="fa__plus__minus"
+                        type="button"
+                        data-toggle="collapse"
+                        [attr.data-target]="'#collapse' + app.id"
+                        aria-expanded="false"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="collapse{{ app.id }}"
+                  class="collapse"
+                  data-parent="#accordionExample"
+                >
+                  <div class="card-body">
                     <div
-                      id="collapse{{ app.id }}"
-                      class="collapse"
-                      data-parent="#accordionExample"
+                      class="accordion sub__accordian card-body__pad"
+                      id="accordionExample{{ app.id }}"
                     >
-                      <div class="card-body">
+                      <div class="orange__text__sm pb-sm"></div>
+                      <div *ngFor="let study of app.studies">
                         <div
-                          class="accordion sub__accordian card-body__pad"
-                          id="accordionExample{{ app.id }}"
+                          class="card"
+                          *ngIf="
+                            study.selectedSitesCount != 0 || study.selected
+                          "
                         >
-                          <div class="orange__text__sm pb-sm"></div>
-                          <div *ngFor="let study of app.studies">
+                          <div class="card-header">
                             <div
-                              class="card"
-                              *ngIf="
-                                study.selectedSitesCount != 0 || study.selected
-                              "
+                              class="mb-0 flex__justify__space-between card__header__study__block"
                             >
-                              <div class="card-header">
-                                <div
-                                  class="mb-0 flex__justify__space-between card__header__study__block"
-                                >
-                                  <div>
-                                    <div class="custom__labels">
-                                      <input
-                                        type="checkbox"
-                                        id="studyCheckBox{{ study.studyId }}"
-                                        disabled
-                                        [value]="study.selected"
-                                      />
-                                      <label
-                                        for="studyCheckBox{{ study.studyId }}"
-                                        class="font14"
-                                      >
-                                        {{ study.studyName }}
-                                      </label>
-                                    </div>
-                                    <div class="custom__labels__radio">
-                                      <span
-                                        *ngIf="
-                                          study.permission == permission.View
-                                        "
-                                        class="txt__green font12"
-                                      >
-                                        View Only
-                                      </span>
-                                      <span
-                                        *ngIf="
-                                          study.permission ==
-                                          permission.ViewAndEdit
-                                        "
-                                        class="txt__green font12"
-                                      >
-                                        View And Edit
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="fa__plus__minus"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    [attr.data-target]="
-                                      '#collapseTwo' + study.studyId
+                              <div>
+                                <div class="custom__labels">
+                                  <input
+                                    type="checkbox"
+                                    id="studyCheckBox{{ study.studyId }}"
+                                    disabled
+                                    [value]="study.selected"
+                                  />
+                                  <label
+                                    for="studyCheckBox{{ study.studyId }}"
+                                    class="font14"
+                                  >
+                                    {{ study.studyName }}
+                                  </label>
+                                </div>
+                                <div class="custom__labels__radio">
+                                  <span
+                                    *ngIf="study.permission == permission.View"
+                                    class="txt__green font12"
+                                  >
+                                    View Only
+                                  </span>
+                                  <span
+                                    *ngIf="
+                                      study.permission == permission.ViewAndEdit
                                     "
-                                    aria-expanded="false"
-                                  ></div>
+                                    class="txt__green font12"
+                                  >
+                                    View And Edit
+                                  </span>
                                 </div>
                               </div>
+                              <div
+                                class="fa__plus__minus"
+                                type="button"
+                                data-toggle="collapse"
+                                [attr.data-target]="
+                                  '#collapseTwo' + study.studyId
+                                "
+                                aria-expanded="false"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          id="collapseTwo{{ study.studyId }}"
+                          class="collapse"
+                          [attr.data-parent]="'#accordionExample' + app.id"
+                        >
+                          <div class="card-body">
+                            <div class="orange__text__sm pad__T10__B20">
+                              {{
+                                study.selectedSitesCount
+                                  | i18nPlural: sitesMessageMapping
+                              }}
                             </div>
                             <div
-                              id="collapseTwo{{ study.studyId }}"
-                              class="collapse"
-                              [attr.data-parent]="'#accordionExample' + app.id"
+                              *ngFor="let site of study.sites"
+                              class="display-flex-center"
                             >
-                              <div class="card-body">
-                                <div class="orange__text__sm pad__T10__B20">
-                                  {{
-                                    study.selectedSitesCount
-                                      | i18nPlural: sitesMessageMapping
-                                  }}
+                              <span *ngIf="site.selected">
+                                <div class="custom__labels">
+                                  <input
+                                    type="checkbox"
+                                    id="siteCheckBox{{ site.siteId }}"
+                                    disabled
+                                    [value]="site.selected"
+                                  />
+                                  <label
+                                    for="siteCheckBox{{ site.siteId }}"
+                                    class="font12"
+                                  >
+                                    {{ site.locationName }}
+                                  </label>
                                 </div>
-                                <div
-                                  *ngFor="let site of study.sites"
-                                  class="display-flex-center"
+                              </span>
+                              <span class="custom__labels__radio pl-2 pr-2">
+                                <span
+                                  *ngIf="site.permission == permission.View"
+                                  class="txt__green font12"
                                 >
-                                  <span *ngIf="site.selected">
-                                    <div class="custom__labels">
-                                      <input
-                                        type="checkbox"
-                                        id="siteCheckBox{{ site.siteId }}"
-                                        disabled
-                                        [value]="site.selected"
-                                      />
-                                      <label
-                                        for="siteCheckBox{{ site.siteId }}"
-                                        class="font12"
-                                      >
-                                        {{ site.locationName }}
-                                      </label>
-                                    </div>
-                                  </span>
-                                  <span class="custom__labels__radio pl-2 pr-2">
-                                    <span
-                                      *ngIf="site.permission == permission.View"
-                                      class="txt__green font12"
-                                    >
-                                      ( View Only )
-                                    </span>
-                                    <span
-                                      *ngIf="
-                                        site.permission ==
-                                        permission.ViewAndEdit
-                                      "
-                                      class="txt__green font12"
-                                    >
-                                      ( View And Edit )
-                                    </span>
-                                  </span>
-                                </div>
-                              </div>
+                                  ( View Only )
+                                </span>
+                                <span
+                                  *ngIf="
+                                    site.permission == permission.ViewAndEdit
+                                  "
+                                  class="txt__green font12"
+                                >
+                                  ( View And Edit )
+                                </span>
+                              </span>
                             </div>
                           </div>
                         </div>
