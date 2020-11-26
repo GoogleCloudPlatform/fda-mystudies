@@ -310,6 +310,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let appBlocker = JailbrokeBlocker.instanceFromNib(
         frame: navigationController.view.frame
       )
+      appBlocker.labelMessage.text = kJailbroken
       UIApplication.shared.keyWindow?.addSubview(appBlocker)
       UIApplication.shared.keyWindow?.bringSubviewToFront(appBlocker)
 
