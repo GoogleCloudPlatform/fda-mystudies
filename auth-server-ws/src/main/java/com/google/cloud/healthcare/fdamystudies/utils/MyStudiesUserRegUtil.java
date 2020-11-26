@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.utils;
 
+import com.google.cloud.healthcare.fdamystudies.controller.bean.LoginResponse;
+import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -21,8 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import com.google.cloud.healthcare.fdamystudies.controller.bean.LoginResponse;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 
 @Component
 @Scope("prototype")
@@ -89,9 +89,10 @@ public class MyStudiesUserRegUtil {
             + " which has been sent to your registered email. "
             + "If not received, would you like to resend verification link?"),
 
-   INVALID_USERNAME_PASSWORD_MSG("Email or password is invalid. If you have not registered, please Sign Up"),
+    INVALID_USERNAME_PASSWORD_MSG(
+        "Email or password is invalid. If you have not registered, please Sign Up"),
 
-    PASSWORD_EXPIRED("Password has expired"),
+    PASSWORD_EXPIRED("Your Password is expired. Please use forgot password to reset your password"),
 
     INVALID_EMAIL_ID("Invalid email id"),
 
