@@ -281,13 +281,16 @@ $ kubectl apply \
 If the cluster has issues, there are a few things you can check:
 
 * Wait. It can take some time for all deployments to come up.
-* Run `kubectl describe pods` and `kubectl logs <pod> <container>`. A useful
-    container to look at is `cloudsql-proxy`, to see if the DB connection was
-    established correctly.
-* Make sure all the secrets in Secret Manager have values and are not empty.
+* Run `kubectl describe pods` and `kubectl logs <pod> <container>`. 
+  Application logs are set to `warning` level by default, if you need more information, 
+  consider changing the log level to `info`.
+* Make sure all the secrets in Secret Manager have values and are not empty. 
+  After updating the value of a secret, make sure you refresh Kubernetes secrets
+  by running `terraform init` and `terraform apply` in `./terraform/kubernets`.
 * Make sure Pod Security Polices were applied. The cluster has enforcement
     enabled, and will not start any containers if there are no Pod Security
     Policies.
+* Make sure your cluster ingress is healthy.
 * Follow a troubleshooting guide. Examples are
     [this](https://learnk8s.io/troubleshooting-deployments) and
     [this](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/).
