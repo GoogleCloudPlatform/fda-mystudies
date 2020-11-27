@@ -42,7 +42,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "study-builder"                             = ["study-builder/**"]
 #     "study-datastore"                           = ["study-datastore/**"]
 #     "hydra"                                     = ["hydra/**"]
-#     "auth-server"                         	  = ["auth-server/**", "common-modules/**"]
+#     "auth-server"                               = ["auth-server/**", "common-modules/**"]
 #     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
 #     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
 #     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]

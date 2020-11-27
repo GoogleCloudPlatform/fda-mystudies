@@ -15,7 +15,7 @@
 billing_account = "XXXXXX-XXXXXX-XXXXXX"
 project_id      = "example-dev-devops"
 state_bucket    = "example-dev-terraform-state"
-terraform_root  = "terraform"
+terraform_root  = "deployment/terraform"
 build_viewers = [
   "group:example-dev-cicd-viewers@example.com",
 ]
