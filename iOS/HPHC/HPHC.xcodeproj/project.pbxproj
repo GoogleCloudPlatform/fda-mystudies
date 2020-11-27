@@ -124,6 +124,7 @@
 		6F2CE77024BDF7ED00F2F4A7 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2CE76C24BDF7B500F2F4A7 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F2CE77124BDF82600F2F4A7 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2CE76C24BDF7B500F2F4A7 /* ResearchKit.framework */; };
 		6F2CE77424BDFF3F00F2F4A7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7D2D591E433E8800763D4C /* AppDelegate.swift */; };
+		6F348DA42571256900B9FA94 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F758CF22570D69400811345 /* Date+Extensions.swift */; };
 		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
 		6F4E1B2D24223C210051D3E2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2A24223C210051D3E2 /* README.md */; };
 		6F4E1B2F24223CA20051D3E2 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */; };
@@ -423,6 +424,7 @@
 		6F2CE76524BDF7B400F2F4A7 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ResearchKit.xcodeproj; sourceTree = "<group>"; };
 		6F4E1B2A24223C210051D3E2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		6F758CF22570D69400811345 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		6F83039424864431009409A5 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		6F83039924864D6B009409A5 /* LocalizableString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizableString.swift; sourceTree = "<group>"; };
 		6F83039A24864D6B009409A5 /* Localizable.strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable.strings.txt; sourceTree = "<group>"; };
@@ -1565,6 +1567,7 @@
 				6F209F01242E5E96005DD23F /* Data+Extensions.swift */,
 				6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */,
 				6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */,
+				6F758CF22570D69400811345 /* Date+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2252,6 +2255,7 @@
 				94334F7C1E6FE60900755444 /* LeftMenuViewController.swift in Sources */,
 				482062521E68532300C7A7AF /* UIUtilities.swift in Sources */,
 				6FB89C25225F410500420A7B /* TextChoiceCell.swift in Sources */,
+				6F348DA42571256900B9FA94 /* Date+Extensions.swift in Sources */,
 				6E7D2D8A1E43400100763D4C /* User.swift in Sources */,
 				94B3DD461E6ED8E500327AE5 /* ProfileViewController.swift in Sources */,
 				94B3DD5E1E6ED8E500327AE5 /* StudyOverviewPageViewController.swift in Sources */,
