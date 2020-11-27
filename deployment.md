@@ -254,7 +254,7 @@ regenerating the Terraform configs several times.
 ### Step 5: Deploy additional Firebase resources and Data resources through CICD
 
 1. In $ENGINE_CONFIG, uncomment the blocks that are marked as *Step 5.1*, *Step
-    5.2* and *Step 5.3*. Then regenerate the Terraform configs:
+    5.2*, *Step 5.3*, *Step 5.4* and *Step 5.5*. Then regenerate the Terraform configs:
 
     ```bash
     ./tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
