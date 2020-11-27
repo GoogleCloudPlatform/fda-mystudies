@@ -32,3 +32,7 @@ spec:
             path: /participant-manager/index.html
           initialDelaySeconds: 30
           periodSeconds: 20
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "50m"
