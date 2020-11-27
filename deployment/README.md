@@ -339,7 +339,7 @@ an initial superadmin account for Study Builder.
     configuration instructions.
    
    
-### Step 12: Push notification config in participant manager
+### Step 12: Mobile app setup in participant manager
 
 An app record is a representation of your mobile apps associated with an 
 FDA MyStudies deployment. App is identified by APP_ID, which is the value you 
