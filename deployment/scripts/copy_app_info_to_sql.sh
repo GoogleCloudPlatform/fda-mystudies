@@ -33,6 +33,7 @@ ANDROID_SERVER_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access l
 IOS_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-ios-bundle-id`
 IOS_CERTIFICATE=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-ios-certificate`
 IOS_CERTIFICATE_PASSWORD=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-ios-certificate-password`
+APP_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-mobile-app-appid`
 
 # Write corresponding SQL commands to TMPFILE.
 echo "UPDATE app_info SET
@@ -41,7 +42,7 @@ echo "UPDATE app_info SET
   ios_bundle_id=\"${IOS_BUNDLE_ID}\",
   ios_certificate=\"${IOS_CERTIFICATE}\",
   ios_certificate_password=\"${IOS_CERTIFICATE_PASSWORD}\"
-WHERE id=1;" >> ${TMPFILE}
+WHERE custom_app_id=\"${APP_ID}\";" >> ${TMPFILE}
 
 # Upload TMPFILE to GCS.
 GCS_FILE=gs://${SQL_IMPORT_BUCKET}/push_notification_info.sql
