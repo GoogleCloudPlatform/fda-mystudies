@@ -77,7 +77,7 @@ export class AuthInterceptor implements HttpInterceptor {
       },
       (error: unknown) => {
         if (error instanceof HttpErrorResponse) {
-          localStorage.clear();
+          sessionStorage.clear();
           void this.router.navigate(['/']);
         }
       },
