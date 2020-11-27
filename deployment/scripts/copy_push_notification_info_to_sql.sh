@@ -8,7 +8,7 @@
 
 #!/bin/bash
 if [ "$#" -ne 2 ]; then
-  echo 'Please provide deployment prefix and env in the order of <prefix> <env>>'
+  echo 'Please provide deployment prefix and env in the order of <prefix> <env>'
   exit 1
 fi
 
