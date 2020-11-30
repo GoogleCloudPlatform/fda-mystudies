@@ -21,7 +21,7 @@ describe('ImportEmailListComponent', () => {
   let fixture: ComponentFixture<ImportEmailListComponent>;
   let importParticipantButton: DebugElement;
   let cancelButtonName: DebugElement;
-
+  let fileName: DebugElement;
   beforeEach(async(async () => {
     const siteDetailsServiceSpy = jasmine.createSpyObj<SiteDetailsService>(
       'SiteDetailsService',
@@ -54,9 +54,6 @@ describe('ImportEmailListComponent', () => {
     fixture = TestBed.createComponent(ImportEmailListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    importParticipantButton = fixture.debugElement.query(
-      By.css('[name="buttonImport"]'),
-    );
     cancelButtonName = fixture.debugElement.query(
       By.css('[name="buttonCancel"]'),
     );
@@ -65,17 +62,6 @@ describe('ImportEmailListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should update the email participants when  button is submitted', fakeAsync(async () => {
-    const importSpy = spyOn(component, 'importParticipants');
-    const importButton = importParticipantButton.nativeElement as HTMLInputElement;
-    fixture.detectChanges();
-    tick();
-    importButton.click();
-    fixture.detectChanges();
-    await fixture.whenStable();
-    expect(importSpy).toHaveBeenCalled();
-  }));
 
   it('should hide component onclick cancel button', fakeAsync(async () => {
     const cancelSpy = spyOn(component, 'cancelled');
