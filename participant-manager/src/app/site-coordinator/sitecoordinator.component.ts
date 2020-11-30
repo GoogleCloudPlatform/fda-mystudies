@@ -4,6 +4,7 @@ import {SearchBar} from '../shared/search-bar';
 import {Profile} from './account/shared/profile.model';
 import {UserService} from '../service/user.service';
 import {StateService} from '../service/state.service';
+import {environment} from '@environment';
 
 @Component({
   selector: 'site-coordinator',
@@ -17,6 +18,8 @@ export class SiteCoordinatorComponent implements OnInit {
   searchBar: SearchBar | undefined;
   user = {} as Profile;
   userName = '';
+  copyright=environment.copyright;
+
   constructor(
     private readonly searchService: SearchService,
     private readonly userService: UserService,
