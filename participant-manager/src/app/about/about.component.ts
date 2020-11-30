@@ -8,9 +8,8 @@ import {environment} from '@environment';
   styleUrls: ['./about.component.scss'],
 })
 export class AboutComponent {
-  htmlContent=environment.aboutPageHtmlContent;
   safeHtmlContent:SafeHtml;
   constructor(sanitizer: DomSanitizer) {
-      this.safeHtmlContent = sanitizer.bypassSecurityTrustHtml( this.htmlContent);
+      this.safeHtmlContent = sanitizer.bypassSecurityTrustHtml(environment.aboutPageHtmlContent);
     }
 }
