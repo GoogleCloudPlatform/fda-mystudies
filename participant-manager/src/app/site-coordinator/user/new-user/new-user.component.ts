@@ -24,6 +24,8 @@ export class AddNewUserComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   appDetails = {} as AppDetails;
+    appDetailsBackup = {} as AppDetails;
+
   selectedApps: App[] = [];
   user = {} as User;
   permission = Permission;
@@ -52,6 +54,7 @@ export class AddNewUserComponent
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
         this.appDetails = data;
+        this.appDetailsBackup=JSON.parse(JSON.stringify(this.appDetails)) as AppDetails;
       }),
     );
   }
@@ -189,6 +192,7 @@ export class AddNewUserComponent
    superAdminCheckBoxChange():void {
     if (this.user.superAdmin) {
     this.selectedApps = [];
+    this.appDetails=this.appDetailsBackup;
     this.user.manageLocationsSelected = false;
     this.user.manageLocations = null;
   }

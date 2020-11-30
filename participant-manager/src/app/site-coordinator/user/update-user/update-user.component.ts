@@ -34,6 +34,8 @@ export class UpdateUserComponent
   permission = Permission;
   adminId = '';
   userStatus = Status;
+  appDetailsBackup = {} as AppDetails;
+
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 Sites',
     '=1': '1 Site',
@@ -93,6 +95,7 @@ export class UpdateUserComponent
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
         this.appDetails = data;
+                this.appDetailsBackup=JSON.parse(JSON.stringify(this.appDetails)) as AppDetails;
       }),
     );
   }
@@ -285,6 +288,7 @@ export class UpdateUserComponent
     if (this.user.superAdmin) {
     this.selectedApps = [];
             this.selectedAppsIds = [];
+             this.appDetails=this.appDetailsBackup;
             this.user.manageLocationsSelected = false;
             this.user.manageLocations = null;
   }
