@@ -8,29 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Context;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
 import com.google.cloud.healthcare.fdamystudies.bean.RefreshTokenBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ValidateClientCredentialsResponse;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -67,6 +44,29 @@ import com.google.cloud.healthcare.fdamystudies.utils.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.utils.JwtTokenUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Context;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthenticationController {
@@ -961,6 +961,9 @@ public class AuthenticationController {
                   userInfo.setResetPassword(null);
                   userInfo.setTempPasswordDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
                   userInfo.setPasswordUpdatedDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
+                  userInfo.setPasswordExpireDate(
+                      LocalDateTime.now(ZoneId.systemDefault())
+                          .plusMinutes(Long.valueOf(appConfig.getPasswdExpiryInMin())));
 
                   if (isLockedAccountTempPassword(changePasswordBean, userInfo)) {
                     userInfo.setLockedAccountTempPassword(null);
@@ -1117,7 +1120,7 @@ public class AuthenticationController {
     AuthInfoBO authInfo = null;
 
     try {
-      if (isUserActualPasswordExpired(participantDetails)) {
+      if (isUserActualPasswordExpired(participantDetails) && !participantDetails.isTempPassword()) {
         logger.info("User Actual Password is Expired");
         throw new PasswordExpiredException();
       }
