@@ -13,6 +13,7 @@ import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppSiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudyInfo;
+import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -174,4 +175,56 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "ud.app_info_id=:appId AND ud.id IN (:userIds) ",
       nativeQuery = true)
   public List<AppSiteInfo> findSitesByAppIdAndUserIds(String appId, List<String> userIds);
+
+  @Query(
+      value =
+          "SELECT ai.id AS appId, ai.app_name AS appName, 'app' AS permissionLevel, ai.custom_app_id AS customAppId, si.name AS studyName, loc.name AS locationName, loc.custom_id AS locationCustomId, sp.edit AS edit, sp.study_id AS studyId, sp.site_id AS siteId, si.custom_id AS customStudyId, loc.id AS locationId, loc.description AS locationDescription "
+              + "FROM app_info ai, study_info si, sites st, sites_permissions sp, locations loc "
+              + "WHERE ai.id=sp.app_info_id AND sp.study_id=si.id AND sp.site_id=st.id AND st.location_id=loc.id AND sp.ur_admin_user_id=:userId "
+              + "AND sp.app_info_id IN (SELECT ap.app_info_id FROM app_permissions ap WHERE ap.ur_admin_user_id=:userId) "
+              + "UNION ALL "
+              + "SELECT ai.id AS appId, ai.app_name AS appName, 'study' AS permissionLevel, ai.custom_app_id AS customAppId, si.name AS studyName, loc.name AS locationName, loc.custom_id AS locationCustomId, sp.edit AS edit, sp.study_id AS studyId, sp.site_id AS siteId, si.custom_id AS customStudyId, loc.id AS locationId, loc.description AS locationDescription "
+              + "FROM app_info ai, study_info si, sites st, sites_permissions sp, locations loc "
+              + "WHERE ai.id=sp.app_info_id AND sp.study_id=si.id AND sp.site_id=st.id AND st.location_id=loc.id AND sp.ur_admin_user_id=:userId "
+              + "AND sp.app_info_id NOT IN (SELECT ap.app_info_id FROM app_permissions ap WHERE ap.ur_admin_user_id=:userId) "
+              + "AND sp.study_id IN (SELECT study_id FROM study_permissions WHERE ur_admin_user_id=:userId) "
+              + "UNION ALL "
+              + "SELECT ai.id AS appId, ai.app_name AS appName, 'site' AS permissionLevel, ai.custom_app_id AS customAppId, si.name AS studyName, loc.name AS locationName, loc.custom_id AS locationCustomId, sp.edit AS edit, sp.study_id AS studyId, sp.site_id AS siteId, si.custom_id AS customStudyId, loc.id AS locationId, loc.description AS locationDescription "
+              + "FROM app_info ai, study_info si, sites st, sites_permissions sp, locations loc "
+              + "WHERE ai.id=sp.app_info_id AND sp.study_id=si.id AND sp.site_id=st.id AND st.location_id=loc.id AND sp.ur_admin_user_id=:userId "
+              + "AND sp.app_info_id NOT IN (SELECT ap.app_info_id FROM app_permissions ap WHERE ap.ur_admin_user_id=:userId) "
+              + "AND sp.study_id NOT IN (SELECT study_id FROM study_permissions WHERE ur_admin_user_id=:userId) "
+              + "UNION ALL "
+              + "SELECT DISTINCT ai.id AS appId, ai.app_name AS appName, 'study' AS permissionLevel, ai.custom_app_id AS customAppId, si.name AS studyName, NULL as locationName, NULL AS locationCustomId, sp.edit AS edit, sp.study_id AS studyId, null AS siteId, null AS customStudyId, null AS locationId, null AS locationDescription  "
+              + "FROM app_info ai, study_info si, sites st, study_permissions sp "
+              + "WHERE ai.id=sp.app_info_id AND sp.study_id=si.id AND sp.ur_admin_user_id=:userId "
+              + "AND sp.app_info_id NOT IN (SELECT ap.app_info_id FROM app_permissions ap WHERE ap.ur_admin_user_id=:userId) "
+              + "AND sp.study_id NOT IN (SELECT study_id FROM sites_permissions WHERE ur_admin_user_id=:userId) "
+              + "UNION ALL "
+              + "SELECT DISTINCT ai.id AS appId, ai.app_name AS appName, 'app' AS permissionLevel, ai.custom_app_id AS customAppId, si.name AS studyName, NULL as locationName, NULL AS locationCustomId, sp.edit AS edit, sp.study_id AS studyId, null AS siteId, null AS customStudyId, null AS locationId, null AS locationDescription "
+              + "FROM app_info ai, study_info si, sites st, study_permissions sp "
+              + "WHERE ai.id=sp.app_info_id AND sp.study_id=si.id AND sp.ur_admin_user_id=:userId "
+              + "AND sp.app_info_id IN (SELECT ap.app_info_id FROM app_permissions ap WHERE ap.ur_admin_user_id=:userId) "
+              + "AND sp.study_id NOT IN (SELECT study_id FROM sites_permissions WHERE ur_admin_user_id=:userId) ",
+      nativeQuery = true)
+  public List<AppStudySiteInfo> findAppsStudiesSitesByUserId(@Param("userId") String userId);
+
+  @Query(
+      value =
+          "SELECT ai.id AS appId, ai.app_name AS appName, ai.custom_app_id AS customAppId, si.name AS studyName, loc.name AS locationName, loc.custom_id AS locationCustomId, si.id AS studyId, st.id AS siteId, si.custom_id AS customStudyId, loc.id AS locationId, loc.description AS locationDescription "
+              + "FROM app_info ai, study_info si, sites st, locations loc "
+              + "WHERE st.location_id=loc.id AND st.study_id=si.id AND si.app_info_id=ai.id "
+              + "AND si.id NOT IN (SELECT study_id FROM study_permissions WHERE app_info_id IN (:appIds) AND ur_admin_user_id= :userId) "
+              + "AND st.id NOT IN (SELECT site_id FROM sites_permissions WHERE app_info_id IN (:appIds) AND ur_admin_user_id=:userId) "
+              + "AND ai.id IN (:appIds) "
+              + "UNION ALL "
+              + "SELECT ai.id AS appId, ai.app_name AS appName, ai.custom_app_id AS customAppId, si.name AS studyName, null AS locationName, null AS locationCustomId, si.id AS studyId, null AS siteId, si.custom_id AS customStudyId, null AS locationId, null AS locationDescription "
+              + "FROM app_info ai, study_info si "
+              + "WHERE si.app_info_id=ai.id "
+              + "AND si.id NOT IN (SELECT study_id FROM study_permissions WHERE app_info_id IN (:appIds) AND ur_admin_user_id=:userId) "
+              + "AND si.id NOT IN (SELECT study.id FROM sites site, study_info study WHERE study.id = site.study_id AND study.app_info_id IN (:appIds)) "
+              + "AND ai.id IN (:appIds) ",
+      nativeQuery = true)
+  public List<AppStudySiteInfo> findUnSelectedAppsStudiesSites(
+      List<String> appIds, @Param("userId") String userId);
 }
