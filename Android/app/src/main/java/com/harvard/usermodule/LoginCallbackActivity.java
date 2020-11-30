@@ -146,6 +146,7 @@ public class LoginCallbackActivity extends AppCompatActivity
         AppController.getHelperProgressDialog().dismissDialog();
         Intent changePasswordIntent =
                 new Intent(LoginCallbackActivity.this, ChangePasswordActivity.class);
+        changePasswordIntent.putExtra("from", "signin");
         changePasswordIntent.putExtra("userid", userId);
         changePasswordIntent.putExtra("auth", userAuth);
         changePasswordIntent.putExtra("email", emailId);
