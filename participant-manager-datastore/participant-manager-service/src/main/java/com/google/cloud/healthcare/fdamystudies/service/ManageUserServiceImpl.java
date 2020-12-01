@@ -17,11 +17,14 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AppPermissionDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SitePermissionDetails;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyPermissionDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.User;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppPermissionRequest;
@@ -31,10 +34,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserSitePermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyPermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.EmailTemplate;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -45,19 +50,18 @@ import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserAccountEmailSchedulerTaskEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +69,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,10 +91,6 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Autowired private AppRepository appRepository;
 
-  @Autowired private StudyRepository studyRepository;
-
-  @Autowired private SiteRepository siteRepository;
-
   @Autowired private AppPermissionRepository appPermissionRepository;
 
   @Autowired private StudyPermissionRepository studyPermissionRepository;
@@ -100,6 +102,11 @@ public class ManageUserServiceImpl implements ManageUserService {
   @Autowired private EmailService emailService;
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
+  @Autowired
+  private UserAccountEmailSchedulerTaskRepository userAccountEmailSchedulerTaskRepository;
+
+  @Autowired private EntityManager entityManger;
 
   @Override
   @Transactional
@@ -127,39 +134,15 @@ public class ManageUserServiceImpl implements ManageUserService {
     return userResponse;
   }
 
-  private EmailResponse sendInvitationEmail(String email, String firstName, String securityCode) {
-    Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("ORG_NAME", appConfig.getOrgName());
-    templateArgs.put("FIRST_NAME", firstName);
-    templateArgs.put("ACTIVATION_LINK", appConfig.getUserDetailsLink() + securityCode);
-    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
-    EmailRequest emailRequest =
-        new EmailRequest(
-            appConfig.getFromEmail(),
-            new String[] {email},
-            null,
-            null,
-            appConfig.getRegisterUserSubject(),
-            appConfig.getRegisterUserBody(),
-            templateArgs);
-    return emailService.sendMimeMail(emailRequest);
-  }
-
   private ErrorCode validateUserRequest(UserRequest user) {
     logger.entry("validateUserRequest()");
     Optional<UserRegAdminEntity> optAdminDetails =
         userAdminRepository.findById(user.getSuperAdminUserId());
-    if (!optAdminDetails.isPresent()) {
-      return ErrorCode.USER_NOT_FOUND;
-    }
 
-    UserRegAdminEntity loggedInUserDetails = optAdminDetails.get();
-    if (!loggedInUserDetails.isSuperAdmin()) {
-      return ErrorCode.NOT_SUPER_ADMIN_ACCESS;
-    }
-
-    if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
-      return ErrorCode.PERMISSION_MISSING;
+    UserRegAdminEntity admin =
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+    if (!admin.isSuperAdmin()) {
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
 
     Optional<UserRegAdminEntity> optUsers = userAdminRepository.findByEmail(user.getEmail());
@@ -167,171 +150,217 @@ public class ManageUserServiceImpl implements ManageUserService {
     return optUsers.isPresent() ? ErrorCode.EMAIL_EXISTS : null;
   }
 
-  private boolean hasAtleastOnePermission(UserRequest user) {
-    logger.entry("hasAtleastOnePermission()");
-    if (user.getManageLocations() != Permission.NO_PERMISSION.value()) {
-      return true;
-    } else if (CollectionUtils.isEmpty(user.getApps())) {
-      return false;
-    }
+  private void addSelectedAppStudySiteIds(
+      List<UserAppPermissionRequest> apps,
+      List<AppPermissionDetails> appPermissions,
+      List<StudyPermissionDetails> studyPermissions,
+      List<SitePermissionDetails> sitePermissions) {
 
     Predicate<UserAppPermissionRequest> appPredicate = app -> app.isSelected();
     Predicate<UserStudyPermissionRequest> studyPredicate = study -> study.isSelected();
     Predicate<UserSitePermissionRequest> sitePredicate = site -> site.isSelected();
 
-    List<UserAppPermissionRequest> selectedApps =
-        user.getApps().stream().filter(appPredicate).collect(Collectors.toList());
-    if (CollectionUtils.isNotEmpty(selectedApps)) {
-      return true;
-    }
+    if (apps != null) {
+      List<UserAppPermissionRequest> selectedApps =
+          (List<UserAppPermissionRequest>)
+              CollectionUtils.emptyIfNull(
+                  apps.stream().filter(appPredicate).collect(Collectors.toList()));
 
-    for (UserAppPermissionRequest appPermission : user.getApps()) {
-      List<UserStudyPermissionRequest> selectedStudies =
-          CollectionUtils.emptyIfNull(appPermission.getStudies())
-              .stream()
-              .filter(studyPredicate)
-              .collect(Collectors.toList());
-      if (CollectionUtils.isNotEmpty(selectedStudies)) {
-        return true;
+      for (UserAppPermissionRequest appRequest : selectedApps) {
+        AppPermissionDetails appPermissionDetails = new AppPermissionDetails();
+        appPermissionDetails.setAppId(appRequest.getId());
+        appPermissionDetails.setEdit(appRequest.getPermission());
+        appPermissions.add(appPermissionDetails);
       }
 
-      for (UserStudyPermissionRequest studyPermission : appPermission.getStudies()) {
-        List<UserSitePermissionRequest> selectedSites =
-            CollectionUtils.emptyIfNull(studyPermission.getSites())
+      for (UserAppPermissionRequest appPermission : apps) {
+        List<UserStudyPermissionRequest> selectedStudies =
+            CollectionUtils.emptyIfNull(appPermission.getStudies())
                 .stream()
-                .filter(sitePredicate)
+                .filter(studyPredicate)
                 .collect(Collectors.toList());
-        if (CollectionUtils.isNotEmpty(selectedSites)) {
-          return true;
+
+        for (UserStudyPermissionRequest studyRequest : selectedStudies) {
+          StudyPermissionDetails studyPermissionDetails = new StudyPermissionDetails();
+          studyPermissionDetails.setAppId(appPermission.getId());
+          studyPermissionDetails.setStudyId(studyRequest.getStudyId());
+          studyPermissionDetails.setEdit(studyRequest.getPermission());
+          studyPermissions.add(studyPermissionDetails);
+        }
+
+        if (appPermission.getStudies() != null) {
+          for (UserStudyPermissionRequest studyPermission : appPermission.getStudies()) {
+            List<UserSitePermissionRequest> selectedSites =
+                CollectionUtils.emptyIfNull(studyPermission.getSites())
+                    .stream()
+                    .filter(sitePredicate)
+                    .collect(Collectors.toList());
+
+            for (UserSitePermissionRequest siteRequest : selectedSites) {
+              SitePermissionDetails sitePermissionDetails = new SitePermissionDetails();
+              sitePermissionDetails.setAppId(appPermission.getId());
+              sitePermissionDetails.setStudyId(studyPermission.getStudyId());
+              sitePermissionDetails.setSiteId(siteRequest.getSiteId());
+              sitePermissionDetails.setCanEdit(siteRequest.getPermission());
+              sitePermissions.add(sitePermissionDetails);
+            }
+          }
         }
       }
     }
-
-    logger.exit("No permissions found, return false");
-    return false;
   }
 
   private AdminUserResponse saveAdminDetails(UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("saveAdminDetails()");
+    List<AppPermissionDetails> appPermissions = new ArrayList<>();
+    List<StudyPermissionDetails> studyPermissions = new ArrayList<>();
+    List<SitePermissionDetails> sitePermissions = new ArrayList<>();
+    if (user.getApps() != null && !user.getApps().isEmpty()) {
+      addSelectedAppStudySiteIds(user.getApps(), appPermissions, studyPermissions, sitePermissions);
+    }
+
+    if (user.getManageLocations() == Permission.NO_PERMISSION.value()
+        && appPermissions.isEmpty()
+        && studyPermissions.isEmpty()
+        && sitePermissions.isEmpty()) {
+      throw new ErrorCodeException(ErrorCode.PERMISSION_MISSING);
+    }
+
     UserRegAdminEntity adminDetails =
         UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
-      Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
-          user.getApps()
-              .stream()
-              .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
-
-      // save permissions for selected apps
-      for (UserAppPermissionRequest app :
-          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
-        saveAppStudySitePermissions(user, adminDetails, app);
-      }
-
-      // save permissions for unselected apps
-      for (UserAppPermissionRequest app :
-          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
-        for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
-          if (study.isSelected()) {
-            saveStudySitePermissions(user, adminDetails, study);
-          } else if (CollectionUtils.isNotEmpty(study.getSites())) {
-            saveSitePermissions(user, adminDetails, study);
-          }
-        }
-      }
+      saveAppLevelPermissions(user, adminDetails, appPermissions);
+      saveStudyLevelPermissions(user, adminDetails, studyPermissions);
+      saveSiteLevelPermissions(user, adminDetails, sitePermissions);
     }
 
-    EmailResponse emailResponse =
-        sendInvitationEmail(user.getEmail(), user.getFirstName(), adminDetails.getSecurityCode());
-    logger.debug(
-        String.format("send add new user email status=%s", emailResponse.getHttpStatusCode()));
-
-    Map<String, String> map =
-        Collections.singletonMap(CommonConstants.NEW_USER_ID, adminDetails.getId());
-    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
-      participantManagerHelper.logEvent(NEW_USER_INVITATION_EMAIL_SENT, auditRequest, map);
-    } else {
-      participantManagerHelper.logEvent(NEW_USER_INVITATION_EMAIL_FAILED, auditRequest, map);
-    }
+    UserAccountEmailSchedulerTaskEntity emailTaskEntity =
+        UserMapper.toUserAccountEmailSchedulerTaskEntity(
+            auditRequest, adminDetails, EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE);
+    userAccountEmailSchedulerTaskRepository.saveAndFlush(emailTaskEntity);
 
     logger.exit("Successfully saved admin details.");
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, adminDetails.getId());
   }
 
-  private void saveAppStudySitePermissions(
-      UserRequest user, UserRegAdminEntity adminDetails, UserAppPermissionRequest app) {
-    logger.entry("saveAppStudySitePermissions()");
-    Optional<AppEntity> optApp = appRepository.findById(app.getId());
-    if (!optApp.isPresent()) {
+  // SQL Injection? No. No need to sanitize appId, userId values as these fields have FK
+  // constraints defined on the table
+  private void saveAppLevelPermissions(
+      UserRequest user,
+      UserRegAdminEntity adminDetails,
+      List<AppPermissionDetails> appPermissions) {
+    logger.entry("saveAppLevelPermissions()");
+    if (CollectionUtils.isEmpty(appPermissions)) {
       return;
     }
 
-    AppEntity appDetails = optApp.get();
-    AppPermissionEntity appPermission =
-        UserMapper.newAppPermissionEntity(user, adminDetails, app, appDetails);
-    appPermissionRepository.saveAndFlush(appPermission);
+    StringBuilder sqlInsertBuilder =
+        new StringBuilder(
+            "insert into app_permissions (id, ur_admin_user_id, app_info_id, edit, created_time, created_by) values");
+    appPermissions.forEach(
+        (AppPermissionDetails appPermssion) -> {
+          sqlInsertBuilder.append("(");
+          sqlInsertBuilder.append("'" + IdGenerator.id() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + adminDetails.getId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + appPermssion.getAppId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + appPermssion.getEdit() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + new Timestamp(Instant.now().toEpochMilli()) + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + user.getSuperAdminUserId() + "'");
+          sqlInsertBuilder.append(")");
+          sqlInsertBuilder.append(", ");
+        });
+    sqlInsertBuilder.deleteCharAt(sqlInsertBuilder.lastIndexOf(","));
 
-    List<StudyEntity> studies =
-        (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findByAppId(app.getId()));
-
-    List<StudyPermissionEntity> studyPermissions =
-        UserMapper.newStudyPermissionList(user, adminDetails, app, appDetails, studies);
-    studyPermissionRepository.saveAll(studyPermissions);
-
-    List<String> studyIds = studies.stream().map(StudyEntity::getId).collect(Collectors.toList());
-
-    List<SiteEntity> sites =
-        (List<SiteEntity>) CollectionUtils.emptyIfNull(siteRepository.findByStudyIds(studyIds));
-
-    List<SitePermissionEntity> sitePermissions =
-        UserMapper.newSitePermissionList(user, adminDetails, app, appDetails, sites);
-    sitePermissionRepository.saveAll(sitePermissions);
-
-    logger.exit("Successfully saved app study and site permissions.");
+    entityManger.createNativeQuery(sqlInsertBuilder.toString()).executeUpdate();
+    logger.exit("Successfully saved app level permissions");
   }
 
-  private void saveStudySitePermissions(
-      UserRequest userId, UserRegAdminEntity superAdminDetails, UserStudyPermissionRequest study) {
-    logger.entry("saveStudySitePermissions()");
-    Optional<StudyEntity> optStudyInfo = studyRepository.findById(study.getStudyId());
-    if (!optStudyInfo.isPresent()) {
+  // SQL Injection? No. No need to sanitize appId,studyId, userId values as these fields have FK
+  // constraints defined on the table
+  private void saveStudyLevelPermissions(
+      UserRequest user,
+      UserRegAdminEntity adminDetails,
+      List<StudyPermissionDetails> studyPermissions) {
+    logger.entry("saveStudyLevelPermissions()");
+    if (CollectionUtils.isEmpty(studyPermissions)) {
       return;
     }
-    List<SiteEntity> sites = siteRepository.findAll();
-    StudyEntity studyDetails = optStudyInfo.get();
-    StudyPermissionEntity studyPermission =
-        UserMapper.newStudyPermissionEntity(userId, superAdminDetails, study, studyDetails);
-    studyPermissionRepository.saveAndFlush(studyPermission);
-    if (CollectionUtils.isNotEmpty(sites)) {
-      for (SiteEntity site : sites) {
-        if (site.getStudy().getId().equals(study.getStudyId())) {
-          SitePermissionEntity sitePermission =
-              UserMapper.newSitePermissionEntity(
-                  userId, superAdminDetails, study, studyDetails, site);
-          sitePermissionRepository.saveAndFlush(sitePermission);
-        }
-      }
-    }
-    logger.exit("Successfully saved study and site permissions.");
+
+    StringBuilder sqlInsertBuilder =
+        new StringBuilder(
+            "insert into study_permissions (id, ur_admin_user_id, app_info_id, study_id, edit, created_time, created_by) values");
+    studyPermissions.forEach(
+        (StudyPermissionDetails studyPermssion) -> {
+          sqlInsertBuilder.append("(");
+          sqlInsertBuilder.append("'" + IdGenerator.id() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + adminDetails.getId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + studyPermssion.getAppId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + studyPermssion.getStudyId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + studyPermssion.getEdit() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + new Timestamp(Instant.now().toEpochMilli()) + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + user.getSuperAdminUserId() + "'");
+          sqlInsertBuilder.append(")");
+          sqlInsertBuilder.append(", ");
+        });
+    sqlInsertBuilder.deleteCharAt(sqlInsertBuilder.lastIndexOf(","));
+
+    entityManger.createNativeQuery(sqlInsertBuilder.toString()).executeUpdate();
+    logger.exit("Successfully saved study level permissions");
   }
 
-  private void saveSitePermissions(
-      UserRequest user, UserRegAdminEntity superAdminDetails, UserStudyPermissionRequest study) {
-    for (UserSitePermissionRequest site : study.getSites()) {
-      logger.entry("saveSitePermission()");
-      if (site.isSelected()) {
-        Optional<SiteEntity> optSite = siteRepository.findById(site.getSiteId());
-        if (!optSite.isPresent()) {
-          return;
-        }
-        SiteEntity siteDetails = optSite.get();
-        SitePermissionEntity sitePermission =
-            UserMapper.newSitePermissionEntity(user, site, superAdminDetails, siteDetails);
-        sitePermissionRepository.saveAndFlush(sitePermission);
-      }
+  // SQL Injection? No. No need to sanitize appId, studyId, siteId, userId values as these fields
+  // have FK constraints defined on the table
+  private void saveSiteLevelPermissions(
+      UserRequest user,
+      UserRegAdminEntity adminDetails,
+      List<SitePermissionDetails> sitePermissions) {
+    logger.entry("saveSiteLevelPermissions()");
+    if (CollectionUtils.isEmpty(sitePermissions)) {
+      return;
     }
-    logger.exit("Successfully saved site permissions.");
+
+    StringBuilder sqlInsertBuilder =
+        new StringBuilder(
+            "insert into sites_permissions (id, ur_admin_user_id, app_info_id, study_id, site_id, edit, created_time, created_by) values");
+    sitePermissions.forEach(
+        (SitePermissionDetails sitePermssion) -> {
+          sqlInsertBuilder.append("(");
+          sqlInsertBuilder.append("'" + IdGenerator.id() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + adminDetails.getId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + sitePermssion.getAppId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + sitePermssion.getStudyId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + sitePermssion.getSiteId() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + sitePermssion.getCanEdit() + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + new Timestamp(Instant.now().toEpochMilli()) + "'");
+          sqlInsertBuilder.append(",");
+          sqlInsertBuilder.append("'" + user.getSuperAdminUserId() + "'");
+          sqlInsertBuilder.append(")");
+          sqlInsertBuilder.append(", ");
+        });
+
+    sqlInsertBuilder.deleteCharAt(sqlInsertBuilder.lastIndexOf(","));
+
+    entityManger.createNativeQuery(sqlInsertBuilder.toString()).executeUpdate();
+    logger.exit("Successfully saved site level permissions");
   }
 
   private AdminUserResponse saveSuperAdminDetails(
@@ -342,19 +371,10 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     superAdminDetails = userAdminRepository.saveAndFlush(superAdminDetails);
 
-    EmailResponse emailResponse =
-        sendInvitationEmail(
-            user.getEmail(), user.getFirstName(), superAdminDetails.getSecurityCode());
-    logger.debug(
-        String.format("send add new user email status=%s", emailResponse.getHttpStatusCode()));
-
-    Map<String, String> map =
-        Collections.singletonMap(CommonConstants.NEW_USER_ID, superAdminDetails.getId());
-    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
-      participantManagerHelper.logEvent(NEW_USER_INVITATION_EMAIL_SENT, auditRequest, map);
-    } else {
-      participantManagerHelper.logEvent(NEW_USER_INVITATION_EMAIL_FAILED, auditRequest, map);
-    }
+    UserAccountEmailSchedulerTaskEntity emailTaskEntity =
+        UserMapper.toUserAccountEmailSchedulerTaskEntity(
+            auditRequest, superAdminDetails, EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE);
+    userAccountEmailSchedulerTaskRepository.saveAndFlush(emailTaskEntity);
 
     logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.ADD_NEW_USER_SUCCESS));
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, superAdminDetails.getId());
@@ -363,17 +383,14 @@ public class ManageUserServiceImpl implements ManageUserService {
   @Override
   @Transactional
   public AdminUserResponse updateUser(
-      UserRequest user, String superAdminUserId, AuditLogEventRequest auditRequest) {
+      UserRequest user, String adminUserId, AuditLogEventRequest auditRequest) {
     logger.entry(String.format("updateUser() with isSuperAdmin=%b", user.isSuperAdmin()));
-    ErrorCode errorCode = validateUpdateUserRequest(user, superAdminUserId);
-    if (errorCode != null) {
-      throw new ErrorCodeException(errorCode);
-    }
+    validateUpdateUserRequest(user);
 
     AdminUserResponse userResponse =
         user.isSuperAdmin()
-            ? updateSuperAdminDetails(user, superAdminUserId, auditRequest)
-            : updateAdminDetails(user, superAdminUserId, auditRequest);
+            ? updateSuperAdminDetails(user, auditRequest)
+            : updateAdminDetails(user, auditRequest);
     String accessLevel = user.isSuperAdmin() ? CommonConstants.SUPER_ADMIN : CommonConstants.ADMIN;
     if (MessageCode.UPDATE_USER_SUCCESS.getMessage().equals(userResponse.getMessage())) {
       Map<String, String> map = new HashedMap<>();
@@ -386,34 +403,23 @@ public class ManageUserServiceImpl implements ManageUserService {
     return userResponse;
   }
 
-  private ErrorCode validateUpdateUserRequest(UserRequest user, String superAdminUserId) {
+  private void validateUpdateUserRequest(UserRequest user) {
     logger.entry("validateUpdateUserRequest()");
     Optional<UserRegAdminEntity> optSuperAdmin =
-        userAdminRepository.findById(user.getSignedInUserId());
+        userAdminRepository.findById(user.getSuperAdminUserId());
     UserRegAdminEntity admin =
         optSuperAdmin.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
     if (!admin.isSuperAdmin()) {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
 
-    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
-    if (!optAdminDetails.isPresent() || user.getId() == null) {
-      return ErrorCode.USER_NOT_FOUND;
-    }
-
-    if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
-      return ErrorCode.PERMISSION_MISSING;
-    }
-
     logger.exit("Successfully validated user request");
-    return null;
   }
 
   private AdminUserResponse updateSuperAdminDetails(
-      UserRequest user, String superAdminUserId, AuditLogEventRequest auditRequest) {
+      UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("updateSuperAdminDetails()");
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getId());
-
     if (!optAdminDetails.isPresent()) {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
@@ -425,101 +431,62 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     deleteAppStudySiteLevelPermissions(user.getId());
 
-    EmailResponse emailResponse = sendUserUpdatedEmail(user);
-    logger.debug(String.format("send update email status=%s", emailResponse.getHttpStatusCode()));
-
-    Map<String, String> map =
-        Collections.singletonMap(CommonConstants.EDITED_USER_ID, adminDetails.getId());
-    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
-      participantManagerHelper.logEvent(ACCOUNT_UPDATE_EMAIL_SENT, auditRequest, map);
-    } else {
-      participantManagerHelper.logEvent(ACCOUNT_UPDATE_EMAIL_FAILED, auditRequest, map);
-    }
+    UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail =
+        UserMapper.toUserAccountEmailSchedulerTaskEntity(
+            auditRequest, adminDetails, EmailTemplate.ACCOUNT_UPDATED_EMAIL_TEMPLATE);
+    userAccountEmailSchedulerTaskRepository.saveAndFlush(adminRecordToSendEmail);
 
     logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.UPDATE_USER_SUCCESS));
     return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
   }
 
-  private EmailResponse sendUserUpdatedEmail(UserRequest user) {
-    Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("ORG_NAME", appConfig.getOrgName());
-    templateArgs.put("FIRST_NAME", user.getFirstName());
-    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
-    EmailRequest emailRequest =
-        new EmailRequest(
-            appConfig.getFromEmail(),
-            new String[] {user.getEmail()},
-            null,
-            null,
-            appConfig.getUpdateUserSubject(),
-            appConfig.getUpdateUserBody(),
-            templateArgs);
-    return emailService.sendMimeMail(emailRequest);
-  }
-
   private AdminUserResponse updateAdminDetails(
-      UserRequest user, String superAdminUserId, AuditLogEventRequest auditRequest) {
+      UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("updateAdminDetails()");
-
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getId());
+    UserRegAdminEntity adminDetails =
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
 
-    if (!optAdminDetails.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    List<AppPermissionDetails> appPermissions = new ArrayList<>();
+    List<StudyPermissionDetails> studyPermissions = new ArrayList<>();
+    List<SitePermissionDetails> sitePermissions = new ArrayList<>();
+    if (user.getApps() != null && !user.getApps().isEmpty()) {
+      addSelectedAppStudySiteIds(user.getApps(), appPermissions, studyPermissions, sitePermissions);
     }
 
-    UserRegAdminEntity adminDetails = optAdminDetails.get();
+    if (user.getManageLocations() == Permission.NO_PERMISSION.value()
+        && appPermissions.isEmpty()
+        && studyPermissions.isEmpty()
+        && sitePermissions.isEmpty()) {
+      throw new ErrorCodeException(ErrorCode.PERMISSION_MISSING);
+    }
+
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
     userAdminRepository.saveAndFlush(adminDetails);
 
     deleteAppStudySiteLevelPermissions(user.getId());
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
-      user.setSuperAdminUserId(superAdminUserId);
-      Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
-          user.getApps()
-              .stream()
-              .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
-
-      // save permissions for selected apps
-      for (UserAppPermissionRequest app :
-          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
-        saveAppStudySitePermissions(user, adminDetails, app);
-      }
-
-      // save permissions for unselected apps
-      for (UserAppPermissionRequest app :
-          CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
-        for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
-          if (study.isSelected()) {
-            saveStudySitePermissions(user, adminDetails, study);
-          } else if (CollectionUtils.isNotEmpty(study.getSites())) {
-            saveSitePermissions(user, adminDetails, study);
-          }
-        }
-      }
+      saveAppLevelPermissions(user, adminDetails, appPermissions);
+      saveStudyLevelPermissions(user, adminDetails, studyPermissions);
+      saveSiteLevelPermissions(user, adminDetails, sitePermissions);
     }
 
-    EmailResponse emailResponse = sendUserUpdatedEmail(user);
-    logger.debug(String.format("send update email status=%s", emailResponse.getHttpStatusCode()));
-
-    Map<String, String> map =
-        Collections.singletonMap(CommonConstants.EDITED_USER_ID, adminDetails.getId());
-    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
-      participantManagerHelper.logEvent(ACCOUNT_UPDATE_EMAIL_SENT, auditRequest, map);
-    } else {
-      participantManagerHelper.logEvent(ACCOUNT_UPDATE_EMAIL_FAILED, auditRequest, map);
-    }
+    UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail =
+        UserMapper.toUserAccountEmailSchedulerTaskEntity(
+            auditRequest, adminDetails, EmailTemplate.ACCOUNT_UPDATED_EMAIL_TEMPLATE);
+    userAccountEmailSchedulerTaskRepository.saveAndFlush(adminRecordToSendEmail);
 
     logger.exit("Successfully updated admin details.");
     return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
   }
 
   private void deleteAppStudySiteLevelPermissions(String userId) {
-    logger.entry("deleteAllPermissions()");
+    logger.entry("deleteAppStudySiteLevelPermissions()");
     sitePermissionRepository.deleteByAdminUserId(userId);
     studyPermissionRepository.deleteByAdminUserId(userId);
     appPermissionRepository.deleteByAdminUserId(userId);
-    logger.exit("Successfully deleted all the assigned permissions.");
+    logger.exit("Successfully deleted all the assigned permissions");
   }
 
   @Override
@@ -715,18 +682,12 @@ public class ManageUserServiceImpl implements ManageUserService {
   @Override
   @Transactional
   public AdminUserResponse sendInvitation(String userId, String superAdminUserId) {
-
+    logger.entry("sendInvitation()");
     validateInviteRequest(superAdminUserId);
 
     Optional<UserRegAdminEntity> optUser = userAdminRepository.findById(userId);
     UserRegAdminEntity user =
         optUser.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
-
-    Timestamp now = new Timestamp(Instant.now().toEpochMilli());
-    if (now.before(user.getSecurityCodeExpireDate())) {
-      logger.info("Valid security code found, skip send invite email");
-      return new AdminUserResponse(MessageCode.INVITATION_SENT_SUCCESSFULLY, user.getId());
-    }
 
     user.setSecurityCode(IdGenerator.id());
     user.setSecurityCodeExpireDate(
@@ -736,14 +697,11 @@ public class ManageUserServiceImpl implements ManageUserService {
                 .toEpochMilli()));
     user = userAdminRepository.saveAndFlush(user);
 
-    EmailResponse emailResponse =
-        sendInvitationEmail(user.getEmail(), user.getFirstName(), user.getSecurityCode());
-
-    if (!MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
-        .getMessage()
-        .equals(emailResponse.getMessage())) {
-      throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
-    }
+    UserAccountEmailSchedulerTaskEntity emailTaskEntity =
+        UserMapper.toUserAccountEmailSchedulerTaskEntity(
+            null, user, EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE);
+    userAccountEmailSchedulerTaskRepository.saveAndFlush(emailTaskEntity);
+    logger.exit("Invitation to user resent successfully");
     return new AdminUserResponse(MessageCode.INVITATION_SENT_SUCCESSFULLY, user.getId());
   }
 
@@ -757,5 +715,115 @@ public class ManageUserServiceImpl implements ManageUserService {
       logger.error("Signed in user is not having super admin privileges");
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
+  }
+
+  @Override
+  @Transactional
+  public void sendUserEmail() {
+    List<UserAccountEmailSchedulerTaskEntity> listOfAdminsToSendEmail =
+        userAccountEmailSchedulerTaskRepository.findAllWithStatusZero();
+
+    for (UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail : listOfAdminsToSendEmail) {
+      int updatedRows =
+          userAccountEmailSchedulerTaskRepository.updateStatus(
+              adminRecordToSendEmail.getUserId(), 1);
+
+      if (updatedRows == 0) {
+        // this record may be taken by another service instance
+        continue;
+      }
+
+      Optional<UserRegAdminEntity> adminOpt =
+          userAdminRepository.findById(adminRecordToSendEmail.getUserId());
+
+      if (!adminOpt.isPresent()) {
+        logger.warn(
+            "Admin not found for invitation. So deleting this record from new admin email service table");
+        userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
+        continue;
+      }
+
+      UserRegAdminEntity admin = adminOpt.get();
+
+      EmailResponse emailResponse = sendAccountCreatedOrUpdatedEmail(adminRecordToSendEmail, admin);
+
+      // Post success or failed audit log event for sending email
+      ParticipantManagerEvent auditEnum = null;
+      if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+          .getMessage()
+          .equals(emailResponse.getMessage())) {
+        auditEnum =
+            EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE
+                    .getTemplate()
+                    .equals(adminRecordToSendEmail.getEmailTemplateType())
+                ? NEW_USER_INVITATION_EMAIL_SENT
+                : ACCOUNT_UPDATE_EMAIL_SENT;
+        userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
+      } else {
+        auditEnum =
+            EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE
+                    .getTemplate()
+                    .equals(adminRecordToSendEmail.getEmailTemplateType())
+                ? NEW_USER_INVITATION_EMAIL_FAILED
+                : ACCOUNT_UPDATE_EMAIL_FAILED;
+        userAccountEmailSchedulerTaskRepository.updateStatus(adminRecordToSendEmail.getUserId(), 0);
+      }
+
+      if (StringUtils.isNotEmpty(adminRecordToSendEmail.getAppId())
+          && StringUtils.isNotEmpty(adminRecordToSendEmail.getSource())) {
+        AuditLogEventRequest auditRequest = prepareAuditlogRequest(adminRecordToSendEmail);
+        Map<String, String> map = new HashMap<>();
+        map.put(CommonConstants.NEW_USER_ID, admin.getId());
+        map.put(CommonConstants.EDITED_USER_ID, admin.getId());
+        participantManagerHelper.logEvent(auditEnum, auditRequest, map);
+      }
+    }
+  }
+
+  private AuditLogEventRequest prepareAuditlogRequest(
+      UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail) {
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(adminRecordToSendEmail.getAppId());
+    auditRequest.setAppVersion(adminRecordToSendEmail.getAppVersion());
+    auditRequest.setCorrelationId(adminRecordToSendEmail.getCorrelationId());
+    auditRequest.setSource(adminRecordToSendEmail.getSource());
+    auditRequest.setMobilePlatform(adminRecordToSendEmail.getMobilePlatform());
+    auditRequest.setUserId(adminRecordToSendEmail.getCreatedBy());
+    return auditRequest;
+  }
+
+  private EmailResponse sendAccountCreatedOrUpdatedEmail(
+      UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail, UserRegAdminEntity admin) {
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("ORG_NAME", appConfig.getOrgName());
+    templateArgs.put("FIRST_NAME", admin.getFirstName());
+    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
+
+    EmailRequest emailRequest = null;
+    if (EmailTemplate.ACCOUNT_UPDATED_EMAIL_TEMPLATE
+        .getTemplate()
+        .equals(adminRecordToSendEmail.getEmailTemplateType())) {
+      emailRequest =
+          new EmailRequest(
+              appConfig.getFromEmail(),
+              new String[] {admin.getEmail()},
+              null,
+              null,
+              appConfig.getUpdateUserSubject(),
+              appConfig.getUpdateUserBody(),
+              templateArgs);
+    } else {
+      templateArgs.put("ACTIVATION_LINK", appConfig.getUserDetailsLink() + admin.getSecurityCode());
+      emailRequest =
+          new EmailRequest(
+              appConfig.getFromEmail(),
+              new String[] {admin.getEmail()},
+              null,
+              null,
+              appConfig.getRegisterUserSubject(),
+              appConfig.getRegisterUserBody(),
+              templateArgs);
+    }
+    return emailService.sendMimeMail(emailRequest);
   }
 }
