@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_SEND_FAILED_EXCEPTION;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_ALREADY_EXISTS;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
@@ -19,6 +18,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
@@ -109,44 +109,55 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     if (optUserDetails.isPresent()) {
       UserDetailsEntity existingUserDetails = optUserDetails.get();
       if (generateVerificationCode(existingUserDetails)) {
-        generateAndSaveVerificationCode(existingUserDetails);
+        EmailResponse emailResponse = generateAndSaveVerificationCode(existingUserDetails);
+
+        if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+            .getMessage()
+            .equals(emailResponse.getMessage())) {
+          userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_SENT, auditRequest);
+        } else {
+          userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_FAILED, auditRequest);
+          throw new ErrorCodeException(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
+        }
       }
       userMgmntAuditHelper.logEvent(
           UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME, auditRequest);
       throw new ErrorCodeException(USER_ALREADY_EXISTS);
     }
 
-    // save user details
     UserDetailsEntity userDetails = fromUserRegistrationForm(user);
     Optional<AppEntity> app = appRepository.findByAppId(appOrgInfoBean.getAppInfoId());
     if (app.isPresent()) {
       userDetails.setApp(app.get());
     }
-    userDetails = userDetailsRepository.saveAndFlush(userDetails);
 
     // Call POST /users API to create a user account in oauth-scim-server
     UserResponse authUserResponse = registerUserInAuthServer(user);
 
-    // save authUserId and verfication code
+    // save authUserId
     userDetails.setUserId(authUserResponse.getUserId());
     userDetails = userDetailsRepository.saveAndFlush(userDetails);
 
-    // save to UserAppDetailsEntity and AuthInfoEntity
+    // save to UserAppDetailsEntity and AuthInfoEntity for Push notification
     saveAuthInfoAndUserAppDetails(userDetails);
 
     auditRequest.setUserId(userDetails.getUserId());
     userMgmntAuditHelper.logEvent(UserMgmntEvent.REGISTRATION_SUCCEEDED, auditRequest);
 
     // generate save and email the verification code
-    userDetails = generateAndSaveVerificationCode(userDetails);
+    EmailResponse emailResponse = generateAndSaveVerificationCode(userDetails);
 
     // verification code is empty if send email is failed
-    if (StringUtils.isEmpty(userDetails.getEmailCode())) {
-      userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_FAILED, auditRequest);
-
-      throw new ErrorCodeException(EMAIL_SEND_FAILED_EXCEPTION);
-    } else {
+    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_SENT, auditRequest);
+    } else {
+      userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_FAILED, auditRequest);
+      // throwing ErrorCodeException will result in Transaction roll back so this is handled in
+      // UserRegistrationController
+      return new UserRegistrationResponse(
+          authUserResponse.getUserId(),
+          authUserResponse.getTempRegId(),
+          ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
     }
 
     logger.exit("user account successfully created and email sent with verification code");
@@ -161,15 +172,15 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             || Timestamp.from(Instant.now()).after(userDetails.getCodeExpireDate()));
   }
 
-  private UserDetailsEntity generateAndSaveVerificationCode(UserDetailsEntity userDetails) {
+  private EmailResponse generateAndSaveVerificationCode(UserDetailsEntity userDetails) {
     String verificationCode = RandomStringUtils.randomAlphanumeric(VERIFICATION_CODE_LENGTH);
     EmailResponse emailResponse = sendConfirmationEmail(userDetails, verificationCode);
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       userDetails.setEmailCode(verificationCode);
       userDetails.setCodeExpireDate(Timestamp.valueOf(LocalDateTime.now().plusMinutes(expireTime)));
-      userDetails = userDetailsRepository.saveAndFlush(userDetails);
+      userDetailsRepository.saveAndFlush(userDetails);
     }
-    return userDetails;
+    return emailResponse;
   }
 
   private UserDetailsEntity fromUserRegistrationForm(UserRegistrationForm user) {
