@@ -47,6 +47,15 @@ export class UserService {
     );
   }
 
+  getUserDetailsForEditing(adminId: string): Observable<ManageUserDetails> {
+    return this.http.get<ManageUserDetails>(
+      `${environment.baseUrl}/users/admin/${adminId}`,
+      {
+        params: {includeUnselected: 'true'},
+      },
+    );
+  }
+
   deleteInvitation(adminId: string): Observable<ApiResponse> {
     return this.http.delete<ApiResponse>(
       `${environment.baseUrl}/users/${adminId}/`,
