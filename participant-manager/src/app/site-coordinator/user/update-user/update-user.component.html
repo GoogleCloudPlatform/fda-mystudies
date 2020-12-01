@@ -8,8 +8,9 @@
           class="subheader__title cursor__pointer"
         >
           <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
-          <span class="pr-2">Edit User Details</span>
         </a>
+        <span class="pr-2">Edit User Details</span>
+
         <span [ngClass]="statusColour(user.status)" class="text__34a853g__14">
           {{ user.status }}
         </span>
@@ -143,8 +144,8 @@
                 #superAdminCheckBox="ngModel"
                 (change)="superAdminCheckBoxChange()"
               />
-              <label class="mt-xs" for="role">
-                Super Admin
+              <label class="mt-xs custom_text_transform" for="role">
+                Make this user a superadmin
                 <span
                   class="tool"
                   data-tip="A superadmin user has application-wide permissions.
