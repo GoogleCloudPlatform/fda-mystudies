@@ -132,6 +132,9 @@
     _answerFormat = answerFormat;
     
     _pickerView.datePickerMode = datePickerMode;
+  if (@available(iOS 14.0, *)) {
+    _pickerView.preferredDatePickerStyle = UIDatePickerStyleWheels;
+  }
     
     if ([self isTimeOfDay]) {
         [self setDate:[(ORKTimeOfDayAnswerFormat *)answerFormat pickerDefaultDate]];
