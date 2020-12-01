@@ -56,6 +56,6 @@ API_KEY = xx
 //
 // Should be max 15 character, human readable and URL safe.
 // If following terraform deployment steps, this APP_ID
-// should match the ones you manually set in GCP secret manager,
+// should match the one you manually set in GCP secret manager,
 // i.e. `manual-mobile-app-appid`.
 APP_ID = xxxxxx
