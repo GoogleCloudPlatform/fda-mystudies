@@ -1244,7 +1244,13 @@ public class SurveyActivitiesFragment extends Fragment
                             .setStartTime(
                                 dateSimpleDateFormat.format(startCalendar.getTime())
                                     + "T"
-                                    + startTime
+                                    + activityListData
+                                        .getActivities()
+                                        .get(i)
+                                        .getFrequency()
+                                        .getAnchorRuns()
+                                        .get(k)
+                                        .getTime()
                                     + ".000"
                                     + timezoneSimpleDateFormat.format(startCalendar.getTime()));
 
@@ -1273,7 +1279,13 @@ public class SurveyActivitiesFragment extends Fragment
                             .setEndTime(
                                 dateSimpleDateFormat.format(endCalendar.getTime())
                                     + "T"
-                                    + endTime
+                                    + activityListData
+                                        .getActivities()
+                                        .get(i)
+                                        .getFrequency()
+                                        .getAnchorRuns()
+                                        .get(k)
+                                        .getTime()
                                     + ".000"
                                     + timezoneSimpleDateFormat.format(endCalendar.getTime()));
 
