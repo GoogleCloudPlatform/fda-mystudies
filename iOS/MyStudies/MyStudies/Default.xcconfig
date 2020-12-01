@@ -55,7 +55,7 @@ API_KEY = xx
 // Study builder would use this appID to match studies to apps.
 //
 // Should be max 15 character, human readable and URL safe.
-// If following terraform deployment steps, these APP_ID and ORG_ID
+// If following terraform deployment steps, this APP_ID
 // should match the ones you manually set in GCP secret manager,
 // i.e. `manual-mobile-app-appid`.
 APP_ID = xxxxxx
