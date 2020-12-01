@@ -34,7 +34,7 @@ describe('UpdateUserComponent', () => {
   let superAdminInput: DebugElement;
   beforeEach(async(async () => {
     const userServiceSpy = jasmine.createSpyObj<UserService>('UserService', {
-      getUserDetails: of(expectedManageUserDetails),
+      getUserDetailsForEditing: of(expectedManageUserDetails),
     });
     const appServiceSpy = jasmine.createSpyObj<AppsService>('AppsService', {
       getAllAppsWithStudiesAndSites: of(expectedAppDetails),
