@@ -3,6 +3,7 @@ import {
   ComponentFixture,
   TestBed,
   fakeAsync,
+  tick,
 } from '@angular/core/testing';
 import {ImportEmailListComponent} from './import-email-list.component';
 import {SiteDetailsService} from '../shared/site-details.service';
@@ -18,6 +19,7 @@ import {By} from '@angular/platform-browser';
 describe('ImportEmailListComponent', () => {
   let component: ImportEmailListComponent;
   let fixture: ComponentFixture<ImportEmailListComponent>;
+  let importParticipantButton: DebugElement;
   let cancelButtonName: DebugElement;
 
   beforeEach(async(async () => {
@@ -52,6 +54,9 @@ describe('ImportEmailListComponent', () => {
     fixture = TestBed.createComponent(ImportEmailListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    importParticipantButton = fixture.debugElement.query(
+      By.css('[name="buttonImport"]'),
+    );
     cancelButtonName = fixture.debugElement.query(
       By.css('[name="buttonCancel"]'),
     );
@@ -60,6 +65,17 @@ describe('ImportEmailListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should update the email participants when  button is submitted', fakeAsync(async () => {
+    const importSpy = spyOn(component, 'importParticipants');
+    const importButton = importParticipantButton.nativeElement as HTMLInputElement;
+    fixture.detectChanges();
+    tick();
+    importButton.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(importSpy).toHaveBeenCalled();
+  }));
 
   it('should hide component onclick cancel button', fakeAsync(async () => {
     const cancelSpy = spyOn(component, 'cancelled');
