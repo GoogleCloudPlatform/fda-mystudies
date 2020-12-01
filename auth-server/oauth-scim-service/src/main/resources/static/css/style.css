@@ -513,11 +513,11 @@ body#body-container {
 
 .loading_text {
   color: var(--space-gray);
-  font-size: 100%;
+  font-size: 14px;
   font-family: Muli, sans-serif;
   font-weight: 600;
   text-align: center;
-  margin-top: 90%;
+  margin-top: 80%;
 }
 
 @-webkit-keyframes loading-spinner {
