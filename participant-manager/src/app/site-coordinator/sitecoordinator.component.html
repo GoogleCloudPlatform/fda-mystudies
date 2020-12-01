@@ -5,7 +5,7 @@
         <a routerLink="/coordinator/studies/sites" class="navbar-brand">
           <img
             class="mr-sm width__auto"
-            src="../../../assets/images/landing-logo.png"
+            src="../../../assets/images/branding/landing-logo.png"
             alt="main logo "
           />
           <!-- <span class="header__logo__text">FDA MyStudies</span> -->
@@ -105,12 +105,4 @@
 
 <router-outlet (activate)="onActivate($event)"></router-outlet>
 
-<footer>
-  <div>&copy; Copyright 2020 Google LLC.</div>
-  <div>
-    <ul>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Terms of Service</a></li>
-    </ul>
-  </div>
-</footer>
+<app-footer></app-footer>

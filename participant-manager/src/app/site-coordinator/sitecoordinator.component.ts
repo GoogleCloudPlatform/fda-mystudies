@@ -17,6 +17,7 @@ export class SiteCoordinatorComponent implements OnInit {
   searchBar: SearchBar | undefined;
   user = {} as Profile;
   userName = '';
+
   constructor(
     private readonly searchService: SearchService,
     private readonly userService: UserService,

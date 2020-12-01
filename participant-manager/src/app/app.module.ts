@@ -23,6 +23,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {ErrorComponent} from './error/error.component';
 import {TermsComponent} from './terms/terms.component';
 import {AboutComponent} from './about/about.component';
+import {FooterComponent} from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import {AboutComponent} from './about/about.component';
     ErrorComponent,
     TermsComponent,
     AboutComponent,
+    FooterComponent,
   ],
   imports: [
     ModalModule.forRoot(),
@@ -60,6 +62,7 @@ import {AboutComponent} from './about/about.component';
     httpInterceptorProviders,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
   ],
+  exports: [FooterComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
