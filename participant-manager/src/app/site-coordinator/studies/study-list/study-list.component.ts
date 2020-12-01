@@ -70,7 +70,7 @@ export class StudyListComponent implements OnInit {
       return 'green__text__sm';
     } else if (
       study.enrollmentPercentage &&
-      (study.enrollmentPercentage >= 30 || study.enrollmentPercentage <= 70)
+      (study.enrollmentPercentage >= 30 && study.enrollmentPercentage <= 70)
     ) {
       return 'orange__text__sm';
     } else {
