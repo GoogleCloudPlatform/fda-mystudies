@@ -145,9 +145,9 @@ public class HttpRequest {
         } else {
           result.append("&");
         }
-        result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
+        result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.name()));
         result.append("=");
-        result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
+        result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.name()));
       }
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();

@@ -10,7 +10,7 @@ metadata:
   labels:
     app: auth-server
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: auth-server
@@ -128,6 +128,10 @@ spec:
               port: 8080
             initialDelaySeconds: 180
             periodSeconds: 20
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "50m"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

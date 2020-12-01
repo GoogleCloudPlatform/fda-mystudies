@@ -30,11 +30,11 @@ export interface EnrolledStudy {
 
 export interface Site {
   siteId: string;
-  customSiteId: string;
-  siteName: string;
+  customLocationId: string;
+  locationName: string;
   enrollmentDate: string;
   withdrawlDate: string;
-  siteStatus?: string;
+  participantStudyStatus?: string;
 }
 export interface Consent {
   id: string;
