@@ -7,7 +7,7 @@ import {NgxDataTableModule} from 'angular-9-datatable';
 import {MobileMenuComponent} from './mobile-menu/mobile-menu.component';
 import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.component';
 import {ParticipantDetailsComponent} from './participant-details/participant-details.component';
-import {FooterComponent} from './footer/footer.component';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -15,13 +15,13 @@ import {FooterComponent} from './footer/footer.component';
     MobileMenuComponent,
     DashboardHeaderComponent,
     ParticipantDetailsComponent,
-    FooterComponent,
   ],
   imports: [
     CommonModule,
     SiteCoordinatorRoutingModule,
     FormsModule,
     NgxDataTableModule,
+    SharedModule,
   ],
 })
 export class SiteCoordinatorModule {}

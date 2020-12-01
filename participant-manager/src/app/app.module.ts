@@ -23,8 +23,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {ErrorComponent} from './error/error.component';
 import {TermsComponent} from './terms/terms.component';
 import {AboutComponent} from './about/about.component';
-import {FooterComponent} from './footer/footer.component';
-
+import {SharedModule} from './shared/shared.module';
 @NgModule({
   declarations: [
     LoginComponent,
@@ -36,7 +35,6 @@ import {FooterComponent} from './footer/footer.component';
     ErrorComponent,
     TermsComponent,
     AboutComponent,
-    FooterComponent,
   ],
   imports: [
     ModalModule.forRoot(),
@@ -47,6 +45,7 @@ import {FooterComponent} from './footer/footer.component';
     NgxSpinnerModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    SharedModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-center',
       preventDuplicates: true,
@@ -62,7 +61,6 @@ import {FooterComponent} from './footer/footer.component';
     httpInterceptorProviders,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
   ],
-  exports: [FooterComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
