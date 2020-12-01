@@ -63,7 +63,7 @@ public enum ErrorCode {
       500,
       "EC_0008",
       "Email Server Error",
-      "Your verification email was unable to send. Please try again later."),
+      "The verification email to help you complete account setup, could not be sent. Please try again."),
 
   APPLICATION_ERROR(
       500,
