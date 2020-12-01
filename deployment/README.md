@@ -309,11 +309,6 @@ regenerating the Terraform configs several times.
     register each application in hydra using the generated client id and secret
     keys.
 
-1. Modify
-    [copy_mobile_app_info_to_sql.sh](./scripts/copy_mobile_app_info_to_sql.sh)
-    to reflect proper {PREFIX} and {ENV}, and run to copy mobile app info from
-    secrets into CloudSQL.
-
 ### Step 10: Superadmin accounts
 
 In order to access Study Builder or Participant Manager web UIs for the first
@@ -340,11 +335,28 @@ an initial superadmin account for Study Builder.
 ### Step 11: Mobile app setups
 
 1. Build and distribute iOS and Android apps following their individual
-    instructions.
+    instructions. See [iOS](../iOS/README.md) and [Android](../Android/README.md) 
+    configuration instructions.
+   
+   
+### Step 12: Mobile app setup in participant manager
 
-1. Once you have set up push notification for the apps, copy the values to
-    their corresponding secrets:
+An app record is a representation of your mobile apps associated with an 
+FDA MyStudies deployment. App is identified by APP_ID, which is the value you 
+set in secret manager for `manual-mobile-app-appid`.
 
+After a study is created (in study builder) that uses this App ID, a corresponding 
+app record will be created in the Participant Manager.
+
+**Note** Current deployment only supports a single App 
+(using `manual-mobile-app-appid`); and it requires the following
+manual step to pass mobile info from Secret Manager to CloudSQL.
+
+1. Once the app is available in Participant Manager, Run
+    [copy_app_info_to_sql.sh](scripts/copy_app_info_to_sql.sh)
+    passing your deployment PREFIX and ENV.
+    
+    The secrets accessed by this script are: 
     ```bash
     # bundleID used for the Android App.
     manual-android-bundle-id
@@ -352,20 +364,16 @@ an initial superadmin account for Study Builder.
     manual-android-server-key
     # bundleID used to build and distribute the iOS App.
     manual-ios-bundle-id
-    # certificate and password generated for APNs.
+    # push notifications certificate in encrypted .p12 format.
     manual-ios-certificate
+    # push notifications certificate password.
     manual-ios-certificate-password
-    # redirect links to mobile apps, e.g. app://gcp/mystudies
+    # redirect links to mobile apps, e.g. app://mydeploymentdomain.com/mystudies
     manual-ios-deeplink-url
     manual-android-deeplink-url
     ```
-
-1. Modify
-    [copy_push_notification_info_to_sql.sh](./scripts/copy_push_notification_info_to_sql.sh)
-    to reflect proper {PREFIX} and {ENV}, and run to copy push notification info
-    from secrets into CloudSQL.
-
-### Step 12: Clean up
+ 
+### Step 13: Clean up
 
 1. Revoke your super admin access by running `gcloud auth revoke` and
     authenticate as a normal user for daily activities.
