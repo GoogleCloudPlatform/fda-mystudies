@@ -96,8 +96,8 @@ public class UserController {
   @GetMapping(value = {"/users"})
   public ResponseEntity<GetUsersResponse> getUsers(
       @RequestHeader("userId") String superAdminUserId,
-      @RequestParam(required = false) Integer page,
-      @RequestParam(required = false) Integer limit,
+      @RequestParam(defaultValue = "50") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
 
@@ -105,7 +105,7 @@ public class UserController {
     auditRequest.setUserId(superAdminUserId);
 
     GetUsersResponse userResponse =
-        manageUserService.getUsers(superAdminUserId, page, limit, auditRequest);
+        manageUserService.getUsers(superAdminUserId, limit, offset, auditRequest);
 
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);

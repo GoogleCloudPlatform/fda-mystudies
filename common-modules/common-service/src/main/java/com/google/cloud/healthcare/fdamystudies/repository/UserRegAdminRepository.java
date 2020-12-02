@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +33,9 @@ public interface UserRegAdminRepository extends JpaRepository<UserRegAdminEntity
 
   @Query("SELECT user from UserRegAdminEntity user where user.securityCode=:securityCode")
   public Optional<UserRegAdminEntity> findBySecurityCode(String securityCode);
+
+  @Query(
+      value = "SELECT * FROM ur_admin_user ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+      nativeQuery = true)
+  public List<UserRegAdminEntity> findByLimitAndOffset(Integer limit, Integer offset);
 }
