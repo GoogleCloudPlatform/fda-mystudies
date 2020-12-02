@@ -225,6 +225,6 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "AND si.id NOT IN (SELECT study.id FROM sites site, study_info study WHERE study.id = site.study_id AND study.app_info_id IN (:appIds)) "
               + "AND ai.id IN (:appIds) ",
       nativeQuery = true)
-  public List<AppStudySiteInfo> findUnSelectedAppsStudiesSites(
+  public List<AppStudySiteInfo> findUnselectedAppsStudiesSites(
       List<String> appIds, @Param("userId") String userId);
 }

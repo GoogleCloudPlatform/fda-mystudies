@@ -821,6 +821,7 @@ public class UserControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), admin.getId())
                 .headers(headers)
+                .queryParam("includeUnselected", String.valueOf(false))
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())

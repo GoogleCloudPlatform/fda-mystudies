@@ -625,10 +625,10 @@ public class ManageUserServiceImpl implements ManageUserService {
         userStudyDetails.setTotalSitesCount(userStudyDetails.getSites().size());
         appDetails.setTotalSitesCount(appDetails.getTotalSitesCount() + 1);
 
-        sortUserSites(userStudyDetails);
+        sortUserStudyDetailsSitesByLocationName(userStudyDetails);
       }
 
-      sortUserStudies(appDetails);
+      sortUserAppDetailsStudiesByStudyName(appDetails);
 
       appDetails.setTotalStudiesCount(appDetails.getStudies().size());
     }
@@ -647,7 +647,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
   }
 
-  private void sortUserSites(UserStudyDetails userStudyDetails) {
+  private void sortUserStudyDetailsSitesByLocationName(UserStudyDetails userStudyDetails) {
     List<UserSiteDetails> sortedSites =
         userStudyDetails
             .getSites()
@@ -658,7 +658,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     userStudyDetails.getSites().addAll(sortedSites);
   }
 
-  private void sortUserStudies(UserAppDetails appDetails) {
+  private void sortUserAppDetailsStudiesByStudyName(UserAppDetails appDetails) {
     List<UserStudyDetails> sortedStudies =
         appDetails
             .getStudies()
@@ -677,7 +677,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       Map<String, UserSiteDetails> unselectedSitesMap) {
 
     List<AppStudySiteInfo> unselectedAppsStudiesSitesInfoList =
-        appRepository.findUnSelectedAppsStudiesSites(selectedAppIds, adminId);
+        appRepository.findUnselectedAppsStudiesSites(selectedAppIds, adminId);
 
     for (AppStudySiteInfo app : unselectedAppsStudiesSitesInfoList) {
       UserAppDetails appDetails = null;
