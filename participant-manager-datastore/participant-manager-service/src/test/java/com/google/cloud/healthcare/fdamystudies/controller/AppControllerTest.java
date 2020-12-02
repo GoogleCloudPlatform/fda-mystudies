@@ -524,7 +524,8 @@ public class AppControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
                 .headers(headers)
-                .queryParam("excludeSiteStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
+                .queryParam(
+                    "excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())

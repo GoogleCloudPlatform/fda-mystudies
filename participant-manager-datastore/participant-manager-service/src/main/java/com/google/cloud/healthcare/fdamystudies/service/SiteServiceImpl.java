@@ -523,9 +523,8 @@ public class SiteServiceImpl implements SiteService {
 
     site.setStatus(SiteStatus.DEACTIVE.value());
     siteRepository.saveAndFlush(site);
-    if (!user.isSuperAdmin()) {
-      updateSitePermissions(siteId);
-    }
+
+    updateSitePermissions(siteId);
 
     deactivateYetToEnrollParticipants(siteId);
 
@@ -638,7 +637,7 @@ public class SiteServiceImpl implements SiteService {
 
     for (SitePermissionEntity sitePermission : sitePermissions) {
       if (!(studyAdminIds.contains(sitePermission.getUrAdminUser().getId())
-          && appAdminIds.contains(sitePermission.getUrAdminUser().getId()))) {
+          || appAdminIds.contains(sitePermission.getUrAdminUser().getId()))) {
         sitePermissionRepository.delete(sitePermission);
       }
     }

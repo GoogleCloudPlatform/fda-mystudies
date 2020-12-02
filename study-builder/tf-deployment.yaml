@@ -100,10 +100,16 @@ spec:
               value: "http://participant-user-datastore-np:50000/participant-user-datastore"
             - name: RESPONSE_DATASTORE_URL
               value: "http://response-datastore-np:50000/response-datastore"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000/auth-server"
             # MISC
+            - name: GCP_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  value: study_resources_bucket_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
-
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -112,6 +118,10 @@ spec:
               port: 8080
             initialDelaySeconds: 180
             periodSeconds: 20
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "50m"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

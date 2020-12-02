@@ -171,14 +171,14 @@ public class UsersDAOImpl implements UsersDAO {
       if (!"".equals(selectedStudies) && !"".equals(permissionValues)) {
         selectedStudy = selectedStudies.split(",");
         permissionValue = permissionValues.split(",");
-
+        List<String> selectedStudiesList = Arrays.asList(selectedStudies.split(","));
         if (updateFlag) {
 
           query =
               session
                   .createSQLQuery(
                       " delete from study_permission where study_id not in (:selectedStudies) and user_id =:userId")
-                  .setParameterList("selectedStudies", Arrays.asList(selectedStudies))
+                  .setParameterList("selectedStudies", selectedStudiesList)
                   .setParameter("userId", userId);
           query.executeUpdate();
         }

@@ -29,7 +29,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
@@ -37,9 +36,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
-import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
-import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -320,7 +317,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertEquals(request.getFirstName(), user.getFirstName());
     assertEquals(request.getLastName(), user.getLastName());
 
-    verify(1, postRequestedFor(urlEqualTo("/oauth-scim-service/users")));
+    verify(1, postRequestedFor(urlEqualTo("/auth-server/users")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(user.getId());
@@ -434,8 +431,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     // verify external API call
     verify(
         1,
-        putRequestedFor(
-            urlEqualTo(String.format("/oauth-scim-service/users/%s", ADMIN_AUTH_ID_VALUE))));
+        putRequestedFor(urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
 
     verifyTokenIntrospectRequest();
   }
@@ -470,8 +466,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     // verify external API call
     verify(
         1,
-        putRequestedFor(
-            urlEqualTo(String.format("/oauth-scim-service/users/%s", ADMIN_AUTH_ID_VALUE))));
+        putRequestedFor(urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
 
     verifyTokenIntrospectRequest();
   }
