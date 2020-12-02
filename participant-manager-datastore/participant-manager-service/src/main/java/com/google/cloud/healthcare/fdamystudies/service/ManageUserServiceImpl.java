@@ -245,8 +245,6 @@ public class ManageUserServiceImpl implements ManageUserService {
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, adminDetails.getId());
   }
 
-  // SQL Injection? No. No need to sanitize appId, userId values as these fields have FK
-  // constraints defined on the table
   private void saveAppLevelPermissions(
       UserRequest user,
       UserRegAdminEntity adminDetails,
@@ -282,8 +280,6 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.exit("Successfully saved app level permissions");
   }
 
-  // SQL Injection? No. No need to sanitize appId,studyId, userId values as these fields have FK
-  // constraints defined on the table
   private void saveStudyLevelPermissions(
       UserRequest user,
       UserRegAdminEntity adminDetails,
@@ -321,8 +317,6 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.exit("Successfully saved study level permissions");
   }
 
-  // SQL Injection? No. No need to sanitize appId, studyId, siteId, userId values as these fields
-  // have FK constraints defined on the table
   private void saveSiteLevelPermissions(
       UserRequest user,
       UserRegAdminEntity adminDetails,
