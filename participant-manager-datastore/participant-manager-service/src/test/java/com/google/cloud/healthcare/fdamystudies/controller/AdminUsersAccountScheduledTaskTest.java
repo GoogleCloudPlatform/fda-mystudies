@@ -74,7 +74,6 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
     assertTrue(invitedAdmins.isEmpty());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    //    auditRequest.setUserId(admin.getId());
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(NEW_USER_INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
 
@@ -111,7 +110,6 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
     assertTrue(invitedAdmins.isEmpty());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    //    auditRequest.setUserId(admin.getId());
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ACCOUNT_UPDATE_EMAIL_SENT.getEventCode(), auditRequest);
 
