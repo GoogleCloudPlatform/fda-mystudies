@@ -240,8 +240,8 @@ public class StudyServiceImpl implements StudyService {
       String studyId,
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
-      Integer page,
-      Integer limit) {
+      Integer limit,
+      Integer offset) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
 
@@ -267,7 +267,13 @@ public class StudyServiceImpl implements StudyService {
         ParticipantMapper.fromStudyAppDetails(studyAppDetails, user);
 
     return prepareRegistryParticipantResponse(
-        participantRegistryDetail, userId, studyId, excludeParticipantStudyStatus, auditRequest);
+        participantRegistryDetail,
+        userId,
+        studyId,
+        excludeParticipantStudyStatus,
+        limit,
+        offset,
+        auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
@@ -275,12 +281,14 @@ public class StudyServiceImpl implements StudyService {
       String userId,
       String studyId,
       String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
     List<StudyParticipantDetails> studyParticipantDetails =
-        studyRepository.getStudyParticipantDetails(studyId);
+        studyRepository.getStudyParticipantDetails(studyId, limit, offset);
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
       if (ArrayUtils.contains(
           excludeParticipantStudyStatus, participantDetails.getEnrolledStatus())) {
@@ -295,8 +303,6 @@ public class StudyServiceImpl implements StudyService {
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
-    Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(studyId);
-    participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
 
     auditRequest.setUserId(userId);
     auditRequest.setStudyId(studyId);

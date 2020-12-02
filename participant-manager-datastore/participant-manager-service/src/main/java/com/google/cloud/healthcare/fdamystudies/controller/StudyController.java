@@ -64,15 +64,15 @@ public class StudyController {
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @PathVariable String studyId,
       @RequestParam(required = false) String[] excludeParticipantStudyStatus,
-      @RequestParam(required = false) Integer page,
-      @RequestParam(required = false) Integer limit,
+      @RequestParam(defaultValue = "50") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ParticipantRegistryResponse participantRegistryResponse =
         studyService.getStudyParticipants(
-            userId, studyId, excludeParticipantStudyStatus, auditRequest, page, limit);
+            userId, studyId, excludeParticipantStudyStatus, auditRequest, limit, offset);
     logger.exit(String.format(STATUS_LOG, participantRegistryResponse.getHttpStatusCode()));
     return ResponseEntity.status(participantRegistryResponse.getHttpStatusCode())
         .body(participantRegistryResponse);

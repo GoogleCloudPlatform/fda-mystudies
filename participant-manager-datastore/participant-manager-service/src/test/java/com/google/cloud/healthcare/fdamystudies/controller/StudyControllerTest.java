@@ -515,9 +515,34 @@ public class StudyControllerTest extends BaseMockIT {
       participantStudyEntity =
           testDataHelper.createParticipantStudyEntity(
               siteEntity, studyEntity, participantRegistrySiteEntity);
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(500);
     }
 
-    // get study participant if page and limit values are null
+    // Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch only 3 data
+    // out of 21
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .param("limit", "20")
+                .param("offset", "18")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(3)))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
+                .value(LOCATION_NAME_VALUE + String.valueOf(2)));
+
+    verifyTokenIntrospectRequest(1);
+
+    // get  study participants for the default values of limit and offset
     mockMvc
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
@@ -529,9 +554,11 @@ public class StudyControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)))
-        .andExpect(jsonPath("$.totalParticipantCount", is(21)));
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
+                .value(LOCATION_NAME_VALUE + String.valueOf(20)));
 
-    verifyTokenIntrospectRequest(1);
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test

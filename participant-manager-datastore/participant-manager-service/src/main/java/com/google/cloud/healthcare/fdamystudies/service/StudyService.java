@@ -21,6 +21,6 @@ public interface StudyService {
       String studyId,
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
-      Integer page,
-      Integer limit);
+      Integer limit,
+      Integer offset);
 }

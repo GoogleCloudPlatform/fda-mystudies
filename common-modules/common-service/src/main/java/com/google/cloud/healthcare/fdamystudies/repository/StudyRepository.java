@@ -120,9 +120,10 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN sites si ON si.id=prs.site_id "
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
               + "WHERE prs.study_info_id=:studyId "
-              + "ORDER BY prs.created_time, prs.email DESC",
+              + "ORDER BY prs.created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
-  public List<StudyParticipantDetails> getStudyParticipantDetails(String studyId);
+  public List<StudyParticipantDetails> getStudyParticipantDetails(
+      String studyId, Integer limit, Integer offset);
 
   @Query(
       value =
