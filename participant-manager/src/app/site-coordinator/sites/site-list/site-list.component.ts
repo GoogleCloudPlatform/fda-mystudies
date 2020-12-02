@@ -56,7 +56,9 @@ export class SiteListComponent implements OnInit {
           (study: Study) =>
             study.name?.toLowerCase().includes(query) ||
             study.customId?.toLowerCase().includes(query) ||
-            study.sites.some((site) => site.name?.toLowerCase().includes(query)),
+            study.sites.some((site) =>
+              site.name?.toLowerCase().includes(query),
+            ),
         );
         return this.manageStudiesBackup;
       }),
@@ -70,7 +72,8 @@ export class SiteListComponent implements OnInit {
       return 'green__text__sm';
     } else if (
       site.enrollmentPercentage &&
-      (site.enrollmentPercentage >= 30 && site.enrollmentPercentage <= 70)
+      site.enrollmentPercentage >= 30 &&
+      site.enrollmentPercentage <= 70
     ) {
       return 'orange__text__sm';
     } else {
