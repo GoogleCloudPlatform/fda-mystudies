@@ -25,6 +25,7 @@ import {ErrorComponent} from './error/error.component';
 import {TermsComponent} from './terms/terms.component';
 import {AboutComponent} from './about/about.component';
 import {environment} from '@environment';
+import {SharedModule} from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import {environment} from '@environment';
     HttpClientModule,
     HttpClientXsrfModule,
     BrowserAnimationsModule,
+    SharedModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-center',
       preventDuplicates: true,

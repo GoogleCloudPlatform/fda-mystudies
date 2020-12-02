@@ -113,6 +113,10 @@ module "example_dev_mystudies_study_resources" {
       member = "serviceAccount:study-builder-gke-sa@example-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
+    {
+      member = "allUsers"
+      role   = "roles/storage.objectViewer"
+    },
   ]
 }
 

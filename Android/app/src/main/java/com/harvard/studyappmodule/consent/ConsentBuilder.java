@@ -252,7 +252,7 @@ public class ConsentBuilder {
       docBuilder.append("</div></br>");
       docBuilder.append("<div>" + consent.getReview().getSignatureContent() + "</div>");
 
-      ConsentDocumentStep documentStep = new ConsentDocumentStep("review");
+      ConsentDocumentStep documentStep = new ConsentDocumentStepCustom("review");
       documentStep.setConsentHTML(docBuilder.toString());
       documentStep.setStepTitle(R.string.notxt);
       documentStep.setConfirmMessage(consent.getReview().getReasonForConsent());
@@ -284,7 +284,7 @@ public class ConsentBuilder {
           docBuilder.append("<div>" + consent.getVisualScreens().get(i).getHtml() + "</div>");
           docBuilder.append("</br>");
         }
-        ConsentDocumentStep documentStep = new ConsentDocumentStep("review");
+        ConsentDocumentStep documentStep = new ConsentDocumentStepCustom("review");
         documentStep.setConsentHTML(docBuilder.toString());
         documentStep.setStepTitle(R.string.notxt);
         documentStep.setOptional(false);
