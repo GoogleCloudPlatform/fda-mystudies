@@ -88,7 +88,7 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
     inviteParticipantsEmail.setAppId(appEntity.getAppId());
     inviteParticipantsEmail.setCorrelationId(IdGenerator.id());
     inviteParticipantsEmail.setAppVersion("1.0");
-    inviteParticipantsEmail.setMobilePlatform("UNKNOWN");
+    inviteParticipantsEmail.setMobilePlatform("UNKOWN");
 
     invitedParticipantsEmailRepository.saveAndFlush(inviteParticipantsEmail);
 

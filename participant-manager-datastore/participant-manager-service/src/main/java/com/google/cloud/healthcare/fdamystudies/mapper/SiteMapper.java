@@ -11,7 +11,10 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
+import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.model.InviteParticipantEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 
 public class SiteMapper {
@@ -32,6 +35,36 @@ public class SiteMapper {
     appSiteResponse.setLocationId(site.getLocation().getId());
     appSiteResponse.setLocationName(site.getLocation().getName());
     return appSiteResponse;
+  }
+
+  public static List<AppSiteDetails> toParticipantSiteList(
+      Entry<StudyEntity, List<ParticipantStudyEntity>> entry, String[] excludeSiteStatus) {
+    List<AppSiteDetails> sites = new ArrayList<>();
+    for (ParticipantStudyEntity enrollment : entry.getValue()) {
+      if (ArrayUtils.contains(excludeSiteStatus, enrollment.getStatus())) {
+        continue;
+      }
+
+      AppSiteDetails studiesEnrollment = new AppSiteDetails();
+
+      if (enrollment.getSite() != null) {
+        studiesEnrollment.setCustomSiteId(enrollment.getSite().getLocation().getCustomId());
+        studiesEnrollment.setSiteId(enrollment.getSite().getId());
+        studiesEnrollment.setSiteName(enrollment.getSite().getLocation().getName());
+      }
+      studiesEnrollment.setSiteStatus(enrollment.getStatus());
+
+      String withdrawalDate = DateTimeUtils.format(enrollment.getWithdrawalDate());
+      studiesEnrollment.setWithdrawlDate(
+          StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
+
+      String enrollmentDate = DateTimeUtils.format(enrollment.getEnrolledDate());
+      studiesEnrollment.setEnrollmentDate(
+          StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+
+      sites.add(studiesEnrollment);
+    }
+    return sites;
   }
 
   public static AuditLogEventRequest prepareAuditlogRequest(
@@ -57,4 +90,5 @@ public class SiteMapper {
     inviteParticipantsEmail.setUserId(auditRequest.getUserId());
     return inviteParticipantsEmail;
   }
+
 }
