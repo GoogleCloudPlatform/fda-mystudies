@@ -712,12 +712,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldNotReturnSiteParticipantsForNotEligible() throws Exception {
-    siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
-    participantRegistrySiteEntity =
-        testDataHelper.createParticipantRegistrySite(siteEntity, studyEntity);
 
     participantStudyEntity.setStatus("yetToJoin");
-    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
@@ -726,12 +722,12 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
                 .headers(headers)
-                .queryParam("excludeEnrollmentStatus", "notEligible", "yetToJoin ")
+                .queryParam("excludeEnrollmentStatus", "notEligible", "yetToJoin")
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray());
-
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(0)));
     verifyTokenIntrospectRequest();
   }
 
