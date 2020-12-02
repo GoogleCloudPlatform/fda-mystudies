@@ -62,7 +62,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: gcp_bucket_name
+                  key: consent_bucket_name
             - name: LOG_PATH
               valueFrom:
                 secretKeyRef:
