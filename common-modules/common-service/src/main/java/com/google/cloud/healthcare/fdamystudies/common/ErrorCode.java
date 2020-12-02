@@ -274,6 +274,8 @@ public enum ErrorCode {
   CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION(
       400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site using a decommissioned location."),
 
+  TEMP_PASSWORD_INVALID(400, "EC_0131", Constants.BAD_REQUEST, "Temporary password is invalid"),
+
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
       403,
       "EC_0124",
