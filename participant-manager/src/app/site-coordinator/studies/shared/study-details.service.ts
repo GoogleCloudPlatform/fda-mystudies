@@ -16,13 +16,14 @@ export class StudyDetailsService {
     private readonly http: HttpClient,
   ) {}
 
-  getStudyDetails(studyId: string): Observable<StudyDetails> {
+  getStudyDetails(studyId: string, offset:number, limit:number): Observable<StudyDetails> {
+    console.log(offset)
 return this.http.get<StudyDetails>(
       `${environment.baseUrl}/studies/${encodeURIComponent(
         studyId,
       )}/participants`,
       {
-        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
+        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin'], offset: offset.toString(), limit: limit.toString()},
       },
     );
 }

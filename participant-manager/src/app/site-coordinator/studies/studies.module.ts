@@ -6,6 +6,7 @@ import {StudyDetailsComponent} from './study-details/study-details.component';
 import {NgxDataTableModule} from 'angular-9-datatable';
 import {FormsModule} from '@angular/forms';
 import {UpdateTargetComponent} from './update-target/update-target.component';
+import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import {UpdateTargetComponent} from './update-target/update-target.component';
     StudiesRoutingModule,
     NgxDataTableModule,
     FormsModule,
+    NgxPaginationModule,
   ],
 })
 export class StudiesModule {}

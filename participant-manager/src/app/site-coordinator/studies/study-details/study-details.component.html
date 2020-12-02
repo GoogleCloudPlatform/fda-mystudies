@@ -94,14 +94,24 @@
       <div class="cards1 m-none">
         <table
           class="table table-striped custom__table"
-          [mfData]="studyDetails.participantRegistryDetail.registryParticipants"
+          [mfData]="
+            studyDetails.participantRegistryDetail.registryParticipants
+              | paginate
+                : {
+                    itemsPerPage: itemsPerPage,
+                    currentPage: currentPage,
+                    totalItems:
+                      studyDetails.participantRegistryDetail
+                        .registryParticipants.length
+                  }
+          "
           #mf="mfDataTable"
           [mfRowsOnPage]="10"
         >
           <thead class="custom__thead">
             <tr>
               <th>
-                <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
+                <mfDefaultSorter by="email">Participant Email</mfDefaultSorter>
               </th>
               <th
                 *ngIf="
@@ -189,8 +199,15 @@
 
           <tfoot class="custom__tfoot">
             <tr>
-              <td colspan="5">
-                <mfBootstrapPaginator></mfBootstrapPaginator>
+              <td colspan="10">
+                <!-- <mfBootstrapPaginator></mfBootstrapPaginator> -->
+                <div style="margin-left: 450px">
+                  <pagination-controls
+                    pagination-template
+                    #api="paginationApi"
+                    (pageChange)="pageChanged($event, api.getLastPage())"
+                  ></pagination-controls>
+                </div>
               </td>
             </tr>
           </tfoot>

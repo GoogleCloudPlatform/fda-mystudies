@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {StudyDetailsService} from '../shared/study-details.service';
 import {ActivatedRoute} from '@angular/router';
 import {BehaviorSubject, Observable, of, combineLatest} from 'rxjs';
@@ -32,6 +32,16 @@ export class StudyDetailsComponent
   onboardingStatus = OnboardingStatus;
   enrollmentStatus = EnrollmentStatus;
   permission = Permission;
+  // pagination
+  itemsPerPage=10;
+  pagesToLoad=5;
+  limit=50;
+  currentPage=1;
+  offset=0;
+  studyDetailsPaginatedData = {} as StudyDetails;
+  @Output()
+  pageChange!: EventEmitter<number>;
+
   constructor(
     private readonly locationLibrary: Location,
     private readonly modalService: BsModalService,
@@ -54,36 +64,43 @@ export class StudyDetailsComponent
         if (params['studyId']) {
           this.studyId = params.studyId as string;
         }
-        this.getStudyDetails();
+        this.getStudyDetails('onPageLoad');
       }),
     );
   }
-  getStudyDetails(): void {
+  getStudyDetails(called:string): void {
     this.studyDetail$ = combineLatest(
-      this.studyDetailsService.getStudyDetails(this.studyId),
+      this.studyDetailsService.getStudyDetails(this.studyId, this.offset, this.limit),
       this.query$,
     ).pipe(
       map(([studyDetails, query]) => {
-        this.studyDetailsBackup = JSON.parse(
+        if (called==='onPageLoad') {
+          this.studyDetailsBackup = JSON.parse(
           JSON.stringify(studyDetails),
         ) as StudyDetails;
-        if (
-          this.studyDetailsBackup.participantRegistryDetail.studyType ===
-            StudyType.Open &&
-          query === ''
-        ) {
-          this.sharedService.updateSearchPlaceHolder(
-            'Search Participant Email',
-          );
+        } else {
+     this.studyDetailsBackup.participantRegistryDetail.registryParticipants=this.studyDetailsBackup.participantRegistryDetail.registryParticipants.concat(studyDetails.participantRegistryDetail.registryParticipants);
+    //  this.studyDetailsBackup = JSON.parse(
+    //       JSON.stringify( this.studyDetailsBackup),
+    //     ) as StudyDetails;
         }
-        this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
-          (participant: RegistryParticipant) =>
-            participant.enrollmentStatus !== EnrollmentStatus.NotEligile &&
-            (participant.email?.toLowerCase().includes(query.toLowerCase()) ||
-              participant.locationName
-                ?.toLowerCase()
-                .includes(query.toLowerCase())),
-        );
+
+                // if (
+        //   this.studyDetailsBackup.participantRegistryDetail.studyType ===
+        //     StudyType.Open &&
+        //   query === ''
+        // ) {
+        //   this.sharedService.updateSearchPlaceHolder(
+        //     'Search Participant Email',
+        //   );
+        // }
+        // this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
+        //   (participant: RegistryParticipant) =>
+        //     (participant.email?.toLowerCase().includes(query.toLowerCase()) ||
+        //       participant.locationName
+        //         ?.toLowerCase()
+        //         .includes(query.toLowerCase())),
+        // );
         return this.studyDetailsBackup;
       }),
     );
@@ -106,5 +123,15 @@ export class StudyDetailsComponent
   }
   backClicked(): void {
     this.locationLibrary.back();
+  }
+  pageChanged(page:number, lastPage:number):void {
+    this.currentPage=page;
+        console.log(lastPage)
+if (this.currentPage===lastPage) {
+      this.offset=this.studyDetailsBackup.participantRegistryDetail.registryParticipants.length;
+console.log(this.offset)
+
+    this.getStudyDetails('onPageChange');
+}
   }
 }
