@@ -129,7 +129,8 @@ resource "kubernetes_secret" "shared_secrets" {
   }
 
   data = {
-    gcp_bucket_name                   = "example-dev-mystudies-consent-documents"
+    consent_bucket_name               = "example-dev-mystudies-consent-documents"
+    study_resources_bucket_name       = "example-dev-mystudies-study-resources"
     institution_resources_bucket_name = "example-dev-mystudies-institution-resources"
     base_url                          = "https://participants.example-dev.example.com"
     studies_base_url                  = "https://studies.example-dev.example.com"
