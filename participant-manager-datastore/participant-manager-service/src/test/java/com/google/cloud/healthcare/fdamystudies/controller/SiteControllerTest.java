@@ -2360,6 +2360,96 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnSitesForSuperAdminForPagination() throws Exception {
+    userRegAdminEntity.setSuperAdmin(true);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
+    for (int i = 1; i <= 21; i++) {
+      studyEntity = testDataHelper.newStudyEntity();
+      studyEntity.setCustomId("StudyCustomId" + String.valueOf(i));
+      studyEntity.setApp(appEntity);
+      studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+      siteEntity = testDataHelper.newSiteEntity();
+      siteEntity.setLocation(locationEntity);
+      siteEntity.setStudy(studyEntity);
+      testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(500);
+    }
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // The offset specifies the offset of the first row to return. The offset of the first row is 0,
+    // not 1.
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath())
+                .param("limit", "20")
+                .param("offset", "10")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(12)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].customId").value("CovidStudy"))
+        .andExpect(jsonPath("$.studies[10].customId").value("StudyCustomId10"))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnSitesForPagination() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
+    for (int i = 1; i <= 20; i++) {
+      studyEntity = testDataHelper.newStudyEntity();
+      studyEntity.setCustomId("StudyCustomId" + String.valueOf(i));
+      studyEntity.setApp(appEntity);
+      testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+
+      siteEntity.setLocation(locationEntity);
+      testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+      SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+      sitePermissionEntity.setUrAdminUser(userRegAdminEntity);
+      sitePermissionEntity.setCanEdit(Permission.EDIT);
+      sitePermissionEntity.setStudy(studyEntity);
+      sitePermissionEntity.setSite(siteEntity);
+      testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermissionEntity);
+
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(500);
+    }
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath())
+                .param("limit", "5")
+                .param("offset", "0")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(5)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].customId").value("StudyCustomId20"))
+        .andExpect(jsonPath("$.studies[4].customId").value("StudyCustomId16"));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnDecommissionedSitesforUserHavingStudyLevelViewAndEditPermission()
       throws Exception {
     // Step 1: set the data needed to get studies with sites

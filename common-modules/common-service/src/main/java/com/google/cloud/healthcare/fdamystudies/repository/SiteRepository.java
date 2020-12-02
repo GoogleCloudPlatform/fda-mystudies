@@ -104,7 +104,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "WHERE study_id=:studyId",
       nativeQuery = true)
   public void addSitePermissions(String studyId, String siteId);
-  
+
   @Query(
       value =
           "SELECT study_created AS studyCreatedTimeStamp, site_created AS siteCreatedTimeStamp, study_id AS studyId, site_id AS siteId, IFNULL(target_enrollment, 0) AS targetEnrollment, site_name AS siteName, custom_id AS customId, study_name AS studyName, TYPE AS studyType, custom_app_id AS customAppId, app_id AS appId, app_name AS appName, logo_image_url AS logoImageUrl, STATUS AS studyStatus, edit AS editPermission, study_permission AS studyPermission "
@@ -115,7 +115,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "LEFT JOIN sites si ON si.study_id=stu.id "
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
               + "LEFT JOIN app_info ai ON ai.id=stu.app_info_id "
-              + "WHERE sp.ur_admin_user_id =:userId AND sp.study_id IN ( "
+              + "WHERE sp.ur_admin_user_id=:userId AND sp.study_id IN ( "
               + "SELECT study_id "
               + "FROM study_permissions "
               + "WHERE ur_admin_user_id =:userId) UNION ALL "
@@ -124,10 +124,9 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "WHERE si.id=sp.site_id AND si.location_id=loc.id AND si.status=1 AND stu.id= sp.study_id AND stu.app_info_id =ai.id AND sp.ur_admin_user_id =:userId AND sp.study_id NOT IN ( "
               + "SELECT study_id "
               + "FROM study_permissions "
-              + "WHERE ur_admin_user_id =:userId)) rstAlias "
-              + "ORDER BY study_created, site_created, study_id DESC ",
+              + "WHERE ur_admin_user_id =:userId)) rstAlias WHERE study_id IN (:studyIds) ORDER BY study_created DESC  ",
       nativeQuery = true)
-  public List<StudySiteInfo> getStudySiteDetails(String userId);
+  public List<StudySiteInfo> getStudySiteDetails(String userId, List<String> studyIds);
 
   @Query(
       value =
