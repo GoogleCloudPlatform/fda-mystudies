@@ -1069,11 +1069,13 @@ public class StudyServiceImpl implements StudyService {
                       studyPageBean.getUserId() + "",
                       studyPageBean.getStudyId());
             }
+
             imagePath[i] =
-                FdahpStudyDesignerUtil.uploadImageFile(
+                FdahpStudyDesignerUtil.saveImage(
                     studyPageBean.getMultipartFiles()[i],
                     file,
                     FdahpStudyDesignerConstants.STUDTYPAGES);
+
           } else {
             imagePath[i] = studyPageBean.getImagePath()[i].split("\\?")[0];
           }
@@ -1125,9 +1127,11 @@ public class StudyServiceImpl implements StudyService {
                     sesObj.getFirstName(),
                     sesObj.getLastName())
                 .replaceAll("\\W+", "_");
+
         fileName =
-            FdahpStudyDesignerUtil.uploadImageFile(
+            FdahpStudyDesignerUtil.saveImage(
                 resourceBO.getPdfFile(), file, FdahpStudyDesignerConstants.RESOURCEPDFFILES);
+
         resourceBO2.setPdfUrl(fileName);
         resourceBO2.setPdfName(resourceBO.getPdfFile().getOriginalFilename());
       } else {
@@ -1450,10 +1454,13 @@ public class StudyServiceImpl implements StudyService {
         studyDetails.setAppId(studyBo.getAppId());
         studyDetails.setAppName("App Name_" + studyBo.getAppId());
         studyDetails.setAppDescription("App Desc_" + studyBo.getAppId());
+
         studyDetails.setLogoImageUrl(
             StringUtils.isEmpty(studyBo.getThumbnailImage())
                 ? ""
-                : propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                : propMap.get("fda.imgDisplaydPath")
+                    + propMap.get("cloud.bucket.name")
+                    + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                     + studyBo.getThumbnailImage());
       }
     } catch (Exception e) {

@@ -2758,8 +2758,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       FdahpStudyDesignerConstants.QUESTION_STEP_IMAGE + 0,
                       questionsResponseTypeBo.getMinImageFile().getOriginalFilename(),
                       String.valueOf(questionsResponseTypeBo.getQuestionsResponseTypeId()));
+
               String imagePath =
-                  FdahpStudyDesignerUtil.uploadImageFile(
+                  FdahpStudyDesignerUtil.saveImage(
                       questionsResponseTypeBo.getMinImageFile(),
                       fileName,
                       FdahpStudyDesignerConstants.QUESTIONNAIRE);
@@ -2787,10 +2788,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       questionsResponseTypeBo.getMaxImageFile().getOriginalFilename(),
                       String.valueOf(questionsResponseTypeBo.getQuestionsResponseTypeId()));
               String imagePath =
-                  FdahpStudyDesignerUtil.uploadImageFile(
+                  FdahpStudyDesignerUtil.saveImage(
                       questionsResponseTypeBo.getMaxImageFile(),
                       fileName,
                       FdahpStudyDesignerConstants.QUESTIONNAIRE);
+
               addOrUpdateQuestionsResponseTypeBo.setMaxImage(imagePath);
             } else {
               addOrUpdateQuestionsResponseTypeBo.setMaxImage(null);
@@ -3597,8 +3599,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                             FdahpStudyDesignerConstants.FORM_STEP_IMAGE + i,
                             questionResponseSubTypeBo.getImageFile().getOriginalFilename(),
                             String.valueOf(questionsBo.getId()));
+
                     String imagePath =
-                        FdahpStudyDesignerUtil.uploadImageFile(
+                        FdahpStudyDesignerUtil.saveImage(
                             questionResponseSubTypeBo.getImageFile(),
                             fileName,
                             FdahpStudyDesignerConstants.QUESTIONNAIRE);
@@ -3617,7 +3620,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                             questionResponseSubTypeBo.getSelectImageFile().getOriginalFilename(),
                             String.valueOf(questionsBo.getId()));
                     String imagePath =
-                        FdahpStudyDesignerUtil.uploadImageFile(
+                        FdahpStudyDesignerUtil.saveImage(
                             questionResponseSubTypeBo.getSelectImageFile(),
                             fileName,
                             FdahpStudyDesignerConstants.QUESTIONNAIRE);
@@ -4169,8 +4172,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                                 FdahpStudyDesignerConstants.QUESTION_STEP_IMAGE + j,
                                 questionResponseSubTypeBo.getImageFile().getOriginalFilename(),
                                 String.valueOf(questionnairesStepsBo.getQuestionsBo().getId()));
+
                         String imagePath =
-                            FdahpStudyDesignerUtil.uploadImageFile(
+                            FdahpStudyDesignerUtil.saveImage(
                                 questionResponseSubTypeBo.getImageFile(),
                                 fileName,
                                 FdahpStudyDesignerConstants.QUESTIONNAIRE);
@@ -4191,7 +4195,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                                     .getOriginalFilename(),
                                 String.valueOf(questionnairesStepsBo.getQuestionsBo().getId()));
                         String imagePath =
-                            FdahpStudyDesignerUtil.uploadImageFile(
+                            FdahpStudyDesignerUtil.saveImage(
                                 questionResponseSubTypeBo.getSelectImageFile(),
                                 fileName,
                                 FdahpStudyDesignerConstants.QUESTIONNAIRE);
@@ -4707,9 +4711,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         searchQuery =
             "select q.anchor_date_id from questions q where q.active=1 and q.id=:id"
                 + " and q.anchor_date_id IS NOT NULL;";
-        List<Integer> aIds = session.createSQLQuery(searchQuery)
-            .setParameter("id", questionId)
-            .list();
+        List<Integer> aIds =
+            session.createSQLQuery(searchQuery).setParameter("id", questionId).list();
         if ((aIds != null) && (aIds.size() > 0)) {
           anchorIds.addAll(aIds);
         }
@@ -4748,9 +4751,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             "select q.id from questionnaires q where q.schedule_type=:type"
                 + " and q.anchor_date_id in( :anchorIds )";
         anchorExistIds =
-            session.createSQLQuery(searchQuery)
+            session
+                .createSQLQuery(searchQuery)
                 .setParameter("type", FdahpStudyDesignerConstants.SCHEDULETYPE_ANCHORDATE)
-                .setParameterList("anchorIds", anchorIds).list();
+                .setParameterList("anchorIds", anchorIds)
+                .list();
         if (!anchorExistIds.isEmpty() && (anchorExistIds.size() > 0)) {
           isAnchorUsed = true;
         } else {
@@ -4758,9 +4763,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               "select q.id from active_task q where q.schedule_type=:type"
                   + " and q.anchor_date_id in( :anchorIds )";
           anchorExistIds =
-              session.createSQLQuery(searchQuery)
+              session
+                  .createSQLQuery(searchQuery)
                   .setParameter("type", FdahpStudyDesignerConstants.SCHEDULETYPE_ANCHORDATE)
-                  .setParameterList("anchorIds", anchorIds).list();
+                  .setParameterList("anchorIds", anchorIds)
+                  .list();
           if (!anchorExistIds.isEmpty() && (anchorExistIds.size() > 0)) {
             isAnchorUsed = true;
           } else {
