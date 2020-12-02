@@ -18,7 +18,7 @@ export class StudyDetailsService {
 
   getStudyDetails(studyId: string): Observable<StudyDetails> {
 return this.http.get<StudyDetails>(
-      `${environment.baseUrl}/studies/${encodeURIComponent(
+      `${environment.participantManagerDatastoreUrl}/studies/${encodeURIComponent(
         studyId,
       )}/participants`,
       {
@@ -31,7 +31,7 @@ return this.http.get<StudyDetails>(
     studyId: string,
   ): Observable<ApiResponse> {
     return this.http.patch<ApiResponse>(
-      `${environment.baseUrl}/studies/${studyId}/targetEnrollment`,
+      `${environment.participantManagerDatastoreUrl}/studies/${studyId}/targetEnrollment`,
       updateTargetEnrollment,
     );
   }
