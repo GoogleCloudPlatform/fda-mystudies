@@ -2,7 +2,9 @@
   <div class="col-xs-12 col-md-12 p-none">
     <div class="upload-btn-wrapper form-group border-radius__77">
       <button class="primary__btn font__bold">Choose file</button>
-      <span class="participant__label ml-sm">{{ fileName }}</span>
+      <span name="participant__label" class="participant__label ml-sm">
+        {{ fileName }}
+      </span>
       <input
         type="file"
         type="hidden"
