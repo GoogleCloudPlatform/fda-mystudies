@@ -74,7 +74,7 @@ spec:
                 secretKeyRef:
                   name: study-datastore-connect-credentials
                   key: ios_id
-                # MISC
+            # MISC
             - name: BASE_URL
               valueFrom:
                 secretKeyRef:
@@ -90,6 +90,11 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: privacy_url
+            - name: GCP_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  value: study_resources_bucket_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
