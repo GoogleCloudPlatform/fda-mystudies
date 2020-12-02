@@ -139,9 +139,10 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "SELECT st.study_id "
               + "FROM study_permissions st "
               + "WHERE st.ur_admin_user_id =:userId)) rstAlias GROUP BY created_time,study_id,custom_id,name,type,logo_image_url,edit,study_permission "
-              + "ORDER BY created_time DESC ",
+              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
-  public List<StudyInfo> getStudyDetails(@Param("userId") String userId);
+  public List<StudyInfo> getStudyDetails(
+      @Param("userId") String userId, Integer limit, Integer offset);
 
   @Query(
       value =
@@ -198,4 +199,9 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN locations loc ON loc.id=si.location_id ",
       nativeQuery = true)
   public List<StudySiteInfo> getStudySiteDetails();
+
+  @Query(
+      value = "SELECT * FROM study_info ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+      nativeQuery = true)
+  public List<StudyEntity> findAll(Integer limit, Integer offset);
 }
