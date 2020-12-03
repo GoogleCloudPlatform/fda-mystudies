@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright 2020 Google LLC
 #
 # Use of this source code is governed by an MIT-style
@@ -9,8 +11,6 @@
 # Run like:
 # $ ./participant-datastore/sqlscripts/create_superadmin.sh <email> <password>
 # then import the generated pm-superadmin.sql file created in your current directory into the database.
-
-#!/bin/bash
 
 if [ "$#" -ne 2 ]; then
   echo 'Please provide Participant Manager superadmin email and password in the order of <email> <password>'
@@ -29,6 +29,7 @@ echo "USE \`oauth_server_hydra\`;" >> ${TMPFILE}
 
 SALT=`printf "%s" uuidgen | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 HASH=`printf "%s%s" $SALT $PWD | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
 DATE=`date -v +30d +"%F %T"`
 TIMESTAMP=`date -v +30d +"%s.%3N"`
@@ -73,7 +74,7 @@ VALUES
   ('c9d30d67-0477-4a8c-8490-0fa1e0300bd0', '1', '${EMAIL}', 'Admin', 1, '${SECURITY_CODE}', '${DATE}', 1, b'1', '96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508');
 " >> ${TMPFILE}
 
-export DEST=`PWD -P`
+export DEST=`pwd -P`
 export OUTPUT="${DEST}/pm-superadmin.sql"
 
 echo "writing output ${OUTPUT}"

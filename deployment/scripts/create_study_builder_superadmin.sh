@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright 2020 Google LLC
 #
 # Use of this source code is governed by an MIT-style
@@ -7,8 +9,6 @@
 # Script to insert study builder superadmin.
 # Run like:
 # $ ./scripts/create_study_builder_superadmin.sh <prefix> <env> <email> <password>
-
-#!/bin/bash
 
 if [ "$#" -ne 4 ]; then
   echo 'Please provide deployment prefix and env, as well as superadmin email and password in the order of <prefix> <env> <email> <password>'

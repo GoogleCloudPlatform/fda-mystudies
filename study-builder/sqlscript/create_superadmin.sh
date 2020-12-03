@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright 2020 Google LLC
 #
 # Use of this source code is governed by an MIT-style
@@ -8,8 +10,6 @@
 # Run like:
 # $ ./study-builder/sqlscripts/create_superadmin.sh <email> <password>
 # then import the generated sb-superadmin.sql file created in your current directory into the database.
-
-#!/bin/bash
 
 if [ "$#" -ne 2 ]; then
   echo 'Please provide Study Builder superadmin email and password in the order of <email> <password>'
@@ -68,7 +68,7 @@ echo "INSERT INTO user_permission_mapping (user_id, permission_id) VALUES
 	(1, 8);
 " >> ${TMPFILE}
 
-export DEST=`PWD -P`
+export DEST=`pwd -P`
 export OUTPUT="${DEST}/sb-superadmin.sql"
 
 echo "writing output ${OUTPUT}"
