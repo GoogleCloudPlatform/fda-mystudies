@@ -6,7 +6,7 @@ import {environment} from '@environment';
 
 @Injectable()
 export class EntityService<T> {
-  baseUrl = environment.baseUrl;
+  baseUrl = environment.participantManagerDatastoreUrl;
 
   constructor(private readonly http: HttpClient) {}
 

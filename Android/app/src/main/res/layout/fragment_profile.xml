@@ -105,12 +105,12 @@
                     style="@style/profileTextField"
                     android:text="@string/username" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <TextView
                     android:id="@+id/edittxt_email"
                     style="@style/signUpEditText"
                     android:enabled="false"
                     android:hint="@string/enter_email"
-                    android:inputType="textEmailAddress"
+                    android:ellipsize="end"
                     android:maxLines="1"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
