@@ -63,7 +63,7 @@ public enum ErrorCode {
       500,
       "EC_0008",
       "Email Server Error",
-      "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
+      "Sorry, an error occurred and we could not send you the email . Please try again later."),
 
   APPLICATION_ERROR(
       500,
