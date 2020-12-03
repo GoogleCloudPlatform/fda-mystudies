@@ -101,8 +101,8 @@ export class StudyDetailsComponent
           }
         } else {
           this.studyDetailsBackup = JSON.parse(
-              JSON.stringify(this.studyDetailsPaginatedData),
-            ) as StudyDetails;
+            JSON.stringify(this.studyDetailsPaginatedData),
+          ) as StudyDetails;
 
           this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
             (participant: RegistryParticipant) =>
@@ -112,8 +112,8 @@ export class StudyDetailsComponent
                 .includes(query.toLowerCase()),
           );
 
-          if (query==='') {
-            this.filterEnabled=false;
+          if (query === '') {
+            this.filterEnabled = false;
           }
         }
         return this.studyDetailsBackup;
@@ -123,13 +123,17 @@ export class StudyDetailsComponent
 
   search(query: string): void {
     this.filterEnabled = true;
-    this.currentPage=1;
+    this.currentPage = 1;
     this.query$.next(query.trim());
   }
 
-   pageChange(page: number, lastPage: number): void {
+  pageChange(page: number, lastPage: number): void {
     this.currentPage = page;
-    if (this.currentPage === lastPage && this.loadMoreRecords && !this.filterEnabled) {
+    if (
+      this.currentPage === lastPage &&
+      this.loadMoreRecords &&
+      !this.filterEnabled
+    ) {
       this.pageChanged = true;
       this.offset = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.length;
       this.getStudyDetails();
