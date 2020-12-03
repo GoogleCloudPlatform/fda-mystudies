@@ -83,6 +83,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     sesObj.setRole(userdetails.getRoleName());
     sesObj.setAccessLevel(userdetails.getAccessLevel());
     sesObj.setCorrelationId(UUID.randomUUID().toString());
+    sesObj.setGcpBucketName(propMap.get("cloud.bucket.name"));
 
     if (response.isCommitted()) {
       logger.info("Can't redirect");
