@@ -4429,15 +4429,16 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       // checking in the question step
       String searchQuery =
           "select count(*) from questions QBO,questionnaires_steps QSBO where QBO.id=QSBO.instruction_form_id and QSBO.questionnaires_id=:questionnaireId "
-              + " and QSBO.active=1 and QSBO.step_type=:stepType "
-              + " and QBO.active=1 and QBO.add_line_chart='Yes' and QBO.line_chart_timerange not in (:timeRange ) ";
+              + " and QSBO.active=1 and QSBO.step_type=:stepType"
+              + " and QBO.active=1 and QBO.add_line_chart='Yes' and QBO.line_chart_timerange not in ('"
+              + timeRange
+              + "')";
       BigInteger count =
           (BigInteger)
               session
                   .createSQLQuery(searchQuery)
                   .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP)
                   .setInteger("questionnaireId", questionnaireId)
-                  .setParameterList("timeRange", Arrays.asList(timeRange))
                   .uniqueResult();
       if ((count != null) && (count.intValue() > 0)) {
         message = FdahpStudyDesignerConstants.SUCCESS;
@@ -4446,14 +4447,15 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         String searchSubQuery =
             "select count(*) from questions QBO,form_mapping f,questionnaires_steps QSBO where QBO.id=f.question_id and f.form_id=QSBO.instruction_form_id and QSBO.questionnaires_id=:questionnaireId "
                 + " and QSBO.active=1 and QSBO.step_type=:stepType "
-                + " and QBO.active=1 and QBO.add_line_chart = 'Yes' and QBO.line_chart_timerange not in (:timeRange ) ";
+                + " and QBO.active=1 and QBO.add_line_chart = 'Yes' and QBO.line_chart_timerange not in ('"
+                + timeRange
+                + "')";
         BigInteger subCount =
             (BigInteger)
                 session
                     .createSQLQuery(searchSubQuery)
                     .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP)
                     .setInteger("questionnaireId", questionnaireId)
-                    .setParameterList("timeRange", Arrays.asList(timeRange))
                     .uniqueResult();
         if ((subCount != null) && (subCount.intValue() > 0)) {
           message = FdahpStudyDesignerConstants.SUCCESS;
