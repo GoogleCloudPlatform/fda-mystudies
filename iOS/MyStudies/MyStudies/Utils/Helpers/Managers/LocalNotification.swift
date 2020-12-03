@@ -31,25 +31,6 @@ class LocalNotification: NSObject {
 
   static var handler: ((Bool) -> Void) = { _ in }
 
-  /// Registers local ntification for joined studies
-  /// - Parameter completionHandler: returns bool value
-  class func registerLocalNotificationForJoinedStudies(
-    completionHandler: @escaping (Bool) -> Void
-  ) {
-
-    studies =
-      (Gateway.instance.studies?.filter({
-        $0.userParticipateState.status == UserStudyStatus.StudyStatus.inProgress
-          && $0
-            .status
-            == .active
-      }))!
-
-    handler = completionHandler
-    LocalNotification.registerForStudy()
-
-  }
-
   /// This method is used to register for study
   class func registerForStudy() {
 
@@ -314,52 +295,6 @@ class LocalNotification: NSObject {
       let center = UNUserNotificationCenter.current()
       center.add(request)
 
-    }
-
-  }
-
-  /// Deletes a notification for a studyId and activityId
-  /// - Parameter studyId: studyId of type string
-  /// - Parameter activityid: activityId of type string
-  class func removeLocalNotificationfor(studyId: String, activityid: String) {
-
-    let notificationCenter = UNUserNotificationCenter.current()
-    notificationCenter.getPendingNotificationRequests { (allNotificaiton) in
-
-      var nIdentifers: [String] = []
-      for notification in allNotificaiton {
-        let userInfo = notification.content.userInfo
-        if userInfo[kStudyId] != nil && userInfo[kActivityId] != nil {
-          if userInfo[kStudyId] as! String == studyId
-            && userInfo[kActivityId] as! String
-              == activityid
-          {
-            nIdentifers.append(notification.identifier)
-          }
-        }
-      }
-      notificationCenter.removePendingNotificationRequests(withIdentifiers: nIdentifers)
-    }
-
-  }
-
-  /// Removes local notification for a studyId
-  /// - Parameter studyId: studyId of type string
-  class func removeLocalNotificationfor(studyId: String) {
-
-    let notificationCenter = UNUserNotificationCenter.current()
-    notificationCenter.getPendingNotificationRequests { (allNotificaiton) in
-
-      var nIdentifers: [String] = []
-      for notification in allNotificaiton {
-        let userInfo = notification.content.userInfo
-        if userInfo[kStudyId] != nil {
-          if userInfo[kStudyId] as! String == studyId {
-            nIdentifers.append(notification.identifier)
-          }
-        }
-      }
-      notificationCenter.removePendingNotificationRequests(withIdentifiers: nIdentifers)
     }
 
   }

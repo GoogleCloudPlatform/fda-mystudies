@@ -228,19 +228,6 @@ class ActivitiesViewController: UIViewController {
     NotificationHandler.instance.reset()
   }
 
-  func checkForDashBoardInfo() {
-    guard let studyID = Study.currentStudy?.studyId else { return }
-    DBHandler.loadStatisticsForStudy(studyId: studyID) {
-      (statiticsList) in
-
-      if statiticsList.count != 0 {
-        // Do Nothing
-      } else {
-        self.sendRequestToGetDashboardInfo()
-      }
-    }
-  }
-
   @objc func refresh(sender: AnyObject) {
     WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
   }

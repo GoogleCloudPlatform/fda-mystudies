@@ -52,43 +52,6 @@ class ResponseServices: NSObject {
 
   /// Creates a request to process `Activity` response
   /// - Parameters:
-  ///   - metaData: Activity MetaData in form of `JSONDictionary`
-  ///   - activityType: Type of Activity
-  ///   - responseData: Response in form of `JSONDictionary`
-  ///   - participantId: Participant ID
-  ///   - delegate: Class object to receive response
-  func processResponse(
-    metaData: [String: Any],
-    activityType: String,
-    responseData: [String: Any],
-    studyStatus: UserStudyStatus,
-    delegate: NMWebServiceDelegate
-  ) {
-
-    self.delegate = delegate
-    let method = ResponseMethods.processResponse.method
-
-    let params =
-      [
-        kActivityType: activityType,
-        kActivityInfoMetaData: metaData,
-        kParticipantId: studyStatus.participantId ?? "",
-        JSONKey.tokenIdentifier: studyStatus.tokenIdentifier ?? "",
-        JSONKey.siteID: studyStatus.siteID ?? "",
-        JSONKey.applicationId: AppConfiguration.appID,
-        kActivityResponseData: responseData,
-      ] as [String: Any]
-
-    let headers: [String: String] = [
-      "userId": User.currentUser.userId ?? "",
-    ]
-
-    self.sendRequestWith(method: method, params: params, headers: headers)
-
-  }
-
-  /// Creates a request to process `Activity` response
-  /// - Parameters:
   ///   - responseData: Response in form of `JSONDictionary`
   ///   - delegate: Class object to receive response
   func processResponse(responseData: [String: Any], delegate: NMWebServiceDelegate) {
@@ -243,25 +206,6 @@ class ResponseServices: NSObject {
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
 
-  /// Creates a request to update `Activity` bookmark status
-  /// - Parameters:
-  ///   - activityStauts: Instance of `UserActivityStatus` to update
-  ///   - delegate: Class object to receive response
-  func updateActivityBookmarkStatus(
-    activityStauts: UserActivityStatus,
-    delegate: NMWebServiceDelegate
-  ) {
-    self.delegate = delegate
-
-    let user = User.currentUser
-    let headerParams = [kUserId: user.userId] as? [String: String]
-
-    let params = [kActivites: [activityStauts.getBookmarkUserActivityStatus()]] as [String: Any]
-    let method = ResponseMethods.updateActivityState.method
-
-    self.sendRequestWith(method: method, params: params, headers: headerParams)
-  }
-
   func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {
     HydraAPI.refreshToken { (status, error) in
       if status {
@@ -305,8 +249,6 @@ class ResponseServices: NSObject {
           // FetalKick
           if dataCount["count"] != nil && data["duration"] != nil {
 
-            // for responseData in dashBoardResponse{
-            let responseData = dashBoardResponse.first
             // count
             let countDetail = dataCount["count"] as? [String: Any]
             let count = (countDetail?["value"] as? Float)!

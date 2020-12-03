@@ -28,7 +28,6 @@
 		6E183AB31E966230005D7A27 /* FileDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E183AB01E966230005D7A27 /* FileDownloadManager.swift */; };
 		6E183AB41E966230005D7A27 /* FileDownloadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E183AB11E966230005D7A27 /* FileDownloadModel.swift */; };
 		6E183AB51E966230005D7A27 /* AKUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E183AB21E966230005D7A27 /* AKUtility.swift */; };
-		6E2B25F31EAE3F1D00E2DFB2 /* ResearchContainerSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2B25F11EAE3F1D00E2DFB2 /* ResearchContainerSegue.swift */; };
 		6E2B25F41EAE3F1D00E2DFB2 /* ResearchContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2B25F21EAE3F1D00E2DFB2 /* ResearchContainerViewController.swift */; };
 		6E31DC691F17AF9C00C3E1DB /* InEligibilityStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E31DC681F17AF9C00C3E1DB /* InEligibilityStepViewController.swift */; };
 		6E4CECB61F31B41C005E0832 /* PinterestLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4CECB51F31B41C005E0832 /* PinterestLayout.swift */; };
@@ -214,7 +213,6 @@
 		94B3DD5B1E6ED8E500327AE5 /* VerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD381E6ED8E500327AE5 /* VerificationViewController.swift */; };
 		94B3DD5C1E6ED8E500327AE5 /* Study.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD3A1E6ED8E500327AE5 /* Study.storyboard */; };
 		94B3DD5D1E6ED8E500327AE5 /* Study.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD3B1E6ED8E500327AE5 /* Study.xcassets */; };
-		94B3DD5E1E6ED8E500327AE5 /* StudyOverviewPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD3D1E6ED8E500327AE5 /* StudyOverviewPageViewController.swift */; };
 		94B3DD5F1E6ED8E500327AE5 /* StudyOverviewPageViewControllerFirst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD3E1E6ED8E500327AE5 /* StudyOverviewPageViewControllerFirst.swift */; };
 		94B3DD601E6ED8E500327AE5 /* StudyOverviewViewControllerSecond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3DD3F1E6ED8E500327AE5 /* StudyOverviewViewControllerSecond.swift */; };
 		94B5F2F41ECA354800BC0336 /* LocalNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B5F2F31ECA354800BC0336 /* LocalNotification.swift */; };
@@ -313,7 +311,6 @@
 		6E183AB01E966230005D7A27 /* FileDownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadManager.swift; sourceTree = "<group>"; };
 		6E183AB11E966230005D7A27 /* FileDownloadModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDownloadModel.swift; sourceTree = "<group>"; };
 		6E183AB21E966230005D7A27 /* AKUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKUtility.swift; sourceTree = "<group>"; };
-		6E2B25F11EAE3F1D00E2DFB2 /* ResearchContainerSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResearchContainerSegue.swift; sourceTree = "<group>"; };
 		6E2B25F21EAE3F1D00E2DFB2 /* ResearchContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResearchContainerViewController.swift; sourceTree = "<group>"; };
 		6E31DC681F17AF9C00C3E1DB /* InEligibilityStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InEligibilityStepViewController.swift; sourceTree = "<group>"; };
 		6E4CECB51F31B41C005E0832 /* PinterestLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinterestLayout.swift; sourceTree = "<group>"; };
@@ -426,6 +423,8 @@
 		6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		6F55B9B9250225AC00A052A9 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
 		6F55B9BD250239DA00A052A9 /* HydraAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydraAPI.swift; sourceTree = "<group>"; };
+		6F59DEA7256CE2BA00D9690D /* HydraNew.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = HydraNew.xcconfig; path = ../../../../../../Desktop/Endpoints/HydraNew.xcconfig; sourceTree = "<group>"; };
+		6F59DEA9256CEC7200D9690D /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Dev.xcconfig; path = ../../../../../../Desktop/Endpoints/Dev.xcconfig; sourceTree = "<group>"; };
 		6F83039424864431009409A5 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		6F83039924864D6B009409A5 /* LocalizableString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizableString.swift; sourceTree = "<group>"; };
 		6F83039A24864D6B009409A5 /* Localizable.strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable.strings.txt; sourceTree = "<group>"; };
@@ -515,7 +514,6 @@
 		94B3DD381E6ED8E500327AE5 /* VerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationViewController.swift; sourceTree = "<group>"; };
 		94B3DD3A1E6ED8E500327AE5 /* Study.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Study.storyboard; sourceTree = "<group>"; };
 		94B3DD3B1E6ED8E500327AE5 /* Study.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Study.xcassets; sourceTree = "<group>"; };
-		94B3DD3D1E6ED8E500327AE5 /* StudyOverviewPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewPageViewController.swift; sourceTree = "<group>"; };
 		94B3DD3E1E6ED8E500327AE5 /* StudyOverviewPageViewControllerFirst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewPageViewControllerFirst.swift; sourceTree = "<group>"; };
 		94B3DD3F1E6ED8E500327AE5 /* StudyOverviewViewControllerSecond.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyOverviewViewControllerSecond.swift; sourceTree = "<group>"; };
 		94B5F2F31ECA354800BC0336 /* LocalNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalNotification.swift; sourceTree = "<group>"; };
@@ -623,7 +621,6 @@
 		6E2B25F01EAE3F1D00E2DFB2 /* ResearchkitContainer */ = {
 			isa = PBXGroup;
 			children = (
-				6E2B25F11EAE3F1D00E2DFB2 /* ResearchContainerSegue.swift */,
 				6E2B25F21EAE3F1D00E2DFB2 /* ResearchContainerViewController.swift */,
 				6ECE8BFA1EAF0E3A00A025F5 /* HealthClientType.swift */,
 			);
@@ -676,6 +673,8 @@
 		6E7D2D581E433E8700763D4C /* MyStudies */ = {
 			isa = PBXGroup;
 			children = (
+				6F59DEA9256CEC7200D9690D /* Dev.xcconfig */,
+				6F59DEA7256CE2BA00D9690D /* HydraNew.xcconfig */,
 				6FA930DF2519CC6E00611C3E /* Hydra.xcconfig */,
 				6F07148824279452002749DA /* Default.xcconfig */,
 				6F10BB15234DDFDA006388E2 /* Branding */,
@@ -1702,7 +1701,6 @@
 			isa = PBXGroup;
 			children = (
 				4833E9DE1E7126900032D244 /* StudyHomeViewController.swift */,
-				94B3DD3D1E6ED8E500327AE5 /* StudyOverviewPageViewController.swift */,
 				94B3DD3E1E6ED8E500327AE5 /* StudyOverviewPageViewControllerFirst.swift */,
 				94B3DD3F1E6ED8E500327AE5 /* StudyOverviewViewControllerSecond.swift */,
 			);
@@ -2241,7 +2239,6 @@
 				6FB89C25225F410500420A7B /* TextChoiceCell.swift in Sources */,
 				6E7D2D8A1E43400100763D4C /* User.swift in Sources */,
 				94B3DD461E6ED8E500327AE5 /* ProfileViewController.swift in Sources */,
-				94B3DD5E1E6ED8E500327AE5 /* StudyOverviewPageViewController.swift in Sources */,
 				6E31DC691F17AF9C00C3E1DB /* InEligibilityStepViewController.swift in Sources */,
 				6ED1B21E1E54252500BF463F /* Schedule.swift in Sources */,
 				94B3DD481E6ED8E500327AE5 /* GatewayResourcesListViewController.swift in Sources */,
@@ -2271,7 +2268,6 @@
 				94B3DD5B1E6ED8E500327AE5 /* VerificationViewController.swift in Sources */,
 				6F214B9624603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift in Sources */,
 				94B3DD4D1E6ED8E500327AE5 /* FirstGatewayOverviewViewController.swift in Sources */,
-				6E2B25F31EAE3F1D00E2DFB2 /* ResearchContainerSegue.swift in Sources */,
 				94C602311E51C7D500CB72F7 /* WCPServices.swift in Sources */,
 				9487102C1E54870000246109 /* ResponseServices.swift in Sources */,
 				6E183AB41E966230005D7A27 /* FileDownloadModel.swift in Sources */,

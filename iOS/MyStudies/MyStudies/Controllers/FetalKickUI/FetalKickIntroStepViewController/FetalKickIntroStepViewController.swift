@@ -21,12 +21,6 @@ import ResearchKit
 
 let kFetalKickIntroStepDefaultIdentifier = "FetalIntroStepIdentifier"
 
-class FetalKickCounterIntroStepType: ORKStep {
-  static func stepViewControllerClass() -> FetalKickIntroStepViewController.Type {
-    return FetalKickIntroStepViewController.self
-  }
-}
-
 class FetalKickIntroStep: ORKStep {
   var introTitle: String?  // MainTitle for the Task
   var subTitle: String?  //Subtitle for Task
