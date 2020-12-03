@@ -29,14 +29,8 @@
           <path>/fdahpStudyDesigner</path>
           <username>admin</username>
           <password>password</password>
-          <!-- <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory> -->
         </configuration>
       </plugin>
-      <!-- <plugin> <artifactId>maven-war-plugin</artifactId> <version>2.1.1</version> 
-        <configuration> <packagingExcludes>WEB-INF/web.xml,META-INF/context.xml,studylogo/,studypages/,studyResources/,questionnaire/</packagingExcludes> 
-        <encoding>UTF-8</encoding> <webResources> <resource> <directory>${project.build.directory}/${project.build.finalName}/</directory> 
-        </resource> </webResources> </configuration> </plugin> -->
-      <!-- Maven compiler plugin -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
@@ -62,6 +56,15 @@
             <exclude>**/*min.css</exclude>
           </excludes>
           <nosuffix>true</nosuffix>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>2.6.0</version>
+        <configuration>
+          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
+          <container><appRoot>/usr/local/tomcat/webapps/studybuilder</appRoot></container>
         </configuration>
       </plugin>
     </plugins>
