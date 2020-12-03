@@ -108,21 +108,25 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     // Return USER_ALREADY_EXISTS error code if user account already exists for the given email
     if (optUserDetails.isPresent()) {
       UserDetailsEntity existingUserDetails = optUserDetails.get();
-      if (generateVerificationCode(existingUserDetails)) {
-        EmailResponse emailResponse = generateAndSaveVerificationCode(existingUserDetails);
-
-        if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
-            .getMessage()
-            .equals(emailResponse.getMessage())) {
-          userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_SENT, auditRequest);
-        } else {
-          userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_FAILED, auditRequest);
-          throw new ErrorCodeException(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
-        }
-      }
       userMgmntAuditHelper.logEvent(
           UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME, auditRequest);
-      throw new ErrorCodeException(USER_ALREADY_EXISTS);
+      if (UserStatus.ACTIVE.getValue().equals(existingUserDetails.getStatus())) {
+        throw new ErrorCodeException(USER_ALREADY_EXISTS);
+      } else if (!generateVerificationCode(existingUserDetails)) {
+        throw new ErrorCodeException(ErrorCode.PENDING_CONFIRMATION);
+      }
+
+      EmailResponse emailResponse = generateAndSaveVerificationCode(existingUserDetails);
+
+      if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+          .getMessage()
+          .equals(emailResponse.getMessage())) {
+        userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_SENT, auditRequest);
+        throw new ErrorCodeException(ErrorCode.PENDING_CONFIRMATION);
+      } else {
+        userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_FAILED, auditRequest);
+        throw new ErrorCodeException(ErrorCode.REGISTRATION_EMAIL_SEND_FAILED);
+      }
     }
 
     UserDetailsEntity userDetails = fromUserRegistrationForm(user);
@@ -157,7 +161,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
       return new UserRegistrationResponse(
           authUserResponse.getUserId(),
           authUserResponse.getTempRegId(),
-          ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
+          ErrorCode.REGISTRATION_EMAIL_SEND_FAILED);
     }
 
     logger.exit("user account successfully created and email sent with verification code");

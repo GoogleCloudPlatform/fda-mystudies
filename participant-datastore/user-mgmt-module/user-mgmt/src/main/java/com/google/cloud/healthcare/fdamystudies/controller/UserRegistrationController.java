@@ -60,7 +60,7 @@ public class UserRegistrationController {
         userRegistrationService.register(user, auditRequest);
 
     if (userRegistrationResponse.getErrorCode() != null) {
-      throw new ErrorCodeException(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
+      throw new ErrorCodeException(ErrorCode.REGISTRATION_EMAIL_SEND_FAILED);
     }
 
     logger.exit("User registration successful");

@@ -193,7 +193,7 @@ public enum ErrorCode {
       403,
       "EC_0043",
       HttpStatus.NOT_FOUND.toString(),
-      "Your account verification is pending.Please check your email for the activation link."),
+      "Your account is pending activation. Please check your email for details and sign in to complete activation."),
 
   ACCOUNT_NOT_VERIFIED(
       403,
@@ -313,7 +313,13 @@ public enum ErrorCode {
       HttpStatus.NOT_FOUND.toString(),
       "This view displays app-wise enrollment if you manage multiple studies."),
 
-  USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists");
+  USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists"),
+
+  REGISTRATION_EMAIL_SEND_FAILED(
+      500,
+      "EC_0075",
+      "Internal Server Error",
+      "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again.");
 
   private final int status;
   private final String code;
