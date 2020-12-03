@@ -57,7 +57,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -81,7 +80,6 @@ import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import com.google.cloud.healthcare.fdamystudies.model.StudyIdAndParticipantRegistryId;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudySiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -763,7 +761,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional
   public InviteParticipantResponse inviteParticipants(
-      InviteParticipantRequest inviteParticipantRequest) {
+      InviteParticipantRequest inviteParticipantRequest, AuditLogEventRequest auditRequest) {
     logger.entry("begin inviteParticipants()");
 
     Optional<SiteEntity> optSiteEntity =
@@ -789,10 +787,13 @@ public class SiteServiceImpl implements SiteService {
 
     List<ParticipantRegistrySiteEntity> participantsList =
         participantRegistrySiteRepository.findByIds(inviteParticipantRequest.getIds());
+
     SiteEntity siteEntity = optSiteEntity.get();
+    auditRequest.setUserId(inviteParticipantRequest.getUserId());
+    auditRequest.setStudyId(siteEntity.getStudyId());
 
     List<ParticipantRegistrySiteEntity> invitedParticipants =
-        findEligibleParticipantsAndInvite(participantsList, siteEntity);
+        findEligibleParticipantsAndInvite(participantsList, siteEntity, auditRequest);
 
     participantsList.removeAll(invitedParticipants);
     List<String> failedParticipantIds =
@@ -816,7 +817,9 @@ public class SiteServiceImpl implements SiteService {
   }
 
   private List<ParticipantRegistrySiteEntity> findEligibleParticipantsAndInvite(
-      List<ParticipantRegistrySiteEntity> participants, SiteEntity siteEntity) {
+      List<ParticipantRegistrySiteEntity> participants,
+      SiteEntity siteEntity,
+      AuditLogEventRequest auditRequest) {
 
     List<ParticipantRegistrySiteEntity> invitedParticipants = new ArrayList<>();
     for (ParticipantRegistrySiteEntity participantRegistrySiteEntity : participants) {
@@ -844,9 +847,10 @@ public class SiteServiceImpl implements SiteService {
                   .plus(appPropertyConfig.getEnrollmentTokenExpiryInHours(), ChronoUnit.HOURS)
                   .toEpochMilli()));
 
-      InviteParticipantEntity inviteParticipantsEmail = new InviteParticipantEntity();
+      InviteParticipantEntity inviteParticipantsEmail =
+          SiteMapper.toInviteParticipantEntity(auditRequest);
       inviteParticipantsEmail.setParticipantRegistrySite(participantRegistrySiteEntity.getId());
-      inviteParticipantsEmail.setStudy(siteEntity.getStudy().getId());
+      inviteParticipantsEmail.setAppId(participantRegistrySiteEntity.getStudy().getAppId());
 
       invitedParticipantsEmailRepository.saveAndFlush(inviteParticipantsEmail);
 
@@ -1332,23 +1336,21 @@ public class SiteServiceImpl implements SiteService {
   @Transactional
   public void sendInvitationEmail() {
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setAppId("GCPMS001");
-    auditRequest.setAppVersion("1.0");
-    auditRequest.setCorrelationId(IdGenerator.id());
-    auditRequest.setSource("PARTICIPANT MANAGER");
-    auditRequest.setMobilePlatform("Unknown");
-
-    List<StudyIdAndParticipantRegistryId> listOfInvitedParticipants =
+    List<InviteParticipantEntity> listOfInvitedParticipants =
         invitedParticipantsEmailRepository.findAllWithStatusZero();
 
-    for (StudyIdAndParticipantRegistryId invitedParticipantsEmailEntity :
-        listOfInvitedParticipants) {
+    Set<String> uniqueRecords = new HashSet<>();
+    for (InviteParticipantEntity invitedParticipantsEmailEntity : listOfInvitedParticipants) {
+
+      if (isDuplicateEntity(invitedParticipantsEmailEntity, uniqueRecords)) {
+        continue;
+      }
 
       int updatedRows =
           invitedParticipantsEmailRepository.updateStatus(
-              invitedParticipantsEmailEntity.getStudyId(),
-              invitedParticipantsEmailEntity.getParticipantRegistryId(),
+              invitedParticipantsEmailEntity.getStudy(),
+              invitedParticipantsEmailEntity.getParticipantRegistrySite(),
+              invitedParticipantsEmailEntity.getAppId(),
               1);
 
       if (updatedRows == 0) {
@@ -1358,17 +1360,18 @@ public class SiteServiceImpl implements SiteService {
 
       Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySiteEntity =
           participantRegistrySiteRepository.findById(
-              invitedParticipantsEmailEntity.getParticipantRegistryId());
+              invitedParticipantsEmailEntity.getParticipantRegistrySite());
 
       Optional<StudyEntity> optStudy =
-          studyRepository.findByStudyId(invitedParticipantsEmailEntity.getStudyId());
+          studyRepository.findByStudyId(invitedParticipantsEmailEntity.getStudy());
 
       if (!optParticipantRegistrySiteEntity.isPresent() || !optStudy.isPresent()) {
         logger.warn(
             "Participant registry or study not found for invited participants so deleting this record from invite participant table");
-        invitedParticipantsEmailRepository.deleteByParticipantRegistryIdAndStudyInfoId(
-            invitedParticipantsEmailEntity.getStudyId(),
-            invitedParticipantsEmailEntity.getParticipantRegistryId());
+        invitedParticipantsEmailRepository.deleteByParticipantRegistryIdAndStudyIdAndAppId(
+            invitedParticipantsEmailEntity.getStudy(),
+            invitedParticipantsEmailEntity.getParticipantRegistrySite(),
+            invitedParticipantsEmailEntity.getAppId());
         continue;
       }
 
@@ -1393,27 +1396,42 @@ public class SiteServiceImpl implements SiteService {
 
       Map<String, String> map =
           Collections.singletonMap("site_id", participantRegistrySiteEntity.getSite().getId());
+      AuditLogEventRequest auditRequest =
+          SiteMapper.prepareAuditlogRequest(invitedParticipantsEmailEntity);
       auditRequest.setSiteId(participantRegistrySiteEntity.getSite().getId());
       auditRequest.setStudyId(participantRegistrySiteEntity.getSite().getStudyId());
-      auditRequest.setAppId(participantRegistrySiteEntity.getSite().getStudy().getAppId());
 
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
           .getMessage()
           .equals(emailResponse.getMessage())) {
-        invitedParticipantsEmailRepository.deleteByParticipantRegistryIdAndStudyInfoId(
-            invitedParticipantsEmailEntity.getStudyId(),
-            invitedParticipantsEmailEntity.getParticipantRegistryId());
+        invitedParticipantsEmailRepository.deleteByParticipantRegistryIdAndStudyIdAndAppId(
+            invitedParticipantsEmailEntity.getStudy(),
+            invitedParticipantsEmailEntity.getParticipantRegistrySite(),
+            invitedParticipantsEmailEntity.getAppId());
 
         participantManagerHelper.logEvent(INVITATION_EMAIL_SENT, auditRequest, map);
 
       } else {
         invitedParticipantsEmailRepository.updateStatus(
-            invitedParticipantsEmailEntity.getStudyId(),
-            invitedParticipantsEmailEntity.getParticipantRegistryId(),
+            invitedParticipantsEmailEntity.getStudy(),
+            invitedParticipantsEmailEntity.getParticipantRegistrySite(),
+            invitedParticipantsEmailEntity.getAppId(),
             0);
 
         participantManagerHelper.logEvent(INVITATION_EMAIL_FAILED, auditRequest, map);
       }
     }
+  }
+
+  public boolean isDuplicateEntity(
+      InviteParticipantEntity invitedParticipants, Set<String> uniqueRecords) {
+    String key =
+        invitedParticipants.getStudy()
+            + "_"
+            + invitedParticipants.getParticipantRegistrySite()
+            + "_"
+            + invitedParticipants.getAppId();
+
+    return !uniqueRecords.add(key);
   }
 }

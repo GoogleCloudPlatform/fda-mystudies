@@ -9,7 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
+import com.google.cloud.healthcare.fdamystudies.model.InviteParticipantEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 
 public class SiteMapper {
@@ -30,5 +32,29 @@ public class SiteMapper {
     appSiteResponse.setLocationId(site.getLocation().getId());
     appSiteResponse.setLocationName(site.getLocation().getName());
     return appSiteResponse;
+  }
+
+  public static AuditLogEventRequest prepareAuditlogRequest(
+      InviteParticipantEntity inviteParticipantDetails) {
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(inviteParticipantDetails.getAppId());
+    auditRequest.setAppVersion(inviteParticipantDetails.getAppVersion());
+    auditRequest.setCorrelationId(inviteParticipantDetails.getCorrelationId());
+    auditRequest.setSource(inviteParticipantDetails.getSource());
+    auditRequest.setMobilePlatform(inviteParticipantDetails.getMobilePlatform());
+    auditRequest.setUserId(inviteParticipantDetails.getUserId());
+    return auditRequest;
+  }
+
+  public static InviteParticipantEntity toInviteParticipantEntity(
+      AuditLogEventRequest auditRequest) {
+    InviteParticipantEntity inviteParticipantsEmail = new InviteParticipantEntity();
+    inviteParticipantsEmail.setStudy(auditRequest.getStudyId());
+    inviteParticipantsEmail.setAppVersion(auditRequest.getAppVersion());
+    inviteParticipantsEmail.setCorrelationId(auditRequest.getCorrelationId());
+    inviteParticipantsEmail.setSource(auditRequest.getSource());
+    inviteParticipantsEmail.setMobilePlatform(auditRequest.getMobilePlatform());
+    inviteParticipantsEmail.setUserId(auditRequest.getUserId());
+    return inviteParticipantsEmail;
   }
 }
