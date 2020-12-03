@@ -256,7 +256,10 @@ public class AppControllerTest extends BaseMockIT {
   public void shouldReturnAppsWithOptionalStudies() throws Exception {
     // Step 1: set app and study
     studyEntity.setApp(appEntity);
-    testDataHelper.getStudyRepository().save(studyEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
