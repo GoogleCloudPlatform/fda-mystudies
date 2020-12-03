@@ -27,6 +27,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
@@ -213,6 +214,10 @@ public class UserProfileController {
                   VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED, auditRequest);
               responseBean.setMessage(
                   MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+            } else {
+              throw new ErrorCodeException(
+                  com.google.cloud.healthcare.fdamystudies.common.ErrorCode
+                      .REGISTRATION_EMAIL_SEND_FAILED);
             }
           }
 
