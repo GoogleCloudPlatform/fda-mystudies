@@ -1304,7 +1304,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                     + AppConfig.APP_ID_VALUE
                     + "&participantId="
                     + participateId
-                    + "&tokenIdentifier="
+                    + "&tokenId="
                     + studies.getHashedToken()
                     + "&siteId="
                     + studies.getSiteId()

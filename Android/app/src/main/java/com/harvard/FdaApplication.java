@@ -132,7 +132,7 @@ public class FdaApplication extends Application {
           new NotificationChannel(
               NOTIFICATION_CHANNEL_ID_SERVICE,
               "App Service",
-              NotificationManager.IMPORTANCE_DEFAULT));
+              NotificationManager.IMPORTANCE_LOW));
       nm.createNotificationChannel(
           new NotificationChannel(
               NOTIFICATION_CHANNEL_ID_INFO, "General", NotificationManager.IMPORTANCE_HIGH));

@@ -156,7 +156,7 @@ INSERT INTO `reference_tables` (`id`, `str_value`, `category`, `type`) VALUES
 	(8, 'Public Health', 'Categories', 'Pre-defined'),
 	(9, 'Radiation-Emitting Products', 'Categories', 'Pre-defined'),
 	(10, 'Tobacco Use', 'Categories', 'Pre-defined'),
-	(11, 'Kaiser Permanente Washington Health Research Institute', 'Data Partner', 'Pre-defined'),
+	(11, 'University Research Institute', 'Data Partner', 'Pre-defined'),
 	(12, 'FDA', 'Research Sponsors', 'Pre-defined');
 /*!40000 ALTER TABLE `reference_tables` ENABLE KEYS */;
 
