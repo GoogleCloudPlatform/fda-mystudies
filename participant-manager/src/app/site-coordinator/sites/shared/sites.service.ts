@@ -12,6 +12,9 @@ export class SitesService {
   constructor(private readonly http: HttpClient) {}
 
   add(addSite: AddSiteRequest): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${environment.participantManagerDatastoreUrl}/sites`, addSite);
+    return this.http.post<ApiResponse>(
+      `${environment.participantManagerDatastoreUrl}/sites`,
+      addSite,
+    );
   }
 }

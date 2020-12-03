@@ -9,7 +9,9 @@ export class UserService {
   constructor(private readonly http: HttpClient) {}
 
   getUserDetails(): Observable<User> {
-    return this.http.get<User>(`${environment.participantManagerDatastoreUrl}/users/profile`);
+    return this.http.get<User>(
+      `${environment.participantManagerDatastoreUrl}/users/profile`,
+    );
   }
 
   getUserProfile(): Profile {

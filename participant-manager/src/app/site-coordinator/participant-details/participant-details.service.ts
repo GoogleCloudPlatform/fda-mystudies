@@ -53,9 +53,9 @@ export class ParticipantDetailsService {
 
   getConsentFile(consentId: string): Observable<ConsentFile> {
     return this.http.get<ConsentFile>(
-      `${environment.participantManagerDatastoreUrl}/consents/${encodeURIComponent(
-        consentId,
-      )}/consentDocument`,
+      `${
+        environment.participantManagerDatastoreUrl
+      }/consents/${encodeURIComponent(consentId)}/consentDocument`,
     );
   }
 }

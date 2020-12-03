@@ -20,12 +20,17 @@ export class LocationService {
     private readonly http: HttpClient,
   ) {}
   getLocations(): Observable<ManageLocations> {
-    return this.http.get<ManageLocations>(`${environment.participantManagerDatastoreUrl}/locations`);
+    return this.http.get<ManageLocations>(
+      `${environment.participantManagerDatastoreUrl}/locations`,
+    );
   }
   getLocationsForSiteCreation(studyId: string): Observable<ManageLocations> {
-    return this.http.get<ManageLocations>(`${environment.participantManagerDatastoreUrl}/locations`, {
-      params: {excludeStudyId: studyId, status: '1'},
-    });
+    return this.http.get<ManageLocations>(
+      `${environment.participantManagerDatastoreUrl}/locations`,
+      {
+        params: {excludeStudyId: studyId, status: '1'},
+      },
+    );
   }
   addLocation(location: Location): Observable<Location> {
     return this.entityService.post(location, 'locations');

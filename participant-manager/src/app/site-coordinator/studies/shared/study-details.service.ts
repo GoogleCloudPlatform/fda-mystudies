@@ -17,15 +17,15 @@ export class StudyDetailsService {
   ) {}
 
   getStudyDetails(studyId: string): Observable<StudyDetails> {
-return this.http.get<StudyDetails>(
-      `${environment.participantManagerDatastoreUrl}/studies/${encodeURIComponent(
-        studyId,
-      )}/participants`,
+    return this.http.get<StudyDetails>(
+      `${
+        environment.participantManagerDatastoreUrl
+      }/studies/${encodeURIComponent(studyId)}/participants`,
       {
         params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
       },
     );
-}
+  }
   updateTargetEnrollment(
     updateTargetEnrollment: UpdateTargetEnrollmentRequest,
     studyId: string,

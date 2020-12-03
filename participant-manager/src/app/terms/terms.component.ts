@@ -8,8 +8,10 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
   styleUrls: ['./terms.component.scss'],
 })
 export class TermsComponent {
-   safeHtmlContent:SafeHtml;
+  safeHtmlContent: SafeHtml;
   constructor(sanitizer: DomSanitizer) {
-      this.safeHtmlContent = sanitizer.bypassSecurityTrustHtml(environment.termsPageHtmlContent);
-    }
+    this.safeHtmlContent = sanitizer.bypassSecurityTrustHtml(
+      environment.termsPageHtmlContent,
+    );
+  }
 }

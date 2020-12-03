@@ -12,7 +12,8 @@ const successMessages = {
   MSG_0010: 'App details fetched successfully',
   MSG_0011: 'Enrollment target updated for the study',
   MSG_0012: 'App participants fetched successfully',
-  MSG_0013: 'The newly added user has been invited to use the Participant Manager',
+  MSG_0013:
+    'The newly added user has been invited to use the Participant Manager',
   MSG_0014: 'User record updated',
   MSG_0015: 'User profile fetched successfully',
   MSG_0016: 'User profile with security code fetched successfully',

@@ -30,18 +30,21 @@ export class SiteDetailsService {
     const fetchingOptions = this.getInvitationType(fetchingOption);
     if (fetchingOption !== OnboardingStatus.All) {
       return this.http.get<SiteParticipants>(
-        `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
-          siteId,
-        )}/participants`,
+        `${
+          environment.participantManagerDatastoreUrl
+        }/sites/${encodeURIComponent(siteId)}/participants`,
         {
-          params: {onboardingStatus: fetchingOptions, excludeEnrollmentStatus: ['notEligible', 'yetToJoin']},
+          params: {
+            onboardingStatus: fetchingOptions,
+            excludeEnrollmentStatus: ['notEligible', 'yetToJoin'],
+          },
         },
       );
     } else {
-       return this.http.get<SiteParticipants>(
-        `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
-          siteId,
-        )}/participants`,
+      return this.http.get<SiteParticipants>(
+        `${
+          environment.participantManagerDatastoreUrl
+        }/sites/${encodeURIComponent(siteId)}/participants`,
         {
           params: {excludeEnrollmentStatus: ['notEligible', 'yetToJoin']},
         },
@@ -51,7 +54,9 @@ export class SiteDetailsService {
 
   siteDecommission(siteId: string): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
-      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(siteId)}/decommission`,
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
+        siteId,
+      )}/decommission`,
       '',
     );
   }
@@ -82,7 +87,9 @@ export class SiteDetailsService {
     modelEmail: AddEmail,
   ): Observable<AddEmailResponse> {
     return this.http.post<AddEmailResponse>(
-      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(siteId)}/participants`,
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
+        siteId,
+      )}/participants`,
       modelEmail,
     );
   }

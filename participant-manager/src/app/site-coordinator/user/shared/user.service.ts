@@ -14,7 +14,10 @@ export class UserService {
   constructor(private readonly http: HttpClient) {}
 
   add(user: User): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${environment.participantManagerDatastoreUrl}/users`, user);
+    return this.http.post<ApiResponse>(
+      `${environment.participantManagerDatastoreUrl}/users`,
+      user,
+    );
   }
 
   update(user: User, adminId: string): Observable<ApiResponse> {
@@ -47,13 +50,13 @@ export class UserService {
     );
   }
 
-getUserDetailsForEditing(adminId: string): Observable<ManageUserDetails> {
+  getUserDetailsForEditing(adminId: string): Observable<ManageUserDetails> {
     return this.http.get<ManageUserDetails>(
       `${environment.participantManagerDatastoreUrl}/users/admin/${adminId}`,
-  {
+      {
         params: {includeUnselected: 'true'},
       },
-      );
+    );
   }
   deleteInvitation(adminId: string): Observable<ApiResponse> {
     return this.http.delete<ApiResponse>(
@@ -62,6 +65,8 @@ getUserDetailsForEditing(adminId: string): Observable<ManageUserDetails> {
   }
 
   getUsers(): Observable<ManageUsers> {
-    return this.http.get<ManageUsers>(`${environment.participantManagerDatastoreUrl}/users`);
+    return this.http.get<ManageUsers>(
+      `${environment.participantManagerDatastoreUrl}/users`,
+    );
   }
 }
