@@ -4398,8 +4398,6 @@ public class StudyController {
     ModelMap map = new ModelMap();
     HashMap<String, List<ReferenceTablesBo>> referenceMap = null;
     List<ReferenceTablesBo> categoryList = null;
-    // List<ReferenceTablesBo> researchSponserList = null;
-    List<ReferenceTablesBo> dataPartnerList = null;
     StudyBo studyBo = null;
     String sucMsg = "";
     String errMsg = "";
@@ -4555,17 +4553,11 @@ public class StudyController {
                 case FdahpStudyDesignerConstants.REFERENCE_TYPE_CATEGORIES:
                   categoryList = referenceMap.get(key);
                   break;
-                case FdahpStudyDesignerConstants.REFERENCE_TYPE_DATA_PARTNER:
-                  dataPartnerList = referenceMap.get(key);
-                  break;
-                default:
-                  break;
               }
             }
           }
         }
         map.addAttribute("categoryList", categoryList);
-        map.addAttribute("dataPartnerList", dataPartnerList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");
         map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
