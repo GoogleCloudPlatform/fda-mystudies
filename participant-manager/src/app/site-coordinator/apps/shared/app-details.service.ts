@@ -12,7 +12,9 @@ export class AppDetailsService {
 
   get(appId: string): Observable<AppDetails> {
     return this.http.get<AppDetails>(
-      `${environment.baseUrl}/apps/${encodeURIComponent(appId)}/participants`,
+      `${environment.participantManagerDatastoreUrl}/apps/${encodeURIComponent(
+        appId,
+      )}/participants`,
       {
         params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
       },
