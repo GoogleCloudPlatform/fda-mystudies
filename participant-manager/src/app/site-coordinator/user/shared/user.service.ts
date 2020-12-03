@@ -14,12 +14,12 @@ export class UserService {
   constructor(private readonly http: HttpClient) {}
 
   add(user: User): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${environment.baseUrl}/users`, user);
+    return this.http.post<ApiResponse>(`${environment.participantManagerDatastoreUrl}/users`, user);
   }
 
   update(user: User, adminId: string): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
-      `${environment.baseUrl}/users/${adminId}/`,
+      `${environment.participantManagerDatastoreUrl}/users/${adminId}/`,
       user,
     );
   }
@@ -29,27 +29,27 @@ export class UserService {
     adminId: string,
   ): Observable<ApiResponse> {
     return this.http.patch<ApiResponse>(
-      `${environment.baseUrl}/users/${adminId}/`,
+      `${environment.participantManagerDatastoreUrl}/users/${adminId}/`,
       updateStatusRequest,
     );
   }
 
   resendInvitation(adminId: string): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(
-      `${environment.baseUrl}/users/${adminId}/invite`,
+      `${environment.participantManagerDatastoreUrl}/users/${adminId}/invite`,
       {},
     );
   }
 
   getUserDetails(adminId: string): Observable<ManageUserDetails> {
     return this.http.get<ManageUserDetails>(
-      `${environment.baseUrl}/users/admin/${adminId}`,
+      `${environment.participantManagerDatastoreUrl}/users/admin/${adminId}`,
     );
   }
 
 getUserDetailsForEditing(adminId: string): Observable<ManageUserDetails> {
     return this.http.get<ManageUserDetails>(
-      `${environment.baseUrl}/users/admin/${adminId}`,
+      `${environment.participantManagerDatastoreUrl}/users/admin/${adminId}`,
   {
         params: {includeUnselected: 'true'},
       },
@@ -57,11 +57,11 @@ getUserDetailsForEditing(adminId: string): Observable<ManageUserDetails> {
   }
   deleteInvitation(adminId: string): Observable<ApiResponse> {
     return this.http.delete<ApiResponse>(
-      `${environment.baseUrl}/users/${adminId}/`,
+      `${environment.participantManagerDatastoreUrl}/users/${adminId}/`,
     );
   }
 
   getUsers(): Observable<ManageUsers> {
-    return this.http.get<ManageUsers>(`${environment.baseUrl}/users`);
+    return this.http.get<ManageUsers>(`${environment.participantManagerDatastoreUrl}/users`);
   }
 }
