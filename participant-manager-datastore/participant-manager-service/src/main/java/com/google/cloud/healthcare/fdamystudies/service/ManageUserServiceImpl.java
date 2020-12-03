@@ -41,6 +41,7 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
@@ -58,15 +59,16 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -523,52 +525,120 @@ public class ManageUserServiceImpl implements ManageUserService {
   }
 
   @Override
-  public GetAdminDetailsResponse getAdminDetails(String userId, String adminId) {
+  public GetAdminDetailsResponse getAdminDetails(
+      String signedInUserId, String adminId, boolean includeUnselected) {
     logger.entry("getAdminDetails()");
-    ErrorCode errorCode = validateUserRequest(userId);
-    if (errorCode != null) {
-      throw new ErrorCodeException(errorCode);
-    }
+    validateSignedInUser(signedInUserId);
 
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(adminId);
-    if (!optAdminDetails.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND);
-    }
 
-    UserRegAdminEntity adminDetails = optAdminDetails.get();
+    UserRegAdminEntity adminDetails =
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
+
     User user = UserMapper.prepareUserInfo(adminDetails);
-    List<AppEntity> apps = appRepository.findAll();
-    List<AppPermissionEntity> appPermissions =
-        appPermissionRepository.findByAdminUserId(user.getId());
-
-    Map<String, AppPermissionEntity> appPermissionMap =
-        appPermissions
-            .stream()
-            .collect(Collectors.toMap(AppPermissionEntity::getAppId, Function.identity()));
-
-    for (AppEntity app : apps) {
-      UserAppDetails userAppBean = UserMapper.toUserAppDetails(app);
-      AppPermissionEntity appPermission = appPermissionMap.get(app.getId());
-      if (appPermission != null && appPermission.getEdit() != null) {
-        Permission permission = appPermission.getEdit();
-        userAppBean.setPermission(permission.value());
-        if (Permission.NO_PERMISSION != permission) {
-          userAppBean.setSelected(true);
-        }
-      } else if (adminDetails.isSuperAdmin()) {
-        userAppBean.setPermission(Permission.EDIT.value());
-        userAppBean.setSelected(true);
-      }
-
-      List<UserStudyDetails> userStudies = getUserStudies(app, adminDetails);
-      userAppBean.getStudies().addAll(userStudies);
-
-      setStudiesSitesCountPerApp(userAppBean, userStudies);
-
-      if (userAppBean.getSelectedSitesCount() > 0 || userAppBean.getSelectedStudiesCount() > 0) {
-        user.getApps().add(userAppBean);
-      }
+    if (adminDetails.isSuperAdmin()) {
+      logger.exit(String.format("superadmin=%b, status=%s", user.isSuperAdmin(), user.getStatus()));
+      return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
     }
+
+    List<AppStudySiteInfo> selectedAppsStudiesSitesInfoList =
+        appRepository.findAppsStudiesSitesByUserId(adminId);
+
+    List<String> selectedAppIds = new ArrayList<>();
+    selectedAppsStudiesSitesInfoList.forEach(
+        p -> {
+          if (!selectedAppIds.contains(p.getAppId())) {
+            selectedAppIds.add(p.getAppId());
+          }
+        });
+
+    if (selectedAppIds.isEmpty()) {
+      logger.exit(String.format("superadmin=%b, status=%s", user.isSuperAdmin(), user.getStatus()));
+      return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
+    }
+
+    Map<String, UserAppDetails> unselectedAppsMap = new HashMap<>();
+    Map<String, UserStudyDetails> unselectedStudiesMap = new HashMap<>();
+    Map<String, UserSiteDetails> unselectedSitesMap = new HashMap<>();
+
+    if (includeUnselected) {
+      putUnselectedAppsStudiesSites(
+          adminId, selectedAppIds, unselectedAppsMap, unselectedStudiesMap, unselectedSitesMap);
+    }
+
+    Map<String, UserAppDetails> appsMap = new HashMap<>();
+    Map<String, UserStudyDetails> studiesMap = new HashMap<>();
+    Map<String, UserSiteDetails> sitesMap = new HashMap<>();
+    for (AppStudySiteInfo app : selectedAppsStudiesSitesInfoList) {
+      UserAppDetails appDetails = null;
+      if (!appsMap.containsKey(app.getAppId())) {
+        appDetails = UserMapper.toUserAppDetails(app);
+        if (unselectedAppsMap.containsKey(app.getAppId())) {
+          UserAppDetails unselectedAppsDetails = unselectedAppsMap.get(app.getAppId());
+          appDetails.getStudies().addAll(unselectedAppsDetails.getStudies());
+          appDetails.setTotalSitesCount(unselectedAppsDetails.getTotalSitesCount());
+        }
+
+        appsMap.put(app.getAppId(), appDetails);
+      }
+
+      appDetails = appsMap.get(app.getAppId());
+
+      UserStudyDetails userStudyDetails = null;
+      if (!studiesMap.containsKey(app.getAppStudyIdKey())) {
+        userStudyDetails = UserMapper.toUserStudyDetails(app);
+        studiesMap.put(app.getAppStudyIdKey(), userStudyDetails);
+        // add all unselected sites
+        if (unselectedStudiesMap.containsKey(app.getAppStudyIdKey())) {
+          userStudyDetails
+              .getSites()
+              .addAll(unselectedStudiesMap.get(app.getAppStudyIdKey()).getSites());
+        }
+
+        // replace unselected study with selected study
+        appDetails
+            .getStudies()
+            .removeIf(study -> StringUtils.equals(study.getStudyId(), app.getStudyId()));
+        appDetails.getStudies().add(userStudyDetails);
+
+        if (userStudyDetails.isSelected()) {
+          appDetails.setSelectedStudiesCount(appDetails.getSelectedStudiesCount() + 1);
+        }
+      }
+      userStudyDetails = studiesMap.get(app.getAppStudyIdKey());
+
+      if (StringUtils.isNotEmpty(app.getLocationName())
+          && userStudyDetails != null
+          && !sitesMap.containsKey(app.getAppStudySiteIdKey())) {
+        UserSiteDetails userSiteDetails = UserMapper.toUserSiteDetails(app);
+        sitesMap.put(app.getAppStudySiteIdKey(), userSiteDetails);
+        // replace unselected site with selected site
+        userStudyDetails
+            .getSites()
+            .removeIf(site -> StringUtils.equals(site.getSiteId(), app.getSiteId()));
+        userStudyDetails.getSites().add(userSiteDetails);
+
+        if (userSiteDetails.isSelected()) {
+          appDetails.setSelectedSitesCount(appDetails.getSelectedSitesCount() + 1);
+          userStudyDetails.setSelectedSitesCount(userStudyDetails.getSelectedSitesCount() + 1);
+        }
+        userStudyDetails.setTotalSitesCount(userStudyDetails.getSites().size());
+        appDetails.setTotalSitesCount(appDetails.getTotalSitesCount() + 1);
+
+        sortUserStudyDetailsSitesByLocationName(userStudyDetails);
+      }
+
+      sortUserAppDetailsStudiesByStudyName(appDetails);
+
+      appDetails.setTotalStudiesCount(appDetails.getStudies().size());
+    }
+
+    List<UserAppDetails> apps = appsMap.values().stream().collect(Collectors.toList());
+    List<UserAppDetails> sortedApps =
+        apps.stream()
+            .sorted(Comparator.comparing(UserAppDetails::getName))
+            .collect(Collectors.toList());
+    user.getApps().addAll(sortedApps);
 
     logger.exit(
         String.format(
@@ -577,120 +647,82 @@ public class ManageUserServiceImpl implements ManageUserService {
     return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
   }
 
-  private void setStudiesSitesCountPerApp(
-      UserAppDetails userAppBean, List<UserStudyDetails> userStudies) {
-    int selectedStudiesCount =
-        (int) userStudies.stream().filter(UserStudyDetails::isSelected).count();
-    userAppBean.setSelectedStudiesCount(selectedStudiesCount);
-    userAppBean.setTotalStudiesCount(userStudies.size());
-
-    int selectedSitesCountPerApp =
-        userStudies.stream().mapToInt(UserStudyDetails::getSelectedSitesCount).sum();
-    userAppBean.setSelectedSitesCount(selectedSitesCountPerApp);
-
-    int totalSitesCount =
-        userStudies.stream().map(study -> study.getSites().size()).reduce(0, Integer::sum);
-    userAppBean.setTotalSitesCount(totalSitesCount);
+  private void sortUserStudyDetailsSitesByLocationName(UserStudyDetails userStudyDetails) {
+    List<UserSiteDetails> sortedSites =
+        userStudyDetails
+            .getSites()
+            .stream()
+            .sorted(Comparator.comparing(UserSiteDetails::getLocationName))
+            .collect(Collectors.toList());
+    userStudyDetails.getSites().clear();
+    userStudyDetails.getSites().addAll(sortedSites);
   }
 
-  private List<UserStudyDetails> getUserStudies(AppEntity app, UserRegAdminEntity adminDetails) {
-    List<UserStudyDetails> userStudies = new ArrayList<>();
-
-    for (StudyEntity existingStudy : CollectionUtils.emptyIfNull(app.getStudies())) {
-      UserStudyDetails studyResponse = UserMapper.toUserStudyDetails(existingStudy);
-      if (adminDetails.isSuperAdmin()) {
-        studyResponse.setPermission(Permission.EDIT.value());
-        studyResponse.setSelected(true);
-      } else {
-        setSelectedAndStudyPermission(adminDetails, app.getId(), studyResponse);
-      }
-      List<UserSiteDetails> userSites = new ArrayList<>();
-      List<SiteEntity> sites = existingStudy.getSites();
-      for (SiteEntity site : CollectionUtils.emptyIfNull(sites)) {
-        UserSiteDetails siteResponse = UserMapper.toUserSiteDetails(site);
-        if (adminDetails.isSuperAdmin()) {
-          siteResponse.setPermission(Permission.EDIT.value());
-          siteResponse.setSelected(true);
-        } else {
-          setSelectedAndSitePermission(
-              site.getId(), adminDetails, app.getId(), siteResponse, studyResponse.getStudyId());
-        }
-        userSites.add(siteResponse);
-      }
-
-      studyResponse.getSites().addAll(userSites);
-
-      int selectedSitesCount = (int) userSites.stream().filter(UserSiteDetails::isSelected).count();
-      studyResponse.setSelectedSitesCount(selectedSitesCount);
-      studyResponse.setTotalSitesCount(userSites.size());
-
-      userStudies.add(studyResponse);
-    }
-
-    return userStudies;
+  private void sortUserAppDetailsStudiesByStudyName(UserAppDetails appDetails) {
+    List<UserStudyDetails> sortedStudies =
+        appDetails
+            .getStudies()
+            .stream()
+            .sorted(Comparator.comparing(UserStudyDetails::getStudyName))
+            .collect(Collectors.toList());
+    appDetails.getStudies().clear();
+    appDetails.getStudies().addAll(sortedStudies);
   }
 
-  private void setSelectedAndSitePermission(
-      String siteId,
-      UserRegAdminEntity admin,
-      String appId,
-      UserSiteDetails siteResponse,
-      String studyId) {
-    logger.entry("setSelectedAndSitePermission()");
-    Optional<SitePermissionEntity> optSitePermission =
-        sitePermissionRepository.findByAdminIdAndAppIdAndStudyIdAndSiteId(
-            siteId, admin.getId(), appId, studyId);
-    if (optSitePermission.isPresent()) {
-      SitePermissionEntity studyPermission = optSitePermission.get();
-      Permission permission = studyPermission.getCanEdit();
-      siteResponse.setPermission(permission.value());
-      if (Permission.NO_PERMISSION != permission) {
-        siteResponse.setSelected(true);
+  private void putUnselectedAppsStudiesSites(
+      String adminId,
+      List<String> selectedAppIds,
+      Map<String, UserAppDetails> unselectedAppsMap,
+      Map<String, UserStudyDetails> unselectedStudiesMap,
+      Map<String, UserSiteDetails> unselectedSitesMap) {
+
+    List<AppStudySiteInfo> unselectedAppsStudiesSitesInfoList =
+        appRepository.findUnselectedAppsStudiesSites(selectedAppIds, adminId);
+
+    for (AppStudySiteInfo app : unselectedAppsStudiesSitesInfoList) {
+      UserAppDetails appDetails = null;
+      if (!unselectedAppsMap.containsKey(app.getAppId())) {
+        appDetails = UserMapper.toUserAppDetails(app);
+        unselectedAppsMap.put(app.getAppId(), appDetails);
+      }
+
+      appDetails = unselectedAppsMap.get(app.getAppId());
+      UserStudyDetails userStudyDetails = null;
+      if (!unselectedStudiesMap.containsKey(app.getAppStudyIdKey())) {
+        userStudyDetails = UserMapper.toUserStudyDetails(app);
+        unselectedStudiesMap.put(app.getAppStudyIdKey(), userStudyDetails);
+        appDetails.getStudies().add(userStudyDetails);
+      }
+
+      userStudyDetails = unselectedStudiesMap.get(app.getAppStudyIdKey());
+
+      if (userStudyDetails != null
+          && StringUtils.isNotEmpty(app.getLocationName())
+          && !unselectedSitesMap.containsKey(app.getAppStudySiteIdKey())) {
+        UserSiteDetails userSiteDetails = UserMapper.toUserSiteDetails(app);
+        unselectedSitesMap.put(app.getAppStudySiteIdKey(), userSiteDetails);
+        userStudyDetails.getSites().add(userSiteDetails);
+        appDetails.setTotalSitesCount(appDetails.getTotalSitesCount() + 1);
+        userStudyDetails.setTotalSitesCount(userStudyDetails.getSites().size());
       }
     }
-
-    logger.exit(String.format("site permission found=%b", optSitePermission.isPresent()));
   }
 
-  private void setSelectedAndStudyPermission(
-      UserRegAdminEntity admin, String appId, UserStudyDetails studyResponse) {
-    logger.entry("setSelectedAndStudyPermission()");
-    Optional<StudyPermissionEntity> optStudyPermission =
-        studyPermissionRepository.findByAdminIdAndAppIdAndStudyId(
-            admin.getId(), appId, studyResponse.getStudyId());
-    if (optStudyPermission.isPresent()) {
-      StudyPermissionEntity studyPermission = optStudyPermission.get();
-      Permission permission = studyPermission.getEdit();
-      studyResponse.setPermission(permission.value());
-      if (Permission.NO_PERMISSION != permission) {
-        studyResponse.setSelected(true);
-      }
-    }
-
-    logger.exit(String.format("study permission found=%b", optStudyPermission.isPresent()));
-  }
-
-  private ErrorCode validateUserRequest(String adminUserId) {
+  private void validateSignedInUser(String adminUserId) {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(adminUserId);
-    if (!optAdminDetails.isPresent()) {
-      return ErrorCode.USER_NOT_FOUND;
-    }
+    UserRegAdminEntity user =
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
 
-    if (!optAdminDetails.get().isSuperAdmin()) {
-      return ErrorCode.NOT_SUPER_ADMIN_ACCESS;
+    if (!user.isSuperAdmin()) {
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
-
-    return null;
   }
 
   @Override
   public GetUsersResponse getUsers(
       String superAdminUserId, Integer page, Integer limit, AuditLogEventRequest auditRequest) {
     logger.entry("getUsers()");
-    ErrorCode errorCode = validateUserRequest(superAdminUserId);
-    if (errorCode != null) {
-      throw new ErrorCodeException(errorCode);
-    }
+    validateSignedInUser(superAdminUserId);
 
     List<User> users = new ArrayList<>();
     List<UserRegAdminEntity> adminList = null;

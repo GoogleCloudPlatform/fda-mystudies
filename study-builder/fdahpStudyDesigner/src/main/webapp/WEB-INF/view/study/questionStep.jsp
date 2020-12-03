@@ -787,7 +787,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
+                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -828,7 +828,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
+                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -985,7 +985,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
+                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -1027,7 +1027,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
+                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -2610,7 +2610,7 @@
                           <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                             <div class="thumb-img">
                               <img
-                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionResponseSubType.image)}"
+                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.image)}"
                                   onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                   class="imageChoiceWidth"/>
                             </div>
@@ -2622,7 +2622,7 @@
                               name="questionResponseSubTypeList[${subtype.index}].imageFile"
                               id="imageFileId${subtype.index}" type="file"
                               accept=".png, .jpg, .jpeg" onchange="readURL(this);"
-                              value="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionResponseSubType.image)}">
+                              value="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.image)}">
                           <input type="hidden"
                                  name="questionResponseSubTypeList[${subtype.index}].image"
                                  id="imagePathId${subtype.index}"
@@ -2635,7 +2635,7 @@
                           <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                             <div class="thumb-img">
                               <img
-                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionResponseSubType.selectedImage)}"
+                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.selectedImage)}"
                                   onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                   class="imageChoiceWidth"/>
                             </div>
@@ -2718,7 +2718,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].image)}"
+                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].image)}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2747,7 +2747,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage)}"
+                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage)}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2828,7 +2828,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].image)}"
+                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].image)}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2857,7 +2857,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage)}"
+                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage)}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
