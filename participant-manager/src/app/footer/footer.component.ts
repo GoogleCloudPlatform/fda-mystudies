@@ -7,5 +7,5 @@ import {environment} from '@environment';
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
-  copyright=environment.copyright;
+  copyright = environment.copyright;
 }

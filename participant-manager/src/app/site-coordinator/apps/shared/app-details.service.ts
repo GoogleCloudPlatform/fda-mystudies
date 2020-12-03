@@ -14,7 +14,7 @@ export class AppDetailsService {
     return this.http.get<AppDetails>(
       `${environment.baseUrl}/apps/${encodeURIComponent(appId)}/participants`,
       {
-         params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
+        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
       },
     );
   }

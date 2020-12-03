@@ -80,7 +80,7 @@ export class SetUpAccountComponent
     this.setUpAccountService.get(this.setUpCode).subscribe(
       (user) => {
         if (user.redirectTo === 'login') {
-        void this.router.navigate(['/login']);
+          void this.router.navigate(['/login']);
         }
         this.setupAccountForm.patchValue(user);
       },

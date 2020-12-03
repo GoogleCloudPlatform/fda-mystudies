@@ -67,7 +67,7 @@ export class AddSiteComponent
     this.closeModalEvent.next();
   }
 
-  cancel():void {
- this.cancelEvent.next();
-}
+  cancel(): void {
+    this.cancelEvent.next();
+  }
 }

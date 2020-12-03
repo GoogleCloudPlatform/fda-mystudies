@@ -33,14 +33,15 @@ export class StudyDetailsComponent
   enrollmentStatus = EnrollmentStatus;
   permission = Permission;
   // pagination
-  itemsPerPage=10;
-  pagesToLoad=5;
-  limit=50;
-  currentPage=1;
-  offset=0;
+  itemsPerPage = 10;
+  pagesToLoad = 5;
+  limit = 50;
+  currentPage = 1;
+  offset = 0;
+  loadMoreRecords = true;
   studyDetailsPaginatedData = {} as StudyDetails;
-  @Output()
-  pageChange!: EventEmitter<number>;
+  filterEnabled = false;
+  pageChanged = false;
 
   constructor(
     private readonly locationLibrary: Location,
@@ -64,50 +65,77 @@ export class StudyDetailsComponent
         if (params['studyId']) {
           this.studyId = params.studyId as string;
         }
-        this.getStudyDetails('onPageLoad');
+        this.getStudyDetails();
       }),
     );
   }
-  getStudyDetails(called:string): void {
+  getStudyDetails(): void {
     this.studyDetail$ = combineLatest(
-      this.studyDetailsService.getStudyDetails(this.studyId, this.offset, this.limit),
+      this.studyDetailsService.getStudyDetails(
+        this.studyId,
+        this.offset,
+        this.limit,
+      ),
       this.query$,
     ).pipe(
       map(([studyDetails, query]) => {
-        if (called==='onPageLoad') {
-          this.studyDetailsBackup = JSON.parse(
-          JSON.stringify(studyDetails),
-        ) as StudyDetails;
-        } else {
-     this.studyDetailsBackup.participantRegistryDetail.registryParticipants=this.studyDetailsBackup.participantRegistryDetail.registryParticipants.concat(studyDetails.participantRegistryDetail.registryParticipants);
-    //  this.studyDetailsBackup = JSON.parse(
-    //       JSON.stringify( this.studyDetailsBackup),
-    //     ) as StudyDetails;
-        }
+        this.loadMoreRecords =
+          studyDetails.participantRegistryDetail.registryParticipants.length >=
+          this.limit;
 
-                // if (
-        //   this.studyDetailsBackup.participantRegistryDetail.studyType ===
-        //     StudyType.Open &&
-        //   query === ''
-        // ) {
-        //   this.sharedService.updateSearchPlaceHolder(
-        //     'Search Participant Email',
-        //   );
-        // }
-        // this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
-        //   (participant: RegistryParticipant) =>
-        //     (participant.email?.toLowerCase().includes(query.toLowerCase()) ||
-        //       participant.locationName
-        //         ?.toLowerCase()
-        //         .includes(query.toLowerCase())),
-        // );
+        if (!this.filterEnabled) {
+          if (!this.pageChanged) {
+            this.studyDetailsPaginatedData = studyDetails;
+
+            this.studyDetailsBackup = JSON.parse(
+              JSON.stringify(this.studyDetailsPaginatedData),
+            ) as StudyDetails;
+          } else {
+            this.studyDetailsPaginatedData.participantRegistryDetail.registryParticipants = this.studyDetailsPaginatedData.participantRegistryDetail.registryParticipants.concat(
+              studyDetails.participantRegistryDetail.registryParticipants,
+            );
+
+            this.studyDetailsBackup = JSON.parse(
+              JSON.stringify(this.studyDetailsPaginatedData),
+            ) as StudyDetails;
+          }
+        } else {
+          this.studyDetailsBackup = JSON.parse(
+              JSON.stringify(this.studyDetailsPaginatedData),
+            ) as StudyDetails;
+
+          this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
+            (participant: RegistryParticipant) =>
+              participant.email?.toLowerCase().includes(query.toLowerCase()) ||
+              participant.locationName
+                ?.toLowerCase()
+                .includes(query.toLowerCase()),
+          );
+
+          if (query==='') {
+            this.filterEnabled=false;
+          }
+        }
         return this.studyDetailsBackup;
       }),
     );
   }
+
   search(query: string): void {
+    this.filterEnabled = true;
+    this.currentPage=1;
     this.query$.next(query.trim());
   }
+
+   pageChange(page: number, lastPage: number): void {
+    this.currentPage = page;
+    if (this.currentPage === lastPage && this.loadMoreRecords && !this.filterEnabled) {
+      this.pageChanged = true;
+      this.offset = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.length;
+      this.getStudyDetails();
+    }
+  }
+
   openModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(template);
   }
@@ -121,17 +149,8 @@ export class StudyDetailsComponent
     );
     this.modalRef.hide();
   }
+
   backClicked(): void {
     this.locationLibrary.back();
-  }
-  pageChanged(page:number, lastPage:number):void {
-    this.currentPage=page;
-        console.log(lastPage)
-if (this.currentPage===lastPage) {
-      this.offset=this.studyDetailsBackup.participantRegistryDetail.registryParticipants.length;
-console.log(this.offset)
-
-    this.getStudyDetails('onPageChange');
-}
   }
 }

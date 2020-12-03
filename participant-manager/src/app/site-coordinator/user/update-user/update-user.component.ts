@@ -95,7 +95,9 @@ export class UpdateUserComponent
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
         this.appDetails = data;
-                this.appDetailsBackup=JSON.parse(JSON.stringify(this.appDetails)) as AppDetails;
+        this.appDetailsBackup = JSON.parse(
+          JSON.stringify(this.appDetails),
+        ) as AppDetails;
       }),
     );
   }
@@ -284,13 +286,13 @@ export class UpdateUserComponent
       return 'inActive__';
     }
   }
-  superAdminCheckBoxChange():void {
+  superAdminCheckBoxChange(): void {
     if (this.user.superAdmin) {
-    this.selectedApps = [];
-            this.selectedAppsIds = [];
-             this.appDetails=this.appDetailsBackup;
-            this.user.manageLocationsSelected = false;
-            this.user.manageLocations = null;
+      this.selectedApps = [];
+      this.selectedAppsIds = [];
+      this.appDetails = this.appDetailsBackup;
+      this.user.manageLocationsSelected = false;
+      this.user.manageLocations = null;
+    }
   }
 }
-  }

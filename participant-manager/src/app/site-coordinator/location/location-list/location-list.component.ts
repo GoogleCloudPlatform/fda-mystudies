@@ -37,6 +37,8 @@ export class LocationListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageLocations, query]) => {
+        console.log(query);
+        console.log(manageLocations);
         this.manageLocationBackup = {...manageLocations};
         this.manageLocationBackup.locations = this.manageLocationBackup.locations.filter(
           (location: Location) =>
