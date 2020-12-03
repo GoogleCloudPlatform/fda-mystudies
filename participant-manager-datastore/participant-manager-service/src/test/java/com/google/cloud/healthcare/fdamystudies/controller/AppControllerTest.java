@@ -61,6 +61,8 @@ public class AppControllerTest extends BaseMockIT {
   private UserDetailsEntity userDetailsEntity;
   private LocationEntity locationEntity;
 
+  public static final String EMAIL_VALUE = "mockit_email@grr.la";
+
   @BeforeEach
   public void setUp() {
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
@@ -425,6 +427,65 @@ public class AppControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(auditEventMap, APP_PARTICIPANT_REGISTRY_VIEWED);
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnAppParticipantsWithPagination() throws Exception {
+    // Step 1 : Set studyEntity,siteEntity,locationEntity,userDetailsEntity and superAdmin to false
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+    studyEntity.setApp(appEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    participantStudyEntity.setUserDetails(userDetailsEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 1: 1 Participants for app already added in @BeforeEach, add 20 new Participants for
+    // app
+    for (int i = 1; i <= 20; i++) {
+      userDetailsEntity = testDataHelper.newUserDetails();
+      userDetailsEntity.setApp(appEntity);
+      userDetailsEntity.setEmail(EMAIL_VALUE + String.valueOf(i));
+      testDataHelper.getUserDetailsRepository().saveAndFlush(userDetailsEntity);
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(500);
+    }
+
+    // Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch 11 data
+    // out of 21
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .param("limit", "20")
+                .param("offset", "10")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.appId").value(appEntity.getId()))
+        .andExpect(jsonPath("$.participants").isArray())
+        .andExpect(jsonPath("$.participants", hasSize(11)))
+        .andExpect(jsonPath("$.participants[0].email").value(EMAIL_VALUE + String.valueOf(10)));
+
+    verifyTokenIntrospectRequest(1);
+
+    // get  app participants for the default values of limit and offset
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participants").isArray())
+        .andExpect(jsonPath("$.participants", hasSize(21)))
+        .andExpect(jsonPath("$.participants[0].email").value(EMAIL_VALUE + String.valueOf(20)));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test

@@ -363,6 +363,8 @@ public class AppServiceImpl implements AppService {
   public AppParticipantsResponse getAppParticipants(
       String appId,
       String adminId,
+      Integer limit,
+      Integer offset,
       AuditLogEventRequest auditRequest,
       String[] excludeParticipantStudyStatus) {
     logger.entry("getAppParticipants(appId, adminId)");
@@ -385,20 +387,7 @@ public class AppServiceImpl implements AppService {
               .getApp();
     }
 
-    List<AppParticipantsInfo> appParticipantsInfoList = null;
-    if (ArrayUtils.isEmpty(excludeParticipantStudyStatus)) {
-      appParticipantsInfoList = appRepository.findUserDetailsByAppId(app.getId());
-    } else {
-      appParticipantsInfoList =
-          appRepository.findUserDetailsByAppIdAndStudyStatus(
-              app.getId(), excludeParticipantStudyStatus);
-    }
-    List<String> userIds =
-        appParticipantsInfoList
-            .stream()
-            .distinct()
-            .map(AppParticipantsInfo::getUserDetailsId)
-            .collect(Collectors.toList());
+    List<String> userIds = appRepository.findUserDetailIds(limit, offset, app.getId());
 
     if (CollectionUtils.isEmpty(userIds)) {
       AppParticipantsResponse appParticipantsResponse =
@@ -406,6 +395,15 @@ public class AppServiceImpl implements AppService {
 
       logger.exit(String.format("No participants found for appId=%s", appId));
       return appParticipantsResponse;
+    }
+
+    List<AppParticipantsInfo> appParticipantsInfoList = null;
+    if (ArrayUtils.isEmpty(excludeParticipantStudyStatus)) {
+      appParticipantsInfoList = appRepository.findUserDetailsByAppId(app.getId(), userIds);
+    } else {
+      appParticipantsInfoList =
+          appRepository.findUserDetailsByAppIdAndStudyStatus(
+              app.getId(), excludeParticipantStudyStatus, userIds);
     }
 
     Map<String, ParticipantDetail> participantsMap = new LinkedHashMap<>();
