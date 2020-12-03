@@ -675,7 +675,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     + AppConfig.APP_ID_VALUE
                     + "&participantId="
                     + anchorDateSchedulingDetails.getParticipantId()
-                    + "&tokenIdentifier="
+                    + "&tokenId="
                     + studies.getHashedToken()
                     + "&siteId="
                     + studies.getSiteId()
