@@ -553,5 +553,10 @@
 		<artifactId>commons-text</artifactId>
 		<version>1.9</version>
 	</dependency>
+  <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-storage</artifactId>
+      <version>1.96.0</version>
+    </dependency>
   </dependencies>
 </project>
