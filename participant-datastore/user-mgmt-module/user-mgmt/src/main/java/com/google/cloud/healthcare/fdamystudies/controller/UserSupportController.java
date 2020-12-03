@@ -11,10 +11,11 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -61,10 +62,7 @@ public class UserSupportController {
           .equals(emailResponse.getMessage())) {
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
-        ErrorBean errorBean = new ErrorBean();
-        errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.FEEDBACK_ERROR_MESSAGE.getValue());
-        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new ErrorCodeException(ErrorCode.FEEDBACK_ERROR_MESSAGE);
       }
     } catch (Exception e) {
       logger.error("UserSupportController - feedbackDetails() :: ERROR", e);
@@ -107,10 +105,7 @@ public class UserSupportController {
           .equals(emailResponse.getMessage())) {
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
-        ErrorBean errorBean = new ErrorBean();
-        errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.CONTACTUS_ERROR_MESSAGE.getValue());
-        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new ErrorCodeException(ErrorCode.CONTACTUS_ERROR_MESSAGE);
       }
     } catch (Exception e) {
       logger.error("UserSupportController - contactUsDetails() :: ERROR", e);
