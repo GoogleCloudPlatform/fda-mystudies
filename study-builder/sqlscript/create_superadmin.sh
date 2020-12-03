@@ -7,12 +7,12 @@
 # Script to generate sql that creates study builder superadmin.
 # Run like:
 # $ ./study-builder/sqlscripts/create_superadmin.sh <email> <password>
-# then import the generated superadmin.sql file created in your current directory into the database.
+# then import the generated sb-superadmin.sql file created in your current directory into the database.
 
 #!/bin/bash
 
 if [ "$#" -ne 2 ]; then
-  echo 'Please provide deployment prefix and env, as well as superadmin email and password in the order of <email> <password>'
+  echo 'Please provide Study Builder superadmin email and password in the order of <email> <password>'
   exit 1
 fi
 
@@ -65,6 +65,7 @@ echo "INSERT INTO user_permission_mapping (user_id, permission_id) VALUES
 " >> ${TMPFILE}
 
 export DEST=`PWD -P`
-export OUTPUT="${DEST}/superadmin.sql"
+export OUTPUT="${DEST}/sb-superadmin.sql"
 
+echo "writing output ${OUTPUT}"
 mv ${TMPFILE} ${OUTPUT}
