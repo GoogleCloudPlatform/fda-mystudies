@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
@@ -67,7 +68,7 @@ public class ProfileFragment extends Fragment
   private Context context;
   private AppCompatEditText firstName;
   private AppCompatEditText lastName;
-  private AppCompatEditText email;
+  private TextView email;
   private AppCompatTextView password;
   private Switch switchUsePasscode;
   private AppCompatTextView usePasscodeLabel;
@@ -158,7 +159,7 @@ public class ProfileFragment extends Fragment
     lastNameLabel = (AppCompatTextView) view.findViewById(R.id.last_name_label);
     lastName = (AppCompatEditText) view.findViewById(R.id.edittxt_last_name);
     emailLabel = (AppCompatTextView) view.findViewById(R.id.email_label);
-    email = (AppCompatEditText) view.findViewById(R.id.edittxt_email);
+    email = (TextView) view.findViewById(R.id.edittxt_email);
     passwordLabel = (AppCompatTextView) view.findViewById(R.id.password_label);
     password = (AppCompatTextView) view.findViewById(R.id.edittxt_password);
     switchUsePasscode = (Switch) view.findViewById(R.id.switch_use_passcode);
