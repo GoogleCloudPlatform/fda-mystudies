@@ -358,18 +358,18 @@ public class LoginControllerTest extends BaseMockIT {
   @ParameterizedTest
   @ValueSource(
       strings = {
-        "test@b0ston",
-        "TEST@B0STON",
-        "TEST@BoSTON",
-        "TEST@0a",
+        "testb0ston",
+        "TEST/B0STON",
+        "TEST.BoSTON",
+        "TEST$0a",
         "T3stB0ston",
         "Test @b0ston"
       })
-  public void shouldReturnInvalidLoginCredentials(String password)
+  public void shouldReturnInvalidLoginCredentials(String email)
       throws MalformedURLException, JsonProcessingException, Exception {
 
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
-    requestParams.set(PASSWORD, password);
+    requestParams.set(EMAIL, email);
 
     Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);

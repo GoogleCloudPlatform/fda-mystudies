@@ -49,7 +49,7 @@ public interface SiteService {
       String participantRegistrySiteId, String userId, Integer page, Integer limit);
 
   public InviteParticipantResponse inviteParticipants(
-      InviteParticipantRequest inviteparticipantBean);
+      InviteParticipantRequest inviteparticipantBean, AuditLogEventRequest auditRequest);
 
   public ImportParticipantResponse importParticipants(
       String userId, String siteId, MultipartFile multipartFile, AuditLogEventRequest auditRequest);
