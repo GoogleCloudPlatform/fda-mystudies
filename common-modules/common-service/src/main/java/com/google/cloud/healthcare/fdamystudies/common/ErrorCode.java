@@ -162,7 +162,7 @@ public enum ErrorCode {
       400,
       "EC_0032",
       Constants.BAD_REQUEST,
-      "User should have atleast one permission in the system to access this resource."),
+      "User should have at least one permission in the system to access this resource."),
 
   SECURITY_CODE_EXPIRED(
       410,
