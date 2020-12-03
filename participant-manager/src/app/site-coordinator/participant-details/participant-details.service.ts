@@ -32,7 +32,7 @@ export class ParticipantDetailsService {
     participantToBeUpdated: StatusUpdate,
   ): Observable<ApiResponse> {
     return this.http.patch<ApiResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
         siteId,
       )}/participants/status`,
       participantToBeUpdated,
@@ -44,7 +44,7 @@ export class ParticipantDetailsService {
     invitationToSend: InviteSend,
   ): Observable<UpdateInviteResponse> {
     return this.http.post<UpdateInviteResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
         siteId,
       )}/participants/invite`,
       invitationToSend,
@@ -53,9 +53,9 @@ export class ParticipantDetailsService {
 
   getConsentFile(consentId: string): Observable<ConsentFile> {
     return this.http.get<ConsentFile>(
-      `${environment.baseUrl}/consents/${encodeURIComponent(
-        consentId,
-      )}/consentDocument`,
+      `${
+        environment.participantManagerDatastoreUrl
+      }/consents/${encodeURIComponent(consentId)}/consentDocument`,
     );
   }
 }
