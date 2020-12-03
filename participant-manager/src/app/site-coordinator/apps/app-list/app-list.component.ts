@@ -66,7 +66,8 @@ export class AppListComponent implements OnInit {
       return 'green__text__sm';
     } else if (
       app.enrollmentPercentage &&
-      (app.enrollmentPercentage >= 30 || app.enrollmentPercentage <= 70)
+      app.enrollmentPercentage >= 30 &&
+      app.enrollmentPercentage <= 70
     ) {
       return 'orange__text__sm';
     } else {

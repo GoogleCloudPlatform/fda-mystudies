@@ -43,4 +43,22 @@ public class InviteParticipantEntity implements Serializable {
 
   @Column(name = "status", columnDefinition = "TINYINT(1) default 0")
   private boolean status;
+
+  @Column(name = "user_id")
+  private String userId;
+
+  @Column(name = "app_id")
+  private String appId;
+
+  @Column(name = "mobile_platform")
+  private String mobilePlatform;
+
+  @Column(name = "source")
+  private String source;
+
+  @Column(name = "correlation_id")
+  private String correlationId;
+
+  @Column(name = "app_version")
+  private String appVersion;
 }
