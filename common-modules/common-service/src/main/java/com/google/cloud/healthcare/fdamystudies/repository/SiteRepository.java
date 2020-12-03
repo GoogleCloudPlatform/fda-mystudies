@@ -104,7 +104,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "WHERE study_id=:studyId",
       nativeQuery = true)
   public void addSitePermissions(String studyId, String siteId);
-  
+
   @Query(
       value =
           "SELECT study_created AS studyCreatedTimeStamp, site_created AS siteCreatedTimeStamp, study_id AS studyId, site_id AS siteId, IFNULL(target_enrollment, 0) AS targetEnrollment, site_name AS siteName, custom_id AS customId, study_name AS studyName, TYPE AS studyType, custom_app_id AS customAppId, app_id AS appId, app_name AS appName, logo_image_url AS logoImageUrl, STATUS AS studyStatus, edit AS editPermission, study_permission AS studyPermission "

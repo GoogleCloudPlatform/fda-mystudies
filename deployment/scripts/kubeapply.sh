@@ -50,7 +50,7 @@ for cert in $(find . -name "cert*.yaml"); do
   echo "=== Applying ${cert} ==="
   read -p "Press enter to continue"
   kubectl apply -f ${cert}
-end
+done
 
 for deployment in $(find . -name "tf-deployment.yaml"); do
   echo "=== Applying deployment ${deployment} ==="
@@ -68,4 +68,4 @@ for ingress in $(find . -name "ingress*.yaml"); do
   echo "=== Applying ${ingress} ==="
   read -p "Press enter to continue"
   kubectl apply -f ${ingress}
-end
+done
