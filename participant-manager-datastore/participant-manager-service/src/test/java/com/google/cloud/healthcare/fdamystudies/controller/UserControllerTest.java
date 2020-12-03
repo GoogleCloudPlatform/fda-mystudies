@@ -44,6 +44,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -805,19 +806,24 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnAdminRecordsWithoutAppStudySitePermissionForGetAdminDetailsAndApps()
       throws Exception {
     // Step 1: Set few admins
-    UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
+    UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
+    testDataHelper.createAppPermission(admin, appEntity, userRegAdminEntity.getId());
+    testDataHelper.createStudyPermission(admin, appEntity, studyEntity, userRegAdminEntity.getId());
+    testDataHelper.createSitePermission(
+        admin, appEntity, studyEntity, siteEntity, userRegAdminEntity.getId());
 
     // Step 2: Call API and expect MANAGE_USERS_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), superAdmin.getId())
+            get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), admin.getId())
                 .headers(headers)
+                .queryParam("includeUnselected", String.valueOf(false))
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.user.id", is(superAdmin.getId())))
+        .andExpect(jsonPath("$.user.id", is(admin.getId())))
         .andExpect(jsonPath("$.user.apps").isArray())
         .andExpect(jsonPath("$.user.apps").isNotEmpty())
         .andExpect(jsonPath("$.user.apps[0].totalStudiesCount", is(1)))
@@ -833,11 +839,6 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnAdminRecordsWithAppStudySiteForGetAdminDetailsAndApps() throws Exception {
     // Step 1: Set one admin
     UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
-    testDataHelper.createAppPermission(superAdmin, appEntity, userRegAdminEntity.getId());
-    testDataHelper.createStudyPermission(
-        superAdmin, appEntity, studyEntity, userRegAdminEntity.getId());
-    testDataHelper.createSitePermission(
-        superAdmin, appEntity, studyEntity, siteEntity, userRegAdminEntity.getId());
 
     // Step 2: Call API and expect MANAGE_USERS_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -850,12 +851,11 @@ public class UserControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.user.id", is(superAdmin.getId())))
-        .andExpect(jsonPath("$.user.apps").isArray())
-        .andExpect(jsonPath("$.user.apps").isNotEmpty())
-        .andExpect(jsonPath("$.user.apps[0].totalStudiesCount", is(1)))
-        .andExpect(jsonPath("$.user.apps[0].selectedStudiesCount", is(1)))
-        .andExpect(jsonPath("$.user.apps[0].totalSitesCount", is(1)))
-        .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(1)))
+        .andExpect(jsonPath("$.user.email", is(superAdmin.getEmail())))
+        .andExpect(jsonPath("$.user.firstName", is(superAdmin.getFirstName())))
+        .andExpect(jsonPath("$.user.lastName", is(superAdmin.getLastName())))
+        .andExpect(jsonPath("$.user.superAdmin", is(true)))
+        .andExpect(jsonPath("$.user.status", is(UserStatus.ACTIVE.getDescription())))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();
@@ -883,6 +883,7 @@ public class UserControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), admin.getId())
                 .headers(headers)
+                .queryParam("includeUnselected", String.valueOf(true))
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())

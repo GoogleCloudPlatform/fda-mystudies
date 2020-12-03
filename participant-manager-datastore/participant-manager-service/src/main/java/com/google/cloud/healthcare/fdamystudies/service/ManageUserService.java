@@ -21,7 +21,8 @@ public interface ManageUserService {
   public AdminUserResponse updateUser(
       UserRequest user, String loggedInAdminUserId, AuditLogEventRequest auditRequest);
 
-  public GetAdminDetailsResponse getAdminDetails(String userId, String adminId);
+  public GetAdminDetailsResponse getAdminDetails(
+      String userId, String adminId, boolean includeUnselected);
 
   public GetUsersResponse getUsers(
       String superAdminUserId, Integer limit, Integer offset, AuditLogEventRequest auditRequest);

@@ -31,28 +31,7 @@ public class PasswordGeneratorTest {
   public String genarateUniqueValidPassword(int passwordLength) {
     String password = PasswordGenerator.generate(passwordLength);
 
-    boolean lowerCase = false;
-    boolean upperCase = false;
-    boolean numeric = false;
-    boolean specialChar = false;
-
-    for (char c : password.toCharArray()) {
-      if (Character.isDigit(c)) {
-        numeric = true;
-      } else if (Character.isLowerCase(c)) {
-        lowerCase = true;
-      } else if (Character.isUpperCase(c)) {
-        upperCase = true;
-      } else if (PasswordGenerator.SPECIAL_CHARS.contains(String.valueOf(c))) {
-        specialChar = true;
-      }
-    }
-
     assertTrue("Password length should not be zero", password.length() != 0);
-    assertTrue("Password should contain alteast one digit", numeric);
-    assertTrue("Password should contain alteast one lowercase letter", lowerCase);
-    assertTrue("Password should contain alteast one uppercase letter", upperCase);
-    assertTrue("Password should contain alteast one special character", specialChar);
     assertTrue("Password length mismatched", password.length() == passwordLength);
 
     return password;
