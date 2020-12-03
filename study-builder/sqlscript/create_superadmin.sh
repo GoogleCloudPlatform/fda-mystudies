@@ -37,7 +37,11 @@ TOKEN=`cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 10 | head -n 1`
 ACCESS_CODE=`cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1`
 # e.g. 2018-01-18 14:36:41
 DATETIME=`date +"%F %T"`
+if [[ "$OSTYPE" == "darwin"* ]]; then
 EXPIRY_DATETIME=`date -v +90d +"%F %T"`
+else # linux
+EXPIRY_DATETIME=`date -d +90days +"%F %T"`
+fi
 
 echo "DELETE FROM user_permission_mapping WHERE user_id=1;" >> ${TMPFILE}
 echo "REPLACE into users
