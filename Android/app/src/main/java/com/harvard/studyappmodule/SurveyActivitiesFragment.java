@@ -3038,7 +3038,7 @@ public class SurveyActivitiesFragment extends Fragment
                     + AppConfig.APP_ID_VALUE
                     + "&participantId="
                     + anchorDateSchedulingDetails.getParticipantId()
-                    + "&tokenIdentifier="
+                    + "&tokenId="
                     + studies.getHashedToken()
                     + "&siteId="
                     + studies.getSiteId()
