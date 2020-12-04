@@ -898,6 +898,10 @@ EOF
           iam_members = [{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          },
+          {
+            role   = "roles/storage.objectViewer"
+            member = "allUsers"
           }]
         },
         {
@@ -1031,7 +1035,8 @@ resource "kubernetes_secret" "shared_secrets" {
   }
 
   data = {
-    gcp_bucket_name                   = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
+    consent_bucket_name               = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
+    study_resources_bucket_name       = "{{.prefix}}-{{.env}}-mystudies-study-resources"
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
     base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
     studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"

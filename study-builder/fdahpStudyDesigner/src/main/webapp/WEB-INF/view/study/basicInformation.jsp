@@ -333,7 +333,7 @@
             <div class="thumb">
               <img
                   <c:if
-                      test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />studylogo/${studyBo.thumbnailImage}"
+                       test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${studyBo.thumbnailImage}"
               </c:if>
                   <c:if
                       test="${empty studyBo.thumbnailImage}">src="/studybuilder/images/dummy-img.jpg" </c:if>

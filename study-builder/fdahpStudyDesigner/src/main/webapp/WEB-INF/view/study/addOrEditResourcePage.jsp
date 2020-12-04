@@ -317,7 +317,7 @@
           </div>
           <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
             <embed id="embedPdfId"
-                   src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />studyResources/${resourceBO.pdfUrl}"
+                   src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studyResources/${resourceBO.pdfUrl}"
                    oncontextmenu="return false;" onkeydown="return false;"
                    onmousedown="return false;"
                    width="100%" height="500px"/>

@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.InviteParticipantEntity;
-import com.google.cloud.healthcare.fdamystudies.model.StudyIdAndParticipantRegistryId;
 import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,27 +25,25 @@ import org.springframework.stereotype.Repository;
 public interface InviteParticipantsEmailRepository
     extends JpaRepository<InviteParticipantEntity, String> {
 
-  @Query(
-      value =
-          "SELECT DISTINCT study_info_id as studyId, participant_registry_site_id as participantRegistryId FROM invite_participants WHERE status = 0",
-      nativeQuery = true)
-  public List<StudyIdAndParticipantRegistryId> findAllWithStatusZero();
+  @Query(value = "SELECT * FROM invite_participants WHERE status = 0", nativeQuery = true)
+  public List<InviteParticipantEntity> findAllWithStatusZero();
 
   @Modifying
   @Query(
       value =
-          "UPDATE invite_participants set status=:newStatus WHERE study_info_id =:studyInfoId and participant_registry_site_id=:participantRegistryId",
+          "UPDATE invite_participants set status=:newStatus WHERE study_info_id =:studyInfoId and participant_registry_site_id=:participantRegistryId and app_id=:appId",
       nativeQuery = true)
   public int updateStatus(
       @Param("studyInfoId") String studyInfoId,
       @Param("participantRegistryId") String participantRegistryId,
+      @Param("appId") String appId,
       @Param("newStatus") int newStatus);
 
   @Modifying
   @Query(
       value =
-          "DELETE from invite_participants WHERE study_info_id =:studyInfoId and participant_registry_site_id=:participantRegistryId",
+          "DELETE from invite_participants WHERE study_info_id =:studyInfoId and participant_registry_site_id=:participantRegistryId and app_id=:appId",
       nativeQuery = true)
-  public int deleteByParticipantRegistryIdAndStudyInfoId(
-      String studyInfoId, String participantRegistryId);
+  public int deleteByParticipantRegistryIdAndStudyIdAndAppId(
+      String studyInfoId, String participantRegistryId, String appId);
 }
