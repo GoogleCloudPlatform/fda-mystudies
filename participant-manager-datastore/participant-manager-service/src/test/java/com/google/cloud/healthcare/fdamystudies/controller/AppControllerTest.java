@@ -252,7 +252,24 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId20"))
         .andExpect(jsonPath("$.apps[19].customId").value("AppCustomId1"));
 
-    verifyTokenIntrospectRequest();
+    verifyTokenIntrospectRequest(1);
+
+    // offset with non-zero value
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .param("limit", "10")
+                .param("offset", "5")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(10)))
+        .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId15"))
+        .andExpect(jsonPath("$.apps[9].customId").value("AppCustomId6"));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
