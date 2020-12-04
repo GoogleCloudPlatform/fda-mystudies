@@ -321,7 +321,7 @@ public enum ErrorCode {
       "Internal Server Error",
       "Sorry, an error occurred and your feedback could not be sent to the organization. Please retry in some time."),
 
-  CONTACTUS_ERROR_MESSAGE(
+  CONTACT_US_ERROR_MESSAGE(
       500,
       "EC_0074",
       "Internal Server Error",
