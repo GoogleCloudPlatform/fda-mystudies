@@ -63,17 +63,6 @@ class FirstGatewayOverviewViewController: UIViewController {
 
   }
 
-  // MARK: - Movie Player methods
-
-  func playerDidFinishPlaying(note: NSNotification) {
-    NotificationCenter.default.removeObserver(
-      self,
-      name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-      object: nil
-    )
-    self.playerViewController.dismiss(animated: true, completion: nil)
-  }
-
   // MARK: - Button Action
 
   /// Watch video button clicked.

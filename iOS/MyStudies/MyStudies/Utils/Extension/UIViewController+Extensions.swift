@@ -56,13 +56,6 @@ extension UIViewController {
     self.slideMenuController()?.addRightGestures()
   }
 
-  func removeNavigationBarItem() {
-    self.navigationItem.leftBarButtonItem = nil
-    self.navigationItem.rightBarButtonItem = nil
-    self.slideMenuController()?.removeLeftGestures()
-    self.slideMenuController()?.removeRightGestures()
-  }
-
   func showAlert(title: String, message: String) {
 
     let alert = UIAlertController(

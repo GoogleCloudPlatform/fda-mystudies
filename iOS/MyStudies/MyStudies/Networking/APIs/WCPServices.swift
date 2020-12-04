@@ -135,16 +135,7 @@ class WCPServices: NSObject {
     let method = WCPMethods.consentDocument.method
     self.sendRequestWith(method: method, params: header, headers: nil)
   }
-
-  /// Creates a request to receive Gateway Resources
-  /// - Parameter delegate: Class object to receive response
-  func getGatewayResources(delegate: NMWebServiceDelegate) {
-    self.delegate = delegate
-    let method = WCPMethods.gatewayInfo.method
-    let params = [String: Any]()
-    self.sendRequestWith(method: method, params: params, headers: nil)
-  }
-
+  
   /// Creates a request to receive Eligibility Consent Metadata
   /// - Parameters:
   ///   - studyId: ID of `Study`
@@ -220,25 +211,6 @@ class WCPServices: NSObject {
     let method = WCPMethods.studyDashboard.method
     let params = [kStudyId: studyId]
     self.sendRequestWith(method: method, params: params, headers: nil)
-  }
-
-  /// Creates a request to receive Terms and Policy Url
-  /// - Parameters:
-  ///   - studyId: ID of `Study`
-  ///   - delegate: Class object to receive response
-  func getTermsPolicy(studyId: String, delegate: NMWebServiceDelegate) {
-    self.delegate = delegate
-    let method = WCPMethods.termsPolicy.method
-    let params = [kStudyId: studyId]
-    self.sendRequestWith(method: method, params: params, headers: nil)
-  }
-
-  /// Creates a request to receive Terms and Policy Url
-  /// - Parameter delegate: Class object to receive response
-  func getTermsPolicy(delegate: NMWebServiceDelegate) {
-    self.delegate = delegate
-    let method = WCPMethods.termsPolicy.method
-    self.sendRequestWith(method: method, params: nil, headers: nil)
   }
 
   /// Creates a request to receive collection of Notification
