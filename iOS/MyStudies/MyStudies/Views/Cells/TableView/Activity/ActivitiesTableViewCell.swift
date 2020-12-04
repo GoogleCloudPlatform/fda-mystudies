@@ -192,15 +192,11 @@ class ActivitiesTableViewCell: UITableViewCell {
   /// - Parameter activity: Access the value from Activity class.
   func calculateActivityTimings(activity: Activity) {
 
-    var startDate = activity.startDate  //?.utcDate()
-    var endDate = activity.endDate  //?.utcDate()
+    var startDate = activity.startDate
+    var endDate = activity.endDate
 
-    var difference = UserDefaults.standard.value(forKey: "offset") as? Int
-    if difference != nil {
-      difference = difference! * -1
-      startDate = startDate?.addingTimeInterval(TimeInterval(difference!))
-      endDate = endDate?.addingTimeInterval(TimeInterval(difference!))
-    }
+    startDate?.updateWithOffset()
+    endDate?.updateWithOffset()
 
     let frequency = activity.frequencyType
 
@@ -274,13 +270,19 @@ class ActivitiesTableViewCell: UITableViewCell {
         runStartDate = activity.startDate
         runEndDate = activity.endDate
       }
-      let currentRunStartDate = ActivitiesTableViewCell.oneTimeFormatter.string(
-        from: runStartDate!
-      )
-      let currentRunEndDate = ActivitiesTableViewCell.oneTimeFormatter.string(
-        from: runEndDate!
-      )
-      labelTime?.text = currentRunStartDate + " to " + currentRunEndDate
+      if var startDate = runStartDate,
+        var endDate = runEndDate
+      {
+        startDate.updateWithOffset()
+        endDate.updateWithOffset()
+        let currentRunStartDate = ActivitiesTableViewCell.oneTimeFormatter.string(
+          from: startDate
+        )
+        let currentRunEndDate = ActivitiesTableViewCell.oneTimeFormatter.string(
+          from: endDate
+        )
+        labelTime?.text = currentRunStartDate + " to " + currentRunEndDate
+      }
     }
   }
 

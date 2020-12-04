@@ -41,6 +41,7 @@ class ResponseServices: NSObject {
     static let applicationId = "applicationId"
     static let studyVersion = "studyVersion"
     static let tokenIdentifier = "tokenIdentifier"
+    static let tokenID = "tokenId"
     static let siteID = "siteId"
     static let appID = "appId"
     static let studyID = "studyId"
@@ -166,7 +167,7 @@ class ResponseServices: NSObject {
         kParticipantId: userStudyStatus?.participantId ?? "",
         "activityVersion": activity.version ?? "",
         "questionKey": "",
-        JSONKey.tokenIdentifier: userStudyStatus?.tokenIdentifier ?? "",
+        JSONKey.tokenID: userStudyStatus?.tokenIdentifier ?? "",
       ] as [String: Any]
 
     let headers: [String: String] = [JSONKey.userID: User.currentUser.userId ?? ""]
