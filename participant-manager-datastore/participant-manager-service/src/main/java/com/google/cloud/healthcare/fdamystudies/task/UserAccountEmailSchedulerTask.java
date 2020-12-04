@@ -18,8 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserAccountEmailSchedulerTask {
 
-  private XLogger logger =
-      XLoggerFactory.getXLogger(UserAccountEmailSchedulerTask.class.getName());
+  private XLogger logger = XLoggerFactory.getXLogger(UserAccountEmailSchedulerTask.class.getName());
 
   @Autowired private ManageUserService manageUserService;
 
