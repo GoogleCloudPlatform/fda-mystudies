@@ -146,8 +146,7 @@ public class StudyControllerTest extends BaseMockIT {
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_STUDY_NOTIFICATION.getPath())
             .headers(headers)
-            .param("buttonType", "add")
-            .sessionAttr("copyAppNotification", true)
+            .param("buttonType", "save")
             .sessionAttrs(getSessionAttributes());
 
     addParams(requestBuilder, notificationBo);
@@ -156,7 +155,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(requestBuilder)
         .andDo(print())
         .andExpect(status().isFound())
-        .andExpect(view().name("redirect:/adminStudies/viewStudyNotificationList.do"));
+        .andExpect(view().name("redirect:getStudyNotification.do"));
 
     verifyAuditEventCall(STUDY_NEW_NOTIFICATION_CREATED);
   }
