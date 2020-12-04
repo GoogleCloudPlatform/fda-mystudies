@@ -4556,6 +4556,8 @@ public class StudyController {
                 case FdahpStudyDesignerConstants.REFERENCE_TYPE_CATEGORIES:
                   categoryList = referenceMap.get(key);
                   break;
+                default:
+                  break;
               }
             }
           }
