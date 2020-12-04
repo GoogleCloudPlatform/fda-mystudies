@@ -231,7 +231,7 @@
                     <div>
                       <div class="thumb">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />studypages/${fn:escapeXml(studyPageBo.imagePath)}"
+                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studypages/${fn:escapeXml(studyPageBo.imagePath)}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                       </div>

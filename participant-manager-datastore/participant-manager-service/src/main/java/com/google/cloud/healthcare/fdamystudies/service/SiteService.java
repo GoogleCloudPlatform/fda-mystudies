@@ -36,7 +36,8 @@ public interface SiteService {
       String onboardingStatus,
       AuditLogEventRequest auditRequest,
       Integer page,
-      Integer limit);
+      Integer limit,
+      String[] excludeEnrollmentStatus);
 
   public ParticipantResponse addNewParticipant(
       ParticipantDetailRequest participant, String userId, AuditLogEventRequest auditRequest);
@@ -48,7 +49,7 @@ public interface SiteService {
       String participantRegistrySiteId, String userId, Integer page, Integer limit);
 
   public InviteParticipantResponse inviteParticipants(
-      InviteParticipantRequest inviteparticipantBean);
+      InviteParticipantRequest inviteparticipantBean, AuditLogEventRequest auditRequest);
 
   public ImportParticipantResponse importParticipants(
       String userId, String siteId, MultipartFile multipartFile, AuditLogEventRequest auditRequest);

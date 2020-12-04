@@ -424,6 +424,7 @@ CREATE TABLE IF NOT EXISTS `user_institution` (
   CONSTRAINT `FKrwwx4csj1ske5o4m74lmusqbv` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 -- Dumping structure for table mystudies_participant_datastore.user_account_email_scheduler_tasks
 DROP TABLE IF EXISTS `user_account_email_scheduler_tasks`;
 CREATE TABLE IF NOT EXISTS `user_account_email_scheduler_tasks` (
@@ -441,6 +442,28 @@ CREATE TABLE IF NOT EXISTS `user_account_email_scheduler_tasks` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table mystudies_participant_datastore.invite_participants
+DROP TABLE IF EXISTS `invite_participants`;
+CREATE TABLE IF NOT EXISTS `invite_participants` (
+  `id` varchar(255) NOT NULL,
+  `participant_registry_site_id` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `study_info_id` varchar(255) DEFAULT NULL,
+  `app_id` varchar(255) DEFAULT NULL,
+  `app_version` varchar(255) DEFAULT NULL,
+  `correlation_id` varchar(255) DEFAULT NULL,
+  `mobile_platform` varchar(255) DEFAULT NULL,
+  `source` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+

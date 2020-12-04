@@ -394,16 +394,16 @@ public class NotificationDAOImpl implements NotificationDAO {
         values.put(NOTIFICATION_ID, String.valueOf(notificationId));
         values.put(OLD_NOTIFICATION_ID, String.valueOf(notificationBO.getNotificationId()));
         values.put(NEW_NOTIFICATION_ID, String.valueOf(notificationId));
+        if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
+          auditLogHelper.logEvent(STUDY_NEW_NOTIFICATION_CREATED, auditRequest, values);
+        }
         if ("add".equals(buttonType)) {
-          boolean copy = (boolean) request.getSession().getAttribute("copyAppNotification");
-          if (FdahpStudyDesignerConstants.STUDYLEVEL.equals(notificationType)) {
-            auditLogEvent = STUDY_NEW_NOTIFICATION_CREATED;
-          } else {
-            auditLogEvent =
-                copy
-                    ? APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND
-                    : APP_LEVEL_NOTIFICATION_CREATED;
-          }
+          auditLogEvent = APP_LEVEL_NOTIFICATION_CREATED;
+        } else if ("update".equals(buttonType)) {
+          auditLogEvent = APP_LEVEL_NOTIFICATION_CREATED;
+        } else if ("resend".equals(buttonType)
+            && !notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
+          auditLogEvent = APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND;
         } else if ("save".equals(buttonType)
             && FdahpStudyDesignerConstants.STUDYLEVEL.equals(notificationType)) {
           values.put(NOTIFICATION_ID, String.valueOf(notificationId));

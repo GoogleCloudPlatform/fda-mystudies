@@ -77,11 +77,14 @@ import com.fdahpstudydesigner.service.UsersService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
-import java.io.File;
-import java.io.FileInputStream;
+import com.google.cloud.ReadChannel;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.channels.Channels;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -919,18 +922,16 @@ public class StudyController {
           fileName = (String) request.getSession().getAttribute(sessionStudyCount + "fileName");
           fileFolder = (String) request.getSession().getAttribute(sessionStudyCount + "fileFolder");
         }
-        String currentPath =
-            configMap.get("fda.currentPath") != null
-                ? System.getProperty(configMap.get("fda.currentPath"))
-                : "";
-        String rootPath = currentPath.replace('\\', '/') + configMap.get("fda.imgUploadPath");
-        File pdfFile = new File(rootPath + fileFolder + "/" + fileName);
-        is = new FileInputStream(pdfFile);
+        Storage storage = StorageOptions.getDefaultInstance().getService();
+        Blob blob = storage.get(configMap.get("cloud.bucket.name"), fileFolder + "/" + fileName);
+        ReadChannel readChannel = blob.reader();
+        InputStream inputStream = Channels.newInputStream(readChannel);
         response.setContentType("application/pdf");
-        response.setContentLength((int) pdfFile.length());
         response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "\"");
-        IOUtils.copy(is, response.getOutputStream());
+        IOUtils.copy(inputStream, response.getOutputStream());
         response.flushBuffer();
+        inputStream.close();
+
       } else {
         mav = new ModelAndView("redirect:studyList.do");
       }
@@ -2011,6 +2012,7 @@ public class StudyController {
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      auditRequest.setCorrelationId(sesObj.getSessionId());
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
@@ -2046,6 +2048,8 @@ public class StudyController {
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
+          StudyBuilderAuditEvent auditLogEvent = STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE;
+          auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
           mav = new ModelAndView("redirect:getChecklist.do", map);
         } else {
           request
@@ -3127,9 +3131,11 @@ public class StudyController {
                 FdahpStudyDesignerUtil.getStandardFileName(
                     "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
           }
+
           fileName =
-              FdahpStudyDesignerUtil.uploadImageFile(
+              FdahpStudyDesignerUtil.saveImage(
                   studyBo.getFile(), file, FdahpStudyDesignerConstants.STUDTYLOGO);
+
           studyBo.setThumbnailImage(fileName);
         }
         studyBo.setButtonText(buttonText);
