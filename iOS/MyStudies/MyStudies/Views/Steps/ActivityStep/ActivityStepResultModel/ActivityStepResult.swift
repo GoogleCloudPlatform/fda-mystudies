@@ -120,50 +120,6 @@ class ActivityStepResult {
 
   }
 
-  /// Initializer method which initializes all params
-  /// - Parameter stepDict: Dictionary which contains all the properties of ActivityStepResult
-  func initWithDict(stepDict: [String: Any]) {
-
-    if Utilities.isValidObject(someObject: stepDict as AnyObject?) {
-
-      if Utilities.isValidValue(someObject: stepDict[kActivityStepType] as AnyObject) {
-        self.type = stepDict[kActivityStepType] as? ActivityStepType
-      }
-      if Utilities.isValidValue(someObject: stepDict[kActivityStepKey] as AnyObject) {
-        self.key = stepDict[kActivityStepKey] as? String
-      }
-      if Utilities.isValidValue(someObject: stepDict[kActivityStepStartTime] as AnyObject) {
-
-        if Utilities.isValidValue(
-          someObject: Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepStartTime] as? String)!
-          ) as AnyObject?
-        ) {
-          self.startTime = Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepStartTime] as? String)!
-          )
-        }
-      }
-      if Utilities.isValidValue(someObject: stepDict[kActivityStepEndTime] as AnyObject) {
-
-        if Utilities.isValidValue(
-          someObject: Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepEndTime] as? String)!
-          ) as AnyObject?
-        ) {
-
-          self.endTime = Utilities.getDateFromString(
-            dateString: (stepDict[kActivityStepEndTime] as? String)!
-          )
-        }
-      }
-
-      if Utilities.isValidValue(someObject: stepDict[kActivityStepSkipped] as AnyObject) {
-        self.skipped = stepDict[kActivityStepSkipped] as? Bool
-      }
-    }
-  }
-
   /// Creates ActivityStepDictionary from step instance and returns ResultDictionary for storing data to Api/Local
   func getActivityStepResultDict() -> [String: Any]? {
 
@@ -774,16 +730,5 @@ class ActivityStepResult {
     default: break
     }
   }
-
-  /// This method is used to initialize step
-  /// - Parameter step: instance with all properties initialized priorly
-  func setStep(step: ActivityStep) {
-
-    self.step = step
-  }
-
-  /// Returns current step
-  func getStep() -> ActivityStep {
-    return self.step!
-  }
+  
 }
