@@ -277,7 +277,7 @@ class LocalNotification: NSObject {
     userInfo: [String: Any],
     id: String?
   ) {
-
+    var date = date
     if date > Date() {
       let content = UNMutableNotificationContent()
       content.body = message
@@ -285,13 +285,16 @@ class LocalNotification: NSObject {
       content.sound = UNNotificationSound.default
       content.badge = 1
 
-      let timeInterval = date.timeIntervalSinceNow
-      let trigger = UNTimeIntervalNotificationTrigger(
-        timeInterval: timeInterval,
-        repeats: false
-      )
+      date.updateWithOffset()
+      let dateComponents = Calendar(identifier: .iso8601)
+        .dateComponents(
+          [.year, .month, .day, .hour, .minute, .second],
+          from: date
+        )
+      let notificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
       let id = id ?? Utilities.randomString(length: 10)
-      let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+      let request = UNNotificationRequest(identifier: id, content: content, trigger: notificationTrigger)
       let center = UNUserNotificationCenter.current()
       center.add(request)
 
@@ -356,15 +359,6 @@ class LocalNotification: NSObject {
   static func removeAllDeliveredNotifications() {
     let center = UNUserNotificationCenter.current()
     center.removeAllDeliveredNotifications()
-  }
-
-  /// Retrives the pending notificaitons
-  class func scheduledNotificaiton() {
-    let center = UNUserNotificationCenter.current()
-    center.getPendingNotificationRequests(
-      completionHandler: { _ in
-        // You can print here for debug purpose.
-      })
   }
 
   private static let timeFormatter: DateFormatter = {

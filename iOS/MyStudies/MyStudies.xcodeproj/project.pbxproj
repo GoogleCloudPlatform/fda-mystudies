@@ -122,6 +122,7 @@
 		6F214B9424603EFE008F2742 /* WKWebView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */; };
 		6F214B9624603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */; };
 		6F2392DE2423E0F300013AC0 /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
+		6F28605B25778B5E00D4BA3A /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F28605A25778B5E00D4BA3A /* Date+Extensions.swift */; };
 		6F4B51B7250644A200DC5991 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51B6250644A200DC5991 /* SessionService.swift */; };
 		6F4B51B92506562D00DC5991 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51B82506562D00DC5991 /* URL+Extensions.swift */; };
 		6F4B51BB250659DB00DC5991 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51BA250659DB00DC5991 /* APIService.swift */; };
@@ -416,6 +417,7 @@
 		6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebView+Extensions.swift"; sourceTree = "<group>"; };
 		6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIPrintPageRenderer+Extensions.swift"; sourceTree = "<group>"; };
 		6F2392DD2423E0F300013AC0 /* EnrollServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollServices.swift; sourceTree = "<group>"; };
+		6F28605A25778B5E00D4BA3A /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		6F4B51B6250644A200DC5991 /* SessionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionService.swift; sourceTree = "<group>"; };
 		6F4B51B82506562D00DC5991 /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		6F4B51BA250659DB00DC5991 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
@@ -1573,6 +1575,7 @@
 				6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */,
 				6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */,
 				6F4B51B82506562D00DC5991 /* URL+Extensions.swift */,
+				6F28605A25778B5E00D4BA3A /* Date+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2219,6 +2222,7 @@
 				6F9975622423B7EA0044944E /* EnrollmentServerConfiguration.swift in Sources */,
 				9432C2F91E4C4993005984EC /* ResponseServerConfiguration.swift in Sources */,
 				6E183AA91E962AA4005D7A27 /* GatewayResourceDetailViewController.swift in Sources */,
+				6F28605B25778B5E00D4BA3A /* Date+Extensions.swift in Sources */,
 				6F83039C24864D6B009409A5 /* LocalizableString.swift in Sources */,
 				94CD96EA1E4AF61800946477 /* NetworkWebServiceHandler.swift in Sources */,
 				6ED1B2301E54256700BF463F /* ActivityActiveStep.swift in Sources */,
