@@ -79,6 +79,15 @@ export class StudyDetailsComponent
       this.query$,
     ).pipe(
       map(([studyDetails, query]) => {
+        if (
+          studyDetails.participantRegistryDetail.studyType ===
+            StudyType.Open &&
+          query === ''
+        ) {
+          this.sharedService.updateSearchPlaceHolder(
+            'Search Participant Email',
+          );
+        }
         this.loadMoreRecords =
           studyDetails.participantRegistryDetail.registryParticipants.length >=
           this.limit;
