@@ -317,8 +317,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     if self.isAppLaunched! {
       self.isAppLaunched = false
 
-      // Update Local Notifications
-      self.checkForRegisteredNotifications()
+      DispatchQueue.main.async {
+        // Update Local Notifications
+        self.checkForRegisteredNotifications()
+      }
     }
   }
 

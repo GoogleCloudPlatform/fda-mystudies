@@ -191,7 +191,7 @@ class AnchorDateHandler {
     urlString += "&activityVersion" + "=" + activityVersion
     urlString += "&participantId" + "=" + participantId
     urlString += "&questionKey"
-    urlString += "&tokenIdentifier" + "=" + tokenIdentifier
+    urlString += "&tokenId" + "=" + tokenIdentifier
 
     urlString =
       urlString.addingPercentEncoding(
