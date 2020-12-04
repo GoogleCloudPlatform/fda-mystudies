@@ -7,24 +7,21 @@
 # https://opensource.org/licenses/MIT.
 #
 # Script to insert the first participant manager superadmin into auth server.
+# Script to generate sql that creates study builder superadmin.
 # Run like:
-# $ ./scripts/create_participant_manager_superadmin.sh <prefix> <env> <email> <password>
+# $ ./participant-datastore/sqlscripts/create_superadmin.sh <email> <password>
+# then import the generated pm-superadmin.sql file created in your current directory into the database.
 
-if [ "$#" -ne 4 ]; then
-  echo 'Please provide deployment prefix and env, as well as superadmin email and password in the order of <prefix> <env> <email> <password>'
+if [ "$#" -ne 2 ]; then
+  echo 'Please provide Participant Manager superadmin email and password in the order of <email> <password>'
   exit 1
 fi
 
-PREFIX=${1}
-ENV=${2}
-EMAIL="${3}"
-PWD="${4}"
-shift 4
+EMAIL="${1}"
+PWD="${2}"
+shift 2
 
 set -e
-
-DATA_PROJECT=${PREFIX}-${ENV}-data
-SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
 
 TMPFILE=$(mktemp)
 
@@ -32,6 +29,7 @@ echo "USE \`oauth_server_hydra\`;" >> ${TMPFILE}
 
 SALT=`printf "%s" uuidgen | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 HASH=`printf "%s%s" $SALT $PWD | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
 DATE=`date -v +30d +"%F %T"`
 TIMESTAMP=`date -v +30d +"%s.%3N"`
@@ -76,12 +74,8 @@ VALUES
   ('c9d30d67-0477-4a8c-8490-0fa1e0300bd0', '1', '${EMAIL}', 'Admin', 1, '${SECURITY_CODE}', '${DATE}', 1, b'1', '96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508');
 " >> ${TMPFILE}
 
-# Upload TMPFILE to GCS.
-GCS_FILE=gs://${SQL_IMPORT_BUCKET}/participant_manager_superadmin.sql
-echo "Copying the sql file to ${GCS_FILE}"
-gsutil mv ${TMPFILE} ${GCS_FILE}
+export DEST=`pwd -P`
+export OUTPUT="${DEST}/pm-superadmin.sql"
 
-# Import the GCS file to CloudSQL.
-echo "Importing ${GCS_FILE} to CloudSQL."
-gcloud sql import sql --project=${DATA_PROJECT} mystudies ${GCS_FILE}
-gsutil rm ${GCS_FILE}
+echo "writing output ${OUTPUT}"
+mv ${TMPFILE} ${OUTPUT}

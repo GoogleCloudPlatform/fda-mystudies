@@ -201,19 +201,19 @@
 }
 
 .bg__white {
-  background: var(- -white) !important;
+  background: var(--white) !important;
 }
 
 .bg__green {
-  background-color: var(- -light-green) !important;
+  background-color: var(--light-green) !important;
 }
 
 .txt__green {
-  color: var(- -light-green) !important;
+  color: var(--light-green) !important;
 }
 
 .txt__light-gray {
-  color: var(- -light-gray) !important;
+  color: var(--light-gray) !important;
 }
 
 .visibility__hidden {
@@ -270,7 +270,7 @@ a:hover, a:active, a:focus {
 }
 
 .error__msg {
-  color: var(- -orange-red);
+  color: var(--orange-red);
   font-size: 75%;
   text-align: left;
   visibility: visible;

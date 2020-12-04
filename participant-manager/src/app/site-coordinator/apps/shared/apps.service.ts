@@ -20,8 +20,11 @@ export class AppsService {
   }
 
   getAllAppsWithStudiesAndSites(): Observable<AppDetails> {
-    return this.http.get<AppDetails>(`${environment.baseUrl}/apps`, {
-      params: {fields: 'studies,sites'},
-    });
+    return this.http.get<AppDetails>(
+      `${environment.participantManagerDatastoreUrl}/apps`,
+      {
+        params: {fields: 'studies,sites'},
+      },
+    );
   }
 }

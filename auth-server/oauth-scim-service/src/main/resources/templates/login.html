@@ -29,6 +29,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
 
+<style type="text/css">
+  /* input auto complete bg color */
+  
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    border: none !important;
+    -webkit-text-fill-color: inherit !important;
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  input {
+    filter: none !important;
+  }
+</style>
 </head>
 <body class="my-login-page bg__aqua-gray">
   <section class="h-100">
@@ -69,7 +89,6 @@
                           placeholder="Enter your password"
                           required="required" minlength="8"
                           maxlength="64" value=""
-                          pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\S+$).{8,64}$"
                           onblur="validateField('password');" />
                         <div class="err__msg" id="password_error"
                           style="display: none">Please enter valid
