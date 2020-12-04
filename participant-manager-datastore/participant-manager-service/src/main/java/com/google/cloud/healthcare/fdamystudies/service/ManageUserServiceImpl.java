@@ -55,7 +55,9 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.sql.Timestamp;
@@ -69,7 +71,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -91,6 +92,10 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Autowired private AppRepository appRepository;
 
+  @Autowired private StudyRepository studyRepository;
+
+  @Autowired private SiteRepository siteRepository;
+
   @Autowired private AppPermissionRepository appPermissionRepository;
 
   @Autowired private StudyPermissionRepository studyPermissionRepository;
@@ -105,8 +110,6 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Autowired
   private UserAccountEmailSchedulerTaskRepository userAccountEmailSchedulerTaskRepository;
-
-  @Autowired private EntityManager entityManger;
 
   @Override
   @Transactional
@@ -231,9 +234,22 @@ public class ManageUserServiceImpl implements ManageUserService {
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
-      saveAppLevelPermissions(user, adminDetails, appPermissions);
-      saveStudyLevelPermissions(user, adminDetails, studyPermissions);
-      saveSiteLevelPermissions(user, adminDetails, sitePermissions);
+      Map<String, AppEntity> appEntitesMap = new HashedMap<>();
+      Map<String, StudyEntity> studyEntitesMap = new HashedMap<>();
+      Map<String, SiteEntity> siteEntitesMap = new HashedMap<>();
+      getAndPutAppStudyAndSiteEntities(
+          appEntitesMap,
+          studyEntitesMap,
+          siteEntitesMap,
+          appPermissions,
+          studyPermissions,
+          sitePermissions);
+
+      saveAppLevelPermissions(user, adminDetails, appPermissions, appEntitesMap);
+      saveStudyLevelPermissions(
+          user, adminDetails, studyPermissions, appEntitesMap, studyEntitesMap);
+      saveSiteLevelPermissions(
+          user, adminDetails, sitePermissions, appEntitesMap, studyEntitesMap, siteEntitesMap);
     }
 
     UserAccountEmailSchedulerTaskEntity emailTaskEntity =
@@ -245,115 +261,148 @@ public class ManageUserServiceImpl implements ManageUserService {
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, adminDetails.getId());
   }
 
+  private void getAndPutAppStudyAndSiteEntities(
+      Map<String, AppEntity> appEntitesMap,
+      Map<String, StudyEntity> studyEntitesMap,
+      Map<String, SiteEntity> siteEntitesMap,
+      List<AppPermissionDetails> appPermissions,
+      List<StudyPermissionDetails> studyPermissions,
+      List<SitePermissionDetails> sitePermissions) {
+
+    List<String> appIds = new ArrayList<>();
+    List<String> studyIds = new ArrayList<>();
+    List<String> siteIds = new ArrayList<>();
+    addAppStudySiteIds(
+        appIds, studyIds, siteIds, appPermissions, studyPermissions, sitePermissions);
+    List<AppEntity> apps = appRepository.findAllById(appIds);
+    List<StudyEntity> studies = studyRepository.findAllById(studyIds);
+    if (CollectionUtils.isNotEmpty(siteIds)) {
+      List<SiteEntity> sites = siteRepository.findAllById(siteIds);
+      for (SiteEntity siteEntity : sites) {
+        siteEntitesMap.put(siteEntity.getId(), siteEntity);
+      }
+    }
+
+    for (AppEntity appEntity : apps) {
+      appEntitesMap.put(appEntity.getId(), appEntity);
+    }
+
+    for (StudyEntity studyEntity : studies) {
+      studyEntitesMap.put(studyEntity.getId(), studyEntity);
+    }
+  }
+
+  private void addAppStudySiteIds(
+      List<String> appIds,
+      List<String> studyIds,
+      List<String> siteIds,
+      List<AppPermissionDetails> appPermissions,
+      List<StudyPermissionDetails> studyPermissions,
+      List<SitePermissionDetails> sitePermissions) {
+    for (AppPermissionDetails appPermissionDetails : appPermissions) {
+      appIds.add(appPermissionDetails.getAppId());
+    }
+
+    for (StudyPermissionDetails studyPermissionDetails : studyPermissions) {
+      if (!studyIds.contains(studyPermissionDetails.getStudyId())) {
+        studyIds.add(studyPermissionDetails.getStudyId());
+      }
+      if (!appIds.contains(studyPermissionDetails.getAppId())) {
+        appIds.add(studyPermissionDetails.getAppId());
+      }
+    }
+
+    for (SitePermissionDetails sitePermissionDetails : sitePermissions) {
+      if (!siteIds.contains(sitePermissionDetails.getSiteId())) {
+        siteIds.add(sitePermissionDetails.getSiteId());
+      }
+      if (!studyIds.contains(sitePermissionDetails.getStudyId())) {
+        studyIds.add(sitePermissionDetails.getStudyId());
+      }
+      if (!appIds.contains(sitePermissionDetails.getAppId())) {
+        appIds.add(sitePermissionDetails.getAppId());
+      }
+    }
+  }
+
   private void saveAppLevelPermissions(
       UserRequest user,
       UserRegAdminEntity adminDetails,
-      List<AppPermissionDetails> appPermissions) {
+      List<AppPermissionDetails> appPermissions,
+      Map<String, AppEntity> appEntitesMap) {
     logger.entry("saveAppLevelPermissions()");
     if (CollectionUtils.isEmpty(appPermissions)) {
       return;
     }
 
-    StringBuilder sqlInsertBuilder =
-        new StringBuilder(
-            "insert into app_permissions (id, ur_admin_user_id, app_info_id, edit, created_time, created_by) values");
-    appPermissions.forEach(
-        (AppPermissionDetails appPermssion) -> {
-          sqlInsertBuilder.append("(");
-          sqlInsertBuilder.append("'" + IdGenerator.id() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + adminDetails.getId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + appPermssion.getAppId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + appPermssion.getEdit() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + new Timestamp(Instant.now().toEpochMilli()) + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + user.getSuperAdminUserId() + "'");
-          sqlInsertBuilder.append(")");
-          sqlInsertBuilder.append(", ");
-        });
-    sqlInsertBuilder.deleteCharAt(sqlInsertBuilder.lastIndexOf(","));
+    List<AppPermissionEntity> appPermissionEntities = new ArrayList<>();
+    for (AppPermissionDetails selectedApp : appPermissions) {
+      AppPermissionEntity appPermissionEntity = new AppPermissionEntity();
+      appPermissionEntity.setApp(appEntitesMap.get(selectedApp.getAppId()));
+      appPermissionEntity.setUrAdminUser(adminDetails);
+      appPermissionEntity.setCreated(new Timestamp(Instant.now().toEpochMilli()));
+      appPermissionEntity.setCreatedBy(user.getSuperAdminUserId());
+      appPermissionEntity.setEdit(Permission.fromValue(selectedApp.getEdit()));
+      appPermissionEntities.add(appPermissionEntity);
+    }
 
-    entityManger.createNativeQuery(sqlInsertBuilder.toString()).executeUpdate();
+    appPermissionRepository.saveAll(appPermissionEntities);
     logger.exit("Successfully saved app level permissions");
   }
 
   private void saveStudyLevelPermissions(
       UserRequest user,
       UserRegAdminEntity adminDetails,
-      List<StudyPermissionDetails> studyPermissions) {
+      List<StudyPermissionDetails> studyPermissions,
+      Map<String, AppEntity> appEntitesMap,
+      Map<String, StudyEntity> studyEntitesMap) {
     logger.entry("saveStudyLevelPermissions()");
     if (CollectionUtils.isEmpty(studyPermissions)) {
       return;
     }
 
-    StringBuilder sqlInsertBuilder =
-        new StringBuilder(
-            "insert into study_permissions (id, ur_admin_user_id, app_info_id, study_id, edit, created_time, created_by) values");
-    studyPermissions.forEach(
-        (StudyPermissionDetails studyPermssion) -> {
-          sqlInsertBuilder.append("(");
-          sqlInsertBuilder.append("'" + IdGenerator.id() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + adminDetails.getId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + studyPermssion.getAppId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + studyPermssion.getStudyId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + studyPermssion.getEdit() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + new Timestamp(Instant.now().toEpochMilli()) + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + user.getSuperAdminUserId() + "'");
-          sqlInsertBuilder.append(")");
-          sqlInsertBuilder.append(", ");
-        });
-    sqlInsertBuilder.deleteCharAt(sqlInsertBuilder.lastIndexOf(","));
+    List<StudyPermissionEntity> studyPermissionEntities = new ArrayList<>();
+    for (StudyPermissionDetails selectedStudy : studyPermissions) {
+      StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
+      studyPermissionEntity.setApp(appEntitesMap.get(selectedStudy.getAppId()));
+      studyPermissionEntity.setStudy(studyEntitesMap.get(selectedStudy.getStudyId()));
+      studyPermissionEntity.setUrAdminUser(adminDetails);
+      studyPermissionEntity.setCreated(new Timestamp(Instant.now().toEpochMilli()));
+      studyPermissionEntity.setCreatedBy(user.getSuperAdminUserId());
+      studyPermissionEntity.setEdit(Permission.fromValue(selectedStudy.getEdit()));
+      studyPermissionEntities.add(studyPermissionEntity);
+    }
 
-    entityManger.createNativeQuery(sqlInsertBuilder.toString()).executeUpdate();
+    studyPermissionRepository.saveAll(studyPermissionEntities);
     logger.exit("Successfully saved study level permissions");
   }
 
   private void saveSiteLevelPermissions(
       UserRequest user,
       UserRegAdminEntity adminDetails,
-      List<SitePermissionDetails> sitePermissions) {
+      List<SitePermissionDetails> sitePermissions,
+      Map<String, AppEntity> appEntitesMap,
+      Map<String, StudyEntity> studyEntitesMap,
+      Map<String, SiteEntity> siteEntitesMap) {
     logger.entry("saveSiteLevelPermissions()");
     if (CollectionUtils.isEmpty(sitePermissions)) {
       return;
     }
 
-    StringBuilder sqlInsertBuilder =
-        new StringBuilder(
-            "insert into sites_permissions (id, ur_admin_user_id, app_info_id, study_id, site_id, edit, created_time, created_by) values");
-    sitePermissions.forEach(
-        (SitePermissionDetails sitePermssion) -> {
-          sqlInsertBuilder.append("(");
-          sqlInsertBuilder.append("'" + IdGenerator.id() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + adminDetails.getId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + sitePermssion.getAppId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + sitePermssion.getStudyId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + sitePermssion.getSiteId() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + sitePermssion.getCanEdit() + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + new Timestamp(Instant.now().toEpochMilli()) + "'");
-          sqlInsertBuilder.append(",");
-          sqlInsertBuilder.append("'" + user.getSuperAdminUserId() + "'");
-          sqlInsertBuilder.append(")");
-          sqlInsertBuilder.append(", ");
-        });
+    List<SitePermissionEntity> sitePermissionEntities = new ArrayList<>();
+    for (SitePermissionDetails selectedSite : sitePermissions) {
+      SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+      sitePermissionEntity.setApp(appEntitesMap.get(selectedSite.getAppId()));
+      sitePermissionEntity.setStudy(studyEntitesMap.get(selectedSite.getStudyId()));
+      sitePermissionEntity.setSite(siteEntitesMap.get(selectedSite.getSiteId()));
+      sitePermissionEntity.setUrAdminUser(adminDetails);
+      sitePermissionEntity.setCreated(new Timestamp(Instant.now().toEpochMilli()));
+      sitePermissionEntity.setCreatedBy(user.getSuperAdminUserId());
+      sitePermissionEntity.setCanEdit(Permission.fromValue(selectedSite.getCanEdit()));
+      sitePermissionEntities.add(sitePermissionEntity);
+    }
 
-    sqlInsertBuilder.deleteCharAt(sqlInsertBuilder.lastIndexOf(","));
-
-    entityManger.createNativeQuery(sqlInsertBuilder.toString()).executeUpdate();
+    sitePermissionRepository.saveAll(sitePermissionEntities);
     logger.exit("Successfully saved site level permissions");
   }
 
@@ -461,9 +510,22 @@ public class ManageUserServiceImpl implements ManageUserService {
     deleteAppStudySiteLevelPermissions(user.getId());
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
-      saveAppLevelPermissions(user, adminDetails, appPermissions);
-      saveStudyLevelPermissions(user, adminDetails, studyPermissions);
-      saveSiteLevelPermissions(user, adminDetails, sitePermissions);
+      Map<String, AppEntity> appEntitesMap = new HashedMap<>();
+      Map<String, StudyEntity> studyEntitesMap = new HashedMap<>();
+      Map<String, SiteEntity> siteEntitesMap = new HashedMap<>();
+      getAndPutAppStudyAndSiteEntities(
+          appEntitesMap,
+          studyEntitesMap,
+          siteEntitesMap,
+          appPermissions,
+          studyPermissions,
+          sitePermissions);
+
+      saveAppLevelPermissions(user, adminDetails, appPermissions, appEntitesMap);
+      saveStudyLevelPermissions(
+          user, adminDetails, studyPermissions, appEntitesMap, studyEntitesMap);
+      saveSiteLevelPermissions(
+          user, adminDetails, sitePermissions, appEntitesMap, studyEntitesMap, siteEntitesMap);
     }
 
     UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail =
