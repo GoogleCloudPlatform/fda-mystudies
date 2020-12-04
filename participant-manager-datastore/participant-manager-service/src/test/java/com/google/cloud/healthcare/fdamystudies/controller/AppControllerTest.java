@@ -253,6 +253,47 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnSortedStudiesAndSites() throws Exception {
+    // set study and site
+    studyEntity.setApp(appEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    // set few more study and sites
+    studyEntity = testDataHelper.newStudyEntity();
+    studyEntity.setName("Study");
+    studyEntity.setApp(appEntity);
+    testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+    testDataHelper.createMultipleSiteEntity(studyEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    String[] fields = {"studies", "sites"};
+
+    // Step 2: Call API and expect success message
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .queryParam("fields", fields))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(1)))
+        .andExpect(jsonPath("$.apps[0].studies").isArray())
+        .andExpect(jsonPath("$.apps[0].studies[0].sites").isArray())
+        .andExpect(jsonPath("$.apps[0].studies[0].studyName").value("COVID Study"))
+        .andExpect(jsonPath("$.apps[0].studies[1].studyName").value("Study"))
+        .andExpect(jsonPath("$.apps[0].studies[1].sites[0].locationName").value("Marlborough1"))
+        .andExpect(jsonPath("$.apps[0].studies[1].sites[1].locationName").value("Marlborough2"));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnAppsWithOptionalStudies() throws Exception {
     // Step 1: set app and study
     studyEntity.setApp(appEntity);
