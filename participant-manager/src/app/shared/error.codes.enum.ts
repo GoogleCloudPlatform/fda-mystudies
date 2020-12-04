@@ -36,7 +36,7 @@ const errorMessages = {
   EC_0025: 'Location ID already exists',
   EC_0026:
     'This email either does not exist or has not been sent an invitation yet.',
-  EC_0027: "This location already has 'Active' status",
+  EC_0027: 'This location already has \'Active\' status',
   EC_0028: 'This site cannot be modified',
   EC_0029: 'This location is already decommissioned',
   EC_0030: 'You do not have permission to update the location',
@@ -51,7 +51,7 @@ const errorMessages = {
   EC_0039:
     'Enrollment target failed to be updated (the site is decommissionned)',
   EC_0040: 'Error in getting consent data',
-  EC_0041: "Allowed values for 'fields' are studies, sites",
+  EC_0041: 'Allowed values for \'fields\' are studies, sites',
   EC_0042: 'Admin user not found',
   EC_0043:
     'Your account is pending activation. Please check your email for details and sign in to complete activation.',
@@ -61,7 +61,7 @@ const errorMessages = {
   EC_0046: 'User does not exist',
   EC_0047: 'You do not have permission to view/edit this study',
   EC_0048: 'You do not have permission to manage this site',
-  EC_0049: "Site doesn't exist or is inactive",
+  EC_0049: 'Site doesn\'t exist or is inactive',
   EC_0050: 'Allowed values are: N, D, I and E',
   EC_0051:
     'The decommission action cannot be taken with this site as it belongs to an open study',
@@ -102,7 +102,7 @@ const errorMessages = {
     'This view displays study-wise enrollment if you manage multiple sites.',
   EC_0072:
     'This view displays app-wise enrollment if you manage multiple studies.',
-  EC_0121: "Invalid 'source' value",
+  EC_0121: 'Invalid \'source\' value',
   EC_0127:
     'This study is deactivated. Sites cannot be re-activated for deactivated studies.',
   EC_0128: 'EmailId or password is blank in request',
