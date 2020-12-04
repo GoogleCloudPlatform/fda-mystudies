@@ -36,7 +36,7 @@ export class AccountService {
     profileToBeUpdated: UpdateProfile,
   ): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
-      `${environment.baseUrl}/users/${encodeURIComponent(
+      `${environment.participantManagerDatastoreUrl}/users/${encodeURIComponent(
         this.authService.getUserId(),
       )}/profile`,
       profileToBeUpdated,
