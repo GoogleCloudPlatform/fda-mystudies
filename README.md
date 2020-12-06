@@ -44,7 +44,7 @@ Participant datastore | Platform component | Manages participant data such as co
 Auth | Platform component | Manages account creation, login, logout and resource requests | [`hydra/`](/hydra/)<br/>[`auth-server/`](/auth-server/)
 Deployment | System administrators | Infrastructure-as-code to build and maintain platform | [`deployment/`](deployment/)
 
-Each high-level directory contains a `README` and the necessary deployment configuration files.
+Each high-level directory contains a `README.md` and the necessary deployment configuration files.
 
 For more information about the platform architecture, visit the [Architecture overview](documentation/architecture_overview.md). An example of how this architecture can be deployed on Google Cloud is diagrammed below.
 
