@@ -46,7 +46,7 @@ Deployment | System administrators | Infrastructure-as-code to build and maintai
 
 Each high-level directory contains a `README.md` and the necessary deployment configuration files.
 
-For more information about the platform architecture, visit the [Architecture overview](documentation/architecture_overview.md). An example of how this architecture can be deployed on Google Cloud is diagrammed below.
+For more information about the platform architecture, visit the [Architecture overview](documentation/architecture.md). An example of how this architecture can be deployed on Google Cloud is diagrammed below.
 
 ![Example architecture](documentation/images/apps-reference-architecture.svg "Example architecture")
 
