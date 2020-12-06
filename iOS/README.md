@@ -19,7 +19,7 @@ This directory contains all the code necessary to build the **FDA MyStudies** iO
 The **FDA MyStudies** iOS application requires [Xcode 11](https://developer.apple.com/xcode/) or newer, and can be run on iOS versions 11 and above.
 
 # Platform integration
-The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth/) using OAuth 2.0.
+The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth-server/) using OAuth 2.0.
 
 # Configuration instructions
 1. Open the [`iOS/MyStudies/MyStudies.xcworkspace`](MyStudies/MyStudies.xcworkspace) in Xcode
@@ -40,7 +40,7 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 1. Enable push notifications
     -    Create [push notification certificates](https://help.apple.com/developer-account/#/dev82a71386a) in encrypted `.p12` format
     -    Update the `ios_certificate` and `ios_certificate_password` fields in the [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) script
-    -    Run the updated [`mystudies_app_info_update_db_script.sql`](sqlscript/mystudies_app_info_update_db_script.sql) script on the `mystudies_participant_datastore` database that you created during [`Participant datastore`](/participant-datastore/) deployment  ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))
+    -    Run the updated [`mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) script on the `mystudies_participant_datastore` database that you created during [`Participant datastore`](/participant-datastore/) deployment  ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))
     -    For more information, visit [Establishing a Certificate-Based Connection to APNs](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_certificate-based_connection_to_apns)
 1. *Optional.* Customize images and text
     -    Replace icons and images in [`iOS/MyStudies/MyStudies/Assets/Assets.xcassets`](MyStudies/MyStudies/Assets/Assets.xcassets/)
