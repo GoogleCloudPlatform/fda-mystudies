@@ -16,16 +16,16 @@ This directory contains all the code necessary to build the **FDA MyStudies** An
 The **FDA MyStudies** Android application requires [Android Studio](https://developer.android.com/studio/index.html) and can be run on Android versions starting from Kitkat.
 
 # Platform integration
-The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth/) using OAuth 2.0 and [Hydra](/hydra/).
+The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth/) using OAuth 2.0 and [`Hydra`](/hydra/).
 
 # Configuration instructions
 
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/) with `git clone https://github.com/GoogleCloudPlatform/fda-mystudies.git` and your [personal access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) as password (you may need to install git, for example `sudo apt install git`)
 1. Open the [`Android/`](../Android/) directory as an existing project with [Android Studio](https://developer.android.com/studio/index.html)
 1. If necessary, install the Android 10 SDK using Tools &rarr; [SDK Manager](https://developer.android.com/studio/intro/update#sdk-manager), then File &rarr; Sync Project with Gradle Files	 
-1. Customize the App Name and Package Name for your deployment in build.gradle
+1. Set the `applicationId` in [`Android/app/build.gradle`](app/build.gradle) to your [Application ID](https://developer.android.com/studio/build/application-id)
 1. Update the following in the [`Android/api.properties`](api.properties) file:
-    -    Update `API_KEY` with the `bundle_id` and `app_token` that you configured in [`study-datastore/src/main/resources/authorizationResource.properties`](../study-datastore/src/main/resources/authorizationResource.properties) during [`Study datastore`](/study-datastore/) deployment with format *<value of android.bundleid>:<value of android.apptoken>*
+    -    Update `API_KEY` with the `bundle_id` and `app_token` that you configured in [`study-datastore/src/main/resources/authorizationResource.properties`](../study-datastore/src/main/resources/authorizationResource.properties) during [`Study datastore`](/study-datastore/) deployment with format `<value of android.bundleid>:<value of android.apptoken>`
     -    Update `BASE_URL_STUDY_DATASTORE` with your [`Study datastore`](../study-datastore) URL
     -    Update `BASE_URL_PARTICIPANT_DATASTORE` with your [`User datastore`](../participant-datastore/user-mgmt-module/) URL
     -    Update `BASE_URL_PARTICIPANT_CONSENT_DATASTORE` with your [`Consent datastore`](../participant-datastore/consent-mgmt-module/) URL
