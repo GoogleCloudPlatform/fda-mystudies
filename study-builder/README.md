@@ -38,7 +38,7 @@ To deploy the [`Study builder`](/study-builder/) manually:
     -    Run the container on the VM using `sudo docker run --detach --volumes-from gcloud-config --env-file variables.env -p 80:8080 --name study-builder study-builder-image`
 1. Visit `http://<CLOUD_VM_INSTANCE_IP>/studybuilder` in your browser to test if the application is running - you should be redirected to the login page if deployed successfully (you can install a [browser and remote desktop connection](https://cloud.google.com/solutions/chrome-desktop-remote-on-compute-engine) if your VM is restricted to IPs within its VPC network, alternatively use `curl -i http://0.0.0.0/studybuilder` to confirm a `302` redirect response)
 1. Login as the super admin user with the username and password that you created with the `create_superadmin.sh` script
-1. Use the web application to create additional administrator accounts as needed
+1. Use the `Study builder` user interface to create additional administrator accounts as needed
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
