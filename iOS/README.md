@@ -23,7 +23,7 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 
 # Configuration instructions
 1. Open the [`iOS/MyStudies/MyStudies.xcworkspace`](MyStudies/MyStudies.xcworkspace) in Xcode
-1. Map your project’s [build configuration](https://help.apple.com/xcode/mac/current/#/dev745c5c974) to [`iOS/MyStudies/MyStudies/Default.xcconfig`](MyStudies/MyStudies/Default.xcconfig) following [these instructions](https://help.apple.com/xcode/mac/current/#/deve97bde215?sub=devf0d495219)
+1. Map your project’s [build configuration](https://help.apple.com/xcode/mac/current/#/dev745c5c974) to [`iOS/MyStudies/MyStudies/Default.xcconfig`](MyStudies/MyStudies/Default.xcconfig) ([instructions](https://help.apple.com/xcode/mac/current/#/deve97bde215?sub=devf0d495219))
 1. Update the following in the [`Default.xcconfig`](MyStudies/MyStudies/Default.xcconfig) file:
     -    Update `STUDY_DATASTORE_URL` with your [`Study datastore`](../study-datastore) URL
     -    Update `RESPONSE_DATASTORE_URL` with your [`Response datastore`](../response-datastore/) URL
@@ -32,12 +32,11 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Update `CONSENT_DATASTORE_URL` with your [`Consent datastore`](../participant-datastore/consent-mgmt-module/) URL
     -    Update `AUTH_URL` with your [`Auth server`](../auth-server/) URL
     -    Update `HYDRA_BASE_URL` with your [`Hydra server`](../hydra/) URL
-    -    Update `HYDRA_CLIENT_ID` with the `client_id` you configured during [`Hydra`](/hydra/) deployment (the mobile applications share a `client_id` with each other and the `Participant manager`) 
-    -    Update `API_KEY` with the `bundle_id` and `app_token` that you configured [`study-datastore/src/main/resources/authorizationResource.properties`](../study-datastore/src/main/resources/authorizationResource.properties) during [`Study datastore`](/study-datastore/) deployment with format *<value of ios.bundleid>:<value of ios.apptoken>
-    -    Update `APP_ID` with the `AppId` configured in the [`Study builder`](../study-builder)
-    -    Set `APP_TYPE` to either “gateway” or “standalone” (*standalone* applications hold a single study while *gateway* applications manage multiple studies)
-    -    Update `STUDY_ID` key with the `StudyId` configured by the study administrator in the `Study builder` user interface (not required for *gateway* applications)
-    -    Set `APP_ID` to the value configured by the study administrator in the `Study builder` user interface
+    -    Update `HYDRA_CLIENT_ID` with the `client_id` you configured during [`Hydra`](/hydra/) deployment (the mobile applications share a `client_id` with each other, the `Auth server` and the `Participant manager`) 
+    -    Update `API_KEY` with the `bundle_id` and `app_token` that you configured [`study-datastore/src/main/resources/authorizationResource.properties`](../study-datastore/src/main/resources/authorizationResource.properties) during [`Study datastore`](/study-datastore/) deployment with format `<value of ios.bundleid>:<value of ios.apptoken>`
+    -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
+    -    Set `APP_TYPE` to either “gateway” or “standalone”
+    -    Update `STUDY_ID` key with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
 1. Enable push notifications
     -    Create [push notification certificates](https://help.apple.com/developer-account/#/dev82a71386a) in encrypted `.p12` format
     -    Update the `ios_certificate` and `ios_certificate_password` fields in the [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) script
