@@ -19,7 +19,7 @@ export SECRETS_SYSTEM=${SYSTEM_SECRET}
 
 # Points to database location
 # mysql://user:pw@tcp(host:port)/database?someSetting=value&foo=bar
-export DSN="mysql://${DB_USER}:${DB_PASS}@tcp(localhost:3306)/${DB_NAME}?sql_notes=false&parseTime=true"
+export DSN="mysql://${DB_USER}:${DB_PASS}@tcp(${DB_INSTANCE_URL}:3306)/${DB_NAME}?sql_notes=false&parseTime=true"
 
 # issuer URL
 export URLS_SELF_ISSUER="${BASE_URL}"
@@ -33,4 +33,4 @@ cd /hydra
 
 # Start hydra
 # use --dangerous-force-http because GCLB take care of https.
-./hydra serve all --dangerous-force-http
+./hydra serve all ${SERVE_ALL_FLAG}
