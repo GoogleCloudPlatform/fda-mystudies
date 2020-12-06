@@ -36,7 +36,7 @@ The overall goals, compliance principles and functionality of this FDA MyStudies
 * Added HTTPs across the codebase
 * Fixed potential cross-site scripting vulnerabilities
 * Added query binding to all existing queries to prevent SQL injection
-* Enhanced auth throughout codebase
+* Enhanced auth throughout codebase:
    * Unified distributed auth implementation into a single [`Auth server`](/auth-server/) (`Study builder` retains built-in auth)
    * Integrated with [Hydra](https://ory.sh/hydra), an OAuth 2.0 and OpenID Connect provider for OAuth 2.0 Access & Refresh token generation and authentication
    * Improved remaining authentication (for example, removed `client_secret` from being transmitted in all calls)
