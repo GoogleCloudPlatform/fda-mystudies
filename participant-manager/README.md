@@ -6,7 +6,7 @@
 -->
  
 # Overview
-The **FDA MyStudies** [`Participant manager`](/participant-manager/) is a web application that provides a no-code user interface for researchers, clinicians and other study coordinators to track and manage the progress of participant enrollment across sites and studies. Study coordinators use the `Participant manager` to add participants to studies and view participant enrollment and consent status. Study coordinators also use the `Participant manager` to create study sites and assign sites to studies. The `Participant manager` is an Angular web application that uses the [Participant manager datastore] (../participant-manager-datastore) as the application backend. The `Participant manager` uses basic authentication `client_id` and `client_secret` managed by [`Hydra`](/hydra/) to interact with the `Participant manager datastore`.
+The **FDA MyStudies** [`Participant manager`](/participant-manager/) is a web application that provides a no-code user interface for researchers, clinicians and other study coordinators to track and manage the progress of participant enrollment across sites and studies. Study coordinators use the `Participant manager` to add participants to studies and view participant enrollment and consent status. Study coordinators also use the `Participant manager` to create study sites, and assign sites to studies. The `Participant manager` is an Angular web application that uses the [Participant manager datastore](../participant-manager-datastore) as the application backend. The `Participant manager` uses basic authentication `client_id` and `client_secret` managed by [`Hydra`](/hydra/) to interact with the `Participant manager datastore`.
  
 The `Participant manager` provides the following functionality:
 1. Create and manage study coordinator accounts
@@ -36,7 +36,7 @@ To deploy the [`Participant manager`](/participant-manager/) manually:
     -    Run the container on the VM using `sudo docker run --detach -p 80:80 --name participant-manager participant-manager-image`
 1. Visit `http://<CLOUD_VM_INSTANCE_IP>/participant-manager` in your browser to test if the application is running - you should be redirected to the login page if deployed successfully (you can install a [browser and remote desktop connection](https://cloud.google.com/solutions/chrome-desktop-remote-on-compute-engine) if your VM is restricted to IPs within its VPC network, alternatively use `curl -i http://0.0.0.0/` to confirm a `200 OK` response)
 1. Login as the super admin user with the username and password that you created with the `create_superadmin.sh` script that you ran during `Participant datastore` deployment
-1. Use the web application to create additional administrator accounts as needed
+1. Use the `Participant manager` user interface to create additional administrator accounts as needed
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
