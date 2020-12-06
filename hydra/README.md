@@ -65,14 +65,13 @@ For example, *<HYDRA_ADMIN_BASE_URL>* could be `https://10.128.0.2:4445` and *<A
  
 Platform component | Grant type | client_id | client_name
 ----------------------------|---------------|---------------|-------------------
-[Participant datastore user module](../participant-datastore/user-mgmt-module/) | `client_credentials` | `participant_user_datastore_hydra_client` | `participant_user_datastore`
-[Participant datastore enrollment module](../participant-datastore/enroll-mgmt-module/) | `client_credentials` | `participant_enroll_datastore_hydra_client` | `participant_enroll_datastore`
-[Participant datastore consent module](../participant-datastore/consent-mgmt-module/) | `client_credentials` | `participant_consent_datastore_hydra_client` | `participant_consent_datastore`
-[Participant manager datastore](../participant-manager-datastore) | `client_credentials` | `participant_manager_datastore_hydra_client` | `participant_manager_datastore`
-[Study builder](../study-builder/) | `client_credentials` | `study_builder_hydra_client` | `study_builder`
-[Study datastore](../study-datastore/) | `client_credentials` | `study_datastore_hydra_client` | `study_datastore`
-[Participant manager](../participant-manager/)<br/>[iOS mobile application](../iOS/)<br/>[Android mobile application](../Android/) | `client_credentials`<br/>`refresh_token`<br/>`authorization_code` | `mystudies_hydra_client` | `mystudies`
-[Auth server](../auth-server/)<br/>[Participant manager](../participant-manager/)<br/>[iOS mobile application](../iOS/)<br/>[Android mobile application](../Android/) | `client_credentials`<br/>`refresh_token`<br/>`authorization_code` | `mystudies_hydra_client` | `mystudies`
+[`Participant datastore user module`](../participant-datastore/user-mgmt-module/) | `client_credentials` | `participant_user_datastore_hydra_client` | `participant_user_datastore`
+[`Participant datastore enrollment module`](../participant-datastore/enroll-mgmt-module/) | `client_credentials` | `participant_enroll_datastore_hydra_client` | `participant_enroll_datastore`
+[`Participant datastore consent module`](../participant-datastore/consent-mgmt-module/) | `client_credentials` | `participant_consent_datastore_hydra_client` | `participant_consent_datastore`
+[`Participant manager datastore`](../participant-manager-datastore) | `client_credentials` | `participant_manager_datastore_hydra_client` | `participant_manager_datastore`
+[`Study builder`](../study-builder/) | `client_credentials` | `study_builder_hydra_client` | `study_builder`
+[`Study datastore`](../study-datastore/) | `client_credentials` | `study_datastore_hydra_client` | `study_datastore`
+[`Auth server`](../auth-server/)<br/>[`Participant manager`](../participant-manager/)<br/>[`iOS mobile application`](../iOS/)<br/>[`Android mobile application`](../Android/) | `client_credentials`<br/>`refresh_token`<br/>`authorization_code` | `mystudies_hydra_client` | `mystudies`
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
