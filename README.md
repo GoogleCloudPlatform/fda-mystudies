@@ -60,6 +60,10 @@ In addition to the platform itself, the open-source [deployment tools](deploymen
 
 Google Cloud can support compliance with 21 CFR Part 11 regulations when using GCP services in a prescribed manner to handle related data and workloads. While Google has a cloud technology stack ready for many 21 CFR Part 11 compliant workloads, the ultimate compliance determination depends on configuration choices made by the deploying organization.
 
+## Release notes
+
+For a detailed list of changes to the FDA MyStudies codebase, see *[What’s new](/documentation/whats-new.md)*.
+
 ## Feedback
 
 Feature requests and bug reports should be submitted as [Github Issues](https://github.com/GoogleCloudPlatform/fda-mystudies/issues). All feedback is greatly appreciated.
