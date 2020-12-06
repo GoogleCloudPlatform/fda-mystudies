@@ -30,7 +30,7 @@ Information related to the deployment and operation of FDA Mystudies can be foun
 * API reference(documentation/api-reference.md)
 -->
 
-For a complete list FDA MyStudies documentation, visit [`documentation/README.md`](/documentation/README.md). 
+For the complete list of FDA MyStudies documentation, visit [`documentation/README.md`](/documentation/README.md). 
 
 ## Platform components and repo organization
 
@@ -44,15 +44,15 @@ Participant datastore | Platform component | Manages participant data such as co
 Auth | Platform component | Manages account creation, login, logout and resource requests | [`hydra/`](/hydra/)<br/>[`auth-server/`](/auth-server/)
 Deployment | System administrators | Infrastructure-as-code to build and maintain platform | [`deployment/`](deployment/)
 
-Each high-level directory contains a `README the necessary deployment configuration files.
+Each high-level directory contains a `README` and the necessary deployment configuration files.
 
 For more information about the platform architecture, visit the [Architecture overview](documentation/architecture_overview.md). An example of how this architecture can be deployed on Google Cloud is diagrammed below.
 
-![Example architecture](documentation/images/gcp-example-architecture.svg "Example architecture")
+![Example architecture](documentation/images/apps-reference-architecture.svg "Example architecture")
 
 ## Data and compliance
 
-FDA MyStudies is designed so that all data stays within the deploying organization’s environment (unless that organization chooses to export their data). Identifiable data (if collected) is stored separately from study and response data to help organizations minimize access to sensitive data.
+FDA MyStudies is designed so that all data stays within the deploying organization’s environment (unless that organization chooses to export their data). Any identifiable data is stored separately from study and response data to help organizations minimize access to sensitive data.
 
 The FDA MyStudies platform has been designed to support auditing requirements for compliance with 21 CFR Part 11, allowing the platform to be used for trials under Investigational New Drug (IND) oversight. If an organization chooses to run FDA MyStudies on Google Cloud, a variety of infrastructure options are available that support HIPAA and other compliance requirements. More information about compliance on Google Cloud and an up-to-date list of products covered under BAA can be found [here](https://cloud.google.com/security/compliance/hipaa/).
 
