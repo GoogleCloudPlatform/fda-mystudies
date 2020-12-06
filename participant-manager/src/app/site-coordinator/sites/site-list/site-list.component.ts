@@ -23,6 +23,8 @@ export class SiteListComponent implements OnInit {
   permission = Permission;
   studyTypes = StudyType;
   studyStatus = Status;
+  loadMoreEnabled = true;
+  limit = 10;
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
@@ -52,20 +54,24 @@ export class SiteListComponent implements OnInit {
 
   getStudies(): void {
     this.study$ = combineLatest(
-      this.studiesService.getStudiesWithSites(),
+      this.studiesService.getStudiesWithSites(this.limit, 0),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
         this.manageStudiesBackup = {...manageStudies};
-        console.log;
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
             study.name?.toLowerCase().includes(query) ||
             study.customId?.toLowerCase().includes(query) ||
             study.sites.some((site) =>
-              (site.name?.toLowerCase()?.includes(query) && study.type!==StudyType.Open),
+              site.name?.toLowerCase()?.includes(query),
             ),
         );
+        this.loadMoreEnabled =
+          this.manageStudiesBackup.studies.length % this.limit === 0
+            ? true
+            : false;
+        console.log(this.manageStudiesBackup.studies.length);
         return this.manageStudiesBackup;
       }),
     );
@@ -89,5 +95,43 @@ export class SiteListComponent implements OnInit {
   openAddSiteModal(template: TemplateRef<unknown>, study: Study): void {
     this.modalRef = this.modalService.show(template);
     this.study = study;
+  }
+
+  loadMoreSites() {
+    const offset = this.manageStudiesBackup.studies.length;
+    // console.log(this.manageStudiesBackup.studies);
+    this.study$ = combineLatest(
+      this.studiesService.getStudiesWithSites(this.limit, offset),
+      this.query$,
+    ).pipe(
+      map(([manageStudies, query]) => {
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        console.log('before ' + this.manageStudiesBackup.studies.length);
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        console.log('result ' + manageStudies.studies.length);
+        const studies = [];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        studies.push(...this.manageStudiesBackup.studies);
+        studies.push(...manageStudies.studies);
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        console.log('combined ' + studies.length);
+        this.manageStudiesBackup.studies = studies;
+        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
+          (study: Study) =>
+            study.name?.toLowerCase().includes(query) ||
+            study.customId?.toLowerCase().includes(query) ||
+            study.sites.some((site) =>
+              site.name?.toLowerCase()?.includes(query),
+            ),
+        );
+
+        this.loadMoreEnabled =
+          this.manageStudiesBackup.studies.length % this.limit === 0
+            ? true
+            : false;
+        // console.log(this.manageStudiesBackup.studies.length);
+        return this.manageStudiesBackup;
+      }),
+    );
   }
 }

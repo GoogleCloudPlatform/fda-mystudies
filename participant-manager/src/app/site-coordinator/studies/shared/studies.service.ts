@@ -10,7 +10,11 @@ export class StudiesService {
   getStudies(): Observable<StudyResponse> {
     return this.entityService.get('studies');
   }
-  getStudiesWithSites(): Observable<StudyResponse> {
-    return this.entityService.get('sites');
+  getStudiesWithSites(
+    limit: number,
+    offset: number,
+  ): Observable<StudyResponse> {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    return this.entityService.get('sites?limit=' + limit + '&offset=' + offset);
   }
 }
