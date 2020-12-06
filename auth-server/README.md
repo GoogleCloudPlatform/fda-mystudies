@@ -13,28 +13,24 @@ The client applications are:
 1. [`iOS mobile application`](../iOS/)
 1. [`Participant manager`](../participant-manager/)
  
-The [`Auth server`](../auth-server/) provides the following functionality to support **FDA MyStudies** administrative users and participants:
+The `Auth server`provides the following functionality:
 1. User registration
 1. User credentials management
 1. User authentication
-1. Token management
 1. User logout
- 
-The [`Auth server`](../auth-server/) provides the following functionality to support server-to-server authentication:
-1. Client credentials management (client id and secret)
-1. Client credentials validation
+1. Server-to-server authentication support
  
 The `Auth server` identity management application is built as a Spring Boot application that implements user login and consent flows. It integrates with your deployment’s instance of [ORY Hydra](https://www.ory.sh/hydra/) for token generation and management.
  
 # Deployment
 > **_NOTE:_** Holistic deployment of the **FDA MyStudies** platform with Terraform and infrastructure-as-code is the recommended approach to deploying this component. A step-by-step guide to semi-automated deployment can be found in the [`deployment/`](/deployment) directory. The following instructions are provided in case manual deployment in a VM is required. Google Cloud infrastructure is indicated, but equivalent alternative infrastructure can be used as well. It is important for the deploying organization to consider the identity and access control choices made when configuring the selected services. If pursuing a manual deployment, a convenient sequence is [`hydra/`](/hydra)&rarr;[`auth-server/`](/auth-server/)&rarr;[`participant-datastore/`](/participant-datastore/)&rarr;[`participant-manager-datastore/`](/participant-manager-datastore/)&rarr;[`participant-manager/`](/participant-manager/)&rarr;[`study-datastore/`](/study-datastore/)&rarr;[`response-datastore/`](/response-datastore/)&rarr;[`study-builder/`](/study-builder/)&rarr;[`Android/`](/Android/)&rarr;[`iOS/`](/iOS/).
  
-To deploy [`auth-server`](/auth-server/) manually:
+To deploy the [`Auth server`](/auth-server/) manually:
 1. [Create](https://cloud.google.com/compute/docs/instances/create-start-instance) a Compute Engine VM instance and [reserve a static IP](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-internal-ip-address)
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/) with `git clone https://github.com/GoogleCloudPlatform/fda-mystudies.git` and your [personal access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) as password (you may need to install git, for example `sudo apt install git`)
 1. Create a Cloud SQL instance with MySQL v5.7 ([instructions](https://cloud.google.com/sql/docs/mysql/create-instance))
 1. Configure the `Auth server` database on the Cloud SQL instance
-    -    Create a user account that the `Auth server` application will use to access this database ([instructions](https://cloud.google.com/sql/docs/mysql/create-manage-users))
+    -    Create a user account that the `Auth server` application will use to access this instance ([instructions](https://cloud.google.com/sql/docs/mysql/create-manage-users))
     -    Create a database named `oauth_server_hydra` with the [`mystudies_oauth_server_hydra_db_script.sql`](sqlscript/mystudies_oauth_server_hydra_db_script.sql) script ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))
     -   Enable the database’s private IP connectivity in the same network as your VM ([instructions](https://cloud.google.com/sql/docs/mysql/configure-private-ip))
 1. Deploy the `Auth server` container to the VM
