@@ -45,7 +45,7 @@ To deploy [`Hydra`](/hydra) manually:
  
 # Hydra client configuration
  
-The FDA MyStudies platform components are configured with a `client_id` and `client_secret`.  The grant type for each component and example values are listed in the table below. The `Participant manager`, `Android` and `iOS` applications share a single set of credentials. You are responsible for generating and managing the values of `client_secret`. You can set these values with `Hydra` by making a POST request:
+The FDA MyStudies platform components are configured with a `client_id` and `client_secret`.  The grant type for each component and example values are listed in the table below. The `Auth server`, `Participant manager`, `Android` and `iOS` applications share a single set of credentials. You are responsible for generating and managing the values of `client_secret`. You can set these values with `Hydra` by making a POST request:
  
 ```shell
  curl    --location --request POST ‘<HYDRA_ADMIN_BASE_URL>/clients’ \
@@ -72,7 +72,7 @@ Platform component | Grant type | client_id | client_name
 [Study builder](../study-builder/) | `client_credentials` | `study_builder_hydra_client` | `study_builder`
 [Study datastore](../study-datastore/) | `client_credentials` | `study_datastore_hydra_client` | `study_datastore`
 [Participant manager](../participant-manager/)<br/>[iOS mobile application](../iOS/)<br/>[Android mobile application](../Android/) | `client_credentials`<br/>`refresh_token`<br/>`authorization_code` | `mystudies_hydra_client` | `mystudies`
-[Auth server](../auth-server/) | `client_credentials`<br/>`refresh_token`<br/>`authorization_code` | `auth_server_hydra_client` | `auth_server`
+[Auth server](../auth-server/)<br/>[Participant manager](../participant-manager/)<br/>[iOS mobile application](../iOS/)<br/>[Android mobile application](../Android/) | `client_credentials`<br/>`refresh_token`<br/>`authorization_code` | `mystudies_hydra_client` | `mystudies`
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
