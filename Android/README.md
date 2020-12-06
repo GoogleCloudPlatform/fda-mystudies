@@ -16,7 +16,7 @@ This directory contains all the code necessary to build the **FDA MyStudies** An
 The **FDA MyStudies** Android application requires [Android Studio](https://developer.android.com/studio/index.html) and can be run on Android versions starting from Kitkat.
 
 # Platform integration
-The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth/) using OAuth 2.0 and [`Hydra`](/hydra/).
+The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth-server/) using OAuth 2.0 and [`Hydra`](/hydra/).
 
 # Configuration instructions
 
@@ -30,8 +30,8 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Update `BASE_URL_PARTICIPANT_DATASTORE` with your [`User datastore`](../participant-datastore/user-mgmt-module/) URL
     -    Update `BASE_URL_PARTICIPANT_CONSENT_DATASTORE` with your [`Consent datastore`](../participant-datastore/consent-mgmt-module/) URL
     -    Update `BASE_URL_PARTICIPANT_ENROLLMENT_DATASTORE` with your [`Enrollment datastore`](../participant-datastore/enroll-mgmt-module/) URL
-    -    Update `BASE_URL_HYDRA_SERVER` with your [`Hydra server`](../auth/hydra/) public URL (typically configured on port 4444)
-    -    Update `BASE_URL_AUTH_SERVER` with your [`Auth server`](../auth/oauth-scim-module/) URL
+    -    Update `BASE_URL_HYDRA_SERVER` with your [`Hydra server`](../hydra/) public URL (typically configured on port 4444)
+    -    Update `BASE_URL_AUTH_SERVER` with your [`Auth server`](../auth-server/) URL
     -    Update `BASE_URL_RESPONSE_DATASTORE` with your [`Response datastore`](../response-datastore/) URL
     -    Update `HYDRA_CLIENT_ID` with the `client_id` you configured during [`Hydra`](/hydra/) deployment (the mobile applications share a `client_id` with the `Auth server` and `Participant manager`) 
     -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
@@ -47,7 +47,7 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    [Register your Android app](https://firebase.google.com/docs/android/setup) in the Cloud Messaging section of the Firebase console (the `Android package name` is the `applicationID` value in the [`Android/app/build.gradle`](app/build.gradle) file)
     -    Download the `google-services.json` file from the [Firebase project settings](https://console.firebase.google.com/project/_/settings/general/) page and replace [`Android/app/src/fda/google-services.json`](app/src/fda/google-services.json)
     -    Set the `android_server_key` field of [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) to the `Server key` retrieved from the [Firebase project settings](https://console.firebase.google.com/project/_/settings/general/) page
-    -    Run the updated [`mystudies_app_info_update_db_script.sql`](sqlscript/mystudies_app_info_update_db_script.sql) script on the `mystudies_participant_datastore` database that you created during [`Participant datastore`](/participant-datastore/) deployment  ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))
+    -    Run the updated [`mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) script on the `mystudies_participant_datastore` database that you created during [`Participant datastore`](/participant-datastore/) deployment  ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))
 1. *Optional.* Customize images and text
      -    Replace images at the appropriate resolution in the [`Android/app/src/fda/res/`](app/src/fda/res/) directories: `mipmap-hdpi`, `mipmap-mdpi`, `mipmap-xhdpi`, `mipmap-xxhdpi`, `mipmap-xxxhdpi`, `drawable-560dpi`, `drawable-xhdpi`, `drawable-xxhdpi`, `drawable-xxxhdpi`
      -    Customize user-facing text in the [`Android/app/src/main/res/values/strings.xml`](app/src/main/res/values/strings.xml) file 
