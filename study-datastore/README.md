@@ -33,6 +33,7 @@ To deploy the [`Study datastore`](/study-datastore/) manually:
 (you may need to install [htpasswd](https://httpd.apache.org/docs/2.4/programs/htpasswd.html), for example `sudo apt-get install apache2-utils`)
     -    Run the [`/study-builder/HPHC_My_Studies_DB_Create_Script.sql`](/study-builder/sqlscript/HPHC_My_Studies_DB_Create_Script.sql) script to create a database named `fda_hphc` ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file)) 
     -    Run the [`/study-builder/version_info_script.sql`](/study-builder/sqlscript/version_info_script.sql) script
+    -    Run the [`/study-builder/procedures.sql`](/study-builder/sqlscript/procedures.sql) script
     -    Run the `sb-superadmin.sql` script that you created in the step above
     -   Enable the database’s private IP connectivity in the same network as your VM ([instructions](https://cloud.google.com/sql/docs/mysql/configure-private-ip))
 1. Configure blob storage for public study resources by [creating](https://cloud.google.com/storage/docs/creating-buckets) a Google Cloud Storage bucket with [public read access](https://cloud.google.com/storage/docs/access-control/making-data-public#buckets)
