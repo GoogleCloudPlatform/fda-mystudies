@@ -184,7 +184,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnStudiesForSuperAdminForPagination() throws Exception {
+  public void shouldReturnStudiesForSuperAdminWithPagination() throws Exception {
     userRegAdminEntity.setSuperAdmin(true);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
 
@@ -219,7 +219,25 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].customId").value("StudyCustomId11"))
         .andExpect(jsonPath("$.studies[10].customId").value("StudyCustomId1"));
 
-    verifyTokenIntrospectRequest();
+    verifyTokenIntrospectRequest(1);
+
+    // search
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDIES.getPath())
+                .param("limit", "20")
+                .param("offset", "0")
+                .param("searchTerm", "11")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].customId").value("StudyCustomId11"));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
@@ -262,6 +280,24 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[4].customId").value("StudyCustomId16"));
 
     verifyTokenIntrospectRequest();
+
+    // search
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDIES.getPath())
+                .param("limit", "20")
+                .param("offset", "0")
+                .param("searchTerm", "2")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(3)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].customId").value("StudyCustomId20"));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test

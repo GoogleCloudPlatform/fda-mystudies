@@ -14,7 +14,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 
 public interface StudyService {
 
-  public StudyResponse getStudies(String userId, Integer limit, Integer offset);
+  public StudyResponse getStudies(String userId, Integer limit, Integer offset, String searchTerm);
 
   public ParticipantRegistryResponse getStudyParticipants(
       String userId,

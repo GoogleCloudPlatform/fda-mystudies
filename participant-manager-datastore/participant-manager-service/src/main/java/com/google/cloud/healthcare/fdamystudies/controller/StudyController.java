@@ -60,9 +60,10 @@ public class StudyController {
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @RequestParam(defaultValue = "10") Integer limit,
       @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
-    StudyResponse studyResponse = studyService.getStudies(userId, limit, offset);
+    StudyResponse studyResponse = studyService.getStudies(userId, limit, offset, searchTerm);
     logger.exit(String.format(STATUS_LOG, studyResponse.getHttpStatusCode()));
     return ResponseEntity.status(studyResponse.getHttpStatusCode()).body(studyResponse);
   }

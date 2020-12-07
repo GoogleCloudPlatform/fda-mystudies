@@ -66,7 +66,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   @Transactional(readOnly = true)
-  public StudyResponse getStudies(String userId, Integer limit, Integer offset) {
+  public StudyResponse getStudies(String userId, Integer limit, Integer offset, String searchTerm) {
     logger.entry("getStudies(String userId)");
 
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
@@ -76,13 +76,15 @@ public class StudyServiceImpl implements StudyService {
 
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
       StudyResponse studyResponse =
-          getStudiesForSuperAdmin(optUserRegAdminEntity.get(), limit, offset);
+          getStudiesForSuperAdmin(optUserRegAdminEntity.get(), limit, offset, searchTerm);
       logger.exit(
           String.format("total studies for superadmin=%d", studyResponse.getStudies().size()));
       return studyResponse;
     }
 
-    List<StudyInfo> studyDetails = studyRepository.getStudyDetails(userId, limit, offset);
+    List<StudyInfo> studyDetails =
+        studyRepository.getStudyDetails(
+            userId, limit, offset, StringUtils.defaultString(searchTerm));
 
     if (CollectionUtils.isEmpty(studyDetails)) {
       throw new ErrorCodeException(ErrorCode.NO_STUDIES_FOUND);
@@ -114,7 +116,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   private StudyResponse getStudiesForSuperAdmin(
-      UserRegAdminEntity userRegAdminEntity, Integer limit, Integer offset) {
+      UserRegAdminEntity userRegAdminEntity, Integer limit, Integer offset, String searchTerm) {
 
     List<StudyCount> studyInvitedCountList = studyRepository.findInvitedCountByStudyId();
     Map<String, StudyCount> studyInvitedCountMap =
@@ -132,7 +134,8 @@ public class StudyServiceImpl implements StudyService {
     Map<String, SiteCount> sitesPerStudyMap =
         sitesList.stream().collect(Collectors.toMap(SiteCount::getStudyId, Function.identity()));
 
-    List<StudyEntity> studies = studyRepository.findAll(limit, offset);
+    List<StudyEntity> studies =
+        studyRepository.findAll(limit, offset, StringUtils.defaultString(searchTerm));
     List<StudyDetails> studyDetailsList = new ArrayList<>();
     for (StudyEntity study : studies) {
       if (sitesPerStudyMap.containsKey(study.getId())) {
