@@ -99,17 +99,17 @@ export class SiteListComponent implements OnInit {
 
   loadMoreSites() {
     const offset = this.manageStudiesBackup.studies.length;
-    // console.log(this.manageStudiesBackup.studies);
+
     this.study$ = combineLatest(
       this.studiesService.getStudiesWithSites(this.limit, offset),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
         const studies = [];
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+
         console.log('combined ' + studies.length);
         this.manageStudiesBackup.studies = studies;
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
@@ -125,7 +125,7 @@ export class SiteListComponent implements OnInit {
           this.manageStudiesBackup.studies.length % this.limit === 0
             ? true
             : false;
-        // console.log(this.manageStudiesBackup.studies.length);
+
         return this.manageStudiesBackup;
       }),
     );

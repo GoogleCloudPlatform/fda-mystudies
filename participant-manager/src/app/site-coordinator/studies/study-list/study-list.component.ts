@@ -88,14 +88,14 @@ export class StudyListComponent implements OnInit {
 
   loadMoreSites() {
     const offset = this.manageStudiesBackup.studies.length;
-    // console.log(this.manageStudiesBackup.studies);
+
     this.studyList$ = combineLatest(
       this.studiesService.getStudies(this.limit, offset),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
         const studies = [];
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
         this.manageStudiesBackup.studies = studies;
