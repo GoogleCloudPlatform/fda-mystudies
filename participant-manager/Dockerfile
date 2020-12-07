@@ -11,6 +11,7 @@ COPY package.json package-lock.json ./
 #RUN yarn install
 WORKDIR /opt/ng COPY .npmrc package.json yarn.lock ./
 RUN yarn global add @angular/cli@latest
+RUN yarn add @angular-devkit/build-angular --dev
 RUN yarn install
 COPY . ./
 RUN ng build --aot --prod
