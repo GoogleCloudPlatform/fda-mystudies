@@ -315,6 +315,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
         participantRegistrySiteRepository.findByStudyIdAndEmail("3", "cdash936@gmail.com");
 
     ParticipantRegistrySiteEntity participantRegistrySite = participantRegistrySiteList.get(0);
+    // Set onboarding status to Disabled (D)
     participantRegistrySite.setOnboardingStatus("D");
     participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
 
@@ -331,15 +332,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
                 .content(requestJson)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest());
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_FOUND_INELIGIBLE_FOR_STUDY.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, USER_FOUND_INELIGIBLE_FOR_STUDY);
+        .andExpect(status().isGone())
+        .andExpect(jsonPath("$.error_description", is(TOKEN_EXPIRED.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
