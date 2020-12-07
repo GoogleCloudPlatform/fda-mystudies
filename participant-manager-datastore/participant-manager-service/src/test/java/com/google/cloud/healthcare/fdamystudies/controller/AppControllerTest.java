@@ -486,9 +486,8 @@ public class AppControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.participants").isArray())
-        .andExpect(jsonPath("$.participants", hasSize(21)))
-        .andExpect(jsonPath("$.participants[0].email").value(EMAIL_VALUE))
-        .andExpect(jsonPath("$.totalParticipantCount").value(21));
+        .andExpect(jsonPath("$.participants", hasSize(10)))
+        .andExpect(jsonPath("$.participants[0].email").value(EMAIL_VALUE));
 
     verifyTokenIntrospectRequest(2);
   }
