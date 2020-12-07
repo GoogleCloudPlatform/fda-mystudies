@@ -1,0 +1,26 @@
+.page-wrap {
+  min-height: 100vh;
+}
+
+@media only screen and (max-width: 2560px) and (min-width: 1020px) {
+  .custom__font_error {
+    font-size: 140px !important;
+  }
+}
+
+@media only screen and (max-width: 1019px) and (min-width: 760px) {
+  .custom__font_error {
+    font-size: 140px !important;
+  }
+}
+
+@media only screen and (max-width: 760px) and (min-width: 320px) {
+  .custom__font_error {
+    font-size: 140px !important;
+  }
+}
+
+.custom__font_error {
+  color: #b3bcc6 !important;
+  margin-top: -20px;
+}
