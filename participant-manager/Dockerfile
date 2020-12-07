@@ -9,7 +9,7 @@ FROM node:latest AS compile-image
 WORKDIR /app
 COPY package.json package-lock.json ./
 #RUN yarn install
-RUN npm install -g yarn
+
 RUN yarn global add @angular/cli@latest
 RUN yarn install
 COPY . ./
