@@ -7,7 +7,7 @@
 # Installing all the dependencies and creating Dist file or building angular application
 FROM node:latest AS compile-image
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package.json ./
 #RUN yarn install
 WORKDIR /opt/ng COPY .npmrc package.json yarn.lock ./
 
