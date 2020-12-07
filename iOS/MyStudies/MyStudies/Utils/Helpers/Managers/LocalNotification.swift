@@ -31,25 +31,6 @@ class LocalNotification: NSObject {
 
   static var handler: ((Bool) -> Void) = { _ in }
 
-  /// Registers local ntification for joined studies
-  /// - Parameter completionHandler: returns bool value
-  class func registerLocalNotificationForJoinedStudies(
-    completionHandler: @escaping (Bool) -> Void
-  ) {
-
-    studies =
-      (Gateway.instance.studies?.filter({
-        $0.userParticipateState.status == UserStudyStatus.StudyStatus.inProgress
-          && $0
-            .status
-            == .active
-      }))!
-
-    handler = completionHandler
-    LocalNotification.registerForStudy()
-
-  }
-
   /// This method is used to register for study
   class func registerForStudy() {
 
@@ -296,7 +277,7 @@ class LocalNotification: NSObject {
     userInfo: [String: Any],
     id: String?
   ) {
-
+    var date = date
     if date > Date() {
       let content = UNMutableNotificationContent()
       content.body = message
@@ -304,62 +285,19 @@ class LocalNotification: NSObject {
       content.sound = UNNotificationSound.default
       content.badge = 1
 
-      let timeInterval = date.timeIntervalSinceNow
-      let trigger = UNTimeIntervalNotificationTrigger(
-        timeInterval: timeInterval,
-        repeats: false
-      )
+      date.updateWithOffset()
+      let dateComponents = Calendar(identifier: .iso8601)
+        .dateComponents(
+          [.year, .month, .day, .hour, .minute, .second],
+          from: date
+        )
+      let notificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
       let id = id ?? Utilities.randomString(length: 10)
-      let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+      let request = UNNotificationRequest(identifier: id, content: content, trigger: notificationTrigger)
       let center = UNUserNotificationCenter.current()
       center.add(request)
 
-    }
-
-  }
-
-  /// Deletes a notification for a studyId and activityId
-  /// - Parameter studyId: studyId of type string
-  /// - Parameter activityid: activityId of type string
-  class func removeLocalNotificationfor(studyId: String, activityid: String) {
-
-    let notificationCenter = UNUserNotificationCenter.current()
-    notificationCenter.getPendingNotificationRequests { (allNotificaiton) in
-
-      var nIdentifers: [String] = []
-      for notification in allNotificaiton {
-        let userInfo = notification.content.userInfo
-        if userInfo[kStudyId] != nil && userInfo[kActivityId] != nil {
-          if userInfo[kStudyId] as! String == studyId
-            && userInfo[kActivityId] as! String
-              == activityid
-          {
-            nIdentifers.append(notification.identifier)
-          }
-        }
-      }
-      notificationCenter.removePendingNotificationRequests(withIdentifiers: nIdentifers)
-    }
-
-  }
-
-  /// Removes local notification for a studyId
-  /// - Parameter studyId: studyId of type string
-  class func removeLocalNotificationfor(studyId: String) {
-
-    let notificationCenter = UNUserNotificationCenter.current()
-    notificationCenter.getPendingNotificationRequests { (allNotificaiton) in
-
-      var nIdentifers: [String] = []
-      for notification in allNotificaiton {
-        let userInfo = notification.content.userInfo
-        if userInfo[kStudyId] != nil {
-          if userInfo[kStudyId] as! String == studyId {
-            nIdentifers.append(notification.identifier)
-          }
-        }
-      }
-      notificationCenter.removePendingNotificationRequests(withIdentifiers: nIdentifers)
     }
 
   }
@@ -421,15 +359,6 @@ class LocalNotification: NSObject {
   static func removeAllDeliveredNotifications() {
     let center = UNUserNotificationCenter.current()
     center.removeAllDeliveredNotifications()
-  }
-
-  /// Retrives the pending notificaitons
-  class func scheduledNotificaiton() {
-    let center = UNUserNotificationCenter.current()
-    center.getPendingNotificationRequests(
-      completionHandler: { _ in
-        // You can print here for debug purpose.
-      })
   }
 
   private static let timeFormatter: DateFormatter = {

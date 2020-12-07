@@ -94,7 +94,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  value: study_resources_bucket_name
+                  key: study_resources_bucket_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
