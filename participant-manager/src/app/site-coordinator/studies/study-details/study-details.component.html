@@ -68,7 +68,7 @@
           class="pt-1"
         >
           <div class="enrollment-label mt-4">
-            <span>
+            <span class="btn mt-2 enrol_btn p-none">
               Enrollment Target:
               {{ studyDetails.participantRegistryDetail.targetEnrollment }}
             </span>
@@ -176,15 +176,18 @@
               </td>
               <td>{{ lists.enrollmentDate }}</td>
             </tr>
+
+            <tr
+              *ngIf="
+                studyDetails.participantRegistryDetail.registryParticipants
+                  .length === 0
+              "
+            >
+              <td></td>
+              <td class="text-center">No records found</td>
+              <td></td>
+            </tr>
           </tbody>
-          <div
-            *ngIf="
-              studyDetails.participantRegistryDetail.registryParticipants
-                .length === 0
-            "
-          >
-            No records found
-          </div>
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="5">
