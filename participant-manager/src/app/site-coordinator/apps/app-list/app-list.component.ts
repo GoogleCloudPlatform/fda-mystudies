@@ -15,6 +15,8 @@ export class AppListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   manageApp$: Observable<ManageApps> = of();
   manageAppsBackup = {} as ManageApps;
+  loadMoreEnabled = true;
+  limit = 10;
   appUsersMessageMapping: {[k: string]: string} = {
     '=0': 'No App Users',
     '=1': 'One App User',
@@ -39,7 +41,7 @@ export class AppListComponent implements OnInit {
 
   getApps(): void {
     this.manageApp$ = combineLatest(
-      this.appService.getUserApps(),
+      this.appService.getUserApps(this.limit, 0),
       this.query$,
     ).pipe(
       map(([manageApps, query]) => {
@@ -55,6 +57,11 @@ export class AppListComponent implements OnInit {
             app.name?.toLowerCase().includes(query.toLowerCase()) ||
             app.customId?.toLowerCase().includes(query.toLowerCase()),
         );
+
+        this.loadMoreEnabled =
+          this.manageAppsBackup.apps.length % this.limit === 0 ? true : false;
+        console.log(this.loadMoreEnabled);
+
         return this.manageAppsBackup;
       }),
     );
@@ -81,6 +88,35 @@ export class AppListComponent implements OnInit {
   checkViewPermission(permission: number): boolean {
     return (
       permission === Permission.View || permission === Permission.ViewAndEdit
+    );
+  }
+
+  loadMoreSites() {
+    const offset = this.manageAppsBackup.apps.length;
+    this.manageApp$ = combineLatest(
+      this.appService.getUserApps(this.limit, offset),
+      this.query$,
+    ).pipe(
+      map(([manageApps, query]) => {
+        const apps = [];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        apps.push(...this.manageAppsBackup.apps);
+        apps.push(...manageApps.apps);
+        this.manageAppsBackup.apps = apps;
+        if (!manageApps.superAdmin && manageApps.studyPermissionCount < 2) {
+          this.toastr.error(
+            'This view displays app-wise enrollment if you manage multiple studies.',
+          );
+        }
+        this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
+          (app: App) =>
+            app.name?.toLowerCase().includes(query.toLowerCase()) ||
+            app.customId?.toLowerCase().includes(query.toLowerCase()),
+        );
+        this.loadMoreEnabled =
+          this.manageAppsBackup.apps.length % this.limit === 0 ? true : false;
+        return this.manageAppsBackup;
+      }),
     );
   }
 }
