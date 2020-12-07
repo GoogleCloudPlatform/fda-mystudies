@@ -10,7 +10,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 #RUN npm install
 #RUN npm install --prefer-offline --no-audit --progress=false
-RUN npm install
+RUN npm install --progress=false
 RUN npm install -g @angular/cli@9.1.12
 COPY . ./
 RUN ng build --aot --prod
