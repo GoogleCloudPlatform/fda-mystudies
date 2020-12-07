@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/MIT.
 # Stage 1
 # Installing all the dependencies and creating Dist file or building angular application
-FROM node:6.9.5-alpine
+FROM node:6.9.5-alpine AS compile-image
 RUN mkdir -p /code
 WORKDIR /code
 ADD . /code
