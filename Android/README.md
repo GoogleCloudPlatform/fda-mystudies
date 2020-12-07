@@ -21,22 +21,8 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 # Configuration instructions
 
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/) with `git clone https://github.com/GoogleCloudPlatform/fda-mystudies.git` and your [personal access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) as password (you may need to install git, for example `sudo apt install git`)
-1. Open the [`Android/`](../Android/) directory as an existing project with [Android Studio](https://developer.android.com/studio/index.html)
-1. If necessary, install the Android 10 SDK using Tools &rarr; [SDK Manager](https://developer.android.com/studio/intro/update#sdk-manager), then File &rarr; Sync Project with Gradle Files	 
 1. Set the `applicationId` in [`Android/app/build.gradle`](app/build.gradle) to your [Application ID](https://developer.android.com/studio/build/application-id)
-1. Update the following in the [`Android/api.properties`](api.properties) file:
-    -    Update `API_KEY` with the `bundle_id` and `app_token` that you configured in [`study-datastore/src/main/resources/authorizationResource.properties`](../study-datastore/src/main/resources/authorizationResource.properties) during [`Study datastore`](/study-datastore/) deployment with format `<value of android.bundleid>:<value of android.apptoken>`
-    -    Update `BASE_URL_STUDY_DATASTORE` with your [`Study datastore`](../study-datastore) URL
-    -    Update `BASE_URL_PARTICIPANT_DATASTORE` with your [`User datastore`](../participant-datastore/user-mgmt-module/) URL
-    -    Update `BASE_URL_PARTICIPANT_CONSENT_DATASTORE` with your [`Consent datastore`](../participant-datastore/consent-mgmt-module/) URL
-    -    Update `BASE_URL_PARTICIPANT_ENROLLMENT_DATASTORE` with your [`Enrollment datastore`](../participant-datastore/enroll-mgmt-module/) URL
-    -    Update `BASE_URL_HYDRA_SERVER` with your [`Hydra server`](../hydra/) public URL (typically configured on port 4444)
-    -    Update `BASE_URL_AUTH_SERVER` with your [`Auth server`](../auth-server/) URL
-    -    Update `BASE_URL_RESPONSE_DATASTORE` with your [`Response datastore`](../response-datastore/) URL
-    -    Update `HYDRA_CLIENT_ID` with the `client_id` you configured during [`Hydra`](/hydra/) deployment (the mobile applications share a `client_id` with the `Auth server` and `Participant manager`) 
-    -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
-    -    Set `APP_TYPE` to either “gateway” or “standalone”
-    -    Update `STUDY_ID` key with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
+1. Modify [`Android/api.properties`](api.properties) to match the configuration of your backend services
 1. Update the following in the [`Android/app/src/fda/res/values/strings.xml`](app/src/fda/res/values/strings.xml) file:
     -    Set `deeplink_host` to redirect to the app from the [`Hydra`](/hydra/) auth server (for example, `app://mystudies.<your-domain>.net/mystudies` - more information about deep links within Android applications is located [here](https://developer.android.com/training/app-links/deep-linking))
     -    Set `google_maps_key` to the API key obtained following the instructions located [here](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
@@ -51,6 +37,8 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 1. *Optional.* Customize images and text
      -    Replace images at the appropriate resolution in the [`Android/app/src/fda/res/`](app/src/fda/res/) directories: `mipmap-hdpi`, `mipmap-mdpi`, `mipmap-xhdpi`, `mipmap-xxhdpi`, `mipmap-xxxhdpi`, `drawable-560dpi`, `drawable-xhdpi`, `drawable-xxhdpi`, `drawable-xxxhdpi`
      -    Customize user-facing text in the [`Android/app/src/main/res/values/strings.xml`](app/src/main/res/values/strings.xml) file 
+1. Open the [`Android/`](../Android/) directory that contains your modifications as an existing project in [Android Studio](https://developer.android.com/studio/index.html)
+1. If necessary, install the Android 10 SDK using Tools &rarr; [SDK Manager](https://developer.android.com/studio/intro/update#sdk-manager), then File &rarr; Sync Project with Gradle Files (do not update Gradle plugin)
 
 # Building and deploying
 
