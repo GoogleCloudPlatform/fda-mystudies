@@ -241,7 +241,9 @@ public class StudyServiceImpl implements StudyService {
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
       Integer limit,
-      Integer offset) {
+      Integer offset,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
 
@@ -273,6 +275,8 @@ public class StudyServiceImpl implements StudyService {
         excludeParticipantStudyStatus,
         limit,
         offset,
+        orderByCondition,
+        searchTerm,
         auditRequest);
   }
 
@@ -283,12 +287,15 @@ public class StudyServiceImpl implements StudyService {
       String[] excludeParticipantStudyStatus,
       Integer limit,
       Integer offset,
+      String orderByCondition,
+      String searchTerm,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
     List<StudyParticipantDetails> studyParticipantDetails =
-        studyRepository.getStudyParticipantDetails(studyId, limit, offset);
+        studyRepository.getStudyParticipantDetails(
+            studyId, limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
       if (ArrayUtils.contains(
           excludeParticipantStudyStatus, participantDetails.getEnrolledStatus())) {
@@ -300,9 +307,13 @@ public class StudyServiceImpl implements StudyService {
     }
     participantRegistryDetail.setRegistryParticipants(registryParticipants);
 
+    Long participantCount =
+        studyRepository.countParticipantsByStudyIdAndSearchTerm(
+            studyId, StringUtils.defaultString(searchTerm));
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
+    participantRegistryResponse.setTotalParticipantCount(participantCount);
 
     auditRequest.setUserId(userId);
     auditRequest.setStudyId(studyId);

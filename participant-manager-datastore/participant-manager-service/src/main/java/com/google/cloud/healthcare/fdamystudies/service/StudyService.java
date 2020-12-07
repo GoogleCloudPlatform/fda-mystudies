@@ -22,5 +22,7 @@ public interface StudyService {
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
       Integer limit,
-      Integer offset);
+      Integer offset,
+      String orderByCondition,
+      String searchTerm);
 }

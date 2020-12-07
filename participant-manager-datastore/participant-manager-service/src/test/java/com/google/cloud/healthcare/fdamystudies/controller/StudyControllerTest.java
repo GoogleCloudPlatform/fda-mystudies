@@ -252,6 +252,44 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnInvalidSortByValue() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), IdGenerator.id())
+                .headers(headers)
+                .param("sortBy", "abc")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.UNSUPPORTED_SORTBY_VALUE.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnInvalidSortDirectionValue() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), IdGenerator.id())
+                .headers(headers)
+                .param("sortDirection", "asce")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.UNSUPPORTED_SORT_DIRECTION_VALUE.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnStudyParticipantsForDisabled() throws Exception {
 
     locationEntity = testDataHelper.createLocation();
@@ -517,17 +555,20 @@ public class StudyControllerTest extends BaseMockIT {
               siteEntity, studyEntity, participantRegistrySiteEntity);
       // Pagination records should be in descending order of created timestamp
       // Entities are not saved in sequential order so adding delay
-      Thread.sleep(500);
+      Thread.sleep(5);
     }
 
-    // Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch only 3 data
+    // Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch only 10 data
     // out of 21
     mockMvc
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
-                .param("limit", "20")
-                .param("offset", "18")
+                .param("limit", "10")
+                .param("offset", "0")
+                .param("sortBy", "siteId")
+                .param("sortDirection", "desc")
+                .param("searchTerm", "20")
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -535,14 +576,14 @@ public class StudyControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(3)))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(1)))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
-                .value(LOCATION_NAME_VALUE + String.valueOf(2)));
+                .value(LOCATION_NAME_VALUE + String.valueOf(20)));
 
     verifyTokenIntrospectRequest(1);
 
-    // get  study participants for the default values of limit and offset
+    // get  study participants for the default values
     mockMvc
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
@@ -553,10 +594,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)))
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
-                .value(LOCATION_NAME_VALUE + String.valueOf(20)));
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)));
 
     verifyTokenIntrospectRequest(2);
   }
