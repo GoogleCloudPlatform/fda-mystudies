@@ -38,7 +38,7 @@ export class AuthService {
 
   beginLoginConsentFlow(): void {
     const params = new HttpParams()
-      .set('client_id', environment.clientId)
+      .set('client_id', environment.hydraClientId)
       .set('scope', 'offline_access')
       .set('appId', this.appId)
       .set('response_type', 'code')
@@ -47,11 +47,11 @@ export class AuthService {
       .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
       .set('correlationId', sessionStorage.getItem('correlationId') || '')
       .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
-      .set('redirect_uri', environment.redirectUrl)
+      .set('redirect_uri', environment.authServerRedirectUrl)
       .set('state', uuidv4())
       .set('source', this.source)
       .toString();
-    window.location.href = `${environment.loginUrl}?${params}`;
+    window.location.href = `${environment.hydraLoginUrl}?${params}`;
   }
 
   hasCredentials(): boolean {
@@ -84,7 +84,7 @@ export class AuthService {
       .set(`grant_type`, 'authorization_code')
       .set('scope', 'openid offline offline_access')
       .set('code', code)
-      .set('redirect_uri', environment.redirectUrl)
+      .set('redirect_uri', environment.authServerRedirectUrl)
       .set('userId', userId)
       .set('code_verifier', sessionStorage.getItem('pkceVerifier') || '');
     return this.http.post<AccessToken>(
@@ -108,8 +108,8 @@ export class AuthService {
 
     const params = new HttpParams()
       .set(`grant_type`, 'refresh_token')
-      .set('redirect_uri', environment.redirectUrl)
-      .set('client_id', environment.clientId)
+      .set('redirect_uri', environment.authServerRedirectUrl)
+      .set('client_id', environment.hydraClientId)
       .set(`refresh_token`, this.getRefreshToken())
       .set('userId', this.getAuthUserId());
 

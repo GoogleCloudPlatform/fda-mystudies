@@ -151,112 +151,6 @@ class User {
     self.userId = userId
   }
 
-  /// Setter method for `FirstName`
-  /// - Parameter firstName:
-  func setFirstName(firstName: String) {
-    self.firstName = firstName
-  }
-
-  /// Setter method for `LastName`
-  /// - Parameter lastName:
-  func setLastName(lastName: String) {
-    self.lastName = lastName
-  }
-
-  /// Setter method for `EmailId`
-  /// - Parameter emailId:
-  func setEmailId(emailId: String) {
-    self.emailId = emailId
-  }
-
-  /// Setter method for `UserType`
-  /// - Parameter userType:
-  func setUserType(userType: UserType) {
-    self.userType = userType
-  }
-
-  /// Setter method for `UserId`
-  /// - Parameter userId:
-  func setUserId(userId: String) {
-    self.userId = userId
-  }
-
-  /// Comines FirstName and lastName
-  func getFullName() -> String {
-    return firstName! + " " + lastName!
-  }
-
-  /// Setter method for `User` which initialize all properties
-  /// - Parameter dict: `JSONDictionary` which contains all properties of `User`
-  func setUser(dict: NSDictionary) {
-
-    if Utilities.isValidObject(someObject: dict) {
-
-      if Utilities.isValidValue(someObject: dict[kUserFirstName] as AnyObject) {
-        self.firstName = dict[kUserFirstName] as? String
-      }
-      if Utilities.isValidValue(someObject: dict[kUserLastName] as AnyObject) {
-        self.lastName = dict[kUserLastName] as? String
-      }
-      if Utilities.isValidValue(someObject: dict[kUserEmailId] as AnyObject) {
-        self.emailId = dict[kUserEmailId] as? String
-      }
-      if Utilities.isValidObject(someObject: dict[kUserSettings] as AnyObject) {
-        self.settings?.setSettings(dict: (dict[kUserSettings] as? NSDictionary)!)
-      }
-      if Utilities.isValidValue(someObject: dict[kUserId] as AnyObject) {
-        self.userId = dict[kUserId] as? String
-      }
-      if Utilities.isValidValue(someObject: dict[kRefreshToken] as AnyObject) {
-        self.refreshToken = dict[kRefreshToken] as? String
-      }
-    }
-  }
-
-  /// Creates `NSMutableDictionary` of `User` based on userType
-  /// - `Returns:  object of NSMutableDictionary`
-  func getUserProfileDict() -> NSMutableDictionary {
-    let dataDict = NSMutableDictionary()
-
-    if self.userType == .loggedInUser {
-
-      if self.userId != nil {
-        dataDict.setValue(self.userId, forKey: ((kUserId as NSCopying) as? String)!)
-      }
-      let profileDict = NSMutableDictionary()
-
-      if self.firstName != nil {
-        profileDict.setValue(
-          self.firstName,
-          forKey: ((kUserFirstName as NSCopying) as? String)!
-        )
-
-      } else {
-        profileDict.setValue("", forKey: ((kUserFirstName as NSCopying) as? String)!)
-      }
-      if self.lastName != nil {
-        profileDict.setValue(
-          self.lastName,
-          forKey: ((kUserLastName as NSCopying) as? String)!
-        )
-
-      } else {
-        profileDict.setValue("", forKey: ((kUserLastName as NSCopying) as? String)!)
-      }
-
-      let infoDict = NSMutableDictionary()
-      infoDict.setValue(kUserValueForOS, forKey: kUserOS)
-
-      if let version = Bundle.main.infoDictionary?[kCFBundleShortVersionString] as? String {
-        infoDict.setValue(version, forKey: kUserAppVersion)
-      }
-
-      dataDict.setObject(profileDict, forKey: kUserProfile as NSCopying)
-      dataDict.setObject(profileDict, forKey: kUserInfo as NSCopying)
-    }
-    return dataDict
-  }
-
   /// Create an instance of UserStudyStatus based on StudyId
   /// - Parameters:
   ///   - studyId: StudyId to filter `UserActivityStatus`
@@ -334,63 +228,6 @@ class User {
     return nil
   }
 
-  // MARK: Activity Bookmark
-
-  /// Checks `Activity` bookmarked status based on StudyId and ActivityId
-  /// - Parameters:
-  ///   - studyId: StudyId to filter `UserActivityStatus`
-  ///   - activityId: ActivityId to filter `UserActivityStatus`
-  /// - Returns: Boolean state of `Activity` bookmarked
-  func isActivityBookmarked(studyId: String, activityId: String) -> Bool {
-
-    let activityes = self.participatedActivites
-    if let activity = activityes?.filter({ $0.studyId == studyId && $0.activityId == activityId })
-      .first
-    {
-      return activity.bookmarked
-    }
-    return false
-
-  }
-
-  /// Set bookmarked status to a `Activity`
-  /// - Parameters:
-  ///   - studyId: StudyId to filter `UserActivityStatus`
-  ///   - activityId: ActivityId to filter `UserActivityStatus`
-  /// - Returns: An object of `UserActivityStatus`
-  func bookmarkActivity(studyId: String, activityId: String) -> UserActivityStatus {
-
-    let activities = self.participatedActivites
-    if let activity = activities?.filter({ $0.studyId == studyId && $0.activityId == activityId })
-      .first
-    {
-      activity.bookmarked = true
-      return activity
-    } else {
-      let activityStatus = UserActivityStatus()
-      activityStatus.bookmarked = true
-      activityStatus.studyId = studyId
-      activityStatus.activityId = activityId
-      self.participatedActivites.append(activityStatus)
-      return activityStatus
-    }
-
-  }
-
-  /// Changes bookmarked status to false based on StudyID and ActivityID
-  /// - Parameters:
-  ///   - studyId: StudyId  to filter `UserActivityStatus`
-  ///   - activityId: ActivityId to filter `UserActivityStatus`
-  func removeBookbarkActivity(studyId: String, activityId: String) {
-
-    let activities = self.participatedActivites
-    if let activity = activities?.filter({ $0.studyId == studyId && $0.activityId == activityId })
-      .first
-    {
-      activity.bookmarked = true
-    }
-  }
-
   // MARK: Study Status
 
   /// Updates `Study` status
@@ -407,25 +244,6 @@ class User {
     } else {
       let studyStatus = UserStudyStatus()
       studyStatus.status = status
-      studyStatus.studyId = studyId
-      self.participatedStudies.append(studyStatus)
-      return studyStatus
-    }
-  }
-
-  /// Updates `Study` participant ID
-  /// - Parameters:
-  ///   - studyId: StudyId  to filter `UserStudyStatus`
-  ///   - participantId:
-  func updateParticipantId(studyId: String, participantId: String) -> UserStudyStatus {
-
-    let studies = self.participatedStudies
-    if let study = studies?.filter({ $0.studyId == studyId }).first {
-      study.participantId = participantId
-      return study
-    } else {
-      let studyStatus = UserStudyStatus()
-      studyStatus.participantId = participantId
       studyStatus.studyId = studyId
       self.participatedStudies.append(studyStatus)
       return studyStatus
@@ -474,21 +292,6 @@ class User {
       self.participatedActivites.append(activityStatus)
       return activityStatus
     }
-  }
-
-  /// Retrives Activity Status based on ActivityID
-  /// - Parameters:
-  ///   - studyId:
-  ///   - activityId: ActivityID to filter `UserActivityStatus`
-  func getActivityStatus(studyId: String, activityId: String)
-    -> UserActivityStatus.ActivityStatus?
-  {
-
-    let activities = self.participatedActivites
-    if let activity = activities?.filter({ $0.activityId == activityId }).first {
-      return activity.status
-    }
-    return .yetToJoin
   }
 
   func authenticate(with dict: JSONDictionary) {
@@ -565,36 +368,6 @@ class Settings {
     self.localNotifications = localNotifications
     self.touchId = touchId
     self.passcode = passcode
-  }
-
-  /// Setter method for `remoteNotification`
-  /// - Parameter value:
-  func setRemoteNotification(value: Bool) {
-    self.remoteNotifications = value
-  }
-
-  /// Setter methos for `localNotification`
-  /// - Parameter value:
-  func setLocalNotification(value: Bool) {
-    self.localNotifications = value
-  }
-
-  /// Setter method for `touchId`
-  /// - Parameter value:
-  func setTouchId(value: Bool) {
-    self.touchId = value
-  }
-
-  /// Setter method for `password`
-  /// - Parameter value:
-  func setPasscode(value: Bool) {
-    self.passcode = value
-  }
-
-  /// Setter method for `leadTime`
-  /// - Parameter value:
-  func setLeadTime(value: String) {
-    self.leadTime = value
   }
 
   /// Setter method for `Settings` which initialize all properties

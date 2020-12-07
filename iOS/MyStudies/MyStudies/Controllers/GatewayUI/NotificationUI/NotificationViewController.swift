@@ -125,49 +125,7 @@ class NotificationViewController: UIViewController {
     }
 
   }
-
-  /// Used to check the Study State.
-  /// - Parameter study: Instance of `Study`.
-  /// - Returns: `true` if participationStatus == .inProgress.
-  class func checkForStudyState(study: Study) -> Bool {
-
-    let currentStudy = study
-    let participatedStatus = (currentStudy.userParticipateState.status)
-
-    switch currentStudy.status {
-    case .active:
-      if participatedStatus == .inProgress {
-        return true
-      } else {
-        UIUtilities.showAlertWithTitleAndMessage(
-          title: "",
-          message: NSLocalizedString("Please join study to go forward.", comment: "")
-            as NSString
-        )
-      }
-    case .upcoming:
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: "",
-        message: NSLocalizedString(kMessageForStudyUpcomingState, comment: "") as NSString
-      )
-
-    case .paused:
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: "",
-        message: NSLocalizedString(kMessageForStudyPausedState, comment: "") as NSString
-      )
-
-    case .closed:
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: "",
-        message: NSLocalizedString(kMessageForStudyClosedState, comment: "") as NSString
-      )
-
-    }
-
-    return false
-  }
-
+  
   /// This method checks if the user has joined the study already.
   /// - Parameter study: Instance of `Study`to check.
   private func isUserJoined(study: Study) -> Bool {
@@ -178,29 +136,6 @@ class NotificationViewController: UIViewController {
       return true
     }
     return false
-  }
-
-  class func checkForStudyStateAndParticiapantState(study: Study) -> Bool {
-
-    let currentStudy = study
-    let participatedStatus = (currentStudy.userParticipateState.status)
-
-    switch currentStudy.status {
-    case .active:
-      if participatedStatus == .inProgress {
-        return true
-      } else {
-        return false
-      }
-    case .upcoming:
-      return false
-    case .paused:
-      return false
-    case .closed:
-      return false
-
-    }
-
   }
 
   /// Used to push the screen to Study Dashboard.
