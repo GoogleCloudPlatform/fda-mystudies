@@ -12,20 +12,20 @@
 
 #!/bin/bash
 if [ "$#" -ne 3 ]; then
-  echo 'Please provide deployment prefix and env in the order of <prefix> <env> <base_url>'
+  echo 'Please provide deployment prefix and env in the order of <prefix> <env> <base_url of auth server>'
   exit 1
 fi
 
 PREFIX=${1}
 ENV=${2}
-BASE_URL=${3}
+AUTH_SERVER_BASE_URL=${3}
 shift 3
 
 set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 # used by client side applications
-SCIM_AUTH_EXTERNAL_URL="${BASE_URL}/auth-server"
+SCIM_AUTH_EXTERNAL_URL="${AUTH_SERVER_BASE_URL}/auth-server"
 # used in server to server calls
 SCIM_AUTH_URL="http://auth-server-np:50000/auth-server"
 HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
