@@ -18,6 +18,7 @@ RUN yarn global add @angular/cli@9.1.12
 RUN yarn add @angular/compiler-cli
 RUN yarn add @angular/compiler
 COPY . ./
+RUN ng config -g cli
 RUN ng build --aot --prod
 #Stage2
 #copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
