@@ -25,10 +25,10 @@ To deploy the [`Participant datastore`](/participant-datastore/) manually:
 1. Create a Cloud SQL instance with MySQL v5.7 ([instructions](https://cloud.google.com/sql/docs/mysql/create-instance)) 
 1. Configure the `Participant datastore` database on the Cloud SQL instance
     -    Create a user account that the `User module`, `Enrollment module` and `Consent module` will use to access this instance ([instructions](https://cloud.google.com/sql/docs/mysql/create-manage-users))
-    -   Run `sudo ./create_superadmin.sh <email> <password>` in the `sqlscript/` directory to create `sb-superadmin.sql`, which you will use to create the first admin user for `Participant manager`
+    -   Run `sudo ./create_superadmin.sh <email> <password>` in the `sqlscript/` directory to create `pm-superadmin.sql`, which you will use to create the first admin user for `Participant manager`
 (you may need to install [htpasswd](https://httpd.apache.org/docs/2.4/programs/htpasswd.html), for example `sudo apt-get install apache2-utils`)
     -    Run the [`mystudies_participant_datastore_db_script.sql`](sqlscript/mystudies_participant_datastore_db_script.sql) script to create a database named `mystudies_participant_datastore` ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file)) 
-    -    Run the `sb-superadmin.sql` script that you created in the step above
+    -    Run the `pm-superadmin.sql` script that you created in the step above
     -    Enable the database’s private IP connectivity in the same network as your VM ([instructions](https://cloud.google.com/sql/docs/mysql/configure-private-ip))
 1. Configure blob storage for participant consent forms by creating a Google Cloud Storage bucket ([instructions](https://cloud.google.com/storage/docs/creating-buckets))
 1. [Initialize a container](https://github.com/GoogleCloudPlatform/cloud-sdk-docker) with Google Cloud credentials by running `sudo docker run -ti --name gcloud-config google/cloud-sdk gcloud init`, then select a service account with access to the Google Cloud Storage bucket (the VM’s [default service](https://cloud.google.com/compute/docs/access/service-accounts#default_service_account) service account will have the necessary permissions if your bucket was created in the same Google Cloud project as your VM instance)
