@@ -20,8 +20,10 @@ public interface AppService {
   public AppParticipantsResponse getAppParticipants(
       String appId,
       String userId,
+      AuditLogEventRequest auditRequest,
+      String[] excludeSiteStatus,
       Integer limit,
       Integer offset,
-      AuditLogEventRequest auditRequest,
-      String[] excludeSiteStatus);
+      String orderByCondition,
+      String searchTerm);
 }

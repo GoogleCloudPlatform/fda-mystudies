@@ -71,17 +71,37 @@ public class AppController {
   @GetMapping("/{appId}/participants")
   public ResponseEntity<AppParticipantsResponse> getAppParticipants(
       @PathVariable String appId,
-      @RequestParam(defaultValue = "50") Integer limit,
-      @RequestParam(defaultValue = "0") Integer offset,
       @RequestParam(required = false) String[] excludeParticipantStudyStatus,
       @RequestHeader(name = USER_ID_HEADER) String userId,
+      @RequestParam(defaultValue = "50") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(defaultValue = "email") String sortBy,
+      @RequestParam(defaultValue = "asc") String sortDirection,
+      @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    String[] allowedSortByValues = {"email", "registrationDate", "registrationStatus"};
+    if (!ArrayUtils.contains(allowedSortByValues, sortBy)) {
+      throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORTBY_VALUE);
+    }
+
+    String[] allowedSortDirection = {"asc", "desc"};
+    if (!ArrayUtils.contains(allowedSortDirection, sortDirection)) {
+      throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORT_DIRECTION_VALUE);
+    }
+
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     AppParticipantsResponse appParticipantsResponse =
         appService.getAppParticipants(
-            appId, userId, limit, offset, auditRequest, excludeParticipantStudyStatus);
+            appId,
+            userId,
+            auditRequest,
+            excludeParticipantStudyStatus,
+            limit,
+            offset,
+            sortBy + "_" + sortDirection,
+            searchTerm);
 
     logger.exit(String.format(STATUS_LOG, appParticipantsResponse.getHttpStatusCode()));
     return ResponseEntity.status(appParticipantsResponse.getHttpStatusCode())
