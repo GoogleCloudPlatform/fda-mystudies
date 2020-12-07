@@ -20,6 +20,8 @@ export class StudyListComponent implements OnInit {
   studies: Study[] = [];
   manageStudiesBackup = {} as StudyResponse;
   studyTypes = StudyType;
+  loadMoreEnabled = true;
+  limit = 10;
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
@@ -39,7 +41,7 @@ export class StudyListComponent implements OnInit {
 
   getStudies(): void {
     this.studyList$ = combineLatest(
-      this.studiesService.getStudies(),
+      this.studiesService.getStudies(this.limit, 0),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
@@ -81,6 +83,33 @@ export class StudyListComponent implements OnInit {
   checkViewPermission(permission: number): boolean {
     return (
       permission === Permission.View || permission === Permission.ViewAndEdit
+    );
+  }
+
+  loadMoreSites() {
+    const offset = this.manageStudiesBackup.studies.length;
+    // console.log(this.manageStudiesBackup.studies);
+    this.studyList$ = combineLatest(
+      this.studiesService.getStudies(this.limit, offset),
+      this.query$,
+    ).pipe(
+      map(([manageStudies, query]) => {
+        const studies = [];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        studies.push(...this.manageStudiesBackup.studies);
+        studies.push(...manageStudies.studies);
+        this.manageStudiesBackup.studies = studies;
+        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
+          (study: Study) =>
+            study.name?.toLowerCase().includes(query.toLowerCase()) ||
+            study.customId?.toLowerCase().includes(query.toLowerCase()),
+        );
+        this.loadMoreEnabled =
+          this.manageStudiesBackup.studies.length % this.limit === 0
+            ? true
+            : false;
+        return this.manageStudiesBackup;
+      }),
     );
   }
 }

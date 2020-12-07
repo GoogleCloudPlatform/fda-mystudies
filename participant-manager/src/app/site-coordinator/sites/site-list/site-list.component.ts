@@ -105,10 +105,6 @@ export class SiteListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        console.log('before ' + this.manageStudiesBackup.studies.length);
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        console.log('result ' + manageStudies.studies.length);
         const studies = [];
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         studies.push(...this.manageStudiesBackup.studies);

@@ -7,8 +7,11 @@ import {StudyResponse} from '../shared/study.model';
 })
 export class StudiesService {
   constructor(private readonly entityService: EntityService<StudyResponse>) {}
-  getStudies(): Observable<StudyResponse> {
-    return this.entityService.get('studies');
+  getStudies(limit: number, offset: number): Observable<StudyResponse> {
+    return this.entityService.get(
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      'studies?limit=' + limit + '&offset=' + offset,
+    );
   }
   getStudiesWithSites(
     limit: number,
