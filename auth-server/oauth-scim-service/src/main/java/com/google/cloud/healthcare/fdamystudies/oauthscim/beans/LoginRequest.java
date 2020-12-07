@@ -9,11 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.beans;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +26,6 @@ public class LoginRequest {
   private String email;
 
   @ToString.Exclude
-  @Pattern(regexp = PASSWORD_REGEX, message = PASSWORD_REGEX_MESSAGE)
+  @Size(min = 8, max = 64)
   private String password;
 }

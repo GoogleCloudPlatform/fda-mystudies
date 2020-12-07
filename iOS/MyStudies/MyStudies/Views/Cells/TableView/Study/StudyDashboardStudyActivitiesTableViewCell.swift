@@ -27,25 +27,5 @@ class StudyDashboardStudyActivitiesTableViewCell: UITableViewCell {
   @IBOutlet var labelTaskNumber: UILabel?
   @IBOutlet var labelSurveyList: UILabel?
   @IBOutlet var labelTaskList: UILabel?
-
-  ///  Used to display Study Activities cell.
-  func displaySecondCelldata(data: NSDictionary) {
-    labelCompletedNumber?.text = String(format: "%@/10", data["completedNumber"] as! String)
-    labelSurveyNumber?.text = data["surveyNumber"] as? String
-    labelTaskNumber?.text = data["taskNumber"] as? String
-
-    labelSurveyList?.text = String(
-      format: "%@ Completed, %@ Pending, %@ Missed",
-      data["surveyCompleted"] as! String,
-      data["surveyPending"] as! String,
-      data["surveyMissed"] as! String
-    )
-
-    labelTaskList?.text = String(
-      format: "%@ Completed, %@ Pending, %@ Missed",
-      data["taskCompleted"] as! String,
-      data["taskPending"] as! String,
-      data["taskMissed"] as! String
-    )
-  }
+  
 }

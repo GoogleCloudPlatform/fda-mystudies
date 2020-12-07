@@ -164,27 +164,6 @@ class Schedule {
     activityRuns.append(activityRun)
   }
 
-  /// Sets Activity Dailty Run
-  func setDailyRuns() {
-
-    let numberOfDays = self.getNumberOfDaysBetween(startDate: startTime, endDate: endTime!)
-    var runStartDate: Date? = startTime
-    var runEndDate: Date?
-    let calendar = Calendar.currentUTC()
-    for day in 1...numberOfDays {
-
-      runStartDate = calendar.date(byAdding: .day, value: day, to: startTime)
-      runEndDate = calendar.date(byAdding: .second, value: 86399, to: runStartDate!)
-
-      // append in activity
-      let activityRun = ActivityRun()
-      activityRun.runId = day
-      activityRun.startDate = runStartDate
-      activityRun.endDate = runEndDate
-      activityRuns.append(activityRun)
-    }
-  }
-
   /// Sets Activity Weekly Run
   func setWeeklyRuns() {
 
@@ -408,25 +387,6 @@ class Schedule {
     }
   }
 
-  /// Combines Date and Time
-  /// - Parameter time: time as string format
-  /// - Parameter date: instance of Date
-  func getDateAfterAddingTimeComponent(_ time: String, date: Date) -> Date? {
-
-    var datetime: Date! = date
-    let calendar = Calendar.currentUTC()
-    let hoursAndMins = time.components(separatedBy: ":")
-    let hour = Int((hoursAndMins[0]))
-    let minutes = Int((hoursAndMins[1]))
-    let second = Int((hoursAndMins[2]))
-
-    datetime = calendar.date(byAdding: .hour, value: hour!, to: datetime)
-    datetime = calendar.date(byAdding: .minute, value: minutes!, to: datetime)
-    datetime = calendar.date(byAdding: .second, value: second!, to: datetime)
-
-    return datetime
-  }
-
   // MARK: Utility Methods
 
   public static var utcFormatter: DateFormatter?
@@ -479,30 +439,6 @@ class Schedule {
     let component = calendar.dateComponents([.weekday], from: date)
     let dayOfWeek = component.weekday! as Int
     return dayOfWeek
-  }
-
-  /// Caluculates end date of input date
-  /// - Parameter date: instance of Date
-  func endOfDay(date: Date) -> (Date) {
-    let calendar = Calendar.currentUTC()
-    let endDate = calendar.date(byAdding: .day, value: 1, to: date)
-    return (endDate!)
-  }
-
-  /// Calculates the number of weeks between two dates
-  /// - Parameter startDate: instance of Date
-  /// - Parameter endDate: instance of Date
-  func getNumberOfWeeksBetween(startDate: Date, endDate: Date) -> Int {
-    let calendar = Calendar.currentUTC()
-    let date1 = calendar.startOfDay(for: startDate)
-    let date2 = calendar.startOfDay(for: endDate)
-
-    let components = calendar.dateComponents(
-      [Calendar.Component.weekOfYear],
-      from: date1,
-      to: date2
-    )
-    return components.weekOfYear! as Int
   }
 
   /// Calculates the number of Days between two dates

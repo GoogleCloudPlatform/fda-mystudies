@@ -308,7 +308,6 @@ public class UserControllerTest extends BaseMockIT {
 
     ChangePasswordRequest userRequest = new ChangePasswordRequest();
     userRequest.setNewPassword(password);
-    userRequest.setCurrentPassword(password);
 
     MvcResult result =
         mockMvc

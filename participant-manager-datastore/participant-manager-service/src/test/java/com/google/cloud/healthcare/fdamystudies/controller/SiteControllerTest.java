@@ -711,6 +711,27 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldNotReturnSiteParticipantsForNotEligible() throws Exception {
+
+    participantStudyEntity.setStatus("yetToJoin");
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .queryParam("excludeEnrollmentStatus", "notEligible", "yetToJoin")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(0)));
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnSiteParticipantsRegistryForSuperAdmin() throws Exception {
     // Step 1: set onboarding status to 'N'
     studyEntity.setStatus(DEACTIVATED);

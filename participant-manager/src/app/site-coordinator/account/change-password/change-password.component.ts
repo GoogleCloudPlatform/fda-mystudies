@@ -32,7 +32,7 @@ export class ChangePasswordComponent
     this.resetPasswordForm = this.fb.group(
       {
         // eslint-disable-next-line @typescript-eslint/unbound-method
-        currentPassword: ['', [Validators.required, passwordValidator()]],
+        currentPassword: ['', [Validators.required]],
         // eslint-disable-next-line @typescript-eslint/unbound-method
         newPassword: ['', [Validators.required, passwordValidator()]],
         // eslint-disable-next-line @typescript-eslint/unbound-method
