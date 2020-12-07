@@ -24,7 +24,7 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 1. Set the `applicationId` in [`Android/app/build.gradle`](app/build.gradle) to your [Application ID](https://developer.android.com/studio/build/application-id)
 1. Modify [`Android/api.properties`](api.properties) to match the configuration of your backend services
 1. Update the following in the [`Android/app/src/fda/res/values/strings.xml`](app/src/fda/res/values/strings.xml) file:
-    -    Set `deeplink_host` to redirect to the app from the [`Hydra`](/hydra/) auth server (for example, `app://mystudies.<your-domain>.net/mystudies` - more information about deep links within Android applications is located [here](https://developer.android.com/training/app-links/deep-linking))
+    -    Set `deeplink_host` to redirect to the app from the [`Hydra`](/hydra/) auth server (for example, `app://mystudies.<your-domain>/mystudies` - more information about deep links within Android applications is located [here](https://developer.android.com/training/app-links/deep-linking))
     -    Set `google_maps_key` to the API key obtained following the instructions located [here](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
     -    Set `package_name` and `app_name` to correspond to a value you define for `applicationId` in [`Android/app/build.gradle`](app/build.gradle) ([details](https://developer.android.com/studio/build/application-id)) 
     -    Customize user-facing text strings as necessary
