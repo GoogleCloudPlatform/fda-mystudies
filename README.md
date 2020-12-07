@@ -40,8 +40,8 @@ Study builder | Researchers and clinicians | No-code user interface for authorin
 Participant manager | Study coordinators | No-code user interface to manage participant enrollment ([demo screens](documentation/images/participant-manager-screens.png)) | [`participant-manager/`](participant-manager/)<br/>[`participant-manager-datastore/`](participant-manager-datastore/)
 Mobile applications | Study participants | Apps to discover, enroll and participate in studies ([demo screens](documentation/images/mobile-screens.png)) | [`iOS/`](iOS/)<br/>[`Android/`](Android/)
 Response datastore | Researchers and analysts | Collects and stores participant response data for downstream analysis | [`response-datastore/`](response-datastore/)
-Participant datastore | Platform component | Manages participant data such as contact information and consent forms | [`participant-datastore/`](participant-datastore/)
-Auth | Platform component | Manages account creation, login, logout and resource requests | [`hydra/`](/hydra/)<br/>[`auth-server/`](/auth-server/)
+Participant datastore |  | Manages participant data such as contact information and consent forms | [`participant-datastore/`](participant-datastore/)
+Auth |  | Manages account creation, login, logout and resource requests | [`hydra/`](/hydra/)<br/>[`auth-server/`](/auth-server/)
 Deployment | System administrators | Infrastructure-as-code to build and maintain platform | [`deployment/`](deployment/)
 
 Each high-level directory contains a `README.md` and the necessary deployment configuration files.
