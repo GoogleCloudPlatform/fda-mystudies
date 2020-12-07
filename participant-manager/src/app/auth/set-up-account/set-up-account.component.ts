@@ -84,9 +84,6 @@ export class SetUpAccountComponent
         }
         this.setupAccountForm.patchValue(user);
       },
-      () => {
-        void this.router.navigate(['/error/EC_0009']);
-      },
     );
   }
 
