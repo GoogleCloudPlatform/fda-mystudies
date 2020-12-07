@@ -220,10 +220,6 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     super.init(coder: aDecoder)
   }
 
-  func initData(otherChoice: OtherChoice) {
-    self.otherChoice = otherChoice
-  }
-
   // MARK: - Lifycycle
 
   override func viewDidLoad() {

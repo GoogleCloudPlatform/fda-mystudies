@@ -126,31 +126,6 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
 
   }
 
-  /// Used to display Statistics cell.
-  func displayStatisics(data: DashboardStatistics) {
-
-    labelStatisticsText?.text = data.displayName
-    let array = data.statList.map { $0.data }
-
-    if data.calculation! == StatisticsFormula.maximum.rawValue {
-      let max = array.max()
-      labelStatisticsCount?.text = String(describing: max)
-    }
-    if data.calculation! == StatisticsFormula.minimum.rawValue {
-      let min = array.min()
-      labelStatisticsCount?.text = String(describing: min)
-    }
-    if data.calculation! == StatisticsFormula.average.rawValue {
-      let sumArray = array.reduce(0, +)
-      let avgArrayValue = sumArray / Float(array.count)
-      labelStatisticsCount?.text = String(describing: avgArrayValue)
-    }
-    if data.calculation! == StatisticsFormula.summation.rawValue {
-      let sumArray = array.reduce(0, +)
-      labelStatisticsCount?.text = String(describing: sumArray)
-    }
-  }
-
   // MARK: - Date Handlers
   func handleForDay(date: Date) {
 

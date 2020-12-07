@@ -1145,84 +1145,11 @@ class DBHandler: NSObject {
     return activity
   }
 
-  /// Loads studyRuns and returns completion and adherence for the runs.
-  /// - Parameters:
-  ///   - studyId: studyId to query runs from DB.
-  ///   - completionHandler: completionHandler description.
-  class func loadAllStudyRuns(
-    studyId: String,
-    completionHandler: @escaping (_ completion: Int, _ adherence: Int) -> Void
-  ) {
-
-    let date = Date()
-    let realm = DBHandler.getRealmObject()!
-    let studyRuns = realm.objects(DBActivityRun.self).filter("studyId == %@", studyId)
-    let completedRuns = studyRuns.filter({ $0.isCompleted == true })
-    let runsBeforeToday = studyRuns.filter({ ($0.endDate == nil) || ($0.endDate <= date) })
-    var incompleteRuns = runsBeforeToday.count - completedRuns.count
-
-    if incompleteRuns < 0 {
-      incompleteRuns = 0
-    }
-
-    let completion = ceil(
-      Double(
-        self.divide(lhs: (completedRuns.count + incompleteRuns) * 100, rhs: studyRuns.count)
-      )
-    )
-    let adherence = ceil(
-      Double(
-        self.divide(
-          lhs: (completedRuns.count) * 100,
-          rhs: (completedRuns.count + incompleteRuns)
-        )
-      )
-    )
-
-    completionHandler(Int(completion), Int(adherence))
-  }
-
   static func divide(lhs: Int, rhs: Int) -> Int {
     if rhs == 0 {
       return 0
     }
     return lhs / rhs
-  }
-
-  /// Saves ActivityRuns to DB
-  /// - Parameters:
-  ///   - activityId: ActivityID of the `DBActivity` for which `ActivityRun` to be updated.
-  ///   - studyId: StudyIdID of the `DBActivity` for which `ActivityRun` to be updated.
-  ///   - runs: Collection of `ActivityRun` to save in DB.
-  class func saveActivityRuns(activityId: String, studyId: String, runs: [ActivityRun]) {
-
-    let realm = DBHandler.getRealmObject()!
-    let dbActivities = realm.objects(DBActivity.self).filter(
-      "studyId == %@ && actvityId == %@",
-      studyId,
-      activityId
-    )
-    let dbActivity = dbActivities.last
-
-    // save overview
-    let dbActivityRuns = List<DBActivityRun>()
-    for sectionIndex in 0...(runs.count - 1) {
-
-      let activityRun = runs[sectionIndex]
-      let dbActivityRun = DBActivityRun()
-      dbActivityRun.startDate = activityRun.startDate
-      dbActivityRun.endDate = activityRun.endDate
-      dbActivityRun.activityId = activityId
-      dbActivityRun.studyId = studyId
-      dbActivityRun.runId = activityRun.runId
-      dbActivityRun.isCompleted = activityRun.isCompleted
-      dbActivityRuns.append(dbActivityRun)
-    }
-
-    try? realm.write {
-      dbActivity?.activityRuns.append(objectsIn: dbActivityRuns)
-    }
-
   }
 
   /// This method marks the `DBActivityRun` object status as completed.
@@ -1320,89 +1247,6 @@ class DBHandler: NSObject {
     } else {
       completionHandler(false)
     }
-  }
-
-  ///  fetches completion and adherence for the Study Id from DB.
-  /// - Parameters:
-  ///   - studyId: studyId description.
-  ///   - completionHandler: completionHandler description.
-  class func getCompletion(
-    studyId: String,
-    completionHandler: @escaping (_ completion: Int, _ adherence: Int) -> Void
-  ) {
-
-    let realm = DBHandler.getRealmObject()!
-    let dbActivities = realm.objects(DBActivity.self).filter("studyId == %@", studyId)
-
-    if dbActivities.count <= 0 {
-      completionHandler(-1, -1)
-      return
-    }
-
-    var date = Date().utcDate()
-    let difference = UserDefaults.standard.value(forKey: "offset") as? Int
-    if difference != nil {
-      date = date.addingTimeInterval(TimeInterval(difference!))
-    }
-
-    var totalStudyRuns = 0
-    var totalCompletedRuns = 0
-    var totalIncompletedRuns = 0
-
-    for dbActivity in dbActivities {
-
-      let runs = dbActivity.activityRuns
-      var run: DBActivityRun!
-      var runsBeforeToday: [DBActivityRun]! = []
-
-      if dbActivity.endDate == nil {
-
-        run = runs.last
-      } else {
-
-        runsBeforeToday = runs.filter({ $0.endDate <= date })
-        let firstRun: [DBActivityRun] = runs.filter {
-          $0.startDate <= date && $0.endDate > date
-        }
-        run = firstRun.first
-      }
-
-      let currentRunId = (run != nil) ? (run?.runId)! : runsBeforeToday.count
-
-      let completedRuns = dbActivity.completedRuns
-      var incompleteRuns = currentRunId - completedRuns
-      incompleteRuns = (incompleteRuns < 0) ? 0 : incompleteRuns
-
-      var participationStatus: UserActivityStatus.ActivityStatus = .yetToJoin
-      if String(currentRunId) == dbActivity.currentRunId {
-        participationStatus = UserActivityStatus.ActivityStatus(
-          rawValue: dbActivity.participationStatus
-        )!
-      }
-
-      if participationStatus != UserActivityStatus.ActivityStatus.completed && run != nil {
-        incompleteRuns = currentRunId - completedRuns
-        incompleteRuns -= 1
-        incompleteRuns = (incompleteRuns < 0) ? 0 : incompleteRuns
-      }
-      let totalRuns = runs.count
-
-      // update values
-      totalStudyRuns += totalRuns
-      totalIncompletedRuns += incompleteRuns
-      totalCompletedRuns += completedRuns
-    }
-
-    let completion = ceil(
-      Double(
-        self.divide(
-          lhs: (totalCompletedRuns + totalIncompletedRuns) * 100,
-          rhs: totalStudyRuns
-        )
-      )
-    )
-    completionHandler(Int(completion), 0)
-
   }
 
   // MARK: - Activity MetaData
@@ -1917,20 +1761,6 @@ class DBHandler: NSObject {
     completionHandler(resourceList)
   }
 
-  /// This method queries `DBResources` objects from DB with Anchor date != nil.
-  /// - Parameters:
-  ///   - studyId: StudyID to query associated Resources from DB.
-  ///   - completionHandler: Returns collection of `DBResources` instances.
-  class func getResourcesWithAnchorDateAvailable(
-    studyId: String,
-    completionHandler: @escaping ([DBResources]) -> Void
-  ) {
-    let realm = DBHandler.getRealmObject()!
-    let dbResourceList: [DBResources] = realm.objects(DBResources.self)
-      .filter { $0.studyId == studyId && $0.povAvailable == true }
-    completionHandler(dbResourceList)
-  }
-
   /// This method queries resources with availablity and no startDate.
   /// - Parameters:
   ///   - studyId: StudyID to query associated Resources from DB.
@@ -2019,38 +1849,6 @@ class DBHandler: NSObject {
       resource.startDate = startDate
       resource.endDate = endDate
     }
-  }
-
-  class func activitiesWithAnchorDateAvailable(
-    studyId: String,
-    completionHandler: @escaping (Bool) -> Void
-  ) {
-
-    let realm = DBHandler.getRealmObject()!
-    let dbActivities = realm.objects(DBActivity.self).filter({
-      $0.studyId == studyId && $0.startDate != nil && $0.anchorDateValue != nil
-    })
-
-    var anchorDateAvailable = false
-    for activity in dbActivities {
-      anchorDateAvailable = DBHandler.updateResourceLifeTime(
-        studyId,
-        activityId: activity.sourceActivityId,
-        questionKey: activity.sourceKey,
-        anchorDateValue: activity.anchorDateValue!
-      )
-    }
-    completionHandler(anchorDateAvailable)
-  }
-
-  class func updateResourceLocalPath(resourceId: String, path: String) {
-    let realm = DBHandler.getRealmObject()!
-    let dbResource = realm.objects(DBResources.self).filter("resourcesId == %@", resourceId)
-      .last!
-    try? realm.write({
-      dbResource.localPath = path
-
-    })
   }
 
   // MARK: - NOTIFICATION
