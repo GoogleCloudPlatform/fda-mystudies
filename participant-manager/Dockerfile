@@ -5,17 +5,18 @@
 # https://opensource.org/licenses/MIT.
 # Stage 1
 # Installing all the dependencies and creating Dist file or building angular application
-FROM node:6.9.5-alpine AS compile-image
-RUN mkdir -p /code
-WORKDIR /code
-ADD . /code
-RUN npm install -g -s --no-progress yarn && \
-    yarn && \
-    yarn run build && \
-    yarn run prune && \
-    yarn cache clean
-CMD [ "yarn", "run", "prod" ]
+FROM node:latest AS compile-image
+WORKDIR /app
+COPY package.json package-lock.json ./
+#RUN yarn install
+WORKDIR /opt/ng COPY .npmrc package.json yarn.lock ./
 
+
+RUN yarn install
+RUN yarn add @angular-devkit/build-angular --dev
+RUN yarn global add @angular/cli@latest
+COPY . ./
+RUN ng build --aot --prod
 #Stage2
 #copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
 FROM nginx
