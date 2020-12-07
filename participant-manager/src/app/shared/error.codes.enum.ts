@@ -85,7 +85,9 @@ EC_0131: 'Temporary password is invalid',
 EC_0073: 'Sorry, an error occurred and your feedback could not be sent to the organization. Please retry in some time',
 EC_0074: 'Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time.',
 EC_0075: 'Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again.',
-
+EC_0076: 'Invalid sortby value',
+EC_0077: 'Invalid sorting direction',
+EC_0078: 'The temporary password entered is incorrect.',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;
