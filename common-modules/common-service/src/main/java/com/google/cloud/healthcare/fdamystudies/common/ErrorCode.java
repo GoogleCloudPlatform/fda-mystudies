@@ -329,7 +329,13 @@ public enum ErrorCode {
       HttpStatus.NOT_FOUND.toString(),
       "This view displays app-wise enrollment if you manage multiple studies."),
 
-  USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists");
+  USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists"),
+
+  UNSUPPORTED_SORTBY_VALUE(
+      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortby value"),
+
+  UNSUPPORTED_SORT_DIRECTION_VALUE(
+      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction");
 
   private final int status;
   private final String code;
