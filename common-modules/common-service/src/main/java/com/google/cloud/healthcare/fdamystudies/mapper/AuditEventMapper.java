@@ -7,16 +7,22 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Arrays;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public final class AuditEventMapper {
 
   private AuditEventMapper() {}
+
+  private static XLogger logger = XLoggerFactory.getXLogger(AuditEventMapper.class.getName());
 
   private static final String APP_ID = "appId";
 
@@ -56,7 +62,14 @@ public final class AuditEventMapper {
   private static String getValue(HttpServletRequest request, String name) {
     String value = request.getHeader(name);
     if (StringUtils.isEmpty(value)) {
-      value = getCookieValue(request, name);
+      value = getCookieValue(request, "mystudies_" + name);
+    }
+    if (StringUtils.isNotEmpty(value)) {
+      try {
+        value = URLDecoder.decode(value, "UTF-8");
+      } catch (UnsupportedEncodingException e) {
+        logger.warn(String.format("Unable to decode '%s'", value), e);
+      }
     }
     return value;
   }
