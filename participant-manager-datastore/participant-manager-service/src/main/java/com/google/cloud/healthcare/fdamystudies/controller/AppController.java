@@ -73,7 +73,7 @@ public class AppController {
       @PathVariable String appId,
       @RequestParam(required = false) String[] excludeParticipantStudyStatus,
       @RequestHeader(name = USER_ID_HEADER) String userId,
-      @RequestParam(defaultValue = "50") Integer limit,
+      @RequestParam(defaultValue = "10") Integer limit,
       @RequestParam(defaultValue = "0") Integer offset,
       @RequestParam(defaultValue = "email") String sortBy,
       @RequestParam(defaultValue = "asc") String sortDirection,
