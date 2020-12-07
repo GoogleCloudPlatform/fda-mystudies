@@ -33,7 +33,6 @@ The overall goals, compliance principles and functionality of this FDA MyStudies
     
 ## Security
 * Replaced hard-coded credentials with scripts that inject initial users into each component
-* Added HTTPs across the codebase
 * Fixed potential cross-site scripting vulnerabilities
 * Added query binding to all existing queries to prevent SQL injection
 * Enhanced auth throughout codebase:
