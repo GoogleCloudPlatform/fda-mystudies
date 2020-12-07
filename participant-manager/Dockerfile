@@ -7,18 +7,13 @@
 # Installing all the dependencies and creating Dist file or building angular application
 FROM node:latest AS compile-image
 WORKDIR /app
-COPY package.json package-lock.json ./
-#RUN yarn install
-WORKDIR /opt/ng COPY .npmrc package.json yarn.lock ./
+ADD . /code
+RUN npm install -g -s --no-progress yarn && \
+    yarn && \
+    yarn run build && \
+    yarn cache clean
+CMD [ "npm", "start" ]
 
-RUN npm install
-RUN npm install -g @angular/cli
-# RUN yarn install
-# RUN yarn add @angular-devkit/build-angular --dev
-# RUN yarn global add @angular/cli@latest
-
-COPY . ./
-RUN ng build --aot --prod
 #Stage2
 #copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
 FROM nginx
