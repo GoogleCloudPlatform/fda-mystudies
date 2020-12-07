@@ -216,31 +216,6 @@ class StudyListViewController: UIViewController {
     tableView.refreshControl = refresher
   }
 
-  /// Used to add left bar button item.
-  func addLeftBarButton() {
-    let button = UIButton(type: .custom)
-    button.setTitle("FDA LISTENS!", for: .normal)
-    button.titleLabel?.font = UIFont(name: "HelveticaNeue-Medium", size: 18)
-    button.frame = CGRect(x: 0, y: 0, width: 120, height: 30)
-    button.contentHorizontalAlignment = .left
-    button.setTitleColor(Utilities.getUIColorFromHex(0x007CBA), for: .normal)
-
-    let barItem = UIBarButtonItem(customView: button)
-
-    navigationItem.setLeftBarButton(barItem, animated: true)
-  }
-
-  /// Used to add right bar button item.
-  func addRightBarButton() {
-    let button = UIButton(type: .custom)
-    button.setImage(#imageLiteral(resourceName: "filter_icn"), for: .normal)
-
-    button.frame = CGRect(x: 0, y: 0, width: 19, height: 22.5)
-    let barItem = UIBarButtonItem(customView: button)
-
-    navigationItem.setRightBarButton(barItem, animated: true)
-  }
-
   // MARK: - Utils
   func checkIfNotificationEnabled() {
 
@@ -277,31 +252,6 @@ class StudyListViewController: UIViewController {
         ud.set(Date(), forKey: "NotificationRemainder")
         ud.synchronize()
       }
-    }
-  }
-
-  /// Used to load the test data from Studylist of type json.
-  func loadTestData() {
-    let filePath = Bundle.main.path(forResource: "StudyList", ofType: "json")
-    let data = NSData(contentsOfFile: filePath!)
-
-    do {
-      let response =
-        try JSONSerialization.jsonObject(with: data! as Data, options: [])
-        as? [String: Any]
-
-      let studies = (response?[kStudies] as? [[String: Any]])!
-      var listOfStudies: [Study] = []
-      for study in studies {
-        let studyModelObj = Study(studyDetail: study)
-        listOfStudies.append(studyModelObj)
-      }
-
-      // Assign to Gateway
-      Gateway.instance.studies = listOfStudies
-
-    } catch {
-      Logger.sharedInstance.error("json error: \(error.localizedDescription)")
     }
   }
 

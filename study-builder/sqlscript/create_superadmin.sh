@@ -6,29 +6,25 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 #
-# Script to insert study builder superadmin.
+# Script to generate sql that creates study builder superadmin.
 # Run like:
-# $ ./scripts/create_study_builder_superadmin.sh <prefix> <env> <email> <password>
+# $ ./study-builder/sqlscripts/create_superadmin.sh <email> <password>
+# then import the generated sb-superadmin.sql file created in your current directory into the database.
 
-if [ "$#" -ne 4 ]; then
-  echo 'Please provide deployment prefix and env, as well as superadmin email and password in the order of <prefix> <env> <email> <password>'
+if [ "$#" -ne 2 ]; then
+  echo 'Please provide Study Builder superadmin email and password in the order of <email> <password>'
   exit 1
 fi
 
-PREFIX=${1}
-ENV=${2}
-EMAIL="${3}"
-PWD="${4}"
-shift 4
+EMAIL="${1}"
+PWD="${2}"
+shift 2
 
 set -e
 
-DATA_PROJECT=${PREFIX}-${ENV}-data
-SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
-
 TMPFILE=$(mktemp)
 
-echo "Inserting/updating superadmin user for 'study_builder'"
+echo "Generating the query to create a superadmin user for 'study_builder'"
 echo "USE \`fda_hphc\`;" >> ${TMPFILE}
 
 # hash password with BCrypt, default strength of 10.
@@ -72,12 +68,9 @@ echo "INSERT INTO user_permission_mapping (user_id, permission_id) VALUES
 	(1, 8);
 " >> ${TMPFILE}
 
-# Upload TMPFILE to GCS.
-GCS_FILE=gs://${SQL_IMPORT_BUCKET}/study_builder_supreadmin.sql
-echo "Copying the sql file to ${GCS_FILE}"
-gsutil mv ${TMPFILE} ${GCS_FILE}
+export DEST=`pwd -P`
+export OUTPUT="${DEST}/sb-superadmin.sql"
 
-# Import the GCS file to CloudSQL.
-echo "Importing ${GCS_FILE} to CloudSQL."
-gcloud sql import sql --project=${DATA_PROJECT} mystudies ${GCS_FILE}
-gsutil rm ${GCS_FILE}
+echo "Writing the results in ${OUTPUT}"
+mv ${TMPFILE} ${OUTPUT}
+echo "Import ${OUTPUT} into the database to inject your initial superadmin user."

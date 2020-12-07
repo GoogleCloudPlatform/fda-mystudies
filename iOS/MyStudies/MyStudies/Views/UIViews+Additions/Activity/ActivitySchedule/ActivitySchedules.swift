@@ -75,10 +75,16 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
     cell.textLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 13)
     let activityRun = self.activity.activityRuns[indexPath.row]
-    cell.textLabel?.text =
-      ActivitySchedules.formatter.string(from: activityRun.startDate)
-      + " to "
-      + ActivitySchedules.formatter.string(from: activityRun.endDate)
+    if var startDate = activityRun.startDate,
+      var endDate = activityRun.endDate
+    {
+      startDate.updateWithOffset()
+      endDate.updateWithOffset()
+      cell.textLabel?.text =
+        ActivitySchedules.formatter.string(from: startDate)
+        + " to "
+        + ActivitySchedules.formatter.string(from: endDate)
+    }
 
     if activityRun.runId == self.activity.currentRunId {
       cell.textLabel?.textColor = kBlueColor
