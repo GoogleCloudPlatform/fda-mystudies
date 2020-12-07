@@ -8,9 +8,10 @@
 FROM node:latest AS compile-image
 WORKDIR /app
 COPY package.json package-lock.json ./
-#RUN npm install
-RUN npm install --prefer-offline --no-audit --progress=false
-RUN npm install -g @angular/cli@9.1.12
+#RUN yarn install
+RUN npm install -g yarn
+RUN yarn global add @angular/cli@latest
+RUN yarn install
 COPY . ./
 RUN ng build --aot --prod
 #Stage2
