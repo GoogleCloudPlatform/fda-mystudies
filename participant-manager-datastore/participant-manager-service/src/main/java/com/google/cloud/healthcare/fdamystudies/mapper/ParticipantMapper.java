@@ -21,7 +21,6 @@ import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
-import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
@@ -193,6 +192,11 @@ public final class ParticipantMapper {
       String onboardingStatus) {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
+      if (participantsEnrollments.size() > 1
+          && participantsEnrollment.getStatus().equals(EnrollmentStatus.WITHDRAWN.getStatus())) {
+        continue;
+      }
+
       if ((OnboardingStatus.INVITED.getStatus().equals(onboardingStatus)
               || OnboardingStatus.NEW.getStatus().equals(onboardingStatus))
           && EnrollmentStatus.WITHDRAWN.getStatus().equals(participantsEnrollment.getStatus())) {
