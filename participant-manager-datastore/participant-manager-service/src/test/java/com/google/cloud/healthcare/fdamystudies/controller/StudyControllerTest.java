@@ -594,7 +594,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)));
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(10)));
 
     verifyTokenIntrospectRequest(2);
   }
