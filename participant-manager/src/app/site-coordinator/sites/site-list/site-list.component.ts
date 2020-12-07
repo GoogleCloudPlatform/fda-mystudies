@@ -56,8 +56,10 @@ export class SiteListComponent implements OnInit {
           (study: Study) =>
             study.name?.toLowerCase().includes(query) ||
             study.customId?.toLowerCase().includes(query) ||
-            study.sites.some((site) =>
-              site.name?.toLowerCase().includes(query),
+            study.sites.some(
+              (site) =>
+                site.name?.toLowerCase()?.includes(query) &&
+                study.type !== StudyType.Open,
             ),
         );
         return this.manageStudiesBackup;
