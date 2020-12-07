@@ -7,7 +7,7 @@
 # https://opensource.org/licenses/MIT.
 #
 # Require ENVs:
-# - BASE_URL: the base URL of your deployment.
+# - BASE_URL: the base URL of your hydra deployment.
 # - DSN: format: "mysql://${DB_USER?}:${DB_PASSWORD?}@tcp(${DB_PRIVATE_IP}:${DB_PORT})/${DB_NAME?}"
 
 # Encryption support in database
@@ -22,10 +22,10 @@ export SECRETS_SYSTEM=${SYSTEM_SECRET}
 export DSN="mysql://${DB_USER}:${DB_PASS}@tcp(localhost:3306)/${DB_NAME}?sql_notes=false&parseTime=true"
 
 # issuer URL
-export URLS_SELF_ISSUER="${BASE_URL}"
+export URLS_SELF_ISSUER="${HYDRA_BASE_URL}"
 # Login and consent app
-export URLS_CONSENT="${BASE_URL}/auth-server/consent"
-export URLS_LOGIN="${BASE_URL}/auth-server/login"
+export URLS_CONSENT="${AUTH_SERVER_BASE_URL}/auth-server/consent"
+export URLS_LOGIN="${AUTH_SERVER_BASE_URL}/auth-server/login"
 
 # Setup database for hydra.
 cd /hydra
