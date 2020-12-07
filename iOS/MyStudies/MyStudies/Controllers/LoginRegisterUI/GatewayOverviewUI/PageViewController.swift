@@ -63,18 +63,6 @@ class PageViewController: UIPageViewController {
 
   // MARK: - Scroll Delegates
 
-  /// Scrolls to the next view controller.
-  func scrollToNextViewController() {
-    if let visibleViewController = viewControllers?.first,
-      let nextViewController = pageViewController(
-        self,
-        viewControllerAfter: visibleViewController
-      )
-    {
-      scrollToViewController(viewController: nextViewController)
-    }
-  }
-
   /// Scrolls to the given 'viewController' page.
   private func scrollToViewController(
     viewController: UIViewController,
@@ -118,20 +106,6 @@ class PageViewController: UIPageViewController {
       }
     }
     pageViewDelegate?.pageViewController(pageViewController: self, didUpdatePageIndex: index)
-  }
-
-  /// Scrolls to the view controller at the given index.
-  func scrollToViewController(index newIndex: Int) {
-
-    if let firstViewController = viewControllers?.first,
-      let currentIndex = orderedViewControllers.firstIndex(of: firstViewController)
-    {
-      let direction: UIPageViewController.NavigationDirection =
-        newIndex >= currentIndex
-        ? .forward : .reverse
-      let nextViewController = orderedViewControllers[newIndex]
-      scrollToViewController(viewController: nextViewController, direction: direction)
-    }
   }
 
   private(set) lazy var orderedViewControllers: [UIViewController] = {

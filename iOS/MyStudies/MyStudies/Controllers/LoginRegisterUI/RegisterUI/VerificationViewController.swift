@@ -173,26 +173,6 @@ class VerificationViewController: UIViewController {
     }
   }
 
-  /// Navigate to change password screen.
-  func navigateToChangePasswordViewController() {
-
-    let storyboard = UIStoryboard(name: kStoryboardIdentifierGateway, bundle: nil)
-
-    let fda =
-      storyboard.instantiateViewController(
-        withIdentifier: kChangePasswordViewControllerIdentifier
-      )
-      as! ChangePasswordViewController
-
-    if shouldCreateMenu {
-      fda.viewLoadFrom = .login
-    } else {
-      fda.viewLoadFrom = .menuLogin
-    }
-
-    self.navigationController?.pushViewController(fda, animated: true)
-  }
-
   private func navigateToLogin() {
     if let signInVC = self.storyboard?
       .instantiateViewController(withIdentifier: "SignInViewController") as? SignInViewController

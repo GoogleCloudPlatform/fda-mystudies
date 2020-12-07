@@ -8,7 +8,6 @@ import Alamofire
 import Foundation
 
 // Completion Handler
-typealias RequestHandler = (_ data: Data?, _ status: Bool, _ error: ApiError?) -> Void
 typealias StatusHandler = (_ status: Bool, _ error: ApiError?) -> Void
 
 struct HydraAPI {

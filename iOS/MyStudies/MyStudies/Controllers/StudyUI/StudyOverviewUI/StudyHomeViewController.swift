@@ -281,35 +281,6 @@ class StudyHomeViewController: UIViewController {
     )
   }
   
-  /// Loads test data from StudyOverview plist file.
-  private func loadTestData() {
-
-    // load plist info
-    guard
-      let plistPath = Bundle.main.path(
-        forResource: "StudyOverview",
-        ofType: ".plist",
-        inDirectory: nil
-      ),
-      let arrayContent = NSMutableArray(contentsOfFile: plistPath)
-    else { return }
-
-    var listOfOverviews: [OverviewSection] = []
-
-    arrayContent.forEach { (overview) in
-      let overviewObj = OverviewSection(detail: (overview as? [String: Any])!)
-      listOfOverviews.append(overviewObj)
-    }
-
-    // create new Overview object
-    let overview = Overview()
-    overview.type = .study
-    overview.sections = listOfOverviews
-
-    // Assign to Gateway
-    Gateway.instance.overview = overview
-  }
-
   /// Creates eligibility Consent Task.
   func createEligibilityConsentTask() {
     var eligibilitySteps = EligibilityBuilder.currentEligibility?.getEligibilitySteps()
