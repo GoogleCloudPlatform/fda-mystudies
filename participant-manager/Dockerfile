@@ -7,12 +7,14 @@
 # Installing all the dependencies and creating Dist file or building angular application
 FROM node:latest AS compile-image
 WORKDIR /app
-ADD . /code
-RUN npm install -g -s --no-progress yarn && \
-    yarn && \
-    yarn run build && \
-    yarn cache clean
-CMD [ "npm", "start" ]
+ADD . .
+
+RUN yarn install && \
+    yarn build
+
+EXPOSE 8080
+
+CMD [ "yarn", "run", "prod" ]
 
 #Stage2
 #copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
