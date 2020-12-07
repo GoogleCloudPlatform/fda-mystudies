@@ -5,15 +5,15 @@
 # https://opensource.org/licenses/MIT.
 # Stage 1
 # Installing all the dependencies and creating Dist file or building angular application
-FROM node:latest AS compile-image
-WORKDIR /app
-ADD . .
-
-RUN yarn install && \
-    yarn build
-
-EXPOSE 8080
-
+FROM node:6.9.5-alpine
+RUN mkdir -p /code
+WORKDIR /code
+ADD . /code
+RUN npm install -g -s --no-progress yarn && \
+    yarn && \
+    yarn run build && \
+    yarn run prune && \
+    yarn cache clean
 CMD [ "yarn", "run", "prod" ]
 
 #Stage2
