@@ -85,9 +85,6 @@ public class StudyDto implements Serializable {
   @Column(name = "research_sponsor")
   private String researchSponsor;
 
-  @Column(name = "data_partner")
-  private String dataPartner;
-
   @Column(name = "tentative_duration")
   private Integer tentativeDuration;
 
@@ -238,14 +235,6 @@ public class StudyDto implements Serializable {
 
   public void setResearchSponsor(String researchSponsor) {
     this.researchSponsor = researchSponsor;
-  }
-
-  public String getDataPartner() {
-    return dataPartner;
-  }
-
-  public void setDataPartner(String dataPartner) {
-    this.dataPartner = dataPartner;
   }
 
   public Integer getTentativeDuration() {
