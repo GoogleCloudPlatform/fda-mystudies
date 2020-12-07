@@ -51,6 +51,7 @@
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "web-animations-js": "^2.3.2",
+    "yarn": "^1.22.10",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
