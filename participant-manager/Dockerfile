@@ -6,11 +6,10 @@
 # Stage 1
 # Installing all the dependencies and creating Dist file or building angular application
 FROM node:latest AS compile-image
-WORKDIR /usr/src/app
-COPY package*.json ./
+WORKDIR /app
+COPY . ./
+RUN npm set progress=false
 RUN npm install
-
-COPY . .
 RUN npm install -g @angular/cli
 RUN ng build --aot --prod
 #Stage2
