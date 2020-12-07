@@ -14,8 +14,14 @@
   <div
     class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg"
   >
-    <div [innerHTML]="safeHtmlContent" class="para_text"></div>
-    '
+    <div>
+      <div class="mb__mb-sm">
+        <div class="p-none dashboard-card__title">{{ title }}</div>
+      </div>
+      <div class="participant__label">
+        {{ description }}
+      </div>
+    </div>
   </div>
 </section>
 <app-footer></app-footer>
