@@ -49,6 +49,7 @@ public class AppController {
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @RequestParam(defaultValue = "10") Integer limit,
       @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(required = false) String searchTerm,
       @RequestParam(name = "fields", required = false) String[] fields,
       HttpServletRequest request) {
     fields = Optional.ofNullable(fields).orElse(new String[] {});
@@ -59,7 +60,7 @@ public class AppController {
     String[] allowedFields = {"studies", "sites"};
     AppResponse appResponse;
     if (ArrayUtils.isEmpty(fields)) {
-      appResponse = appService.getApps(userId, limit, offset);
+      appResponse = appService.getApps(userId, limit, offset, searchTerm);
     } else if (Arrays.asList(allowedFields).containsAll(Arrays.asList(fields))) {
       appResponse = appService.getAppsWithOptionalFields(userId, fields);
     } else {

@@ -213,7 +213,24 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId20"))
         .andExpect(jsonPath("$.apps[4].customId").value("AppCustomId16"));
 
-    verifyTokenIntrospectRequest();
+    verifyTokenIntrospectRequest(1);
+
+    // test case for searchTerm
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .param("limit", "5")
+                .param("offset", "1")
+                .param("searchTerm", "AppCustomId")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(5)))
+        .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId19"));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
@@ -270,6 +287,23 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[9].customId").value("AppCustomId6"));
 
     verifyTokenIntrospectRequest(2);
+
+    // test case for searchTerm
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .param("limit", "10")
+                .param("offset", "1")
+                .param("searchTerm", "AppCustomId")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(10)))
+        .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId19"));
+
+    verifyTokenIntrospectRequest(3);
   }
 
   @Test
