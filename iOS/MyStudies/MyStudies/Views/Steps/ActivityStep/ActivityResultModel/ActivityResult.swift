@@ -95,67 +95,12 @@ class ActivityResult {
     }
   }
 
-  /// Initializer method which initializes all params
-  /// - Parameter activityDict: which contains all the activity related data
-  func initWithDict(activityDict: [String: Any]) {
-
-    // Here the dictionary is assumed to have only type,startTime,endTime
-    if Utilities.isValidObject(someObject: activityDict as AnyObject?) {
-
-      if Utilities.isValidValue(someObject: activityDict[kActivityType] as AnyObject) {
-        self.type = activityDict[kActivityType] as? ActivityType
-      }
-
-      if Utilities.isValidValue(someObject: activityDict[kActivityStartTime] as AnyObject) {
-
-        if Utilities.isValidValue(
-          someObject: Utilities.getDateFromString(
-            dateString: (activityDict[kActivityStartTime] as? String)!
-          ) as AnyObject?
-        ) {
-          self.startTime = Utilities.getDateFromString(
-            dateString: (activityDict[kActivityStartTime] as? String)!
-          )
-
-        }
-      }
-      if Utilities.isValidValue(someObject: activityDict[kActivityEndTime] as AnyObject) {
-
-        if Utilities.isValidValue(
-          someObject: Utilities.getDateFromString(
-            dateString: (activityDict[kActivityEndTime] as? String)!
-          ) as AnyObject?
-        ) {
-          self.endTime = Utilities.getDateFromString(
-            dateString: (activityDict[kActivityEndTime] as? String)!
-          )
-        }
-      }
-    }
-  }
-
   /// Sets activy and activity type
   /// - Parameter activity: instance of Activity
   func setActivity(activity: Activity) {
 
     self.activity = activity
     self.type = activity.type
-  }
-
-  /// Returns an instance of Activity
-  func getActivity() -> Activity {
-    return self.activity!
-  }
-
-  /// Appends ActivityStepResult to result which is array of ActivityStepResult
-  /// - Parameter activityStepResult: instance of ActivityStepResult
-  func setActivityResult(activityStepResult: ActivityStepResult) {
-    self.result?.append(activityStepResult)
-  }
-
-  /// Returns result which is array of ActivityStepResult
-  func getActivityResult() -> [ActivityStepResult] {
-    return self.result!
   }
 
   /// Creates dictionary for the step being used and returns the dictionary of activitysteps
