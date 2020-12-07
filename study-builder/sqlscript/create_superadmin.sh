@@ -24,7 +24,7 @@ set -e
 
 TMPFILE=$(mktemp)
 
-echo "Inserting/updating superadmin user for 'study_builder'"
+echo "Generating the query to create a superadmin user for 'study_builder'"
 echo "USE \`fda_hphc\`;" >> ${TMPFILE}
 
 # hash password with BCrypt, default strength of 10.
@@ -71,5 +71,6 @@ echo "INSERT INTO user_permission_mapping (user_id, permission_id) VALUES
 export DEST=`pwd -P`
 export OUTPUT="${DEST}/sb-superadmin.sql"
 
-echo "writing output ${OUTPUT}"
+echo "Writing the results in ${OUTPUT}"
 mv ${TMPFILE} ${OUTPUT}
+echo "Import ${OUTPUT} into the database to inject your initial superadmin user."

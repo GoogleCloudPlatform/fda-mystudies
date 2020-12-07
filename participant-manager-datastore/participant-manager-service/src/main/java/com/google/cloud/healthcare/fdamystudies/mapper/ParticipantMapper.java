@@ -192,6 +192,11 @@ public final class ParticipantMapper {
       String onboardingStatus) {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
+      if (participantsEnrollments.size() > 1
+          && participantsEnrollment.getStatus().equals(EnrollmentStatus.WITHDRAWN.getStatus())) {
+        continue;
+      }
+
       if ((OnboardingStatus.INVITED.getStatus().equals(onboardingStatus)
               || OnboardingStatus.NEW.getStatus().equals(onboardingStatus))
           && EnrollmentStatus.WITHDRAWN.getStatus().equals(participantsEnrollment.getStatus())) {
