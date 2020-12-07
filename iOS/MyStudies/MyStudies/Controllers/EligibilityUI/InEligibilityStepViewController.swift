@@ -60,26 +60,6 @@ class InEligibilityStepViewController: ORKStepViewController {
     buttonDone?.layer.borderColor = kUicolorForButtonBackground
   }
 
-  // MARK: - UI Utils
-
-  func showAlert(message: String) {
-    let alert = UIAlertController(
-      title: kErrorTitle as String,
-      message: message as String,
-      preferredStyle: UIAlertController.Style.alert
-    )
-    alert.addAction(
-      UIAlertAction(
-        title: NSLocalizedString(kTitleOK, comment: ""),
-        style: .default,
-        handler: nil
-      )
-    )
-
-    self.navigationController?.present(alert, animated: true, completion: nil)
-
-  }
-
   // MARK: - Actions
   @IBAction func buttonActionDone(sender: UIButton?) {
     self.goForward()

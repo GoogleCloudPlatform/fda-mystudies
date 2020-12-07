@@ -317,8 +317,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     if self.isAppLaunched! {
       self.isAppLaunched = false
 
-      // Update Local Notifications
-      self.checkForRegisteredNotifications()
+      DispatchQueue.main.async {
+        // Update Local Notifications
+        self.checkForRegisteredNotifications()
+      }
     }
   }
 
@@ -818,18 +820,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
   }
 
-  /// Navigate to `StudyListViewController` from Current View
-  func popToStudyListViewController() {
-
-    let navigationController = (self.window?.rootViewController as? UINavigationController)!
-
-    var topController: UIViewController = navigationController
-    if navigationController.viewControllers.count > 0 {
-      topController = navigationController.viewControllers.first!
-    }
-    _ = topController.navigationController?.popViewController(animated: true)
-  }
-
   /// get study updates if exist
   func checkForStudyUpdates() {
 
@@ -1085,13 +1075,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     NotificationCenter.default.post(
       name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentCompleted"),
       object: nil
-    )
-  }
-
-  func studyEnrollmentFailed(error: NSError?) {
-    NotificationCenter.default.post(
-      name: NSNotification.Name(rawValue: "NotificationStudyEnrollmentFailed"),
-      object: error
     )
   }
 
@@ -1809,10 +1792,5 @@ extension UIWindow {
         }
       )
     }
-  }
-}
-extension UIApplication {
-  func topMostViewController() -> UIViewController? {
-    return self.keyWindow?.rootViewController?.topMostViewController()
   }
 }

@@ -73,16 +73,8 @@ class File {
     return self.mimeType!.rawValue
   }
 
-  func getFileName() -> String {
-    return self.name!
-  }
-
   func getFileLink() -> String {
     return self.link!
-  }
-
-  func getFileLocalPath() -> String {
-    return self.localPath!
   }
 
   /// Initialize all properties
