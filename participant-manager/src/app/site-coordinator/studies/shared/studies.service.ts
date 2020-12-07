@@ -16,16 +16,8 @@ export class StudiesService {
   getStudiesWithSites(
     limit: number,
     offset: number,
-    searchTerm: string,
   ): Observable<StudyResponse> {
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    return this.entityService.get(
-      'sites?limit=' +
-        limit +
-        '&offset=' +
-        offset +
-        '&searchTerm=' +
-        searchTerm,
-    );
+    return this.entityService.get('sites?limit=' + limit + '&offset=' + offset);
   }
 }
