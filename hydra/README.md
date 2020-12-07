@@ -32,7 +32,7 @@ To deploy [`Hydra`](/hydra) manually:
 1. Generate a self-signed certificate from the private key with a validity of 365 days using `openssl req -new -x509 -sha256 -key ${HOME}/key.pem -out ${HOME}/hydra.crt -days 365`
 1. Set a [system secret](https://www.ory.sh/hydra/docs/configure-deploy/#deploy-ory-hydra) using `export SYSTEM_SECRET=$(export LC_CTYPE=C; cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)` (this secret is used to encrypt a fresh database and needs to be set to the same value every time)
 1. Deploy the [Hydra v1.7.4 container](https://github.com/ory/hydra/releases/tag/v1.7.4) to the VM
-    -    Create the Docker image using `sudo docker build -t hydra-image .` from the `hydra/` directory (you may need to [install Docker](https://docs.docker.com/engine/install/debian/) and Maven, for example `sudo apt install maven`)
+    -    Create the Docker image using `sudo docker build -t hydra-image .` from the `hydra/` directory (you may need to [install Docker](https://docs.docker.com/engine/install/debian/))
     -    Update the Docker environment file [`variables.env`](variables.env) with the values for your deployment
     -    Run the container on the VM using `sudo docker run --detach --mount src=$HOME,target=/home/certs,type=bind --env-file variables.env -p 4444:4444 -p 4445:4445 --name hydra hydra-image`
 1. Check the logs to confirm deployment using `sudo docker logs hydra`, the expected response is:
