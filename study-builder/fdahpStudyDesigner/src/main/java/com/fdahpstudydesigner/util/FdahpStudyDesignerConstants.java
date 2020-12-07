@@ -308,7 +308,6 @@ public class FdahpStudyDesignerConstants {
   public static final String QUESTIONSTEP_SAVED = "Questionnaire question step saved";
   public static final String REDIRECT_SESSION_PARAM_NAME = "sessionUserId=";
   public static final String REFERENCE_TYPE_CATEGORIES = "Categories";
-  public static final String REFERENCE_TYPE_DATA_PARTNER = "Data Partner";
   public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research Sponsors";
   public static final String REQUIRED_DATE_TIME = "MM/dd/yyyy HH:mm";
   public static final String REQUIRED_DATE_TIME_FOR_DATE_DIFF = "MM/dd/yyyy HH:mm:ss";
