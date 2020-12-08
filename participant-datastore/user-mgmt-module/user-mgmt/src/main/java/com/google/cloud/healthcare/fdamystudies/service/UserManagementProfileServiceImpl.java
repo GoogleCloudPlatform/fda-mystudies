@@ -113,7 +113,11 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     AuthInfoEntity authInfo = null;
 
     userDetails = userProfileManagementDao.getParticipantInfoDetails(userId);
-    if (user != null && userDetails != null) {
+    if (userDetails == null) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_EXISTS);
+    }
+
+    if (user != null) {
       if (user.getSettings() != null) {
         if (user.getSettings().getRemoteNotifications() != null) {
           userDetails.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
