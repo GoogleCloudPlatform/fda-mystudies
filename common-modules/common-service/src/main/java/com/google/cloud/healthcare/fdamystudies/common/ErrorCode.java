@@ -335,7 +335,19 @@ public enum ErrorCode {
       400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortby value"),
 
   UNSUPPORTED_SORT_DIRECTION_VALUE(
-      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction");
+      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
+  
+  FEEDBACK_ERROR_MESSAGE(
+      500,
+      "EC_0073",
+      "Internal Server Error",
+      "Sorry, an error occurred and your feedback could not be sent to the organization. Please retry in some time."),
+
+  CONTACT_US_ERROR_MESSAGE(
+      500,
+      "EC_0074",
+      "Internal Server Error",
+      "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time.");
 
   private final int status;
   private final String code;
