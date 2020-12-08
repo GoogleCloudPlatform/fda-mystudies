@@ -56,7 +56,8 @@ public interface SiteService {
   public ParticipantStatusResponse updateOnboardingStatus(
       ParticipantStatusRequest request, AuditLogEventRequest auditRequest);
 
-  public SiteDetailsResponse getSites(String userId, Integer limit, Integer offset);
+  public SiteDetailsResponse getSites(
+      String userId, Integer limit, Integer offset, String searchTerm);
 
   public UpdateTargetEnrollmentResponse updateTargetEnrollment(
       UpdateTargetEnrollmentRequest enrollmentRequest, AuditLogEventRequest auditRequest);

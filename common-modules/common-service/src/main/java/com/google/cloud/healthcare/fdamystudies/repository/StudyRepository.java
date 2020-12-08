@@ -200,9 +200,10 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT si.created_time AS siteCreatedTimeStamp, si.id AS siteId, si.study_id AS studyId, si.target_enrollment AS targetEnrollment, loc.name AS siteName "
               + "FROM sites si, locations loc, study_info stu "
-              + "WHERE stu.id=si.study_id AND loc.id=si.location_id) AS site ON study.studyId= site.studyId ",
+              + "WHERE stu.id=si.study_id AND loc.id=si.location_id) AS site ON study.studyId= site.studyId "
+              + "WHERE study.studyName LIKE %:searchTerm% OR study.customId LIKE %:searchTerm% OR site.siteName LIKE %:searchTerm% ",
       nativeQuery = true)
-  public List<StudySiteInfo> getStudySiteDetails(Integer limit, Integer offset);
+  public List<StudySiteInfo> getStudySiteDetails(Integer limit, Integer offset, String searchTerm);
 
   @Query(
       value =
