@@ -25,7 +25,12 @@ public interface ManageUserService {
       String userId, String adminId, boolean includeUnselected);
 
   public GetUsersResponse getUsers(
-      String superAdminUserId, Integer limit, Integer offset, AuditLogEventRequest auditRequest);
+      String superAdminUserId,
+      Integer limit,
+      Integer offset,
+      AuditLogEventRequest auditRequest,
+      String orderByCondition,
+      String searchTerm);
 
   public AdminUserResponse sendInvitation(String userId, String superAdminUserId);
 }
