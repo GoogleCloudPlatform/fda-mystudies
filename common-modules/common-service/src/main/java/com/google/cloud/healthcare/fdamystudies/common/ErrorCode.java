@@ -332,11 +332,11 @@ public enum ErrorCode {
   USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists"),
 
   UNSUPPORTED_SORTBY_VALUE(
-      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortby value"),
+      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortBy value"),
 
   UNSUPPORTED_SORT_DIRECTION_VALUE(
       400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
-  
+
   FEEDBACK_ERROR_MESSAGE(
       500,
       "EC_0073",
