@@ -854,37 +854,27 @@ public class FdahpStudyDesignerUtil {
     return timeRangeList;
   }
 
-  public static String getTimeRangeString(String frequency) {
-    String timeRange = "";
+  public static String[] getTimeRangeString(String frequency) {
     if (StringUtils.isNotEmpty(frequency)) {
       switch (frequency) {
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
-          timeRange =
-              FdahpStudyDesignerConstants.DAYS_OF_THE_CURRENT_MONTH
-                  + "' , '"
-                  + FdahpStudyDesignerConstants.DAYS_OF_THE_CURRENT_WEEK;
-          break;
+          return new String[] {
+            FdahpStudyDesignerConstants.DAYS_OF_THE_CURRENT_MONTH,
+            FdahpStudyDesignerConstants.DAYS_OF_THE_CURRENT_WEEK
+          };
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_DAILY:
-          timeRange = FdahpStudyDesignerConstants.MULTIPLE_TIMES_A_DAY;
-          break;
-
+          return new String[] {FdahpStudyDesignerConstants.MULTIPLE_TIMES_A_DAY};
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_WEEKLY:
-          timeRange = FdahpStudyDesignerConstants.WEEKS_OF_THE_CURRENT_MONTH;
-          break;
-
+          return new String[] {FdahpStudyDesignerConstants.WEEKS_OF_THE_CURRENT_MONTH};
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_MONTHLY:
-          timeRange = FdahpStudyDesignerConstants.MONTHS_OF_THE_CURRENT_YEAR;
-          break;
-
+          return new String[] {FdahpStudyDesignerConstants.MONTHS_OF_THE_CURRENT_YEAR};
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
-          timeRange = FdahpStudyDesignerConstants.RUN_BASED;
-          break;
+          return new String[] {FdahpStudyDesignerConstants.RUN_BASED};
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_ONE_TIME:
-          timeRange = "";
-          break;
+          return new String[] {""};
       }
     }
-    return timeRange;
+    return new String[] {""};
   }
 
   public static boolean isEmpty(String str) {

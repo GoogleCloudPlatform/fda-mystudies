@@ -56,6 +56,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
@@ -702,8 +703,7 @@ public class SiteServiceImpl implements SiteService {
       Enrollment enrollment = new Enrollment(null, "-", YET_TO_ENROLL, "-");
       participantDetail.getEnrollments().add(enrollment);
     } else {
-      ParticipantMapper.addEnrollments(
-          participantDetail, participantsEnrollments, participantDetail.getOnboardingStatus());
+      ParticipantMapper.addEnrollments(participantDetail, participantsEnrollments);
       List<String> participantStudyIds =
           participantsEnrollments
               .stream()
@@ -799,7 +799,8 @@ public class SiteServiceImpl implements SiteService {
     auditRequest.setStudyId(siteEntity.getStudyId());
 
     List<ParticipantRegistrySiteEntity> invitedParticipants =
-        findEligibleParticipantsAndInvite(participantsList, siteEntity, auditRequest);
+        findEligibleParticipantsAndInvite(
+            participantsList, siteEntity, auditRequest, inviteParticipantRequest.getIds());
 
     participantsList.removeAll(invitedParticipants);
     List<String> failedParticipantIds =
@@ -825,7 +826,8 @@ public class SiteServiceImpl implements SiteService {
   private List<ParticipantRegistrySiteEntity> findEligibleParticipantsAndInvite(
       List<ParticipantRegistrySiteEntity> participants,
       SiteEntity siteEntity,
-      AuditLogEventRequest auditRequest) {
+      AuditLogEventRequest auditRequest,
+      List<String> ids) {
 
     List<ParticipantRegistrySiteEntity> invitedParticipants = new ArrayList<>();
     for (ParticipantRegistrySiteEntity participantRegistrySiteEntity : participants) {
@@ -861,6 +863,7 @@ public class SiteServiceImpl implements SiteService {
       invitedParticipantsEmailRepository.saveAndFlush(inviteParticipantsEmail);
 
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
+      participantStudyRepository.updateEnrollmentStatus(ids, CommonConstants.YET_TO_ENROLL);
       invitedParticipants.add(participantRegistrySiteEntity);
     }
     return invitedParticipants;
@@ -1053,6 +1056,8 @@ public class SiteServiceImpl implements SiteService {
           participantStatusRequest.getStatus(),
           participantStatusRequest.getIds(),
           disabledTimestamp);
+      participantStudyRepository.updateEnrollmentStatus(
+          participantStatusRequest.getIds(), CommonConstants.YET_TO_ENROLL);
     } else {
       List<String> emails =
           participantregistryList
@@ -1072,6 +1077,8 @@ public class SiteServiceImpl implements SiteService {
           participantStatusRequest.getStatus(),
           participantStatusRequest.getIds(),
           disabledTimestamp);
+      participantStudyRepository.updateEnrollmentStatus(
+          participantStatusRequest.getIds(), CommonConstants.YET_TO_ENROLL);
     }
 
     SiteEntity site = optSite.get();
