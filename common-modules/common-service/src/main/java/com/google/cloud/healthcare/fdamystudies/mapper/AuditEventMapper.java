@@ -36,6 +36,8 @@ public final class AuditEventMapper {
 
   private static final String SOURCE = "source";
 
+  private static final String COOKIE_PREFIX = "mystudies_";
+
   public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request) {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(getValue(request, APP_ID));
@@ -62,7 +64,7 @@ public final class AuditEventMapper {
   private static String getValue(HttpServletRequest request, String name) {
     String value = request.getHeader(name);
     if (StringUtils.isEmpty(value)) {
-      value = getCookieValue(request, "mystudies_" + name);
+      value = getCookieValue(request, COOKIE_PREFIX + name);
     }
     if (StringUtils.isNotEmpty(value)) {
       try {
