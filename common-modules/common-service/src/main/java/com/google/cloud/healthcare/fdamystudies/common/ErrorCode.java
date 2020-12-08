@@ -63,8 +63,8 @@ public enum ErrorCode {
   EMAIL_SEND_FAILED_EXCEPTION(
       500,
       "EC_0008",
-       HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-      "Sorry, an error occurred and we could not send you the email . Please try again later."),
+      HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+      "Sorry, an error occurred and we could not send you the email. Please try again later."),
 
   APPLICATION_ERROR(
       500,
