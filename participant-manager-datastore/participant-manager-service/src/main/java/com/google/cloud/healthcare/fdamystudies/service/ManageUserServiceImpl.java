@@ -235,22 +235,22 @@ public class ManageUserServiceImpl implements ManageUserService {
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
-      Map<String, AppEntity> appEntitesMap = new HashedMap<>();
-      Map<String, StudyEntity> studyEntitesMap = new HashedMap<>();
-      Map<String, SiteEntity> siteEntitesMap = new HashedMap<>();
-      getAndPutAppStudyAndSiteEntities(
-          appEntitesMap,
-          studyEntitesMap,
-          siteEntitesMap,
+      Map<String, AppEntity> appEntitiesMap = new HashedMap<>();
+      Map<String, StudyEntity> studyEntitiesMap = new HashedMap<>();
+      Map<String, SiteEntity> siteEntitiesMap = new HashedMap<>();
+      getAppStudyAndSiteEntitiesMapFromPermissions(
+          appEntitiesMap,
+          studyEntitiesMap,
+          siteEntitiesMap,
           appPermissions,
           studyPermissions,
           sitePermissions);
 
-      saveAppLevelPermissions(user, adminDetails, appPermissions, appEntitesMap);
+      saveAppLevelPermissions(user, adminDetails, appPermissions, appEntitiesMap);
       saveStudyLevelPermissions(
-          user, adminDetails, studyPermissions, appEntitesMap, studyEntitesMap);
+          user, adminDetails, studyPermissions, appEntitiesMap, studyEntitiesMap);
       saveSiteLevelPermissions(
-          user, adminDetails, sitePermissions, appEntitesMap, studyEntitesMap, siteEntitesMap);
+          user, adminDetails, sitePermissions, appEntitiesMap, studyEntitiesMap, siteEntitiesMap);
     }
 
     UserAccountEmailSchedulerTaskEntity emailTaskEntity =
@@ -262,10 +262,10 @@ public class ManageUserServiceImpl implements ManageUserService {
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, adminDetails.getId());
   }
 
-  private void getAndPutAppStudyAndSiteEntities(
-      Map<String, AppEntity> appEntitesMap,
-      Map<String, StudyEntity> studyEntitesMap,
-      Map<String, SiteEntity> siteEntitesMap,
+  private void getAppStudyAndSiteEntitiesMapFromPermissions(
+      Map<String, AppEntity> appEntitiesMap,
+      Map<String, StudyEntity> studyEntitiesMap,
+      Map<String, SiteEntity> siteEntitiesMap,
       List<AppPermissionDetails> appPermissions,
       List<StudyPermissionDetails> studyPermissions,
       List<SitePermissionDetails> sitePermissions) {
@@ -280,16 +280,16 @@ public class ManageUserServiceImpl implements ManageUserService {
     if (CollectionUtils.isNotEmpty(siteIds)) {
       List<SiteEntity> sites = siteRepository.findAllById(siteIds);
       for (SiteEntity siteEntity : sites) {
-        siteEntitesMap.put(siteEntity.getId(), siteEntity);
+        siteEntitiesMap.put(siteEntity.getId(), siteEntity);
       }
     }
 
     for (AppEntity appEntity : apps) {
-      appEntitesMap.put(appEntity.getId(), appEntity);
+      appEntitiesMap.put(appEntity.getId(), appEntity);
     }
 
     for (StudyEntity studyEntity : studies) {
-      studyEntitesMap.put(studyEntity.getId(), studyEntity);
+      studyEntitiesMap.put(studyEntity.getId(), studyEntity);
     }
   }
 
@@ -330,7 +330,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       UserRequest user,
       UserRegAdminEntity adminDetails,
       List<AppPermissionDetails> appPermissions,
-      Map<String, AppEntity> appEntitesMap) {
+      Map<String, AppEntity> appEntitiesMap) {
     logger.entry("saveAppLevelPermissions()");
     if (CollectionUtils.isEmpty(appPermissions)) {
       return;
@@ -339,7 +339,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     List<AppPermissionEntity> appPermissionEntities = new ArrayList<>();
     for (AppPermissionDetails selectedApp : appPermissions) {
       AppPermissionEntity appPermissionEntity = new AppPermissionEntity();
-      appPermissionEntity.setApp(appEntitesMap.get(selectedApp.getAppId()));
+      appPermissionEntity.setApp(appEntitiesMap.get(selectedApp.getAppId()));
       appPermissionEntity.setUrAdminUser(adminDetails);
       appPermissionEntity.setCreated(new Timestamp(Instant.now().toEpochMilli()));
       appPermissionEntity.setCreatedBy(user.getSuperAdminUserId());
@@ -355,8 +355,8 @@ public class ManageUserServiceImpl implements ManageUserService {
       UserRequest user,
       UserRegAdminEntity adminDetails,
       List<StudyPermissionDetails> studyPermissions,
-      Map<String, AppEntity> appEntitesMap,
-      Map<String, StudyEntity> studyEntitesMap) {
+      Map<String, AppEntity> appEntitiesMap,
+      Map<String, StudyEntity> studyEntitiesMap) {
     logger.entry("saveStudyLevelPermissions()");
     if (CollectionUtils.isEmpty(studyPermissions)) {
       return;
@@ -365,8 +365,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     List<StudyPermissionEntity> studyPermissionEntities = new ArrayList<>();
     for (StudyPermissionDetails selectedStudy : studyPermissions) {
       StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
-      studyPermissionEntity.setApp(appEntitesMap.get(selectedStudy.getAppId()));
-      studyPermissionEntity.setStudy(studyEntitesMap.get(selectedStudy.getStudyId()));
+      studyPermissionEntity.setApp(appEntitiesMap.get(selectedStudy.getAppId()));
+      studyPermissionEntity.setStudy(studyEntitiesMap.get(selectedStudy.getStudyId()));
       studyPermissionEntity.setUrAdminUser(adminDetails);
       studyPermissionEntity.setCreated(new Timestamp(Instant.now().toEpochMilli()));
       studyPermissionEntity.setCreatedBy(user.getSuperAdminUserId());
@@ -382,9 +382,9 @@ public class ManageUserServiceImpl implements ManageUserService {
       UserRequest user,
       UserRegAdminEntity adminDetails,
       List<SitePermissionDetails> sitePermissions,
-      Map<String, AppEntity> appEntitesMap,
-      Map<String, StudyEntity> studyEntitesMap,
-      Map<String, SiteEntity> siteEntitesMap) {
+      Map<String, AppEntity> appEntitiesMap,
+      Map<String, StudyEntity> studyEntitiesMap,
+      Map<String, SiteEntity> siteEntitiesMap) {
     logger.entry("saveSiteLevelPermissions()");
     if (CollectionUtils.isEmpty(sitePermissions)) {
       return;
@@ -393,9 +393,9 @@ public class ManageUserServiceImpl implements ManageUserService {
     List<SitePermissionEntity> sitePermissionEntities = new ArrayList<>();
     for (SitePermissionDetails selectedSite : sitePermissions) {
       SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-      sitePermissionEntity.setApp(appEntitesMap.get(selectedSite.getAppId()));
-      sitePermissionEntity.setStudy(studyEntitesMap.get(selectedSite.getStudyId()));
-      sitePermissionEntity.setSite(siteEntitesMap.get(selectedSite.getSiteId()));
+      sitePermissionEntity.setApp(appEntitiesMap.get(selectedSite.getAppId()));
+      sitePermissionEntity.setStudy(studyEntitiesMap.get(selectedSite.getStudyId()));
+      sitePermissionEntity.setSite(siteEntitiesMap.get(selectedSite.getSiteId()));
       sitePermissionEntity.setUrAdminUser(adminDetails);
       sitePermissionEntity.setCreated(new Timestamp(Instant.now().toEpochMilli()));
       sitePermissionEntity.setCreatedBy(user.getSuperAdminUserId());
@@ -511,22 +511,22 @@ public class ManageUserServiceImpl implements ManageUserService {
     deleteAppStudySiteLevelPermissions(user.getId());
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
-      Map<String, AppEntity> appEntitesMap = new HashedMap<>();
-      Map<String, StudyEntity> studyEntitesMap = new HashedMap<>();
-      Map<String, SiteEntity> siteEntitesMap = new HashedMap<>();
-      getAndPutAppStudyAndSiteEntities(
-          appEntitesMap,
-          studyEntitesMap,
-          siteEntitesMap,
+      Map<String, AppEntity> appEntitiesMap = new HashedMap<>();
+      Map<String, StudyEntity> studyEntitiesMap = new HashedMap<>();
+      Map<String, SiteEntity> siteEntitiesMap = new HashedMap<>();
+      getAppStudyAndSiteEntitiesMapFromPermissions(
+          appEntitiesMap,
+          studyEntitiesMap,
+          siteEntitiesMap,
           appPermissions,
           studyPermissions,
           sitePermissions);
 
-      saveAppLevelPermissions(user, adminDetails, appPermissions, appEntitesMap);
+      saveAppLevelPermissions(user, adminDetails, appPermissions, appEntitiesMap);
       saveStudyLevelPermissions(
-          user, adminDetails, studyPermissions, appEntitesMap, studyEntitesMap);
+          user, adminDetails, studyPermissions, appEntitiesMap, studyEntitiesMap);
       saveSiteLevelPermissions(
-          user, adminDetails, sitePermissions, appEntitesMap, studyEntitesMap, siteEntitesMap);
+          user, adminDetails, sitePermissions, appEntitiesMap, studyEntitiesMap, siteEntitiesMap);
     }
 
     UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail =
