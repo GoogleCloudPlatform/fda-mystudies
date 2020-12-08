@@ -141,16 +141,6 @@ class ResourcesViewController: UIViewController {
     }
   }
 
-  func checkForInfoUpdate() {
-
-    if StudyUpdates.studyInfoUpdated {
-      WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!,
-        delegate: self
-      )
-    }
-  }
-
   func updateAnchorDateLifeTime() {
     guard let currentStudy = Study.currentStudy else { return }
     AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateForResource {

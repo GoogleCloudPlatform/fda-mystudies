@@ -9,10 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
-
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
-import com.google.cloud.healthcare.fdamystudies.common.ParticipantStudyStateStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
@@ -76,40 +74,36 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     return isStudyExist;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public boolean isValidStudyToken(
       @NotNull String token, @NotNull String studyId, @NotNull String email) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
-    List<ParticipantRegistrySiteEntity> participantRegistrySite = null;
-    ParticipantRegistrySiteEntity participantRegistrySiteDetails = null;
-    boolean isValidStudyToken = false;
+    ParticipantRegistrySiteEntity participantRegistrySite = null;
     Session session = this.sessionFactory.getCurrentSession();
+
     participantRegistrySite =
-        session
-            .createQuery(
-                "from ParticipantRegistrySiteEntity PS where study.customId =:studyId and"
-                    + " upper(trim(enrollmentToken))=:token and email=:email and"
-                    + " onboardingStatus != :onboardingStatus")
-            .setParameter("studyId", studyId)
-            .setParameter("token", token.toUpperCase())
-            .setParameter("email", email)
-            .setParameter("onboardingStatus", "D")
-            .getResultList();
+        (ParticipantRegistrySiteEntity)
+            session
+                .createQuery(
+                    "from ParticipantRegistrySiteEntity PS where study.customId =:studyId and"
+                        + " upper(trim(enrollmentToken))=:token and email=:email")
+                .setParameter("studyId", studyId)
+                .setParameter("token", token.toUpperCase())
+                .setParameter("email", email)
+                .uniqueResult();
 
-    if (participantRegistrySite != null && !participantRegistrySite.isEmpty()) {
-      participantRegistrySiteDetails = participantRegistrySite.get(0);
-    }
-    if (participantRegistrySiteDetails != null) {
-      Timestamp now = new Timestamp(Instant.now().toEpochMilli());
-      if (now.after(participantRegistrySiteDetails.getEnrollmentTokenExpiry())) {
-        throw new ErrorCodeException(ErrorCode.TOKEN_EXPIRED);
-      }
-      isValidStudyToken = true;
+    if (participantRegistrySite == null) {
+      return false;
     }
 
-    logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends");
-    return isValidStudyToken;
+    Timestamp now = new Timestamp(Instant.now().toEpochMilli());
+    if (participantRegistrySite.getOnboardingStatus().equals(OnboardingStatus.DISABLED.getCode())
+        || now.after(participantRegistrySite.getEnrollmentTokenExpiry())) {
+      throw new ErrorCodeException(ErrorCode.TOKEN_EXPIRED);
+    }
+
+    logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends ");
+    return true;
   }
 
   @SuppressWarnings("unchecked")

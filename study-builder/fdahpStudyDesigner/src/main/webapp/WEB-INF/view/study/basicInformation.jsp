@@ -115,6 +115,24 @@
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
+
+        <div class="col-md-6 pr-none">
+          <div class="gray-xs-f mb-xs">
+            Study Category
+            <span class="requiredStar"> *</span>
+          </div>
+          <div class="form-group">
+            <select
+                class="selectpicker aq-select aq-select-form elaborateClass"
+                id="category" name="category" required title="Select">
+              <c:forEach items="${categoryList}" var="category">
+                <option value="${category.id}"
+                  ${studyBo.category eq category.id ?'selected':''}>${category.value}</option>
+              </c:forEach>
+            </select>
+            <div class="help-block with-errors red-txt"></div>
+          </div> 
+        </div>
       </div>
       <!--phase2a sp1-->
 
@@ -136,23 +154,6 @@
       <div class="col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            Study Category
-            <span class="requiredStar"> *</span>
-          </div>
-          <div class="form-group">
-            <select
-                class="selectpicker aq-select aq-select-form elaborateClass"
-                id="category" name="category" required title="Select">
-              <c:forEach items="${categoryList}" var="category">
-                <option value="${category.id}"
-                  ${studyBo.category eq category.id ?'selected':''}>${category.value}</option>
-              </c:forEach>
-            </select>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-        <div class="col-md-6 pr-none">
-          <div class="gray-xs-f mb-xs">
             Research Sponsor
             <small>(100 characters max)</small>
             <span
@@ -165,28 +166,7 @@
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-      </div>
-
-      <div class="col-md-12 p-none">
-        <div class="col-md-6 pl-none">
-          <div class="gray-xs-f mb-xs">
-            Data Partner
-            <span class="requiredStar"> *</span>
-          </div>
-          <div class="form-group">
-            <select class="selectpicker elaborateClass" id="dataPartnerId"
-                    multiple="multiple" title="Select"
-                    data-none-selected-text="Select" name="dataPartner" required>
-              <c:forEach items="${dataPartnerList}" var="datapartner">
-                <option value="${datapartner.id}"
-                  ${fn:contains(studyBo.dataPartner , datapartner.id ) ? 'selected' : ''}>${datapartner.value}</option>
-              </c:forEach>
-            </select>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-
-        </div>
-        <div class="col-md-6 pr-none">
+        <div class="col-md-6">
           <div class="gray-xs-f mb-xs">
             Tentative Duration
             <small>(3 numbers max)</small>
@@ -194,14 +174,14 @@
                 class="requiredStar"> *
             </span>
           </div>
-          <div class="form-group col-md-4 p-none mr-md mb-none">
+          <div class="form-group col-md-4 p-none mr-md">
             <input type="text" class="form-control" name="tentativeDuration"
                    value="${studyBo.tentativeDuration}" maxlength="3" required
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                    data-pattern-error="Please enter valid number."/>
             <div class="help-block with-errors red-txt"></div>
           </div>
-          <div class="form-group col-md-4 p-none mb-none">
+          <div class="form-group col-md-4 p-none">
             <select class="selectpicker elaborateClass" required
                     title="Select" name="tentativeDurationWeekmonth">
               <option value="Days"
@@ -220,8 +200,8 @@
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-      </div>
-
+      </div> 
+      
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-xs">
           Study Tagline
@@ -333,7 +313,7 @@
             <div class="thumb">
               <img
                   <c:if
-                       test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" /><spring:eval expression="@propertyConfigurer.getProperty('cloud.bucket.name')" />/studylogo/${studyBo.thumbnailImage}"
+                       test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${studyBo.thumbnailImage}"
               </c:if>
                   <c:if
                       test="${empty studyBo.thumbnailImage}">src="/studybuilder/images/dummy-img.jpg" </c:if>

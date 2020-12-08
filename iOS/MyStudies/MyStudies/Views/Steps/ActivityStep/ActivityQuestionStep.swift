@@ -233,12 +233,6 @@ enum QuestionStepType: String {
 
 }
 
-enum PHIType: String {
-  case notPHI = "NotPHI"
-  case limited = "Limited"
-  case phi = "PHI"
-}
-
 class ActivityQuestionStep: ActivityStep {
 
   var formatDict: [String: Any]?

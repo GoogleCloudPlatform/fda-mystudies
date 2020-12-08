@@ -203,20 +203,6 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
   // MARK: Helper Methods
 
-  /// Updates the timer value
-  func setCounterValue() {
-
-    if self.kickCounter! < 10 {
-      counterTextField?.text = "00" + "\(self.kickCounter!)"
-
-    } else if self.kickCounter! >= 10 && self.kickCounter! < 100 {
-      counterTextField?.text = "0" + "\(self.kickCounter!)"
-
-    } else {
-      counterTextField?.text = "\(self.kickCounter!)"
-    }
-  }
-
   /// Updates the timer Value
   @objc func setCounter() {
 
@@ -532,12 +518,6 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     acp?.toolbarBackgroundColor = UIColor.white
     acp?.toolbarButtonsColor = kUIColorForSubmitButtonBackground
     acp?.show()
-  }
-}
-
-class FetalKickCounterStepType: ORKActiveStep {
-  static func stepViewControllerClass() -> FetalKickCounterStepViewController.Type {
-    return FetalKickCounterStepViewController.self
   }
 }
 

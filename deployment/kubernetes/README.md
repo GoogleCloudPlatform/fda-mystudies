@@ -89,7 +89,6 @@ Upload the SQL files to the bucket:
 gsutil cp \
   ./study-builder/sqlscript/* \
   ./response-datastore/sqlscript/mystudies_response_server_db_script.sql \
-  ./participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
   ./hydra/sqlscript/create_hydra_db_script.sql \
   gs://<prefix>-<env>-mystudies-sql-import
@@ -126,7 +125,6 @@ gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix
 
 ```bash
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/mystudies_participant_datastore_db_script.sql
-gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/mystudies_app_info_update_db_script.sql
 ```
 
 ### Kubernetes Config Values
