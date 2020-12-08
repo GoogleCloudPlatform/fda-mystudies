@@ -330,7 +330,7 @@ public enum ErrorCode {
       "This view displays app-wise enrollment if you manage multiple studies."),
 
   UNSUPPORTED_SORTBY_VALUE(
-      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortby value"),
+      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortBy value"),
 
   UNSUPPORTED_SORT_DIRECTION_VALUE(
       400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
