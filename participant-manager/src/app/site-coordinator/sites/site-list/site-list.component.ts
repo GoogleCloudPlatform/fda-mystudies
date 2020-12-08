@@ -9,6 +9,7 @@ import {StudiesService} from '../../studies/shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {Permission} from 'src/app/shared/permission-enums';
 import {Status, StudyType} from 'src/app/shared/enums';
+import {SearchTermService} from 'src/app/service/search-term.service';
 
 @Component({
   selector: 'app-site-list',
@@ -35,13 +36,21 @@ export class SiteListComponent implements OnInit {
     private readonly modalService: BsModalService,
     private modalRef: BsModalRef,
     private readonly sharedService: SearchService,
+    private readonly searchTerm: SearchTermService,
   ) {}
 
   ngOnInit(): void {
+    this.searchTerm.searchParameter$.subscribe((upadtedUsername) => {
+      if (upadtedUsername === '') {
+        this.getStudies();
+      } else {
+        this.searchParameter(upadtedUsername);
+      }
+    });
+
     this.sharedService.updateSearchPlaceHolder(
       'Search by Site or Study ID or Name',
     );
-    this.getStudies();
   }
   closeModal(): void {
     this.modalRef.hide();
@@ -76,9 +85,9 @@ export class SiteListComponent implements OnInit {
       }),
     );
   }
-  search(query: string): void {
-    this.query$.next(query.trim().toLowerCase());
-  }
+  // search(query: string): void {
+  //   this.query$.next(query.trim().toLowerCase());
+  // }
   progressBarColor(site: Site): string {
     if (site.enrollmentPercentage && site.enrollmentPercentage > 70) {
       return 'green__text__sm';
@@ -97,7 +106,7 @@ export class SiteListComponent implements OnInit {
     this.study = study;
   }
 
-  loadMoreSites() {
+  loadMoreSites(): void {
     const offset = this.manageStudiesBackup.studies.length;
 
     this.study$ = combineLatest(
@@ -110,7 +119,6 @@ export class SiteListComponent implements OnInit {
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
 
-        console.log('combined ' + studies.length);
         this.manageStudiesBackup.studies = studies;
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
@@ -127,6 +135,31 @@ export class SiteListComponent implements OnInit {
             : false;
 
         return this.manageStudiesBackup;
+      }),
+    );
+  }
+
+  searchParameter(searchTerm: string): void {
+    console.log('value updated ' + searchTerm);
+    // const offset = this.manageStudiesBackup.studies.length;
+    this.study$ = combineLatest(
+      this.studiesService.searchStudiesWithSites(this.limit, 0, searchTerm),
+      this.query$,
+    ).pipe(
+      map(([manageStudies, query]) => {
+        // this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
+        //   (study: Study) =>
+        //     study.name?.toLowerCase().includes(query) ||
+        //     study.customId?.toLowerCase().includes(query) ||
+        //     study.sites.some((site) =>
+        //       site.name?.toLowerCase()?.includes(query),
+        //     ),
+        // );
+        this.loadMoreEnabled =
+          this.manageStudiesBackup.studies.length % this.limit === 0
+            ? true
+            : false;
+        return manageStudies;
       }),
     );
   }
