@@ -227,4 +227,17 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
       nativeQuery = true)
   public List<AppStudySiteInfo> findUnselectedAppsStudiesSites(
       List<String> appIds, @Param("userId") String userId);
+
+  @Query(
+      value =
+          "SELECT ai.id AS appId, ai.app_name AS appName, ai.custom_app_id AS customAppId, si.name AS studyName, loc.name AS locationName, loc.custom_id AS locationCustomId, si.id AS studyId, st.id AS siteId, si.custom_id AS customStudyId, loc.id AS locationId, loc.description AS locationDescription "
+              + "FROM app_info ai, study_info si, sites st, locations loc "
+              + "WHERE st.location_id=loc.id AND st.study_id=si.id AND si.app_info_id=ai.id "
+              + "UNION ALL "
+              + "SELECT ai.id AS appId, ai.app_name AS appName, ai.custom_app_id AS customAppId, si.name AS studyName, null AS locationName, null AS locationCustomId, si.id AS studyId, null AS siteId, si.custom_id AS customStudyId, null AS locationId, null AS locationDescription "
+              + "FROM app_info ai, study_info si "
+              + "WHERE si.app_info_id=ai.id "
+              + "AND si.id NOT IN (SELECT study.id FROM sites site, study_info study WHERE study.id = site.study_id)",
+      nativeQuery = true)
+  public List<AppStudySiteInfo> findAppsStudiesSites();
 }
