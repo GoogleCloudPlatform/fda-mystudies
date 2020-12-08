@@ -81,21 +81,21 @@
 		</plugins>
 	</build>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.google.cloud</groupId>
-				<artifactId>libraries-bom</artifactId>
-				<version>3.4.0</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-gcp-starter-firestore</artifactId>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>libraries-bom</artifactId>
+        <version>15.1.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-gcp-starter-firestore</artifactId>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 	<dependencies>
 		<dependency>

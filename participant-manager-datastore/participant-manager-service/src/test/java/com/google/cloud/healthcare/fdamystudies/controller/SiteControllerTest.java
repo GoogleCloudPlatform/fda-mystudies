@@ -691,6 +691,10 @@ public class SiteControllerTest extends BaseMockIT {
 
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
     participantRegistrySiteRepository.save(participantRegistrySiteEntity);
+    participantStudyEntity.setStatus(CommonConstants.YET_TO_ENROLL);
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -743,6 +747,9 @@ public class SiteControllerTest extends BaseMockIT {
     testDataHelper
         .getParticipantRegistrySiteRepository()
         .saveAndFlush(participantRegistrySiteEntity);
+    participantStudyEntity.setStatus("Yet to Enroll");
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
     // Step 2: Call API and expect  GET_PARTICIPANT_REGISTRY_SUCCESS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -799,6 +806,9 @@ public class SiteControllerTest extends BaseMockIT {
     testDataHelper
         .getParticipantRegistrySiteRepository()
         .saveAndFlush(participantRegistrySiteEntity);
+    participantStudyEntity.setStatus("Yet to Enroll");
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
     // Step 2: Call API and expect  GET_PARTICIPANT_REGISTRY_SUCCESS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -1512,8 +1522,9 @@ public class SiteControllerTest extends BaseMockIT {
     siteEntity.setLocation(locationEntity);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
-    participantStudyEntity.setStatus(EnrollmentStatus.WITHDRAWN.getStatus());
     participantStudyEntity.setWithdrawalDate(new Timestamp(Instant.now().toEpochMilli()));
+    participantStudyEntity.setStatus(CommonConstants.YET_TO_ENROLL);
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
     // Step 2: Call API and expect GET_PARTICIPANT_DETAILS_SUCCESS message

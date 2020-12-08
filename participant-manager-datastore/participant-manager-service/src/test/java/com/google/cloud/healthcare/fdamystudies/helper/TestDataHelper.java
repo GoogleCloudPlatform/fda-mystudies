@@ -12,6 +12,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.AC
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOGO_IMAGE_URL;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
@@ -395,6 +396,23 @@ public class TestDataHelper {
     sitePermissionEntity.setApp(appEntity);
     siteEntity.addSitePermissionEntity(sitePermissionEntity);
     return siteRepository.saveAndFlush(siteEntity);
+  }
+
+  public List<SiteEntity> createMultipleSiteEntity(StudyEntity studyEntity) {
+    List<SiteEntity> siteList = new ArrayList<>();
+    for (int i = 1; i <= 2; i++) {
+      LocationEntity locationEntity = newLocationEntity();
+      locationEntity.setName(LOCATION_NAME_VALUE + String.valueOf(i));
+      locationEntity.setCustomId(CUSTOM_ID_VALUE + String.valueOf(i));
+      SiteEntity siteEntity = new SiteEntity();
+      siteEntity.setLocation(locationEntity);
+      siteEntity.setStudy(studyEntity);
+      locationEntity = locationRepository.saveAndFlush(locationEntity);
+      locationEntity.addSiteEntity(siteEntity);
+      SiteEntity site = siteRepository.saveAndFlush(siteEntity);
+      siteList.add(site);
+    }
+    return siteList;
   }
 
   public void cleanUp() {
