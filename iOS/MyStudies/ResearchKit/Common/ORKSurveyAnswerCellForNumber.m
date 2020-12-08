@@ -70,8 +70,10 @@
     
     if (questionType == ORKQuestionTypeDecimal) {
         textField.keyboardType = UIKeyboardTypeDecimalPad;
+        (void)textField.addPlusMinusAccessoryView;
     } else if (questionType == ORKQuestionTypeInteger) {
         textField.keyboardType = UIKeyboardTypeNumberPad;
+        (void)textField.addPlusMinusAccessoryView;
     }
     
     [textField addTarget:self action:@selector(valueFieldDidChange:) forControlEvents:UIControlEventEditingChanged];

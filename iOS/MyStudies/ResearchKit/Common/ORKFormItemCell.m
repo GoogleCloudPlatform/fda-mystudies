@@ -788,6 +788,10 @@ static const CGFloat HorizontalMargin = 15.0;
     [super cellInit];
     ORKQuestionType questionType = [self.formItem questionType];
     self.textField.keyboardType = (questionType == ORKQuestionTypeInteger) ? UIKeyboardTypeNumberPad : UIKeyboardTypeDecimalPad;
+    if (questionType == ORKQuestionTypeDecimal ||
+        questionType == ORKQuestionTypeInteger) {
+        (void)self.textField.addPlusMinusAccessoryView;
+    }
     [self.textField addTarget:self action:@selector(valueFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     self.textField.allowsSelection = YES;
     
