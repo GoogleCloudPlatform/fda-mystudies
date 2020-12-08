@@ -342,51 +342,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     self.tableView.reloadData()
 
   }
-
-  /// Used to set the initial data for new user
-  func setInitialData() {
-
-    let user = User.currentUser
-    if user.userType == .loggedInUser {
-      menus.append(
-        [
-          "menuTitle": "My Account",
-          "iconName": "profile_menu1",
-        ])
-      self.tableView.tableFooterView?.isHidden = false
-    } else {
-      menus.append(
-        [
-          "menuTitle": "Sign In",
-          "iconName": "signin_menu1",
-        ])
-
-      menus.append(
-        [
-          "menuTitle": "New User?",
-          "iconName": "newuser_menu1",
-          "subTitle": "Sign up",
-        ])
-      self.tableView.tableFooterView?.isHidden = true
-    }
-
-    /// Setting proportion height of the header and footer view
-    let height = UIScreen.main.bounds.size.height * (220.0 / 667.0)  // calculate new height
-    self.tableView.tableHeaderView?.frame.size = CGSize(
-      width: self.tableView.tableHeaderView!.frame.size.width,
-      height: height
-    )
-    self.tableView.tableFooterView?.frame.size = CGSize(
-      width: self.tableView.tableFooterView!.frame.size.width,
-      height: height
-    )
-    self.tableView.frame.size = CGSize(
-      width: self.tableView.frame.width,
-      height: UIScreen.main.bounds.size.height
-    )
-    self.tableView.reloadData()
-  }
-
+  
   /// Used to change the view controller when clicked from the left menu.
   /// - Parameter menu:  Accepts the data from enum LeftMenu
   func changeViewController(_ menu: LeftMenu) {

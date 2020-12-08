@@ -101,31 +101,6 @@ class SplashViewController: UIViewController {
 
   }
 
-  func initilizeStudyOverview() {
-
-    let plistPath = Bundle.main.path(
-      forResource: "StudyOverview",
-      ofType: ".plist",
-      inDirectory: nil
-    )
-    let arrayContent = NSMutableArray.init(contentsOfFile: plistPath!)
-
-    var listOfOverviews: [OverviewSection] = []
-    for overview in arrayContent! {
-      let overviewObj = OverviewSection(detail: overview as! [String: Any])
-      listOfOverviews.append(overviewObj)
-    }
-
-    // create new Overview object
-    let overview = Overview()
-    overview.type = .study
-    overview.sections = listOfOverviews
-
-    Study.currentStudy?.overview = overview
-    self.navigateToStudyHomeController()
-
-  }
-
   /// Navigate to `StudyHomeViewController`
   func navigateToStudyHomeController() {
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
