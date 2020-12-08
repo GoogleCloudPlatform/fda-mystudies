@@ -140,25 +140,13 @@ export class SiteListComponent implements OnInit {
   }
 
   searchParameter(searchTerm: string): void {
-    console.log('value updated ' + searchTerm);
+    this.loadMoreEnabled = false;
     // const offset = this.manageStudiesBackup.studies.length;
     this.study$ = combineLatest(
       this.studiesService.searchStudiesWithSites(this.limit, 0, searchTerm),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
-        // this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
-        //   (study: Study) =>
-        //     study.name?.toLowerCase().includes(query) ||
-        //     study.customId?.toLowerCase().includes(query) ||
-        //     study.sites.some((site) =>
-        //       site.name?.toLowerCase()?.includes(query),
-        //     ),
-        // );
-        this.loadMoreEnabled =
-          this.manageStudiesBackup.studies.length % this.limit === 0
-            ? true
-            : false;
         return manageStudies;
       }),
     );
