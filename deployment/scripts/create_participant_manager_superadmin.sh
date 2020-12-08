@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright 2020 Google LLC
 #
 # Use of this source code is governed by an MIT-style
@@ -7,8 +9,6 @@
 # Script to insert the first participant manager superadmin into auth server.
 # Run like:
 # $ ./scripts/create_participant_manager_superadmin.sh <prefix> <env> <email> <password>
-
-#!/bin/bash
 
 if [ "$#" -ne 4 ]; then
   echo 'Please provide deployment prefix and env, as well as superadmin email and password in the order of <prefix> <env> <email> <password>'
@@ -32,8 +32,13 @@ echo "USE \`oauth_server_hydra\`;" >> ${TMPFILE}
 
 SALT=`printf "%s" uuidgen | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 HASH=`printf "%s%s" $SALT $PWD | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
+if [[ "$OSTYPE" == "darwin"* ]]; then
 DATE=`date -v +30d +"%F %T"`
 TIMESTAMP=`date -v +30d +"%s.%3N"`
+else # linux
+DATE=`date -d +30days +"%F %T"`
+TIMESTAMP=`date -d +30days +"%s.%3N"`
+fi
 
 echo "Inserting/updating superadmin user in 'oauth_server_hydra' database"
 echo "REPLACE into users (id, app_id, email, status, temp_reg_id, user_id, user_info)

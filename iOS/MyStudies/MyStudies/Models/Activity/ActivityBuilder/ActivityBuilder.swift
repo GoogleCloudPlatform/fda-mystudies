@@ -52,18 +52,6 @@ class ActivityBuilder {
     actvityResult = ActivityResult()
   }
 
-  /// Initialize all properties
-  /// - Parameter dict: `JSONDictionary` contains all properties
-  func initActivityWithDict(dict: [String: Any]) {
-
-    if Utilities.isValidObject(someObject: dict as AnyObject) {
-      self.activity?.setActivityMetaData(activityDict: dict)
-    }
-    self.actvityResult = ActivityResult()
-    self.actvityResult?.setActivity(activity: self.activity!)
-
-  }
-
   /// Initialize all proeprties
   /// - Parameter activity: Instance of `Activity`
   func initWithActivity(activity: Activity) {
@@ -72,12 +60,6 @@ class ActivityBuilder {
       self.actvityResult = ActivityResult()
       self.actvityResult?.setActivity(activity: self.activity!)
     }
-  }
-
-  /// Sets ActivtyResult using `ORKTaskResult` instance
-  /// - Parameter taskResult: Instance of `ORKTaskResult`
-  func setActivityResultWithORKResult(taskResult: ORKTaskResult) {
-    actvityResult?.initWithORKTaskResult(taskResult: taskResult)
   }
 
   /// Creates `ORKTask` instance based on ActivityType

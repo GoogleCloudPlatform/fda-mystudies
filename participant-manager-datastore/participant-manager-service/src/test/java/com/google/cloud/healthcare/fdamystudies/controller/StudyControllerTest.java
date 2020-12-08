@@ -353,7 +353,7 @@ public class StudyControllerTest extends BaseMockIT {
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
     participantStudyEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(EnrollmentStatus.WITHDRAWN.getStatus());
+    participantStudyEntity.setStatus(CommonConstants.YET_TO_ENROLL);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -373,9 +373,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
                 .value(locationEntity.getName()))
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentDate")
-                .isEmpty())
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
                 .value(YET_TO_ENROLL))

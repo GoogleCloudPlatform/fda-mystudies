@@ -72,7 +72,7 @@ export class StudyDetailsComponent
           query === ''
         ) {
           this.sharedService.updateSearchPlaceHolder(
-            'Search by Participant Email',
+            'Search Participant Email',
           );
         }
         this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
