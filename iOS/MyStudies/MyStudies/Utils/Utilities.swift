@@ -86,35 +86,6 @@ class Utilities: NSObject {
     return Branding.standaloneStudyID
   }
 
-  class func getAttributedText(
-    plainString pstr: String,
-    boldString bstr: String,
-    fontSize size: CGFloat,
-    plainFontName: String,
-    boldFontName: String
-  ) -> NSAttributedString {
-
-    let title: String = pstr + " " + bstr
-    let attributedString = NSMutableAttributedString(string: title)
-    let stringAttributes1 = [
-      NSAttributedString.Key.font: UIFont(name: plainFontName, size: size)!,
-    ]
-    let stringAttributes2 = [
-      NSAttributedString.Key.font: UIFont(name: boldFontName, size: size)!,
-    ]
-
-    attributedString.addAttributes(
-      stringAttributes1,
-      range: (title as NSString).range(of: pstr)
-    )
-    attributedString.addAttributes(
-      stringAttributes2,
-      range: (title as NSString).range(of: bstr)
-    )
-
-    return attributedString
-  }
-
   class func getUIColorFromHex(_ hexInt: Int, alpha: CGFloat? = 1.0) -> UIColor {
 
     let red = CGFloat((hexInt & 0xff0000) >> 16) / 255.0
@@ -151,17 +122,6 @@ class Utilities: NSObject {
     )
   }
 
-  class func getDateStringWithFormat(_ dateFormatter: String, date: Date) -> String {
-
-    let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "us")
-    formatter.dateStyle = DateFormatter.Style.full
-    formatter.dateFormat = dateFormatter
-    let dateString = formatter.string(from: date)
-
-    return dateString
-  }
-
   class func getDateFromStringWithFormat(_ dateFormate: String, resultDate: String) -> Date {
 
     let formatter = DateFormatter()
@@ -173,51 +133,7 @@ class Utilities: NSObject {
     return resDate!
   }
 
-  class func frameForText(_ text: String, font: UIFont) -> CGSize {
-
-    let attrString = NSAttributedString.init(
-      string: text,
-      attributes: [NSAttributedString.Key.font: font]
-    )
-    let rect = attrString.boundingRect(
-      with: CGSize(width: maxWidth, height: maxHeight),
-      options: NSStringDrawingOptions.usesLineFragmentOrigin,
-      context: nil
-    )
-    let size = CGSize(width: rect.size.width, height: rect.size.height)
-    return size
-  }
-
-  class func clearTheNotificationData() {
-    // clearing notificationArray inUserdefaults
-    UserDefaults.standard.removeObject(forKey: "NotifName")
-    UserDefaults.standard.removeObject(forKey: "NotifTime")
-  }
-
   // MARK: - Validation Methods
-  class func validateInputValue(value: String, valueType: String) -> Bool {
-
-    var valueRegex = ""
-    if valueType == "Phone" {
-
-    } else if valueType == "Name" {
-      valueRegex = "[a-zA-z]+([ '-][a-zA-Z]+)*$"
-
-    } else if valueType == "Email" {
-
-      valueRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
-
-    } else if valueType == "Password" {
-
-      // password validation for which is length >= 8 && contains any special character
-      valueRegex =
-        "^(?=.*[!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~\\[\\]])[0-9A-Za-z!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~\\[\\]]{8,}$"
-    }
-
-    let predicate = NSPredicate.init(format: "SELF MATCHES %@", valueRegex)
-    let isValid = predicate.evaluate(with: value as String)
-    return isValid
-  }
 
   class func isValidEmail(testStr: String) -> Bool {
     let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
@@ -259,49 +175,6 @@ class Utilities: NSObject {
     return true
   }
 
-  class func formatNumber(mobileNumber: NSString) -> NSString {
-    var mobileNumber = mobileNumber
-    mobileNumber = mobileNumber.replacingOccurrences(of: "(", with: "") as NSString
-    mobileNumber = mobileNumber.replacingOccurrences(of: ")", with: "") as NSString
-    mobileNumber = mobileNumber.replacingOccurrences(of: " ", with: "") as NSString
-    mobileNumber = mobileNumber.replacingOccurrences(of: "-", with: "") as NSString
-    mobileNumber = mobileNumber.replacingOccurrences(of: "+", with: "") as NSString
-
-    let length = mobileNumber.length
-    if length > 10 {
-      mobileNumber = mobileNumber.substring(from: length - 10) as NSString
-
-    }
-
-    return mobileNumber
-  }
-
-  class func getLength(mobileNumber: NSString) -> Int {
-    var mobileNumber = mobileNumber
-    mobileNumber = mobileNumber.replacingOccurrences(of: "(", with: "") as NSString
-    mobileNumber = mobileNumber.replacingOccurrences(of: ")", with: "") as NSString
-    mobileNumber = mobileNumber.replacingOccurrences(of: " ", with: "") as NSString
-    mobileNumber = mobileNumber.replacingOccurrences(of: "-", with: "") as NSString
-    mobileNumber = mobileNumber.replacingOccurrences(of: "+", with: "") as NSString
-
-    let length = mobileNumber.length
-    return length
-  }
-
-  class func checkTextSufficientComplexity(password: String) -> Bool {
-
-    let capitalLetterRegEx = ".*[~!@#$%^&*()_]+.*"
-
-    let texttest = NSPredicate(format: "SELF MATCHES %@", capitalLetterRegEx)
-    let capitalresult = texttest.evaluate(with: password)
-
-    let numberRegEx = ".*[a-z0-9A-Z]+.*"
-    let texttest1 = NSPredicate(format: "SELF MATCHES %@", numberRegEx)
-    let numberresult = texttest1.evaluate(with: password)
-
-    return capitalresult && numberresult
-  }
-
   // Method to validate a value for Null condition
   //     @someObject: can be String,Int or Bool
   //     returns a Boolean on valid data
@@ -338,29 +211,6 @@ class Utilities: NSObject {
       } else if someObject as? Date != nil {
         return true
 
-      } else {
-        return false
-      }
-    } else {
-      return false
-    }
-  }
-
-  // Method to check if value is of specific Type
-  //     @someValue:can be any value
-  //     @type:must a specific class Type
-  //     returns boolean
-  class func isValidValueAndOfType(someValue: AnyObject?, type: AnyClass) -> Bool {
-    guard let someObject = someValue else {
-      // is null
-
-      return false
-    }
-    // is not null
-    if (someObject is NSNull) == false {
-
-      if (someValue?.isKind(of: type))! && someValue != nil {
-        return true
       } else {
         return false
       }
@@ -487,11 +337,6 @@ class Utilities: NSObject {
     return version + "." + bundleVersion
   }
 
-  class func getBundleIdentifier() -> String {
-
-    return Bundle.main.bundleIdentifier!
-  }
-
   class func currentDevicePlatform() -> String {
     return "IOS"
   }
@@ -545,47 +390,4 @@ extension FileManager {
     return paths[0]
   }
 
-  // Method to get CacheDirectory of Application
-  //     return path of CacheDirectory
-  class func cachesDir() -> String {
-
-    let paths =
-      NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
-      as [String]
-    return paths[0]
-  }
-
-  // Method to create Study or gateway directory
-  //     @type:DirectoryType can be study or gateway
-  //     returns a directory path string if exists already or else create One and returns path
-  class func getStorageDirectory(type: DirectoryType) -> String {
-
-    let fileManager = FileManager.default
-
-    let fullPath = self.documentsDir() + "/" + "\(type)"
-
-    var isDirectory: ObjCBool = false
-    if fileManager.fileExists(atPath: fullPath, isDirectory: &isDirectory) {
-      if isDirectory.boolValue {
-        // file exists and is a directory
-        return fullPath
-      } else {
-        // file exists and is not a directory
-        return ""
-      }
-    } else {
-      // file does not exist
-      do {
-        try FileManager.default.createDirectory(
-          atPath: fullPath,
-          withIntermediateDirectories: false,
-          attributes: nil
-        )
-        return fullPath
-      } catch let error as NSError {
-        Logger.sharedInstance.error("Unable to create Storage directory: ", error)
-        return ""
-      }
-    }
-  }
 }

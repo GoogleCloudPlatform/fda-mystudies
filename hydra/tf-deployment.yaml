@@ -47,7 +47,12 @@ spec:
             secretKeyRef:
               name: hydra-credentials
               key: system_secret
-        - name: BASE_URL
+        - name: AUTH_SERVER_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: shared-secrets
+              key: base_url
+        - name: HYDRA_BASE_URL
           valueFrom:
             secretKeyRef:
               name: shared-secrets

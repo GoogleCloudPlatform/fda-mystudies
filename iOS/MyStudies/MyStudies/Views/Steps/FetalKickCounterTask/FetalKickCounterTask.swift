@@ -80,11 +80,6 @@ class FetalKickCounterTask {
 
   }
 
-  /// Setter method to set totalKickCounts.
-  func setMaxKicks(maxKicks: Int) {
-    self.maxKickCounts = maxKicks
-  }
-
   /// Getter method to create fetalKickTask.
   ///   - Returns: Instance of ordered task,
   func getTask() -> ORKOrderedTask {
