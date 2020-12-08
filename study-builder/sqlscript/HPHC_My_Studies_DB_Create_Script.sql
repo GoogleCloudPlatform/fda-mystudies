@@ -1266,7 +1266,6 @@ CREATE TABLE IF NOT EXISTS `studies` (
   `platform` varchar(20) DEFAULT NULL,
   `category` varchar(200) DEFAULT NULL,
   `research_sponsor` varchar(200) DEFAULT NULL,
-  `data_partner` varchar(200) DEFAULT NULL,
   `tentative_duration` int(11) DEFAULT NULL,
   `tentative_duration_weekmonth` varchar(20) DEFAULT NULL,
   `description` longtext,

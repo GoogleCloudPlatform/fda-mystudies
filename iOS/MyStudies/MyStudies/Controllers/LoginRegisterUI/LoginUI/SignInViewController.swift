@@ -282,12 +282,7 @@ class SignInViewController: UIViewController {
       }
     )
   }
-
-  /// Dismiss key board when clicked on Background.
-  @objc func dismissKeyboard() {
-    self.view.endEditing(true)
-  }
-
+  
   /// To Create Menu View before Navigating to DashBoard.
   func navigateToGatewayDashboard() {
     self.createMenuView()

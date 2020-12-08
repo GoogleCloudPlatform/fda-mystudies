@@ -20,14 +20,6 @@ enum DateHelper {
     return dateFormatter
   }
 
-  static func stringFromDate(date: Date, format: String) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = format
-    dateFormatter.timeZone = TimeZone.current
-    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-    return dateFormatter.string(from: date)
-  }
-
   static func dateFromString(date: String, format: String) -> Date? {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = format

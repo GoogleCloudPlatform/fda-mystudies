@@ -328,24 +328,6 @@ class Activity {
     }
   }
 
-  /// Sets Configuration
-  /// - Parameter configurationDict: Dictionary which contains the properties of Activity
-  func setConfiguration(configurationDict: [String: Any]) {
-
-    if Utilities.isValidObject(someObject: configurationDict as AnyObject?) {
-      if Utilities.isValidValue(
-        someObject: configurationDict[kActivityBranching] as AnyObject
-      ) {
-        self.branching = configurationDict[kActivityBranching] as? Bool
-      }
-      if Utilities.isValidValue(
-        someObject: configurationDict[kActivityRandomization] as AnyObject
-      ) {
-        self.randomization = configurationDict[kActivityId] as? Bool
-      }
-    }
-  }
-
   /// Sets  Activity Availability like Start Date, End Date
   /// - Parameter availability: Dictionary which contains the properties of Activity
   func setActivityAvailability(_ availability: [String: Any]) {
@@ -434,18 +416,7 @@ class Activity {
       }
     )
   }
-
-  /// Returns the RestortionData which is of type Data
-  func getRestortionData() -> Data {
-    return self.restortionData!
-  }
-
-  /// Sets restortion Data
-  /// - Parameter restortionData: RestortionData which is of type Data
-  func setRestortionData(restortionData: Data) {
-    self.restortionData = restortionData
-  }
-
+  
   /// Update and returns StartDate and EndDate which is of type Date
   /// - Parameter anchorDate: instance of AnchorDate
   /// - Parameter frequency: instance of Frequency

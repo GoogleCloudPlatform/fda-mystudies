@@ -1,2 +1,23 @@
-<p>error works!</p>
-{{ errorMessage }}
+<div class="page-wrap d-flex flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12 text-center">
+        <span class="display-1 d-block">
+          <img
+            class="mr-sm"
+            src="assets/svgs/error_SVG.svg"
+            alt="error image "
+          />
+        </span>
+        <div class="mb-4 mt-4">
+          <div>
+            Sorry, {{ errorMessage }} occurred and your request could not be
+            processed.
+          </div>
+          <div>Please try again in some time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

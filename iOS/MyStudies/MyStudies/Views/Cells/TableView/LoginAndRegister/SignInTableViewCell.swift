@@ -19,11 +19,6 @@
 import Foundation
 import UIKit
 
-enum SignInTableViewTags: Int {
-  case emailId = 0
-  case password
-}
-
 class SignInTableViewCell: UITableViewCell {
 
   @IBOutlet var labelType: UILabel?
