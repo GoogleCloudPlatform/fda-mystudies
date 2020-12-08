@@ -59,13 +59,6 @@ struct ConsentDocument {
   var mimeType: MimeType?
   var version: String?
 
-  /// Default Initializer
-  mutating func initialize() {
-    self.mimeType = .html
-    self.htmlString = ""
-    self.version = "No_Version"
-  }
-
   /// Initializes all properties
   /// - Parameter consentDoucumentdict: `JSONDictionary` contains all properties of `ConsentDocument`
   mutating func initData(consentDoucumentdict: [String: Any]) {
@@ -306,27 +299,6 @@ class StudyAnchorDate {
     }
   }
 
-  /// Updates `StudyAnchorDate` date
-  /// - Parameter date: `Date` instance
-  func updateAnchorDate(date: Date) {
-    self.date = date
-  }
-
-  /// Sets `Study` joining date as Anchor date based on currentStudy StudyID
-  func setEnrollmentDateAsAnchorDate() {
-
-    if self.anchorDateType == "enrollment-date" {
-      let currentUser = User.currentUser
-      if let userStudyStatus = currentUser.participatedStudies.filter({
-        $0.studyId == Study.currentStudy?.studyId
-      }).first {
-        self.date = userStudyStatus.joiningDate
-
-        DBHandler.saveAnchorDate(date: self.date!, studyId: (Study.currentStudy?.studyId)!)
-      }
-    }
-  }
-
   /// Sets Anchor Date based on AnchorDateType
   /// - Parameter date: Instance of Date
   func setAnchorDateFromQuestion(date: String) {
@@ -339,16 +311,7 @@ class StudyAnchorDate {
       DBHandler.saveAnchorDate(date: self.date!, studyId: (Study.currentStudy?.studyId)!)
     }
   }
-
-  /// Checks Anchor Date availability
-  /// - Returns: `Boolean` state of Anchor Date
-  func isAnchorDateAvailable() -> Bool {
-
-    if self.anchorDateType != nil {
-      return true
-    }
-    return false
-  }
+  
 }
 
 // MARK: - StudyWithdrawalConfigration

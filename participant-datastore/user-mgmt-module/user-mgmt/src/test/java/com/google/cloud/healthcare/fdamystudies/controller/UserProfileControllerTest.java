@@ -45,6 +45,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -231,6 +232,26 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertEquals(Constants.USER_EMAIL, emailId);
 
     verifyTokenIntrospectRequest(2);
+  }
+
+  @Test
+  public void shouldReturnUnauthorizedForUpdateUserProfile() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.set(Constants.USER_ID_HEADER, IdGenerator.id());
+    SettingsRespBean settingRespBean = new SettingsRespBean(true, true, true, true, "", "");
+    UserRequestBean userRequestBean = new UserRequestBean(settingRespBean, new InfoBean());
+    String requestJson = getObjectMapper().writeValueAsString(userRequestBean);
+    mockMvc
+        .perform(
+            post(UPDATE_USER_PROFILE_PATH)
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_EXISTS.getDescription())));
+
+    verifyTokenIntrospectRequest(1);
   }
 
   @Test

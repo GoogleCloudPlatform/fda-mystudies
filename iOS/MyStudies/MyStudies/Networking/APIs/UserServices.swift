@@ -82,12 +82,6 @@ let kLogoutReasonValue = "Logout"
 // MARK: - Refresh token constants
 let kRefreshToken = "refreshToken"
 
-struct FailedUserServices {
-  var requestParams: [String: Any]? = [:]
-  var headerParams: [String: String]? = [:]
-  var method: Method!
-}
-
 class UserServices: NSObject {
 
   let networkManager = NetworkManager.sharedInstance()
@@ -117,19 +111,6 @@ class UserServices: NSObject {
 
     let method = RegistrationMethods.register.method
     self.sendRequestWith(method: method, params: params, headers: nil)
-
-  }
-
-  /// Creates a request to confirm `User` registation
-  /// - Parameter delegate: Class object to receive response
-  func confirmUserRegistration(_ delegate: NMWebServiceDelegate) {
-
-    self.delegate = delegate
-
-    let user = User.currentUser
-    let headerParams = [kUserId: user.userId!]
-    let method = RegistrationMethods.confirmRegistration.method
-    self.sendRequestWith(method: method, params: nil, headers: headerParams)
 
   }
 
@@ -273,24 +254,6 @@ class UserServices: NSObject {
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
 
-  /// Creates a request to get `User`preferences
-  /// - Parameter delegate: Class object to receive response
-  func getUserPreference(_ delegate: NMWebServiceDelegate) {
-
-    self.delegate = delegate
-
-    let user = User.currentUser
-    let headerParams =
-      [
-        kUserId: user.userId!,
-        kUserAuthToken: user.authToken,
-      ] as? [String: String]
-
-    let method = RegistrationMethods.userPreferences.method
-
-    self.sendRequestWith(method: method, params: nil, headers: headerParams)
-  }
-
   /// Creates a request to send `User` feedback
   /// - Parameter delegate: Class object to receive response
   func sendUserFeedback(delegate: NMWebServiceDelegate) {
@@ -316,12 +279,6 @@ class UserServices: NSObject {
       kContactusFirstname: ContactUsFields.firstName,
     ]
     self.sendRequestWith(method: method, params: params, headers: nil)
-  }
-
-  /// Creates a request to update `Activity` status
-  /// - Parameter delegate: Class object to receive response
-  func updateUserActivityState(_ delegate: NMWebServiceDelegate) {
-    self.delegate = delegate
   }
 
   func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {
@@ -401,12 +358,6 @@ class UserServices: NSObject {
     user.lastName = profile[kUserLastName] as? String
   }
 
-  func handleUpdateUserProfileResponse(response: [String: Any]) {
-  }
-
-  func handleResendEmailConfirmationResponse(response: [String: Any]) {
-  }
-
   /// Handles `User` preference response
   /// - Parameter response: Webservice response
   func handleGetPreferenceResponse(response: [String: Any]) {
@@ -428,32 +379,6 @@ class UserServices: NSObject {
       headers: self.headerParams
     )
   }
-
-  /// Handles `Study` status response
-  /// - Parameter response: Webservice response
-  func handleGetStudyStatesResponse(response: [String: Any]) {
-    let user = User.currentUser
-    user.participatedStudies.removeAll()
-    if let studies = response[kStudies] as? [[String: Any]] {
-
-      for study in studies {
-        let participatedStudy = UserStudyStatus(detail: study)
-        user.participatedStudies.append(participatedStudy)
-      }
-    }
-  }
-
-  func handleUpdateEligibilityConsentStatusResponse(response: [String: Any]) {}
-
-  func handleGetConsentPDFResponse(response: [String: Any]) {}
-
-  func handleUpdateActivityStateResponse(response: [String: Any]) {}
-
-  func handleGetActivityStateResponse(response: [String: Any]) {
-    _ = (response[kActivites] as? [[String: Any]])!
-  }
-
-  func handleWithdrawFromStudyResponse(response: [String: Any]) {}
 
   func handleDeActivateAccountResponse(response: [String: Any]) {
     let ud = UserDefaults.standard
@@ -521,8 +446,7 @@ extension UserServices: NMWebServiceDelegate {
     case RegistrationMethods.userProfile.description as String:
       self.handleGetUserProfileResponse(response: (response as? [String: Any])!)
 
-    case RegistrationMethods.updateUserProfile.description as String:
-      self.handleUpdateUserProfileResponse(response: (response as? [String: Any])!)
+    case RegistrationMethods.updateUserProfile.description as String: break
 
     case RegistrationMethods.userPreferences.description as String:
       self.handleGetPreferenceResponse(response: (response as? [String: Any])!)

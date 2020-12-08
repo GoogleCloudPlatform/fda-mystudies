@@ -38,7 +38,7 @@ DATE=`date -d +30days +"%F %T"`
 TIMESTAMP=`date -d +30days +"%s.%3N"`
 fi
 
-echo "Inserting/updating superadmin user in 'oauth_server_hydra' database"
+echo "Generating the query to create/replace superadmin user in 'oauth_server_hydra' database"
 echo "REPLACE into users (id, app_id, email, status, temp_reg_id, user_id, user_info)
   VALUES
   ('8ad16a8c74f823a10174f82c9a300001',
@@ -52,14 +52,9 @@ echo "REPLACE into users (id, app_id, email, status, temp_reg_id, user_id, user_
     }');
 " >> ${TMPFILE}
 
-# Upload TMPFILE to GCS.
-GCS_FILE=gs://${SQL_IMPORT_BUCKET}/participant_manager_superadmin.sql
-echo "Copying the sql file to ${GCS_FILE}"
-gsutil mv ${TMPFILE} ${GCS_FILE}
-
 echo "USE \`mystudies_participant_datastore\`;" >> ${TMPFILE}
 
-echo "Insert default location"
+echo "Generate the query to insert a default location"
 echo "REPLACE INTO locations
   (id, custom_id, is_default, name, status)
 VALUES
@@ -67,7 +62,7 @@ VALUES
 " >> ${TMPFILE}
 
 SECURITY_CODE=`cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 64 | head -n 1 | sed 's/^.* //'`
-echo "Inserting/updating ur_admin_user record in 'mystudies_participant_datastore' database"
+echo "Generating the query to create/replace ur_admin_user record in 'mystudies_participant_datastore' database"
 echo "REPLACE INTO ur_admin_user
   (id, created_by, email, first_name, location_permission, security_code, security_code_expire_date, status, super_admin, ur_admin_auth_id)
 VALUES
@@ -77,5 +72,6 @@ VALUES
 export DEST=`pwd -P`
 export OUTPUT="${DEST}/pm-superadmin.sql"
 
-echo "writing output ${OUTPUT}"
+echo "Writing the results in ${OUTPUT}"
 mv ${TMPFILE} ${OUTPUT}
+echo "Import ${OUTPUT} into the database to inject your initial superadmin user."
