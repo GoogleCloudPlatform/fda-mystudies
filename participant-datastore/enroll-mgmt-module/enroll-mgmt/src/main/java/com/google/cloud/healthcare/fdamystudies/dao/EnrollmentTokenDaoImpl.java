@@ -102,6 +102,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       throw new ErrorCodeException(ErrorCode.TOKEN_EXPIRED);
     }
 
+    if (participantRegistrySite.getOnboardingStatus().equals(OnboardingStatus.NEW.getCode())) {
+      return false;
+    }
+
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends ");
     return true;
   }
