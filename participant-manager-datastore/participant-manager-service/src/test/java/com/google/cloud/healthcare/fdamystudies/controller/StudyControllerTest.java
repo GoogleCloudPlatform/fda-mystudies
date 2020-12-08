@@ -535,9 +535,9 @@ public class StudyControllerTest extends BaseMockIT {
     siteEntity.setLocation(locationEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
-    // Step 1: 1 Participants for study already added in @BeforeEach, add 20 new Participants for
+    // Step 1: 1 Participants for study already added in @BeforeEach, add 9 new Participants for
     // study
-    for (int i = 1; i <= 20; i++) {
+    for (int i = 1; i <= 9; i++) {
       locationEntity = testDataHelper.newLocationEntity();
       locationEntity.setCustomId(CUSTOM_ID_VALUE + String.valueOf(i));
       locationEntity.setName(LOCATION_NAME_VALUE + String.valueOf(i));
@@ -555,8 +555,7 @@ public class StudyControllerTest extends BaseMockIT {
       Thread.sleep(5);
     }
 
-    // Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch only 10 data
-    // out of 21
+    // Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch  10 data
     mockMvc
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
@@ -565,7 +564,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .param("offset", "0")
                 .param("sortBy", "siteId")
                 .param("sortDirection", "desc")
-                .param("searchTerm", "20")
+                .param("searchTerm", "Marlb")
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -573,10 +572,10 @@ public class StudyControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(1)))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(9)))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
-                .value(LOCATION_NAME_VALUE + String.valueOf(20)));
+                .value(LOCATION_NAME_VALUE + String.valueOf(9)));
 
     verifyTokenIntrospectRequest(1);
 
