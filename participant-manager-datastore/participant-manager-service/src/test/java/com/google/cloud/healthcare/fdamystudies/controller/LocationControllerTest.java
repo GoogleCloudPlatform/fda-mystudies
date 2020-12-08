@@ -546,7 +546,7 @@ public class LocationControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(1);
 
-    // get all locations if page and limit values are null
+    // location with default limit(10),offset(0),sortBy(locationId), sortDirection(asc)
     mockMvc
         .perform(
             get(ApiEndpoint.GET_LOCATIONS.getPath()).headers(headers).contextPath(getContextPath()))
