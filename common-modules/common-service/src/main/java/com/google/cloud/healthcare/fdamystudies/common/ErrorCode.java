@@ -64,7 +64,7 @@ public enum ErrorCode {
       500,
       "EC_0008",
       HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-      "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
+      "Sorry, an error occurred and we could not send you the email. Please try again later."),
 
   APPLICATION_ERROR(
       500,
@@ -330,6 +330,12 @@ public enum ErrorCode {
       "This view displays app-wise enrollment if you manage multiple studies."),
 
   USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists"),
+  
+  REGISTRATION_EMAIL_SEND_FAILED(
+      500,
+      "EC_0075",
+      "Internal Server Error",
+      "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
 
   UNSUPPORTED_SORTBY_VALUE(
       400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortBy value"),
