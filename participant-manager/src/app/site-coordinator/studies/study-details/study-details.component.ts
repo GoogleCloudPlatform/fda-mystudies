@@ -34,7 +34,7 @@ export class StudyDetailsComponent
   currentPage = 1;
   offset = 0;
   searchTerm = '';
-  sortBy = 'email';
+  sortBy: string[] | string = ['email'];
   sortOrder = 'asc';
   constructor(
     private readonly locationLibrary: Location,
@@ -68,7 +68,7 @@ export class StudyDetailsComponent
         this.offset,
         this.limit,
         this.searchTerm,
-        this.sortBy,
+        this.sortBy[0],
         this.sortOrder,
       ),
     ).pipe(
@@ -106,7 +106,7 @@ export class StudyDetailsComponent
   }
 
   public onSortBy(event: string | string[]): void {
-    this.sortBy = event as string;
+    this.sortBy = new Array(event) as string[];
     this.offset = 0;
     this.currentPage = 0;
     this.getStudyDetails();

@@ -105,6 +105,8 @@
           "
           #mf="mfDataTable"
           [mfRowsOnPage]="limit"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
           (mfSortOrderChange)="onSortOrder($event)"
           (mfSortByChange)="onSortBy($event)"
         >
