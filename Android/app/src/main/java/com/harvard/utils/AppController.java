@@ -268,6 +268,10 @@ public class AppController {
     return new SimpleDateFormat("MMM dd, yyyy");
   }
 
+  public static SimpleDateFormat getDateFormatForActivityListMonthly() {
+    return new SimpleDateFormat("MMM yyyy");
+  }
+
   public static SimpleDateFormat getDateFormatForDailyRun() {
     return new SimpleDateFormat("yyyy-MM-dd");
   }

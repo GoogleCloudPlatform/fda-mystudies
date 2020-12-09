@@ -24,7 +24,7 @@
     <string name="last_name">Last Name</string>
     <string name="email_id">Email</string>
     <string name="username">Username</string>
-    <string name="enter_email">enter email</string>
+    <string name="enter_email">Enter email</string>
     <string name="enter_new_password">enter new password</string>
     <string name="enter_old_password">enter current password</string>
     <string name="enter_temp_password">enter temporary password</string>
@@ -80,7 +80,7 @@
     <string name="recv_stdy_actrem">Receive Study Activity Reminders?</string>
     <string name="reminder">Set up lead time for study activity reminders</string>
     <string name="sign_out">Sign Out</string>
-    <string name="delete_my_account">Delete My Account</string>
+    <string name="delete_my_account">Delete App Account</string>
     <string name="update">Update</string>
     <string name="get_started">Get Started</string>
     <string name="gateway_welcome">Welcome!</string>
@@ -135,7 +135,7 @@
     <string name="enter_enrollmentid">Enter enrollment ID</string>
     <string name="enrollmentdesc">This study allows only pre-screened participants to join the study. If you are one, please enter the enrollment ID provided to you for this study.</string>
     <string name="reviewconformmsg">By Agreeing you confirm that you read the consent and that you wish to take part in this research study.</string>
-    <string name="reviewmsg">Review the form below, and tap Agree if you\'re ready to continue</string>
+    <string name="reviewmsg">Review the form below, and tap Agree if you are ready to continue</string>
     <string name="review">Review</string>
 
     <string name="verification_email_content1">An email has been sent to</string>
@@ -170,7 +170,7 @@
     <string name="resend_success">An email verification code has been sent to your registered email.</string>
 
 
-    <string name="consentthanksmsg">Thanks for providing consent for this Study</string>
+    <string name="consentthanksmsg">Consent confirmed</string>
     <string name="studystartmsg">You can now start using the app to participate in the study.</string>
     <string name="viewpdf">View/Email eConsent PDF</string>
 
@@ -235,7 +235,7 @@
     <string name="setected_location">selected location</string>
     <string name="enter_a_time">Enter a Time</string>
     <string name="setelct_time">Select Time</string>
-    <string name="activities_not_found">Activities Not Found</string>
+    <string name="activities_not_found">None</string>
     <string name="unable_to_parse">Oops! something went wrong</string>
     <string name="enter_enrollment_id">Please Enter a Enrollment ID</string>
     <string name="not_able_create_pdf">Not able to create PDF</string>
@@ -382,7 +382,7 @@
     <string name="runchartmaxindex">runchartmaxindex</string>
     <string name="passcode_confirm_reenter">Re-enter the 4-digit passcode</string>
     <string name="enter_your_passcode">Enter your passcode</string>
-    <string name="thank_you_for_your_time">Thank you for your time!</string>
+    <string name="thank_you_for_your_time">Thank you for your time</string>
     <string name="permission_enable_message_screenshot">Please enable the permission from settings to share the Screen Shot</string>
     <string name="search">Search</string>
     <string name="apply">Apply</string>

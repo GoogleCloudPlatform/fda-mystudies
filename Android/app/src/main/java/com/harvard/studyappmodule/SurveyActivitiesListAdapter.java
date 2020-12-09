@@ -281,6 +281,8 @@ public class SurveyActivitiesListAdapter
       SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
       SimpleDateFormat simpleDateFormatForActivityList =
           AppController.getDateFormatForActivityList();
+      SimpleDateFormat simpleDateFormatForActivityListMonthly =
+          AppController.getDateFormatForActivityListMonthly();
       SimpleDateFormat simpleDateFormatForOtherFreq = AppController.getDateFormatForOtherFreq();
       SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUtcNoZone();
       try {
@@ -360,11 +362,11 @@ public class SurveyActivitiesListAdapter
           holder.time.setVisibility(View.VISIBLE);
 
           holder.date.setText(
-              simpleDateFormatForActivityList.format(startDate)
+                  simpleDateFormatForActivityListMonthly.format(startDate)
                   + " "
                   + context.getResources().getString(R.string.to)
                   + " "
-                  + simpleDateFormatForActivityList.format(endDate));
+                  + simpleDateFormatForActivityListMonthly.format(endDate));
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -755,13 +757,13 @@ public class SurveyActivitiesListAdapter
 
         date =
             simpleDateFormatForOtherFreq.format(startCalendar.getTime())
-                + " to "
+                + " - "
                 + simpleDateFormatForOtherFreq.format(endDate);
       } else {
 
         date =
             simpleDateFormatForOtherFreq.format(startDate)
-                + " to "
+                + " - "
                 + simpleDateFormatForOtherFreq.format(endDate);
       }
     } else {
