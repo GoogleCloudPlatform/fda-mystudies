@@ -2652,8 +2652,7 @@
       });
     });
     $("#saveId").click(function () {
-
-      var table = $('#content').DataTable();
+    	var table = $('#content').DataTable();
       validateShortTitle('', function (val) {
         if (val) {
           if (isFromValid("#contentFormId")) {
@@ -2963,7 +2962,7 @@
   }
 
   function addDate() {
-    customCount = parseInt(customCount) + 1;
+    customCount = customCount + 1;
     var newDateCon = "<div class='manually-option mb-md form-group' id='" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
