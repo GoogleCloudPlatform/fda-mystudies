@@ -14,8 +14,7 @@ import {Observable, of} from 'rxjs';
   templateUrl: './add-site.component.html',
   styleUrls: ['./add-site.component.scss'],
 })
-export class AddSiteComponent
-  extends UnsubscribeOnDestroyAdapter
+export class AddSiteComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   @Input() study = {} as Study;
   @Output() closeModalEvent = new EventEmitter();
