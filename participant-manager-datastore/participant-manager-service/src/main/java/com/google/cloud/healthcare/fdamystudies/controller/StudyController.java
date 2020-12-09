@@ -75,7 +75,7 @@ public class StudyController {
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     String[] allowedSortByValues = {
-      "email", "siteId", "onboardingStatus", "enrollmentStatus", "enrollmentDate"
+      "email", "locationName", "onboardingStatus", "enrollmentStatus", "enrollmentDate"
     };
     if (!ArrayUtils.contains(allowedSortByValues, sortBy)) {
       throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORTBY_VALUE);

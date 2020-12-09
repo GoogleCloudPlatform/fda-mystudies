@@ -562,7 +562,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .headers(headers)
                 .param("limit", "10")
                 .param("offset", "0")
-                .param("sortBy", "siteId")
+                .param("sortBy", "locationName")
                 .param("sortDirection", "desc")
                 .param("searchTerm", "Marlb")
                 .contextPath(getContextPath()))
