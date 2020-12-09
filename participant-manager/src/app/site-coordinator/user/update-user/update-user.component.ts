@@ -25,7 +25,8 @@ import {Status} from 'src/app/shared/enums';
   selector: 'user-update',
   templateUrl: './update-user.component.html',
 })
-export class UpdateUserComponent extends UnsubscribeOnDestroyAdapter
+export class UpdateUserComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   appDetails = {} as AppDetails;
   appDetailsBackup = {} as AppDetails;

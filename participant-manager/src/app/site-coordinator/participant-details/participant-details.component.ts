@@ -21,7 +21,8 @@ import {Permission} from 'src/app/shared/permission-enums';
   templateUrl: './participant-details.component.html',
   styleUrls: ['./participant-details.component.scss'],
 })
-export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
+export class ParticipantDetailsComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   participantId = '';
   sendResend = '';
