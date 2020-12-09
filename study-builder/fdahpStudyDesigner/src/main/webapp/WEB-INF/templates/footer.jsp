@@ -2,7 +2,7 @@
 
 <div class="md-container ft_con">
   <div class="foot">
-    <span>Copyright Placeholder</span>
+    <span>Copyright</span>
     <span>
       <a href="/studybuilder/terms.do" id=""
          target="_blank">Terms
