@@ -26,6 +26,7 @@ export class SiteListComponent implements OnInit {
   studyStatus = Status;
   loadMoreEnabled = true;
   limit = 10;
+  searchValue = '';
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
@@ -44,7 +45,9 @@ export class SiteListComponent implements OnInit {
       if (upadtedUsername === '') {
         this.getStudies();
       } else {
-        this.searchParameter(upadtedUsername);
+        this.manageStudiesBackup = {} as StudyResponse;
+        this.searchValue = upadtedUsername;
+        this.searchParameter();
       }
     });
 
@@ -110,7 +113,11 @@ export class SiteListComponent implements OnInit {
     const offset = this.manageStudiesBackup.studies.length;
 
     this.study$ = combineLatest(
-      this.studiesService.getStudiesWithSites(this.limit, offset),
+      this.studiesService.searchStudiesWithSites(
+        this.limit,
+        offset,
+        this.searchValue,
+      ),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
@@ -139,15 +146,33 @@ export class SiteListComponent implements OnInit {
     );
   }
 
-  searchParameter(searchTerm: string): void {
+  searchParameter(): void {
     this.loadMoreEnabled = false;
     // const offset = this.manageStudiesBackup.studies.length;
     this.study$ = combineLatest(
-      this.studiesService.searchStudiesWithSites(this.limit, 0, searchTerm),
+      this.studiesService.searchStudiesWithSites(
+        this.limit,
+        0,
+        this.searchValue,
+      ),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
-        return manageStudies;
+        this.manageStudiesBackup = {...manageStudies};
+        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
+          (study: Study) =>
+            study.name?.toLowerCase().includes(query) ||
+            study.customId?.toLowerCase().includes(query) ||
+            study.sites.some((site) =>
+              site.name?.toLowerCase()?.includes(query),
+            ),
+        );
+        this.loadMoreEnabled =
+          this.manageStudiesBackup.studies.length % this.limit === 0
+            ? true
+            : false;
+        console.log(this.manageStudiesBackup.studies.length);
+        return this.manageStudiesBackup;
       }),
     );
   }
