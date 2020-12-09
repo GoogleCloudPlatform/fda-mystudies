@@ -105,10 +105,8 @@
           "
           #mf="mfDataTable"
           [mfRowsOnPage]="limit"
-          [(mfSortBy)]="sortBy"
-          [(mfSortOrder)]="sortOrder"
-          (mfSortOrderChange)="onSortOrder()"
-          (mfSortByChange)="onSortBy()"
+          (mfSortOrderChange)="onSortOrder($event)"
+          (mfSortByChange)="onSortBy($event)"
         >
           <thead class="custom__thead">
             <tr>

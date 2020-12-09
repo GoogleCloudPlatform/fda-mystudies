@@ -98,13 +98,15 @@ export class StudyDetailsComponent
     this.getStudyDetails();
   }
 
-  public onSortOrder(): void {
+  public onSortOrder(event: string): void {
+    this.sortOrder = event;
     this.offset = 0;
     this.currentPage = 0;
     this.getStudyDetails();
   }
 
-  public onSortBy(): void {
+  public onSortBy(event: string | string[]): void {
+    this.sortBy = event as string;
     this.offset = 0;
     this.currentPage = 0;
     this.getStudyDetails();
