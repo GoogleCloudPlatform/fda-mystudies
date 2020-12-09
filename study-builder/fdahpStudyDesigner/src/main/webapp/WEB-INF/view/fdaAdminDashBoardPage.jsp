@@ -79,7 +79,7 @@
           <div class="manage-content-parent">
             <div class="lg-space-center">
               <div class="lg-space-txt">
-                Study Builder Portal
+                Study Builder
               </div>
               <div class="ll__border__bottom"></div>
               <div class="lg-space-title">
@@ -131,7 +131,7 @@
           </div>
         </div>
         <div class="footer">
-          <span>Copyright Placeholder</span>
+          <span>Copyright</span>
           <span>
             <a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
           </span>
