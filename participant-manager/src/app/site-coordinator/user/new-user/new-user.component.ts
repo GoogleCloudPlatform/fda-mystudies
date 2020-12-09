@@ -20,8 +20,7 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
   selector: 'user-new',
   templateUrl: './new-user.component.html',
 })
-export class AddNewUserComponent
-  extends UnsubscribeOnDestroyAdapter
+export class AddNewUserComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   appDetails = {} as AppDetails;
   appDetailsBackup = {} as AppDetails;
