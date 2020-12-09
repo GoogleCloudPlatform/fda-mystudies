@@ -5,4 +5,5 @@ export interface StudyDetails {
   status: number;
   message: string;
   code: string;
+  totalParticipantCount:number;
 }

@@ -20,6 +20,9 @@ export class StudyDetailsService {
     studyId: string,
     offset: number,
     limit: number,
+    searchTerm:string,
+    sortBy:string,
+    sortOrder:string,
   ): Observable<StudyDetails> {
     console.log(offset);
     return this.http.get<StudyDetails>(
@@ -31,6 +34,9 @@ export class StudyDetailsService {
           excludeParticipantStudyStatus: ['notEligible', 'yetToJoin'],
           offset: offset.toString(),
           limit: limit.toString(),
+          searchTerm: searchTerm,
+          sortBy: sortBy,
+          sortDirection: sortOrder,
         },
       },
     );

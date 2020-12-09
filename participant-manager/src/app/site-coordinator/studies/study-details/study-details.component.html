@@ -98,15 +98,17 @@
             studyDetails.participantRegistryDetail.registryParticipants
               | paginate
                 : {
-                    itemsPerPage: itemsPerPage,
+                    itemsPerPage: limit,
                     currentPage: currentPage,
-                    totalItems:
-                      studyDetails.participantRegistryDetail
-                        .registryParticipants.length
+                    totalItems: studyDetails.totalParticipantCount
                   }
           "
           #mf="mfDataTable"
-          [mfRowsOnPage]="10"
+          [mfRowsOnPage]="limit"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
+          (mfSortOrderChange)="onSortOrder($event)"
+          (mfSortByChange)="onSortBy($event)"
         >
           <thead class="custom__thead">
             <tr>
@@ -119,7 +121,7 @@
                   studyTypes.Close
                 "
               >
-                <mfDefaultSorter by="locationName">Site ID</mfDefaultSorter>
+                <mfDefaultSorter by="locationName">Site</mfDefaultSorter>
               </th>
               <th
                 *ngIf="
@@ -207,7 +209,7 @@
                   <pagination-controls
                     pagination-template
                     #api="paginationApi"
-                    (pageChange)="pageChange($event, api.getLastPage())"
+                    (pageChange)="pageChange($event)"
                   ></pagination-controls>
                 </div>
               </td>

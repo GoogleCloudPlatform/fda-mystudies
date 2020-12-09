@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {StudyDetailsService} from '../shared/study-details.service';
 import {ActivatedRoute} from '@angular/router';
 import {BehaviorSubject, Observable, of, combineLatest} from 'rxjs';
@@ -13,7 +13,6 @@ import {
 } from 'src/app/shared/enums';
 import {Permission} from 'src/app/shared/permission-enums';
 import {TemplateRef} from '@angular/core';
-import {RegistryParticipant} from 'src/app/shared/participant';
 import {SearchService} from 'src/app/shared/search.service';
 import {Location} from '@angular/common';
 @Component({
@@ -25,24 +24,18 @@ export class StudyDetailsComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   studyId = '';
-  query$ = new BehaviorSubject('');
   studyDetail$: Observable<StudyDetails> = of();
-  studyDetailsBackup = {} as StudyDetails;
   studyTypes = StudyType;
   onboardingStatus = OnboardingStatus;
   enrollmentStatus = EnrollmentStatus;
   permission = Permission;
   // pagination
-  itemsPerPage = 10;
-  pagesToLoad = 5;
-  limit = 50;
+  limit = 10;
   currentPage = 1;
   offset = 0;
-  loadMoreRecords = true;
-  studyDetailsPaginatedData = {} as StudyDetails;
-  filterEnabled = false;
-  pageChanged = false;
-
+  searchTerm = '';
+  sortBy = 'email';
+  sortOrder = 'asc';
   constructor(
     private readonly locationLibrary: Location,
     private readonly modalService: BsModalService,
@@ -55,7 +48,6 @@ export class StudyDetailsComponent
   }
 
   ngOnInit(): void {
-    console.log('study details');
     this.sharedService.updateSearchPlaceHolder(
       'Search by Site ID or Participant Email',
     );
@@ -75,77 +67,48 @@ export class StudyDetailsComponent
         this.studyId,
         this.offset,
         this.limit,
+        this.searchTerm,
+        this.sortBy,
+        this.sortOrder,
       ),
       this.query$,
     ).pipe(
-      map(([studyDetails, query]) => {
+      map(([studyDetails]) => {
         if (
-          studyDetails.participantRegistryDetail.studyType === StudyType.Open &&
-          query === ''
+          studyDetails.participantRegistryDetail.studyType === StudyType.Open
         ) {
           this.sharedService.updateSearchPlaceHolder(
             'Search Participant Email',
           );
         }
-        this.loadMoreRecords =
-          studyDetails.participantRegistryDetail.registryParticipants.length >=
-          this.limit;
-
-        if (!this.filterEnabled) {
-          if (!this.pageChanged) {
-            this.studyDetailsPaginatedData = studyDetails;
-
-            this.studyDetailsBackup = JSON.parse(
-              JSON.stringify(this.studyDetailsPaginatedData),
-            ) as StudyDetails;
-          } else {
-            this.studyDetailsPaginatedData.participantRegistryDetail.registryParticipants = this.studyDetailsPaginatedData.participantRegistryDetail.registryParticipants.concat(
-              studyDetails.participantRegistryDetail.registryParticipants,
-            );
-
-            this.studyDetailsBackup = JSON.parse(
-              JSON.stringify(this.studyDetailsPaginatedData),
-            ) as StudyDetails;
-          }
-        } else {
-          this.studyDetailsBackup = JSON.parse(
-            JSON.stringify(this.studyDetailsPaginatedData),
-          ) as StudyDetails;
-
-          this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
-            (participant: RegistryParticipant) =>
-              participant.email?.toLowerCase().includes(query.toLowerCase()) ||
-              participant.locationName
-                ?.toLowerCase()
-                .includes(query.toLowerCase()),
-          );
-
-          if (query === '') {
-            this.filterEnabled = false;
-          }
-        }
-        return this.studyDetailsBackup;
+        return studyDetails;
       }),
     );
   }
 
   search(query: string): void {
-    this.filterEnabled = true;
     this.currentPage = 1;
-    this.query$.next(query.trim());
+    this.offset = 0;
+    this.searchTerm = query.trim().toLowerCase();
+    this.getStudyDetails();
   }
 
-  pageChange(page: number, lastPage: number): void {
+  pageChange(page: number): void {
     this.currentPage = page;
-    if (
-      this.currentPage === lastPage &&
-      this.loadMoreRecords &&
-      !this.filterEnabled
-    ) {
-      this.pageChanged = true;
-      this.offset = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.length;
-      this.getStudyDetails();
-    }
+    this.offset = (page - 1) * this.limit;
+    this.getStudyDetails();
+  }
+
+  public onSortOrder(): void {
+    this.offset = 0;
+    this.currentPage = 0;
+    this.getStudyDetails();
+  }
+
+  public onSortBy(): void {
+    this.offset = 0;
+    this.currentPage = 0;
+    this.getStudyDetails();
   }
 
   openModal(template: TemplateRef<unknown>): void {
