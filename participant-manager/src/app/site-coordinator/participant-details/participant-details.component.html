@@ -37,7 +37,7 @@
                   class="pr-xlg"
                 >
                   <div class="banner__label">SITE</div>
-                  <div class="banner__text">NA</div>
+                  <div class="banner__text">NA (Open study)</div>
                 </div>
                 <div class="pr-xlg">
                   <div class="banner__label">
@@ -212,7 +212,7 @@
                   NA
                 </span>
               </td>
-              <td>
+              <td class="font14">
                 <span
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -238,7 +238,7 @@
                     .enrollments
                 "
               >
-                <td>
+                <td class="font14">
                   <span
                     [ngClass]="{
                       'txt__green':
@@ -252,10 +252,10 @@
                     {{ enrollmentDetails.enrollmentStatus }}
                   </span>
                 </td>
-                <td class="mb__mt-sm inactive__text">
+                <td class="mb__mt-sm inactive__text font14">
                   <span>{{ enrollmentDetails.enrollmentDate }}</span>
                 </td>
-                <td class="mb__mt-sm inactive__text">
+                <td class="mb__mt-sm inactive__text font14">
                   <span>{{ enrollmentDetails.withdrawalDate }}</span>
                 </td>
               </table>
@@ -333,12 +333,16 @@
                 </button>
               </td>
             </tr>
+
+            <tr
+              *ngIf="participant.participantDetails.consentHistory.length === 0"
+            >
+              <td></td>
+              <td class="text-right">No records found</td>
+              <td></td>
+            </tr>
           </tbody>
-          <div
-            *ngIf="participant.participantDetails.consentHistory.length === 0"
-          >
-            No records found
-          </div>
+
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">
