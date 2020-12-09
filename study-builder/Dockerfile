@@ -13,8 +13,6 @@ RUN mkdir /usr/local/tomcat/webapps/fdaResources
 RUN chmod a+w /usr/local/tomcat/webapps/fdaResources
 RUN mkdir /usr/local/tomcat/webapps/fdaResources/studyResources
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=/home/mohank/MyStudies-Open-Impl-Track1-Dev-f3ce2e8ae516.json
-
 # Installs gcsfuse
 ENV GCSFUSE_REPO gcsfuse-stretch
 RUN apt-get update && apt-get install --yes --no-install-recommends \
@@ -27,6 +25,8 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
   && apt-get update \
   && apt-get install --yes gcsfuse \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENV GOOGLE_APPLICATION_CREDENTIALS=/home/mohank/MyStudies-Open-Impl-Track1-Dev-f3ce2e8ae516.json
 
 COPY --from=maven_builder /app/target/studybuilder.war /usr/local/tomcat/webapps/
 CMD ["catalina.sh","run"]
