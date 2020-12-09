@@ -12,8 +12,7 @@ import {Permission} from 'src/app/shared/permission-enums';
   templateUrl: './location-details.component.html',
   styleUrls: ['./location-details.component.scss'],
 })
-export class LocationDetailsComponent
-  extends UnsubscribeOnDestroyAdapter
+export class LocationDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   location = {} as Location;
   locationBackup = {} as Location;

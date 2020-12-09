@@ -29,14 +29,13 @@ describe('ParticipantDetailsComponent', () => {
   let sendInviteButton: DebugElement;
   let toggleInviteButton: DebugElement;
   beforeEach(async(async () => {
-    const participantDetailsSpy = jasmine.createSpyObj<ParticipantDetailsService>(
-      'ParticipantDetailsService',
-      {
-        get: of(expectedParticipantDetails),
-        toggleInvitation: of(expectedToggleResponse),
-        sendInvitation: of(expectedSendInviteResponse),
-      },
-    );
+    const participantDetailsSpy = jasmine.createSpyObj<
+      ParticipantDetailsService
+    >('ParticipantDetailsService', {
+      get: of(expectedParticipantDetails),
+      toggleInvitation: of(expectedToggleResponse),
+      sendInvitation: of(expectedSendInviteResponse),
+    });
 
     await TestBed.configureTestingModule({
       declarations: [ParticipantDetailsComponent],

@@ -11,8 +11,7 @@ import {Status} from 'src/app/shared/enums';
   selector: 'user-details',
   templateUrl: './user-details.component.html',
 })
-export class UserDetailsComponent
-  extends UnsubscribeOnDestroyAdapter
+export class UserDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   adminId = '';
   user = {} as User;
