@@ -105,7 +105,7 @@
       </div>
       <div class="footer">
         <div>
-          <span>Copyright Placeholder</span>
+          <span>Copyright</span>
           <span>
             <a href="/studybuilder/terms.do" class="" target="_blank">Terms</a>
           </span>
