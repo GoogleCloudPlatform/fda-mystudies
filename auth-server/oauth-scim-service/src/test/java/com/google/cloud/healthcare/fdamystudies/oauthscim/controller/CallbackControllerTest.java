@@ -132,6 +132,7 @@ public class CallbackControllerTest extends BaseMockIT {
         .andExpect(redirectedUrl(expectedRedirectUrl))
         .andReturn();
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(USER_ID_VALUE);
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SIGNIN_SUCCEEDED.getEventCode(), auditRequest);
     verifyAuditEventCall(auditEventMap, SIGNIN_SUCCEEDED);
@@ -182,6 +183,7 @@ public class CallbackControllerTest extends BaseMockIT {
         .andExpect(redirectedUrl(expectedRedirectUrl))
         .andReturn();
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(USER_ID_VALUE);
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED.getEventCode(), auditRequest);
     verifyAuditEventCall(auditEventMap, SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED);
