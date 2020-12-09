@@ -16,7 +16,8 @@ import {UserService} from 'src/app/service/user.service';
   templateUrl: './account-profile.component.html',
   styleUrls: ['./account-profile.component.scss'],
 })
-export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
+export class AccountProfileComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   profileForm: FormGroup;
   user = {} as Profile;
