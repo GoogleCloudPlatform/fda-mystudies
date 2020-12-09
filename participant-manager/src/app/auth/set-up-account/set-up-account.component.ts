@@ -79,9 +79,6 @@ export class SetUpAccountComponent
   getPreStoredDetails(): void {
     this.setUpAccountService.get(this.setUpCode).subscribe(
       (user) => {
-        if (user.redirectTo === 'login') {
-          void this.router.navigate(['/login']);
-        }
         this.setupAccountForm.patchValue(user);
       },
     );
