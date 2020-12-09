@@ -59,6 +59,8 @@ spec:
             secretKeyRef:
               name: shared-secrets
               key: base_url
+        - name: SERVE_ALL_FLAG
+          value: "--dangerous-force-http"
         ports:
         - containerPort: 4444 # public
         - containerPort: 4445 # admin
