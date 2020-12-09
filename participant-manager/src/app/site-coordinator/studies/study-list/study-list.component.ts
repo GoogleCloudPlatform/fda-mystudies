@@ -9,6 +9,7 @@ import {StudiesService} from '../shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {StudyType} from 'src/app/shared/enums';
 import {Permission} from 'src/app/shared/permission-enums';
+import {SearchTermService} from 'src/app/service/search-term.service';
 @Component({
   selector: 'app-study-list',
   templateUrl: './study-list.component.html',
@@ -22,6 +23,7 @@ export class StudyListComponent implements OnInit {
   studyTypes = StudyType;
   loadMoreEnabled = true;
   limit = 10;
+  searchValue = '';
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
@@ -32,16 +34,21 @@ export class StudyListComponent implements OnInit {
     private readonly router: Router,
     private readonly toastr: ToastrService,
     private readonly sharedService: SearchService,
+    private readonly searchTerm: SearchTermService,
   ) {}
 
   ngOnInit(): void {
+    this.searchTerm.searchParameter$.subscribe((upadtedUsername) => {
+      this.manageStudiesBackup = {} as StudyResponse;
+      this.searchValue = upadtedUsername;
+      this.getStudies();
+    });
     this.sharedService.updateSearchPlaceHolder('Search By Study ID or Name');
-    this.getStudies();
   }
 
   getStudies(): void {
     this.studyList$ = combineLatest(
-      this.studiesService.getStudies(this.limit, 0),
+      this.studiesService.getStudies(this.limit, 0, this.searchValue),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
@@ -90,7 +97,7 @@ export class StudyListComponent implements OnInit {
     const offset = this.manageStudiesBackup.studies.length;
 
     this.studyList$ = combineLatest(
-      this.studiesService.getStudies(this.limit, offset),
+      this.studiesService.getStudies(this.limit, offset, this.searchValue),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {

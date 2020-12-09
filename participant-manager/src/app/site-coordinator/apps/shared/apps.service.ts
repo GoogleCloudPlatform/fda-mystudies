@@ -15,9 +15,15 @@ export class AppsService {
     private readonly http: HttpClient,
   ) {}
 
-  getUserApps(limit: number, offset: number): Observable<ManageApps> {
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    return this.entityService.get('apps?limit=' + limit + '&offset=' + offset);
+  getUserApps(
+    limit: number,
+    offset: number,
+    searchTerm: string,
+  ): Observable<ManageApps> {
+    return this.entityService.get(
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      'apps?limit=' + limit + '&offset=' + offset + '&searchTerm=' + searchTerm,
+    );
   }
 
   getAllAppsWithStudiesAndSites(): Observable<AppDetails> {

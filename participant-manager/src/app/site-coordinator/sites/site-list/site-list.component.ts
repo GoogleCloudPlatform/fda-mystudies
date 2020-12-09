@@ -42,15 +42,10 @@ export class SiteListComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchTerm.searchParameter$.subscribe((upadtedUsername) => {
-      if (upadtedUsername === '') {
-        this.getStudies();
-      } else {
-        this.manageStudiesBackup = {} as StudyResponse;
-        this.searchValue = upadtedUsername;
-        this.searchParameter();
-      }
+      this.manageStudiesBackup = {} as StudyResponse;
+      this.searchValue = upadtedUsername;
+      this.getStudies();
     });
-
     this.sharedService.updateSearchPlaceHolder(
       'Search by Site or Study ID or Name',
     );
@@ -66,7 +61,7 @@ export class SiteListComponent implements OnInit {
 
   getStudies(): void {
     this.study$ = combineLatest(
-      this.studiesService.getStudiesWithSites(this.limit, 0),
+      this.studiesService.getStudiesWithSites(this.limit, 0, this.searchValue),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
@@ -113,7 +108,7 @@ export class SiteListComponent implements OnInit {
     const offset = this.manageStudiesBackup.studies.length;
 
     this.study$ = combineLatest(
-      this.studiesService.searchStudiesWithSites(
+      this.studiesService.getStudiesWithSites(
         this.limit,
         offset,
         this.searchValue,
@@ -141,37 +136,6 @@ export class SiteListComponent implements OnInit {
             ? true
             : false;
 
-        return this.manageStudiesBackup;
-      }),
-    );
-  }
-
-  searchParameter(): void {
-    this.loadMoreEnabled = false;
-    // const offset = this.manageStudiesBackup.studies.length;
-    this.study$ = combineLatest(
-      this.studiesService.searchStudiesWithSites(
-        this.limit,
-        0,
-        this.searchValue,
-      ),
-      this.query$,
-    ).pipe(
-      map(([manageStudies, query]) => {
-        this.manageStudiesBackup = {...manageStudies};
-        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
-          (study: Study) =>
-            study.name?.toLowerCase().includes(query) ||
-            study.customId?.toLowerCase().includes(query) ||
-            study.sites.some((site) =>
-              site.name?.toLowerCase()?.includes(query),
-            ),
-        );
-        this.loadMoreEnabled =
-          this.manageStudiesBackup.studies.length % this.limit === 0
-            ? true
-            : false;
-        console.log(this.manageStudiesBackup.studies.length);
         return this.manageStudiesBackup;
       }),
     );
