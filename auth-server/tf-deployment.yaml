@@ -87,7 +87,7 @@ spec:
               value: "http://hydra-np:50000"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/auth-server"
-            - name: HYDRA_BASE_URL
+            - name: AUTH_SERVER_BASE_URL
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
