@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/MIT.
 # Stage 1
 # Installing all the dependencies and creating Dist file or building angular application
-FROM node:latest AS compile-image
+FROM node:12.16.1 AS compile-image
 WORKDIR /app
 COPY . ./
 RUN npm install
