@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {StudyDetailsService} from '../shared/study-details.service';
 import {ActivatedRoute} from '@angular/router';
-import {BehaviorSubject, Observable, of, combineLatest} from 'rxjs';
+import {Observable, of, combineLatest} from 'rxjs';
 import {StudyDetails} from '../shared/study-details';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {map} from 'rxjs/operators';
@@ -71,7 +71,6 @@ export class StudyDetailsComponent
         this.sortBy,
         this.sortOrder,
       ),
-      this.query$,
     ).pipe(
       map(([studyDetails]) => {
         if (
