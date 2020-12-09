@@ -13,7 +13,8 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss'],
 })
-export class ChangePasswordComponent extends UnsubscribeOnDestroyAdapter
+export class ChangePasswordComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   resetPasswordForm: FormGroup;
   changePasswordTitle = 'Change Password';
