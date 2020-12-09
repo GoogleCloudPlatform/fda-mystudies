@@ -77,7 +77,7 @@ spec:
                   name: study-datastore-connect-credentials
                   key: ios_id
             # MISC
-            - name: STUDY_DATASTORE_BASE_URL
+            - name: STUDY_BUILDER_BASE_URL
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
