@@ -75,8 +75,6 @@ public class ErrorResponseUtil {
     USER_ALREADY_VERIFIED("User already verified"),
     INVALID_CODE("Invalid code"),
     CODE_EXPIRED("Code Expired"),
-    YET_TO_JOIN("yetToJoin"),
-    IN_PROGRESS("inProgress"),
     STUDY_LEVEL("ST"),
     GATEWAY_LEVEL("GT"),
     INVALID_CREDENTIALS("Invalid credentials"),
