@@ -108,9 +108,7 @@
               </td>
             </tr>
             <tr *ngIf="appDetails.participants.length === 0">
-              <td></td>
-              <td class="text-right">No records found</td>
-              <td></td>
+              <td colspan="4" class="text-right">No records found</td>
             </tr>
           </tbody>
 
@@ -153,12 +151,12 @@
                 <div class="font20 text_light-black">
                   {{ applists.studyName }}
                 </div>
-                <span class="text-grey__sm">Site ID :</span>
+                <span class="text-grey__sm">Site:</span>
                 <span
                   *ngIf="applists.studyType !== studyTypes.Open"
                   class="blue__text__md blue__link cursor__none"
                 >
-                  {{ sitelists.customLocationId }} {{ sitelists.locationName }}
+                  {{ sitelists.locationName }}
                 </span>
                 <span
                   *ngIf="applists.studyType === studyTypes.Open"
