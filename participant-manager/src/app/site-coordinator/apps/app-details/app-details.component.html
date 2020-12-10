@@ -30,9 +30,21 @@
       <div class="cards1 m-none">
         <table
           class="table table-striped custom__table"
-          [mfData]="appDetails.participants"
+          [mfData]="
+            appDetails.participants
+              | paginate
+                : {
+                    itemsPerPage: limit,
+                    currentPage: currentPage,
+                    totalItems: appDetails.totalParticipantCount
+                  }
+          "
           #mf="mfDataTable"
-          [mfRowsOnPage]="10"
+          [mfRowsOnPage]="limit"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
+          (mfSortOrderChange)="onSortOrder($event)"
+          (mfSortByChange)="onSortBy($event)"
         >
           <thead class="custom__thead">
             <tr>
@@ -43,21 +55,19 @@
                 Sort By:
               </span>
               <th>
-                <mfDefaultSorter by="Email">Participant Email</mfDefaultSorter>
+                <mfDefaultSorter by="_email">Participant Email</mfDefaultSorter>
               </th>
               <th>
-                <mfDefaultSorter by="Date">
+                <mfDefaultSorter by="_registrationDate">
                   App Registration Date
                 </mfDefaultSorter>
               </th>
               <th>
-                <mfDefaultSorter by="Status">
+                <mfDefaultSorter by="_registrationStatus">
                   App Account Status
                 </mfDefaultSorter>
               </th>
-              <th>
-                <mfDefaultSorter by="Enrolled">Studies</mfDefaultSorter>
-              </th>
+              <th>Studies</th>
             </tr>
           </thead>
           <tbody class="custom__tbody">
@@ -107,7 +117,13 @@
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">
-                <mfBootstrapPaginator></mfBootstrapPaginator>
+                <div class="text-center">
+                  <pagination-controls
+                    pagination-template
+                    #api="paginationApi"
+                    (pageChange)="pageChange($event)"
+                  ></pagination-controls>
+                </div>
               </td>
             </tr>
           </tfoot>

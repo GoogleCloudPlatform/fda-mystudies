@@ -33,6 +33,7 @@ export const expectedAppDetails = {
   appId: '1',
   customId: 'MyStudies-Id-1',
   name: 'MyStudies-1',
+  totalParticipantCount: 2,
   participants: [
     {
       email: 'mockit_email@grr.la',
@@ -129,6 +130,7 @@ export const filteredEmail = {
   appId: '1',
   customId: 'MyStudies-Id-1',
   name: 'MyStudies-1',
+  totalParticipantCount: 1,
   participants: [
     {
       email: 'mockitTest@grr.la',
