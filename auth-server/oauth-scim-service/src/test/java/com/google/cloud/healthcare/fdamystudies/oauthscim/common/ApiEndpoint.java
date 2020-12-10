@@ -34,7 +34,9 @@ public enum ApiEndpoint {
 
   DELETE_USER("http://localhost:8002/auth-server/users/{userId}"),
 
-  CALLBACK("http://localhost:8002/auth-server/callback");
+  CALLBACK("http://localhost:8002/oauth-scim-service/callback"),
+
+  ERROR("http://localhost:8002/auth-server/oauth2/error");
 
   private String url;
 
