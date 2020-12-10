@@ -115,9 +115,6 @@
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
               First Name
-            <%--   <c:if test="${actionPage ne 'VIEW_PAGE'}">&nbsp;<small>(50
-                characters max)</small>
-              </c:if> --%>
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -132,9 +129,6 @@
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
               Last Name
-            <%--   <c:if test="${actionPage ne 'VIEW_PAGE'}">&nbsp;<small>(50
-                characters max)</small>
-              </c:if> --%>
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -164,7 +158,6 @@
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                      data-pattern-error="Email address is invalid" maxlength="100"
                      required
-                <%-- <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || not empty userBO}">disabled</c:if>/> --%>
                      <c:if
                          test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -174,7 +167,6 @@
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
               Phone (XXX - XXX - XXXX)
-      
             </div>
             <div class="form-group">
               <input type="text" class="form-control phoneMask"
