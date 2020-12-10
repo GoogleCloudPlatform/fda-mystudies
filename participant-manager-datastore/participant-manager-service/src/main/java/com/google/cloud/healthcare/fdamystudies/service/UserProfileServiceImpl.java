@@ -44,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -99,7 +98,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findBySecurityCode(securityCode);
 
     if (!optUserRegAdminUser.isPresent()) {
-      return new UserProfileResponse("login", HttpStatus.OK.value());
+      throw new ErrorCodeException(ErrorCode.SECURITY_CODE_EXPIRED);
     }
 
     UserRegAdminEntity user = optUserRegAdminUser.get();
@@ -278,5 +277,29 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     logger.exit(
         String.format("status=%d", ((BaseResponse) responseEntity.getBody()).getHttpStatusCode()));
+  }
+
+  @Override
+  public void deleteInvitation(String signedInUserId, String userId) {
+    logger.entry("deleteInvitation()");
+
+    Optional<UserRegAdminEntity> optSuperAdmin = userRegAdminRepository.findById(signedInUserId);
+    UserRegAdminEntity admin =
+        optSuperAdmin.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+    if (!admin.isSuperAdmin()) {
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
+    }
+
+    Optional<UserRegAdminEntity> optUser = userRegAdminRepository.findById(userId);
+    UserRegAdminEntity user =
+        optUser.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+
+    if (user.getStatus() != UserStatus.INVITED.getValue()) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_DELETE_INVITATION);
+    }
+
+    userRegAdminRepository.delete(user);
+
+    logger.exit("Sucessfully deleted invitation");
   }
 }

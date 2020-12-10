@@ -26,47 +26,47 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  initlocalStorage(): void {
-    localStorage.setItem('correlationId', uuidv4());
+  initSessionStorage(): void {
+    sessionStorage.setItem('correlationId', uuidv4());
     getPkce(this.pkceLength, (error, {verifier, challenge}) => {
       if (!error) {
-        localStorage.setItem('pkceVerifier', verifier);
-        localStorage.setItem('pkceChallenge', challenge);
+        sessionStorage.setItem('pkceVerifier', verifier);
+        sessionStorage.setItem('pkceChallenge', challenge);
       }
     });
   }
 
   beginLoginConsentFlow(): void {
     const params = new HttpParams()
-      .set('client_id', environment.clientId)
+      .set('client_id', environment.hydraClientId)
       .set('scope', 'offline_access')
       .set('appId', this.appId)
       .set('response_type', 'code')
       .set('mobilePlatform', this.mobilePlatform)
       .set('code_challenge_method', 'S256')
-      .set('code_challenge', localStorage.getItem('pkceChallenge') || '')
-      .set('correlationId', localStorage.getItem('correlationId') || '')
-      .set('tempRegId', localStorage.getItem('tempRegId') || '')
-      .set('redirect_uri', environment.redirectUrl)
+      .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
+      .set('correlationId', sessionStorage.getItem('correlationId') || '')
+      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
+      .set('redirect_uri', environment.authServerRedirectUrl)
       .set('state', uuidv4())
       .set('source', this.source)
       .toString();
-    window.location.href = `${environment.loginUrl}?${params}`;
+    window.location.href = `${environment.hydraLoginUrl}?${params}`;
   }
 
   hasCredentials(): boolean {
-    return 'accessToken' in localStorage;
+    return 'accessToken' in sessionStorage;
   }
 
   getUserAccessToken(): string {
-    return localStorage.getItem('accessToken') || '';
+    return sessionStorage.getItem('accessToken') || '';
   }
   getAuthUserId(): string {
-    return localStorage.getItem('authUserId') || '';
+    return sessionStorage.getItem('authUserId') || '';
   }
 
   getUserId(): string {
-    return localStorage.getItem('userId') || '';
+    return sessionStorage.getItem('userId') || '';
   }
 
   getToken(code: string, userId: string): Observable<AccessToken> {
@@ -75,7 +75,7 @@ export class AuthService {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
-        'correlationId': localStorage.getItem('correlationId') || '',
+        'correlationId': sessionStorage.getItem('correlationId') || '',
         'appId': this.appId,
         'mobilePlatform': this.mobilePlatform,
       }),
@@ -84,9 +84,9 @@ export class AuthService {
       .set(`grant_type`, 'authorization_code')
       .set('scope', 'openid offline offline_access')
       .set('code', code)
-      .set('redirect_uri', environment.redirectUrl)
+      .set('redirect_uri', environment.authServerRedirectUrl)
       .set('userId', userId)
-      .set('code_verifier', localStorage.getItem('pkceVerifier') || '');
+      .set('code_verifier', sessionStorage.getItem('pkceVerifier') || '');
     return this.http.post<AccessToken>(
       `${environment.authServerUrl}/oauth2/token`,
       params.toString(),
@@ -100,7 +100,7 @@ export class AuthService {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
-        'correlationId': localStorage.getItem('correlationId') || '',
+        'correlationId': sessionStorage.getItem('correlationId') || '',
         'appId': this.appId,
         'mobilePlatform': this.mobilePlatform,
       }),
@@ -108,8 +108,8 @@ export class AuthService {
 
     const params = new HttpParams()
       .set(`grant_type`, 'refresh_token')
-      .set('redirect_uri', environment.redirectUrl)
-      .set('client_id', environment.clientId)
+      .set('redirect_uri', environment.authServerRedirectUrl)
+      .set('client_id', environment.hydraClientId)
       .set(`refresh_token`, this.getRefreshToken())
       .set('userId', this.getAuthUserId());
 
@@ -121,7 +121,7 @@ export class AuthService {
   }
 
   private getRefreshToken() {
-    return localStorage.getItem('refreshToken') || '';
+    return sessionStorage.getItem('refreshToken') || '';
   }
 
   getUserDetails(): void {
@@ -132,7 +132,7 @@ export class AuthService {
   }
 
   logOutUser(): void {
-    localStorage.clear();
+    sessionStorage.clear();
     this.cookieService.deleteAll();
   }
 }

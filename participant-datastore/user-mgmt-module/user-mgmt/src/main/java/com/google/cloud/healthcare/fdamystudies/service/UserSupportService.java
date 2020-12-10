@@ -16,6 +16,7 @@ public interface UserSupportService {
   public EmailResponse feedback(String subject, String body, AuditLogEventRequest auditRequest);
 
   public EmailResponse contactUsDetails(
+      String appName,
       String subject,
       String body,
       String firstName,

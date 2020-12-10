@@ -1266,7 +1266,6 @@ CREATE TABLE IF NOT EXISTS `studies` (
   `platform` varchar(20) DEFAULT NULL,
   `category` varchar(200) DEFAULT NULL,
   `research_sponsor` varchar(200) DEFAULT NULL,
-  `data_partner` varchar(200) DEFAULT NULL,
   `tentative_duration` int(11) DEFAULT NULL,
   `tentative_duration_weekmonth` varchar(20) DEFAULT NULL,
   `description` longtext,
@@ -1447,6 +1446,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `force_logout` char(1) DEFAULT NULL,
   `user_login_datetime` varchar(255) DEFAULT NULL,
   `email_changed` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0',
+  `access_level` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   KEY `role_id_idx` (`role_id`),
   CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE NO ACTION ON UPDATE NO ACTION

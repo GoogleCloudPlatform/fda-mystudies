@@ -273,7 +273,7 @@
   var ansCount = $(".ans-opts").length;
 
   function addAns() {
-    ansCount = ansCount + 1;
+    ansCount = parseInt(ansCount) + 1;
     var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
         + "'><div class='col-md-6 pl-none'>"
         + "<div class='form-group'>"
@@ -399,19 +399,18 @@
           xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
         },
         success: function (data) {
-          var jsonobject = eval(data);
-          var message = jsonobject.message;
+          var message = data.message;
           if (message == "SUCCESS") {
-            var questionId = jsonobject.questionId;
+            var questionId = data.questionId;
             $("#id").val(questionId);
-            $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $('#alertMsg').show();
           } else {
-            var errMsg = jsonobject.errMsg;
+            var errMsg = data.errMsg;
             if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(errMsg);
             } else {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             }
           }
           setTimeout(hideDisplayMessage, 4000);
@@ -419,7 +418,7 @@
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
-          $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+          $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
           setTimeout(hideDisplayMessage, 4000);
         }
       });
@@ -427,8 +426,8 @@
       $('#questionText').validator('destroy').validator();
       if (!$('#questionText')[0].checkValidity()) {
         $("#questionText").parent().addClass('has-error has-danger').find(
-            ".help-block").empty().append(
-            '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "This is a required field."));
       }
     }
   }
@@ -444,7 +443,7 @@
       return true;
     } else {
       $('#alertMsg').show();
-      $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+      $("#alertMsg").removeClass('s-box').addClass('e-box').text(
           "Please select at least one correct answer as yes.");
       setTimeout(hideDisplayMessage, 3000);
       return false;
@@ -466,7 +465,7 @@
           $("#responseOptionId" + id).parent().addClass("has-danger").addClass("has-error");
           $("#responseOptionId" + id).parent().find(".help-block").empty();
           $("#responseOptionId" + id).parent().find(".help-block").append(
-              "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
+        	 $("<ul><li> </li></ul>").attr("class","list-unstyled").text("The value should be unique "));
         } else
           valueArray.push(diaplay_value.toLowerCase());
       } else {

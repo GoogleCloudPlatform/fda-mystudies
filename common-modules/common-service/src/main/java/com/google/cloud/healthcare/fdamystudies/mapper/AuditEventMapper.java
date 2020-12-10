@@ -7,16 +7,22 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Arrays;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public final class AuditEventMapper {
 
   private AuditEventMapper() {}
+
+  private static XLogger logger = XLoggerFactory.getXLogger(AuditEventMapper.class.getName());
 
   private static final String APP_ID = "appId";
 
@@ -30,6 +36,8 @@ public final class AuditEventMapper {
 
   private static final String SOURCE = "source";
 
+  private static final String COOKIE_PREFIX = "mystudies_";
+
   public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request) {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(getValue(request, APP_ID));
@@ -38,11 +46,13 @@ public final class AuditEventMapper {
     auditRequest.setUserId(getValue(request, USER_ID));
 
     String source = getValue(request, SOURCE);
-    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
-    if (platformComponent == null) {
-      throw new ErrorCodeException(ErrorCode.INVALID_SOURCE_NAME);
+    if (StringUtils.isNotEmpty(source)) {
+      PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+      if (platformComponent == null) {
+        throw new ErrorCodeException(ErrorCode.INVALID_SOURCE_NAME);
+      }
+      auditRequest.setSource(source);
     }
-    auditRequest.setSource(source);
 
     auditRequest.setUserIp(getUserIP(request));
 
@@ -54,7 +64,14 @@ public final class AuditEventMapper {
   private static String getValue(HttpServletRequest request, String name) {
     String value = request.getHeader(name);
     if (StringUtils.isEmpty(value)) {
-      value = getCookieValue(request, name);
+      value = getCookieValue(request, COOKIE_PREFIX + name);
+    }
+    if (StringUtils.isNotEmpty(value)) {
+      try {
+        value = URLDecoder.decode(value, "UTF-8");
+      } catch (UnsupportedEncodingException e) {
+        logger.warn(String.format("Unable to decode '%s'", value), e);
+      }
     }
     return value;
   }

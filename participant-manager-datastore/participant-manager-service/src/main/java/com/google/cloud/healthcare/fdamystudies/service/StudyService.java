@@ -19,6 +19,7 @@ public interface StudyService {
   public ParticipantRegistryResponse getStudyParticipants(
       String userId,
       String studyId,
+      String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
       Integer page,
       Integer limit);

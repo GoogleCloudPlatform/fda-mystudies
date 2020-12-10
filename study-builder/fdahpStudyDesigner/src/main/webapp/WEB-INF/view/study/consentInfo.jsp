@@ -332,6 +332,8 @@
           'click',
           function () {
             $("#doneId").prop('disabled', true);
+            $('#elaboratedRTE').summernote(
+            'code');
             valid = maxLenValEditor();
             if (isFromValid("#consentInfoFormId")
                 && valid) {
@@ -351,7 +353,6 @@
                 var briefSummaryText = replaceSpecialCharacters($(
                     "#briefSummary")
                     .val());
-                elaboratedContent = $('#elaboratedRTE').text(elaboratedContent).html();
                 $("#elaborated").val(
                     elaboratedContent);
                 $("#briefSummary").val(
@@ -372,8 +373,8 @@
                 $('.visualStepDiv')
                     .find(".help-block")
                     .empty()
-                    .html(
-                        '<ul class="list-unstyled"><li>Please choose one visual step</li></ul>');
+                    .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                        "Please choose one visual step"));
                 $("#doneId").prop(
                     'disabled', false);
               }
@@ -444,19 +445,18 @@
                   "${_csrf.token}");
             },
             success: function (data) {
-              var jsonobject = eval(data);
-              var message = jsonobject.message;
+              var message = data.message;
               if (message == "SUCCESS") {
-                var consentInfoId = jsonobject.consentInfoId;
+                var consentInfoId = data.consentInfoId;
                 $("#id").val(consentInfoId);
                 $("#alertMsg").removeClass('e-box').addClass(
                     's-box')
-                    .html("Content saved as draft.");
+                    .text("Content saved as draft.");
                 $(item).prop('disabled', false);
                 $('#alertMsg').show();
               } else {
                 $("#alertMsg").removeClass('s-box').addClass(
-                    'e-box').html("Something went Wrong");
+                    'e-box').text("Something went Wrong");
                 $('#alertMsg').show();
               }
               setTimeout(hideDisplayMessage, 4000);
@@ -465,7 +465,7 @@
               $(item).prop('disabled', false);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('s-box').addClass(
-                  'e-box').html("Something went Wrong");
+                  'e-box').text("Something went Wrong");
               setTimeout(hideDisplayMessage, 4000);
             }
           });
@@ -477,8 +477,8 @@
             .parent()
             .find(".help-block")
             .empty()
-            .append(
-                '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
+            .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "This is a required field."));
         setTimeout(hideDisplayMessage, 4000);
       }
 
@@ -613,12 +613,13 @@
           isValid = false;
         }
         $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
-            '<ul class="list-unstyled"><li>Maximum 15000 characters are allowed.</li></ul>');
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 15000 characters are allowed."));
 
       } else {
         $('#elaboratedRTE').parent().removeClass("has-danger")
             .removeClass("has-error");
-        $('#elaboratedRTE').parent().find(".help-block").html("");
+        $('#elaboratedRTE').parent().find(".help-block").empty();
       }
     } else {
       isValid = false;
@@ -627,8 +628,8 @@
           .addClass('has-error has-danger')
           .find(".help-block")
           .empty()
-          .append(
-              '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please fill out this field."));
 
     }
     return isValid;

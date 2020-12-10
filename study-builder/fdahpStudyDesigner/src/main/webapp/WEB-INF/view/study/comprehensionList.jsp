@@ -256,20 +256,20 @@
             var status = data.message;
             if (status == "SUCCESS") {
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                   "Reorder done successfully");
               if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
                 $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
               }
             } else {
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
             setTimeout(hideDisplayMessage, 4000);
           },
           error: function (xhr, status, error) {
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
             setTimeout(hideDisplayMessage, 4000);
           }
         });
@@ -290,7 +290,8 @@
         $("#comprehensionTestMinimumScore").parent().addClass("has-danger").addClass("has-error");
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>The value should not be more than no of questions or zero</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "The value should not be more than no of questions or zero"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");
@@ -329,19 +330,19 @@
             success: function deleteConsentInfo(data) {
               var status = data.message;
               if (status == "SUCCESS") {
-                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                     "Question deleted successfully");
                 $('#alertMsg').show();
                 reloadData(studyId);
               } else {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Unable to delete Question");
                 $('#alertMsg').show();
               }
               setTimeout(hideDisplayMessage, 4000);
             },
             error: function (xhr, status, error) {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
               setTimeout(hideDisplayMessage, 4000);
             }
           });
@@ -360,10 +361,9 @@
         "${_csrf.parameterName}": "${_csrf.token}",
       },
       success: function status(data, status) {
-        var jsonobject = eval(data);
-        var message = jsonobject.message;
+        var message = data.message;
         if (message == "SUCCESS") {
-          reloadComprehensionQuestionDataTable(jsonobject.comprehensionTestQuestionList);
+          reloadComprehensionQuestionDataTable(data.comprehensionTestQuestionList);
         }
       },
       error: function status(data, status) {
@@ -408,14 +408,14 @@
         if (typeof obj.questionText === "undefined" && typeof obj.questionText === "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push("<div class='dis-ellipsis'>" + obj.questionText + "</div>");
+          datarow.push("<div class='dis-ellipsis'>" + DOMPurify.sanitize(obj.questionText) + "</div>");
         }
         var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
-            + obj.id + ");'></span>"
-            + "<span class='sprites_icon edit-g mr-lg' onclick='editComprehensionQuestion(" + obj.id
+            + parseInt(obj.id) + ");'></span>"
+            + "<span class='sprites_icon edit-g mr-lg' onclick='editComprehensionQuestion(" + parseInt(obj.id)
             + ");'>"
             + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
-            + obj.id + ");'>"
+            + parseInt(obj.id) + ");'>"
             + "</span>";
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);
@@ -437,7 +437,7 @@
 
       if (!table.data().count()) {
         $('#alertMsg').show();
-        $("#alertMsg").removeClass('s-box').addClass('e-box').html("Add atleast one question !");
+        $("#alertMsg").removeClass('s-box').addClass('e-box').text("Add atleast one question !");
         setTimeout(hideDisplayMessage, 4000);
       } else if (isFromValid("#comprehensionInfoForm")) {
         saveConsent("Done");
@@ -486,7 +486,8 @@
         $("#comprehensionTestMinimumScore").parent().addClass("has-danger").addClass("has-error");
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
-            "<ul class='list-unstyled'><li>The value should not be more than no of questions or zero</li></ul>");
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "The value should not be more than no of questions or zero"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");
@@ -503,10 +504,9 @@
             xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
           },
           success: function (data) {
-            var jsonobject = eval(data);
-            var message = jsonobject.message;
+            var message = data.message;
             if (message == "SUCCESS") {
-              var consentId = jsonobject.consentId;
+              var consentId = data.consentId;
 
               $("#consentId").val(consentId);
               $("#addQuestionId").attr("disabled", false);
@@ -516,7 +516,7 @@
                 document.comprehensionInfoForm.submit();
               } else {
                 $("body").removeClass("loading");
-                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                     "Content saved as draft");
                 $('#alertMsg').show();
                 if ($('.fifthComre').find('span').hasClass(
@@ -527,7 +527,7 @@
               }
             } else {
               $("body").removeClass("loading");
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
               $('#alertMsg').show();
             }
             setTimeout(hideDisplayMessage, 4000);
@@ -535,7 +535,7 @@
           error: function (xhr, status, error) {
             $("body").removeClass("loading");
             $('#alertMsg').show();
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             setTimeout(hideDisplayMessage, 4000);
           },
           global: false,

@@ -18,11 +18,10 @@
       datatype: "json",
       data: {},
       success: function test(data) {
-        data = eval(data);
         var count = data.count;
         if (parseInt(count) > 0) {
-          $("#notifSpanId").html(
-              'NOTIFICATIONS <B><font color="#42963b">(' + data.count + ')</font></B>');
+          $("#notifSpanId").empty().append("NOTIFICATIONS ").append($("<B> </B>").append(
+                  $("<font> </font>").attr("color","#42963b").text("(" + data.count + ")")));
         }
       }
     });

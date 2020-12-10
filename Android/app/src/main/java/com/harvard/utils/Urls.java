@@ -45,6 +45,7 @@ public class Urls {
           + "&appId=" + BuildConfig.APP_ID
           + "&appVersion=" + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE
           + "&mobilePlatform=ANDROID"
+          + "&source=MOBILE APPS"
           + "&code_challenge_method=S256"
           + "&code_challenge=" + FdaApplication.getCodeChallenge(FdaApplication.getRandomString())
           + "&correlationId=" + FdaApplication.getRandomString()

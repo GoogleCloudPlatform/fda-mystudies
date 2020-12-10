@@ -1,0 +1,51 @@
+<!-- 
+  Copyright 2020 Google LLC
+ 
+  Use of this source code is governed by an MIT-style
+  license that can be found in the LICENSE file or at
+  https://opensource.org/licenses/MIT. -->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="https://www.thymeleaf.org">
+<head>
+<title>Please wait</title>
+
+<link rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" th:href="@{/css/utilities.css}">
+<!-- Bootstrap core CSS -->
+<link
+  href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"
+  rel="stylesheet" />
+<!-- Custom styles for this template -->
+<link
+  href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css"
+  rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript" th:src="@{/js/consent.js}"></script>
+</head>
+<body class="bg__aqua-gray">
+  <form th:action="@{/consent}" method="post" id="consentForm"
+    name="consentForm">
+    <div>
+      <div id="loading-spinner" class="loading_div">
+        <div class="spin-icon"></div>
+      </div>
+      <div id="loading-spinner" class="loading_div">
+        <div class="loading_text">
+          <div>
+            <div>Please wait while we set things up for you…</div>
+            <div>this might take a few seconds.</div>
+          </div>
+        </div>
+        <div>
+          <input type="submit" id="acceptConsent" value="Allow"
+            style="display: none" />
+        </div>
+      </div>
+    </div>
+  </form>
+</body>
+</html>

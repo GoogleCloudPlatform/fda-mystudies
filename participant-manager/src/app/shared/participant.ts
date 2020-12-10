@@ -25,8 +25,11 @@ export interface RegistryParticipant {
   enrollments: Enrollment[];
   consentHistory: Consent[];
   newlyCreatedUser?: boolean;
+  studyStatus?: string;
+  siteStatus?: number;
   studyType: StudyType;
   sitePermission: Permission;
+  disabledDate: string;
 }
 export interface Site {
   siteId: string;

@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "POST",
-		"url": "/hydra/oauth2/token",
+		"url": "/oauth2/token",
 		"headers": {
       "Authorization": {
         "contains": "invalid_grant_or_invalid_refresh_token"

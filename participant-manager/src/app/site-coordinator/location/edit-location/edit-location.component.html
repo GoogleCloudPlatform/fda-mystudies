@@ -33,7 +33,7 @@
               class="help-block with-errors error__msg"
               *ngIf="name.errors?.required"
             >
-              Location Name is required.
+              Enter a location name.
             </span>
             <span
               class="help-block with-errors error__msg"
@@ -77,7 +77,7 @@
               class="help-block with-errors error__msg"
               *ngIf="description.errors?.required"
             >
-              Location Description is required.
+              Enter a location description.
             </span>
             <span
               class="help-block with-errors error__msg"
@@ -103,6 +103,7 @@
     <div class="p-xlg flex__justify__space-between">
       <div>
         <button
+          [hidden]="statusUpdate.status !== 1"
           type="submit"
           name="update"
           class="btn bt__add mr-sm"
@@ -116,7 +117,7 @@
         <button
           type="button"
           name="cancel"
-          class="btn bt__cancel"
+          class="btn bt__cancel mobile_mt-2"
           (click)="closeModal()"
         >
           Cancel

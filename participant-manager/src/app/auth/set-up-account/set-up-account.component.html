@@ -3,7 +3,11 @@
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
         <a href="#" class="navbar-brand">
-          <img class="mr-sm" src="assets/images/landing-logo.gif" alt="logo" />
+          <img
+            class="mr-sm width__auto"
+            src="assets/images/landing-logo.png"
+            alt="main logo"
+          />
         </a>
       </nav>
     </div>
@@ -56,7 +60,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.firstName.errors?.required"
                   >
-                    Please fill out this field.
+                    Enter a first name.
                   </span>
                 </div>
               </div>
@@ -82,7 +86,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.lastName.errors?.required"
                   >
-                    Please fill out this field.
+                    Enter a last name.
                   </span>
                 </div>
               </div>
@@ -90,7 +94,6 @@
           </div>
         </div>
       </section>
-
       <h2 class="subheader__title mb-sm">Create Password</h2>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="row">
@@ -122,7 +125,7 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.password.errors?.required"
                 >
-                  Please fill out this field.
+                  Enter a password.
                 </span>
               </div>
             </div>
@@ -154,7 +157,7 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.confirmPassword.errors?.mustMatch"
                 >
-                  Passwords must match.
+                  Passwords do not match.
                 </span>
               </div>
             </div>
@@ -184,3 +187,4 @@
     </form>
   </section>
 </ng-container>
+<app-footer></app-footer>

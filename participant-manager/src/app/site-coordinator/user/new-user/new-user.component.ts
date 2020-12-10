@@ -1,4 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {UserService} from '../shared/user.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
@@ -18,6 +24,7 @@ export class AddNewUserComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   appDetails = {} as AppDetails;
+  appDetailsBackup = {} as AppDetails;
   selectedApps: App[] = [];
   user = {} as User;
   permission = Permission;
@@ -27,6 +34,8 @@ export class AddNewUserComponent
     'other': '# Sites',
   };
   disableButton = false;
+  @ViewChildren('permissionCheckBox')
+  selectedPermission: QueryList<ElementRef> = new QueryList();
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
@@ -44,6 +53,9 @@ export class AddNewUserComponent
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
         this.appDetails = data;
+        this.appDetailsBackup = JSON.parse(
+          JSON.stringify(this.appDetails),
+        ) as AppDetails;
       }),
     );
   }
@@ -139,12 +151,14 @@ export class AddNewUserComponent
   }
 
   add(): void {
-    const permissionsSelected = this.selectedApps.filter(
-      (app) => app.selectedSitesCount > 0,
-    );
+    const permissionsSelected = this.selectedPermission.filter((element) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return element.nativeElement?.checked as boolean;
+    });
     if (
       this.user.superAdmin ||
-      (this.selectedApps.length > 0 && permissionsSelected.length > 0)
+      this.user.manageLocationsSelected ||
+      (this.selectedApps.length > 0 && permissionsSelected.length !== 0)
     ) {
       this.disableButton = true;
       if (this.user.superAdmin) {
@@ -175,5 +189,13 @@ export class AddNewUserComponent
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.manageLocationsSelected;
+  }
+  superAdminCheckBoxChange(): void {
+    if (this.user.superAdmin) {
+      this.selectedApps = [];
+      this.appDetails = this.appDetailsBackup;
+      this.user.manageLocationsSelected = false;
+      this.user.manageLocations = null;
+    }
   }
 }

@@ -41,11 +41,15 @@
         <tr
           class="border__bottom__red border-top__c4d1e6 progress__bar"
           *ngFor="let user of mf.data"
-          routerLink="/coordinator/users/{{ user.id }}"
         >
           <td>
             <span class="tbl__td__label">First Name:</span>
-            <span class="no_st_en">{{ user.firstName }}</span>
+            <span
+              class="no_st_en outline__none"
+              routerLink="/coordinator/users/{{ user.id }}"
+            >
+              {{ user.firstName }}
+            </span>
           </td>
           <td>
             <span class="tbl__td__label">Last Name:</span>
@@ -63,6 +67,7 @@
           </td>
         </tr>
       </tbody>
+      <div *ngIf="manageUsers.users.length === 0">No records found</div>
       <tfoot class="custom__tfoot">
         <tr>
           <td colspan="4">

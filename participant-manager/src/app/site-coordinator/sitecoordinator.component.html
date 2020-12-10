@@ -1,10 +1,13 @@
 <header>
-  <div (keydown)="onKeyDown($event)" id="desktop-menu">
+  <div (keyup)="onKeyUp($event)" id="desktop-menu">
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
         <a routerLink="/coordinator/studies/sites" class="navbar-brand">
-          <img class="mr-sm" src="assets/images/landing-logo.gif" />
-          <span class="header__logo__text">FDA MyStudies</span>
+          <img
+            class="mr-sm width__auto"
+            src="assets/images/landing-logo.png"
+            alt="main logo "
+          />
         </a>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <div class="navbar-nav ml-auto">
@@ -21,7 +24,6 @@
                   class="form-control search-box search__"
                 />
               </div>
-
               <a
                 class="nav-item nav-link"
                 routerLink="/coordinator/studies/sites"
@@ -96,18 +98,10 @@
     [searchPlaceholder]="searchPlaceholder"
     [showSearchBar]="showSearchBar"
     [filterQuery]="filterQuery"
-    (keyDown)="onKeyDown($event)"
+    (keyup)="onKeyUp($event)"
   ></mobile-menu>
 </header>
 
 <router-outlet (activate)="onActivate($event)"></router-outlet>
 
-<footer>
-  <div>&copy; 2019 FDA MyStudies. All rights reserved.</div>
-  <div>
-    <ul>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Terms of Service</a></li>
-    </ul>
-  </div>
-</footer>
+<app-footer></app-footer>

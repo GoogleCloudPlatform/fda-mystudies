@@ -146,11 +146,7 @@ public class MyStudiesUserRegUtil {
     LOGIN_ORG_NOTEXIST(
         "Sorry, this account is in use for platform-powered app(s) belonging to another organization. Please sign up with a different email and try again."),
     RP_SUBJECT("subject"),
-    RP_BODY("body"),
-    FEEDBACK_ERROR_MESSAGE(
-        "Sorry, an error occurred and your feedback could not be sent to the organization. Please retry in some time"),
-    CONTACTUS_ERROR_MESSAGE(
-        "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time.");
+    RP_BODY("body");
 
     private final String value;
 

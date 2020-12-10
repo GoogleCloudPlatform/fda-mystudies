@@ -140,7 +140,7 @@
         </div>
         <!--container-->
         <div class="footer">
-          <span>Copyright Placeholder</span>
+          <span>Copyright</span>
           <span>
             <a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
           </span>
@@ -157,7 +157,7 @@
         addPasswordPopup();
         var errMsg = '${errMsg}';
         if (errMsg.length > 0) {
-          $("#errMsg").html(errMsg);
+          $("#errMsg").text(errMsg);
           $("#errMsg").show("fast");
           setTimeout(hideDisplayMessage, 4000);
         }

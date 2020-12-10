@@ -231,7 +231,7 @@
                     <div>
                       <div class="thumb">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />studypages/${fn:escapeXml(studyPageBo.imagePath)}"
+                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studypages/${fn:escapeXml(studyPageBo.imagePath)}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                       </div>
@@ -335,8 +335,8 @@
     });
     </c:if>
 
-    $('body').find('a[aria-expanded=true]').find('.imageBg').html(
-        '<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
+    $('body').find('a[aria-expanded=true]').find('.imageBg').empty().append($("<img />").attr(
+          "id","slideDownId2").attr("class", "arrow").attr("src","/studybuilder/images/icons/slide-up.png"));
     $(".menuNav li.active").removeClass('active');
     $(".menuNav li.third").addClass('active');
 
@@ -403,7 +403,7 @@
 
       $(".panel-collapse").collapse('hide').removeClass('in');
       $(".delete").show();
-      var count = $("#accordion").find('.panel-default').length + 1;
+      var count = parseInt($("#accordion").find('.panel-default').length) + 1;
       $("#accordion").append("<!-- Start panel-->" +
           "<div class='panel panel-default'> <input type='hidden' name='pageId'>" +
           "<div class='panel-heading'>" +
@@ -480,20 +480,18 @@
     });
     $(document).on('show.bs.collapse', '.panel-collapse', function () {
       $('.panel-collapse').not(this).collapse('hide').removeClass('in');
-      $('body').not(this).find('.imageBg').html(
-          '<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
-
+      $('body').not(this).find('.imageBg').empty().append($("<img />").attr("id","slideDownId2").attr(
+            "class", "arrow").attr("src","/studybuilder/images/icons/slide-down.png"));
     });
     $(document).on('hide.bs.collapse', '.panel-collapse', function () {
-      $('body').not('a[aria-expanded=true]').find('.imageBg').html(
-          '<img class="arrow" src="/studybuilder/images/icons/slide-down.png" />');
-
+      $('body').not('a[aria-expanded=true]').find('.imageBg').empty().append($("<img />").attr(
+            "id","slideDownId2").attr("class", "arrow").attr("src","/studybuilder/images/icons/slide-down.png"));
     });
     $(document).on('shown.bs.collapse', '.panel-collapse', function () {
       var $panel = $(this).parent().ScrollTo();
-      $('body').find('a[aria-expanded=true]').find('.imageBg').html(
-          '<img class="arrow" src="/studybuilder/images/icons/slide-up.png" />');
-    });
+      $('body').find('a[aria-expanded=true]').find('.imageBg').empty().append($("<img />").attr(
+            "id","slideDownId2").attr("class", "arrow").attr("src","/studybuilder/images/icons/slide-up.png"));
+      });
     $('.submitEle').click(function (e) {
       $('#actTy').remove();
       $('<input />').attr('type', 'hidden').attr('name', "actionType").attr('value',
@@ -564,7 +562,8 @@
               $(thisAttr).val();
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
-                  '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please upload image as per provided guidelines."));
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             }
           } else {
@@ -580,7 +579,8 @@
               $(thisAttr).val();
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
-                  '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please upload image as per provided guidelines."));
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             }
           }
@@ -590,7 +590,8 @@
           $(thisAttr).val();
           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
           $(thisAttr).parent().find(".help-block").empty().append(
-              '<ul class="list-unstyled"><li>Please upload image as per provided guidelines.</li></ul>');
+        	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please upload image as per provided guidelines."));
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);

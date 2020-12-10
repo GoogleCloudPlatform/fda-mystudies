@@ -17,14 +17,21 @@ export class StudyDetailsService {
   ) {}
 
   getStudyDetails(studyId: string): Observable<StudyDetails> {
-    return this.entityService.get(`studies/${studyId}/participants`);
+    return this.http.get<StudyDetails>(
+      `${
+        environment.participantManagerDatastoreUrl
+      }/studies/${encodeURIComponent(studyId)}/participants`,
+      {
+        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
+      },
+    );
   }
   updateTargetEnrollment(
     updateTargetEnrollment: UpdateTargetEnrollmentRequest,
     studyId: string,
   ): Observable<ApiResponse> {
     return this.http.patch<ApiResponse>(
-      `${environment.baseUrl}/studies/${studyId}/targetEnrollment`,
+      `${environment.participantManagerDatastoreUrl}/studies/${studyId}/targetEnrollment`,
       updateTargetEnrollment,
     );
   }

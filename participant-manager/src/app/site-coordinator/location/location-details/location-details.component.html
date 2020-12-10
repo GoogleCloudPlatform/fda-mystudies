@@ -2,12 +2,15 @@
   <div class="max__w__1280 m-none">
     <div class="flex__justify__space-between">
       <div>
-        <a routerLink="/coordinator/locations" class="subheader__title">
+        <a
+          routerLink="/coordinator/locations"
+          class="subheader__title cursor__pointer"
+        >
           <img src="assets/svgs/back-arrow.svg" alt="Backwards" />
-          <span class="pl-1">Location Details</span>
         </a>
+        <span class="pl-1">Location Details</span>
       </div>
-      <div>
+      <div *ngIf="locationBackup.locationPermission === permission.ViewAndEdit">
         <button
           class="btn font12__light-grey p-none"
           name="edit_location"

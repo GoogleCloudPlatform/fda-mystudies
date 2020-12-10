@@ -9,6 +9,7 @@ import {getMessage} from 'src/app/shared/success.codes.enum';
 import {
   EnrollmentStatus,
   OnboardingStatus,
+  Status,
   StudyType,
 } from 'src/app/shared/enums';
 import {ApiResponse} from 'src/app/entity/api.response.model';
@@ -30,6 +31,8 @@ export class ParticipantDetailsComponent
   onBoardingStatus = OnboardingStatus;
   studyTypes = StudyType;
   permission = Permission;
+  studyStatus = Status;
+  enrollmentStatus = EnrollmentStatus;
   constructor(
     private readonly locationLibrary: Location,
     private readonly participantDetailsService: ParticipantDetailsService,

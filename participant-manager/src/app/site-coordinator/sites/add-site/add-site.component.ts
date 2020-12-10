@@ -19,6 +19,7 @@ export class AddSiteComponent
   implements OnInit {
   @Input() study = {} as Study;
   @Output() closeModalEvent = new EventEmitter();
+  @Output() cancelEvent = new EventEmitter();
   newSite = {} as Study;
   site = {} as AddSiteRequest;
   location$: Observable<ManageLocations> = of();
@@ -33,7 +34,10 @@ export class AddSiteComponent
   ngOnInit(): void {
     this.newSite.customId = this.study.customId;
     this.newSite.appId = this.study.appId;
+    this.newSite.name = this.study.name;
+    this.newSite.appName = this.study.appName;
     this.site.studyId = String(this.study.id);
+    this.site.locationId = '';
     this.getLocation(this.site.studyId);
   }
   getLocation(studyId: string): void {
@@ -61,5 +65,8 @@ export class AddSiteComponent
   }
   closeModal(): void {
     this.closeModalEvent.next();
+  }
+  cancel(): void {
+    this.cancelEvent.next();
   }
 }

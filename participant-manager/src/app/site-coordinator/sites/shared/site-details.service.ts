@@ -17,7 +17,7 @@ import {ImportParticipantEmailResponse} from './import-participants';
   providedIn: 'root',
 })
 export class SiteDetailsService {
-  baseUrl = environment.baseUrl;
+  baseUrl = environment.participantManagerDatastoreUrl;
   constructor(
     private readonly entityService: EntityService<SiteParticipants>,
     private readonly http: HttpClient,
@@ -30,23 +30,33 @@ export class SiteDetailsService {
     const fetchingOptions = this.getInvitationType(fetchingOption);
     if (fetchingOption !== OnboardingStatus.All) {
       return this.http.get<SiteParticipants>(
-        `${environment.baseUrl}/sites/${encodeURIComponent(
-          siteId,
-        )}/participants`,
+        `${
+          environment.participantManagerDatastoreUrl
+        }/sites/${encodeURIComponent(siteId)}/participants`,
         {
-          params: {onboardingStatus: fetchingOptions},
+          params: {
+            onboardingStatus: fetchingOptions,
+            excludeEnrollmentStatus: ['notEligible', 'yetToJoin'],
+          },
         },
       );
     } else {
-      return this.entityService.get(
-        `sites/${encodeURIComponent(siteId)}/participants`,
+      return this.http.get<SiteParticipants>(
+        `${
+          environment.participantManagerDatastoreUrl
+        }/sites/${encodeURIComponent(siteId)}/participants`,
+        {
+          params: {excludeEnrollmentStatus: ['notEligible', 'yetToJoin']},
+        },
       );
     }
   }
 
   siteDecommission(siteId: string): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(siteId)}/decommission`,
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
+        siteId,
+      )}/decommission`,
       '',
     );
   }
@@ -56,7 +66,7 @@ export class SiteDetailsService {
     participantToBeUpdated: StatusUpdate,
   ): Observable<ApiResponse> {
     return this.http.patch<ApiResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
         siteId,
       )}/participants/status`,
       participantToBeUpdated,
@@ -68,7 +78,7 @@ export class SiteDetailsService {
     invitationToSend: InviteSend,
   ): Observable<UpdateInviteResponse> {
     return this.http.post<UpdateInviteResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
         siteId,
       )}/participants/invite`,
       invitationToSend,
@@ -79,7 +89,9 @@ export class SiteDetailsService {
     modelEmail: AddEmail,
   ): Observable<AddEmailResponse> {
     return this.http.post<AddEmailResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(siteId)}/participants`,
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
+        siteId,
+      )}/participants`,
       modelEmail,
     );
   }
@@ -102,7 +114,7 @@ export class SiteDetailsService {
     formData: FormData,
   ): Observable<ImportParticipantEmailResponse> {
     return this.http.post<ImportParticipantEmailResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(
+      `${environment.participantManagerDatastoreUrl}/sites/${encodeURIComponent(
         siteId,
       )}/participants/import`,
       formData,

@@ -8,7 +8,7 @@ import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {Permission} from 'src/app/shared/permission-enums';
-import {StudyType} from 'src/app/shared/enums';
+import {Status, StudyType} from 'src/app/shared/enums';
 
 @Component({
   selector: 'app-site-list',
@@ -22,6 +22,7 @@ export class SiteListComponent implements OnInit {
   study = {} as Study;
   permission = Permission;
   studyTypes = StudyType;
+  studyStatus = Status;
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
@@ -55,7 +56,11 @@ export class SiteListComponent implements OnInit {
           (study: Study) =>
             study.name?.toLowerCase().includes(query) ||
             study.customId?.toLowerCase().includes(query) ||
-            study.sites.some((site) => site.name?.includes(query)),
+            study.sites.some(
+              (site) =>
+                site.name?.toLowerCase()?.includes(query) &&
+                study.type !== StudyType.Open,
+            ),
         );
         return this.manageStudiesBackup;
       }),
@@ -69,7 +74,8 @@ export class SiteListComponent implements OnInit {
       return 'green__text__sm';
     } else if (
       site.enrollmentPercentage &&
-      (site.enrollmentPercentage >= 30 || site.enrollmentPercentage <= 70)
+      site.enrollmentPercentage >= 30 &&
+      site.enrollmentPercentage <= 70
     ) {
       return 'orange__text__sm';
     } else {
@@ -79,5 +85,8 @@ export class SiteListComponent implements OnInit {
   openAddSiteModal(template: TemplateRef<unknown>, study: Study): void {
     this.modalRef = this.modalService.show(template);
     this.study = study;
+  }
+  cancel(): void {
+    this.modalRef.hide();
   }
 }

@@ -6,6 +6,7 @@ import {AppsService} from '../shared/apps.service';
 import {ManageApps, App} from '../shared/app.model';
 import {Permission} from 'src/app/shared/permission-enums';
 import {SearchService} from 'src/app/shared/search.service';
+import {ToastrService} from 'ngx-toastr';
 @Component({
   selector: 'app-app-list',
   templateUrl: './app-list.component.html',
@@ -28,6 +29,7 @@ export class AppListComponent implements OnInit {
   constructor(
     private readonly appService: AppsService,
     private readonly sharedService: SearchService,
+    private readonly toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +44,11 @@ export class AppListComponent implements OnInit {
     ).pipe(
       map(([manageApps, query]) => {
         this.manageAppsBackup = {...manageApps};
+        if (!manageApps.superAdmin && manageApps.studyPermissionCount < 2) {
+          this.toastr.error(
+            'This view displays app-wise enrollment if you manage multiple studies.',
+          );
+        }
         this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
           (app: App) =>
             app.name?.toLowerCase().includes(query.toLowerCase()) ||
@@ -59,7 +66,8 @@ export class AppListComponent implements OnInit {
       return 'green__text__sm';
     } else if (
       app.enrollmentPercentage &&
-      (app.enrollmentPercentage >= 30 || app.enrollmentPercentage <= 70)
+      app.enrollmentPercentage >= 30 &&
+      app.enrollmentPercentage <= 70
     ) {
       return 'orange__text__sm';
     } else {
@@ -68,5 +76,10 @@ export class AppListComponent implements OnInit {
   }
   checkEditPermission(permission: number): boolean {
     return permission === Permission.ViewAndEdit;
+  }
+  checkViewPermission(permission: number): boolean {
+    return (
+      permission === Permission.View || permission === Permission.ViewAndEdit
+    );
   }
 }

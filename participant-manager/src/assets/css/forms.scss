@@ -48,7 +48,7 @@
     height: auto;
   }
   .select__form-control__parent {
-    border: 1px solid var(--periwinkle-gray);
+    border: 1px solid var(--semi-dark-gray);
     padding: 20px;
     border-radius: 7px;
   }
@@ -81,8 +81,8 @@
   .form-group .custom__labels label:before {
     content: "";
     appearance: none;
-    background-color: transparent;
-    border: 1px solid var(--geyser-gray);
+    background-color: var(--white);
+    border: 1px solid var(--semi-dark-gray);
     padding: 7px;
     display: inline-block;
     position: relative;
@@ -128,7 +128,7 @@
     position: relative;
     padding-left: 25px;
     cursor: pointer;
-    display: inline-block;
+    display: inline;
     color: var(--stone-gray);
     margin-right: 10px;
     font-size: 75%;
@@ -141,7 +141,7 @@
     top: 0;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--alto-gray);
+    border: 1px solid var(--semi-dark-gray);
     border-radius: 100%;
     background: var(--white);
   }
@@ -176,7 +176,7 @@
     top: 0;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--alto-gray);
+    border: 1px solid var(--semi-dark-gray);
     border-radius: 100%;
     background: var(--white);
   }

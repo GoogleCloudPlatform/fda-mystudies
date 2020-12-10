@@ -15,6 +15,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -171,10 +172,9 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnRedirectUriToLoginForUserDetailsBySecurityCode() throws Exception {
+  public void shouldReturnSecurityCodeExpiredForInvalidSecurityCode() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
-    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
@@ -182,8 +182,9 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.redirectTo", is("login")));
+        .andExpect(status().isGone())
+        .andExpect(
+            jsonPath("$.error_description", is(ErrorCode.SECURITY_CODE_EXPIRED.getDescription())));
   }
 
   @Test
@@ -316,7 +317,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertEquals(request.getFirstName(), user.getFirstName());
     assertEquals(request.getLastName(), user.getLastName());
 
-    verify(1, postRequestedFor(urlEqualTo("/oauth-scim-service/users")));
+    verify(1, postRequestedFor(urlEqualTo("/auth-server/users")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(user.getId());
@@ -430,8 +431,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     // verify external API call
     verify(
         1,
-        putRequestedFor(
-            urlEqualTo(String.format("/oauth-scim-service/users/%s", ADMIN_AUTH_ID_VALUE))));
+        putRequestedFor(urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
 
     verifyTokenIntrospectRequest();
   }
@@ -466,8 +466,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     // verify external API call
     verify(
         1,
-        putRequestedFor(
-            urlEqualTo(String.format("/oauth-scim-service/users/%s", ADMIN_AUTH_ID_VALUE))));
+        putRequestedFor(urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
 
     verifyTokenIntrospectRequest();
   }
@@ -530,6 +529,92 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldDeleteInvitedUser() throws Exception {
+    // Step 1: Set the super admin user in Header
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
+
+    // Step 2: Creating non super admin with invited status
+    // and Call the API and expect INVITATION_DELETED_SUCCESSFULLY message
+    userRegAdminEntity = testDataHelper.createNonSuperAdmin();
+    userRegAdminEntity.setSuperAdmin(false);
+    userRegAdminEntity.setStatus(CommonConstants.INVITED_STATUS);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), userRegAdminEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+            jsonPath("$.message").value(MessageCode.INVITATION_DELETED_SUCCESSFULLY.getMessage()))
+        .andReturn();
+  }
+
+  @Test
+  public void shouldNotDeleteActiveUserForDeleteInvitationRequest() throws Exception {
+    // Step 1: Set the super admin user in Header
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
+
+    // Step 2: Creating non super admin with active status
+    // and Call the API and expect CANNOT_DELETE_INVITATION error
+    userRegAdminEntity = testDataHelper.createNonSuperAdmin();
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), userRegAdminEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.CANNOT_DELETE_INVITATION.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnNotSuperAdminAccess() throws Exception {
+    // Step 1: set user non super admin
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    // Step 2: Call the API and expect NOT_SUPER_ADMIN_ACCESS error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), userRegAdminEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description", is(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForDeleteInvitation() throws Exception {
+    // Call the API and expect USER_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), IdGenerator.id())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
   }
 
   @AfterEach

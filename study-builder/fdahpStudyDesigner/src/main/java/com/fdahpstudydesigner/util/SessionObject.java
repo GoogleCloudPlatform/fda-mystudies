@@ -56,6 +56,7 @@ public class SessionObject implements Serializable {
   private String sessionId;
   private String accessLevel = "";
   private String correlationId;
+  private String gcpBucketName;
 
   public String getCorrelationId() {
     return correlationId;
@@ -255,5 +256,15 @@ public class SessionObject implements Serializable {
 
   public void setCorrelationId(String correlationId) {
     this.correlationId = correlationId;
+  }
+
+  /** @return the gcpBucketName */
+  public String getGcpBucketName() {
+    return gcpBucketName;
+  }
+
+  /** @param gcpBucketName the gcpBucketName to set */
+  public void setGcpBucketName(String gcpBucketName) {
+    this.gcpBucketName = gcpBucketName;
   }
 }

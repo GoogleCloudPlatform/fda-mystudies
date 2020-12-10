@@ -79,7 +79,7 @@ describe('ForgotPasswordComponent', () => {
     );
     const errorHelpBlocks = errorHelpBlock.nativeElement as HTMLElement;
     expect(emailInputs.required).toBeTruthy();
-    expect(errorHelpBlocks.innerText).toEqual('Please fill out this field.');
+    expect(errorHelpBlocks.innerText).toEqual('Enter your registered email.');
   });
 
   it('should show validation error if the email is invalid', async () => {
@@ -95,7 +95,7 @@ describe('ForgotPasswordComponent', () => {
     const errorHelpBlocks = errorHelpBlock.nativeElement as HTMLElement;
     expect(errorHelpBlock).toBeTruthy();
     expect(errorMsg).toBeTruthy();
-    expect(errorHelpBlocks.innerText).toEqual('Email is invalid.');
+    expect(errorHelpBlocks.innerText).toEqual('Enter a valid email.');
   });
 
   it('should update the email on forgotPassword button submit', fakeAsync(() => {

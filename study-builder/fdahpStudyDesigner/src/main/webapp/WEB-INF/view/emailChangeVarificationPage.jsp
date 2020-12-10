@@ -105,7 +105,7 @@
       </div>
       <div class="footer">
         <div>
-          <span>Copyright Placeholder</span>
+          <span>Copyright</span>
           <span>
             <a href="/studybuilder/terms.do" class="" target="_blank">Terms</a>
           </span>
@@ -162,7 +162,7 @@
         var isValidToken = '${isValidToken}';
         if (isValidToken) {
           if (errMsg.length > 0) {
-            $("#errMsg").html(errMsg);
+            $("#errMsg").text(errMsg);
             $("#errMsg").show("fast");
             setTimeout(hideDisplayMessage, 4000);
           }
@@ -170,7 +170,7 @@
         var sucMsg = '${sucMsg}';
         if (isValidToken) {
           if (sucMsg.length > 0) {
-            $("#sucMsg").html(sucMsg);
+            $("#sucMsg").text(sucMsg);
             $("#sucMsg").show("fast");
             $("#errMsg").hide("fast");
             setTimeout(hideDisplayMessage, 4000);

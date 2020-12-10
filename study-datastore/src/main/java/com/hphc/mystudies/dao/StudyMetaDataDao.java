@@ -147,7 +147,9 @@ public class StudyMetaDataDao {
             infoBean.setImage(
                 StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())
                     ? ""
-                    : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    : propMap.get("fda.imgDisplaydPath")
+                        + propMap.get("cloud.bucket.name")
+                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                         + gatewayWelcomeInfo.getImagePath());
             infoBean.setText(
                 StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())
@@ -202,7 +204,9 @@ public class StudyMetaDataDao {
               resourceBean.setContent(
                   StringUtils.isEmpty(resource.getPdfUrl())
                       ? ""
-                      : propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH)
+                      : propMap.get("fda.imgDisplaydPath")
+                          + propMap.get("cloud.bucket.name")
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH)
                           + resource.getPdfUrl());
             }
 
@@ -288,7 +292,9 @@ public class StudyMetaDataDao {
             studyBean.setLogo(
                 StringUtils.isEmpty(studyDto.getThumbnailImage())
                     ? ""
-                    : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    : propMap.get("fda.imgDisplaydPath")
+                        + propMap.get("cloud.bucket.name")
+                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                         + studyDto.getThumbnailImage());
             studyBean.setStudyId(
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
@@ -819,6 +825,14 @@ public class StudyMetaDataDao {
                         .setString("studyId", studyId)
                         .setString("activityVersion", activityVersion)
                         .uniqueResult();
+          } else {
+            studyVersionDto =
+                (StudyVersionDto)
+                    session
+                        .createQuery(studyVersionQuery)
+                        .setMaxResults(1)
+                        .setString("studyId", studyId)
+                        .uniqueResult();
           }
         } else {
           studyVersionDto = new StudyVersionDto();
@@ -925,7 +939,9 @@ public class StudyMetaDataDao {
               resourcesBean.setContent(
                   StringUtils.isEmpty(resourcesDto.getPdfUrl())
                       ? ""
-                      : propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH)
+                      : propMap.get("fda.imgDisplaydPath")
+                          + propMap.get("cloud.bucket.name")
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH)
                           + resourcesDto.getPdfUrl());
             }
             resourcesBean.setResourcesId(
@@ -966,10 +982,13 @@ public class StudyMetaDataDao {
                 availability.put(
                     "availabilityType", StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE);
                 String searchQuery = "";
-                searchQuery =
-                    "from AnchorDateTypeDto a where a.id=" + resourcesDto.getAnchorDateId();
+                searchQuery = "from AnchorDateTypeDto a where a.id=:id";
                 AnchorDateTypeDto anchorDateTypeDto =
-                    (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
+                    (AnchorDateTypeDto)
+                        session
+                            .createQuery(searchQuery)
+                            .setParameter("id", resourcesDto.getAnchorDateId())
+                            .uniqueResult();
                 if (anchorDateTypeDto != null) {
                   if (!anchorDateTypeDto
                       .getName()
@@ -1125,7 +1144,9 @@ public class StudyMetaDataDao {
             info.setImage(
                 StringUtils.isEmpty(studyPageInfo.getImagePath())
                     ? ""
-                    : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_PAGE_PATH)
+                    : propMap.get("fda.imgDisplaydPath")
+                        + propMap.get("cloud.bucket.name")
+                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_PAGE_PATH)
                         + studyPageInfo.getImagePath());
             info.setText(
                 StringUtils.isEmpty(studyPageInfo.getDescription())
@@ -1150,7 +1171,9 @@ public class StudyMetaDataDao {
           info.setImage(
               StringUtils.isEmpty(studyDto.getThumbnailImage())
                   ? ""
-                  : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                  : propMap.get("fda.imgDisplaydPath")
+                      + propMap.get("cloud.bucket.name")
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                       + studyDto.getThumbnailImage());
           info.setText(StringUtils.isEmpty(studyDto.getFullName()) ? "" : studyDto.getFullName());
           infoList.add(info);
@@ -1616,7 +1639,9 @@ public class StudyMetaDataDao {
             studyBean.setLogo(
                 StringUtils.isEmpty(studyDto.getThumbnailImage())
                     ? ""
-                    : propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    : propMap.get("fda.imgDisplaydPath")
+                        + propMap.get("cloud.bucket.name")
+                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                         + studyDto.getThumbnailImage());
             studyBean.setStudyId(
                 StringUtils.isEmpty(studyDto.getCustomStudyId())

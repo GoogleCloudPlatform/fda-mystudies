@@ -187,12 +187,11 @@
             "${_csrf.parameterName}": "${_csrf.token}",
           },
           success: function consentInfo(data) {
-            var jsonobject = eval(data);
-            var message = jsonobject.message;
+            var message = data.message;
             if (message == "SUCCESS") {
-              reloadConsentInfoDataTable(jsonobject.consentInfoList, null);
+              reloadConsentInfoDataTable(data.consentInfoList, null);
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                   "Reorder done successfully");
               if ($('.fifthConsent').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
@@ -206,13 +205,13 @@
               }
             } else {
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
             setTimeout(hideDisplayMessage, 4000);
           },
           error: function (xhr, status, error) {
-            $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
             setTimeout(hideDisplayMessage, 4000);
           }
         });
@@ -242,7 +241,7 @@
             success: function deleteConsentInfo(data) {
               var status = data.message;
               if (status == "SUCCESS") {
-                $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                     "Consent Section deleted successfully.");
                 $('#alertMsg').show();
                 reloadData(studyId);
@@ -257,14 +256,14 @@
                       'sprites-icons-2 tick pull-right mt-xs');
                 }
               } else {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Unable to delete consent");
                 $('#alertMsg').show();
               }
               setTimeout(hideDisplayMessage, 4000);
             },
             error: function (xhr, status, error) {
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html(error);
+              $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
               setTimeout(hideDisplayMessage, 4000);
             }
           });
@@ -283,11 +282,10 @@
         "${_csrf.parameterName}": "${_csrf.token}",
       },
       success: function status(data, status) {
-        var jsonobject = eval(data);
-        var message = jsonobject.message;
-        var markAsComplete = jsonobject.markAsComplete;
+        var message = data.message;
+        var markAsComplete = data.markAsComplete;
         if (message == "SUCCESS") {
-          reloadConsentInfoDataTable(jsonobject.consentInfoList, markAsComplete);
+          reloadConsentInfoDataTable(data.consentInfoList, markAsComplete);
         }
       },
       error: function status(data, status) {
@@ -318,15 +316,15 @@
           datarow.push(obj.visualStep);
         }
         var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewConsentInfo("
-            + obj.id + ");'></span>";
+            + parseInt(obj.id) + ");'></span>";
         if (obj.status) {
-          actions += "<span class='sprites_icon edit-g mr-lg' onclick='editConsentInfo(" + obj.id
+          actions += "<span class='sprites_icon edit-g mr-lg' onclick='editConsentInfo(" + parseInt(obj.id)
               + ");'></span>"
         } else {
           actions += "<span class='sprites_icon edit-inc-draft mr-lg' onclick='editConsentInfo("
-              + obj.id + ");'></span>";
+              + parseInt(obj.id) + ");'></span>";
         }
-        actions += "<span class='sprites_icon copy delete' onclick='deleteConsentInfo(" + obj.id
+        actions += "<span class='sprites_icon copy delete' onclick='deleteConsentInfo(" + parseInt(obj.id)
             + ");'></span>";
         datarow.push(actions);
         $('#consent_list').DataTable().row.add(datarow);

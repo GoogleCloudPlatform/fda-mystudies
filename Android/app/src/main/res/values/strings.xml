@@ -27,6 +27,7 @@
     <string name="enter_email">enter email</string>
     <string name="enter_new_password">enter new password</string>
     <string name="enter_old_password">enter current password</string>
+    <string name="enter_temp_password">enter temporary password</string>
     <string name="password">Password</string>
     <string name="passcode">Passcode</string>
     <string name="enter_password">enter password</string>
@@ -58,8 +59,9 @@
     <string name="sign_in_btn">Sign In</string>
     <string name="usr_pwd">with username and\n password</string>
     <string name="email">Email</string>
-    <string name="new_password">New Password</string>
-    <string name="old_pasword">Current Password</string>
+    <string name="new_password">New password</string>
+    <string name="old_pasword">Current password</string>
+    <string name="temp_password">Temporary password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="new_usr_signup">New User? Sign Up</string>
     <string name="use_touch_id">Use Touch ID</string>
@@ -96,6 +98,7 @@
     <string name="forgot_password_text">Please enter your registered email to receive password help.</string>
     <string name="change_password_heading">CHANGE PASSWORD</string>
     <string name="change_password_heading1">CREATE PASSWORD</string>
+    <string name="change_password_heading2">SET UP PASSWORD</string>
     <string name="watch_video">Watch Video</string>
 
     <string name="learn_more">Learn More</string>
@@ -571,5 +574,5 @@
     <string name="login_studyinfo_enroll">login_studyinfo_enroll</string>
     <string name="login_studyinfo_rejoin">login_studyinfo_rejoin</string>
     <string name="login_studyinfo_about_this_study">login_studyinfo_about_this_study</string>
-
+    <string name="invalid_client">Invalid Client</string>
 </resources>

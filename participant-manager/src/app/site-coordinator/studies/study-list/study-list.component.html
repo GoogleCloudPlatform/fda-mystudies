@@ -7,21 +7,30 @@
           class="bg__white cards cards__var box__shadow-cmn ml-none mr-none studies_row"
         >
           <div
-            [routerLink]="['/coordinator/studies', study.id]"
+            [routerLink]="
+              checkViewPermission(study.studyPermission)
+                ? ['/coordinator/studies', study.id]
+                : []
+            "
+            [ngClass]="
+              checkViewPermission(study.studyPermission)
+                ? ' cursor__pointer'
+                : ''
+            "
             class="flex__justify__space-between flex__wrap"
           >
             <div>
               <div class="flex__ flex__row align__items__center">
-                <div class="img__container__left" *ngIf="study.logoImageUrl">
-                  <img [src]="study.logoImageUrl" alt="" />
+                <div class="img__container__left">
+                  <div class="deafult__img">
+                    <img [src]="study.logoImageUrl" alt="" />
+                  </div>
                 </div>
                 <div>
                   <div class="blue__text__md text-capitalize">
                     {{ study.customId }}
                   </div>
-                  <div
-                    class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
-                  >
+                  <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                     {{ study.name }}
                   </div>
                   <div
@@ -105,6 +114,7 @@
             </div>
           </div>
         </div>
+        <div *ngIf="studyList.studies.length === 0">No records found</div>
       </div>
     </ng-container>
   </div>

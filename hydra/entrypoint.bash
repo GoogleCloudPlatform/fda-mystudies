@@ -2,21 +2,13 @@
 
 # Copyright 2020 Google LLC
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 # Require ENVs:
-# - BASE_URL: the base URL of your deployment.
-# - DSN: format: "mysql://${DB_USER?}:${DB_PASSWORD?}@tcp(${DB_PRIVATE_IP}:${DB_PORT})/${DB_NAME?}?sslmode=disable"
+# - BASE_URL: the base URL of your hydra deployment.
+# - DSN: format: "mysql://${DB_USER?}:${DB_PASSWORD?}@tcp(${DB_PRIVATE_IP}:${DB_PORT})/${DB_NAME?}"
 
 # Encryption support in database
 # The system secret can only be set against a fresh database. Key rotation is currently not supported. This
@@ -27,13 +19,13 @@ export SECRETS_SYSTEM=${SYSTEM_SECRET}
 
 # Points to database location
 # mysql://user:pw@tcp(host:port)/database?someSetting=value&foo=bar
-export DSN="mysql://${DB_USER}:${DB_PASS}@tcp(localhost:3306)/${DB_NAME}?sql_notes=false"
+export DSN="mysql://${DB_USER}:${DB_PASS}@tcp(${DB_INSTANCE_URL}:3306)/${DB_NAME}?sql_notes=false&parseTime=true"
 
 # issuer URL
-export URLS_SELF_ISSUER="${BASE_URL}/hydra"
+export URLS_SELF_ISSUER="${HYDRA_PUBLIC_BASE_URL}"
 # Login and consent app
-export URLS_CONSENT="${BASE_URL}/oauth-scim-service/consent"
-export URLS_LOGIN="${BASE_URL}/oauth-scim-service/login"
+export URLS_CONSENT="${AUTH_SERVER_BASE_URL}/auth-server/consent"
+export URLS_LOGIN="${AUTH_SERVER_BASE_URL}/auth-server/login"
 
 # Setup database for hydra.
 cd /hydra
@@ -41,4 +33,4 @@ cd /hydra
 
 # Start hydra
 # use --dangerous-force-http because GCLB take care of https.
-./hydra serve all --dangerous-force-http
+./hydra serve all ${SERVE_ALL_FLAG}

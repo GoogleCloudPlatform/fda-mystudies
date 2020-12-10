@@ -8,6 +8,7 @@ import {Study, StudyResponse} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {StudyType} from 'src/app/shared/enums';
+import {Permission} from 'src/app/shared/permission-enums';
 @Component({
   selector: 'app-study-list',
   templateUrl: './study-list.component.html',
@@ -43,6 +44,14 @@ export class StudyListComponent implements OnInit {
     ).pipe(
       map(([manageStudies, query]) => {
         this.manageStudiesBackup = {...manageStudies};
+        if (
+          !manageStudies.superAdmin &&
+          manageStudies.sitePermissionCount < 2
+        ) {
+          this.toastr.error(
+            'This view displays study-wise enrollment if you manage multiple sites.',
+          );
+        }
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
             study.name?.toLowerCase().includes(query.toLowerCase()) ||
@@ -60,11 +69,17 @@ export class StudyListComponent implements OnInit {
       return 'green__text__sm';
     } else if (
       study.enrollmentPercentage &&
-      (study.enrollmentPercentage >= 30 || study.enrollmentPercentage <= 70)
+      study.enrollmentPercentage >= 30 &&
+      study.enrollmentPercentage <= 70
     ) {
       return 'orange__text__sm';
     } else {
       return 'red__text__sm';
     }
+  }
+  checkViewPermission(permission: number): boolean {
+    return (
+      permission === Permission.View || permission === Permission.ViewAndEdit
+    );
   }
 }

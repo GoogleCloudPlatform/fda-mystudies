@@ -8,20 +8,24 @@
           class="subheader__title cursor__pointer"
         >
           <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
-          <span>Edit User Details</span>
         </a>
-        <span class="text__34a853g__14">
+        <span class="pr-2">Edit User Details</span>
+
+        <span [ngClass]="statusColour(user.status)" class="text__34a853g__14">
           {{ user.status }}
         </span>
       </div>
+
       <div class="col-xs-12 col-md-6 pl-none text-right pr-none">
         <button
-          (click)="changeStatus()"
+          (click)="changeStatus(user.status)"
           class="btn banner__default__btn pad__5__13 bt__font12__pad113 ml-sm"
         >
           {{
             user.status === userStatus.Deactivated
               ? "Activate User"
+              : user.status === userStatus.Invited
+              ? "Delete User"
               : "Deactivate User"
           }}
         </button>
@@ -66,7 +70,7 @@
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.required"
               >
-                Please fill out this field.
+                Enter a first name.
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -100,7 +104,7 @@
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.required"
               >
-                Please fill out this field.
+                Enter a last name.
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -138,15 +142,20 @@
                 [(ngModel)]="user.superAdmin"
                 name="superAdminCheckBox"
                 #superAdminCheckBox="ngModel"
+                (change)="superAdminCheckBoxChange()"
               />
-              <label class="mt-xs" for="role">
-                Super Admin
+              <label class="mt-xs custom_text_transform" for="role">
+                Make this user a superadmin
                 <span
                   class="tool"
-                  data-tip="A superadmin user has application-wide permissions; can manage users and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only."
+                  data-tip="A superadmin user has application-wide permissions.
+Superadmins can manage users of this Particpant Manager and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only. "
                   tabindex="1"
                 >
-                  <i class="fa fa-info-circle ml-sm" aria-hidden="true"></i>
+                  <i
+                    class="fa fa-info-circle ml-xs info_i"
+                    aria-hidden="true"
+                  ></i>
                 </span>
               </label>
             </div>
@@ -171,7 +180,9 @@
                   [ngModelOptions]="{standalone: true}"
                   (change)="locationsCheckBoxChange()"
                 />
-                <label for="location">Allow access to locations</label>
+                <label class="text-initial" for="location">
+                  Allow access to locations
+                </label>
               </div>
               <div class="pl-xl pt-xs">
                 <span>
@@ -213,32 +224,37 @@
         <div class="form-group">
           <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
           <div class="select__form-control__parent">
-            <label class="wrap">
+            <label class="wrap pb-1 text-initial">
               Add an app
               <ng-select
                 [items]="appDetails.apps"
                 [clearable]="false"
                 [multiple]="true"
                 bindLabel="name"
+                bindValue="customId"
                 class="form-control select__form-control"
                 placeholder="Enter App ID or Name"
                 [hideSelected]="true"
-                [(ngModel)]="selectedApps"
+                [(ngModel)]="selectedAppsIds"
                 [ngModelOptions]="{standalone: true}"
+                (add)="add($event)"
               ></ng-select>
             </label>
           </div>
         </div>
-        <div class="form-group pt-none">
+        <div class="form-group pt-none pt-0">
           <div class="accordion" id="accordionExample">
             <div *ngFor="let app of selectedApps" class="card">
               <div class="flex__justify__space-between">
                 <div class="acc__dele">
                   <div class="card-header">
-                    <div class="mb-0 flex__justify__space-between">
+                    <div
+                      class="mb-0 flex__justify__space-between mob_display-flowroot"
+                    >
                       <div>
                         <div class="custom__labels">
                           <input
+                            #permissionCheckBox
                             type="checkbox"
                             id="appCheckBox{{ app.id }}"
                             [(ngModel)]="app.selected"
@@ -246,13 +262,9 @@
                             (change)="appCheckBoxChange(app)"
                           />
                           <label for="appCheckBox{{ app.id }}">
-                            {{ app.name }}({{ app.customId }})
-                            <span class="app__id ml-xs"></span>
-                            <span>
-                              {{
-                                app.selectedSitesCount
-                                  | i18nPlural: sitesMessageMapping
-                              }}
+                            {{ app.name }}
+                            <span class="app__id ml-xs">
+                              ({{ app.customId }})
                             </span>
                           </label>
                         </div>
@@ -268,7 +280,12 @@
                               name="appRadioGroup{{ app.id }}"
                               (change)="appRadioButtonChange(app)"
                             />
-                            <label for="appRadioView{{ app.id }}">View</label>
+                            <label
+                              class="font12"
+                              for="appRadioView{{ app.id }}"
+                            >
+                              View
+                            </label>
                           </span>
                           <span>
                             <input
@@ -281,19 +298,32 @@
                               name="appRadioGroup{{ app.id }}"
                               (change)="appRadioButtonChange(app)"
                             />
-                            <label for="appRadioEdit{{ app.id }}">
+                            <label
+                              class="font12"
+                              for="appRadioEdit{{ app.id }}"
+                            >
                               View And Edit
                             </label>
                           </span>
                         </div>
                       </div>
                       <div
-                        class="fa__plus__minus"
-                        type="button"
-                        data-toggle="collapse"
-                        [attr.data-target]="'#collapse' + app.id"
-                        aria-expanded="false"
-                      ></div>
+                        class="app__id_num flex__justify__space-between mob_pull_right"
+                      >
+                        <div class="pr-2">
+                          {{
+                            app.selectedSitesCount
+                              | i18nPlural: sitesMessageMapping
+                          }}
+                        </div>
+                        <div
+                          class="fa__plus__minus mob_pull_right"
+                          type="button"
+                          data-toggle="collapse"
+                          [attr.data-target]="'#collapse' + app.id"
+                          aria-expanded="false"
+                        ></div>
+                      </div>
                     </div>
                   </div>
                   <div
@@ -310,10 +340,13 @@
 
                         <div class="card" *ngFor="let study of app.studies">
                           <div class="card-header">
-                            <div class="mb-0 flex__justify__space-between">
+                            <div
+                              class="mb-0 flex__justify__space-between mob_display-flowroot"
+                            >
                               <div>
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="studyCheckBoxChange(study, app)"
                                     [disabled]="app.selected"
                                     type="checkbox"
@@ -321,7 +354,10 @@
                                     [(ngModel)]="study.selected"
                                     [ngModelOptions]="{standalone: true}"
                                   />
-                                  <label for="studyCheckBox{{ study.studyId }}">
+                                  <label
+                                    class="font14"
+                                    for="studyCheckBox{{ study.studyId }}"
+                                  >
                                     {{ study.studyName }}
                                   </label>
                                 </div>
@@ -340,6 +376,7 @@
                                       (change)="studyRadioButtonChange(study)"
                                     />
                                     <label
+                                      class="font12"
                                       for="studyRadioView{{ study.studyId }}"
                                     >
                                       View
@@ -359,6 +396,7 @@
                                       (change)="studyRadioButtonChange(study)"
                                     />
                                     <label
+                                      class="font12"
                                       for="studyRadioEdit{{ study.studyId }}"
                                     >
                                       View And Edit
@@ -367,7 +405,7 @@
                                 </div>
                               </div>
                               <div
-                                class="fa__plus__minus"
+                                class="fa__plus__minus mob_pull_right"
                                 type="button"
                                 data-toggle="collapse"
                                 [attr.data-target]="
@@ -392,6 +430,7 @@
                               <div *ngFor="let site of study.sites">
                                 <div class="custom__labels">
                                   <input
+                                    #permissionCheckBox
                                     (change)="
                                       siteCheckBoxChange(site, study, app)
                                     "
@@ -401,7 +440,10 @@
                                     [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="site.selected"
                                   />
-                                  <label for="siteCheckBox{{ site.siteId }}">
+                                  <label
+                                    class="font12"
+                                    for="siteCheckBox{{ site.siteId }}"
+                                  >
                                     {{ site.locationName }}
                                   </label>
                                 </div>
@@ -418,7 +460,10 @@
                                       id="siteRadioRead{{ site.siteId }}"
                                       name="siteRadioGroup{{ site.siteId }}"
                                     />
-                                    <label for="siteRadioRead{{ site.siteId }}">
+                                    <label
+                                      class="font12"
+                                      for="siteRadioRead{{ site.siteId }}"
+                                    >
                                       View
                                     </label>
                                   </span>
@@ -434,7 +479,10 @@
                                       id="siteRadioEdit{{ site.siteId }}"
                                       name="siteRadioGroup{{ site.siteId }}"
                                     />
-                                    <label for="siteRadioEdit{{ site.siteId }}">
+                                    <label
+                                      class="font12"
+                                      for="siteRadioEdit{{ site.siteId }}"
+                                    >
                                       View And Edit
                                     </label>
                                   </span>
@@ -447,7 +495,7 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn" (click)="deleteAppFromList(app.id)">
+                <button class="btn pr-0" (click)="deleteAppFromList(app.id)">
                   <img src="assets/svgs/delete.svg" alt="Delete" />
                 </button>
               </div>
@@ -456,7 +504,10 @@
         </div>
       </section>
     </div>
-    <section class="btn__container">
+    <section
+      *ngIf="user.status !== userStatus.Deactivated"
+      class="btn__container"
+    >
       <button
         [disabled]="!editUserForm.form.valid"
         type="submit"

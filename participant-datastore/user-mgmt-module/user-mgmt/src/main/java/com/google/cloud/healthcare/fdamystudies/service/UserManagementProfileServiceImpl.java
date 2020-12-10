@@ -113,33 +113,14 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     AuthInfoEntity authInfo = null;
 
     userDetails = userProfileManagementDao.getParticipantInfoDetails(userId);
-    if (user != null && userDetails != null) {
+    if (userDetails == null) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_EXISTS);
+    }
+
+    if (user != null) {
       if (user.getSettings() != null) {
         if (user.getSettings().getRemoteNotifications() != null) {
           userDetails.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
-
-          authInfo = userProfileManagementDao.getAuthInfo(userDetails);
-          if (authInfo != null) {
-            authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
-
-            if ((user.getInfo().getOs() != null) && !StringUtils.isEmpty(user.getInfo().getOs())) {
-              authInfo.setDeviceType(user.getInfo().getOs());
-            }
-            if ((user.getInfo().getOs() != null)
-                && !StringUtils.isEmpty(user.getInfo().getOs())
-                && (user.getInfo().getOs().equalsIgnoreCase("IOS")
-                    || user.getInfo().getOs().equalsIgnoreCase("I"))) {
-              authInfo.setIosAppVersion(user.getInfo().getAppVersion());
-            } else {
-              authInfo.setAndroidAppVersion(user.getInfo().getAppVersion());
-            }
-            if ((user.getInfo().getDeviceToken() != null)
-                && !StringUtils.isEmpty(user.getInfo().getDeviceToken())) {
-              authInfo.setDeviceToken(user.getInfo().getDeviceToken());
-            }
-
-            authInfo.setModified(Timestamp.from(Instant.now()));
-          }
         }
         if (user.getSettings().getLocalNotifications() != null) {
           userDetails.setLocalNotificationFlag(user.getSettings().getLocalNotifications());
@@ -159,6 +140,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
           userDetails.setLocale(user.getSettings().getLocale());
         }
       }
+      authInfo = authInfoDetails(userDetails, user);
       errorBean = userProfileManagementDao.updateUserProfile(userId, userDetails, authInfo);
     }
 
@@ -367,15 +349,18 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         || appPropertiesDetails.getRegEmailSub().equalsIgnoreCase("")) {
       subject = appConfig.getConfirmationMailSubject();
       content = appConfig.getConfirmationMail();
-      templateArgs.put("securitytoken", securityToken);
     } else {
-      content = appPropertiesDetails.getRegEmailBody().replace("<<< TOKEN HERE >>>", securityToken);
+      content = appPropertiesDetails.getRegEmailBody();
       subject = appPropertiesDetails.getRegEmailSub();
     }
 
+    if (appPropertiesDetails != null) {
+      templateArgs.put("appName", appPropertiesDetails.getAppName());
+    }
     // TODO(#496): replace with actual study's org name.
     templateArgs.put("orgName", appConfig.getOrgName());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmail(),
@@ -387,5 +372,34 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             templateArgs);
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Ends");
     return emailService.sendMimeMail(emailRequest);
+  }
+
+  private AuthInfoEntity authInfoDetails(UserDetailsEntity userDetails, UserRequestBean user) {
+    AuthInfoEntity authInfo = null;
+    authInfo = userProfileManagementDao.getAuthInfo(userDetails);
+    if (authInfo != null) {
+      if (user.getSettings() != null && user.getSettings().getRemoteNotifications() != null) {
+        authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
+      }
+      if (user.getInfo() != null) {
+        if (!StringUtils.isBlank(user.getInfo().getOs())) {
+          authInfo.setDeviceType(user.getInfo().getOs());
+        }
+        if (!StringUtils.isBlank(user.getInfo().getOs())
+            && (user.getInfo().getOs().equalsIgnoreCase("IOS")
+                || user.getInfo().getOs().equalsIgnoreCase("I"))) {
+          authInfo.setIosAppVersion(user.getInfo().getAppVersion());
+        } else {
+          authInfo.setAndroidAppVersion(user.getInfo().getAppVersion());
+        }
+        if (!StringUtils.isBlank(user.getInfo().getDeviceToken())) {
+          authInfo.setDeviceToken(user.getInfo().getDeviceToken());
+        } else if (!StringUtils.isBlank(authInfo.getDeviceToken())) {
+          authInfo.setDeviceToken(null);
+        }
+      }
+      authInfo.setModified(Timestamp.from(Instant.now()));
+    }
+    return authInfo;
   }
 }

@@ -26,10 +26,9 @@ import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
 import com.fdahpstudydesigner.common.UserAccessLevel;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -79,6 +78,8 @@ public class FdahpStudyDesignerUtil {
   private static Logger logger = Logger.getLogger(FdahpStudyDesignerUtil.class.getName());
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+
+  private static final String PATH_SEPARATOR = "/";
 
   public static Date addDaysToDate(Date date, int days) {
     logger.info("fdahpStudyDesignerUtiltyLinkUtil: addDaysToDate :: Starts");
@@ -853,37 +854,27 @@ public class FdahpStudyDesignerUtil {
     return timeRangeList;
   }
 
-  public static String getTimeRangeString(String frequency) {
-    String timeRange = "";
+  public static String[] getTimeRangeString(String frequency) {
     if (StringUtils.isNotEmpty(frequency)) {
       switch (frequency) {
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_WITHIN_A_DAY:
-          timeRange =
-              FdahpStudyDesignerConstants.DAYS_OF_THE_CURRENT_MONTH
-                  + "' , '"
-                  + FdahpStudyDesignerConstants.DAYS_OF_THE_CURRENT_WEEK;
-          break;
+          return new String[] {
+            FdahpStudyDesignerConstants.DAYS_OF_THE_CURRENT_MONTH,
+            FdahpStudyDesignerConstants.DAYS_OF_THE_CURRENT_WEEK
+          };
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_DAILY:
-          timeRange = FdahpStudyDesignerConstants.MULTIPLE_TIMES_A_DAY;
-          break;
-
+          return new String[] {FdahpStudyDesignerConstants.MULTIPLE_TIMES_A_DAY};
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_WEEKLY:
-          timeRange = FdahpStudyDesignerConstants.WEEKS_OF_THE_CURRENT_MONTH;
-          break;
-
+          return new String[] {FdahpStudyDesignerConstants.WEEKS_OF_THE_CURRENT_MONTH};
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_MONTHLY:
-          timeRange = FdahpStudyDesignerConstants.MONTHS_OF_THE_CURRENT_YEAR;
-          break;
-
+          return new String[] {FdahpStudyDesignerConstants.MONTHS_OF_THE_CURRENT_YEAR};
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE:
-          timeRange = FdahpStudyDesignerConstants.RUN_BASED;
-          break;
+          return new String[] {FdahpStudyDesignerConstants.RUN_BASED};
         case FdahpStudyDesignerConstants.FREQUENCY_TYPE_ONE_TIME:
-          timeRange = "";
-          break;
+          return new String[] {""};
       }
     }
-    return timeRange;
+    return new String[] {""};
   }
 
   public static boolean isEmpty(String str) {
@@ -984,46 +975,6 @@ public class FdahpStudyDesignerUtil {
     return rounded;
   }
 
-  public static String uploadImageFile(MultipartFile file, String fileName, String folderName)
-      throws IOException {
-    File serverFile;
-    String actulName = null;
-    FileOutputStream fileOutputStream = null;
-    BufferedOutputStream stream = null;
-    if (file != null) {
-      try {
-        fileName = fileName + "." + FilenameUtils.getExtension(file.getOriginalFilename());
-        byte[] bytes = file.getBytes();
-        String currentPath =
-            configMap.get("fda.currentPath") != null
-                ? System.getProperty(configMap.get("fda.currentPath"))
-                : "";
-        String rootPath = currentPath.replace('\\', '/') + configMap.get("fda.imgUploadPath");
-        File dir = new File(rootPath + File.separator + folderName);
-        if (!dir.exists()) {
-          dir.mkdirs();
-        }
-        serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
-        fileOutputStream = new FileOutputStream(serverFile);
-        stream = new BufferedOutputStream(fileOutputStream);
-        stream.write(bytes);
-        logger.info("Server File Location=" + serverFile.getAbsolutePath());
-        actulName = fileName;
-      } catch (Exception e) {
-        logger.error("ERROR: FdahpStudyDesignerUtil.uploadImageFile()", e);
-      } finally {
-        if (null != stream) {
-          stream.close();
-        }
-        if (null != fileOutputStream) {
-          fileOutputStream.close();
-        }
-      }
-    }
-
-    return actulName;
-  }
-
   public static boolean validateUserSession(HttpServletRequest request) {
     boolean flag = false;
     SessionObject sesObj =
@@ -1067,5 +1018,22 @@ public class FdahpStudyDesignerUtil {
       }
     }
     return UserAccessLevel.APP_STUDY_ADMIN.getValue();
+  }
+
+  public static String saveImage(MultipartFile fileStream, String fileName, String underDirectory) {
+    String fileNameWithExtension =
+        fileName + "." + FilenameUtils.getExtension(fileStream.getOriginalFilename());
+    String absoluteFileName = underDirectory + PATH_SEPARATOR + fileNameWithExtension;
+    BlobInfo blobInfo =
+        BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
+
+    try {
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      storage.create(blobInfo, fileStream.getBytes());
+
+    } catch (Exception e) {
+      logger.error("Save Image in cloud storage failed", e);
+    }
+    return fileNameWithExtension;
   }
 }
