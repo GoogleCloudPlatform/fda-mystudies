@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.User;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppPermissionRequest;
@@ -16,6 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserSitePermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyPermissionRequest;
+import com.google.cloud.healthcare.fdamystudies.common.EmailTemplate;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
@@ -26,6 +28,7 @@ import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserAccountEmailSchedulerTaskEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -256,5 +259,24 @@ public final class UserMapper {
     }
 
     return siteDetails;
+  }
+
+  public static UserAccountEmailSchedulerTaskEntity toUserAccountEmailSchedulerTaskEntity(
+      AuditLogEventRequest auditRequest,
+      UserRegAdminEntity adminDetails,
+      EmailTemplate emailTemplate) {
+    UserAccountEmailSchedulerTaskEntity userAccountEmailTaskEntity =
+        new UserAccountEmailSchedulerTaskEntity();
+    if (auditRequest != null) {
+      userAccountEmailTaskEntity.setAppId(auditRequest.getAppId());
+      userAccountEmailTaskEntity.setAppVersion(auditRequest.getAppVersion());
+      userAccountEmailTaskEntity.setCorrelationId(auditRequest.getCorrelationId());
+      userAccountEmailTaskEntity.setSource(auditRequest.getSource());
+      userAccountEmailTaskEntity.setMobilePlatform(auditRequest.getMobilePlatform());
+      userAccountEmailTaskEntity.setCreatedBy(auditRequest.getUserId());
+    }
+    userAccountEmailTaskEntity.setUserId(adminDetails.getId());
+    userAccountEmailTaskEntity.setEmailTemplateType(emailTemplate.getTemplate());
+    return userAccountEmailTaskEntity;
   }
 }
