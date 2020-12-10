@@ -117,7 +117,7 @@ const errorMessages = {
     'Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again.',
   EC_0076: 'Invalid sortby value',
   EC_0077: 'Invalid sorting direction',
-  EC_0078: 'The temporary password entered is incorrect.',
+  EC_0078: 'Temporary password is incorrect',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;
