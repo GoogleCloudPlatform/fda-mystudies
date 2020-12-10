@@ -66,7 +66,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.site_id, COUNT(ps.site_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='Enrolled' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.site_id) AS enrolled ON invites.site_id=enrolled.site_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> getEnrolledInvitedCountByUserId(@Param("userId") String userId);
@@ -85,7 +85,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "( "
               + "SELECT ps.site_id, COUNT(ps.site_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites si "
-              + "WHERE ps.site_id=si.id AND ps.status='inProgress' "
+              + "WHERE ps.site_id=si.id AND ps.status='Enrolled' "
               + "GROUP BY ps.site_id "
               + ") AS enrolled ON invites.site_id=enrolled.site_id ",
       nativeQuery = true)
@@ -133,7 +133,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
       value =
           "SELECT si.id AS siteId, IFNULL(COUNT(psi.site_id), 0) AS enrolledCount "
               + "FROM sites si , participant_study_info psi "
-              + "WHERE si.id=psi.site_id AND psi.status='inProgress' "
+              + "WHERE si.id=psi.site_id AND psi.status='Enrolled' "
               + "GROUP BY si.id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> findEnrolledCountForOpenStudy();
@@ -150,7 +150,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.study_info_id, COUNT(ps.study_info_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='Enrolled' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.study_info_id) AS enrolled ON invites.study_id=enrolled.study_info_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> getInvitedEnrolledCountForOpenStudy(

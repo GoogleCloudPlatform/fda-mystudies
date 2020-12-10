@@ -25,7 +25,6 @@ public final class CommonConstants {
 
   public static final String DEACTIVATED = "Deactivated";
 
-  public static final String IN_PROGRESS = "inProgress";
 
   public static final String NOT_APPLICABLE = "NA";
 
@@ -41,11 +40,9 @@ public final class CommonConstants {
 
   public static final int EDIT_VALUE = 1;
 
-  public static final String ENROLLED_STATUS = "Enrolled";
 
   public static final String YET_TO_ENROLL = "Yet To Enroll";
 
-  public static final String YET_TO_JOIN = "Yet to Join";
 
   public static final String OPEN = "Open";
 

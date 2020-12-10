@@ -60,21 +60,16 @@ public final class ParticipantMapper {
     participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
 
     if (studyParticipantDetail.getEnrolledStatus() != null) {
-      if (studyParticipantDetail.getEnrolledStatus().equals(CommonConstants.YET_TO_ENROLL)) {
-        participantDetail.setEnrollmentStatus(studyParticipantDetail.getEnrolledStatus());
-        participantDetail.setEnrollmentDate(null);
-      } else {
-        String enrollmentStatus =
-            EnrollmentStatus.IN_PROGRESS
-                    .getStatus()
-                    .equalsIgnoreCase(studyParticipantDetail.getEnrolledStatus())
-                ? EnrollmentStatus.ENROLLED.getStatus()
-                : studyParticipantDetail.getEnrolledStatus();
-        participantDetail.setEnrollmentStatus(enrollmentStatus);
-        String enrollmentDate = DateTimeUtils.format(studyParticipantDetail.getEnrolledDate());
-        participantDetail.setEnrollmentDate(
-            StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-      }
+      String enrollmentStatus =
+          EnrollmentStatus.YET_TO_ENROLL
+                  .getStatus()
+                  .equalsIgnoreCase(studyParticipantDetail.getEnrolledStatus())
+              ? EnrollmentStatus.YET_TO_ENROLL.getDisplayValue()
+              : studyParticipantDetail.getEnrolledStatus();
+      participantDetail.setEnrollmentStatus(enrollmentStatus);
+      String enrollmentDate = DateTimeUtils.format(studyParticipantDetail.getEnrolledDate());
+      participantDetail.setEnrollmentDate(
+          StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
 
     } else {
       participantDetail.setEnrollmentStatus(YET_TO_ENROLL);
@@ -149,18 +144,13 @@ public final class ParticipantMapper {
 
     ParticipantStudyEntity participantStudy = idMap.get(participantRegistrySite.getId());
     if (participantStudy != null) {
-      if (CommonConstants.YET_TO_ENROLL.equals(participantStudy.getStatus())) {
-        participant.setEnrollmentStatus(participantStudy.getStatus());
-        participant.setEnrollmentDate(null);
-      } else {
-        String enrollmentStatus =
-            EnrollmentStatus.IN_PROGRESS.getStatus().equalsIgnoreCase(participantStudy.getStatus())
-                ? EnrollmentStatus.ENROLLED.getStatus()
-                : participantStudy.getStatus();
-        participant.setEnrollmentStatus(enrollmentStatus);
-        String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
-        participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-      }
+      String enrollmentStatus =
+          EnrollmentStatus.YET_TO_ENROLL.getStatus().equalsIgnoreCase(participantStudy.getStatus())
+              ? EnrollmentStatus.YET_TO_ENROLL.getDisplayValue()
+              : participantStudy.getStatus();
+      participant.setEnrollmentStatus(enrollmentStatus);
+      String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
+      participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
     } else {
       participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
     }
@@ -189,7 +179,7 @@ public final class ParticipantMapper {
             .stream()
             .filter(
                 participant ->
-                    participant.getStatus().equals(EnrollmentStatus.IN_PROGRESS.getStatus()))
+                    participant.getStatus().equals(EnrollmentStatus.ENROLLED.getStatus()))
             .findAny();
 
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
@@ -206,11 +196,8 @@ public final class ParticipantMapper {
         // current implementation has single record, so added below return;
         return;
       }
-      String enrollmentStatus =
-          EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantsEnrollment.getStatus())
-              ? EnrollmentStatus.ENROLLED.getStatus()
-              : participantsEnrollment.getStatus();
-      enrollment.setEnrollmentStatus(enrollmentStatus);
+
+      enrollment.setEnrollmentStatus(participantsEnrollment.getStatus());
       enrollment.setParticipantId(participantsEnrollment.getParticipantId());
 
       String enrollmentDate = DateTimeUtils.format(participantsEnrollment.getEnrolledDate());
