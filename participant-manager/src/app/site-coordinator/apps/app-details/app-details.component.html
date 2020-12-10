@@ -97,10 +97,11 @@
                 </span>
               </td>
             </tr>
+            <tr *ngIf="appDetails.participants.length === 0">
+              <td colspan="4" class="text-right">No records found</td>
+            </tr>
           </tbody>
-          <div *ngIf="appDetails.participants.length === 0">
-            No records found
-          </div>
+
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">
@@ -126,7 +127,7 @@
         </div>
 
         <div>
-          <li *ngFor="let sitelists of applists.sites">
+          <div *ngFor="let sitelists of applists.sites">
             <div
               class="row col-xs-12 col-md-12 flex-wrap-unset p-none flex__justify__space-between"
             >
@@ -161,7 +162,7 @@
                 </span>
               </div>
             </div>
-          </li>
+          </div>
         </div>
       </li>
     </ul>

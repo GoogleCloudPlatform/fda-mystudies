@@ -277,11 +277,11 @@ export class UpdateUserComponent
 
   statusColour(status: Status | undefined): string {
     if (status && status === this.userStatus.Active) {
-      return 'txt__green';
+      return 'active__';
     } else if (status && status === this.userStatus.Deactivated) {
-      return 'txt__light-gray';
+      return 'deactive__';
     } else {
-      return 'txt__space-gray';
+      return 'inActive__';
     }
   }
   superAdminCheckBoxChange(): void {

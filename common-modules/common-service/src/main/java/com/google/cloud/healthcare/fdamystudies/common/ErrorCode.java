@@ -64,7 +64,7 @@ public enum ErrorCode {
       500,
       "EC_0008",
       HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-      "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
+      "Sorry, an error occurred and we could not send you the email. Please try again later."),
 
   APPLICATION_ERROR(
       500,
@@ -168,7 +168,7 @@ public enum ErrorCode {
       410,
       "EC_0034",
       HttpStatus.GONE.toString(),
-      "This link is no longer valid to be used. Please contact the system admin for assistance with your account."),
+      "This link is no longer valid to be used. Please contact the system admin for assistance with your account or sign in if already registered."),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC_0035", Constants.BAD_REQUEST, "Error in getting participants details"),
@@ -336,6 +336,12 @@ public enum ErrorCode {
 
   UNSUPPORTED_SORT_DIRECTION_VALUE(
       400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
+
+  REGISTRATION_EMAIL_SEND_FAILED(
+      500,
+      "EC_0075",
+      "Internal Server Error",
+      "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
 
   FEEDBACK_ERROR_MESSAGE(
       500,

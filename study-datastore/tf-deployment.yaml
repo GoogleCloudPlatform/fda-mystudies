@@ -41,6 +41,8 @@ spec:
                 secretKeyRef:
                   name: study-datastore-credentials
                   key: dbname
+            - name: DB_INSTANCE_URL
+              value: "127.0.0.1" 
             # SERVER CALLS
             - name: PARTICIPANT_USER_DATASTORE_URL
               value: "http://participant-user-datastore-np:50000/participant-user-datastore"
