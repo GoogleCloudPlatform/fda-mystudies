@@ -145,7 +145,6 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     userDetailsPredicates.add(
         criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.EMAIL), email));
     userDetailsPredicates.add(criteriaBuilder.equal(userDetailsBoRoot.get("app"), app));
-    userDetailsPredicates.add(criteriaBuilder.notEqual(userDetailsBoRoot.get("emailCode"), "Null"));
     criteriaQuery
         .select(userDetailsBoRoot)
         .where(userDetailsPredicates.toArray(new Predicate[userDetailsPredicates.size()]));
