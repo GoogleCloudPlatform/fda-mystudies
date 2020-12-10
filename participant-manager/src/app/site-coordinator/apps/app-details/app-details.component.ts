@@ -2,8 +2,8 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {AppDetailsService} from '../shared/app-details.service';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {ActivatedRoute} from '@angular/router';
-import {BehaviorSubject, Observable, of, combineLatest} from 'rxjs';
-import {AppDetails, Participant, EnrolledStudy} from '../shared/app-details';
+import {Observable, of, combineLatest} from 'rxjs';
+import {AppDetails, EnrolledStudy} from '../shared/app-details';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {map} from 'rxjs/operators';
 import {Status, StudyType} from 'src/app/shared/enums';
@@ -18,13 +18,17 @@ export class AppDetailsComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   appId = '';
-  query$ = new BehaviorSubject('');
   appDetail$: Observable<AppDetails> = of();
-  appDetailsBackup = {} as AppDetails;
   statusEnum = Status;
   enrolledStudies: EnrolledStudy[] = [];
   studyTypes = StudyType;
-
+  // pagination
+  limit = 10;
+  currentPage = 1;
+  offset = 0;
+  searchTerm = '';
+  sortBy: string[] | string = ['email'];
+  sortOrder = 'asc';
   constructor(
     private readonly modalService: BsModalService,
     public modalRef: BsModalRef,
@@ -59,23 +63,45 @@ export class AppDetailsComponent
 
   fetchParticipantsDetails(): void {
     this.appDetail$ = combineLatest(
-      this.appDetailsService.get(this.appId),
-      this.query$,
+      this.appDetailsService.get(
+        this.appId,
+        this.offset,
+        this.limit,
+        this.searchTerm,
+        this.sortBy[0],
+        this.sortOrder,
+      ),
     ).pipe(
-      map(([appDetails, query]) => {
-        this.appDetailsBackup = JSON.parse(
-          JSON.stringify(appDetails),
-        ) as AppDetails;
-        this.appDetailsBackup.participants = this.appDetailsBackup.participants.filter(
-          (participant: Participant) =>
-            participant.email?.toLowerCase().includes(query.toLowerCase()),
-        );
-        return this.appDetailsBackup;
+      map(([appDetails]) => {
+        return appDetails;
       }),
     );
   }
 
   search(query: string): void {
-    this.query$.next(query.trim());
+    this.currentPage = 1;
+    this.offset = 0;
+    this.searchTerm = query.trim().toLowerCase();
+    this.fetchParticipantsDetails();
+  }
+
+  pageChange(page: number): void {
+    this.currentPage = page;
+    this.offset = (page - 1) * this.limit;
+    this.fetchParticipantsDetails();
+  }
+
+  public onSortOrder(event: string): void {
+    this.sortOrder = event;
+    this.offset = 0;
+    this.currentPage = 0;
+    this.fetchParticipantsDetails();
+  }
+
+  public onSortBy(event: string | string[]): void {
+    this.sortBy = new Array(event) as string[];
+    this.offset = 0;
+    this.currentPage = 0;
+    this.fetchParticipantsDetails();
   }
 }

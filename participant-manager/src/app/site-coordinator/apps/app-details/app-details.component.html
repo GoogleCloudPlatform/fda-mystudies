@@ -32,7 +32,11 @@
           class="table table-striped custom__table"
           [mfData]="appDetails.participants"
           #mf="mfDataTable"
-          [mfRowsOnPage]="10"
+          [mfRowsOnPage]="limit"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
+          (mfSortOrderChange)="onSortOrder($event)"
+          (mfSortByChange)="onSortBy($event)"
         >
           <thead class="custom__thead">
             <tr>
@@ -43,25 +47,33 @@
                 Sort By:
               </span>
               <th>
-                <mfDefaultSorter by="Email">Participant Email</mfDefaultSorter>
+                <mfDefaultSorter by="email">Participant Email</mfDefaultSorter>
               </th>
               <th>
-                <mfDefaultSorter by="Date">
+                <mfDefaultSorter by="registrationDate">
                   App Registration Date
                 </mfDefaultSorter>
               </th>
               <th>
-                <mfDefaultSorter by="Status">
+                <mfDefaultSorter by="registrationStatus">
                   App Account Status
                 </mfDefaultSorter>
               </th>
-              <th>
-                <mfDefaultSorter by="Enrolled">Studies</mfDefaultSorter>
-              </th>
+              <th>Studies</th>
             </tr>
           </thead>
           <tbody class="custom__tbody">
-            <tr *ngFor="let applists of mf.data">
+            <tr
+              *ngFor="
+                let applists of mf.data
+                  | paginate
+                    : {
+                        itemsPerPage: limit,
+                        currentPage: currentPage,
+                        totalItems: appDetails.totalParticipantCount
+                      }
+              "
+            >
               <td [routerLink]="['/coordinator/participant', applists.id]">
                 <span class="tbl__td__label">Participant Email:</span>
                 <span>{{ applists.email }}</span>
@@ -108,7 +120,14 @@
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">
-                <mfBootstrapPaginator></mfBootstrapPaginator>
+                <!-- <mfBootstrapPaginator></mfBootstrapPaginator> -->
+                <div style="margin-left: 450px">
+                  <pagination-controls
+                    pagination-template
+                    #api="paginationApi"
+                    (pageChange)="pageChange($event)"
+                  ></pagination-controls>
+                </div>
               </td>
             </tr>
           </tfoot>
