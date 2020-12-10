@@ -81,10 +81,11 @@
                   </span>
                 </td>
               </tr>
+              <tr *ngIf="manageLocations.locations.length === 0">
+                <td colspan="3" class="text-right">No records found</td>
+              </tr>
             </tbody>
-            <div *ngIf="manageLocations.locations.length === 0">
-              No records found
-            </div>
+
             <tfoot class="custom__tfoot">
               <tr>
                 <td colspan="4">
