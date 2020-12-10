@@ -7,6 +7,7 @@ import {NgxDataTableModule} from 'angular-9-datatable';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {EditLocationComponent} from './edit-location/edit-location.component';
+import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import {EditLocationComponent} from './edit-location/edit-location.component';
     CommonModule,
     LocationRoutingModule,
     NgxDataTableModule,
+    NgxPaginationModule,
   ],
 })
 export class LocationModule {}

@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {LocationService} from '../shared/location.service';
-import {Location, ManageLocations} from '../shared/location.model';
+import {ManageLocations} from '../shared/location.model';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {SearchService} from 'src/app/shared/search.service';
@@ -15,10 +15,15 @@ import {Permission} from 'src/app/shared/permission-enums';
   styleUrls: ['./location-list.component.scss'],
 })
 export class LocationListComponent implements OnInit {
-  query$ = new BehaviorSubject('');
   location$: Observable<ManageLocations> = of();
-  manageLocationBackup = {} as ManageLocations;
   permission = Permission;
+  // pagination
+  limit = 10;
+  currentPage = 1;
+  offset = 0;
+  searchTerm = '';
+  sortBy: string[] | string = ['locationId'];
+  sortOrder = 'asc';
   constructor(
     private readonly locationService: LocationService,
     private readonly router: Router,
@@ -33,26 +38,45 @@ export class LocationListComponent implements OnInit {
 
   getLocation(): void {
     this.location$ = combineLatest(
-      this.locationService.getLocations(),
-      this.query$,
+      this.locationService.getLocations(
+        this.offset,
+        this.limit,
+        this.searchTerm,
+        this.sortBy[0],
+        this.sortOrder,
+      ),
     ).pipe(
-      map(([manageLocations, query]) => {
-        console.log(query);
-        console.log(manageLocations);
-        this.manageLocationBackup = {...manageLocations};
-        this.manageLocationBackup.locations = this.manageLocationBackup.locations.filter(
-          (location: Location) =>
-            (location.name &&
-              location.name.toLowerCase().includes(query.toLowerCase())) ||
-            (location.customId &&
-              location.customId.toLowerCase().includes(query.toLowerCase())),
-        );
-        return this.manageLocationBackup;
+      map(([manageLocations]) => {
+        return manageLocations;
       }),
     );
   }
   search(query: string): void {
-    this.query$.next(query.trim());
+    this.currentPage = 1;
+    this.offset = 0;
+    this.searchTerm = query.trim().toLowerCase();
+    this.getLocation();
+  }
+
+  pageChange(page: number): void {
+    this.currentPage = page;
+    this.offset = (page - 1) * this.limit;
+    this.getLocation();
+  }
+
+  public onSortOrder(event: string): void {
+    this.sortOrder = event;
+    this.offset = 0;
+    this.currentPage = 0;
+    this.getLocation();
+  }
+
+  public onSortBy(event: string | string[]): void {
+    console.log(event);
+    this.sortBy = new Array(event) as string[];
+    this.offset = 0;
+    this.currentPage = 0;
+    this.getLocation();
   }
 
   locationDetails(locationId: number): void {
