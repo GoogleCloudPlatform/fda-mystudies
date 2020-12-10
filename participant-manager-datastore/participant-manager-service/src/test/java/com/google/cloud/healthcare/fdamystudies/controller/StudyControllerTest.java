@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
@@ -19,8 +18,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.STUDY_PARTICIPANT_REGISTRY_VIEWED;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.NO_OF_RECORDS;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.PAGE_NO;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
@@ -216,7 +213,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
-            jsonPath("$.error_description").value(ErrorCode.STUDY_NOT_FOUND.getDescription()));
+            jsonPath("$.error_description").value(ErrorCode.NO_STUDIES_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
@@ -290,79 +287,6 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnAppNotFoundForStudyParticipants() throws Exception {
-    userRegAdminEntity.setSuperAdmin(false);
-    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
-
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-
-    StudyPermissionEntity studyPermission = studyEntity.getStudyPermissions().get(0);
-    studyPermission.setApp(null);
-    studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.error_description").value(ErrorCode.APP_NOT_FOUND.getDescription()));
-
-    verifyTokenIntrospectRequest();
-  }
-
-  @Test
-  public void shouldReturnAccessDeniedForStudyParticipants() throws Exception {
-    userRegAdminEntity.setSuperAdmin(false);
-    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
-
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-
-    StudyEntity study = testDataHelper.newStudyEntity();
-    study.setType(CLOSE_STUDY);
-    testDataHelper.getStudyRepository().saveAndFlush(study);
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), study.getId())
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isForbidden())
-        .andExpect(
-            jsonPath("$.error_description")
-                .value(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED.getDescription()));
-
-    verifyTokenIntrospectRequest();
-  }
-
-  @Test
-  public void shouldReturnSiteAccessDeniedForStudyParticipants() throws Exception {
-    userRegAdminEntity.setSuperAdmin(false);
-    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
-
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-
-    StudyEntity study = testDataHelper.newStudyEntity();
-    study.setType(OPEN_STUDY);
-    testDataHelper.getStudyRepository().saveAndFlush(study);
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), study.getId())
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isForbidden())
-        .andExpect(
-            jsonPath("$.error_description")
-                .value(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription()));
-
-    verifyTokenIntrospectRequest();
-  }
-
-  @Test
   public void shouldReturnStudyParticipantsForSuperAdmin() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
@@ -415,60 +339,6 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnStudyParticipants() throws Exception {
-    userRegAdminEntity.setSuperAdmin(false);
-    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-
-    locationEntity = testDataHelper.createLocation();
-    studyEntity.setType(OPEN_STUDY);
-    siteEntity.setLocation(locationEntity);
-    siteEntity.setTargetEnrollment(0);
-    siteEntity.setStudy(studyEntity);
-    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
-    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
-    participantStudyEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
-    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
-    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
-
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(1)))
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.registryParticipants[0].siteId")
-                .value(siteEntity.getId()))
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
-                .value(locationEntity.getName()))
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
-                .value(ENROLLED_STATUS))
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.targetEnrollment")
-                .value(siteEntity.getTargetEnrollment()));
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, STUDY_PARTICIPANT_REGISTRY_VIEWED);
-    verifyTokenIntrospectRequest();
-  }
-
-  @Test
   public void shouldReturnYetToEnrollStatusForEnrollmentStatusWithdrawn() throws Exception {
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
@@ -483,7 +353,7 @@ public class StudyControllerTest extends BaseMockIT {
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
     participantStudyEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(EnrollmentStatus.WITHDRAWN.getStatus());
+    participantStudyEntity.setStatus(CommonConstants.YET_TO_ENROLL);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -503,9 +373,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
                 .value(locationEntity.getName()))
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentDate")
-                .isEmpty())
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
                 .value(YET_TO_ENROLL))
@@ -647,50 +514,6 @@ public class StudyControllerTest extends BaseMockIT {
               siteEntity, studyEntity, participantRegistrySiteEntity);
     }
 
-    // Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch only 5 data
-    // out of 21
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
-                .headers(headers)
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(
-            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
-        .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(5)))
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
-                .value(LOCATION_NAME_VALUE + String.valueOf(20)))
-        .andExpect(jsonPath("$.totalParticipantCount", is(21)));
-
-    verifyTokenIntrospectRequest(1);
-
-    // page index starts with 0, get Study Participant for 3rd page
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
-                .headers(headers)
-                .queryParam("page", "2")
-                .queryParam("limit", "9")
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(
-            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(
-            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
-                .value(LOCATION_NAME_VALUE + String.valueOf(2)))
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(3)))
-        .andExpect(jsonPath("$.totalParticipantCount", is(21)));
-
-    verifyTokenIntrospectRequest(2);
-
     // get study participant if page and limit values are null
     mockMvc
         .perform(
@@ -705,7 +528,49 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)))
         .andExpect(jsonPath("$.totalParticipantCount", is(21)));
 
-    verifyTokenIntrospectRequest(3);
+    verifyTokenIntrospectRequest(1);
+  }
+
+  @Test
+  public void shouldNotReturnRegisteredParticipantWithYetToJoinStudyStatus() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    locationEntity = testDataHelper.createLocation();
+    studyEntity.setType(OPEN_STUDY);
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setTargetEnrollment(0);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
+    participantStudyEntity.setStudy(studyEntity);
+    participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_JOIN.getStatus());
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .queryParam(
+                    "excludeParticipantStudyStatus", EnrollmentStatus.YET_TO_JOIN.getStatus())
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(0)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -875,7 +740,7 @@ public class StudyControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
-            patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
+            patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), IdGenerator.id())
                 .headers(headers)
                 .content(asJsonString(targetEnrollmentRequest))
                 .contextPath(getContextPath()))
@@ -884,7 +749,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED.getDescription())));
+                is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
 
     verifyTokenIntrospectRequest();
   }

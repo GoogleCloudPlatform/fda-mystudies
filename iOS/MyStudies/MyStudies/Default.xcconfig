@@ -1,0 +1,61 @@
+//  Copyright 2020 Google LLC
+//
+//  Use of this source code is governed by an MIT-style
+//  license that can be found in the LICENSE file or at
+//  https://opensource.org/licenses/MIT.
+//
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+//
+// Server configuration
+// By default App will connect to network over HTTPS, in order to connect over HTTP
+// Change the settings in MyStudies/Networking/Configurations/Environment/APIConfiguration.swift
+// Update the enum `AppProtocol` getter value for Debug and Release.
+//
+// Update the App Transport Security Settings in info.plist
+// Set `Allow Arbitrary Loads` to YES and `Allow Arbitrary Loads in Web Content` to YES to connect over HTTP
+// Set `Allow Arbitrary Loads` to NO and `Allow Arbitrary Loads in Web Content` to NO to connect over HTTPS
+
+// URL of study datastore server.
+// e.g. studies.mystudiesdeployment.com/study-datastore
+STUDY_DATASTORE_URL = xxxxxx
+
+// URL of response datastore.
+// e.g. participants.mystudiesdeployment.com/response-datastore
+RESPONSE_DATASTORE_URL = xxxxxxxxx
+
+// URL of different service bundles within participant datastore.
+// e.g. participants.mystudiesdeployment.com/participant-user-datastore
+USER_DATASTORE_URL = xxxxxxx
+// e.g. participants.mystudiesdeployment.com/participant-enroll-datastore
+ENROLLMENT_DATASTORE_URL = xxxxxx
+// e.g. participants.mystudiesdeployment.com/participant-consent-datastore
+CONSENT_DATASTORE_URL = xxxxxx
+
+// URL of oauth scim services.
+// e.g. participants.mystudiesdeployment.com/auth-server
+AUTH_URL = xxxxxx
+
+// URL of Hydra server.
+// e.g. participants.mystudiesdeployment.com
+HYDRA_BASE_URL = xxxxx
+
+// HYDRA_CLIENT_ID is a client ID for OAuth.
+// In the terraform deployment, this should be set to the value of
+// `auto-auth-server-client-id` secret in your GCP secrets project.
+HYDRA_CLIENT_ID = xxxx
+
+// API_KEY is <ios.bundleid>:<ios.apptoken>
+// e.g. com.bundleID:axdks
+// These values should match the ones set in study datastore server.
+// see: study-datastore/src/main/resources/authorizationResource.properties
+API_KEY = xx
+
+// AppID of this application.
+// Study builder would use this appID to match studies to apps.
+//
+// Should be max 15 character, human readable and URL safe.
+// If following terraform deployment steps, this APP_ID
+// should match the one you manually set in GCP secret manager,
+// i.e. `manual-mobile-app-appid`.
+APP_ID = xxxxxx

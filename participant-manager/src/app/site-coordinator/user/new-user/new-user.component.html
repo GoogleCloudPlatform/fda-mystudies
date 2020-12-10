@@ -7,8 +7,8 @@
           class="subheader__title cursor__pointer"
         >
           <img src="assets/svgs/back-arrow.svg" alt="Go Back" />
-          <span class="pl-2">Add New User</span>
         </a>
+        <span class="pl-2">Add New User</span>
       </div>
     </div>
   </div>
@@ -99,7 +99,7 @@
               id="emailId"
               placeholder="Enter Email"
               [(ngModel)]="user.email"
-              pattern='(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)'
+              pattern="[a-zA-Z0-9\+\.\_\%\-\+]{1,256}\@[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+"
               name="emailText"
               #emailText="ngModel"
               required
@@ -134,16 +134,18 @@
                 [(ngModel)]="user.superAdmin"
                 name="superAdminCheckBox"
                 #superAdminCheckBox="ngModel"
+                (change)="superAdminCheckBoxChange()"
               />
-              <label class="mt-xs" for="role">
-                Super Admin
+              <label class="mt-xs custom_text_transform" for="role">
+                Make this user a superadmin
                 <span
                   class="tool"
-                  data-tip="A superadmin user has application-wide permissions; can manage users and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only."
+                  data-tip="A superadmin user has application-wide permissions.
+Superadmins can manage users of this Particpant Manager and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only. "
                   tabindex="1"
                 >
                   <i
-                    class="fa fa-info-circle add_user_info_icon ml-sm"
+                    class="fa fa-info-circle ml-xs info_i"
                     aria-hidden="true"
                   ></i>
                 </span>
@@ -170,7 +172,9 @@
                   [ngModelOptions]="{standalone: true}"
                   (change)="locationsCheckBoxChange()"
                 />
-                <label for="location">Allow access to locations</label>
+                <label class="text-initial" for="location">
+                  Allow access to locations
+                </label>
               </div>
               <div class="pl-xl pt-xs">
                 <span>
@@ -209,10 +213,10 @@
         </div>
       </section>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
-        <div class="form-group">
+        <div class="form-group pb-0">
           <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
           <div class="select__form-control__parent">
-            <label class="wrap">Add an app</label>
+            <label class="wrap pb-1 text-initial">Add an app</label>
             <ng-select
               [items]="appDetails.apps"
               [clearable]="false"
@@ -230,7 +234,7 @@
           <div class="accordion" id="accordionExample">
             <div *ngFor="let app of selectedApps" class="card">
               <div class="flex__justify__space-between">
-                <div class="acc__dele">
+                <div class="acc__dele mob_custom_width">
                   <div class="card-header">
                     <div class="mb-0 flex__justify__space-between">
                       <div>
@@ -247,12 +251,6 @@
                             {{ app.name }}
                             <span class="app__id ml-xs">
                               ({{ app.customId }})
-                            </span>
-                            <span>
-                              {{
-                                app.selectedSitesCount
-                                  | i18nPlural: sitesMessageMapping
-                              }}
                             </span>
                           </label>
                         </div>
@@ -287,13 +285,21 @@
                           </span>
                         </div>
                       </div>
-                      <div
-                        class="fa__plus__minus"
-                        type="button"
-                        data-toggle="collapse"
-                        [attr.data-target]="'#collapse' + app.id"
-                        aria-expanded="false"
-                      ></div>
+                      <div class="app__id_num flex__justify__space-between">
+                        <div class="pr-2">
+                          {{
+                            app.selectedSitesCount
+                              | i18nPlural: sitesMessageMapping
+                          }}
+                        </div>
+                        <div
+                          class="fa__plus__minus"
+                          type="button"
+                          data-toggle="collapse"
+                          [attr.data-target]="'#collapse' + app.id"
+                          aria-expanded="false"
+                        ></div>
+                      </div>
                     </div>
                   </div>
                   <div

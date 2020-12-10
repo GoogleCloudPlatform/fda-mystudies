@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.APP_PARTICIPANT_REGISTRY_VIEWED;
 import static org.hamcrest.CoreMatchers.is;
@@ -143,6 +144,34 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnReturnAppsWithEnrolledCount() throws Exception {
+    participantRegistrySiteEntity.setOnboardingStatus("I");
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+    participantStudyEntity.setStatus("inProgress");
+    testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
+    userDetailsEntity.setStatus(ACTIVE_STATUS);
+    testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
+    studyEntity.setType(OPEN_STUDY);
+    testDataHelper.getStudyRepository().save(studyEntity);
+    siteEntity.setTargetEnrollment(0);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(1)))
+        .andExpect(jsonPath("$.apps[0].invitedCount").value(0))
+        .andExpect(jsonPath("$.apps[0].enrolledCount").value(1))
+        .andExpect(jsonPath("$.apps[0].enrollmentPercentage").isEmpty());
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnBadRequestForGetApps() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
 
@@ -169,7 +198,7 @@ public class AppControllerTest extends BaseMockIT {
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.error_description").value(ErrorCode.APP_NOT_FOUND.getDescription()));
+        .andExpect(jsonPath("$.error_description").value(ErrorCode.NO_APPS_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
@@ -224,10 +253,54 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnSortedStudiesAndSites() throws Exception {
+    // set study and site
+    studyEntity.setApp(appEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    // set few more study and sites
+    studyEntity = testDataHelper.newStudyEntity();
+    studyEntity.setName("Study");
+    studyEntity.setApp(appEntity);
+    testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+    testDataHelper.createMultipleSiteEntity(studyEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    String[] fields = {"studies", "sites"};
+
+    // Step 2: Call API and expect success message
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .queryParam("fields", fields))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(1)))
+        .andExpect(jsonPath("$.apps[0].studies").isArray())
+        .andExpect(jsonPath("$.apps[0].studies[0].sites").isArray())
+        .andExpect(jsonPath("$.apps[0].studies[0].studyName").value("COVID Study"))
+        .andExpect(jsonPath("$.apps[0].studies[1].studyName").value("Study"))
+        .andExpect(jsonPath("$.apps[0].studies[1].sites[0].locationName").value("Marlborough1"))
+        .andExpect(jsonPath("$.apps[0].studies[1].sites[1].locationName").value("Marlborough2"));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnAppsWithOptionalStudies() throws Exception {
     // Step 1: set app and study
     studyEntity.setApp(appEntity);
-    testDataHelper.getStudyRepository().save(studyEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
@@ -495,7 +568,8 @@ public class AppControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
                 .headers(headers)
-                .queryParam("excludeSiteStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
+                .queryParam(
+                    "excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())

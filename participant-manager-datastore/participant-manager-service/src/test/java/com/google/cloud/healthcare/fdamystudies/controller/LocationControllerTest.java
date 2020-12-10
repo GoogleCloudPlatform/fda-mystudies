@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YES;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ALREADY_DECOMMISSIONED;
@@ -430,6 +431,32 @@ public class LocationControllerTest extends BaseMockIT {
     auditEventMap.put(LOCATION_DECOMMISSIONED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, LOCATION_DECOMMISSIONED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnLocationNameExistsForUpdateLocation() throws Exception {
+    LocationEntity location = new LocationEntity();
+    location.setCustomId(RandomStringUtils.randomAlphanumeric(8));
+    location.setName(LOCATION_NAME_VALUE);
+    location.setIsDefault(NO);
+    locationRepository.saveAndFlush(location);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    UpdateLocationRequest updateLocationRequest = getUpdateLocationRequest();
+    updateLocationRequest.setName(LOCATION_NAME_VALUE);
+
+    mockMvc
+        .perform(
+            put(ApiEndpoint.UPDATE_LOCATION.getPath(), locationEntity.getId())
+                .content(asJsonString(updateLocationRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(LOCATION_NAME_EXISTS.getDescription())));
+
     verifyTokenIntrospectRequest();
   }
 

@@ -21,7 +21,6 @@ describe('ImportEmailListComponent', () => {
   let fixture: ComponentFixture<ImportEmailListComponent>;
   let importParticipantButton: DebugElement;
   let cancelButtonName: DebugElement;
-
   beforeEach(async(async () => {
     const siteDetailsServiceSpy = jasmine.createSpyObj<SiteDetailsService>(
       'SiteDetailsService',
@@ -66,9 +65,11 @@ describe('ImportEmailListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the profile when  button is submitted', fakeAsync(async () => {
+  it('should update the email participants when  button is submitted', fakeAsync(async () => {
     const importSpy = spyOn(component, 'importParticipants');
     const importButton = importParticipantButton.nativeElement as HTMLInputElement;
+    component.fileName = 'Email_Import_Template.xlsx';
+    tick(10000);
     fixture.detectChanges();
     tick();
     importButton.click();

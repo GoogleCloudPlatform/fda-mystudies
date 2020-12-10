@@ -71,14 +71,14 @@ public class AppController {
   @GetMapping("/{appId}/participants")
   public ResponseEntity<AppParticipantsResponse> getAppParticipants(
       @PathVariable String appId,
-      @RequestParam(required = false) String[] excludeSiteStatus,
+      @RequestParam(required = false) String[] excludeParticipantStudyStatus,
       @RequestHeader(name = USER_ID_HEADER) String userId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     AppParticipantsResponse appParticipantsResponse =
-        appService.getAppParticipants(appId, userId, auditRequest, excludeSiteStatus);
+        appService.getAppParticipants(appId, userId, auditRequest, excludeParticipantStudyStatus);
 
     logger.exit(String.format(STATUS_LOG, appParticipantsResponse.getHttpStatusCode()));
     return ResponseEntity.status(appParticipantsResponse.getHttpStatusCode())

@@ -84,7 +84,7 @@
 
         <div class="login-box">
           <div class="lg-space-txt">
-            Study Builder Portal
+            Study Builder
           </div>
           <div class="ll__border__bottom"></div>
           <c:url value='/j_spring_security_check' var="fdaLink"/>
@@ -158,7 +158,7 @@
       <div class="clearfix"></div>
       <div class="footer">
         <div>
-          <span>Copyright Placeholder</span>
+          <span>Copyright</span>
           <span>
             <a href="/studybuilder/terms.do" class=""
                target="_blank">Terms
@@ -266,14 +266,14 @@
 
         var errMsg = '${errMsg}';
         if (errMsg.length > 0) {
-          $("#errMsg").html(errMsg);
+          $("#errMsg").text(errMsg);
           $("#errMsg").show("fast");
 
           setTimeout(hideDisplayMessage, 4000);
         }
         var sucMsg = '${sucMsg}';
         if (sucMsg.length > 0) {
-          $("#sucMsg").html(sucMsg);
+          $("#sucMsg").text(sucMsg);
           $("#sucMsg").show("fast");
           $("#errMsg").hide("fast");
           setTimeout(hideDisplayMessage, 4000);
@@ -293,15 +293,15 @@
             isEmail = regEX.test(emailAdd);
             if (emailAdd == '') {
               if (isIE || isEdge) {
-                $('#email').parent().find(".help-block").html(
-                    "<ul class='list-unstyled'><li>This is a required field</li></ul>");
+                $('#email').parent().find(".help-block").empty().append(
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("This is a required field"));
               } else {
-                $('#email').parent().find(".help-block").html(
-                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
+                $('#email').parent().find(".help-block").empty().append(
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field"));
               }
             } else if (!isEmail) {
-              $('#email').parent().find(".help-block").html(
-                  "<ul class='list-unstyled'><li>Email address is invalid</li></ul>");
+              $('#email').parent().find(".help-block").empty().append(
+            		  $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Email address is invalid"));
             }
           }
         });

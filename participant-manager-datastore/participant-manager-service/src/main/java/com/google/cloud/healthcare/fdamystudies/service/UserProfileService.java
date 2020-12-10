@@ -29,4 +29,6 @@ public interface UserProfileService {
       SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest);
 
   public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest);
+
+  public void deleteInvitation(String signedInUserId, String userId);
 }

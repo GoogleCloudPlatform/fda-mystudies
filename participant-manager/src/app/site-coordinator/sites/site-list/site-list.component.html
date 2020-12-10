@@ -14,9 +14,7 @@
             </div>
             <div class="width__100">
               <div class="row">
-                <div
-                  class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
-                >
+                <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                   {{ study.name }}
                 </div>
                 <div
@@ -40,7 +38,7 @@
                   </div>
                 </div>
                 <div
-                  class="col-xs-12 col-md-12 p-none border__bottom__red border-top__c4d1e6 progress__bar"
+                  class="col-xs-12 col-md-12 p-none border__bottom__red border-top__c4d1e6 progress__bar cursor__pointer"
                 >
                   <div
                     class="outline__none"
@@ -55,13 +53,13 @@
                       <div class="col-xs-12 col-md-8 p-none cursor__pointer">
                         <span
                           *ngIf="study.type !== studyTypes.Open"
-                          class="sites_row font14"
+                          class="sites_row font14 no_st_en"
                         >
                           {{ site.name }}
                         </span>
                         <span
                           *ngIf="study.type === studyTypes.Open"
-                          class="font14"
+                          class="sites_row font14 no_st_en"
                         >
                           Enrollment Registry
                         </span>
@@ -78,7 +76,7 @@
                           </div>
                         </div>
                         <div
-                          class="progress-label font__bold"
+                          class="progress-label font__bold mob_pull_right"
                           [ngClass]="progressBarColor(site)"
                         >
                           <div>
@@ -123,10 +121,15 @@
             </div>
           </div>
         </div>
+        <div *ngIf="studies.studies.length === 0">No records found</div>
       </div>
     </ng-container>
   </div>
 </div>
 <ng-template #template>
-  <add-site [study]="study" (closeModalEvent)="closeModal()"></add-site>
+  <add-site
+    [study]="study"
+    (cancelEvent)="cancel()"
+    (closeModalEvent)="closeModal()"
+  ></add-site>
 </ng-template>

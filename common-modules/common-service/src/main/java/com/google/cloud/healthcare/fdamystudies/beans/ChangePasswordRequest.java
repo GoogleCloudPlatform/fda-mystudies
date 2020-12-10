@@ -12,6 +12,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PA
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,7 +22,7 @@ import lombok.ToString;
 public class ChangePasswordRequest {
 
   @ToString.Exclude
-  @Pattern(regexp = PASSWORD_REGEX, message = PASSWORD_REGEX_MESSAGE)
+  @Size(min = 8, max = 64)
   private String currentPassword;
 
   @ToString.Exclude

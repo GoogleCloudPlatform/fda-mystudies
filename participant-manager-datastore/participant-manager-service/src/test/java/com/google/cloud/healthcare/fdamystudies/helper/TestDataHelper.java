@@ -12,6 +12,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.AC
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOGO_IMAGE_URL;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
@@ -37,6 +38,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.InviteParticipantsEmailRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
@@ -50,7 +52,9 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import lombok.Getter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +102,8 @@ public class TestDataHelper {
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private StudyConsentRepository studyConsentRepository;
+
+  @Autowired private InviteParticipantsEmailRepository invitedParticipantsEmailRepository;
 
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -359,6 +365,56 @@ public class TestDataHelper {
     sitePermissionRepository.saveAndFlush(sitePermission);
   }
 
+  public List<StudyEntity> createMultipleStudyEntity(AppEntity appEntity) {
+    List<StudyEntity> studyList = new ArrayList<>();
+    for (int i = 1; i <= 2; i++) {
+      StudyEntity studyEntity = newStudyEntity();
+      studyEntity.setType("CLOSE");
+      studyEntity.setName("COVID Study" + i);
+      studyEntity.setCustomId("CovidStudy" + i);
+      studyEntity.setApp(appEntity);
+      studyEntity.setLogoImageUrl(LOGO_IMAGE_URL);
+      StudyEntity study = studyRepository.saveAndFlush(studyEntity);
+      studyList.add(study);
+    }
+    return studyList;
+  }
+
+  public SiteEntity createMultipleSiteEntityWithPermission(
+      StudyEntity studyEntity,
+      UserRegAdminEntity urAdminUser,
+      AppEntity appEntity,
+      LocationEntity locationEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setName(siteEntity.getName() + RandomStringUtils.random(2));
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setStudy(studyEntity);
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(urAdminUser);
+    sitePermissionEntity.setApp(appEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
+  }
+
+  public List<SiteEntity> createMultipleSiteEntity(StudyEntity studyEntity) {
+    List<SiteEntity> siteList = new ArrayList<>();
+    for (int i = 1; i <= 2; i++) {
+      LocationEntity locationEntity = newLocationEntity();
+      locationEntity.setName(LOCATION_NAME_VALUE + String.valueOf(i));
+      locationEntity.setCustomId(CUSTOM_ID_VALUE + String.valueOf(i));
+      SiteEntity siteEntity = new SiteEntity();
+      siteEntity.setLocation(locationEntity);
+      siteEntity.setStudy(studyEntity);
+      locationEntity = locationRepository.saveAndFlush(locationEntity);
+      locationEntity.addSiteEntity(siteEntity);
+      SiteEntity site = siteRepository.saveAndFlush(siteEntity);
+      siteList.add(site);
+    }
+    return siteList;
+  }
+
   public void cleanUp() {
     getAppPermissionRepository().deleteAll();
     getStudyPermissionRepository().deleteAll();
@@ -372,5 +428,6 @@ public class TestDataHelper {
     getUserRegAdminRepository().deleteAll();
     getLocationRepository().deleteAll();
     getUserDetailsRepository().deleteAll();
+    getInvitedParticipantsEmailRepository().deleteAll();
   }
 }

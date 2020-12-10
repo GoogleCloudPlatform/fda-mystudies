@@ -17,6 +17,10 @@ export class ChangePasswordComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   resetPasswordForm: FormGroup;
+  changePasswordTitle = 'Change Password';
+  currentPasswordValidationMessage = 'Enter your current password';
+  currentPasswordPlaceholder = 'Enter Current Password';
+  currentPasswordlabel = 'Current Password';
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -28,7 +32,7 @@ export class ChangePasswordComponent
     this.resetPasswordForm = this.fb.group(
       {
         // eslint-disable-next-line @typescript-eslint/unbound-method
-        currentPassword: ['', Validators.required],
+        currentPassword: ['', [Validators.required]],
         // eslint-disable-next-line @typescript-eslint/unbound-method
         newPassword: ['', [Validators.required, passwordValidator()]],
         // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -44,12 +48,20 @@ export class ChangePasswordComponent
     return this.resetPasswordForm.controls;
   }
   ngOnInit(): void {
-    this.passCriteria = `Your password must be 8 to 64 characters long.  
+    this.route.queryParams.subscribe((params) => {
+      if (params.action && params.action === 'passwordsetup') {
+        this.changePasswordTitle = 'SET UP PASSWORD';
+        this.currentPasswordValidationMessage = 'Enter your temporary password';
+        this.currentPasswordPlaceholder = 'Enter Temporary Password';
+        this.currentPasswordlabel = 'Temporary Password';
+      }
+    }),
+      (this.passCriteria = `Your password must be 8 to 64 characters long.  
                         - contain a lower case letter.
                         - contain an upper case letter. 
                         - contain a number.
                         - contain a special character from the following set:
-                        !"" # $ % ' () * + , - . : ; < = > ? @ [] ^_  {} |~"' `;
+                        !"" # $ % ' () * + , - . : ; < = > ? @ [] ^_  {} |~"' `);
   }
   changePassword(): void {
     if (!this.resetPasswordForm.valid) return;

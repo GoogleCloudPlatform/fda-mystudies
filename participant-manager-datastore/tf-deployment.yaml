@@ -83,9 +83,9 @@ spec:
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000/oauth-scim-service"
+              value: "http://auth-server-np:50000/auth-server"
             # MISC
-            - name: BASE_URL
+            - name: PARTICIPANT_MANAGER_BASE_URL
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
@@ -94,7 +94,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: gcp_bucket_name
+                  key: consent_bucket_name
             - name: ORG_NAME
               valueFrom:
                 secretKeyRef:
@@ -116,6 +116,10 @@ spec:
               port: 8080
             initialDelaySeconds: 180
             periodSeconds: 20
+          resources:
+            requests:
+              memory: "400Mi"
+              cpu: "50m"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

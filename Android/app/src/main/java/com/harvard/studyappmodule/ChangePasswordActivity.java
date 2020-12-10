@@ -103,7 +103,13 @@ public class ChangePasswordActivity extends AppCompatActivity
 
   private void setTextForView() {
     relpassword.setVisibility(View.VISIBLE);
-    title.setText(getResources().getString(R.string.change_password_heading));
+    if (from != null && from.equalsIgnoreCase("signin")) {
+      title.setText(getResources().getString(R.string.change_password_heading2));
+      oldPasswordLabel.setText(getResources().getString(R.string.temp_password));
+      oldPassword.setHint(getResources().getString(R.string.enter_temp_password));
+    } else {
+      title.setText(getResources().getString(R.string.change_password_heading));
+    }
   }
 
   private void setFont() {

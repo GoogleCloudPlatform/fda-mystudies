@@ -744,8 +744,7 @@ public class ActivityMetaDataDao {
                 session
                     .createQuery(
                         "from InstructionsDto IDTO"
-                            + " where IDTO.id in (:instructionIdList"
-                            + ") and IDTO.status=true")
+                            + " where IDTO.id in (:instructionIdList) and IDTO.status=true")
                     .setParameterList("instructionIdList", instructionIdList)
                     .list();
             if ((instructionsDtoList != null) && !instructionsDtoList.isEmpty()) {
@@ -2348,14 +2347,18 @@ public class ActivityMetaDataDao {
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMaxImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                  propMap.get("fda.imgDisplaydPath")
+                      + propMap.get("cloud.bucket.name")
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                       + reponseType.getMaxImage()));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                  propMap.get("fda.imgDisplaydPath")
+                      + propMap.get("cloud.bucket.name")
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                       + reponseType.getMinImage()));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
@@ -2411,14 +2414,18 @@ public class ActivityMetaDataDao {
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMaxImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                  propMap.get("fda.imgDisplaydPath")
+                      + propMap.get("cloud.bucket.name")
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                       + reponseType.getMaxImage()));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                  propMap.get("fda.imgDisplaydPath")
+                      + propMap.get("cloud.bucket.name")
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                       + reponseType.getMinImage()));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
@@ -2542,14 +2549,18 @@ public class ActivityMetaDataDao {
               StringUtils.isEmpty(subType.getImage())
                   ? ""
                   : this.getBase64Image(
-                      propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                      propMap.get("fda.imgDisplaydPath")
+                          + propMap.get("cloud.bucket.name")
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + subType.getImage()));
           imageChoiceMap.put(
               "selectedImage",
               StringUtils.isEmpty(subType.getSelectedImage())
                   ? ""
                   : this.getBase64Image(
-                      propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                      propMap.get("fda.imgDisplaydPath")
+                          + propMap.get("cloud.bucket.name")
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + subType.getSelectedImage()));
           imageChoiceMap.put(
               "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
@@ -4085,9 +4096,13 @@ public class ActivityMetaDataDao {
     String searchQuery = "";
     try {
       ActivityAnchorDateBean activityAnchorDateBean = new ActivityAnchorDateBean();
-      searchQuery = "from AnchorDateTypeDto a where a.id=" + questionaire.getAnchorDateId() + "";
+      searchQuery = "from AnchorDateTypeDto a where a.id=:id";
       AnchorDateTypeDto anchorDateTypeDto =
-          (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
+          (AnchorDateTypeDto)
+              session
+                  .createQuery(searchQuery)
+                  .setParameter("id", questionaire.getAnchorDateId())
+                  .uniqueResult();
       if (anchorDateTypeDto != null) {
         if (!anchorDateTypeDto
             .getName()

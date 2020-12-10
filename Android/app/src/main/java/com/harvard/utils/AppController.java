@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.SplashActivity;
+import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -871,7 +872,7 @@ public class AppController {
     notificationManager.cancelAll();
 
     if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
-      Intent intent = new Intent(context, StudyActivity.class);
+      Intent intent = new Intent(context, GatewayActivity.class);
       ComponentName cn = intent.getComponent();
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
       mainIntent.putExtra("action", loginCallback);

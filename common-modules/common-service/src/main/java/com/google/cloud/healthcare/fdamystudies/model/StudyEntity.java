@@ -37,6 +37,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -72,7 +74,7 @@ public class StudyEntity implements Serializable {
   @Column(name = "custom_id", nullable = false, length = XS_LENGTH)
   private String customId;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "app_info_id")
   private AppEntity app;
 
@@ -175,5 +177,20 @@ public class StudyEntity implements Serializable {
   @Transient
   public String getAppId() {
     return app != null ? app.getId() : StringUtils.EMPTY;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(id).toHashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof StudyEntity) {
+      final StudyEntity study = (StudyEntity) obj;
+      return new EqualsBuilder().append(id, study.id).isEquals();
+    } else {
+      return false;
+    }
   }
 }

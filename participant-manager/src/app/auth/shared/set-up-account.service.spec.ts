@@ -72,7 +72,7 @@ describe('SetUpAccountService', () => {
       );
 
     const httpReq = httpTest.expectOne(
-      `${environment.baseUrl}/users/setUpAccount/`,
+      `${environment.participantManagerDatastoreUrl}/users/setUpAccount/`,
     );
     expect(httpReq.request.method).toEqual('POST');
 

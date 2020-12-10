@@ -55,7 +55,7 @@ public class AuthServerWebServiceTest {
   private static final String PARAMS_AOUTH_USERID_KEY = "userId";
   private static final String PARAMS_AOUTH_GRANT_TYPE_VALUE = "refresh_token";
   private static final String PARAMS_AOUTH_REDIRECT_URL_VALUE =
-      "https://localhost:8085/qa/oauth-scim-service/login";
+      "https://localhost:8085/qa/auth-server/login";
   private static final String PARAMS_AOUTH_CLIENT_ID_VALUE = "oauth-scimefre-cliente-id";
   private static final String PARAMS_AOUTH_REFRESH_TOKEN_VALUE =
       "qxDWRk-0KHhfasYJxvcvsdvQTg.Ivf6lV9PXz-uxfn";
@@ -86,7 +86,7 @@ public class AuthServerWebServiceTest {
           }
         });
     StringBuilder studyListUrl = new StringBuilder();
-    studyListUrl.append("oauth-scim-service/user/reset_password");
+    studyListUrl.append("auth-server/user/reset_password");
     URL url = mockWebServer.url(studyListUrl.toString()).url();
     JSONObject params = new JSONObject();
     try {
@@ -145,7 +145,7 @@ public class AuthServerWebServiceTest {
         });
     StringBuilder studyListUrl = new StringBuilder();
     studyListUrl.append(
-        "/oauth-scim-service/users/GLolRAsSmIAeUEGc.Yo1Rf1VAVJlfAVb01NVCoj7kGo/logout");
+        "/auth-server/users/GLolRAsSmIAeUEGc.Yo1Rf1VAVJlfAVb01NVCoj7kGo/logout");
     JSONObject params = new JSONObject();
     URL url = mockWebServer.url(studyListUrl.toString()).url();
     async = new ApiCallSyncronizer();
@@ -197,7 +197,7 @@ public class AuthServerWebServiceTest {
           }
         });
     StringBuilder studyListUrl = new StringBuilder();
-    studyListUrl.append("oauth-scim-service/oauth2/token");
+    studyListUrl.append("auth-server/oauth2/token");
     JSONObject params = new JSONObject();
     try {
       params.put(PARAMS_AOUTH_GRANT_TYPE_KEY, PARAMS_AOUTH_GRANT_TYPE_VALUE);
@@ -258,7 +258,7 @@ public class AuthServerWebServiceTest {
           }
         });
     StringBuilder studyListUrl = new StringBuilder();
-    studyListUrl.append("oauth-scim-service/users/71481c9f7b0c0b65/change_password");
+    studyListUrl.append("auth-server/users/71481c9f7b0c0b65/change_password");
     URL url = mockWebServer.url(studyListUrl.toString()).url();
     JSONObject params = new JSONObject();
     try {
