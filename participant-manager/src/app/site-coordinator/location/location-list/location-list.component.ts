@@ -22,7 +22,7 @@ export class LocationListComponent implements OnInit {
   currentPage = 1;
   offset = 0;
   searchTerm = '';
-  sortBy: string[] | string = ['locationId'];
+  sortBy: string[] | string = ['_locationId'];
   sortOrder = 'asc';
   constructor(
     private readonly locationService: LocationService,
@@ -42,7 +42,7 @@ export class LocationListComponent implements OnInit {
         this.offset,
         this.limit,
         this.searchTerm,
-        this.sortBy[0],
+        this.sortBy[0].replace('_', ''),
         this.sortOrder,
       ),
     ).pipe(

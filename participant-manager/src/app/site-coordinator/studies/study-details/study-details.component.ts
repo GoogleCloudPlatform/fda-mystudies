@@ -34,7 +34,7 @@ export class StudyDetailsComponent
   currentPage = 1;
   offset = 0;
   searchTerm = '';
-  sortBy: string[] | string = ['email'];
+  sortBy: string[] | string = ['_email'];
   sortOrder = 'asc';
   constructor(
     private readonly locationLibrary: Location,
@@ -68,7 +68,7 @@ export class StudyDetailsComponent
         this.offset,
         this.limit,
         this.searchTerm,
-        this.sortBy[0],
+        this.sortBy[0].replace('_', ''),
         this.sortOrder,
       ),
     ).pipe(
