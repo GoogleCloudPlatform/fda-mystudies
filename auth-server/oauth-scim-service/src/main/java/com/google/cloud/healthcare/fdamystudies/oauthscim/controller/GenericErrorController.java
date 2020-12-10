@@ -35,8 +35,7 @@ public class GenericErrorController {
       return ERROR_VIEW_NAME;
     }
 
-    logger.error(
-        String.format("sign-in failed due to %s", URLDecoder.decode(errorDetails, "UTF-8")));
+    logger.error(String.format("Failed due to %s", URLDecoder.decode(errorDetails, "UTF-8")));
     // redirect added to remove error details in URL
     response.setHeader("Location", ERROR_VIEW_NAME);
     response.setStatus(HttpStatus.FOUND.value());
