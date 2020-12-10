@@ -172,10 +172,9 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnRedirectUriToLoginForUserDetailsBySecurityCode() throws Exception {
+  public void shouldReturnSecurityCodeExpiredForInvalidSecurityCode() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
-    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
@@ -183,8 +182,9 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.redirectTo", is("login")));
+        .andExpect(status().isGone())
+        .andExpect(
+            jsonPath("$.error_description", is(ErrorCode.SECURITY_CODE_EXPIRED.getDescription())));
   }
 
   @Test
