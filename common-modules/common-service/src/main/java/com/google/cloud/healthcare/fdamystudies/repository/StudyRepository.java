@@ -84,7 +84,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
       value =
           "SELECT study.id AS studyId, COUNT(psi.site_id) AS COUNT "
               + "FROM study_info study, participant_study_info psi "
-              + "WHERE study.id=psi.study_info_id AND psi.status='Enrolled' "
+              + "WHERE study.id=psi.study_info_id AND psi.status='enrolled' "
               + "GROUP BY study.id ",
       nativeQuery = true)
   public List<StudyCount> findEnrolledCountByStudyId();
@@ -164,7 +164,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.study_info_id, COUNT(ps.study_info_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='Enrolled' AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='enrolled' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.study_info_id) AS enrolled ON invites.study_id=enrolled.study_info_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCountForStudy> getInvitedEnrolledCountForOpenStudyForStudies(
@@ -181,7 +181,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.study_info_id, COUNT(ps.study_info_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='Enrolled' AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='enrolled' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.study_info_id) AS enrolled ON invites.study_info_id=enrolled.study_info_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCountForStudy> getEnrolledInvitedCountByUserId(

@@ -114,7 +114,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldReturnStudiesForSuperAdmin() throws Exception {
     participantRegistrySiteEntity.setOnboardingStatus("I");
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
-    participantStudyEntity.setStatus("Enrolled");
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
@@ -155,7 +155,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldReturnStudies() throws Exception {
     participantRegistrySiteEntity.setOnboardingStatus("I");
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
-    participantStudyEntity.setStatus("Enrolled");
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
@@ -321,7 +321,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .value(locationEntity.getName()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
-                .value(participantStudyEntity.getStatus()))
+                .value(EnrollmentStatus.ENROLLED.getDisplayValue()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.targetEnrollment")
                 .value(siteEntity.getTargetEnrollment()));
@@ -353,7 +353,7 @@ public class StudyControllerTest extends BaseMockIT {
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
     participantStudyEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(CommonConstants.YET_TO_ENROLL);
+    participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -375,7 +375,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .value(locationEntity.getName()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
-                .value(YET_TO_ENROLL))
+                .value(EnrollmentStatus.YET_TO_ENROLL.getDisplayValue()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.targetEnrollment")
                 .value(siteEntity.getTargetEnrollment()));
@@ -469,7 +469,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .value(locationEntity.getName()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
-                .value(EnrollmentStatus.ENROLLED.getStatus()))
+                .value(EnrollmentStatus.ENROLLED.getDisplayValue()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].siteId")
                 .value(participantRegistrySiteEntity.getSite().getId()))

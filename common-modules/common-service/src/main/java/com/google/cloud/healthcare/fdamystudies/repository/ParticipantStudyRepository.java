@@ -79,7 +79,7 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
 
   @Query(
       value =
-          "SELECT ps.site_id AS siteId, COUNT(ps.site_id) AS enrolledCount FROM participant_study_info ps WHERE ps.status='Enrolled' AND ps.site_id IN (:siteIds) GROUP BY ps.site_id ",
+          "SELECT ps.site_id AS siteId, COUNT(ps.site_id) AS enrolledCount FROM participant_study_info ps WHERE ps.status='enrolled' AND ps.site_id IN (:siteIds) GROUP BY ps.site_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> getEnrolledCountForOpenStudy(List<String> siteIds);
 
