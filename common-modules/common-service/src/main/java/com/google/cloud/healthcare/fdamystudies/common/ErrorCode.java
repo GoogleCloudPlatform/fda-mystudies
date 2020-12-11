@@ -168,7 +168,7 @@ public enum ErrorCode {
       410,
       "EC_0034",
       HttpStatus.GONE.toString(),
-      "This link is no longer valid to be used. Please contact the system admin for assistance with your account."),
+      "This link is no longer valid to be used. Please contact the system admin for assistance with your account or sign in if already registered."),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC_0035", Constants.BAD_REQUEST, "Error in getting participants details"),

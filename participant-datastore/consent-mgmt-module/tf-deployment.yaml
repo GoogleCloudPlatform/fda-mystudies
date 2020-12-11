@@ -26,6 +26,8 @@ spec:
           image: gcr.io/fda-mystudies-dev-apps/participant-consent-datastore:latest
           env:
             # DB ACCESS
+            - name: DB_INSTANCE_URL
+              value: "127.0.0.1" 
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
