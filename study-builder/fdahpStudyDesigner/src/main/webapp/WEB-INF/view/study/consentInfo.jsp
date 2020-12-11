@@ -135,7 +135,7 @@
       <div class="clearfix"></div>
       <div>
         <div class="gray-xs-f mb-xs">
-          Elaborated Content (appears in a 'Learn More' section)
+          Long Description (appears in a 'Learn more' section, and also in the study's consent document if you choose to use the auto-created one)
           <span
               class="requiredStar">*
           </span>

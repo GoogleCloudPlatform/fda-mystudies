@@ -47,6 +47,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.sql.Timestamp;
@@ -104,6 +105,8 @@ public class TestDataHelper {
   @Autowired private StudyConsentRepository studyConsentRepository;
 
   @Autowired private InviteParticipantsEmailRepository invitedParticipantsEmailRepository;
+
+  @Autowired private UserAccountEmailSchedulerTaskRepository addNewAdminEmailServiceRepository;
 
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -429,5 +432,6 @@ public class TestDataHelper {
     getLocationRepository().deleteAll();
     getUserDetailsRepository().deleteAll();
     getInvitedParticipantsEmailRepository().deleteAll();
+    getAddNewAdminEmailServiceRepository().deleteAll();
   }
 }

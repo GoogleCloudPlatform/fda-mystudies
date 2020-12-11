@@ -28,4 +28,6 @@ public interface ManageUserService {
       String superAdminUserId, Integer page, Integer limit, AuditLogEventRequest auditRequest);
 
   public AdminUserResponse sendInvitation(String userId, String superAdminUserId);
+
+  public void sendUserEmail();
 }

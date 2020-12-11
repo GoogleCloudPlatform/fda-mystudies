@@ -66,8 +66,11 @@
             </span>
           </td>
         </tr>
+        <tr *ngIf="manageUsers.users.length === 0">
+          <td colspan="3" class="text-right">No records found</td>
+        </tr>
       </tbody>
-      <div *ngIf="manageUsers.users.length === 0">No records found</div>
+
       <tfoot class="custom__tfoot">
         <tr>
           <td colspan="4">

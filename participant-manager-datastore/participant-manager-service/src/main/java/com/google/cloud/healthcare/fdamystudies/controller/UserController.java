@@ -62,22 +62,22 @@ public class UserController {
   }
 
   @PutMapping(
-      value = "/users/{superAdminUserId}/",
+      value = "/users/{adminUserId}/",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AdminUserResponse> updateUserSiteCoordinator(
       @RequestHeader(name = "userId") String signedInUserId,
       @Valid @RequestBody UserRequest user,
-      @PathVariable String superAdminUserId,
+      @PathVariable String adminUserId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    auditRequest.setUserId(superAdminUserId);
+    auditRequest.setUserId(signedInUserId);
 
-    user.setSignedInUserId(signedInUserId);
-    AdminUserResponse userResponse =
-        manageUserService.updateUser(user, superAdminUserId, auditRequest);
+    user.setSuperAdminUserId(signedInUserId);
+    user.setId(adminUserId);
+    AdminUserResponse userResponse = manageUserService.updateUser(user, adminUserId, auditRequest);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
