@@ -9,7 +9,7 @@ import {StudiesService} from '../../studies/shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {Permission} from 'src/app/shared/permission-enums';
 import {Status, StudyType} from 'src/app/shared/enums';
-
+const limit = 10;
 @Component({
   selector: 'app-site-list',
   templateUrl: './site-list.component.html',
@@ -23,6 +23,8 @@ export class SiteListComponent implements OnInit {
   permission = Permission;
   studyTypes = StudyType;
   studyStatus = Status;
+  searchValue = '';
+  loadMoreEnabled = false;
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
@@ -45,9 +47,10 @@ export class SiteListComponent implements OnInit {
     this.modalRef.hide();
     this.getStudies();
   }
+
   getStudies(): void {
     this.study$ = combineLatest(
-      this.studiesService.getStudiesWithSites(),
+      this.studiesService.getStudiesWithSites(limit, 0, this.searchValue),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
@@ -56,12 +59,13 @@ export class SiteListComponent implements OnInit {
           (study: Study) =>
             study.name?.toLowerCase().includes(query) ||
             study.customId?.toLowerCase().includes(query) ||
-            study.sites.some(
-              (site) =>
-                site.name?.toLowerCase()?.includes(query) &&
-                study.type !== StudyType.Open,
+            study.sites.some((site) =>
+              site.name?.toLowerCase()?.includes(query),
             ),
         );
+        this.loadMoreEnabled =
+          this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
+        console.log(this.manageStudiesBackup.studies.length);
         return this.manageStudiesBackup;
       }),
     );
