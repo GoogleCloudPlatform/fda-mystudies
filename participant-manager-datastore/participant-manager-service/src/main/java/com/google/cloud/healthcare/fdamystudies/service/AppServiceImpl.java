@@ -83,7 +83,7 @@ public class AppServiceImpl implements AppService {
 
   @Override
   @Transactional(readOnly = true)
-  public AppResponse getApps(String userId) {
+  public AppResponse getApps(String userId, Integer limit, Integer offset, String searchTerm) {
     logger.entry("getApps(userId)");
 
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
@@ -92,12 +92,16 @@ public class AppServiceImpl implements AppService {
     }
 
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
-      AppResponse appResponse = getAppsForSuperAdmin(optUserRegAdminEntity.get());
+      AppResponse appResponse =
+          getAppsForSuperAdmin(
+              optUserRegAdminEntity.get(), limit, offset, StringUtils.defaultString(searchTerm));
       logger.exit(String.format("total apps for superadmin=%d", appResponse.getApps().size()));
       return appResponse;
     }
 
-    List<AppStudyInfo> appStudyInfoList = appRepository.findAppsByUserId(userId);
+    List<AppStudyInfo> appStudyInfoList =
+        appRepository.findAppsByUserId(
+            userId, limit, offset, StringUtils.defaultString(searchTerm));
     if (CollectionUtils.isEmpty(appStudyInfoList)) {
       throw new ErrorCodeException(ErrorCode.NO_APPS_FOUND);
     }
@@ -141,7 +145,8 @@ public class AppServiceImpl implements AppService {
         optUserRegAdminEntity.get());
   }
 
-  private AppResponse getAppsForSuperAdmin(UserRegAdminEntity userRegAdminEntity) {
+  private AppResponse getAppsForSuperAdmin(
+      UserRegAdminEntity userRegAdminEntity, Integer limit, Integer offset, String searchTerm) {
     List<AppCount> appUsersCountList = userDetailsRepository.findAppUsersCount();
     Map<String, AppCount> appUsersCountMap =
         appUsersCountList
@@ -170,7 +175,8 @@ public class AppServiceImpl implements AppService {
             .stream()
             .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
 
-    List<AppEntity> apps = appRepository.findAll();
+    List<AppEntity> apps = appRepository.findAll(limit, offset, searchTerm);
+
     List<AppDetails> appDetailsList = new ArrayList<>();
     for (AppEntity app : apps) {
       AppDetails appDetails = AppMapper.toAppDetails(app);

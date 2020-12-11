@@ -93,10 +93,13 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "WHERE ai.id=sp.app_info_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id = :userId AND sp.study_id NOT IN ( "
               + "SELECT st.study_id "
               + "FROM study_permissions st "
-              + "WHERE st.ur_admin_user_id = :userId)) rstAlias GROUP BY created_time,app_info_id,custom_app_id,app_name "
-              + "ORDER BY created_time DESC ",
+              + "WHERE st.ur_admin_user_id = :userId)) rstAlias "
+              + "WHERE app_name LIKE %:searchTerm% OR custom_app_id LIKE %:searchTerm% "
+              + "GROUP BY created_time,app_info_id,custom_app_id,app_name "
+              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset",
       nativeQuery = true)
-  public List<AppStudyInfo> findAppsByUserId(@Param("userId") String userId);
+  public List<AppStudyInfo> findAppsByUserId(
+      @Param("userId") String userId, Integer limit, Integer offset, String searchTerm);
 
   @Query(
       value =
@@ -189,6 +192,14 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "ud.app_info_id=:appId AND ud.id IN (:userIds) ",
       nativeQuery = true)
   public List<AppSiteInfo> findSitesByAppIdAndUserIds(String appId, List<String> userIds);
+
+  @Query(
+      value =
+          "SELECT * FROM app_info "
+              + "WHERE app_name LIKE %:searchTerm% OR custom_app_id LIKE %:searchTerm% "
+              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+      nativeQuery = true)
+  public List<AppEntity> findAll(Integer limit, Integer offset, String searchTerm);
 
   @Query(
       value =

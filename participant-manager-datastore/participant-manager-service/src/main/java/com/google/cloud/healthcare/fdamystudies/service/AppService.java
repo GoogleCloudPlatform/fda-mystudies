@@ -13,7 +13,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 
 public interface AppService {
-  public AppResponse getApps(String userId);
+  public AppResponse getApps(String userId, Integer limit, Integer offset, String searchTerm);
 
   public AppResponse getAppsWithOptionalFields(String userId, String[] fields);
 
