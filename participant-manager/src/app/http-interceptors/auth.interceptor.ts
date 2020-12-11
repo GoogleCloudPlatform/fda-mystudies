@@ -25,9 +25,9 @@ import {
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
-  private readonly refreshTokenSubject: BehaviorSubject<
-    unknown
-  > = new BehaviorSubject<unknown>(null);
+  private readonly refreshTokenSubject: BehaviorSubject<unknown> = new BehaviorSubject<unknown>(
+    null,
+  );
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
@@ -143,7 +143,7 @@ export class AuthInterceptor implements HttpInterceptor {
             'http://35.193.185.224:8087/oauth-scim-service/oauth2/token'
           ) {
             this.toasterService.error(
-              'Your session has expired and have been loged out successfully',
+              'Your session has expired. Please sign in again.',
             );
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
