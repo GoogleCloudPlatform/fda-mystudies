@@ -329,7 +329,8 @@ public class UserServiceImpl implements UserService {
 
     if (!StringUtils.equals(currentPasswordHash, hash)) {
       return userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
-          ? ErrorCode.TEMP_PASSWORD_INVALID
+              || userEntity.getStatus() == UserAccountStatus.PASSWORD_RESET.getStatus()
+          ? ErrorCode.TEMP_PASSWORD_INCORRECT
           : ErrorCode.CURRENT_PASSWORD_INVALID;
     }
 
