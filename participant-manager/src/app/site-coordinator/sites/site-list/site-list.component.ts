@@ -9,6 +9,7 @@ import {StudiesService} from '../../studies/shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {Permission} from 'src/app/shared/permission-enums';
 import {Status, StudyType} from 'src/app/shared/enums';
+import {SearchParameterService} from 'src/app/service/search-parameter.service';
 const limit = 10;
 @Component({
   selector: 'app-site-list',
@@ -35,13 +36,19 @@ export class SiteListComponent implements OnInit {
     private readonly modalService: BsModalService,
     private modalRef: BsModalRef,
     private readonly sharedService: SearchService,
+    private readonly searchParameter: SearchParameterService,
   ) {}
 
   ngOnInit(): void {
+    this.searchParameter.searchParam$.subscribe((upadtedParameter) => {
+      this.manageStudiesBackup = {} as StudyResponse;
+      this.searchValue = upadtedParameter;
+      this.getStudies();
+    });
+
     this.sharedService.updateSearchPlaceHolder(
       'Search by Site or Study ID or Name',
     );
-    this.getStudies();
   }
   closeModal(): void {
     this.modalRef.hide();
@@ -64,7 +71,9 @@ export class SiteListComponent implements OnInit {
             ),
         );
         this.loadMoreEnabled =
-          this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
+          (this.manageStudiesBackup.studies.length % limit === 0
+            ? true
+            : false) && manageStudies.studies.length > 0;
         return this.manageStudiesBackup;
       }),
     );

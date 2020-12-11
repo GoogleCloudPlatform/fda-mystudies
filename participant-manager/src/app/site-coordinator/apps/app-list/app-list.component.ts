@@ -7,6 +7,7 @@ import {ManageApps, App} from '../shared/app.model';
 import {Permission} from 'src/app/shared/permission-enums';
 import {SearchService} from 'src/app/shared/search.service';
 import {ToastrService} from 'ngx-toastr';
+import {SearchParameterService} from 'src/app/service/search-parameter.service';
 const limit = 10;
 @Component({
   selector: 'app-app-list',
@@ -34,11 +35,16 @@ export class AppListComponent implements OnInit {
     private readonly appService: AppsService,
     private readonly sharedService: SearchService,
     private readonly toastr: ToastrService,
+    private readonly searchParameter: SearchParameterService,
   ) {}
 
   ngOnInit(): void {
+    this.searchParameter.searchParam$.subscribe((upadtedParameter) => {
+      this.manageAppsBackup = {} as ManageApps;
+      this.searchValue = upadtedParameter;
+      this.getApps();
+    });
     this.sharedService.updateSearchPlaceHolder('Search by App ID or Name');
-    this.getApps();
   }
   getApps(): void {
     this.manageApp$ = combineLatest(
@@ -60,7 +66,8 @@ export class AppListComponent implements OnInit {
         );
 
         this.loadMoreEnabled =
-          this.manageAppsBackup.apps.length % limit === 0 ? true : false;
+          (this.manageAppsBackup.apps.length % limit === 0 ? true : false) &&
+          manageApps.apps.length > 0;
         return this.manageAppsBackup;
       }),
     );

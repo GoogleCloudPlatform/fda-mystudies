@@ -9,6 +9,7 @@ import {StudiesService} from '../shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {StudyType} from 'src/app/shared/enums';
 import {Permission} from 'src/app/shared/permission-enums';
+import {SearchParameterService} from 'src/app/service/search-parameter.service';
 const limit = 10;
 @Component({
   selector: 'app-study-list',
@@ -33,11 +34,17 @@ export class StudyListComponent implements OnInit {
     private readonly router: Router,
     private readonly toastr: ToastrService,
     private readonly sharedService: SearchService,
+    private readonly searchParameter: SearchParameterService,
   ) {}
 
   ngOnInit(): void {
+    this.searchParameter.searchParam$.subscribe((upadtedParameter) => {
+      this.manageStudiesBackup = {} as StudyResponse;
+      this.searchValue = upadtedParameter;
+      this.getStudies();
+    });
+
     this.sharedService.updateSearchPlaceHolder('Search By Study ID or Name');
-    this.getStudies();
   }
 
   getStudies(): void {
@@ -62,7 +69,9 @@ export class StudyListComponent implements OnInit {
             study.customId?.toLowerCase().includes(query.toLowerCase()),
         );
         this.loadMoreEnabled =
-          this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
+          (this.manageStudiesBackup.studies.length % limit === 0
+            ? true
+            : false) && manageStudies.studies.length > 0;
 
         return this.manageStudiesBackup;
       }),
