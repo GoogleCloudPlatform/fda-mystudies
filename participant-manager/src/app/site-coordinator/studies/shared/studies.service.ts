@@ -13,11 +13,10 @@ export class StudiesService {
     searchTerm: string,
   ): Observable<StudyResponse> {
     return this.entityService.get(
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       'studies?limit=' +
-        limit +
+        limit.toString() +
         '&offset=' +
-        offset +
+        offset.toString() +
         '&searchTerm=' +
         searchTerm,
     );
@@ -27,30 +26,11 @@ export class StudiesService {
     offset: number,
     searchTerm: string,
   ): Observable<StudyResponse> {
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     return this.entityService.get(
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       'sites?limit=' +
-        limit +
+        limit.toString() +
         '&offset=' +
-        offset +
-        '&searchTerm=' +
-        searchTerm,
-    );
-  }
-
-  searchStudiesWithSites(
-    limit: number,
-    offset: number,
-    searchTerm: string,
-  ): Observable<StudyResponse> {
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    return this.entityService.get(
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      'sites?limit=' +
-        limit +
-        '&offset=' +
-        offset +
+        offset.toString() +
         '&searchTerm=' +
         searchTerm,
     );
