@@ -435,11 +435,11 @@ $(document)
                       $('#password').attr(
                           "data-minlength", "");
                       var passwordLength = "";
-					  var i;
-					  for (i = 0; i < $('#password').val().length; i++) {
-					    passwordLength += "*";
-					  }
-					  $('#password')
+                      var i;
+                      for (i = 0; i < $('#password').val().length; i++) {
+                        passwordLength += "*";
+                      }
+                      $('#password')
                           .val(passwordLength);
                       $('#cfnPassword')
                           .unbind()
@@ -504,11 +504,11 @@ $(document)
                             "");
                         $('#password').attr(
                             "data-minlength", "");
-	                      var passwordLength = "";
-						  var i;
-						  for (i = 0; i < $('#password').val().length; i++) {
-						    passwordLength += "*";
-						  }
+                        var passwordLength = "";
+                        var i;
+                        for (i = 0; i < $('#password').val().length; i++) {
+                          passwordLength += "*";
+                        }
                         $('#password')
                             .val(passwordLength);
                         $('#cfnPassword')
@@ -572,10 +572,10 @@ $(document)
                       $('#password').attr(
                           "data-minlength", "");
                       var passwordLength = "";
-					  var i;
-					  for (i = 0; i < $('#password').val().length; i++) {
-					    passwordLength += "*";
-					  }
+                      var i;
+                      for (i = 0; i < $('#password').val().length; i++) {
+                        passwordLength += "*";
+                      }
                       $('#password')
                           .val(passwordLength);
                       $('#cfnPassword')
@@ -641,11 +641,11 @@ $(document)
                             "");
                         $('#password').attr(
                             "data-minlength", "");
-                      	var passwordLength = "";
-					  	var i;
-					  	for (i = 0; i < $('#password').val().length; i++) {
-					    	passwordLength += "*";
-					  	}
+                        var passwordLength = "";
+                        var i;
+                        for (i = 0; i < $('#password').val().length; i++) {
+                        	passwordLength += "*";
+                        }
                         $('#password')
                             .val(passwordLength);
                         $('#cfnPassword')
@@ -691,10 +691,10 @@ $(document)
                       $('#email').val('');
                       var password = $('#password').val();
                       var passwordLength = "";
-					  var i;
-					  for (i = 0; i < $('#password').val().length; i++) {
-					    passwordLength += "*";
-					  }
+                      var i;
+                      for (i = 0; i < $('#password').val().length; i++) {
+                        passwordLength += "*";
+                      }
                       $('#password')
                           .val(passwordLength);
                       $('#password')
