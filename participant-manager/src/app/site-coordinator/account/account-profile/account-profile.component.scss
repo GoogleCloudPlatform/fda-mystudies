@@ -1,0 +1,10 @@
+.change__password span {
+  color: var(--light-blue);
+  text-decoration: underline;
+}
+
+.under-below {
+  -webkit-text-underline-position: under;
+  -ms-text-underline-position: below;
+  text-underline-position: under;
+}
