@@ -140,7 +140,7 @@
         </div>
         <!--container-->
         <div class="footer">
-          <span>Copyright Placeholder</span>
+          <span>Copyright</span>
           <span>
             <a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
           </span>

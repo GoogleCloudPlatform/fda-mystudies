@@ -8,39 +8,22 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
-import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
-import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.StudySiteInfo;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 
 public final class StudyMapper {
 
   private StudyMapper() {}
 
-  public static AppStudyResponse toAppStudyResponse(
-      StudyEntity study, List<SiteEntity> sites, String[] fields) {
+  public static AppStudyResponse toAppStudyResponse(AppStudySiteInfo study) {
     AppStudyResponse appStudyResponse = new AppStudyResponse();
-    appStudyResponse.setStudyId(study.getId());
-    appStudyResponse.setCustomStudyId(study.getCustomId());
-    appStudyResponse.setStudyName(study.getName());
-    if (ArrayUtils.contains(fields, "sites")) {
-      List<AppSiteResponse> appSiteResponsesList =
-          CollectionUtils.emptyIfNull(sites)
-              .stream()
-              .map(SiteMapper::toAppSiteResponse)
-              .collect(Collectors.toList());
-      appStudyResponse.getSites().addAll(appSiteResponsesList);
-    }
-    int totalSiteCountPerStudy = appStudyResponse.getSites().size();
-    appStudyResponse.setTotalSitesCount(totalSiteCountPerStudy);
+    appStudyResponse.setStudyId(study.getStudyId());
+    appStudyResponse.setCustomStudyId(study.getCustomStudyId());
+    appStudyResponse.setStudyName(study.getStudyName());
     return appStudyResponse;
   }
 
