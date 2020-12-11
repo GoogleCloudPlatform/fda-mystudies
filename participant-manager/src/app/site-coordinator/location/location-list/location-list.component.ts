@@ -43,7 +43,7 @@ export class LocationListComponent implements OnInit {
         this.limit,
         this.searchTerm,
         this.sortBy[0].replace('_', ''),
-        this.sortOrder,
+        this.getSortBy(),
       ),
     ).pipe(
       map(([manageLocations]) => {
@@ -77,9 +77,6 @@ export class LocationListComponent implements OnInit {
     this.sortBy = new Array(event) as string[];
     this.offset = 0;
     this.currentPage = 0;
-    if (this.sortBy[0] === '_status') {
-      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
-    }
     this.getLocation();
   }
 
@@ -88,5 +85,11 @@ export class LocationListComponent implements OnInit {
   }
   addLocation(): void {
     void this.router.navigate(['/coordinator/locations/new']);
+  }
+  getSortBy() {
+    if (this.sortBy[0] === '_status') {
+      return this.sortOrder === 'asc' ? 'desc' : 'asc';
+    }
+    return this.sortOrder;
   }
 }
