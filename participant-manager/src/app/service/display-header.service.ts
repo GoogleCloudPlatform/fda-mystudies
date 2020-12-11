@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 @Injectable({providedIn: 'root'})
 export class DisplayHeaderService {
-  private readonly showHeader = new BehaviorSubject<boolean>(false);
+  private readonly showHeader = new BehaviorSubject<boolean>(true);
   showHeaders$: Observable<boolean>;
   constructor() {
     this.showHeaders$ = this.showHeader.asObservable();
