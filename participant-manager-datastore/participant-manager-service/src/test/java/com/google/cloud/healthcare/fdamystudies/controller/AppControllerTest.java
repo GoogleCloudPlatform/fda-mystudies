@@ -26,12 +26,14 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -172,6 +174,139 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnAppsWithPagination() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
+    for (int i = 1; i <= 20; i++) {
+      appEntity = testDataHelper.newAppEntity();
+      appEntity.setAppId("AppCustomId" + String.valueOf(i));
+      testDataHelper.getAppRepository().saveAndFlush(appEntity);
+      studyEntity = testDataHelper.newStudyEntity();
+      testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+      SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+      sitePermissionEntity.setUrAdminUser(userRegAdminEntity);
+      sitePermissionEntity.setCanEdit(Permission.EDIT);
+      sitePermissionEntity.setApp(appEntity);
+      sitePermissionEntity.setStudy(studyEntity);
+      sitePermissionEntity.setSite(siteEntity);
+      testDataHelper.getSitePermissionRepository().saveAndFlush(sitePermissionEntity);
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(500);
+    }
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .param("limit", "5")
+                .param("offset", "0")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(5)))
+        .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId20"))
+        .andExpect(jsonPath("$.apps[4].customId").value("AppCustomId16"));
+
+    verifyTokenIntrospectRequest(1);
+
+    // test case for searchTerm
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .param("limit", "5")
+                .param("offset", "1")
+                .param("searchTerm", "AppCustomId")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(5)))
+        .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId19"));
+
+    verifyTokenIntrospectRequest(2);
+  }
+
+  @Test
+  public void shouldReturnAppsWithPaginationForSuperAdmin() throws Exception {
+    userRegAdminEntity.setSuperAdmin(true);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
+    for (int i = 1; i <= 20; i++) {
+      appEntity = testDataHelper.newAppEntity();
+      appEntity.setAppId("AppCustomId" + String.valueOf(i));
+      testDataHelper.getAppRepository().saveAndFlush(appEntity);
+      studyEntity = testDataHelper.newStudyEntity();
+      testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+      siteEntity = testDataHelper.newSiteEntity();
+      siteEntity.setStudy(studyEntity);
+      testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(500);
+    }
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .param("limit", "20")
+                .param("offset", "0")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(20)))
+        .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId20"))
+        .andExpect(jsonPath("$.apps[19].customId").value("AppCustomId1"));
+
+    verifyTokenIntrospectRequest(1);
+
+    // offset with non-zero value
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .param("limit", "10")
+                .param("offset", "5")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(10)))
+        .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId15"))
+        .andExpect(jsonPath("$.apps[9].customId").value("AppCustomId6"));
+
+    verifyTokenIntrospectRequest(2);
+
+    // test case for searchTerm
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .param("limit", "10")
+                .param("offset", "1")
+                .param("searchTerm", "AppCustomId")
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(10)))
+        .andExpect(jsonPath("$.apps[0].customId").value("AppCustomId19"));
+
+    verifyTokenIntrospectRequest(3);
+  }
+
+  @Test
   public void shouldReturnBadRequestForGetApps() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
 
@@ -253,10 +388,54 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnSortedStudiesAndSites() throws Exception {
+    // set study and site
+    studyEntity.setApp(appEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    // set few more study and sites
+    studyEntity = testDataHelper.newStudyEntity();
+    studyEntity.setName("Study");
+    studyEntity.setApp(appEntity);
+    testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+    testDataHelper.createMultipleSiteEntity(studyEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    String[] fields = {"studies", "sites"};
+
+    // Step 2: Call API and expect success message
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .queryParam("fields", fields))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(1)))
+        .andExpect(jsonPath("$.apps[0].studies").isArray())
+        .andExpect(jsonPath("$.apps[0].studies[0].sites").isArray())
+        .andExpect(jsonPath("$.apps[0].studies[0].studyName").value("COVID Study"))
+        .andExpect(jsonPath("$.apps[0].studies[1].studyName").value("Study"))
+        .andExpect(jsonPath("$.apps[0].studies[1].sites[0].locationName").value("Marlborough1"))
+        .andExpect(jsonPath("$.apps[0].studies[1].sites[1].locationName").value("Marlborough2"));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnAppsWithOptionalStudies() throws Exception {
     // Step 1: set app and study
     studyEntity.setApp(appEntity);
-    testDataHelper.getStudyRepository().save(studyEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());

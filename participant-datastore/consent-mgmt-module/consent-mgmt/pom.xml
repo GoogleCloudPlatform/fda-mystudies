@@ -7,7 +7,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.2.6.RELEASE</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>ConsentMgmtServicesWs</artifactId>
@@ -213,24 +213,24 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-gcp-starter-storage</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
-    <dependencyManagement>
-      <dependencies>
-        <dependency>
-          <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-gcp-dependencies</artifactId>
-          <version>1.2.3.RELEASE</version>
-          <type>pom</type>
-          <scope>import</scope>
-        </dependency>
-      </dependencies>
-    </dependencyManagement>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-gcp-dependencies</artifactId>
+        <version>1.2.3.RELEASE</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <finalName>participant-consent-datastore</finalName>
@@ -261,8 +261,12 @@
         <artifactId>jib-maven-plugin</artifactId>
         <version>2.6.0</version>
         <configuration>
-          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
-          <container><appRoot>/usr/local/tomcat/webapps/participant-consent-datastore</appRoot></container>
+          <from>
+            <image>tomcat:9.0.33-jdk11-openjdk</image>
+          </from>
+          <container>
+            <appRoot>/usr/local/tomcat/webapps/participant-consent-datastore</appRoot>
+          </container>
         </configuration>
       </plugin>
     </plugins>
@@ -275,4 +279,33 @@
       </plugin>
     </plugins>
   </reporting>
+  <profiles>
+    <profile>
+      <id>local</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <spring.profiles.active>local</spring.profiles.active>
+      </properties>
+    </profile>
+    <profile>
+      <id>mockit</id>
+      <properties>
+        <spring.profiles.active>mockit</spring.profiles.active>
+      </properties>
+    </profile>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <spring.profiles.active>dev</spring.profiles.active>
+      </properties>
+    </profile>
+    <profile>
+      <id>qa</id>
+      <properties>
+        <spring.profiles.active>qa</spring.profiles.active>
+      </properties>
+    </profile>
+  </profiles>
 </project>

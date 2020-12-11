@@ -424,6 +424,25 @@ CREATE TABLE IF NOT EXISTS `user_institution` (
   CONSTRAINT `FKrwwx4csj1ske5o4m74lmusqbv` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- Dumping structure for table mystudies_participant_datastore.user_account_email_scheduler_tasks
+DROP TABLE IF EXISTS `user_account_email_scheduler_tasks`;
+CREATE TABLE IF NOT EXISTS `user_account_email_scheduler_tasks` (
+  `id` varchar(255) NOT NULL,
+  `app_id` varchar(255) DEFAULT NULL,
+  `app_version` varchar(255) DEFAULT NULL,
+  `correlation_id` varchar(255) DEFAULT NULL,
+  `email_template_type` varchar(255) DEFAULT NULL,
+  `mobile_platform` varchar(255) DEFAULT NULL,
+  `sign_in_user_id` varchar(255) DEFAULT NULL,
+  `source` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `user_id` varchar(255) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 -- Data exporting was unselected.
 
 -- Dumping structure for table mystudies_participant_datastore.invite_participants
@@ -441,6 +460,7 @@ CREATE TABLE IF NOT EXISTS `invite_participants` (
   `user_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
