@@ -7,7 +7,7 @@ import {AuthService} from 'src/app/service/auth.service';
 import {StateService} from 'src/app/service/state.service';
 import {AccountService} from 'src/app/site-coordinator/account/shared/account.service';
 import {Profile} from 'src/app/site-coordinator/account/shared/profile.model';
-
+import {DisplayHeaderService} from 'src/app/service/display-header.service';
 @Component({
   selector: 'login-callback',
   template: '',
@@ -20,6 +20,7 @@ export class LoginCallbackComponent implements OnInit {
     private readonly accountService: AccountService,
     private readonly userState: StateService,
     private readonly toastr: ToastrService,
+    private readonly displayHeader: DisplayHeaderService,
   ) {}
   ngOnInit(): void {
     this.redirect();
@@ -54,6 +55,7 @@ export class LoginCallbackComponent implements OnInit {
                 params.accountStatus === '3' ||
                 params.accountStatus === '2'
               ) {
+                this.displayHeader.setDisplayHeaderStatus(false);
                 void this.router.navigate(
                   ['/coordinator/accounts/change-password'],
                   {queryParams: {action: 'passwordsetup'}},

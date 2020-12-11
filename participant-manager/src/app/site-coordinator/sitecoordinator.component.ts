@@ -5,7 +5,7 @@ import {Profile} from './account/shared/profile.model';
 import {UserService} from '../service/user.service';
 import {StateService} from '../service/state.service';
 import {SearchTermService} from '../service/search-term.service';
-
+import {DisplayHeaderService} from '../service/display-header.service';
 @Component({
   selector: 'site-coordinator',
   templateUrl: './sitecoordinator.component.html',
@@ -14,6 +14,7 @@ import {SearchTermService} from '../service/search-term.service';
 export class SiteCoordinatorComponent implements OnInit {
   searchPlaceholder = 'Search by Site or Study ID or Name';
   showSearchBar = false;
+  displayHeaderOnResetpassword = true;
   filterQuery = '';
   searchBar: SearchBar | undefined;
   user = {} as Profile;
@@ -24,6 +25,7 @@ export class SiteCoordinatorComponent implements OnInit {
     private readonly userService: UserService,
     private readonly userState: StateService,
     private readonly searchTerm: SearchTermService,
+    private readonly displayHeader: DisplayHeaderService,
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +34,10 @@ export class SiteCoordinatorComponent implements OnInit {
     this.userState.currentUserName$.subscribe((upadtedUsername) => {
       this.userName = upadtedUsername;
     });
+    this.displayHeader.showHeaders$.subscribe((upadtedUsername) => {
+      this.displayHeaderOnResetpassword = upadtedUsername;
+    });
+
     if (this.userName === '') {
       this.userName = this.user.firstName;
     }

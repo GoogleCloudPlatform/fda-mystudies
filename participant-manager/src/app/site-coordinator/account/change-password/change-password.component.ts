@@ -8,6 +8,7 @@ import {getMessage} from 'src/app/shared/success.codes.enum';
 import {ChangePassword} from '../shared/profile.model';
 import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {DisplayHeaderService} from 'src/app/service/display-header.service';
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -21,12 +22,14 @@ export class ChangePasswordComponent
   currentPasswordValidationMessage = 'Enter your current password';
   currentPasswordPlaceholder = 'Enter Current Password';
   currentPasswordlabel = 'Current Password';
+  hideClickabale = false;
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly toastr: ToastrService,
+    private readonly displayHeader: DisplayHeaderService,
   ) {
     super();
     this.resetPasswordForm = this.fb.group(
@@ -48,6 +51,10 @@ export class ChangePasswordComponent
     return this.resetPasswordForm.controls;
   }
   ngOnInit(): void {
+    this.displayHeader.showHeaders$.subscribe((visible) => {
+      this.hideClickabale = visible;
+    });
+
     this.route.queryParams.subscribe((params) => {
       if (params.action && params.action === 'passwordsetup') {
         this.changePasswordTitle = 'SET UP PASSWORD';
@@ -56,14 +63,6 @@ export class ChangePasswordComponent
         this.currentPasswordlabel = 'Temporary Password';
       }
     }),
-      // this.route.queryParams
-      //   .filter((params) => params.order)
-      //   .subscribe((params) => {
-      //     console.log(params); // { order: "popular" }
-
-      //     this.order = params.order;
-      //     console.log(this.order); // popular
-      //   });
       (this.passCriteria = `Your password must be 8 to 64 characters long.  
                         - contain a lower case letter.
                         - contain an upper case letter. 
@@ -79,16 +78,18 @@ export class ChangePasswordComponent
       ),
       newPassword: String(this.resetPasswordForm.controls['newPassword'].value),
     };
+
     this.accountService
       .changePassword(changePassword)
       .subscribe((successResponse: ApiResponse) => {
+        this.displayHeader.setDisplayHeaderStatus(true);
         if (getMessage(successResponse.code)) {
           this.toastr.success(getMessage(successResponse.code));
         }
-        void this.router.navigate(['/coordinator/accounts']);
+        void this.router.navigate(['/coordinator/studies/sites']);
       });
   }
   cancel() {
-    void this.router.navigate(['/coordinator/accounts']);
+    void this.router.navigate(['/coordinator/studies/sites']);
   }
 }
