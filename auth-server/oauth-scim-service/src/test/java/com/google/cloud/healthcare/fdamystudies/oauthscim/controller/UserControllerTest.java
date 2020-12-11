@@ -365,11 +365,15 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnCurrentPasswordInvalidErrroCodeForChangePasswordAction()
+  public void shouldReturnCurrentPasswordInvalidErrroCodeForActiveUser()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
     headers.add("correlationId", IdGenerator.id());
+
+    // set the status to PASSWORD_RESET(2)
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    userEntity = repository.saveAndFlush(userEntity);
 
     ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword("CurrentM0ck!tPassword");
@@ -386,6 +390,45 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.error_description")
                 .value(ErrorCode.CURRENT_PASSWORD_INVALID.getDescription()));
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_CHANGE_FAILED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, PASSWORD_CHANGE_FAILED);
+  }
+
+  @Test
+  public void shouldReturnTemporaryPasswordIncorrectErrroCodeForResetPassword()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
+
+    // set the status to PASSWORD_RESET(2)
+    userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
+    userEntity = repository.saveAndFlush(userEntity);
+
+    ChangePasswordRequest request = new ChangePasswordRequest();
+    request.setCurrentPassword("CurrentM0ck!tPassword");
+    request.setNewPassword("NewM0ck!tPassword");
+
+    mockMvc
+        .perform(
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userEntity.getUserId())
+                .contextPath(getContextPath())
+                .content(asJsonString(request))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.TEMP_PASSWORD_INCORRECT.getDescription()));
 
     verify(
         1,

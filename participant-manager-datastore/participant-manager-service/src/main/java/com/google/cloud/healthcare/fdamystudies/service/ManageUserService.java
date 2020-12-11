@@ -33,4 +33,6 @@ public interface ManageUserService {
       String searchTerm);
 
   public AdminUserResponse sendInvitation(String userId, String superAdminUserId);
+
+  public void sendUserEmail();
 }

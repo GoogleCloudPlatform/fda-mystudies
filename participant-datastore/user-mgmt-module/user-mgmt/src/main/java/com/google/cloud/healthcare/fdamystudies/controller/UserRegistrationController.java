@@ -11,6 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationResponse;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.UserRegistrationService;
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +58,10 @@ public class UserRegistrationController {
 
     UserRegistrationResponse userRegistrationResponse =
         userRegistrationService.register(user, auditRequest);
+
+    if (userRegistrationResponse.getErrorCode() != null) {
+      throw new ErrorCodeException(ErrorCode.REGISTRATION_EMAIL_SEND_FAILED);
+    }
 
     logger.exit("User registration successful");
     return ResponseEntity.status(HttpStatus.CREATED).body(userRegistrationResponse);

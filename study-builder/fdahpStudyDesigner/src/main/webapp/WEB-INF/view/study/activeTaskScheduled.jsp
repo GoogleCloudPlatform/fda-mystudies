@@ -2039,7 +2039,7 @@
   }
 
   function addTime() {
-    count = parseInt(count) + 1;
+    count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
         "  <input id='time" + count + "' type='text' required name='activeTaskFrequenciesList["
@@ -2082,7 +2082,7 @@
   }
 
   function addDate() {
-    customCount = parseInt(customCount) + 1;
+    customCount = customCount + 1;
     var newDateCon = "<div class='manually-option mb-md form-group' id='" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount

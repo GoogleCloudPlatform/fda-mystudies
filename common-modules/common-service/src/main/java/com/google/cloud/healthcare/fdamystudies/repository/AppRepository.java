@@ -93,10 +93,13 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "WHERE ai.id=sp.app_info_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id = :userId AND sp.study_id NOT IN ( "
               + "SELECT st.study_id "
               + "FROM study_permissions st "
-              + "WHERE st.ur_admin_user_id = :userId)) rstAlias GROUP BY created_time,app_info_id,custom_app_id,app_name "
-              + "ORDER BY created_time DESC ",
+              + "WHERE st.ur_admin_user_id = :userId)) rstAlias "
+              + "WHERE app_name LIKE %:searchTerm% OR custom_app_id LIKE %:searchTerm% "
+              + "GROUP BY created_time,app_info_id,custom_app_id,app_name "
+              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset",
       nativeQuery = true)
-  public List<AppStudyInfo> findAppsByUserId(@Param("userId") String userId);
+  public List<AppStudyInfo> findAppsByUserId(
+      @Param("userId") String userId, Integer limit, Integer offset, String searchTerm);
 
   @Query(
       value =
@@ -178,6 +181,14 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
 
   @Query(
       value =
+          "SELECT * FROM app_info "
+              + "WHERE app_name LIKE %:searchTerm% OR custom_app_id LIKE %:searchTerm% "
+              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+      nativeQuery = true)
+  public List<AppEntity> findAll(Integer limit, Integer offset, String searchTerm);
+
+  @Query(
+      value =
           "SELECT ai.id AS appId, ai.app_name AS appName, 'app' AS permissionLevel, ai.custom_app_id AS customAppId, si.name AS studyName, loc.name AS locationName, loc.custom_id AS locationCustomId, sp.edit AS edit, sp.study_id AS studyId, sp.site_id AS siteId, si.custom_id AS customStudyId, loc.id AS locationId, loc.description AS locationDescription "
               + "FROM app_info ai, study_info si, sites st, sites_permissions sp, locations loc "
               + "WHERE ai.id=sp.app_info_id AND sp.study_id=si.id AND sp.site_id=st.id AND st.location_id=loc.id AND sp.ur_admin_user_id=:userId "
@@ -227,4 +238,17 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
       nativeQuery = true)
   public List<AppStudySiteInfo> findUnselectedAppsStudiesSites(
       List<String> appIds, @Param("userId") String userId);
+
+  @Query(
+      value =
+          "SELECT ai.id AS appId, ai.app_name AS appName, ai.custom_app_id AS customAppId, si.name AS studyName, loc.name AS locationName, loc.custom_id AS locationCustomId, si.id AS studyId, st.id AS siteId, si.custom_id AS customStudyId, loc.id AS locationId, loc.description AS locationDescription "
+              + "FROM app_info ai, study_info si, sites st, locations loc "
+              + "WHERE st.location_id=loc.id AND st.study_id=si.id AND si.app_info_id=ai.id "
+              + "UNION ALL "
+              + "SELECT ai.id AS appId, ai.app_name AS appName, ai.custom_app_id AS customAppId, si.name AS studyName, null AS locationName, null AS locationCustomId, si.id AS studyId, null AS siteId, si.custom_id AS customStudyId, null AS locationId, null AS locationDescription "
+              + "FROM app_info ai, study_info si "
+              + "WHERE si.app_info_id=ai.id "
+              + "AND si.id NOT IN (SELECT study.id FROM sites site, study_info study WHERE study.id = site.study_id)",
+      nativeQuery = true)
+  public List<AppStudySiteInfo> findAppsStudiesSites();
 }
