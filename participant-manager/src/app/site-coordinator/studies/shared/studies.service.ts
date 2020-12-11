@@ -10,9 +10,6 @@ export class StudiesService {
   getStudies(): Observable<StudyResponse> {
     return this.entityService.get('studies');
   }
-  // getStudiesWithSites(): Observable<StudyResponse> {
-  //   return this.entityService.get('sites');
-  // }
 
   getStudiesWithSites(
     limit: number,
@@ -20,11 +17,10 @@ export class StudiesService {
     searchTerm: string,
   ): Observable<StudyResponse> {
     return this.entityService.get(
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       'sites?limit=' +
-        limit +
+        limit.toString() +
         '&offset=' +
-        offset +
+        offset.toString() +
         '&searchTerm=' +
         searchTerm,
     );
