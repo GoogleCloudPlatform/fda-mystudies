@@ -155,7 +155,10 @@ public class LoginController {
     String mobilePlatform = cookieHelper.getCookieValue(request, MOBILE_PLATFORM_COOKIE);
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
 
-    addAttributesToModel(model, mobilePlatform, source);
+    boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source);
+    if (!attrsAdded) {
+      return ERROR_VIEW_NAME;
+    }
 
     if (StringUtils.isNotEmpty(tempRegId)) {
       return redirectToLoginOrConsentPage(tempRegId, loginChallenge, response);
@@ -250,7 +253,10 @@ public class LoginController {
     String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
     String source = qsParams.getFirst(SOURCE);
     model.addAttribute(LOGIN_CHALLENGE, loginChallenge);
-    addAttributesToModel(model, mobilePlatform, source);
+    boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source);
+    if (!attrsAdded) {
+      return ERROR_VIEW_NAME;
+    }
 
     // tempRegId for auto login after signup
     String tempRegId = qsParams.getFirst(TEMP_REG_ID);
@@ -270,8 +276,16 @@ public class LoginController {
     return LOGIN_VIEW_NAME;
   }
 
-  private void addAttributesToModel(Model model, String mobilePlatform, String source) {
+  private boolean addAttributesToModel(Model model, String mobilePlatform, String source) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (platformComponent == null) {
+      logger.warn(
+          String.format(
+              "'%s' is invalid source value. Allowed values: MOBILE APPS or PARTICIPANT MANAGER",
+              source));
+      return false;
+    }
+
     model.addAttribute(
         FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform, source));
     model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
@@ -279,6 +293,7 @@ public class LoginController {
     model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
     model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(source));
     model.addAttribute(MOBILE_APP, platformComponent.equals(PlatformComponent.MOBILE_APPS));
+    return true;
   }
 
   private String redirect(HttpServletResponse response, String redirectUrl) {
