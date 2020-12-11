@@ -86,9 +86,11 @@ export class AppDetailsComponent
   }
 
   pageChange(page: number): void {
-    this.currentPage = page;
-    this.offset = (page - 1) * this.limit;
-    this.fetchParticipantsDetails();
+    if (page >= 1) {
+      this.currentPage = page;
+      this.offset = (page - 1) * this.limit;
+      this.fetchParticipantsDetails();
+    }
   }
 
   public onSortOrder(event: string): void {

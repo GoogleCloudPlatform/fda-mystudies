@@ -59,9 +59,11 @@ export class LocationListComponent implements OnInit {
   }
 
   pageChange(page: number): void {
-    this.currentPage = page;
-    this.offset = (page - 1) * this.limit;
-    this.getLocation();
+    if (page >= 1) {
+      this.currentPage = page;
+      this.offset = (page - 1) * this.limit;
+      this.getLocation();
+    }
   }
 
   public onSortOrder(event: string): void {

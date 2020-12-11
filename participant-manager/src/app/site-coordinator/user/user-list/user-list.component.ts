@@ -56,9 +56,11 @@ export class UserListComponent implements OnInit {
   }
 
   pageChange(page: number): void {
-    this.currentPage = page;
-    this.offset = (page - 1) * this.limit;
-    this.getUsers();
+    if (page >= 1) {
+      this.currentPage = page;
+      this.offset = (page - 1) * this.limit;
+      this.getUsers();
+    }
   }
 
   public onSortOrder(event: string): void {
