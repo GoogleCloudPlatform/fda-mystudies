@@ -34,6 +34,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,9 +47,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -216,7 +214,8 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   @Transactional
-  public LocationResponse getLocations(String userId, Integer page, Integer limit) {
+  public LocationResponse getLocations(
+      String userId, Integer limit, Integer offset, String orderByCondition, String searchTerm) {
     logger.entry("begin getLocations()");
 
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
@@ -224,20 +223,23 @@ public class LocationServiceImpl implements LocationService {
     if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
       throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
-    List<LocationEntity> locations = null;
-    if (page != null && limit != null) {
-      Page<LocationEntity> locationsPage =
-          locationRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
-      locations = (List<LocationEntity>) CollectionUtils.emptyIfNull(locationsPage.getContent());
-    } else {
-      locations = locationRepository.findAll();
+    List<LocationEntity> locations =
+        locationRepository.findAll(limit, offset, orderByCondition, searchTerm.toLowerCase());
+
+    List<LocationDetails> locationDetailsList = new ArrayList<>();
+
+    if (CollectionUtils.isEmpty(locations)) {
+      LocationResponse locationResponse =
+          new LocationResponse(MessageCode.GET_LOCATION_SUCCESS, locationDetailsList);
+      locationResponse.setLocationPermission(adminUser.getLocationPermission());
+      return locationResponse;
     }
 
     List<String> locationIds =
         locations.stream().map(LocationEntity::getId).distinct().collect(Collectors.toList());
     Map<String, List<String>> locationStudies = getStudiesAndGroupByLocationId(locationIds);
 
-    List<LocationDetails> locationDetailsList =
+    locationDetailsList =
         locations.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
     for (LocationDetails locationDetails : locationDetailsList) {
       List<String> studies = locationStudies.get(locationDetails.getLocationId());
@@ -246,10 +248,10 @@ public class LocationServiceImpl implements LocationService {
       }
       locationDetails.setStudiesCount(locationDetails.getStudyNames().size());
     }
-
     LocationResponse locationResponse =
         new LocationResponse(MessageCode.GET_LOCATION_SUCCESS, locationDetailsList);
-    locationResponse.setTotalLocationsCount(locationRepository.count());
+    locationResponse.setTotalLocationsCount(
+        locationRepository.countLocationBySearchTerm(searchTerm));
     locationResponse.setLocationPermission(adminUser.getLocationPermission());
     logger.exit(String.format("locations size=%d", locationResponse.getLocations().size()));
     return locationResponse;
