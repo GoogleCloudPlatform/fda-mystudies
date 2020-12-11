@@ -27,6 +27,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class GenericErrorController {
   private XLogger logger = XLoggerFactory.getXLogger(GenericErrorController.class.getName());
 
+  /* ORY Hydra error
+   *
+   *Sets the error endpoint. The error ui will be shown
+   *when an OAuth2/Hydra error occurs that which can not be
+   *sent back to the client.
+   *
+   *Set this value using environment variables on
+   *- Linux/macOS:
+   *   $ export URLS_ERROR=<value>
+   *- Windows Command Line (CMD):
+   *   > set URLS_ERROR=<value>
+   */
   @GetMapping(value = "/oauth2/error")
   public String error(HttpServletRequest request, HttpServletResponse response, Model model)
       throws UnsupportedEncodingException {
