@@ -74,10 +74,12 @@ export class LocationListComponent implements OnInit {
   }
 
   public onSortBy(event: string | string[]): void {
-    console.log(event);
     this.sortBy = new Array(event) as string[];
     this.offset = 0;
     this.currentPage = 0;
+    if (this.sortBy[0] === '_status') {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    }
     this.getLocation();
   }
 
