@@ -136,7 +136,6 @@ public class MyStudiesUserRegUtil {
     PARTICIPANTINFO("participantInfo"),
     STUDIES("studies"),
     ACTIVITIES("activities"),
-    WITHDRAWN("Withdrawn"),
     NO_DATA_AVAILABLE("No data available"),
     CONSENT_VERSION_REQUIRED("Consent version is required"),
     WITHDRAWN_STUDY("You are already Withdrawn from study"),

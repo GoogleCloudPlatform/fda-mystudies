@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -250,7 +251,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setParticipantId(participantid);
               participants.setUserDetails(userDetail);
               participants.setParticipantRegistrySite(participantRegistry);
-              participants.setStatus(AppConstants.ENROLLED);
+              participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
               participants.setEnrolledDate(Timestamp.from(Instant.now()));
               participants.setWithdrawalDate(null);
               session.update(participants);
@@ -262,7 +263,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setParticipantId(participantid);
               participants.setUserDetails(userDetail);
               participants.setParticipantRegistrySite(participantRegistry);
-              participants.setStatus(AppConstants.ENROLLED);
+              participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
               participants.setEnrolledDate(Timestamp.from(Instant.now()));
               countAddParticipant = (String) session.save(participants);
             }
@@ -319,7 +320,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           participants.setParticipantId(participantid);
           participants.setUserDetails(userDetail);
           participants.setParticipantRegistrySite(participantregistrySite);
-          participants.setStatus(AppConstants.ENROLLED);
+          participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
           participants.setEnrolledDate(Timestamp.from(Instant.now()));
           participants.setSite(site);
           participants.setWithdrawalDate(null);
@@ -332,7 +333,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           participants.setParticipantId(participantid);
           participants.setUserDetails(userDetail);
           participants.setParticipantRegistrySite(participantregistrySite);
-          participants.setStatus(AppConstants.ENROLLED);
+          participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
           participants.setEnrolledDate(Timestamp.from(Instant.now()));
           countAddParticipant = (String) session.save(participants);
         }

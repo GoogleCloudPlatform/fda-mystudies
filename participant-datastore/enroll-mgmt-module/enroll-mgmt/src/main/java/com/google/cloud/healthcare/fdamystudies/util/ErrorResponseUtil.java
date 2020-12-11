@@ -59,7 +59,6 @@ public class ErrorResponseUtil {
     PARTICIPANTINFO("participantInfo"),
     STUDIES("studies"),
     ACTIVITIES("activities"),
-    WITHDRAWN("Withdrawn"),
     NO_DATA_AVAILABLE("No data available"),
     CONSENT_VERSION_REQUIRED("Consent version is required"),
     CONNECTION_ERROR_MSG("Oops, something went wrong. Please try again after sometime"),
