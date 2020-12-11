@@ -90,6 +90,37 @@ export class SiteListComponent implements OnInit {
     this.modalRef = this.modalService.show(template);
     this.study = study;
   }
+
+  loadMoreSites(): void {
+    const offset = this.manageStudiesBackup.studies.length;
+
+    this.study$ = combineLatest(
+      this.studiesService.getStudiesWithSites(limit, offset, this.searchValue),
+      this.query$,
+    ).pipe(
+      map(([manageStudies, query]) => {
+        const studies = [];
+
+        studies.push(...this.manageStudiesBackup.studies);
+        studies.push(...manageStudies.studies);
+
+        this.manageStudiesBackup.studies = studies;
+        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
+          (study: Study) =>
+            study.name?.toLowerCase().includes(query) ||
+            study.customId?.toLowerCase().includes(query) ||
+            study.sites.some((site) =>
+              site.name?.toLowerCase()?.includes(query),
+            ),
+        );
+
+        this.loadMoreEnabled =
+          this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
+
+        return this.manageStudiesBackup;
+      }),
+    );
+  }
   cancel(): void {
     this.modalRef.hide();
   }
