@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {environment} from '@environment';
 
 @Component({
@@ -8,10 +7,10 @@ import {environment} from '@environment';
   styleUrls: ['./about.component.scss'],
 })
 export class AboutComponent {
-  safeHtmlContent: SafeHtml;
-  constructor(sanitizer: DomSanitizer) {
-    this.safeHtmlContent = sanitizer.bypassSecurityTrustHtml(
-      environment.aboutPageHtmlContent,
-    );
+  title = '';
+  description = '';
+  constructor() {
+    this.title = environment.aboutPageTitle;
+    this.description = environment.aboutPageDescription;
   }
 }

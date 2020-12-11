@@ -76,8 +76,31 @@
     self.inputAccessoryView = accessoryViewWithDoneButton;
 }
 
+- (void)addPlusMinusAccessoryView {
+  UIToolbar *toolBar = (UIToolbar *)self.inputAccessoryView;
+  NSArray<UIBarButtonItem *> *OldItems = toolBar.items;
+  UIBarButtonItem *plusMinus = [[UIBarButtonItem alloc]
+                                initWithTitle:ORKLocalizedString(@"+/-", nil)
+                                style:UIBarButtonItemStylePlain
+                                target:self
+                                action:@selector(keyboardAccessoryViewPlusMinusButtonPressed)];
+
+  NSMutableArray *newItems = [[NSMutableArray alloc] init];
+  [newItems addObject:plusMinus];
+  [newItems addObjectsFromArray:OldItems];
+  toolBar.items = newItems;
+}
+
 - (void)keyboardAccessoryViewDoneButtonPressed {
     [self resignFirstResponder];
+}
+
+- (void)keyboardAccessoryViewPlusMinusButtonPressed {
+  if ([self.text hasPrefix:@"-"]) {
+    self.text = [self.text substringFromIndex:1];
+  } else {
+    self.text = [NSString stringWithFormat:@"-%@",self.text];
+  }
 }
 
 - (void)updateAppearance {
