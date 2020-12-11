@@ -23,7 +23,7 @@ export DSN="mysql://${DB_USER}:${DB_PASS}@tcp(${DB_INSTANCE_URL}:3306)/${DB_NAME
 
 # issuer URL
 export URLS_SELF_ISSUER="${HYDRA_PUBLIC_BASE_URL}"
-# Login, consent, error app
+# Login, consent, error URL's
 export URLS_CONSENT="${AUTH_SERVER_BASE_URL}/auth-server/consent"
 export URLS_LOGIN="${AUTH_SERVER_BASE_URL}/auth-server/login"
 export URLS_ERROR="${AUTH_SERVER_BASE_URL}/auth-server/oauth2/error"
