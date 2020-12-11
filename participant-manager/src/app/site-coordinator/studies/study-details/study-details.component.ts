@@ -93,9 +93,11 @@ export class StudyDetailsComponent
   }
 
   pageChange(page: number): void {
-    this.currentPage = page;
-    this.offset = (page - 1) * this.limit;
-    this.getStudyDetails();
+    if (page >= 1) {
+      this.currentPage = page;
+      this.offset = (page - 1) * this.limit;
+      this.getStudyDetails();
+    }
   }
 
   public onSortOrder(event: string): void {
