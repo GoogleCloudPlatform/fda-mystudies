@@ -15,13 +15,16 @@ import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.service.LocationService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -93,20 +96,39 @@ public class LocationController {
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @RequestParam(required = false) Integer status,
       @RequestParam(required = false) String excludeStudyId,
-      @RequestParam(required = false) Integer page,
-      @RequestParam(required = false) Integer limit,
+      @RequestParam(defaultValue = "10") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(defaultValue = "locationId") String sortBy,
+      @RequestParam(defaultValue = "asc") String sortDirection,
+      @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(
         String.format(
             "%s request with status=%s and excludeStudyId=%s",
             request.getRequestURI(), status, excludeStudyId));
 
+    String[] allowedSortByValues = {"locationId", "locationName", "status"};
+    if (!ArrayUtils.contains(allowedSortByValues, sortBy)) {
+      throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORTBY_VALUE);
+    }
+
+    String[] allowedSortDirection = {"asc", "desc"};
+    if (!ArrayUtils.contains(allowedSortDirection, sortDirection)) {
+      throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORT_DIRECTION_VALUE);
+    }
+
     LocationResponse locationResponse;
     if (status != null && StringUtils.isNotEmpty(excludeStudyId)) {
       locationResponse = locationService.getLocationsForSite(userId, status, excludeStudyId);
     } else {
 
-      locationResponse = locationService.getLocations(userId, page, limit);
+      locationResponse =
+          locationService.getLocations(
+              userId,
+              limit,
+              offset,
+              sortBy + "_" + sortDirection,
+              StringUtils.defaultString(searchTerm));
     }
 
     logger.exit(String.format(STATUS_LOG, locationResponse.getHttpStatusCode()));

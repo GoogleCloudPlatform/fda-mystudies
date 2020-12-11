@@ -64,7 +64,7 @@ public enum ErrorCode {
       500,
       "EC_0008",
       HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-      "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
+      "Sorry, an error occurred and we could not send you the email. Please try again later."),
 
   APPLICATION_ERROR(
       500,
@@ -168,7 +168,7 @@ public enum ErrorCode {
       410,
       "EC_0034",
       HttpStatus.GONE.toString(),
-      "This link is no longer valid to be used. Please contact the system admin for assistance with your account."),
+      "This link is no longer valid to be used. Please contact the system admin for assistance with your account or sign in if already registered."),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC_0035", Constants.BAD_REQUEST, "Error in getting participants details"),
@@ -274,8 +274,6 @@ public enum ErrorCode {
   CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION(
       400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site using a decommissioned location."),
 
-  TEMP_PASSWORD_INVALID(400, "EC_0131", Constants.BAD_REQUEST, "Temporary password is invalid"),
-
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
       403,
       "EC_0124",
@@ -331,6 +329,18 @@ public enum ErrorCode {
 
 
   USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists"),
+  
+  UNSUPPORTED_SORTBY_VALUE(
+      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sort by value"),
+
+  UNSUPPORTED_SORT_DIRECTION_VALUE(
+      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
+
+  REGISTRATION_EMAIL_SEND_FAILED(
+      500,
+      "EC_0075",
+      "Internal Server Error",
+      "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
 
   FEEDBACK_ERROR_MESSAGE(
       500,
@@ -344,13 +354,14 @@ public enum ErrorCode {
       "Internal Server Error",
       "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time."),
   
-  
   UNSUPPORTED_SORTBY_VALUE(
       400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortBy value"),
 
   UNSUPPORTED_SORT_DIRECTION_VALUE(
-      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction");
+      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
 
+  TEMP_PASSWORD_INCORRECT(
+      400, "EC_0078", Constants.BAD_REQUEST, "The temporary password entered is incorrect.");
 
   private final int status;
   private final String code;

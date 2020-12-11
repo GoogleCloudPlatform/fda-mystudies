@@ -26,12 +26,14 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.controller.EnrollmentTokenController;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import com.google.cloud.healthcare.fdamystudies.util.ErrorResponseUtil.ErrorCodes;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -315,6 +317,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
         participantRegistrySiteRepository.findByStudyIdAndEmail("3", "cdash936@gmail.com");
 
     ParticipantRegistrySiteEntity participantRegistrySite = participantRegistrySiteList.get(0);
+    // Set onboarding status to Disabled (D)
     participantRegistrySite.setOnboardingStatus("D");
     participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
 
@@ -331,15 +334,37 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
                 .content(requestJson)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isGone())
+        .andExpect(jsonPath("$.error_description", is(TOKEN_EXPIRED.getDescription())));
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+    verifyTokenIntrospectRequest();
+  }
 
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_FOUND_INELIGIBLE_FOR_STUDY.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, USER_FOUND_INELIGIBLE_FOR_STUDY);
+  @Test
+  public void shouldReturnUnknownTokenForEnrollment() throws Exception {
+    List<ParticipantRegistrySiteEntity> participantRegistrySiteList =
+        participantRegistrySiteRepository.findByStudyIdAndEmail("3", "cdash936@gmail.com");
+
+    ParticipantRegistrySiteEntity participantRegistrySite = participantRegistrySiteList.get(0);
+    // Set onboarding status to New (N)
+    participantRegistrySite.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+    // study type close
+    String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH_CLOSE);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ENROLL_PATH.getPath())
+                .headers(headers)
+                .content(requestJson)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message", is(ErrorCodes.UNKNOWN_TOKEN.getValue())));
 
     verifyTokenIntrospectRequest();
   }
