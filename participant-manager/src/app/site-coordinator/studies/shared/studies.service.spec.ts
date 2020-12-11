@@ -40,7 +40,7 @@ describe('StudiesService', () => {
     );
     studiesService = new StudiesService(entityServicespy);
     studiesService
-      .getStudies()
+      .getStudies(10, 0, '')
       .subscribe(
         (studies) =>
           expect(studies).toEqual(expectedStudyList, 'expected StudiesList'),

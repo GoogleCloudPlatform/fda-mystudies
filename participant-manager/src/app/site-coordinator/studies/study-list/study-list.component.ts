@@ -46,7 +46,6 @@ export class StudyListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
-        console.log(manageStudies);
         this.manageStudiesBackup = {...manageStudies};
         if (
           !manageStudies.superAdmin &&
@@ -56,11 +55,15 @@ export class StudyListComponent implements OnInit {
             'This view displays study-wise enrollment if you manage multiple sites.',
           );
         }
+
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
             study.name?.toLowerCase().includes(query.toLowerCase()) ||
             study.customId?.toLowerCase().includes(query.toLowerCase()),
         );
+        this.loadMoreEnabled =
+          this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
+
         return this.manageStudiesBackup;
       }),
     );

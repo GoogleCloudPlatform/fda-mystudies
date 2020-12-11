@@ -65,7 +65,6 @@ export class SiteListComponent implements OnInit {
         );
         this.loadMoreEnabled =
           this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
-        console.log(this.manageStudiesBackup.studies.length);
         return this.manageStudiesBackup;
       }),
     );
@@ -113,7 +112,6 @@ export class SiteListComponent implements OnInit {
               site.name?.toLowerCase()?.includes(query),
             ),
         );
-
         this.loadMoreEnabled =
           this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
 
