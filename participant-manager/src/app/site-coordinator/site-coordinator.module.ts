@@ -8,7 +8,8 @@ import {MobileMenuComponent} from './mobile-menu/mobile-menu.component';
 import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.component';
 import {ParticipantDetailsComponent} from './participant-details/participant-details.component';
 import {SharedModule} from '../shared/shared.module';
-
+import {RoleGuard} from '../../app/service/role.guard';
+import {LocationsGuard} from '../service/locations.guard';
 @NgModule({
   declarations: [
     SiteCoordinatorComponent,
@@ -23,5 +24,6 @@ import {SharedModule} from '../shared/shared.module';
     NgxDataTableModule,
     SharedModule,
   ],
+  providers: [RoleGuard, LocationsGuard],
 })
 export class SiteCoordinatorModule {}
