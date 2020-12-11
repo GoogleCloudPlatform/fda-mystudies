@@ -7,8 +7,19 @@ import {StudyResponse} from '../shared/study.model';
 })
 export class StudiesService {
   constructor(private readonly entityService: EntityService<StudyResponse>) {}
-  getStudies(): Observable<StudyResponse> {
-    return this.entityService.get('studies');
+  getStudies(
+    limit: number,
+    offset: number,
+    searchTerm: string,
+  ): Observable<StudyResponse> {
+    return this.entityService.get(
+      'studies?limit=' +
+        limit.toString() +
+        '&offset=' +
+        offset.toString() +
+        '&searchTerm=' +
+        searchTerm,
+    );
   }
 
   getStudiesWithSites(
