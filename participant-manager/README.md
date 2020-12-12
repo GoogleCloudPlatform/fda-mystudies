@@ -34,9 +34,12 @@ To deploy the [`Participant manager`](/participant-manager/) manually:
     -    Update the [`environment.prod.ts`](src/environments/environment.prod.ts) file with the values for your deployment (if you change this file you will need to create a new Docker image)
     -    Create the Docker image using `sudo docker build -t participant-manager-image .` from the `participant-manager/` directory (you may need to [install Docker](https://docs.docker.com/engine/install/debian/))
     -    Run the container on the VM using `sudo docker run --detach -p 80:80 --name participant-manager participant-manager-image`
-1. Visit `http://<CLOUD_VM_INSTANCE_IP>/participant-manager` in your browser to test if the application is running - you should be redirected to the login page if deployed successfully (you can install a [browser and remote desktop connection](https://cloud.google.com/solutions/chrome-desktop-remote-on-compute-engine) if your VM is restricted to IPs within its VPC network, alternatively use `curl -i http://0.0.0.0/` to confirm a `200 OK` response)
+1. Visit `http://<CLOUD_VM_INSTANCE_IP>/` in your browser to test if the application is running - you should be redirected to the login page if deployed successfully
+    -    If access to your VM is restricted to IPs within its VPC network, you can make a [remote desktop connection](https://cloud.google.com/solutions/chrome-desktop-remote-on-compute-engine) to a machine within your VPC (alternatively use `curl -i http://0.0.0.0/` to confirm a `200 OK` response)
+    -    Depending on how you have configured your domains and security, you may need to add the domain of your `Participant manager` instance to Chrome’s [insecure origin allowlist](chrome://flags/#unsafely-treat-insecure-origin-as-secure)
 1. Login as the super admin user with the username and password that you created with the `create_superadmin.sh` script that you ran during `Participant datastore` deployment
 1. Use the `Participant manager` user interface to create additional administrator accounts as needed
+1. You can review application logs in the logging directories you specified, or with `sudo docker logs participant-manager`; audit logs are available in [Cloud Logging](https://cloud.google.com/logging)
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
