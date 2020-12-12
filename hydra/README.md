@@ -55,7 +55,7 @@ The FDA MyStudies platform components are configured with a `client_id` and `cli
          "redirect_uris": ["<AUTH_SERVER_BASE_URL>/callback"] 
          }’
 ```
-For example, *<HYDRA_ADMIN_BASE_URL>* could be `https://10.128.0.2:4445` and *<AUTH_SERVER_BASE_URL>* could be `https://10.128.0.3`.
+For example, *<HYDRA_ADMIN_BASE_URL>* could be `https://10.128.0.2:4445` and *<AUTH_SERVER_BASE_URL>* could be `https://10.128.0.3`. See [`/deployment/scripts/register_clients_in_hydra.sh`](/deployment/scripts/register_clients_in_hydra.sh) for an example for how to create these resources efficiently.
  
 Platform component | Grant type | client_id | client_name
 ----------------------------|---------------|---------------|-------------------
