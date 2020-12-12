@@ -42,7 +42,7 @@ To deploy the [`Study datastore`](/study-datastore/) manually:
     -    Update the Docker environment file [`variables.env`](variables.env) with values to configure the [`application.properties`](src/main/resources/application.properties) file for your deployment
     -    Run the container on the VM using `sudo docker run --detach --env-file variables.env -p 80:8080 --name study-datastore study-datastore-image`
 1. Test if the application is running by running `curl 0.0.0.0/study-datastore/healthCheck`
-1. You can review application logs in the logging directories you specified, or with `sudo docker logs stuy-datastore`; audit logs are available in [Cloud Logging](https://cloud.google.com/logging)
+1. You can review application logs in the logging directories you specified, or with `sudo docker logs study-datastore`; audit logs are available in [Cloud Logging](https://cloud.google.com/logging)
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
