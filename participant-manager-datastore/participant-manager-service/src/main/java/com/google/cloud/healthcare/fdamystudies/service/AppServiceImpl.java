@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AppMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
@@ -419,7 +420,12 @@ public class AppServiceImpl implements AppService {
 
     List<String> userIds =
         appRepository.findUserDetailIds(
-            app.getId(), limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
+            app.getId(),
+            UserStatus.DEACTIVATED.getValue(),
+            limit,
+            offset,
+            orderByCondition,
+            StringUtils.defaultString(searchTerm));
 
     if (CollectionUtils.isEmpty(userIds)) {
       AppParticipantsResponse appParticipantsResponse =
@@ -496,7 +502,7 @@ public class AppServiceImpl implements AppService {
 
     Long participantCount =
         appRepository.countParticipantByAppIdAndSearchTerm(
-            app.getId(), StringUtils.defaultString(searchTerm));
+            app.getId(), UserStatus.DEACTIVATED.getValue(), StringUtils.defaultString(searchTerm));
 
     AppParticipantsResponse appParticipantsResponse =
         prepareAppParticipantResponse(appId, adminId, auditRequest, app, participants);
