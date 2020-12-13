@@ -27,13 +27,4 @@ public interface StudyConsentRepository extends JpaRepository<StudyConsentEntity
   @Query(
       "SELECT sc FROM StudyConsentEntity sc WHERE sc.participantStudy.id in (:participantStudyIds) ORDER BY sc.created DESC")
   public List<StudyConsentEntity> findByParticipantRegistrySiteId(List<String> participantStudyIds);
-
-  @Query(
-      "SELECT sc FROM StudyConsentEntity sc WHERE sc.participantStudy.id in (:participantStudyIds)")
-  public Page<StudyConsentEntity> findByParticipantRegistrySiteIdForPagination(
-      List<String> participantStudyIds, Pageable page);
-
-  @Query(
-      "SELECT COUNT(sc) FROM StudyConsentEntity sc WHERE sc.participantStudy.id in (:participantStudyIds)")
-  public Long countByParticipantRegistrySiteId(List<String> participantStudyIds);
 }

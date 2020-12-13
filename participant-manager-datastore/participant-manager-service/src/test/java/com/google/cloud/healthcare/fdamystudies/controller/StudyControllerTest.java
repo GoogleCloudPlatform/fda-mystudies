@@ -445,7 +445,7 @@ public class StudyControllerTest extends BaseMockIT {
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
     participantStudyEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -544,7 +544,7 @@ public class StudyControllerTest extends BaseMockIT {
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
     participantStudyEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_JOIN.getStatus());
+    participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -553,7 +553,7 @@ public class StudyControllerTest extends BaseMockIT {
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
                 .queryParam(
-                    "excludeParticipantStudyStatus", EnrollmentStatus.YET_TO_JOIN.getStatus())
+                    "excludeParticipantStudyStatus", EnrollmentStatus.YET_TO_ENROLL.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())

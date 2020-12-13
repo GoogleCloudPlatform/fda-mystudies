@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.repository;
 import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
-import com.google.cloud.healthcare.fdamystudies.model.AppSiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudyInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
 import java.util.List;
@@ -170,28 +169,6 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
       nativeQuery = true)
   public List<AppParticipantsInfo> findUserDetailsByAppId(
       String appId, List<String> userDetailIds, String orderByCondition);
-
-  @Query(
-      value =
-          "SELECT ud.id AS userDetailsId, psi.site_id as siteId, psi.study_info_id AS studyId, "
-              + "loc.custom_id AS locationCustomId, loc.name AS locationName "
-              + "FROM participant_study_info psi, locations loc, sites s, user_details ud "
-              + "WHERE ud.id=psi.user_details_id AND psi.study_info_id=s.study_id "
-              + "AND psi.site_id=s.id AND loc.id=s.location_id AND "
-              + "ud.app_info_id=:appId AND psi.status NOT IN (:excludeParticipantStudyStatus) "
-              + "AND ud.id IN (:userIds)",
-      nativeQuery = true)
-  public List<AppSiteInfo> findSitesByAppIdAndStudyStatusAndUserIds(
-      String appId, String[] excludeParticipantStudyStatus, List<String> userIds);
-
-  @Query(
-      value =
-          "SELECT ud.id AS userDetailsId, psi.site_id as siteId, psi.study_info_id AS studyId, loc.custom_id AS locationCustomId, loc.name AS locationName "
-              + "FROM participant_study_info psi, locations loc, sites s, user_details ud "
-              + "WHERE ud.id=psi.user_details_id AND psi.study_info_id=s.study_id AND psi.site_id=s.id AND loc.id=s.location_id AND "
-              + "ud.app_info_id=:appId AND ud.id IN (:userIds) ",
-      nativeQuery = true)
-  public List<AppSiteInfo> findSitesByAppIdAndUserIds(String appId, List<String> userIds);
 
   @Query(
       value =

@@ -21,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -35,12 +36,13 @@ import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
-import com.google.cloud.healthcare.fdamystudies.model.AppSiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudyInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistory;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
@@ -81,6 +83,8 @@ public class AppServiceImpl implements AppService {
   @Autowired private StudyRepository studyRepository;
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
+  @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -447,20 +451,44 @@ public class AppServiceImpl implements AppService {
 
     Map<String, ParticipantDetail> participantsMap = new LinkedHashMap<>();
 
-    List<AppSiteInfo> appSiteInfoList = null;
+    List<ParticipantEnrollmentHistory> enrollmentHistoryEntities =
+        participantEnrollmentHistoryRepository.findParticipantEnrollmentHistoryByAppId(
+            app.getId(), userIds);
 
-    if (ArrayUtils.isEmpty(excludeParticipantStudyStatus)) {
-      appSiteInfoList = appRepository.findSitesByAppIdAndUserIds(app.getId(), userIds);
-    } else {
-      appSiteInfoList =
-          appRepository.findSitesByAppIdAndStudyStatusAndUserIds(
-              app.getId(), excludeParticipantStudyStatus, userIds);
+    Map<String, AppSiteDetails> enrollmentHistoryMap = new HashMap<>();
+    Map<String, List<AppSiteDetails>> sitesByUserIdStudyIdMap = new HashMap<>();
+
+    List<AppSiteDetails> appSites = null;
+    AppSiteDetails appSiteDetails = null;
+    String createdDate = null;
+    for (ParticipantEnrollmentHistory enrollmentHistory : enrollmentHistoryEntities) {
+      createdDate = DateTimeUtils.format(enrollmentHistory.getCreated());
+      if (!sitesByUserIdStudyIdMap.containsKey(enrollmentHistory.getUserIdStudyIdKey())) {
+        appSites = new ArrayList<>();
+        sitesByUserIdStudyIdMap.put(enrollmentHistory.getUserIdStudyIdKey(), appSites);
+      }
+      appSites = sitesByUserIdStudyIdMap.get(enrollmentHistory.getUserIdStudyIdKey());
+      if (!enrollmentHistoryMap.containsKey(enrollmentHistory.getUserIdStudyIdSiteIdKey())) {
+        appSiteDetails = prepareAppSiteDetails(createdDate, enrollmentHistory);
+        enrollmentHistoryMap.put(enrollmentHistory.getUserIdStudyIdSiteIdKey(), appSiteDetails);
+        appSites.add(appSiteDetails);
+        continue;
+      }
+
+      appSiteDetails = enrollmentHistoryMap.get(enrollmentHistory.getUserIdStudyIdSiteIdKey());
+
+      if (StringUtils.isEmpty(appSiteDetails.getWithdrawlDate())
+          && EnrollmentStatus.WITHDRAWN
+              .getStatus()
+              .equals(enrollmentHistory.getEnrollmentStatus())) {
+        appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
+      } else if (StringUtils.isEmpty(appSiteDetails.getEnrollmentDate())
+          && EnrollmentStatus.ENROLLED
+              .getStatus()
+              .equals(enrollmentHistory.getEnrollmentStatus())) {
+        appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
+      }
     }
-
-    Map<String, AppSiteInfo> appSiteInfoMap =
-        appSiteInfoList
-            .stream()
-            .collect(Collectors.toMap(AppSiteInfo::getUserIdStudyIdKey, Function.identity()));
 
     for (AppParticipantsInfo appParticipantsInfo : appParticipantsInfoList) {
       ParticipantDetail participantDetail =
@@ -474,24 +502,10 @@ public class AppServiceImpl implements AppService {
 
       AppStudyDetails appStudyDetails = StudyMapper.toAppStudyDetailsList(appParticipantsInfo);
 
-      AppSiteInfo appSite =
-          appSiteInfoMap.get(
-              appParticipantsInfo.getUserDetailsId() + appParticipantsInfo.getStudyId());
-
-      if (appSite != null) {
-        AppSiteDetails appSiteDetails = new AppSiteDetails();
-        appSiteDetails.setSiteId(appSite.getSiteId());
-        appSiteDetails.setCustomLocationId(appSite.getLocationCustomId());
-        appSiteDetails.setLocationName(appSite.getLocationName());
-        appSiteDetails.setParticipantStudyStatus(appParticipantsInfo.getParticipantStudyStatus());
-
-        String withdrawalDate = DateTimeUtils.format(appParticipantsInfo.getWithdrawalTime());
-        appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
-
-        String enrollmentDate = DateTimeUtils.format(appParticipantsInfo.getEnrolledTime());
-        appSiteDetails.setEnrollmentDate(
-            StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-        appStudyDetails.getSites().add(appSiteDetails);
+      String userIdStudyIdKey =
+          appParticipantsInfo.getUserDetailsId() + appParticipantsInfo.getStudyId();
+      if (sitesByUserIdStudyIdMap.containsKey(userIdStudyIdKey)) {
+        appStudyDetails.getSites().addAll(sitesByUserIdStudyIdMap.get(userIdStudyIdKey));
       }
 
       participantDetail.getEnrolledStudies().add(appStudyDetails);
@@ -510,6 +524,25 @@ public class AppServiceImpl implements AppService {
 
     logger.exit(String.format("%d participant found for appId=%s", participantsMap.size(), appId));
     return appParticipantsResponse;
+  }
+
+  private AppSiteDetails prepareAppSiteDetails(
+      String createdDate, ParticipantEnrollmentHistory enrollmentHistory) {
+    AppSiteDetails appSiteDetails;
+    appSiteDetails = new AppSiteDetails();
+    appSiteDetails.setSiteId(enrollmentHistory.getSiteId());
+    appSiteDetails.setCustomLocationId(enrollmentHistory.getLocationCustomId());
+    appSiteDetails.setLocationName(enrollmentHistory.getLocationName());
+    appSiteDetails.setParticipantStudyStatus(enrollmentHistory.getEnrollmentStatus());
+
+    if (EnrollmentStatus.WITHDRAWN.getStatus().equals(enrollmentHistory.getEnrollmentStatus())) {
+      appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
+    } else if (EnrollmentStatus.ENROLLED
+        .getStatus()
+        .equals(enrollmentHistory.getEnrollmentStatus())) {
+      appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
+    }
+    return appSiteDetails;
   }
 
   private AppParticipantsResponse prepareAppParticipantResponse(

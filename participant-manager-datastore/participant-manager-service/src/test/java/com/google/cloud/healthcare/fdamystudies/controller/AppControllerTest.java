@@ -26,11 +26,12 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
-import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistoryEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -63,6 +64,7 @@ public class AppControllerTest extends BaseMockIT {
   private SiteEntity siteEntity;
   private UserDetailsEntity userDetailsEntity;
   private LocationEntity locationEntity;
+  private ParticipantEnrollmentHistoryEntity participantEnrollmentHistoryEntity;
 
   public static final String EMAIL_VALUE = "mockit_email@grr.la";
 
@@ -498,6 +500,13 @@ public class AppControllerTest extends BaseMockIT {
     siteEntity.setLocation(locationEntity);
     participantStudyEntity.setUserDetails(userDetailsEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+    participantEnrollmentHistoryEntity =
+        testDataHelper.createEnrollmentHistory(appEntity, studyEntity, siteEntity);
+    participantEnrollmentHistoryEntity.setUserDetails(userDetailsEntity);
+    participantEnrollmentHistoryEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
+    testDataHelper
+        .getParticipantEnrollmentHistoryRepository()
+        .saveAndFlush(participantEnrollmentHistoryEntity);
 
     // Step 2: Call API to return GET_APPS_PARTICIPANTS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
