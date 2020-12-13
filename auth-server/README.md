@@ -41,7 +41,7 @@ To deploy the [`Auth server`](/auth-server/) manually:
     -    Update the Docker environment file [`variables.env`](variables.env) with the values of the [`application.properties`](oauth-scim-service/src/main/resources/application.properties) file for your deployment
     -    Run the container on your VM using `sudo docker run --detach  -v ~/certs:/certs --env-file variables.env -p 443:8080  --name auth-server auth-server-image` (you may need to adjust the port to 80 if you are using `http`)
     -    If your `Hydra` instance is using a self-signed certificate, add that certificate to your container’s keystore, for example with `sudo docker exec -it auth-server bash -c "openssl s_client -connect <your_hydra_instance> | sed -ne '/-BEGIN CERTIFICATE/,/END CERTIFICATE/p' > hydra.crt; keytool -import -trustcacerts -alias hydra -file hydra.crt -keystore /usr/local/openjdk-11/lib/security/cacerts -storepass changeit”`, then restart the container with `sudo docker restart auth-server`
-1. Test if the application is running with `curl http://0.0.0.0/auth-server/healthCheck`
+1. Test if the application is running with `curl https://0.0.0.0/auth-server/healthCheck`
 1. You can review application logs in the logging directory you specified, or with `sudo docker logs auth-server`; audit logs are available in [Cloud Logging](https://cloud.google.com/logging)
 
 ***
