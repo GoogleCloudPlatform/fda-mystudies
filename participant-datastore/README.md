@@ -47,7 +47,7 @@ To deploy the [`Participant datastore`](/participant-datastore/) manually:
          sudo docker run --detach --env-file enroll-mgmt-module/variables.env -p 8081:8080 --name enroll-mgmt enroll-mgmt-image && \
          sudo docker run --detach --env-file consent-mgmt-module/variables.env -p 8082:8080 --name consent-mgmt consent-mgmt-image
          ```
-    -    If your `Hydra` instance is a using self-signed certificate, add that certificate to each of the container keystores, for example with `sudo docker exec -it <container_name> bash -c "openssl s_client -connect <your_hydra_instance> | sed -ne '/-BEGIN CERTIFICATE/,/END CERTIFICATE/p' > hydra.crt; keytool -import -trustcacerts -alias hydra -file hydra.crt -keystore /usr/local/openjdk-11/lib/security/cacerts -storepass changeit”`, then restart the containers
+    -    If your `Hydra` instance is a using self-signed certificate, add that certificate to each of the container keystores, for example with `sudo docker exec -it <container_name> bash -c "openssl s_client -connect <your_hydra_instance> | sed -ne '/-BEGIN CERTIFICATE/,/END CERTIFICATE/p' > hydra.crt; keytool -import -trustcacerts -alias hydra -file hydra.crt -keystore /usr/local/openjdk-11/lib/security/cacerts -storepass changeit"`, then restart the containers
 1. Test if the applications are running with
      ```bash
     curl http://0.0.0.0:8080/participant-user-datastore/healthCheck
