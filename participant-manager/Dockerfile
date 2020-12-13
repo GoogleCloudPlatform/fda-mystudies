@@ -11,7 +11,7 @@ COPY . ./
 RUN npm set progress=false
 RUN npm install
 RUN npm install -g @angular/cli
-RUN ng build --aot --prod --base-href='/participant-manager/'
+RUN ng build --aot --prod --base-href='/'
 
 # Stage2
 # copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
