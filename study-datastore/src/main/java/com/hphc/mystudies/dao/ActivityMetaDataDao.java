@@ -2916,6 +2916,8 @@ public class ActivityMetaDataDao {
                       endDateTime,
                       StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                       StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          activityBean.setIsLaunchStudy(activeTaskFrequency.isLaunchStudy());
+          activityBean.setIsStudyLifeTime(activeTaskFrequency.isStudyLifeTime());
         } else if (activeTaskDto
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_DAILY)) {
@@ -3075,6 +3077,8 @@ public class ActivityMetaDataDao {
                       endDateTime,
                       StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                       StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          activityBean.setIsLaunchStudy(questionnairesFrequency.getIsLaunchStudy());
+          activityBean.setIsStudyLifeTime(questionnairesFrequency.getIsStudyLifeTime());
         } else if (questionaire
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_DAILY)) {
