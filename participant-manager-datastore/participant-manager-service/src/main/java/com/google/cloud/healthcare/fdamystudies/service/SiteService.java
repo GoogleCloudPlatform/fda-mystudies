@@ -36,8 +36,7 @@ public interface SiteService {
       String onboardingStatus,
       AuditLogEventRequest auditRequest,
       Integer page,
-      Integer limit,
-      String[] excludeEnrollmentStatus);
+      Integer limit);
 
   public ParticipantResponse addNewParticipant(
       ParticipantDetailRequest participant, String userId, AuditLogEventRequest auditRequest);

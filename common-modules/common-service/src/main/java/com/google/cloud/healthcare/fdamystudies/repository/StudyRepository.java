@@ -114,15 +114,17 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
           "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_time AS enrolledDate, psi.status AS enrolledStatus "
               + ",prs.site_id AS siteId, prs.onboarding_status AS onboardingStatus, "
               + "loc.name AS locationName, loc.custom_id AS locationCustomId, "
-              + "prs.invitation_time AS invitedDate, prs.id AS participantId "
+              + "prs.invitation_time AS invitedDate, prs.id AS participantId, stu.type AS studyType "
               + "FROM participant_registry_site prs "
-              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id AND psi.status NOT IN (:excludeParticipantStudyStatus) "
+              + "LEFT JOIN study_info stu ON psi.study_info_id = stu.id  "
               + "LEFT JOIN sites si ON si.id=prs.site_id "
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
-              + "WHERE prs.study_info_id=:studyId "
+              + "WHERE prs.study_info_id=:studyId AND stu.type='OPEN' "
               + "ORDER BY prs.created_time, prs.email DESC",
       nativeQuery = true)
-  public List<StudyParticipantDetails> getStudyParticipantDetails(String studyId);
+  public List<StudyParticipantDetails> getStudyParticipantDetailsForOpenStudy(
+      String studyId, String[] excludeParticipantStudyStatus);
 
   @Query(
       value =
@@ -213,4 +215,20 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<String> findStudyIds(Integer limit, Integer offset, String userId);
+
+  @Query(
+      value =
+          "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_time AS enrolledDate, psi.status AS enrolledStatus "
+              + ",prs.site_id AS siteId, prs.onboarding_status AS onboardingStatus, "
+              + "loc.name AS locationName, loc.custom_id AS locationCustomId, "
+              + "prs.invitation_time AS invitedDate, prs.id AS participantId, stu.type AS studyType "
+              + "FROM participant_registry_site prs "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id  "
+              + "LEFT JOIN study_info stu ON psi.study_info_id = stu.id  "
+              + "LEFT JOIN sites si ON si.id=prs.site_id "
+              + "LEFT JOIN locations loc ON loc.id=si.location_id "
+              + "WHERE prs.study_info_id=:studyId AND stu.type='CLOSE' "
+              + "ORDER BY prs.created_time, prs.email DESC",
+      nativeQuery = true)
+  public List<StudyParticipantDetails> getStudyParticipantDetailsForClosedStudy(String studyId);
 }
