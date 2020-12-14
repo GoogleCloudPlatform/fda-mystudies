@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Study, StudyResponse} from '../shared/study.model';
@@ -17,7 +17,6 @@ const limit = 10;
   styleUrls: ['./study-list.component.scss'],
 })
 export class StudyListComponent implements OnInit {
-  query$ = new BehaviorSubject('');
   studyList$: Observable<StudyResponse> = of();
   studies: Study[] = [];
   manageStudiesBackup = {} as StudyResponse;
@@ -50,9 +49,8 @@ export class StudyListComponent implements OnInit {
   getStudies(): void {
     this.studyList$ = combineLatest(
       this.studiesService.getStudies(limit, 0, this.searchValue),
-      this.query$,
     ).pipe(
-      map(([manageStudies, query]) => {
+      map(([manageStudies]) => {
         this.manageStudiesBackup = {...manageStudies};
         if (
           !manageStudies.superAdmin &&
@@ -72,9 +70,6 @@ export class StudyListComponent implements OnInit {
     );
   }
 
-  search(query: string): void {
-    this.query$.next(query.trim());
-  }
   progressBarColor(study: Study): string {
     if (study.enrollmentPercentage && study.enrollmentPercentage > 70) {
       return 'green__text__sm';
@@ -93,9 +88,8 @@ export class StudyListComponent implements OnInit {
     const offset = this.manageStudiesBackup.studies.length;
     this.studyList$ = combineLatest(
       this.studiesService.getStudies(limit, offset, this.searchValue),
-      this.query$,
     ).pipe(
-      map(([manageStudies, query]) => {
+      map(([manageStudies]) => {
         const studies = [];
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);

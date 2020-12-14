@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Study, StudyResponse} from '../../studies/shared/study.model';
@@ -17,7 +17,6 @@ const limit = 10;
   styleUrls: ['./site-list.component.scss'],
 })
 export class SiteListComponent implements OnInit {
-  query$ = new BehaviorSubject('');
   study$: Observable<StudyResponse> = of();
   manageStudiesBackup = {} as StudyResponse;
   study = {} as Study;
@@ -58,9 +57,8 @@ export class SiteListComponent implements OnInit {
   getStudies(): void {
     this.study$ = combineLatest(
       this.studiesService.getStudiesWithSites(limit, 0, this.searchValue),
-      this.query$,
     ).pipe(
-      map(([manageStudies, query]) => {
+      map(([manageStudies]) => {
         this.manageStudiesBackup = {...manageStudies};
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
@@ -69,9 +67,6 @@ export class SiteListComponent implements OnInit {
         return this.manageStudiesBackup;
       }),
     );
-  }
-  search(query: string): void {
-    this.query$.next(query.trim().toLowerCase());
   }
   progressBarColor(site: Site): string {
     if (site.enrollmentPercentage && site.enrollmentPercentage > 70) {
@@ -96,11 +91,9 @@ export class SiteListComponent implements OnInit {
 
     this.study$ = combineLatest(
       this.studiesService.getStudiesWithSites(limit, offset, this.searchValue),
-      this.query$,
     ).pipe(
-      map(([manageStudies, query]) => {
+      map(([manageStudies]) => {
         const studies = [];
-
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
         this.manageStudiesBackup.studies = studies;

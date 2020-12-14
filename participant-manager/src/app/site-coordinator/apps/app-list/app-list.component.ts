@@ -51,7 +51,7 @@ export class AppListComponent implements OnInit {
       this.appService.getUserApps(limit, 0, this.searchValue),
       this.query$,
     ).pipe(
-      map(([manageApps, query]) => {
+      map(([manageApps]) => {
         this.manageAppsBackup = {...manageApps};
 
         if (!manageApps.superAdmin && manageApps.studyPermissionCount < 2) {
@@ -66,9 +66,7 @@ export class AppListComponent implements OnInit {
       }),
     );
   }
-  search(query: string): void {
-    this.query$.next(query.trim());
-  }
+
   progressBarColor(app: App): string {
     if (app.enrollmentPercentage && app.enrollmentPercentage > 70) {
       return 'green__text__sm';
@@ -97,7 +95,7 @@ export class AppListComponent implements OnInit {
       this.appService.getUserApps(limit, offset, this.searchValue),
       this.query$,
     ).pipe(
-      map(([manageApps, query]) => {
+      map(([manageApps]) => {
         const apps = [];
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         apps.push(...this.manageAppsBackup.apps);
