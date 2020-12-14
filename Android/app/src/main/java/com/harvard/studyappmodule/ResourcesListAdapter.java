@@ -33,6 +33,8 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import io.realm.RealmList;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdapter.Holder> {
   private final Context context;
@@ -86,6 +88,24 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
   public void onBindViewHolder(final Holder holder, final int position) {
     final int i = holder.getAdapterPosition();
     try {
+      Comparator<Resource> comparator =
+              new Comparator<Resource>() {
+                @Override
+                public int compare(final Resource o1, final Resource o2) {
+                  if (o1.getTitle().contains(context.getResources().getString(R.string.leave_study))
+                          && !o2.getTitle()
+                          .contains(context.getResources().getString(R.string.leave_study))) {
+                    return 1;
+                  } else if (!o1.getTitle()
+                          .contains(context.getResources().getString(R.string.leave_study))
+                          && o2.getTitle()
+                          .contains(context.getResources().getString(R.string.leave_study))) {
+                    return -1;
+                  }
+                  return 0;
+                }
+              };
+      Collections.sort(items, comparator);
       holder.resourcesTitle.setText(items.get(i).getTitle());
 
       if (items.get(i).getTitle().equalsIgnoreCase(context.getResources().getString(R.string.leave_study))
