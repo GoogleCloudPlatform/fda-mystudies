@@ -577,7 +577,12 @@
                   <div>
                     <div class="form-group mb-none">
                       <div
-                        *ngIf="participant.enrollmentStatus == 'Yet to Enroll'"
+                        *ngIf="
+                          participant.enrollmentStatus ===
+                            enrollmentStatus.YetToEnroll ||
+                          participant.enrollmentStatus ===
+                            enrollmentStatus.NotEligile
+                        "
                       >
                         <input
                           type="checkbox"
@@ -606,7 +611,12 @@
                         </span>
                       </div>
                       <div
-                        *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
+                        *ngIf="
+                          participant.enrollmentStatus !==
+                            enrollmentStatus.YetToEnroll &&
+                          participant.enrollmentStatus !==
+                            enrollmentStatus.NotEligile
+                        "
                       >
                         <span
                           class="no_st_en cursor__pointer outline__none"
@@ -662,9 +672,12 @@
                 <td *ngIf="activeTab != onBoardingStatus.New">
                   <div
                     [ngClass]="{
-                      'txt__green': participant.enrollmentStatus == 'Enrolled',
+                      'txt__green':
+                        participant.enrollmentStatus ==
+                        enrollmentStatus.Enrolled,
                       'txt__light-gray':
-                        participant.enrollmentStatus == 'Withdrawn'
+                        participant.enrollmentStatus ==
+                        enrollmentStatus.Withdrawn
                     }"
                   >
                     {{ participant.enrollmentStatus }}
