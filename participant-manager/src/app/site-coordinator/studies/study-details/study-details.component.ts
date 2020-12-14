@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {StudyDetailsService} from '../shared/study-details.service';
 import {ActivatedRoute} from '@angular/router';
-import {BehaviorSubject, Observable, of, combineLatest} from 'rxjs';
+import {Observable, of, combineLatest} from 'rxjs';
 import {StudyDetails} from '../shared/study-details';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {map} from 'rxjs/operators';
@@ -13,7 +13,6 @@ import {
 } from 'src/app/shared/enums';
 import {Permission} from 'src/app/shared/permission-enums';
 import {TemplateRef} from '@angular/core';
-import {RegistryParticipant} from 'src/app/shared/participant';
 import {SearchService} from 'src/app/shared/search.service';
 import {Location} from '@angular/common';
 @Component({
@@ -25,13 +24,18 @@ export class StudyDetailsComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   studyId = '';
-  query$ = new BehaviorSubject('');
   studyDetail$: Observable<StudyDetails> = of();
-  studyDetailsBackup = {} as StudyDetails;
   studyTypes = StudyType;
   onboardingStatus = OnboardingStatus;
   enrollmentStatus = EnrollmentStatus;
   permission = Permission;
+  // pagination
+  limit = 10;
+  currentPage = 1;
+  offset = 0;
+  searchTerm = '';
+  sortBy: string[] | string = ['_email'];
+  sortOrder = 'asc';
   constructor(
     private readonly locationLibrary: Location,
     private readonly modalService: BsModalService,
@@ -59,36 +63,55 @@ export class StudyDetailsComponent
   }
   getStudyDetails(): void {
     this.studyDetail$ = combineLatest(
-      this.studyDetailsService.getStudyDetails(this.studyId),
-      this.query$,
+      this.studyDetailsService.getStudyDetails(
+        this.studyId,
+        this.offset,
+        this.limit,
+        this.searchTerm,
+        this.sortBy[0].replace('_', ''),
+        this.sortOrder,
+      ),
     ).pipe(
-      map(([studyDetails, query]) => {
-        this.studyDetailsBackup = JSON.parse(
-          JSON.stringify(studyDetails),
-        ) as StudyDetails;
+      map(([studyDetails]) => {
         if (
-          this.studyDetailsBackup.participantRegistryDetail.studyType ===
-            StudyType.Open &&
-          query === ''
+          studyDetails.participantRegistryDetail.studyType === StudyType.Open
         ) {
           this.sharedService.updateSearchPlaceHolder(
             'Search Participant Email',
           );
         }
-        this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
-          (participant: RegistryParticipant) =>
-            participant.enrollmentStatus !== EnrollmentStatus.NotEligile &&
-            (participant.email?.toLowerCase().includes(query.toLowerCase()) ||
-              participant.locationName
-                ?.toLowerCase()
-                .includes(query.toLowerCase())),
-        );
-        return this.studyDetailsBackup;
+        return studyDetails;
       }),
     );
   }
+
   search(query: string): void {
-    this.query$.next(query.trim());
+    this.currentPage = 1;
+    this.offset = 0;
+    this.searchTerm = query.trim().toLowerCase();
+    this.getStudyDetails();
+  }
+
+  pageChange(page: number): void {
+    if (page >= 1) {
+      this.currentPage = page;
+      this.offset = (page - 1) * this.limit;
+      this.getStudyDetails();
+    }
+  }
+
+  public onSortOrder(event: string): void {
+    this.sortOrder = event;
+    this.offset = 0;
+    this.currentPage = 0;
+    this.getStudyDetails();
+  }
+
+  public onSortBy(event: string | string[]): void {
+    this.sortBy = new Array(event) as string[];
+    this.offset = 0;
+    this.currentPage = 0;
+    this.getStudyDetails();
   }
   openModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(template);
