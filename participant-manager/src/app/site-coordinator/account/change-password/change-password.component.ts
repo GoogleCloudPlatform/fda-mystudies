@@ -84,10 +84,10 @@ export class ChangePasswordComponent
         if (getMessage(successResponse.code)) {
           this.toastr.success(getMessage(successResponse.code));
         }
-        void this.router.navigate(['/coordinator/accounts']);
+        void this.router.navigate(['/coordinator/studies/sites']);
       });
   }
   cancel() {
-    void this.router.navigate(['/coordinator/accounts']);
+    void this.router.navigate(['/coordinator/studies/sites']);
   }
 }
