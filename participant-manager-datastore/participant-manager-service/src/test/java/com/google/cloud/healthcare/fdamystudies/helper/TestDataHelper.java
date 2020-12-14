@@ -180,6 +180,7 @@ public class TestDataHelper {
     studyEntity.setStatus("Active");
     studyEntity.setName("Covid19");
     studyEntity.setSponsor("FDA");
+    studyEntity.setType("CLOSE");
     return studyEntity;
   }
 

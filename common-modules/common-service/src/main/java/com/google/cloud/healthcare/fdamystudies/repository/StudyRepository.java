@@ -84,7 +84,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
       value =
           "SELECT study.id AS studyId, COUNT(psi.site_id) AS COUNT "
               + "FROM study_info study, participant_study_info psi "
-              + "WHERE study.id=psi.study_info_id AND psi.status='inProgress' "
+              + "WHERE study.id=psi.study_info_id AND psi.status='enrolled' "
               + "GROUP BY study.id ",
       nativeQuery = true)
   public List<StudyCount> findEnrolledCountByStudyId();
@@ -164,7 +164,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.study_info_id, COUNT(ps.study_info_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='enrolled' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.study_info_id) AS enrolled ON invites.study_id=enrolled.study_info_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCountForStudy> getInvitedEnrolledCountForOpenStudyForStudies(
@@ -181,7 +181,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.study_info_id, COUNT(ps.study_info_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='enrolled' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.study_info_id) AS enrolled ON invites.study_info_id=enrolled.study_info_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCountForStudy> getEnrolledInvitedCountByUserId(
@@ -189,13 +189,28 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT DISTINCT stu.created_time AS studyCreatedTimeStamp, si.created_time AS siteCreatedTimeStamp, stu.id AS studyId, si.id AS siteId, IFNULL(si.target_enrollment, 0) AS targetEnrollment, "
-              + "loc.name AS siteName,stu.custom_id AS customId,stu.name AS studyName, stu.type AS studyType, ai.custom_app_id AS customAppId, ai.id AS appId, ai.app_name AS appName, "
-              + "stu.logo_image_url AS logoImageUrl,stu.status AS studyStatus "
-              + "FROM study_info stu "
-              + "LEFT JOIN app_info ai ON ai.id=stu.app_info_id "
-              + "LEFT JOIN sites si ON si.study_id=stu.id "
-              + "LEFT JOIN locations loc ON loc.id=si.location_id ",
+          "SELECT DISTINCT study.studyCreatedTimeStamp AS studyCreatedTimeStamp, site.siteCreatedTimeStamp AS siteCreatedTimeStamp, study.studyId AS studyId, site.siteId AS siteId, IFNULL(site.targetEnrollment, 0) AS targetEnrollment, "
+              + "site.siteName AS siteName,study.customId AS customId,study.studyName AS studyName, study.studyType AS studyType, study.customAppId AS customAppId, study.appId AS appId, study.appName AS appName, "
+              + "study.logoImageUrl AS logoImageUrl,study.studyStatus AS studyStatus "
+              + "FROM ( "
+              + "SELECT stu.id AS studyId, stu.created_time AS studyCreatedTimeStamp, stu.custom_id AS customId, stu.name AS studyName, stu.type AS studyType, "
+              + "stu.logo_image_url AS logoImageUrl,stu.status AS studyStatus, ai.custom_app_id AS customAppId, ai.id AS appId, ai.app_name AS appName "
+              + "FROM study_info stu, app_info ai "
+              + "WHERE stu.app_info_id = ai.id ORDER BY stu.created_time DESC  LIMIT :limit OFFSET :offset) AS study "
+              + "LEFT JOIN ( "
+              + "SELECT si.created_time AS siteCreatedTimeStamp, si.id AS siteId, si.study_id AS studyId, si.target_enrollment AS targetEnrollment, loc.name AS siteName "
+              + "FROM sites si, locations loc, study_info stu "
+              + "WHERE stu.id=si.study_id AND loc.id=si.location_id) AS site ON study.studyId= site.studyId "
+              + "WHERE study.studyName LIKE %:searchTerm% OR study.customId LIKE %:searchTerm% OR site.siteName LIKE %:searchTerm% ",
       nativeQuery = true)
-  public List<StudySiteInfo> getStudySiteDetails();
+  public List<StudySiteInfo> getStudySiteDetails(Integer limit, Integer offset, String searchTerm);
+
+  @Query(
+      value =
+          "SELECT id AS studyId  FROM study_info where id IN "
+              + "(SELECT study_id from study_permissions where ur_admin_user_id=:userId UNION ALL "
+              + "SELECT study_id from sites_permissions  where ur_admin_user_id=:userId) "
+              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+      nativeQuery = true)
+  public List<String> findStudyIds(Integer limit, Integer offset, String userId);
 }
