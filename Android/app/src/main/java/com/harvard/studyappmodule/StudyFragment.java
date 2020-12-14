@@ -107,8 +107,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   private String lastUpdatedStatusStatus;
   private Study study;
   private String title;
-  public static final String YET_TO_JOIN = "yetToJoin";
-  public static final String IN_PROGRESS = "inProgress";
+  public static final String YET_TO_JOIN = "yetToEnroll";
+  public static final String IN_PROGRESS = "enrolled";
   public static final String COMPLETED = "completed";
   public static final String NOT_ELIGIBLE = "notEligible";
   public static final String WITHDRAWN = "withdrawn";
@@ -574,10 +574,10 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       }
       JSONObject participationStatus = jsonObj.getJSONObject("participationStatus");
       ArrayList<String> temp2 = new ArrayList<>();
-      if (participationStatus.getBoolean("inProgress")) {
+      if (participationStatus.getBoolean("enrolled")) {
         temp2.add(StudyFragment.IN_PROGRESS);
       }
-      if (participationStatus.getBoolean("yetToJoin")) {
+      if (participationStatus.getBoolean("yetToEnroll")) {
         temp2.add(StudyFragment.YET_TO_JOIN);
       }
       if (participationStatus.getBoolean("completed")) {

@@ -4,26 +4,26 @@ import io.realm.RealmObject;
 
 public class ParticipationStatus extends RealmObject {
 
-  private boolean inProgress;
-  private boolean yetToJoin;
+  private boolean enrolled;
+  private boolean yetToEnroll;
   private boolean completed;
   private boolean withdrawn;
   private boolean notEligible;
 
-  public boolean isInProgress() {
-    return inProgress;
+  public boolean isEnrolled() {
+    return enrolled;
   }
 
-  public void setInProgress(boolean inProgress) {
-    this.inProgress = inProgress;
+  public void setEnrolled(boolean enrolled) {
+    this.enrolled = enrolled;
   }
 
-  public boolean isYetToJoin() {
-    return yetToJoin;
+  public boolean isYetToEnroll() {
+    return yetToEnroll;
   }
 
-  public void setYetToJoin(boolean yetToJoin) {
-    this.yetToJoin = yetToJoin;
+  public void setYetToEnroll(boolean yetToEnroll) {
+    this.yetToEnroll = yetToEnroll;
   }
 
   public boolean isCompleted() {

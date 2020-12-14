@@ -300,15 +300,15 @@ public class FilterActivity extends AppCompatActivity {
               studyStatus.setClosed(false);
             }
             if (inProgressSelctBtn.isChecked()) {
-              participationStatus.setInProgress(true);
+              participationStatus.setEnrolled(true);
             } else {
-              participationStatus.setInProgress(false);
+              participationStatus.setEnrolled(false);
             }
 
             if (yettoJoinSelctBtn.isChecked()) {
-              participationStatus.setYetToJoin(true);
+              participationStatus.setYetToEnroll(true);
             } else {
-              participationStatus.setYetToJoin(false);
+              participationStatus.setYetToEnroll(false);
             }
 
             if (completedSelectBtn.isChecked()) {
@@ -438,8 +438,8 @@ public class FilterActivity extends AppCompatActivity {
                 }
               }
             } else {
-              if (!filter.getParticipationStatus().isInProgress()
-                  && !filter.getParticipationStatus().isYetToJoin()
+              if (!filter.getParticipationStatus().isEnrolled()
+                  && !filter.getParticipationStatus().isYetToEnroll()
                   && !filter.getParticipationStatus().isCompleted()
                   && !filter.getParticipationStatus().isWithdrawn()
                   && !filter.getParticipationStatus().isNotEligible()) {
@@ -505,12 +505,12 @@ public class FilterActivity extends AppCompatActivity {
         closedSelectBtn.setChecked(false);
       }
       JSONObject participationStatus = jsonObj.getJSONObject("participationStatus");
-      if (participationStatus.getBoolean("inProgress")) {
+      if (participationStatus.getBoolean("enrolled")) {
         inProgressSelctBtn.setChecked(true);
       } else {
         inProgressSelctBtn.setChecked(false);
       }
-      if (participationStatus.getBoolean("yetToJoin")) {
+      if (participationStatus.getBoolean("yetToEnroll")) {
         yettoJoinSelctBtn.setChecked(true);
       } else {
         yettoJoinSelctBtn.setChecked(false);
