@@ -21,7 +21,6 @@ public interface AppService {
       String appId,
       String userId,
       AuditLogEventRequest auditRequest,
-      String[] excludeSiteStatus,
       Integer limit,
       Integer offset,
       String orderByCondition,

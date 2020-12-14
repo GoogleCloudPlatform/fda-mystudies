@@ -21,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistory;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -31,7 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -153,43 +154,33 @@ public final class ParticipantMapper {
   }
 
   public static void addEnrollments(
-      ParticipantDetail participantDetail, List<ParticipantStudyEntity> participantsEnrollments) {
+      ParticipantDetail participantDetail,
+      List<ParticipantEnrollmentHistory> enrollmentHistoryEntities) {
+    if (CollectionUtils.isEmpty(enrollmentHistoryEntities)) {
+      Enrollment enrollment =
+          new Enrollment(
+              null,
+              NOT_APPLICABLE,
+              EnrollmentStatus.YET_TO_ENROLL.getDisplayValue(),
+              NOT_APPLICABLE);
+      participantDetail.getEnrollments().add(enrollment);
+      return;
+    }
 
-    Optional<ParticipantStudyEntity> optParticipant =
-        participantsEnrollments
-            .stream()
-            .filter(
-                participant ->
-                    participant.getStatus().equals(EnrollmentStatus.ENROLLED.getStatus()))
-            .findAny();
-
-    for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
+    for (ParticipantEnrollmentHistory enrollmentHistory : enrollmentHistoryEntities) {
       Enrollment enrollment = new Enrollment();
-
-      if (!optParticipant.isPresent()
-          && participantsEnrollment
-              .getStatus()
-              .equals(EnrollmentStatus.YET_TO_ENROLL.getStatus())) {
-        enrollment.setEnrollmentStatus(participantsEnrollment.getStatus());
-        enrollment.setParticipantId(participantsEnrollment.getParticipantId());
-        enrollment.setEnrollmentDate(NOT_APPLICABLE);
-        enrollment.setWithdrawalDate(NOT_APPLICABLE);
-        participantDetail.getEnrollments().add(enrollment);
-        // TODO: (Issue #1454) Separate records should be displayed for each time of the user
-        // enrollment process
-        // current implementation has single record, so added below return;
-        return;
-      }
-
       enrollment.setEnrollmentStatus(
-          EnrollmentStatus.getDisplayValue(participantsEnrollment.getStatus()));
-      enrollment.setParticipantId(participantsEnrollment.getParticipantId());
-
-      String enrollmentDate = DateTimeUtils.format(participantsEnrollment.getEnrolledDate());
-      enrollment.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-
-      String withdrawalDate = DateTimeUtils.format(participantsEnrollment.getWithdrawalDate());
-      enrollment.setWithdrawalDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
+          EnrollmentStatus.getDisplayValue(enrollmentHistory.getEnrollmentStatus()));
+      String createdDate = DateTimeUtils.format(enrollmentHistory.getCreated());
+      if (EnrollmentStatus.WITHDRAWN.getStatus().equals(enrollmentHistory.getEnrollmentStatus())) {
+        enrollment.setWithdrawalDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
+        enrollment.setEnrollmentDate(NOT_APPLICABLE);
+      } else if (EnrollmentStatus.ENROLLED
+          .getStatus()
+          .equals(enrollmentHistory.getEnrollmentStatus())) {
+        enrollment.setEnrollmentDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
+        enrollment.setWithdrawalDate(NOT_APPLICABLE);
+      }
       participantDetail.getEnrollments().add(enrollment);
     }
   }
