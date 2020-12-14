@@ -92,7 +92,7 @@
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
-        <textarea class="form-control" rows="5" id="instructionText" name="instructionText"
+        <textarea class="form-control" rows="5" id="summernote" name="instructionText"
                   required
                   maxlength="500">${instructionsBo.instructionText}</textarea>
         <div class="help-block with-errors red-txt"></div>
@@ -142,6 +142,34 @@
       validateShortTitle('', function (val) {
       });
     });
+  //summernote editor initialization
+    $('#summernote')
+        .summernote(
+            {
+              placeholder: '',
+              tabsize: 2,
+              height: 200,
+              toolbar: [
+                [
+                  'font',
+                  ['bold', 'italic']],
+                [
+                  'para',
+                  ['paragraph',
+                    'ul', 'ol']],
+                ['font', ['underline']],
+                ['insert', ['link']],
+                ['hr'],
+                ['clear'],
+                ['cut'],
+                ['undo'],
+                ['redo'],
+                ['fontname',
+                  ['fontname']],
+                ['fontsize',
+                  ['fontsize']],]
+
+            });
     $('[data-toggle="tooltip"]').tooltip();
     $("#doneId").click(function () {
       $("#doneId").attr("disabled", true);
@@ -157,6 +185,33 @@
         } else {
           $("#doneId").attr("disabled", false);
         }
+        if ($('#summernote').summernote(
+        'code') === '<br>' || $('#summernote').summernote(
+        'code') === '' || $('#summernote').summernote('code') === '<p><br></p>') {
+      $('#summernote').attr(
+          'required', true);
+      $('#summernote')
+          .parent()
+          .addClass(
+              'has-error has-danger')
+          .find(".help-block")
+          .empty()
+          .append(
+              '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+      return false;
+    } else {
+      $('#summernote').attr(
+          'required', false);
+      $('#summernote').parent()
+          .removeClass(
+              "has-danger")
+          .removeClass(
+              "has-error");
+      $('#summernote').parent().find(
+          ".help-block").html("");
+
+    }
+        
       });
     });
   });
@@ -171,6 +226,7 @@
         $("#saveId").attr("disabled", false);
         $("body").removeClass("loading");
       }
+      
     });
   }
 
@@ -229,7 +285,7 @@
     var instruction_id = $("#id").val();
     var questionnaire_id = $("#questionnaireId").val();
     var instruction_title = $("#instructionTitle").val();
-    var instruction_text = $("#instructionText").val();
+    var instruction_text = $("#summernote").val();
 
     var shortTitle = $("#shortTitleId").val();
     var destinationStep = $("#destinationStepId").val();
@@ -298,6 +354,7 @@
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             "This is a required field."));
       }
+      
     }
   }
 
