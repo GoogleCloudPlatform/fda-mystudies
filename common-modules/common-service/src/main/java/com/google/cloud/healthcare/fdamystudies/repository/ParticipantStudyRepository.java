@@ -79,7 +79,7 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
 
   @Query(
       value =
-          "SELECT ps.site_id AS siteId, COUNT(ps.site_id) AS enrolledCount FROM participant_study_info ps WHERE ps.status='inProgress' AND ps.site_id IN (:siteIds) GROUP BY ps.site_id ",
+          "SELECT ps.site_id AS siteId, COUNT(ps.site_id) AS enrolledCount FROM participant_study_info ps WHERE ps.status='enrolled' AND ps.site_id IN (:siteIds) GROUP BY ps.site_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> getEnrolledCountForOpenStudy(List<String> siteIds);
 
@@ -90,6 +90,6 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
 
   @Modifying
   @Query(
-      "update ParticipantStudyEntity ps set ps.status=:enrollmentStatus WHERE ps.participantRegistrySite.id IN (:ids)")
+      "update ParticipantStudyEntity ps set ps.status=:enrollmentStatus, ps.enrolledDate=null WHERE ps.participantRegistrySite.id IN (:ids)")
   public void updateEnrollmentStatus(List<String> ids, String enrollmentStatus);
 }
