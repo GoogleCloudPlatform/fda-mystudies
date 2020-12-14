@@ -108,15 +108,48 @@ $(document)
                           .parent()
                           .find(".help-block")
                           .empty()
-                          .append($("<ul><li> </li></ul>")
-                          .attr("class","list-unstyled")
-                          .text("Special characters such as #^}{ are not allowed."));
+                          .html(
+                              "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
                     } else {
                       $(this).parent()
-                          .find(".help-block").empty();
+                          .find(".help-block").html(
+                          "");
                     }
 
                   });
+                  
+                  
+          $('input[type = text][custAttType = customValidate]')
+			  .on("keyup",function (e) {
+          var evt = (e) ? e : window.event;
+          var charCode = (evt.which) ? evt.which
+              : evt.keyCode;
+          if (charCode == 16)
+            isShift = false;
+          if (!isShift && $(this).val()) {
+            var regularExpression = /^[a-z0-9_-]*$/;
+            if (!regularExpression.test($(this)
+                .val())) {
+              var newVal = $(this)
+                  .val()
+                  .replace(
+                      /[^a-z0-9_-]/g,
+                      '');
+              e.preventDefault();
+              
+              $(this).val(newVal);
+              $(this).parent().addClass(
+                  "has-danger has-error");
+              $(this)
+              .parent()
+              .find(".help-block")
+              .empty()
+              .html(
+                  "<ul style ='white-space: nowrap;' class='list-unstyled'><li>Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)</li></ul>");
+            }
+          }
+        });
+                  
           $('input[type = text][custAttType != cust]')
               .on(
                   'keyup',
@@ -143,15 +176,11 @@ $(document)
                             .parent()
                             .find(".help-block")
                             .empty()
-                            .append($("<ul><li> </li></ul>")
-                            .attr("class","list-unstyled")
-                            .text("Special characters such as #^}{ are not allowed."));
+                            .html(
+                                "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
                       }
                     }
                   });
-          $('input').on('drop', function () {
-            return false;
-          });
           $('input[type = text][custAttType = cust]')
               .on(
                   'keyup',
@@ -178,9 +207,8 @@ $(document)
                             .parent()
                             .find(".help-block")
                             .empty()
-                            .append($("<ul><li> </li></ul>")
-                            .attr("class","list-unstyled")
-                            .text("The characters like (< >) are not allowed."));
+                            .html(
+                                "<ul class='list-unstyled'><li>The characters like (< >) are not allowed.</li></ul>");
                       }
                     }
                   });
@@ -193,7 +221,7 @@ $(document)
                         || wrappedString
                             .indexOf('</script>') !== -1) {
                       e.preventDefault();
-                      $(this).empty();
+                      $(this).html('');
                       $(this).parents().eq(2).find("textarea").val("");
                       $(this).parents().eq(2).addClass(
                           "has-danger").addClass(
@@ -202,12 +230,12 @@ $(document)
                          .parents().eq(2)
                           .find(".help-block")
                           .empty()
-                          .append($("<ul><li> </li></ul>")
-                          .attr("class","list-unstyled")
-                          .text("Special characters such as #^}{ are not allowed."));
+                          .html(
+                              "<ul class='list-unstyled'><li>Special characters such as #^}{ are not allowed.</li></ul>");
                     } else {
                       $(this).parents().eq(2)
-                          .find(".help-block").empty();
+                          .find(".help-block").html(
+                          "");
                     }
 
                   });
@@ -248,9 +276,8 @@ $(document)
                       $(thisAttr)
                           .parent()
                           .find(".help-block")
-                          .empty()
-                          .append($("<ul><li> </li></ul>")
-                          .attr("class","list-unstyled"));
+                          .html(
+                              "<ul class='list-unstyled'><li></li></ul>");
                       if (email !== '') {
                         $
                             .ajax({
@@ -280,7 +307,8 @@ $(document)
                                       .parent()
                                       .find(
                                           ".help-block")
-                                      .empty();
+                                      .html(
+                                          "");
                                 } else {
                                   $(thisAttr)
                                       .val(
@@ -300,9 +328,10 @@ $(document)
                                       .parent()
                                       .find(
                                           ".help-block")
-                                      .append($("<ul><li> </li></ul>")
-                                      .attr("class","list-unstyled").text(email
-                                          + " already exists."));
+                                      .append(
+                                          "<ul class='list-unstyled'><li>'"
+                                          + email
+                                          + "' already exists.</li></ul>");
                                 }
                               }
                             });
@@ -727,7 +756,7 @@ $(document)
                                     .addClass(
                                         'hide');
                                 $("#errMsg")
-                                    .text(
+                                    .html(
                                         message);
                                 $("#errMsg")
                                     .show(

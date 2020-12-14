@@ -28,7 +28,6 @@
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
             <div class="gray-xs-f line34">First Name
-              <small>(50 characters max)</small>
               <span
                   class="requiredStar"> *
               </span>
@@ -50,7 +49,6 @@
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
             <div class="gray-xs-f line34">Last Name
-              <small>(50 characters max)</small>
               <span
                   class="requiredStar"> *
               </span>
@@ -95,9 +93,6 @@
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
             <div class="gray-xs-f line34">Phone (XXX - XXX - XXXX)
-              <span
-                  class="requiredStar"> *
-              </span>
             </div>
           </div>
           <div class="col-md-6 p-none">
@@ -105,7 +100,7 @@
               <input type="text"
                      class="form-control edit-field bor-trans phoneMask resetVal linkDis"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     oldVal="${userBO.phoneNumber}" maxlength="12" data-minlength="12" required
+                     oldVal="${userBO.phoneNumber}" maxlength="12" data-minlength="12"
                      readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>

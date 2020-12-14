@@ -21,6 +21,11 @@
     display: flex;
     align-items: center;
   }
+  
+  .btn{
+  font-size:13px !important
+  }
+  
 </style>
 <script type="text/javascript">
   function isNumber(evt) {
@@ -787,7 +792,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
+                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -828,7 +833,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
+                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -985,7 +990,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
+                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -1027,7 +1032,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
+                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -2035,7 +2040,7 @@
                          value="Multiple"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
-                  <label for="multipleSelect">Multiple Select</label>
+                  <label for="multipleSelect">Multiple Select</label>	
                 </span>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -2087,13 +2092,13 @@
                           <div class="help-block with-errors red-txt"></div>
                         </div>
                       </div>
-                      <div class="col-md-2 pl-none">
+                       <div class="col-md-2 pl-none">
                         <div class="gray-xs-f mb-xs">Mark as exclusive ?
                           <span
                               class="requiredStar">*
                           </span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-none dropdown-font">
                           <select name="questionResponseSubTypeList[${subtype.index}].exclusive"
                                   id="exclusiveId${subtype.index}" index="${subtype.index}"
                                   title="select" data-error="Please choose one option"
@@ -2113,6 +2118,7 @@
                           <div class="help-block with-errors red-txt"></div>
                         </div>
                       </div>
+                      <br></br>
                       <c:if test="${questionnaireBo.branching}">
                         <div class="col-md-2 pl-none">
                           <div class="gray-xs-f mb-xs">Destination Step</div>
@@ -2142,7 +2148,7 @@
                       </c:if>
                       <div class="col-md-12 p-none display__flex__">
                         <div class="col-md-10 pl-none">
-                          <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                          <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                           <div class="form-group">
                             <textarea class="form-control"
                                       name="questionResponseSubTypeList[${subtype.index}].description"
@@ -2198,17 +2204,17 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <div class="col-md-2 pl-none">
+                     <div class="col-md-2 pl-none">
                       <div class="gray-xs-f mb-xs">Mark as exclusive ?
                         <span
                             class="requiredStar">*
                         </span>
-                      </div>
-                      <div class="form-group">
+                      </div> 
+                      <div class="form-group mb-none ">
                         <select name="questionResponseSubTypeList[0].exclusive"
                                 id="exclusiveId0" index="0" title="select"
                                 data-error="Please choose one option"
-                                class="selectpicker textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if>"
+                                class="selectpicker dropdown-font textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if>"
                                 <c:if
                                     test="${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}">disabled</c:if>
                                 onchange="setExclusiveData(this);">
@@ -2227,7 +2233,7 @@
                     <c:if test="${questionnaireBo.branching}">
                       <div class="col-md-2 pl-none">
                         <div class="gray-xs-f mb-xs">Destination Step</div>
-                        <div class="form-group">
+                        <div class="form-group mb-none">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextChoiceStepId0"
                                   class="selectpicker destionationYes"
@@ -2251,7 +2257,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[0].description"
@@ -2303,13 +2309,13 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <div class="col-md-2 pl-none">
+                     <div class="col-md-2 pl-none">
                       <div class="gray-xs-f mb-xs">Mark as exclusive ?
                         <span
                             class="requiredStar">*
                         </span>
-                      </div>
-                      <div class="form-group">
+                      </div> 
+                      <div class="form-group mb-none">
                         <select name="questionResponseSubTypeList[1].exclusive"
                                 id="exclusiveId1" index="1" title="select"
                                 data-error="Please choose one option"
@@ -2356,7 +2362,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[1].description"
@@ -2422,7 +2428,7 @@
                       <span
                           class="requiredStar">*
                       </span>
-                    </div>
+                    </div> 
                     <div class="form-group">
                       <select name="questionReponseTypeBo.otherExclusive" id="" title="select"
                               data-error="Please choose one option"
@@ -2469,7 +2475,7 @@
                   </c:if>
                   <div class="col-md-12 p-none display__flex__center">
                     <div class="col-md-10 pl-none">
-                      <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                      <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                       <div class="form-group">
                         <textarea class="form-control"
                                   name="questionReponseTypeBo.otherDescription"
@@ -2507,7 +2513,7 @@
                              name="questionReponseTypeBo.otherPlaceholderText" id=""
                              value="${questionnairesStepsBo.questionReponseTypeBo.otherPlaceholderText}"
                              maxlength="50"/>
-                    </div>
+	                    </div>
                   </div>
                   <div class="clearfix"></div>
                   <div class="mt-lg">
@@ -2610,7 +2616,7 @@
                           <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                             <div class="thumb-img">
                               <img
-                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.image)}"
+                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionResponseSubType.image)}"
                                   onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                   class="imageChoiceWidth"/>
                             </div>
@@ -2622,7 +2628,7 @@
                               name="questionResponseSubTypeList[${subtype.index}].imageFile"
                               id="imageFileId${subtype.index}" type="file"
                               accept=".png, .jpg, .jpeg" onchange="readURL(this);"
-                              value="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.image)}">
+                              value="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionResponseSubType.image)}">
                           <input type="hidden"
                                  name="questionResponseSubTypeList[${subtype.index}].image"
                                  id="imagePathId${subtype.index}"
@@ -2635,7 +2641,7 @@
                           <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                             <div class="thumb-img">
                               <img
-                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.selectedImage)}"
+                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionResponseSubType.selectedImage)}"
                                   onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                   class="imageChoiceWidth"/>
                             </div>
@@ -2718,7 +2724,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].image)}"
+                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].image)}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2747,7 +2753,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage)}"
+                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage)}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2828,7 +2834,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].image)}"
+                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].image)}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2857,7 +2863,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage)}"
+                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage)}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -3416,7 +3422,7 @@
         $('.useAnchorDateName').hide();
         $("#anchorTextId").attr('required', false);
         $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
-        $("#anchorTextId").parent().find(".help-block").empty();
+        $("#anchorTextId").parent().find(".help-block").html("");
       }
 
       $('#useAnchorDateId').click(function () {
@@ -3427,7 +3433,7 @@
           $('.useAnchorDateName').hide();
           $("#anchorTextId").attr('required', false);
           $("#anchorTextId").parent().removeClass("has-danger").removeClass("has-error");
-          $("#anchorTextId").parent().find(".help-block").empty();
+          $("#anchorTextId").parent().find(".help-block").html("");
         }
       });
 
@@ -3566,15 +3572,13 @@
                 $("#numericMaxValueId").parent().addClass("has-danger").addClass("has-error");
                 $("#numericMaxValueId").parent().find(".help-block").empty();
                 $("#numericMaxValueId").parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please fill out this field"));
+                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
               }
               if (minValue == '') {
                 $("#numericMinValueId").parent().addClass("has-danger").addClass("has-error");
                 $("#numericMinValueId").parent().find(".help-block").empty();
                 $("#numericMinValueId").parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please fill out this field"));
+                    "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
               }
               isValid = false;
               $("#doneId").attr("disabled", false);
@@ -3602,14 +3606,12 @@
                       "has-error");
                   $("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
                   $("#continuesScaleMaxDescriptionId").parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "Please fill out this field"));
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
                 } else {
                   $("#scaleMaxDescriptionId").parent().addClass("has-danger").addClass("has-error");
                   $("#scaleMaxDescriptionId").parent().find(".help-block").empty();
                   $("#scaleMaxDescriptionId").parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "Please fill out this field"));
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
                 }
               }
               if (minValue == '') {
@@ -3618,14 +3620,12 @@
                       "has-error");
                   $("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
                   $("#continuesScaleMinDescriptionId").parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "Please fill out this field"));
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
                 } else {
                   $("#scaleMinDescriptionId").parent().addClass("has-danger").addClass("has-error");
                   $("#scaleMinDescriptionId").parent().find(".help-block").empty();
                   $("#scaleMinDescriptionId").parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "Please fill out this field"));
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
                 }
               }
               isValid = false;
@@ -3669,8 +3669,7 @@
                   $("#scaleMaxImagePathId").parent().addClass("has-danger").addClass("has-error");
                   $("#scaleMaxImagePathId").parent().find(".help-block").empty();
                   $("#scaleMaxImagePathId").parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "Please fill out this field"));
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
                 }
               }
               if (minImagePath == '' && (minImageFile == '' || typeof minImageFile == 'undefined'
@@ -3680,14 +3679,12 @@
                       "has-error");
                   $("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
                   $("#continuesScaleMinImagePathId").parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "Please fill out this field"));
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
                 } else {
                   $("#scaleMinImagePathId").parent().addClass("has-danger").addClass("has-error");
                   $("#scaleMinImagePathId").parent().find(".help-block").empty();
                   $("#scaleMinImagePathId").parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "Please fill out this field"));
+                      "<ul class='list-unstyled'><li>Please fill out this field</li></ul>");
                 }
               }
               isImageValid = false;
@@ -4021,8 +4018,7 @@
                 $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
                 $("#scaleMinValueId").parent().find(".help-block").empty();
                 $("#scaleMinValueId").parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter an integer number in the range (Min, 10000)"));
+                    "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000)</li></ul>");
               } else {
                 $("#scaleMinValueId").parent().removeClass("has-danger").removeClass("has-error");
                 $("#scaleMinValueId").parent().find(".help-block").empty();
@@ -4032,8 +4028,7 @@
               $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
               $("#scaleMinValueId").parent().find(".help-block").empty();
               $("#scaleMinValueId").parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter an integer number in the range (Min, 10000) "));
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
             }
           }
         } else {
@@ -4046,8 +4041,7 @@
               $("#scaleMinValueId").parent().addClass("has-danger").addClass("has-error");
               $("#scaleMinValueId").parent().find(".help-block").empty();
               $("#scaleMinValueId").parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter an integer number in the range (Min, 10000) "));
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
             }
           }
         }
@@ -4068,16 +4062,14 @@
                 $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
                 $("#scaleMaxValueId").parent().find(".help-block").empty();
                 $("#scaleMaxValueId").parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter an integer number in the range (Min+1, 10000)"));
+                    "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000)</li></ul>");
               }
             } else {
               $("#scaleMaxValueId").val('');
               $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
               $("#scaleMaxValueId").parent().find(".help-block").empty();
               $("#scaleMaxValueId").parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter an integer number in the range (Min+1, 10000) "));
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
             }
           }
         } else {
@@ -4090,8 +4082,7 @@
               $("#scaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
               $("#scaleMaxValueId").parent().find(".help-block").empty();
               $("#scaleMaxValueId").parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter an integer number in the range (Min+1, 10000) "));
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
             }
           }
         }
@@ -4145,12 +4136,10 @@
               $("#displayStepsCount").parent().find(".help-block").empty();
               if (parseInt(stepsCount) < 1) {
                 $("#displayStepsCount").parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter  a smaller step size."));
+                    "<ul class='list-unstyled'><li>Please enter  a smaller step size.</li></ul>");
               } else {
                 $("#displayStepsCount").parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter a larger step size."));
+                    "<ul class='list-unstyled'><li>Please enter a larger step size.</li></ul>");
               }
 
             }
@@ -4160,8 +4149,7 @@
             $("#displayStepsCount").parent().addClass("has-danger").addClass("has-error");
             $("#displayStepsCount").parent().find(".help-block").empty();
             $("#displayStepsCount").parent().find(".help-block").append(
-          		$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "(Max-Min) value should be exactly divisisble by the step size."));
+                "<ul class='list-unstyled'><li>(Max-Min) value should be exactly divisisble by the step size.</li></ul>");
           }
         }
       });
@@ -4179,8 +4167,7 @@
             $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
             $("#scaleDefaultValueId").parent().find(".help-block").empty();
             $("#scaleDefaultValueId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an integer from 0 to number of steps"));
+                "<ul class='list-unstyled'><li>Please enter an integer from 0 to number of steps</li></ul>");
           }
         } else {
           if (value != '') {
@@ -4188,8 +4175,7 @@
             $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
             $("#scaleDefaultValueId").parent().find(".help-block").empty();
             $("#scaleDefaultValueId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an step size first "));
+                "<ul class='list-unstyled'><li>Please enter an step size first </li></ul>");
           }
         }
       });
@@ -4207,8 +4193,7 @@
               $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
               $("#continuesScaleMinValueId").parent().find(".help-block").empty();
               $("#continuesScaleMinValueId").parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter an integer number in the range (Min, 10000)"));
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000)</li></ul>");
             } else {
               $("#continuesScaleMinValueId").parent().removeClass("has-danger").removeClass(
                   "has-error");
@@ -4219,8 +4204,7 @@
             $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
             $("#continuesScaleMinValueId").parent().find(".help-block").empty();
             $("#continuesScaleMinValueId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an integer number in the range (Min, 10000) "));
+                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
           }
         } else {
           if (value != '') {
@@ -4233,8 +4217,7 @@
               $("#continuesScaleMinValueId").parent().addClass("has-danger").addClass("has-error");
               $("#continuesScaleMinValueId").parent().find(".help-block").empty();
               $("#continuesScaleMinValueId").parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter an integer number in the range (Min, 10000) "));
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min, 10000) </li></ul>");
             }
           }
         }
@@ -4255,16 +4238,14 @@
               $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
               $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
               $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter an integer number in the range (Min+1, 10000)"));
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000)</li></ul>");
             }
           } else {
             $("#continuesScaleMaxValueId").val('');
             $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
             $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
             $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an integer number in the range (Min+1, 10000) "));
+                "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
           }
         } else {
           if (value != '') {
@@ -4277,8 +4258,7 @@
               $("#continuesScaleMaxValueId").parent().addClass("has-danger").addClass("has-error");
               $("#continuesScaleMaxValueId").parent().find(".help-block").empty();
               $("#continuesScaleMaxValueId").parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter an integer number in the range (Min+1, 10000) "));
+                  "<ul class='list-unstyled'><li>Please enter an integer number in the range (Min+1, 10000) </li></ul>");
             }
           }
         }
@@ -4298,8 +4278,7 @@
             $(this).parent().addClass("has-danger").addClass("has-error");
             $(this).parent().find(".help-block").empty();
             $(this).parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an integer between the minimum and maximum  "));
+                "<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
           }
         }
       });
@@ -4314,8 +4293,7 @@
             $(this).parent().addClass("has-danger").addClass("has-error");
             $(this).parent().find(".help-block").empty();
             $(this).parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an value number less than Maximum"));
+                "<ul class='list-unstyled'><li>Please enter an value number less than Maximum</li></ul>");
           } else {
             $(this).parent().removeClass("has-danger").removeClass("has-error");
             $(this).parent().find(".help-block").empty();
@@ -4333,8 +4311,7 @@
             $(this).parent().addClass("has-danger").addClass("has-error");
             $(this).parent().find(".help-block").empty();
             $(this).parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an value number greater than Minimum"));
+                "<ul class='list-unstyled'><li>Please enter an value number greater than Minimum</li></ul>");
           } else {
             $(this).parent().removeClass("has-danger").removeClass("has-error");
             $(this).parent().find(".help-block").empty();
@@ -4348,6 +4325,7 @@
       $("#responseTypeId").on("change", function () {
         var value = $(this).val();
         getResponseType(value);
+        $('.textChoiceExclusive').parent().parent().hide();
       });
       $('.DateStyleRequired').on("change", function () {
         var value = $(this).val();
@@ -4377,8 +4355,8 @@
         if (minDate != '' && maxDate != '' && new Date(minDate) >= new Date(maxDate)) {
           $('#maxDateId').data("DateTimePicker").clear();
           $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
-          $('#maxDateId').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Max Date and Time Should not be less than or equal Min Date and Time"));
+          $('#maxDateId').parent().find(".help-block").html(
+              '<ul class="list-unstyled"><li>Max Date and Time Should not be less than or equal Min Date and Time</li></ul>');
         } else {
           $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
           $('#maxDateId').parent().find(".help-block").empty();
@@ -4398,8 +4376,8 @@
           } else {
             $("#defaultDate").data("DateTimePicker").clear();
             $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
-            $('#defaultDate').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Enter default date to be shown as selected as per availability of Min and Max"));
+            $('#defaultDate').parent().find(".help-block").html(
+                '<ul class="list-unstyled"><li>Enter default date to be shown as selected as per availability of Min and Max</li></ul>');
           }
         }
       });
@@ -4422,8 +4400,7 @@
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30)."));
+              "<ul class='list-unstyled'><li>Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30).</li></ul>");
         }
       });
       $("#textScalePositionId").blur(function () {
@@ -4440,8 +4417,7 @@
             $("#textScalePositionId").parent().addClass("has-danger").addClass("has-error");
             $("#textScalePositionId").parent().find(".help-block").empty();
             $("#textScalePositionId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter choice from 1 to number of choices"));
+                "<ul class='list-unstyled'><li>Please enter choice from 1 to number of choices</li></ul>");
           }
         }
       });
@@ -4458,8 +4434,7 @@
           durationFlag = false;
           $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-               "Please select a non-zero Duration value."));
+              '<ul class="list-unstyled"><li>Please select a non-zero Duration value.</li></ul>');
         } else {
           durationFlag = true;
           $('#timeIntervalDefaultId').parent().find(".help-block").empty();
@@ -4505,8 +4480,7 @@
               $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Failed to upload."));
+                  '<ul class="list-unstyled"><li>Failed to upload.</li></ul>');
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
               var id = $(thisAttr).next().attr("id");
 
@@ -4522,8 +4496,7 @@
             $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
             $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
             $(thisAttr).parent().find(".help-block").empty().append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "File incorrect."));
+                '<ul class="list-unstyled"><li>File incorrect.</li></ul>');
             $(thisAttr).parent().parent().parent().find(".removeUrl").click();
           };
           img.src = _URL.createObjectURL(file);
@@ -4554,9 +4527,9 @@
       });
       $('#myModal').find('.close').click(function () {
         $('#trailInputId').val('');
-        $('#lhsValueId').empty();
-        $('#rhsValueId').empty();
-        $('#outputId').empty();
+        $('#lhsValueId').html("");
+        $('#rhsValueId').html("");
+        $('#outputId').html("");
         $('#myModal').modal('hide');
       });
       $('#trailId').click(function () {
@@ -4588,18 +4561,21 @@
                 "${_csrf.parameterName}": "${_csrf.token}",
               },
               success: function (data) {
-                var message = data.message;
-                var formulaResponseJsonObject = data.formulaResponseJsonObject;
+                var jsonobject = eval(data);
+                var message = jsonobject.message;
+                var formulaResponseJsonObject = jsonobject.formulaResponseJsonObject;
                 if (message == "SUCCESS") {
-                  $('#lhsValueId').empty().append($("<B> </B>").text(formulaResponseJsonObject.lhsData));
-                  $('#rhsValueId').empty().append($("<B> </B>").text(formulaResponseJsonObject.rhsData));
+                  $('#lhsValueId').html("<b>" + formulaResponseJsonObject.lhsData + "</b>");
+                  $('#rhsValueId').html("<b>" + formulaResponseJsonObject.rhsData + "</b>");
                   if (formulaResponseJsonObject.outPutData == 'true'
                       || formulaResponseJsonObject.outPutData == 'True') {
-                    $('#outputId').empty().append(
-                            $("<font> </font>").attr("class","gtxtf").empty().append($("<B> </B>").text(formulaResponseJsonObject.outPutData)));
+                    $('#outputId').html(
+                        "<span class='gtxtf'><b>" + formulaResponseJsonObject.outPutData
+                        + "</b></span>");
                   } else {
-                    $('#outputId').empty().append(
-                            $("<font> </font>").attr("class","rtxtf").empty().append($("<B> </B>").text(formulaResponseJsonObject.outPutData)));
+                    $('#outputId').html(
+                        "<span class='rtxtf'><b>" + formulaResponseJsonObject.outPutData
+                        + "</b></span>");
                   }
                 } else {
                   if (typeof formulaResponseJsonObject != 'undefined'
@@ -4774,7 +4750,7 @@
       if (id != null && id != '' && typeof id != 'undefined') {
         var previousResponseType = '${questionnairesStepsBo.questionsBo.responseType}';
         if (Number(id) != Number(previousResponseType)) {
-          var responseType = $("#responseTypeId>option:selected").text();
+          var responseType = $("#responseTypeId>option:selected").html();
           resetTheLineStatData();
           if (responseType != 'Boolean') {
 
@@ -5200,7 +5176,7 @@
           questionSubResponseType.text = diasplay_text;
           questionSubResponseType.value = diaplay_value;
           questionSubResponseType.destinationStepId = destination_step;
-          
+
           questionSubResponseArray.push(questionSubResponseType);
         });
         questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
@@ -5383,14 +5359,15 @@
             xhr.setRequestHeader("X-CSRF-TOKEN", "${_csrf.token}");
           },
           success: function (data) {
-            var message = data.message;
+            var jsonobject = eval(data);
+            var message = jsonobject.message;
             if (message == "SUCCESS") {
               $("body").removeClass("loading");
               $("#preShortTitleId").val(shortTitle);
-              var stepId = data.stepId;
-              var questionId = data.questionId;
-              var questionResponseId = data.questionResponseId;
-              var questionsResponseTypeId = data.questionsResponseTypeId;
+              var stepId = jsonobject.stepId;
+              var questionId = jsonobject.questionId;
+              var questionResponseId = jsonobject.questionResponseId;
+              var questionsResponseTypeId = jsonobject.questionsResponseTypeId;
 
               if (statShortName != null && statShortName != '' && typeof statShortName
                   != 'undefined') {
@@ -5402,7 +5379,7 @@
               $("#questionResponseTypeId").val(questionResponseId);
               $("#responseQuestionId").val(questionId);
 
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').html("Content saved as draft.");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
 
@@ -5415,11 +5392,11 @@
               if (callback)
                 callback(true);
             } else {
-              var errMsg = data.errMsg;
+              var errMsg = jsonobject.errMsg;
               if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').text(errMsg);
+                $("#alertMsg").removeClass('s-box').addClass('e-box').html(errMsg);
               } else {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
+                $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
               }
               $('#alertMsg').show();
               if (callback)
@@ -5430,7 +5407,7 @@
           error: function (xhr, status, error) {
             $(item).prop('disabled', false);
             $('#alertMsg').show();
-            $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
+            $("#alertMsg").removeClass('s-box').addClass('e-box').html("Something went Wrong");
             setTimeout(hideDisplayMessage, 4000);
           }
         });
@@ -5439,8 +5416,7 @@
         if (!$('#stepShortTitle')[0].checkValidity()) {
           $("#stepShortTitle").parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "This is a required field."));
+              '<ul class="list-unstyled"><li>This is a required field.</li></ul>');
           $('.stepLevel a').tab('show');
         }
       }
@@ -5489,10 +5465,12 @@
         $('.destionationYes').attr("disabled", false);
         $('.selectpicker').selectpicker('refresh');
         $(".textChoiceExclusive").validator('validate');
+        $('.textChoiceExclusive').parent().parent().hide();
       } else {
         $('.textChoiceExclusive').attr("disabled", false);
         $('.textChoiceExclusive').attr("required", true);
         $('.selectpicker').selectpicker('refresh');
+        $('.textChoiceExclusive').parent().parent().show();
       }
     }
 
@@ -5513,7 +5491,7 @@
     var count = $('.value-picker').length;
 
     function addValuePicker() {
-      count = parseInt(count) + 1;
+      count = count + 1;
       var newValuePicker = "<div class='value-picker row form-group mb-xs' id=" + count + ">" +
           "	<div class='col-md-3 pl-none'>" +
           "   <div class='form-group'>" +
@@ -5570,7 +5548,7 @@
     var scaleCount = $('.text-scale').length;
 
     function addTextScale() {
-      scaleCount = parseInt(scaleCount) + 1;
+      scaleCount = scaleCount + 1;
       if ($('.text-scale').length < 8) {
         var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
             "	<div class='col-md-3 pl-none'>" +
@@ -5667,7 +5645,7 @@
     var choiceCount = $('.text-choice').length;
 
     function addTextChoice() {
-      choiceCount = parseInt(choiceCount) + 1;
+      choiceCount = choiceCount + 1;
       var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
       var newTextChoice = "<div class='mt-xlg text-choice' id='" + choiceCount + "'>" +
           "<div class='col-md-3 pl-none'>" +
@@ -5691,10 +5669,10 @@
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
           "</div>" +
-          "<div class='col-md-2 pl-none'>" +
+           "<div class='col-md-2 pl-none'>" +
           "   <div class='gray-xs-f mb-xs'>Mark as exclusive ? <span class='requiredStar'>*</span> </div>"
-          +
-          "   <div class='form-group'>";
+          + 
+          "   <div class='form-group mb-none'>";
       if (selectionStyle == 'Single') {
         newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
             + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
@@ -5728,7 +5706,7 @@
       </c:if>
       newTextChoice += "<div class='col-md-12 p-none display__flex__'><div class='col-md-10 pl-none'>"
           +
-          "<div class='gray-xs-f mb-xs'>Description(1 to 150 characters) </div>" +
+          "<div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) </div>" +
           "<div class='form-group'>" +
           "   <textarea type='text' class='form-control' name='questionResponseSubTypeList["
           + choiceCount + "].description' id='displayTextChoiceDescription" + choiceCount
@@ -5754,6 +5732,11 @@
         $(".remBtnDis").addClass("hide");
       }
       $('#' + choiceCount).find('input:first').focus();
+      if (selectionStyle == 'Single') {
+      	$('.textChoiceExclusive').parent().parent().hide();
+      }else{
+    	  $('.textChoiceExclusive').parent().parent().show();
+      }
     }
 
     function removeTextChoice(param) {
@@ -5774,7 +5757,7 @@
     var imageCount = $('.image-choice').length;
 
     function addImageChoice() {
-      imageCount = parseInt(imageCount) + 1;
+      imageCount = imageCount + 1;
       var newImageChoice = "<div class='image-choice row' id='" + imageCount + "'>" +
           "	   <div class='col-md-2 pl-none col-smthumb-2'>" +
           "   <div class='form-group'>" +
@@ -5911,9 +5894,8 @@
                 $(thisAttr).parent().addClass("has-danger").addClass("has-error");
                 $(thisAttr).parent().find(".help-block").empty();
                 $(thisAttr).parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    shortTitle
-                    + " has already been used in the past."));
+                    "<ul class='list-unstyled'><li>'" + shortTitle
+                    + "' has already been used in the past.</li></ul>");
                 callback(false);
               }
             },
@@ -5922,7 +5904,7 @@
         } else {
           callback(true);
           $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-          $(thisAttr).parent().find(".help-block").empty();
+          $(thisAttr).parent().find(".help-block").html("");
         }
       } else {
         callback(false);
@@ -5960,9 +5942,8 @@
                 $("#statShortNameId").parent().addClass("has-danger").addClass("has-error");
                 $("#statShortNameId").parent().find(".help-block").empty();
                 $("#statShortNameId").parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    short_title
-                    + " has already been used in the past."));
+                    "<ul class='list-unstyled'><li>'" + short_title
+                    + "' has already been used in the past.</li></ul>");
                 if (callback)
                   callback(false);
 
@@ -6040,16 +6021,14 @@
             $(item).parent().addClass("has-danger").addClass("has-error");
             $(item).parent().find(".help-block").empty();
             $(item).parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter a value in the range (0,x)."));
+                "<ul class='list-unstyled'><li>Please enter a value in the range (0,x).</li></ul>");
           }
         } else {
           $(item).val('');
           $(item).parent().addClass("has-danger").addClass("has-error");
           $(item).parent().find(".help-block").empty();
           $(item).parent().find(".help-block").append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please enter an minimum and maximum values "));
+              "<ul class='list-unstyled'><li>Please enter an minimum and maximum values </li></ul>");
         }
       }
     }
@@ -6073,8 +6052,7 @@
               $("#displayTextSclValue" + id).parent().addClass("has-danger").addClass("has-error");
               $("#displayTextSclValue" + id).parent().find(".help-block").empty();
               $("#displayTextSclValue" + id).parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "The value should be unique "));
+                  "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
             } else
               valueArray.push(diaplay_value.toLowerCase());
           } else {
@@ -6098,8 +6076,7 @@
               $("#displayValPickValue" + id).parent().addClass("has-danger").addClass("has-error");
               $("#displayValPickValue" + id).parent().find(".help-block").empty();
               $("#displayValPickValue" + id).parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "The value should be unique "));
+                  "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
             } else
               valueArray.push(diaplay_value.toLowerCase());
           } else {
@@ -6124,8 +6101,7 @@
                   "has-error");
               $("#displayImageChoiceValue" + id).parent().find(".help-block").empty();
               $("#displayImageChoiceValue" + id).parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "The value should be unique "));
+                  "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
             } else
               valueArray.push(diaplay_value.toLowerCase());
           } else {
@@ -6150,8 +6126,7 @@
                   "has-error");
               $("#displayTextChoiceValue" + id).parent().find(".help-block").empty();
               $("#displayTextChoiceValue" + id).parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "The value should be unique "));
+                  "<ul class='list-unstyled'><li>The value should be unique </li></ul>");
             } else
               valueArray.push(diaplay_value.toLowerCase());
           } else {
@@ -6164,7 +6139,7 @@
     }
 
     function addFunctions(item) {
-      var index = parseInt($(item).attr('index'));
+      var index = $(item).attr('index');
 
       var value = $(item).val();
       var isValid = true;
@@ -6344,7 +6319,7 @@
         if (!isValid) {
 
           $("#inputTypeErrorValueId" + index).show();
-          $("#inputTypeErrorValueId" + index).text('RDE (x) should be used only once.');
+          $("#inputTypeErrorValueId" + index).html('RDE (x) should be used only once.');
         } else {
           $(".numeric__row").each(function (j) {
             var id = $(this).attr("id");
@@ -6493,8 +6468,8 @@
           $("#rootId" + parent_index + " .numeric__row").last().find('select').attr("count"));
       var v = total + 1;
       count = count + 1;
-      var addVar = "<div class='numeric__row display__flex__base' id='" + (parseInt(v)) + "'>" +
-          "   <span>V" + (parseInt(v)) + " =</span>" +
+      var addVar = "<div class='numeric__row display__flex__base' id='" + v + "'>" +
+          "   <span>V" + v + " =</span>" +
           "   <div class='form-group sm-selection' style=''>" +
           "      <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
           + index + "].questionConditionBranchBos[" + count + "].inputType' id='inputTypeId"
@@ -6505,7 +6480,7 @@
           "         <option value='F'>Function</option>" +
           "         <option value='RDE'>Response Data Element (x)</option>" +
           "      </select>" +
-          "		<div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId" + (parseInt(v))
+          "		<div class='mt-sm black-xs-f italic-txt red-txt' id='inputTypeErrorValueId" + v
           + "' style='display: none;'></div>" +
           "      <div class='help-block with-errors red-txt'></div>" +
           "      <input type='hidden' name='questionConditionBranchBoList[" + index
@@ -6521,7 +6496,7 @@
           + "' onclick='addVariable(this);' id='addVaraiable" + count + "'>+ Add Variable</div> " +
           "   </div>" +
           "   <div class='form-group sm__in add_var_hide'>" +
-          "      <input type='text' id='constantValId" + (parseInt(v)) + "' index='" + (parseInt(v))
+          "      <input type='text' id='constantValId" + v + "' index='" + v
           + "' class='constant form-control add_var_hide' onkeypress='return isNumberKey(event)'/>"
           +
           "   </div>" +
@@ -6597,7 +6572,7 @@
           });
           if (!isSingle) {
             $('#alertMsg').show();
-            $("#alertMsg").removeClass('s-box').addClass('e-box').text(
+            $("#alertMsg").removeClass('s-box').addClass('e-box').html(
                 "RDE (x) should be used only once.");
             setTimeout(hideDisplayMessage, 3000);
           }
@@ -6620,7 +6595,7 @@
           return true;
         } else {
           $('#alertMsg').show();
-          $("#alertMsg").removeClass('s-box').addClass('e-box').text(
+          $("#alertMsg").removeClass('s-box').addClass('e-box').html(
               "Please add atleast one response data element in conditional formula.");
           setTimeout(hideDisplayMessage, 3000);
           return false;
@@ -6837,9 +6812,8 @@
           $(thisAttr).parent().addClass("has-danger").addClass("has-error");
           $(thisAttr).parent().find(".help-block").empty();
           $(thisAttr).parent().find(".help-block").append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              anchordateText
-              + " has already been used in the past."));
+              "<ul class='list-unstyled'><li>'" + anchordateText
+              + "' has already been used in the past.</li></ul>");
           callback(false);
         } else {
           $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
@@ -6869,9 +6843,8 @@
                 $(thisAttr).parent().addClass("has-danger").addClass("has-error");
                 $(thisAttr).parent().find(".help-block").empty();
                 $(thisAttr).parent().find(".help-block").append(
-                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    anchordateText
-                    + " has already been used in the past."));
+                    "<ul class='list-unstyled'><li>'" + anchordateText
+                    + "' has already been used in the past.</li></ul>");
                 callback(false);
               }
             },
@@ -6881,7 +6854,7 @@
       } else {
         callback(true);
         $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
-        $(thisAttr).parent().find(".help-block").empty();
+        $(thisAttr).parent().find(".help-block").html("");
       }
     }
 
