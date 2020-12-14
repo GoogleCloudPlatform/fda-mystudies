@@ -214,10 +214,14 @@ public class SiteController {
 
   @GetMapping("/sites")
   public ResponseEntity<SiteDetailsResponse> getSites(
-      @RequestHeader(name = USER_ID_HEADER) String userId, HttpServletRequest request) {
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      @RequestParam(defaultValue = "10") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(required = false) String searchTerm,
+      HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
 
-    SiteDetailsResponse siteDetails = siteService.getSites(userId);
+    SiteDetailsResponse siteDetails = siteService.getSites(userId, limit, offset, searchTerm);
 
     logger.exit(String.format(STATUS_LOG, siteDetails.getHttpStatusCode()));
     return ResponseEntity.status(siteDetails.getHttpStatusCode()).body(siteDetails);
