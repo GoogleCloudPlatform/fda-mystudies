@@ -59,6 +59,11 @@ spec:
             secretKeyRef:
               name: shared-secrets
               key: base_url
+        - name: URLS_ERROR
+          valueFrom:
+            secretKeyRef:
+              name: shared-secrets
+              key: base_url
         - name: SERVE_ALL_FLAG
           value: "--dangerous-force-http"
         ports:
