@@ -103,14 +103,14 @@ export class StudyDetailsComponent
   public onSortOrder(event: string): void {
     this.sortOrder = event;
     this.offset = 0;
-    this.currentPage = 0;
+    this.currentPage = 1;
     this.getStudyDetails();
   }
 
   public onSortBy(event: string | string[]): void {
     this.sortBy = new Array(event) as string[];
     this.offset = 0;
-    this.currentPage = 0;
+    this.currentPage = 1;
     this.getStudyDetails();
   }
   openModal(template: TemplateRef<unknown>): void {
