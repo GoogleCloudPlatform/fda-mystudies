@@ -161,7 +161,7 @@ public class FdahpStudyDesignerConstants {
 
   public static final Integer ELIGIBILITY_TEST = 3;
   public static final String ELIGIBILITY_TOKEN_TEXT_DEFAULT =
-      "This study allows only pre-screened participants to join the study. If you are one, please enter the enrollment token provided to you for this study.";
+      "Participating in this study requires an invitation. If you have received one, please enter the token provided.";
   public static final String ENCRYPT_SALT = "StudieGatewayApp";
   public static final String ERR_MSG = "errMsg";
   public static final String FAILURE = "FAILURE";
