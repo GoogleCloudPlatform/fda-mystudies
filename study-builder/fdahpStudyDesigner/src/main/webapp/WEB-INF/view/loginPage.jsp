@@ -98,7 +98,8 @@
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
                        data-pattern-error="Email address is invalid"
-                       placeholder="Email Address" required maxlength="100"
+                       placeholder="Email address" required maxlength="100"
+                       data-error="Please complete this field"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" autofocus
                        autocomplete="off">
                 <div class="help-block with-errors red-txt"></div>
@@ -106,7 +107,7 @@
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input" id="password"
                        placeholder="Password" required maxlength="64"
-                       data-error="This field shouldn't be empty"
+                       data-error="Please complete this field"
                        autocomplete="off" readonly onfocus="$(this).removeAttr('readonly');">
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -114,11 +115,9 @@
                 <button type="button" id="loginBtnId" class="btn lg-btn">SIGN IN</button>
               </div>
               <div class="pb-md pt-xs">
-                <span class="white__text">Forgot Password?</span>
                 <a id="forgot_pwd"
                    class="gray-link white__text"
-                   href="javascript:void(0)">Get
-                  Help
+                   href="javascript:void(0)">Forgot password?
                 </a>
               </div>
             </div>
@@ -129,7 +128,7 @@
                      autocomplete="off">
             <div class="pwd dis-none">
               <div class="mb-lg">
-                <h3 style="    color: #fff; padding-top: 20px;" class="mt-none">Forgot Password?</h3>
+                <h3 style="    color: #fff; padding-top: 20px;" class="mt-none">Forgot password?</h3>
                 <div class="mt-md white__text">Enter your Email address to get a link to reset your
                   password
                 </div>
@@ -137,7 +136,7 @@
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="emailReg" name="email"
                        maxlength="100"
-                       placeholder="Email Address"
+                       placeholder="Email address"
                        data-pattern-error="Email address is invalid" required maxlength="100"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
                 <div class="help-block with-errors red-txt"></div>
@@ -294,10 +293,10 @@
             if (emailAdd == '') {
               if (isIE || isEdge) {
                 $('#email').parent().find(".help-block").empty().append(
-                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("This is a required field"));
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please complete this field"));
               } else {
                 $('#email').parent().find(".help-block").empty().append(
-                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field"));
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please complete this field"));
               }
             } else if (!isEmail) {
               $('#email').parent().find(".help-block").empty().append(
