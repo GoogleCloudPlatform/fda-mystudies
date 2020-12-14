@@ -414,6 +414,7 @@ public class LoginController {
   public ModelAndView validateSecurityToken(HttpServletRequest request) {
     logger.info("LoginController - createPassword() - Starts");
     ModelAndView mv = new ModelAndView("redirect:login.do");
+    Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       ModelMap map = new ModelMap();
@@ -442,6 +443,7 @@ public class LoginController {
       map.addAttribute("masterDataBO", masterDataBO);
       if ((userBO != null) && (StringUtils.isEmpty(userBO.getUserPassword()))) {
         map.addAttribute("userBO", userBO);
+        map.addAttribute("orgName", configMap.get("orgName"));
         mv = new ModelAndView("signUpPage", map);
       } else {
         mv = new ModelAndView("userPasswordReset", map);

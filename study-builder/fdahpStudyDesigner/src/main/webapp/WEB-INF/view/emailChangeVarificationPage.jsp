@@ -103,17 +103,9 @@
           </form:form>
         </div>
       </div>
-      <div class="footer">
-        <div>
-          <span>Copyright</span>
-          <span>
-            <a href="/studybuilder/terms.do" class="" target="_blank">Terms</a>
-          </span>
-          <span>
-            <a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a>
-          </span>
-        </div>
-      </div>
+      <jsp:include page="../templates/copyright.jsp">
+        <jsp:param name="footerClass" value="footer" />
+      </jsp:include>
 
     </div>
     <!-- End Login Right Section-->

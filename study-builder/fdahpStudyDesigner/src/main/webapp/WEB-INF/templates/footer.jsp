@@ -1,19 +1,9 @@
 <div class="clearfix"></div>
 
 <div class="md-container ft_con">
-  <div class="foot">
-    <span>Copyright</span>
-    <span>
-      <a href="/studybuilder/terms.do" id=""
-         target="_blank">Terms
-      </a>
-    </span>
-    <span>
-      <a
-          href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy
-      </a>
-    </span>
-  </div>
+  <jsp:include page="copyright.jsp">
+    <jsp:param name="footerClass" value="foot" />
+  </jsp:include>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="termsModal" role="dialog">

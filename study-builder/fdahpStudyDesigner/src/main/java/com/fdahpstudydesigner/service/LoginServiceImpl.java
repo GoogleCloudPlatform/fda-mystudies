@@ -473,6 +473,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               keyValueForSubject.put("$oldMail", oldEmail);
               contact = propMap.get("phone.number.to");
               keyValueForSubject.put("$contact", contact);
+              keyValueForSubject.put("$orgName", propMap.get("orgName"));
+              keyValueForSubject2.put("$orgName", propMap.get("orgName"));
               if ("USER".equals(type) && !userdetails.isEnabled()) {
                 dynamicContent =
                     FdahpStudyDesignerUtil.genarateEmailContent(
@@ -617,6 +619,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
           String customerCareMail = propMap.get("email.address.customer.service");
           keyValueForSubject.put("$customerCareMail", customerCareMail);
+          keyValueForSubject.put("$orgName", propMap.get("orgName"));
           String dynamicContent =
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "accountLockedContent", keyValueForSubject);

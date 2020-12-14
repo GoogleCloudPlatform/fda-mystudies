@@ -156,21 +156,9 @@
         <div class="clearfix"></div>
       </div>
       <div class="clearfix"></div>
-      <div class="footer">
-        <div>
-          <span>Copyright</span>
-          <span>
-            <a href="/studybuilder/terms.do" class=""
-               target="_blank">Terms
-            </a>
-          </span>
-          <span>
-            <a
-                href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy
-            </a>
-          </span>
-        </div>
-      </div>
+      <jsp:include page="../templates/copyright.jsp">
+       <jsp:param name="footerClass" value="footer" />
+      </jsp:include>
       <!-- new login -->
     </div>
 

@@ -117,6 +117,7 @@ public class UsersServiceImpl implements UsersService {
               "$sessionAdminFullName",
               userSession.getFirstName() + " " + userSession.getLastName());
           keyValueForSubject.put("$userEmail", userBo.getUserEmail());
+          keyValueForSubject.put("$orgName", propMap.get("orgName"));
           dynamicContent =
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "mailForAdminUserUpdateContent", keyValueForSubject);
@@ -135,6 +136,7 @@ public class UsersServiceImpl implements UsersService {
             customerCareMail = propMap.get("email.address.customer.service");
             keyValueForSubject.put("$userFirstName", userBo.getFirstName());
             keyValueForSubject.put("$customerCareMail", customerCareMail);
+            keyValueForSubject.put("$orgName", propMap.get("orgName"));
             dynamicContent =
                 FdahpStudyDesignerUtil.genarateEmailContent(
                     "mailForReactivatingUserContent", keyValueForSubject);
@@ -178,6 +180,8 @@ public class UsersServiceImpl implements UsersService {
     String dynamicContent = "";
     UserBO adminFullNameIfSizeOne = null;
     UserBO userBO3 = null;
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+
     try {
       if (null == userBO.getUserId()) {
         addFlag = true;
@@ -270,6 +274,7 @@ public class UsersServiceImpl implements UsersService {
           keyValueForSubject.put(
               "$sessionAdminFullName",
               userSession.getFirstName() + " " + userSession.getLastName());
+          keyValueForSubject.put("$orgName", propMap.get("orgName"));
           if (addFlag) {
             dynamicContent =
                 FdahpStudyDesignerUtil.genarateEmailContent(
