@@ -20,9 +20,9 @@ export class StudyDetailsService {
     studyId: string,
     offset: number,
     limit: number,
-    searchTerm:string,
-    sortBy:string,
-    sortOrder:string,
+    searchTerm: string,
+    sortBy: string,
+    sortOrder: string,
   ): Observable<StudyDetails> {
     console.log(offset);
     return this.http.get<StudyDetails>(
@@ -31,7 +31,7 @@ export class StudyDetailsService {
       }/studies/${encodeURIComponent(studyId)}/participants`,
       {
         params: {
-          excludeParticipantStudyStatus: ['notEligible', 'yetToJoin'],
+          excludeParticipantStudyStatus: ['notEligible', 'yetToEnroll'],
           offset: offset.toString(),
           limit: limit.toString(),
           searchTerm: searchTerm,
