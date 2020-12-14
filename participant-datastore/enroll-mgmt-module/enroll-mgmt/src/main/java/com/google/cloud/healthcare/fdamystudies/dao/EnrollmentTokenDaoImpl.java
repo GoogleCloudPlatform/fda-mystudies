@@ -255,7 +255,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setParticipantId(participantid);
               participants.setUserDetails(userDetail);
               participants.setParticipantRegistrySite(participantregistrySite);
-              participants.setStatus(AppConstants.ENROLLED);
+              participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
               participants.setEnrolledDate(Timestamp.from(Instant.now()));
               participants.setWithdrawalDate(null);
               session.update(participants);
@@ -267,7 +267,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setParticipantId(participantid);
               participants.setUserDetails(userDetail);
               participants.setParticipantRegistrySite(participantregistrySite);
-              participants.setStatus(AppConstants.ENROLLED);
+              participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
               participants.setEnrolledDate(Timestamp.from(Instant.now()));
               countAddParticipant = (String) session.save(participants);
             }
@@ -324,7 +324,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           participants.setParticipantId(participantid);
           participants.setUserDetails(userDetail);
           participants.setParticipantRegistrySite(participantregistrySite);
-          participants.setStatus(AppConstants.ENROLLED);
+          participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
           participants.setEnrolledDate(Timestamp.from(Instant.now()));
           participants.setSite(site);
           participants.setWithdrawalDate(null);
@@ -337,7 +337,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           participants.setParticipantId(participantid);
           participants.setUserDetails(userDetail);
           participants.setParticipantRegistrySite(participantregistrySite);
-          participants.setStatus(AppConstants.ENROLLED);
+          participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
           participants.setEnrolledDate(Timestamp.from(Instant.now()));
           countAddParticipant = (String) session.save(participants);
         }

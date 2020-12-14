@@ -14,7 +14,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DE
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEFAULT_PERCENTAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN_PROGRESS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
@@ -54,7 +53,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
@@ -270,6 +269,15 @@ public class SiteServiceImpl implements SiteService {
                 .toEpochMilli()));
     participantRegistrySite =
         participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+    ParticipantStudyEntity participantStudyEntity =
+        ParticipantMapper.toParticipantStudyEntity(
+            participantRegistrySite, EnrollmentStatus.YET_TO_ENROLL);
+    participantStudyEntity.setParticipantId(null);
+    participantStudyEntity.setUserDetails(null);
+    participantStudyEntity.setEnrolledDate(null);
+    participantStudyRepository.saveAndFlush(participantStudyEntity);
+
     ParticipantResponse response =
         new ParticipantResponse(
             MessageCode.ADD_PARTICIPANT_SUCCESS, participantRegistrySite.getId());
@@ -583,14 +591,14 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY);
     }
 
-    List<String> status = Arrays.asList(IN_PROGRESS, STATUS_ACTIVE);
+    List<String> status = Arrays.asList(EnrollmentStatus.ENROLLED.getStatus(), STATUS_ACTIVE);
     Optional<Long> optParticipantStudyCount =
         participantStudyRepository.findByStudyIdSiteIdAndStatus(status, study.getId(), siteId);
 
     if (optParticipantStudyCount.isPresent()
         && optParticipantStudyCount.get() > 0
         && study.getStatus().equals(STATUS_ACTIVE)) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS);
+      throw new ErrorCodeException(ErrorCode.ACTIVE_STUDY_ENROLLED_PARTICIPANT);
     }
   }
 
@@ -741,6 +749,8 @@ public class SiteServiceImpl implements SiteService {
         participantDetailResponse.getTotalConsentHistoryCount());
   }
 
+
+
   private ErrorCode validateParticipantDetailsRequest(
       Optional<ParticipantRegistrySiteEntity> optParticipantRegistry, String userId) {
     if (!optParticipantRegistry.isPresent()) {
@@ -863,7 +873,8 @@ public class SiteServiceImpl implements SiteService {
       invitedParticipantsEmailRepository.saveAndFlush(inviteParticipantsEmail);
 
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
-      participantStudyRepository.updateEnrollmentStatus(ids, CommonConstants.YET_TO_ENROLL);
+      participantStudyRepository.updateEnrollmentStatus(
+          ids, EnrollmentStatus.YET_TO_ENROLL.getStatus());
       invitedParticipants.add(participantRegistrySiteEntity);
     }
     return invitedParticipants;
@@ -999,6 +1010,15 @@ public class SiteServiceImpl implements SiteService {
                   .toEpochMilli()));
       participantRegistrySite =
           participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+      ParticipantStudyEntity participantStudyEntity =
+          ParticipantMapper.toParticipantStudyEntity(
+              participantRegistrySite, EnrollmentStatus.YET_TO_ENROLL);
+      participantStudyEntity.setParticipantId(null);
+      participantStudyEntity.setUserDetails(null);
+      participantStudyEntity.setEnrolledDate(null);
+      participantStudyRepository.saveAndFlush(participantStudyEntity);
+
       participantDetail.setId(participantRegistrySite.getId());
       savedParticipants.add(participantDetail);
     }
@@ -1057,7 +1077,7 @@ public class SiteServiceImpl implements SiteService {
           participantStatusRequest.getIds(),
           disabledTimestamp);
       participantStudyRepository.updateEnrollmentStatus(
-          participantStatusRequest.getIds(), CommonConstants.YET_TO_ENROLL);
+          participantStatusRequest.getIds(), EnrollmentStatus.YET_TO_ENROLL.getStatus());
     } else {
       List<String> emails =
           participantregistryList
@@ -1078,7 +1098,7 @@ public class SiteServiceImpl implements SiteService {
           participantStatusRequest.getIds(),
           disabledTimestamp);
       participantStudyRepository.updateEnrollmentStatus(
-          participantStatusRequest.getIds(), CommonConstants.YET_TO_ENROLL);
+          participantStatusRequest.getIds(), EnrollmentStatus.YET_TO_ENROLL.getStatus());
     }
 
     SiteEntity site = optSite.get();
@@ -1088,11 +1108,14 @@ public class SiteServiceImpl implements SiteService {
     auditRequest.setStudyId(site.getStudyId());
     auditRequest.setAppId(site.getStudy().getAppId());
 
+    MessageCode messageCode = null;
     Map<String, String> map = Collections.singletonMap("site_id", optSite.get().getId());
     if (participantStatusRequest.getStatus().equals(OnboardingStatus.DISABLED.getCode())) {
       participantManagerHelper.logEvent(PARTICIPANT_INVITATION_DISABLED, auditRequest, map);
+      messageCode = MessageCode.INVITATION_DISABLED_SUCCESS;
     } else if (participantStatusRequest.getStatus().equals(OnboardingStatus.NEW.getCode())) {
       participantManagerHelper.logEvent(PARTICIPANT_INVITATION_ENABLED, auditRequest, map);
+      messageCode = MessageCode.INVITATION_ENABLED_SUCCESS;
     }
     logger.exit(
         String.format(
@@ -1100,7 +1123,7 @@ public class SiteServiceImpl implements SiteService {
             participantStatusRequest.getStatus(),
             participantStatusRequest.getIds().size(),
             participantStatusRequest.getSiteId()));
-    return new ParticipantStatusResponse(MessageCode.UPDATE_STATUS_SUCCESS);
+    return new ParticipantStatusResponse(messageCode);
   }
 
   @Override

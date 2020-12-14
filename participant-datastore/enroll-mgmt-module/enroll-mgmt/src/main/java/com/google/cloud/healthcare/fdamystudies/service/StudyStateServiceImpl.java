@@ -119,19 +119,13 @@ public class StudyStateServiceImpl implements StudyStateService {
             if (studyEntity != null) {
               if (studyEntity.getId().equals(participantStudies.getStudy().getId())) {
                 isExists = true;
-                if (participantStudies.getStatus() != null
-                    && participantStudies
-                        .getStatus()
-                        .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue())) {
-                  participantStudies.setEnrolledDate(Timestamp.from(Instant.now()));
-                }
                 if (studiesBean.getStatus() != null
                     && !StringUtils.isEmpty(studiesBean.getStatus())) {
                   participantStudies.setStatus(studiesBean.getStatus());
 
                   if (studiesBean
                       .getStatus()
-                      .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+                      .equalsIgnoreCase(EnrollmentStatus.ENROLLED.getStatus())) {
                     participantStudies.setEnrolledDate(Timestamp.from(Instant.now()));
                   }
                 }
@@ -162,14 +156,11 @@ public class StudyStateServiceImpl implements StudyStateService {
           }
           if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
             participantStudyEntity.setStatus(studiesBean.getStatus());
-            if (studiesBean
-                .getStatus()
-                .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+            if (studiesBean.getStatus().equalsIgnoreCase(EnrollmentStatus.ENROLLED.getStatus())) {
               participantStudyEntity.setEnrolledDate(Timestamp.from(Instant.now()));
             }
           } else {
-            participantStudyEntity.setStatus(
-                MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
+            participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
           }
           if (studiesBean.getBookmarked() != null) {
             participantStudyEntity.setBookmark(studiesBean.getBookmarked());
