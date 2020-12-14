@@ -279,7 +279,8 @@ public class StudyStateControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies[3].participantId").isEmpty())
-        .andExpect(jsonPath("$.studies[3].status", is(EnrollmentStatus.WITHDRAWN.getStatus())))
+        .andExpect(
+            jsonPath("$.studies[3].status", is(EnrollmentStatus.WITHDRAWN.getDisplayValue())))
         .andReturn();
 
     verifyTokenIntrospectRequest(2);
