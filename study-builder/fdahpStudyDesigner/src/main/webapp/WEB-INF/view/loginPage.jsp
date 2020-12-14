@@ -144,8 +144,7 @@
                 <button type="submit" class="btn lg-btn" id="log-btn">SUBMIT</button>
               </div>
               <div class="pt-xs">
-                <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to sign
-                  in
+                <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to sign in
                 </a>
               </div>
             </div>
