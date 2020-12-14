@@ -4,6 +4,7 @@ import {ToastrService} from 'ngx-toastr';
 import {switchMap} from 'rxjs/operators';
 import {AccessToken} from 'src/app/entity/access-token';
 import {AuthService} from 'src/app/service/auth.service';
+import {HeaderDisplayService} from 'src/app/service/header-display.service';
 import {StateService} from 'src/app/service/state.service';
 import {AccountService} from 'src/app/site-coordinator/account/shared/account.service';
 import {Profile} from 'src/app/site-coordinator/account/shared/profile.model';
@@ -20,6 +21,7 @@ export class LoginCallbackComponent implements OnInit {
     private readonly accountService: AccountService,
     private readonly userState: StateService,
     private readonly toastr: ToastrService,
+    private readonly displayHeader: HeaderDisplayService,
   ) {}
   ngOnInit(): void {
     this.redirect();
@@ -54,6 +56,7 @@ export class LoginCallbackComponent implements OnInit {
                 params.accountStatus === '3' ||
                 params.accountStatus === '2'
               ) {
+                this.displayHeader.setDisplayHeaderStatus(false);
                 void this.router.navigate(
                   ['/coordinator/accounts/change-password'],
                   {queryParams: {action: 'passwordsetup'}},

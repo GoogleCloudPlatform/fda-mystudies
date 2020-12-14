@@ -2,14 +2,16 @@
   <div (keyup)="onKeyUp($event)" id="desktop-menu">
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
-        <a routerLink="/coordinator/studies/sites" class="navbar-brand">
+        <a [routerLink]="displayHeaderOnResetpassword ?'/coordinator/studies/sites' : []"  
+        [ngClass]="{'cursor__none': displayHeaderOnResetpassword === false}"
+            class="navbar-brand">
           <img
             class="mr-sm width__auto"
             src="assets/images/landing-logo.png"
             alt="main logo "
           />
         </a>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div *ngIf="displayHeaderOnResetpassword" class="collapse navbar-collapse" id="navbarCollapse">
           <div class="navbar-nav ml-auto">
             <div class="navbar-nav display-flex-center">
               <div

@@ -8,6 +8,7 @@ import {getMessage} from 'src/app/shared/success.codes.enum';
 import {ChangePassword} from '../shared/profile.model';
 import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {HeaderDisplayService} from 'src/app/service/header-display.service';
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -21,12 +22,14 @@ export class ChangePasswordComponent
   currentPasswordValidationMessage = 'Enter your current password';
   currentPasswordPlaceholder = 'Enter Current Password';
   currentPasswordlabel = 'Current Password';
+  hideClickabale = true;
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly toastr: ToastrService,
+    private readonly displayHeader: HeaderDisplayService,
   ) {
     super();
     this.resetPasswordForm = this.fb.group(
@@ -62,6 +65,9 @@ export class ChangePasswordComponent
                         - contain a number.
                         - contain a special character from the following set:
                         !"" # $ % ' () * + , - . : ; < = > ? @ [] ^_  {} |~"' `);
+    this.displayHeader.showHeaders$.subscribe((visible) => {
+      this.hideClickabale = visible;
+    });
   }
   changePassword(): void {
     if (!this.resetPasswordForm.valid) return;
@@ -74,6 +80,7 @@ export class ChangePasswordComponent
     this.accountService
       .changePassword(changePassword)
       .subscribe((successResponse: ApiResponse) => {
+        this.displayHeader.setDisplayHeaderStatus(true);
         if (getMessage(successResponse.code)) {
           this.toastr.success(getMessage(successResponse.code));
         }
