@@ -19,6 +19,9 @@ import android.os.Build;
 import android.util.Base64;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
+import com.harvard.FdaApplication;
+import com.harvard.R;
+import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -61,6 +64,7 @@ public class HttpRequest {
   private static String CONTENT_TYPE_KEY = "Content-Type";
   private static String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
   private static String APPLICATION_JSON = "application/json";
+  private static String APP_NAME_KEY = "appName";
 
   /**
    * To make a Get request.
@@ -181,6 +185,7 @@ public class HttpRequest {
         }
         httppost.addHeader(CONTENT_TYPE_KEY, APPLICATION_JSON);
         httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        httppost.addHeader(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
 
         StringEntity params1 = new StringEntity(jsonObject.toString());
         httppost.setEntity(params1);
@@ -281,6 +286,7 @@ public class HttpRequest {
       conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestProperty(CONTENT_TYPE_KEY, APPLICATION_JSON);
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
 
       if (serverType.equalsIgnoreCase(SERVER_TYPE_STUDY_DATASTORE)) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
