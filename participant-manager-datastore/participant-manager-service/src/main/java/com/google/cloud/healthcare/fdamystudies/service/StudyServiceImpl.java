@@ -306,16 +306,6 @@ public class StudyServiceImpl implements StudyService {
       registryParticipants.add(participantDetail);
     }
 
-    if (StringUtils.equals(orderByCondition, "enrollmentStatus_asc")) {
-      registryParticipants.sort(
-          (ParticipantDetail s1, ParticipantDetail s2) ->
-              s1.getEnrollmentStatus().compareTo(s2.getEnrollmentStatus()));
-    } else if (StringUtils.equals(orderByCondition, "enrollmentStatus_desc")) {
-      registryParticipants.sort(
-          (ParticipantDetail s1, ParticipantDetail s2) ->
-              s2.getEnrollmentStatus().compareTo(s1.getEnrollmentStatus()));
-    }
-
     participantRegistryDetail.setRegistryParticipants(registryParticipants);
     Long participantCount =
         studyRepository.countParticipantsByStudyIdAndSearchTerm(
