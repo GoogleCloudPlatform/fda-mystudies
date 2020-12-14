@@ -49,6 +49,7 @@
           <div class="form-group">
             <label for="fname">First Name</label>
             <input
+            [readonly]="user.status === userStatus.Deactivated"
               placeholder="Enter First Name"
               type="text"
               class="form-control"
@@ -85,6 +86,7 @@
           <div class="form-group">
             <label for="lname">Last Name</label>
             <input
+           [readonly]="user.status === userStatus.Deactivated"
               type="text"
               maxlength="50"
               [(ngModel)]="user.lastName"
@@ -137,6 +139,7 @@
             <label>Role</label>
             <div class="custom__labels">
               <input
+              [disabled]="user.status === userStatus.Deactivated"
                 type="checkbox"
                 id="role"
                 [(ngModel)]="user.superAdmin"
@@ -172,6 +175,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
             <div class="form-group">
               <div class="custom__labels">
                 <input
+                 [disabled]="user.status === userStatus.Deactivated"
                   type="checkbox"
                   id="location"
                   [(ngModel)]="user.manageLocationsSelected"
@@ -187,6 +191,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
               <div class="pl-xl pt-xs">
                 <span>
                   <input
+                  [disabled]="user.status === userStatus.Deactivated"
                     [value]="permission.View"
                     type="radio"
                     id="location_view_permssion"
@@ -201,6 +206,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                 </span>
                 <span>
                   <input
+                  [disabled]="user.status === userStatus.Deactivated"
                     [value]="permission.ViewAndEdit"
                     type="radio"
                     id="location_view_edit_permssion"
@@ -227,6 +233,8 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
             <label class="wrap pb-1 text-initial">
               Add an app
               <ng-select
+               [disabled]="user.status === userStatus.Deactivated"
+                  type="checkbox"
                 [items]="appDetails.apps"
                 [clearable]="false"
                 [multiple]="true"
@@ -254,6 +262,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                       <div>
                         <div class="custom__labels">
                           <input
+                           [disabled]="user.status === userStatus.Deactivated"
                             #permissionCheckBox
                             type="checkbox"
                             id="appCheckBox{{ app.id }}"
@@ -271,6 +280,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                         <div class="pl-xl pt-xs">
                           <span>
                             <input
+                             [disabled]="user.status === userStatus.Deactivated"
                               type="radio"
                               [value]="permission.View"
                               [(ngModel)]="app.permission"
@@ -289,6 +299,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                           </span>
                           <span>
                             <input
+                             [disabled]="user.status === userStatus.Deactivated"
                               type="radio"
                               [value]="permission.ViewAndEdit"
                               [(ngModel)]="app.permission"
@@ -316,7 +327,8 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                               | i18nPlural: sitesMessageMapping
                           }}
                         </div>
-                        <div
+                        <div 
+                        *ngIf="user.status !== userStatus.Deactivated"
                           class="fa__plus__minus mob_pull_right"
                           type="button"
                           data-toggle="collapse"
@@ -346,9 +358,9 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                               <div>
                                 <div class="custom__labels">
                                   <input
-                                    #permissionCheckBox
+                                                                    #permissionCheckBox
                                     (change)="studyCheckBoxChange(study, app)"
-                                    [disabled]="app.selected"
+                                    [disabled]="app.selected ||user.status === userStatus.Deactivated"
                                     type="checkbox"
                                     id="studyCheckBox{{ study.studyId }}"
                                     [(ngModel)]="study.selected"
@@ -365,7 +377,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                                   <span>
                                     <input
                                       [disabled]="
-                                        app.selected || !study.selected
+                                        app.selected || !study.selected||user.status === userStatus.Deactivated
                                       "
                                       type="radio"
                                       [value]="permission.View"
@@ -385,7 +397,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                                   <span>
                                     <input
                                       [disabled]="
-                                        app.selected || !study.selected
+                                        app.selected || !study.selected || user.status === userStatus.Deactivated
                                       "
                                       type="radio"
                                       [value]="permission.ViewAndEdit"
@@ -430,11 +442,12 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                               <div *ngFor="let site of study.sites">
                                 <div class="custom__labels">
                                   <input
+                                  
                                     #permissionCheckBox
                                     (change)="
                                       siteCheckBoxChange(site, study, app)
-                                    "
-                                    [disabled]="study.selected"
+                                    " 
+                                    [disabled]="study.selected || user.status === userStatus.Deactivated"
                                     type="checkbox"
                                     id="siteCheckBox{{ site.siteId }}"
                                     [ngModelOptions]="{standalone: true}"
@@ -450,8 +463,9 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                                 <div class="custom__labels__radio">
                                   <span>
                                     <input
+                                    
                                       [disabled]="
-                                        study.selected || !site.selected
+                                        study.selected || !site.selected ||user.status === userStatus.Deactivated
                                       "
                                       type="radio"
                                       [value]="permission.View"
@@ -469,8 +483,9 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                                   </span>
                                   <span>
                                     <input
+                                     
                                       [disabled]="
-                                        study.selected || !site.selected
+                                        study.selected || !site.selected ||user.status === userStatus.Deactivated
                                       "
                                       type="radio"
                                       [value]="permission.ViewAndEdit"
@@ -495,7 +510,7 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                     </div>
                   </div>
                 </div>
-                <button class="btn pr-0" (click)="deleteAppFromList(app.id)">
+                <button  *ngIf="user.status !== userStatus.Deactivated"  class="btn pr-0" (click)="deleteAppFromList(app.id)">
                   <img src="assets/svgs/delete.svg" alt="Delete" />
                 </button>
               </div>
