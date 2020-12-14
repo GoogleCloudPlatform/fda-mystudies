@@ -17,7 +17,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ENROLLMENT_TARGET_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.INVITATION_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.INVITATION_EMAIL_SENT;
@@ -55,7 +54,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
@@ -267,6 +265,15 @@ public class SiteServiceImpl implements SiteService {
                 .toEpochMilli()));
     participantRegistrySite =
         participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+    ParticipantStudyEntity participantStudyEntity =
+        ParticipantMapper.toParticipantStudyEntity(
+            participantRegistrySite, EnrollmentStatus.YET_TO_ENROLL);
+    participantStudyEntity.setParticipantId(null);
+    participantStudyEntity.setUserDetails(null);
+    participantStudyEntity.setEnrolledDate(null);
+    participantStudyRepository.saveAndFlush(participantStudyEntity);
+
     ParticipantResponse response =
         new ParticipantResponse(
             MessageCode.ADD_PARTICIPANT_SUCCESS, participantRegistrySite.getId());
@@ -700,7 +707,8 @@ public class SiteServiceImpl implements SiteService {
 
     ParticipantDetailResponse participantDetailResponse = new ParticipantDetailResponse();
     if (CollectionUtils.isEmpty(participantsEnrollments)) {
-      Enrollment enrollment = new Enrollment(null, "-", YET_TO_ENROLL, "-");
+      Enrollment enrollment =
+          new Enrollment(null, "-", EnrollmentStatus.YET_TO_ENROLL.getStatus(), "-");
       participantDetail.getEnrollments().add(enrollment);
     } else {
       ParticipantMapper.addEnrollments(participantDetail, participantsEnrollments);
@@ -863,7 +871,8 @@ public class SiteServiceImpl implements SiteService {
       invitedParticipantsEmailRepository.saveAndFlush(inviteParticipantsEmail);
 
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
-      participantStudyRepository.updateEnrollmentStatus(ids, CommonConstants.YET_TO_ENROLL);
+      participantStudyRepository.updateEnrollmentStatus(
+          ids, EnrollmentStatus.YET_TO_ENROLL.getStatus());
       invitedParticipants.add(participantRegistrySiteEntity);
     }
     return invitedParticipants;
@@ -999,6 +1008,15 @@ public class SiteServiceImpl implements SiteService {
                   .toEpochMilli()));
       participantRegistrySite =
           participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+      ParticipantStudyEntity participantStudyEntity =
+          ParticipantMapper.toParticipantStudyEntity(
+              participantRegistrySite, EnrollmentStatus.YET_TO_ENROLL);
+      participantStudyEntity.setParticipantId(null);
+      participantStudyEntity.setUserDetails(null);
+      participantStudyEntity.setEnrolledDate(null);
+      participantStudyRepository.saveAndFlush(participantStudyEntity);
+
       participantDetail.setId(participantRegistrySite.getId());
       savedParticipants.add(participantDetail);
     }
@@ -1057,7 +1075,7 @@ public class SiteServiceImpl implements SiteService {
           participantStatusRequest.getIds(),
           disabledTimestamp);
       participantStudyRepository.updateEnrollmentStatus(
-          participantStatusRequest.getIds(), CommonConstants.YET_TO_ENROLL);
+          participantStatusRequest.getIds(), EnrollmentStatus.YET_TO_ENROLL.getStatus());
     } else {
       List<String> emails =
           participantregistryList
@@ -1078,7 +1096,7 @@ public class SiteServiceImpl implements SiteService {
           participantStatusRequest.getIds(),
           disabledTimestamp);
       participantStudyRepository.updateEnrollmentStatus(
-          participantStatusRequest.getIds(), CommonConstants.YET_TO_ENROLL);
+          participantStatusRequest.getIds(), EnrollmentStatus.YET_TO_ENROLL.getStatus());
     }
 
     SiteEntity site = optSite.get();

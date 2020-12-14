@@ -12,9 +12,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CL
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO_OF_RECORDS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PAGE_NO;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
@@ -531,6 +529,14 @@ public class SiteControllerTest extends BaseMockIT {
     assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
     assertEquals(participantRequest.getEmail(), optParticipantRegistrySite.get().getEmail());
 
+    // verify new record inserted in ParticipantStudyEntity
+    Optional<ParticipantStudyEntity> optParticipantStudy =
+        participantStudyRepository.findByParticipantRegistrySiteId(participantId);
+    assertNotNull(optParticipantStudy.get().getParticipantRegistrySite());
+    assertNotNull(optParticipantStudy.get().getSite());
+    assertEquals(participantId, optParticipantStudy.get().getParticipantRegistrySite().getId());
+    assertEquals(siteEntity.getId(), optParticipantStudy.get().getSite().getId());
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(appEntity.getId());
     auditRequest.setStudyId(studyEntity.getId());
@@ -952,109 +958,6 @@ public class SiteControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(auditEventMap, SITE_PARTICIPANT_REGISTRY_VIEWED);
     verifyTokenIntrospectRequest();
-  }
-
-  @Test
-  public void shouldReturnSiteParticipantsRegistryForPagination() throws Exception {
-    studyEntity.setType(OPEN);
-    siteEntity.setTargetEnrollment(0);
-    siteEntity.setStudy(studyEntity);
-    locationEntity.setName("Location1");
-    locationEntity.setCustomId("Location");
-    locationEntity.setStatus(0);
-    siteEntity.setLocation(locationEntity);
-    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
-    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
-    participantRegistrySiteEntity.setEmail(testDataHelper.EMAIL_VALUE);
-    testDataHelper
-        .getParticipantRegistrySiteRepository()
-        .saveAndFlush(participantRegistrySiteEntity);
-
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
-
-    /*Step 1: 1 participantRegistrySite already added in @BeforeEach, add 20 new participantRegistrySites*/
-
-    for (int i = 1; i <= 20; i++) {
-      participantRegistrySiteEntity =
-          testDataHelper.createParticipantRegistrySite(siteEntity, studyEntity);
-      participantRegistrySiteEntity.setEmail(String.valueOf(i) + TestConstants.EMAIL_ID);
-      participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
-    }
-
-    /*Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch only 5 data out of 21*/
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
-                .headers(headers)
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.participantRegistryDetail", notNullValue()))
-        .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
-        .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(5)))
-        .andExpect(jsonPath("$.totalParticipantCount", is(21)))
-        .andExpect(
-            jsonPath(
-                "$.participantRegistryDetail.registryParticipants[0].email",
-                is(String.valueOf(20) + TestConstants.EMAIL_ID)))
-        .andExpect(
-            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
-
-    verifyTokenIntrospectRequest(1);
-
-    // page index starts with 0, get site participants for 3rd page
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
-                .headers(headers)
-                .queryParam("page", "2")
-                .queryParam("limit", "9")
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.participantRegistryDetail", notNullValue()))
-        .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
-        .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(3)))
-        .andExpect(jsonPath("$.totalParticipantCount", is(21)))
-        .andExpect(
-            jsonPath(
-                "$.participantRegistryDetail.registryParticipants[0].email",
-                is(String.valueOf(2) + TestConstants.EMAIL_ID)))
-        .andExpect(
-            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
-
-    verifyTokenIntrospectRequest(2);
-
-    // get all participantregistrySites if page and limit values are null
-
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.participantRegistryDetail", notNullValue()))
-        .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
-        .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)))
-        .andExpect(jsonPath("$.totalParticipantCount", is(21)))
-        .andExpect(
-            jsonPath(
-                "$.participantRegistryDetail.registryParticipants[1].email",
-                is(String.valueOf(1) + TestConstants.EMAIL_ID)))
-        .andExpect(
-            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
-
-    verifyTokenIntrospectRequest(3);
   }
 
   @Test
@@ -1495,7 +1398,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.participantDetails.enrollments[0].enrollmentStatus",
-                is(EnrollmentStatus.ENROLLED.getStatus())))
+                is(EnrollmentStatus.ENROLLED.getDisplayValue())))
         .andExpect(jsonPath("$.participantDetails.enrollments[0].enrollmentDate").isNotEmpty())
         .andExpect(
             jsonPath("$.participantDetails.enrollments[0].withdrawalDate", is(NOT_APPLICABLE)))
@@ -1520,7 +1423,7 @@ public class SiteControllerTest extends BaseMockIT {
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     participantStudyEntity.setWithdrawalDate(new Timestamp(Instant.now().toEpochMilli()));
-    participantStudyEntity.setStatus(CommonConstants.YET_TO_ENROLL);
+    participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -1550,7 +1453,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.participantDetails.enrollments[0].enrollmentStatus",
-                is(CommonConstants.YET_TO_ENROLL)))
+                is(EnrollmentStatus.YET_TO_ENROLL.getStatus())))
         .andExpect(
             jsonPath("$.participantDetails.enrollments[0].enrollmentDate", is(NOT_APPLICABLE)))
         .andExpect(
@@ -1608,7 +1511,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.participantDetails.enrollments[0].enrollmentStatus",
-                is(EnrollmentStatus.ENROLLED.getStatus())));
+                is(EnrollmentStatus.ENROLLED.getDisplayValue())));
 
     verifyTokenIntrospectRequest();
   }
@@ -2127,6 +2030,14 @@ public class SiteControllerTest extends BaseMockIT {
     assertNotNull(optParticipantRegistrySite.get().getSite());
     assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
     assertEquals(IMPORT_EMAIL_2, optParticipantRegistrySite.get().getEmail());
+
+    // verify new record inserted in ParticipantStudyEntity
+    Optional<ParticipantStudyEntity> optParticipantStudy =
+        participantStudyRepository.findByParticipantRegistrySiteId(participantId);
+    assertNotNull(optParticipantStudy.get().getParticipantRegistrySite());
+    assertNotNull(optParticipantStudy.get().getSite());
+    assertEquals(participantId, optParticipantStudy.get().getParticipantRegistrySite().getId());
+    assertEquals(siteEntity.getId(), optParticipantStudy.get().getSite().getId());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());

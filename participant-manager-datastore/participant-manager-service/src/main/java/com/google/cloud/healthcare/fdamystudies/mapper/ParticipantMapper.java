@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
 
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
@@ -59,15 +58,10 @@ public final class ParticipantMapper {
     String invitedDate = DateTimeUtils.format(studyParticipantDetail.getInvitedDate());
     participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
 
-    if (studyParticipantDetail.getEnrolledStatus() != null) {
-      participantDetail.setEnrollmentStatus(
-          EnrollmentStatus.getDisplayValue(studyParticipantDetail.getEnrolledStatus()));
-      String enrollmentDate = DateTimeUtils.format(studyParticipantDetail.getEnrolledDate());
-      participantDetail.setEnrollmentDate(
-          StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-    } else {
-      participantDetail.setEnrollmentStatus(YET_TO_ENROLL);
-    }
+    String enrollmentDate = DateTimeUtils.format(studyParticipantDetail.getEnrolledDate());
+    participantDetail.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+    participantDetail.setEnrollmentStatus(
+        EnrollmentStatus.getDisplayValue(studyParticipantDetail.getEnrolledStatus()));
 
     return participantDetail;
   }
@@ -137,14 +131,10 @@ public final class ParticipantMapper {
     }
 
     ParticipantStudyEntity participantStudy = idMap.get(participantRegistrySite.getId());
-    if (participantStudy != null) {
-      participant.setEnrollmentStatus(
-          EnrollmentStatus.getDisplayValue(participantStudy.getStatus()));
-      String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
-      participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-    } else {
-      participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
-    }
+    participant.setEnrollmentStatus(EnrollmentStatus.getDisplayValue(participantStudy.getStatus()));
+    String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
+    participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
     String disabledDate = DateTimeUtils.format(participantRegistrySite.getDisabledDate());
@@ -176,7 +166,10 @@ public final class ParticipantMapper {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
 
-      if (!optParticipant.isPresent() && participantsEnrollment.getStatus().equals(YET_TO_ENROLL)) {
+      if (!optParticipant.isPresent()
+          && participantsEnrollment
+              .getStatus()
+              .equals(EnrollmentStatus.YET_TO_ENROLL.getStatus())) {
         enrollment.setEnrollmentStatus(participantsEnrollment.getStatus());
         enrollment.setParticipantId(participantsEnrollment.getParticipantId());
         enrollment.setEnrollmentDate(NOT_APPLICABLE);
@@ -188,7 +181,8 @@ public final class ParticipantMapper {
         return;
       }
 
-      enrollment.setEnrollmentStatus(participantsEnrollment.getStatus());
+      enrollment.setEnrollmentStatus(
+          EnrollmentStatus.getDisplayValue(participantsEnrollment.getStatus()));
       enrollment.setParticipantId(participantsEnrollment.getParticipantId());
 
       String enrollmentDate = DateTimeUtils.format(participantsEnrollment.getEnrolledDate());
@@ -260,5 +254,15 @@ public final class ParticipantMapper {
             ? permission
             : null);
     return participantRegistryDetail;
+  }
+
+  public static ParticipantStudyEntity toParticipantStudyEntity(
+      ParticipantRegistrySiteEntity participantRegistrySite, EnrollmentStatus enrollment) {
+    ParticipantStudyEntity participantStudyEntity = new ParticipantStudyEntity();
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySite);
+    participantStudyEntity.setStatus(enrollment.getStatus());
+    participantStudyEntity.setSite(participantRegistrySite.getSite());
+    participantStudyEntity.setStudy(participantRegistrySite.getStudy());
+    return participantStudyEntity;
   }
 }
