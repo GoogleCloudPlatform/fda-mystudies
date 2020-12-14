@@ -7,7 +7,7 @@ describe('LoadmoreSpinnerComponent', () => {
   let fixture: ComponentFixture<LoadmoreSpinnerComponent>;
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({
+    void TestBed.configureTestingModule({
       declarations: [LoadmoreSpinnerComponent],
     }).compileComponents();
   }));
