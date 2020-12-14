@@ -226,7 +226,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "SELECT study_id from sites_permissions  where ur_admin_user_id=:userId) "
               + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
-   public List<String> findStudyIds(Integer limit, Integer offset, String userId);
+  public List<String> findStudyIds(Integer limit, Integer offset, String userId);
 
   @Query(
       value =
@@ -238,9 +238,6 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "WHERE prs.study_info_id=:studyId  AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) ",
       nativeQuery = true)
   public Long countParticipantsByStudyIdAndSearchTerm(String studyId, String searchTerm);
- 
-
-  public List<String> findStudyIds(Integer limit, Integer offset, String userId);
 
   @Query(
       value =
