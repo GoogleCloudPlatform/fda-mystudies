@@ -39,6 +39,7 @@ export class AppListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.searchParameter.setSearchParameter('');
     this.searchParameter.searchParam$.subscribe((updatedParameter) => {
       this.manageAppsBackup = {} as ManageApps;
       this.searchValue = updatedParameter;

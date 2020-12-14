@@ -37,6 +37,7 @@ export class StudyListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.searchParameter.setSearchParameter('');
     this.searchParameter.searchParam$.subscribe((updatedParameter) => {
       this.manageStudiesBackup = {} as StudyResponse;
       this.searchValue = updatedParameter;
