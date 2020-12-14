@@ -137,7 +137,7 @@ export class AuthInterceptor implements HttpInterceptor {
             this.handle401Error(request, next);
           } else if (err.url === `${environment.authServerUrl}/oauth2/token`) {
             this.toasterService.error(
-              'Your session has expired and have been loged out successfully',
+              'Your session has expired. Please sign in again.',
             );
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
