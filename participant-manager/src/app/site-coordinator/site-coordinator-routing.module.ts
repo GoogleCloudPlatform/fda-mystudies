@@ -8,7 +8,8 @@ import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.comp
 import {StudiesModule} from './studies/studies.module';
 import {ParticipantDetailsComponent} from './participant-details/participant-details.component';
 import {AppsModule} from '../site-coordinator/apps/apps.module';
-
+import {RoleGuard} from '../service/roles.guard';
+import {LocationsGuard} from '../service/locations.guard';
 const routes: Routes = [
   {
     path: '',
@@ -21,11 +22,13 @@ const routes: Routes = [
       },
       {
         path: 'locations',
+        canActivate: [LocationsGuard],
         loadChildren: async (): Promise<LocationModule> =>
           import('./location/location.module').then((m) => m.LocationModule),
       },
       {
         path: 'users',
+        canActivate: [RoleGuard],
         loadChildren: async (): Promise<UserModule> =>
           import('./user/user.module').then((m) => m.UserModule),
       },
