@@ -461,6 +461,29 @@ CREATE TABLE IF NOT EXISTS `invite_participants` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `participant_enrollment_history` (
+  `id` varchar(255) NOT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `status` varchar(64) DEFAULT NULL,
+  `app_info_id` varchar(255) DEFAULT NULL,
+  `site_id` varchar(255) DEFAULT NULL,
+  `study_info_id` varchar(255) DEFAULT NULL,
+  `user_details_id` varchar(255) DEFAULT NULL,
+  `participant_registry_site_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKf67cshsfhjae6if1vgskre3jo` (`app_info_id`),
+  KEY `FKt54o4s9tiiv74ni6urb8k4fq2` (`site_id`),
+  KEY `FK1bmomoc73pe9g97g4ih69mh3u` (`study_info_id`),
+  KEY `FKbvetsdb2isivd8q95sly7md99` (`user_details_id`),
+  KEY `FKahlmyi1rkt3odfyvt7wax433w` (`participant_registry_site_id`),
+  CONSTRAINT `FK1bmomoc73pe9g97g4ih69mh3u` FOREIGN KEY (`study_info_id`) REFERENCES `study_info` (`id`),
+  CONSTRAINT `FKahlmyi1rkt3odfyvt7wax433w` FOREIGN KEY (`participant_registry_site_id`) REFERENCES `participant_registry_site` (`id`),
+  CONSTRAINT `FKbvetsdb2isivd8q95sly7md99` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`),
+  CONSTRAINT `FKf67cshsfhjae6if1vgskre3jo` FOREIGN KEY (`app_info_id`) REFERENCES `app_info` (`id`),
+  CONSTRAINT `FKt54o4s9tiiv74ni6urb8k4fq2` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
