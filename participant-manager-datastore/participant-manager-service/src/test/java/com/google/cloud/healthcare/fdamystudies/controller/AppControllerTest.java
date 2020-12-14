@@ -26,6 +26,7 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
@@ -65,6 +66,8 @@ public class AppControllerTest extends BaseMockIT {
   private UserDetailsEntity userDetailsEntity;
   private LocationEntity locationEntity;
   private ParticipantEnrollmentHistoryEntity participantEnrollmentHistoryEntity;
+
+  public static final String EMAIL_VALUE = "mockit_email@grr.la";
 
   public static final String EMAIL_VALUE = "mockit_email@grr.la";
 
