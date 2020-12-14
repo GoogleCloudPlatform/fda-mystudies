@@ -42,7 +42,7 @@ describe('LocationService', () => {
     locationService = new LocationService(entityServiceSpy, httpServicespyobj);
 
     locationService
-      .getLocations()
+      .getLocations(0, 10, '', '', '')
       .subscribe(
         (locations) =>
           expect(locations).toEqual(
@@ -154,7 +154,7 @@ describe('LocationService', () => {
     });
     locationService = new LocationService(entityServiceSpy, httpServiceSpyObj);
 
-    locationService.getLocations().subscribe(
+    locationService.getLocations(0, 10, '', '', '').subscribe(
       () => fail('expected an error, not locations'),
       (error: ApiResponse) => {
         expect(error.message).toContain('User does not exist');
