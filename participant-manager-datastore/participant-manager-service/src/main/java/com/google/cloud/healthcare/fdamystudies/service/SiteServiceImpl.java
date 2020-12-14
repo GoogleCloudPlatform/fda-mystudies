@@ -588,7 +588,7 @@ public class SiteServiceImpl implements SiteService {
     if (optParticipantStudyCount.isPresent()
         && optParticipantStudyCount.get() > 0
         && study.getStatus().equals(STATUS_ACTIVE)) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS);
+      throw new ErrorCodeException(ErrorCode.ACTIVE_STUDY_ENROLLED_PARTICIPANT);
     }
   }
 
@@ -1100,11 +1100,14 @@ public class SiteServiceImpl implements SiteService {
     auditRequest.setStudyId(site.getStudyId());
     auditRequest.setAppId(site.getStudy().getAppId());
 
+    MessageCode messageCode = null;
     Map<String, String> map = Collections.singletonMap("site_id", optSite.get().getId());
     if (participantStatusRequest.getStatus().equals(OnboardingStatus.DISABLED.getCode())) {
       participantManagerHelper.logEvent(PARTICIPANT_INVITATION_DISABLED, auditRequest, map);
+      messageCode = MessageCode.INVITATION_DISABLED_SUCCESS;
     } else if (participantStatusRequest.getStatus().equals(OnboardingStatus.NEW.getCode())) {
       participantManagerHelper.logEvent(PARTICIPANT_INVITATION_ENABLED, auditRequest, map);
+      messageCode = MessageCode.INVITATION_ENABLED_SUCCESS;
     }
     logger.exit(
         String.format(
@@ -1112,7 +1115,7 @@ public class SiteServiceImpl implements SiteService {
             participantStatusRequest.getStatus(),
             participantStatusRequest.getIds().size(),
             participantStatusRequest.getSiteId()));
-    return new ParticipantStatusResponse(MessageCode.UPDATE_STATUS_SUCCESS);
+    return new ParticipantStatusResponse(messageCode);
   }
 
   @Override
