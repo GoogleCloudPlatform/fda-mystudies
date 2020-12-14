@@ -86,7 +86,7 @@ export class StudyDetailsComponent
   }
 
   search(query: string): void {
-    this.currentPage = 1;
+    this.currentPage = 0;
     this.offset = 0;
     this.searchTerm = query.trim().toLowerCase();
     this.getStudyDetails();
@@ -96,6 +96,10 @@ export class StudyDetailsComponent
     if (page >= 1) {
       this.currentPage = page;
       this.offset = (page - 1) * this.limit;
+      this.getStudyDetails();
+    } else if (page === 0) {
+      this.currentPage = 0;
+      this.offset = 0;
       this.getStudyDetails();
     }
   }

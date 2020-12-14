@@ -24,7 +24,6 @@ export class AppDetailsService {
       )}/participants`,
       {
         params: {
-          excludeParticipantStudyStatus: ['notEligible', 'yetToEnroll'],
           offset: offset.toString(),
           limit: limit.toString(),
           searchTerm: searchTerm,
