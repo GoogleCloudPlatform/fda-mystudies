@@ -32,7 +32,7 @@
         </div>
       </li>
       <li class="first active">
-        Basic Information
+        Study Information
         <c:if test="${studyBo.studySequenceBo.basicInfo}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
