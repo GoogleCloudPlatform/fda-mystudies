@@ -148,15 +148,12 @@
         <div class="blue__text__md text-uppercase">
           {{ applists.customStudyId }}
         </div>
-
-        <div *ngFor="let sitelists of applists.sites">
-          <div
-            class="row flex-wrap-unset col-xs-12 col-md-12 p-none flex__justify__space-between"
-          >
+        <div class="font20 text_light-black">
+          {{ applists.studyName }}
+        </div>
+        <div *ngFor="let sitelists of applists.sites" class="mt-2">
+          <div class="p-none">
             <div class="p-none cursor__none">
-              <div class="font20 text_light-black">
-                {{ applists.studyName }}
-              </div>
               <span class="text-grey__sm">Site :</span>
               <span
                 *ngIf="applists.studyType !== studyTypes.Open"
@@ -172,16 +169,22 @@
               </span>
             </div>
             <div>
-              <div>
-                <span class="text-grey__sm">Date of Enrollment:</span>
-                <span class="text__date__sm">
-                  {{ sitelists.enrollmentDate }}
-                </span>
-                <br />
-                <span class="text-grey__sm">Date of Withdrawal:</span>
-                <span class="text__date__sm">
-                  {{ sitelists.withdrawlDate }}
-                </span>
+              <div
+                class="row flex-wrap-unset flex__justify__space-between line_height_normal"
+              >
+                <div class="col-xs-6 col-md-6 p-none">
+                  <span class="text-grey__sm">Date of Enrollment:</span>
+                  <span class="text__date__sm">
+                    {{ sitelists.enrollmentDate }}
+                  </span>
+                </div>
+
+                <div class="col-xs-6 col-md-6 p-none">
+                  <span class="text-grey__sm">Date of Withdrawal:</span>
+                  <span class="text__date__sm">
+                    {{ sitelists.withdrawlDate }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
