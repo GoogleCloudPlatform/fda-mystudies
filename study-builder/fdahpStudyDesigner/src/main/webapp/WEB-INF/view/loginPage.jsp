@@ -114,11 +114,9 @@
                 <button type="button" id="loginBtnId" class="btn lg-btn">SIGN IN</button>
               </div>
               <div class="pb-md pt-xs">
-                <span class="white__text">Forgot Password?</span>
                 <a id="forgot_pwd"
                    class="gray-link white__text"
-                   href="javascript:void(0)">Get
-                  Help
+                   href="javascript:void(0)">Forgot Password?
                 </a>
               </div>
             </div>
@@ -146,8 +144,7 @@
                 <button type="submit" class="btn lg-btn" id="log-btn">SUBMIT</button>
               </div>
               <div class="pt-xs">
-                <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to Sign
-                  in
+                <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to sign in
                 </a>
               </div>
             </div>
