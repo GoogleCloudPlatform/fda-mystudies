@@ -173,21 +173,22 @@
               <th>
                 <div class="blue__text__md">Last Invitation Sent</div>
               </th>
-
-              <th>
-                <div class="blue__text__md">Enrollment Status</div>
-              </th>
-              <th class="mb__mt-sm">
-                <div class="blue__text__md">Date of Enrollment</div>
-              </th>
-              <th class="mb__mt-sm">
-                <div class="blue__text__md">Date of Withdrawal</div>
-              </th>
+              <table class="width__100">
+                <th>
+                  <div class="blue__text__md">Enrollment Status</div>
+                </th>
+                <th class="mb__mt-sm">
+                  <div class="blue__text__md">Date of Enrollment</div>
+                </th>
+                <th class="mb__mt-sm">
+                  <div class="blue__text__md">Date of Withdrawal</div>
+                </th>
+              </table>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="font14">
+              <td class="font14 vertical-align_top">
                 <span
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -212,7 +213,7 @@
                   NA
                 </span>
               </td>
-              <td class="font14">
+              <td class="font14 vertical-align_top">
                 <span
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -231,15 +232,15 @@
                 </span>
               </td>
 
-              <table
-                class="display__contents"
+              <div
                 *ngFor="
                   let enrollmentDetails of participant.participantDetails
                     .enrollments
                 "
               >
-                <td class="font14">
-                  <span
+                <table class="width__100">
+                  <td
+                    class="font14 custm_table_width_20"
                     [ngClass]="{
                       'txt__green':
                         enrollmentDetails.enrollmentStatus ==
@@ -250,15 +251,20 @@
                     }"
                   >
                     {{ enrollmentDetails.enrollmentStatus }}
-                  </span>
-                </td>
-                <td class="mb__mt-sm inactive__text font14">
-                  <span>{{ enrollmentDetails.enrollmentDate }}</span>
-                </td>
-                <td class="mb__mt-sm inactive__text font14">
-                  <span>{{ enrollmentDetails.withdrawalDate }}</span>
-                </td>
-              </table>
+                  </td>
+
+                  <td
+                    class="mb__mt-sm inactive__text font14 custm_table_width_20"
+                  >
+                    {{ enrollmentDetails.enrollmentDate }}
+                  </td>
+                  <td
+                    class="mb__mt-sm inactive__text font14 custm_table_width_20"
+                  >
+                    {{ enrollmentDetails.withdrawalDate }}
+                  </td>
+                </table>
+              </div>
             </tr>
           </tbody>
         </table>
