@@ -22,7 +22,7 @@ export class ChangePasswordComponent
   currentPasswordValidationMessage = 'Enter your current password';
   currentPasswordPlaceholder = 'Enter Current Password';
   currentPasswordlabel = 'Current Password';
-  hideClickabale = true;
+  hideClickable = true;
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -66,7 +66,7 @@ export class ChangePasswordComponent
                         - contain a special character from the following set:
                         !"" # $ % ' () * + , - . : ; < = > ? @ [] ^_  {} |~"' `);
     this.displayHeader.showHeaders$.subscribe((visible) => {
-      this.hideClickabale = visible;
+      this.hideClickable = visible;
     });
   }
   changePassword(): void {

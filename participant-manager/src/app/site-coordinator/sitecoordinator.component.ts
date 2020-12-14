@@ -33,8 +33,8 @@ export class SiteCoordinatorComponent implements OnInit {
       this.userName = upadtedUsername;
     });
 
-    this.displayHeader.showHeaders$.subscribe((upadtedHeaderDisplayStatus) => {
-      this.displayHeaderOnResetpassword = upadtedHeaderDisplayStatus;
+    this.displayHeader.showHeaders$.subscribe((updatedHeaderDisplayStatus) => {
+      this.displayHeaderOnResetpassword = updatedHeaderDisplayStatus;
     });
 
     if (this.userName === '') {
