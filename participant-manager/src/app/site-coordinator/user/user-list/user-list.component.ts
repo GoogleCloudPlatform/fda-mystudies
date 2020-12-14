@@ -15,7 +15,7 @@ export class UserListComponent implements OnInit {
   onBoardingStatus = Status;
   // pagination
   limit = 10;
-  currentPage = 1;
+  currentPage = 0;
   offset = 0;
   searchTerm = '';
   sortBy: string[] | string = ['_firstName'];
@@ -49,7 +49,7 @@ export class UserListComponent implements OnInit {
   }
 
   search(query: string): void {
-    this.currentPage = 1;
+    this.currentPage = 0;
     this.offset = 0;
     this.searchTerm = query.trim().toLowerCase();
     this.getUsers();
@@ -59,6 +59,10 @@ export class UserListComponent implements OnInit {
     if (page >= 1) {
       this.currentPage = page;
       this.offset = (page - 1) * this.limit;
+      this.getUsers();
+    } else if (page === 0) {
+      this.currentPage = 0;
+      this.offset = 0;
       this.getUsers();
     }
   }
