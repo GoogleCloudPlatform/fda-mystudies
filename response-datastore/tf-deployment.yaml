@@ -41,6 +41,8 @@ spec:
                 secretKeyRef:
                   name: response-datastore-credentials
                   key: dbname
+            - name: DB_INSTANCE_URL
+              value: "127.0.0.1" 
             # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:

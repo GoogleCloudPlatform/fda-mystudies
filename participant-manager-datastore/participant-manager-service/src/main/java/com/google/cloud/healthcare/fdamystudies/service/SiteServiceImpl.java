@@ -1105,16 +1105,21 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   @Transactional(readOnly = true)
-  public SiteDetailsResponse getSites(String userId) {
+  public SiteDetailsResponse getSites(
+      String userId, Integer limit, Integer offset, String searchTerm) {
     logger.entry("getSites(userId)");
 
     Optional<UserRegAdminEntity> optUser = userRegAdminRepository.findById(userId);
     if (optUser.isPresent() && optUser.get().isSuperAdmin()) {
-      List<StudyDetails> studies = getSitesForSuperAdmin();
+      List<StudyDetails> studies =
+          getSitesForSuperAdmin(limit, offset, StringUtils.defaultString(searchTerm));
       return new SiteDetailsResponse(studies, MessageCode.GET_SITES_SUCCESS);
     }
 
-    List<StudySiteInfo> studySiteDetails = siteRepository.getStudySiteDetails(userId);
+    List<String> studyIds = studyRepository.findStudyIds(limit, offset, userId);
+
+    List<StudySiteInfo> studySiteDetails =
+        siteRepository.getStudySiteDetails(userId, studyIds, StringUtils.defaultString(searchTerm));
     if (CollectionUtils.isEmpty(studySiteDetails)) {
       throw new ErrorCodeException(ErrorCode.NO_SITES_FOUND);
     }
@@ -1156,9 +1161,11 @@ public class SiteServiceImpl implements SiteService {
     return new SiteDetailsResponse(studies, MessageCode.GET_SITES_SUCCESS);
   }
 
-  private List<StudyDetails> getSitesForSuperAdmin() {
+  private List<StudyDetails> getSitesForSuperAdmin(
+      Integer limit, Integer offset, String searchTerm) {
 
-    List<StudySiteInfo> studySiteDetails = studyRepository.getStudySiteDetails();
+    List<StudySiteInfo> studySiteDetails =
+        studyRepository.getStudySiteDetails(limit, offset, StringUtils.defaultString(searchTerm));
 
     List<EnrolledInvitedCount> enrolledInvitedCountList = siteRepository.getEnrolledInvitedCount();
 

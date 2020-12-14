@@ -37,7 +37,7 @@
                   class="pr-xlg"
                 >
                   <div class="banner__label">SITE</div>
-                  <div class="banner__text">NA (Open study)</div>
+                  <div class="banner__text">NA (Open Study)</div>
                 </div>
                 <div class="pr-xlg">
                   <div class="banner__label">
@@ -187,7 +187,7 @@
           </thead>
           <tbody>
             <tr>
-              <td>
+              <td class="font14">
                 <span
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -337,9 +337,7 @@
             <tr
               *ngIf="participant.participantDetails.consentHistory.length === 0"
             >
-              <td></td>
-              <td class="text-right">No records found</td>
-              <td></td>
+              <td colspan="4" class="text-center">No records found</td>
             </tr>
           </tbody>
 

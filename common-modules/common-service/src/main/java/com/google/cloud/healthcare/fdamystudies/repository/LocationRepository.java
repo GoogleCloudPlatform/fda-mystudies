@@ -33,4 +33,24 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
   public Optional<LocationEntity> findByCustomId(String customId);
 
   public Optional<LocationEntity> findByName(String name);
+
+  @Query(
+      value =
+          "SELECT * FROM locations WHERE LOWER(custom_id) LIKE %:searchTerm% OR LOWER(name) LIKE %:searchTerm% "
+              + "ORDER BY CASE :orderByCondition WHEN 'locationId_asc' THEN custom_id END ASC, "
+              + "         CASE :orderByCondition WHEN 'locationName_asc' THEN name END ASC, "
+              + "         CASE :orderByCondition WHEN 'status_asc' THEN status END ASC, "
+              + "         CASE :orderByCondition WHEN 'status_desc' THEN status END DESC, "
+              + "         CASE :orderByCondition WHEN 'locationId_desc' THEN custom_id END DESC, "
+              + "         CASE :orderByCondition WHEN 'locationName_desc' THEN name END DESC "
+              + "LIMIT :limit OFFSET :offset ",
+      nativeQuery = true)
+  public List<LocationEntity> findAll(
+      Integer limit, Integer offset, String orderByCondition, String searchTerm);
+
+  @Query(
+      value =
+          "SELECT count(id) FROM locations WHERE custom_id LIKE %:searchTerm% OR name LIKE %:searchTerm% ",
+      nativeQuery = true)
+  public Long countLocationBySearchTerm(String searchTerm);
 }
