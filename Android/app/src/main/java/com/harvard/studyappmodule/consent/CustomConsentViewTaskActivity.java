@@ -689,19 +689,19 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       getFile("/data/data/" + getPackageName() + "/files/");
 
-      StringBuilder docBuilder = null;
+      StringBuilder docBuilder = new StringBuilder();
       if (eligibilityConsent != null
           && eligibilityConsent.getConsent() != null
           && eligibilityConsent.getConsent().getReview() != null
-          && eligibilityConsent.getConsent().getReview().getSignatureContent() != null
+          && eligibilityConsent.getConsent().getReview().getReviewHTML() != null
           && !eligibilityConsent
               .getConsent()
               .getReview()
-              .getSignatureContent()
+              .getReviewHTML()
               .equalsIgnoreCase("")) {
         docBuilder.append(
             Html.fromHtml(
-                    eligibilityConsent.getConsent().getReview().getSignatureContent().toString())
+                    eligibilityConsent.getConsent().getReview().getReviewHTML().toString())
                 .toString());
       } else if (eligibilityConsent != null
           && eligibilityConsent.getConsent() != null

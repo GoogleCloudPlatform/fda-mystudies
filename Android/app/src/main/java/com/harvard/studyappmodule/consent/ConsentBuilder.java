@@ -236,8 +236,8 @@ public class ConsentBuilder {
     }
 
     if (consent.getReview() != null
-        && consent.getReview().getSignatureContent() != null
-        && !consent.getReview().getSignatureContent().equalsIgnoreCase("")) {
+        && consent.getReview().getReviewHTML() != null
+        && !consent.getReview().getReviewHTML().equalsIgnoreCase("")) {
       StringBuilder docBuilder =
           new StringBuilder("</br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
       String title = context.getString(R.string.review);
@@ -250,7 +250,7 @@ public class ConsentBuilder {
       docBuilder.append("</div></br>");
       docBuilder.append("<div> <h2 style=\"color:#007cba;\"> " + pdftitle + "<h2> </div>");
       docBuilder.append("</div></br>");
-      docBuilder.append("<div>" + consent.getReview().getSignatureContent() + "</div>");
+      docBuilder.append("<div>" + consent.getReview().getReviewHTML() + "</div>");
 
       ConsentDocumentStep documentStep = new ConsentDocumentStepCustom("review");
       documentStep.setConsentHTML(docBuilder.toString());
