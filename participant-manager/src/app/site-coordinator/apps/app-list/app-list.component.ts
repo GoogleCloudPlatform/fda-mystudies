@@ -39,9 +39,9 @@ export class AppListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.searchParameter.searchParam$.subscribe((upadtedParameter) => {
+    this.searchParameter.searchParam$.subscribe((updatedParameter) => {
       this.manageAppsBackup = {} as ManageApps;
-      this.searchValue = upadtedParameter;
+      this.searchValue = updatedParameter;
       this.getApps();
     });
     this.sharedService.updateSearchPlaceHolder('Search by App ID or Name');
@@ -59,12 +59,6 @@ export class AppListComponent implements OnInit {
             'This view displays app-wise enrollment if you manage multiple studies.',
           );
         }
-        this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
-          (app: App) =>
-            app.name?.toLowerCase().includes(query.toLowerCase()) ||
-            app.customId?.toLowerCase().includes(query.toLowerCase()),
-        );
-
         this.loadMoreEnabled =
           (this.manageAppsBackup.apps.length % limit === 0 ? true : false) &&
           manageApps.apps.length > 0;
@@ -114,11 +108,6 @@ export class AppListComponent implements OnInit {
             'This view displays app-wise enrollment if you manage multiple studies.',
           );
         }
-        this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
-          (app: App) =>
-            app.name?.toLowerCase().includes(query.toLowerCase()) ||
-            app.customId?.toLowerCase().includes(query.toLowerCase()),
-        );
         this.loadMoreEnabled =
           this.manageAppsBackup.apps.length % limit === 0 ? true : false;
         return this.manageAppsBackup;

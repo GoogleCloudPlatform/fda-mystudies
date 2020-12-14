@@ -38,9 +38,9 @@ export class StudyListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.searchParameter.searchParam$.subscribe((upadtedParameter) => {
+    this.searchParameter.searchParam$.subscribe((updatedParameter) => {
       this.manageStudiesBackup = {} as StudyResponse;
-      this.searchValue = upadtedParameter;
+      this.searchValue = updatedParameter;
       this.getStudies();
     });
 
@@ -62,12 +62,6 @@ export class StudyListComponent implements OnInit {
             'This view displays study-wise enrollment if you manage multiple sites.',
           );
         }
-
-        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
-          (study: Study) =>
-            study.name?.toLowerCase().includes(query.toLowerCase()) ||
-            study.customId?.toLowerCase().includes(query.toLowerCase()),
-        );
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
@@ -97,22 +91,15 @@ export class StudyListComponent implements OnInit {
 
   loadMoreSites() {
     const offset = this.manageStudiesBackup.studies.length;
-
     this.studyList$ = combineLatest(
       this.studiesService.getStudies(limit, offset, this.searchValue),
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
         const studies = [];
-
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
         this.manageStudiesBackup.studies = studies;
-        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
-          (study: Study) =>
-            study.name?.toLowerCase().includes(query.toLowerCase()) ||
-            study.customId?.toLowerCase().includes(query.toLowerCase()),
-        );
         this.loadMoreEnabled =
           this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
         return this.manageStudiesBackup;

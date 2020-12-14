@@ -40,9 +40,9 @@ export class SiteListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.searchParameter.searchParam$.subscribe((upadtedParameter) => {
+    this.searchParameter.searchParam$.subscribe((updatedParameter) => {
       this.manageStudiesBackup = {} as StudyResponse;
-      this.searchValue = upadtedParameter;
+      this.searchValue = updatedParameter;
       this.getStudies();
     });
 
@@ -62,14 +62,6 @@ export class SiteListComponent implements OnInit {
     ).pipe(
       map(([manageStudies, query]) => {
         this.manageStudiesBackup = {...manageStudies};
-        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
-          (study: Study) =>
-            study.name?.toLowerCase().includes(query) ||
-            study.customId?.toLowerCase().includes(query) ||
-            study.sites.some((site) =>
-              site.name?.toLowerCase()?.includes(query),
-            ),
-        );
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
@@ -111,16 +103,7 @@ export class SiteListComponent implements OnInit {
 
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
-
         this.manageStudiesBackup.studies = studies;
-        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
-          (study: Study) =>
-            study.name?.toLowerCase().includes(query) ||
-            study.customId?.toLowerCase().includes(query) ||
-            study.sites.some((site) =>
-              site.name?.toLowerCase()?.includes(query),
-            ),
-        );
         this.loadMoreEnabled =
           this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
 
