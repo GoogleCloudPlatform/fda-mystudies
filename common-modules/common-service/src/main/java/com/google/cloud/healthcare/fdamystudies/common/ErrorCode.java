@@ -168,7 +168,7 @@ public enum ErrorCode {
       410,
       "EC_0034",
       HttpStatus.GONE.toString(),
-      "This link is no longer valid to be used. Please contact the system admin for assistance with your account."),
+      "This link is no longer valid to be used. Please contact the system admin for assistance with your account or sign in if already registered."),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC_0035", Constants.BAD_REQUEST, "Error in getting participants details"),
@@ -253,6 +253,12 @@ public enum ErrorCode {
 
   USER_ID_REQUIRED(400, "EC_0054", Constants.BAD_REQUEST, "User Id is required"),
 
+  LOCATION_ID_UNIQUE(
+      400,
+      "EC_0058",
+      Constants.BAD_REQUEST,
+      "Location ID must be unique across the location directory"),
+
   EMAIL_ID_OR_PASSWORD_NULL(
       400, "EC_0128", Constants.BAD_REQUEST, "EmailId or password is blank in request"),
 
@@ -273,8 +279,6 @@ public enum ErrorCode {
 
   CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION(
       400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site using a decommissioned location."),
-
-  TEMP_PASSWORD_INVALID(400, "EC_0131", Constants.BAD_REQUEST, "Temporary password is invalid"),
 
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
       403,
@@ -330,7 +334,13 @@ public enum ErrorCode {
       "This view displays app-wise enrollment if you manage multiple studies."),
 
   USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists"),
-  
+
+  UNSUPPORTED_SORTBY_VALUE(
+      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sort by value"),
+
+  UNSUPPORTED_SORT_DIRECTION_VALUE(
+      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
+
   REGISTRATION_EMAIL_SEND_FAILED(
       500,
       "EC_0075",
@@ -347,7 +357,16 @@ public enum ErrorCode {
       500,
       "EC_0074",
       "Internal Server Error",
-      "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time.");
+      "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time."),
+
+  TEMP_PASSWORD_INCORRECT(
+      400, "EC_0078", Constants.BAD_REQUEST, "The temporary password entered is incorrect."),
+
+  ACTIVE_STUDY_ENROLLED_PARTICIPANT(
+      400,
+      "EC_0079",
+      Constants.BAD_REQUEST,
+      "This site belongs to an active study that has one or more actively enrolled participants, and cannot be decommissioned.");
 
   private final int status;
   private final String code;

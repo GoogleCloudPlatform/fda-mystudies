@@ -204,24 +204,6 @@ CREATE TABLE IF NOT EXISTS `participant_study_info` (
 
 -- Data exporting was unselected.
 
--- Dumping structure for table mystudies_participant_datastore.personalized_user_report
-DROP TABLE IF EXISTS `personalized_user_report`;
-CREATE TABLE IF NOT EXISTS `personalized_user_report` (
-  `id` varchar(255) NOT NULL,
-  `activity_date_time` datetime DEFAULT NULL,
-  `report_content` longtext,
-  `report_title` varchar(128) DEFAULT NULL,
-  `study_info_id` varchar(255) DEFAULT NULL,
-  `user_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKlc6i0t4lygxvvkorf3dsridox` (`study_info_id`),
-  KEY `FKo472wtrii4vfs2ouur00t696` (`user_id`),
-  CONSTRAINT `FKlc6i0t4lygxvvkorf3dsridox` FOREIGN KEY (`study_info_id`) REFERENCES `study_info` (`id`),
-  CONSTRAINT `FKo472wtrii4vfs2ouur00t696` FOREIGN KEY (`user_id`) REFERENCES `user_details` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
 -- Dumping structure for table mystudies_participant_datastore.sites
 DROP TABLE IF EXISTS `sites`;
 CREATE TABLE IF NOT EXISTS `sites` (
@@ -413,16 +395,23 @@ CREATE TABLE IF NOT EXISTS `user_details` (
 
 -- Data exporting was unselected.
 
--- Dumping structure for table mystudies_participant_datastore.user_institution
-DROP TABLE IF EXISTS `user_institution`;
-CREATE TABLE IF NOT EXISTS `user_institution` (
+-- Dumping structure for table mystudies_participant_datastore.user_account_email_scheduler_tasks
+DROP TABLE IF EXISTS `user_account_email_scheduler_tasks`;
+CREATE TABLE IF NOT EXISTS `user_account_email_scheduler_tasks` (
   `id` varchar(255) NOT NULL,
-  `institution_id` varchar(128) DEFAULT NULL,
-  `user_details_id` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKrwwx4csj1ske5o4m74lmusqbv` (`user_details_id`),
-  CONSTRAINT `FKrwwx4csj1ske5o4m74lmusqbv` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`) ON DELETE CASCADE
+  `app_id` varchar(255) DEFAULT NULL,
+  `app_version` varchar(255) DEFAULT NULL,
+  `correlation_id` varchar(255) DEFAULT NULL,
+  `email_template_type` varchar(255) DEFAULT NULL,
+  `mobile_platform` varchar(255) DEFAULT NULL,
+  `sign_in_user_id` varchar(255) DEFAULT NULL,
+  `source` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `user_id` varchar(255) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- Data exporting was unselected.
 
@@ -441,6 +430,7 @@ CREATE TABLE IF NOT EXISTS `invite_participants` (
   `user_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

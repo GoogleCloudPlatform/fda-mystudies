@@ -12,9 +12,10 @@ import {ImportParticipantEmailResponse} from '../shared/import-participants';
 })
 export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   @Output() cancel = new EventEmitter();
-  @Output() import: EventEmitter<
+  @Output()
+  import: EventEmitter<ImportParticipantEmailResponse> = new EventEmitter<
     ImportParticipantEmailResponse
-  > = new EventEmitter<ImportParticipantEmailResponse>();
+  >();
   @Input() siteId = '';
   fileName = '';
   file?: File;
@@ -59,7 +60,7 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
             successResponse.invalidEmails.length > 0 ||
             successResponse.duplicateEmails.length > 0
           ) {
-            this.toastr.error(
+            this.toastr.success(
               `The email list was imported with the following issues: <br/>` +
                 String(
                   successResponse.invalidEmails.length +

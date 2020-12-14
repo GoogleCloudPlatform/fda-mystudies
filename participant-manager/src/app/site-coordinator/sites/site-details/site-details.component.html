@@ -577,7 +577,10 @@
                   <div>
                     <div class="form-group mb-none">
                       <div
-                        *ngIf="participant.enrollmentStatus == 'Yet to Enroll'"
+                        *ngIf="
+                          (participant.enrollmentStatus | uppercase) ==
+                          'YET TO ENROLL'
+                        "
                       >
                         <input
                           type="checkbox"
@@ -606,7 +609,10 @@
                         </span>
                       </div>
                       <div
-                        *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
+                        *ngIf="
+                          (participant.enrollmentStatus | uppercase) !=
+                          'YET TO ENROLL'
+                        "
                       >
                         <span
                           class="no_st_en cursor__pointer outline__none"
@@ -682,9 +688,7 @@
                     .registryParticipants.length === 0
                 "
               >
-                <td></td>
-                <td class="text-center">No records found</td>
-                <td></td>
+                <td colspan="3" class="text-center">No records found</td>
               </tr>
             </tbody>
 

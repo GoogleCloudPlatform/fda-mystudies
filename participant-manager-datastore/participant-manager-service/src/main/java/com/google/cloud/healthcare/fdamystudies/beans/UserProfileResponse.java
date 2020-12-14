@@ -21,14 +21,8 @@ public class UserProfileResponse extends BaseResponse {
   private String userId;
   private Integer manageLocations;
   private boolean superAdmin;
-  private String redirectTo;
 
   public UserProfileResponse(MessageCode messageCode) {
     super(messageCode);
-  }
-
-  public UserProfileResponse(String redirectTo, Integer status) {
-    this.redirectTo = redirectTo;
-    super.setHttpStatusCode(status);
   }
 }

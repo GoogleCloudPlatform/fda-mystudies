@@ -56,7 +56,7 @@
         <ul class="nav nav-tabs review-tabs">
           <li class="shareData active">
             <a data-toggle="tab"
-               href="#menu1">Data-sharing Permission
+               href="#menu1">Data-sharing permission
             </a>
           </li>
           <li class="consentReview">
@@ -194,8 +194,7 @@
           </div>
           <div id="menu2" class="tab-pane fade">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm">Select a method of creation
-                for the consent document:
+              <div class="gray-xs-f mb-sm">Select the type of consent document you wish to use:
               </div>
               <div class="form-group mb-none">
                 <div id="consentDocTypeDivId">
@@ -204,14 +203,14 @@
                       name="consentDocType" required
                       data-error="Please choose consent document type"
                     ${consentBo.consentDocType=='Auto'?'checked':''}> <label
-                      for="inlineRadio1">Automatic creation</label>
+                      for="inlineRadio1">Auto-created consent document</label>
                   </span>
                   <span class="radio radio-inline"><input type="radio"
                                                           id="inlineRadio2" value="New"
                                                           name="consentDocType" required
                                                           data-error="Please choose consent document type"
                     ${consentBo.consentDocType=='New'?'checked':''}> <label
-                      for="inlineRadio2">Manual content entry</label>
+                      for="inlineRadio2">Custom</label>
                   </span>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -219,24 +218,21 @@
             </div>
             <div class="italic-txt">
               <div id="autoCreateHelpTextDiv" style="display: block;">
-                <small class="inst">This is a preview of the Consent
-                  Document to depict how it gets created by the ResearchKit /
-                  ResearchStack frameworks on the mobile app. Consent Items
-                  (title and long description portions) are concatenated to
-                  automatically create the Consent Document. The mobile app also
-                  generates a Consent Document PDF with participant first name,
-                  last name, signature and date, time of providing consent, as
-                  captured on the app.
+                <small class="inst">This is a preview of the auto-created 
+                consent document generated on the mobile app by concatenating
+                 content from consent sections (long descriptions only). 
+                 You could either use this or choose to have a custom consent document 
+                 for the study. Note that the signed consent PDF for each 
+                 participant will also have their first name, last name, signature and 
+                 date of consent, as captured on the app.
                 </small>
               </div>
               <div id="newDocumentHelpTextDiv" style="display: none;">
-                <small class="inst">Choose this option if you wish to
-                  provide separate content for the Consent Document instead of
-                  using the auto-generated Consent Document. Note that in this
-                  case, the mobile app will not be able to add user-specific
-                  details such as first name, last name, signature and date/time
-                  of providing consent, to the PDF that it generates for the
-                  Consent Document.
+                <small class="inst">Choose this option if you wish to provide separate 
+                content for the consent document instead of using the auto-created one. 
+                Enter the content you wish to use here. Note that the signed consent PDF 
+                for each participant will also have their first name, last name, 
+                signature and date of consent, as captured on the app.
                 </small>
               </div>
             </div>

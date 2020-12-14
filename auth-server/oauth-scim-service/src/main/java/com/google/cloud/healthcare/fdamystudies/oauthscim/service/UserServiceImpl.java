@@ -314,7 +314,7 @@ public class UserServiceImpl implements UserService {
     repository.saveAndFlush(userEntity);
     auditHelper.logEvent(PASSWORD_CHANGE_SUCCEEDED, auditRequest);
     logger.exit("Your password has been changed successfully!");
-    return new ChangePasswordResponse(MessageCode.CHANGE_PASSWORD_SUCCESS);
+    return new ChangePasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
   }
 
   private ErrorCode validateChangePasswordRequest(
@@ -329,7 +329,8 @@ public class UserServiceImpl implements UserService {
 
     if (!StringUtils.equals(currentPasswordHash, hash)) {
       return userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
-          ? ErrorCode.TEMP_PASSWORD_INVALID
+              || userEntity.getStatus() == UserAccountStatus.PASSWORD_RESET.getStatus()
+          ? ErrorCode.TEMP_PASSWORD_INCORRECT
           : ErrorCode.CURRENT_PASSWORD_INVALID;
     }
 
