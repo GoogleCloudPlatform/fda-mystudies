@@ -32,6 +32,7 @@ import com.harvard.studyappmodule.custom.question.DateAnswerformatCustom;
 import com.harvard.studyappmodule.custom.question.DecimalUnitAnswerFormat;
 import com.harvard.studyappmodule.custom.question.EmailAnswerFormatCustom;
 import com.harvard.studyappmodule.custom.question.HeightAnswerFormat;
+import com.harvard.studyappmodule.custom.question.InstructionStepCustom;
 import com.harvard.studyappmodule.custom.question.IntegerUnitAnswerFormat;
 import com.harvard.studyappmodule.custom.question.LocationAnswerFormat;
 import com.harvard.studyappmodule.custom.question.MultiChoiceImageAnswerFormat;
@@ -621,12 +622,11 @@ public class StepsBuilder {
           formstep.setOptional(activityobj.getSteps().get(i).isSkippable());
           steps.add(formstep);
         } else if (activityQuestionStep.get(i).getType().equalsIgnoreCase("instruction")) {
-          InstructionStep instructionStep =
-                  new InstructionStep(
+          InstructionStepCustom instructionStep =
+                  new InstructionStepCustom(
                           activityQuestionStep.get(i).getKey(),
                           activityQuestionStep.get(i).getTitle(),
-                          Html.escapeHtml(
-                                  activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />")));
+                          activityQuestionStep.get(i).getText());
           instructionStep.setOptional(activityQuestionStep.get(i).isSkippable());
           if (branching) {
             instructionStep.setStepTitle(R.string.notxt);
