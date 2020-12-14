@@ -108,7 +108,7 @@
                   studyTypes.Close
                 "
               >
-                <mfDefaultSorter by="locationName">Site ID</mfDefaultSorter>
+                <mfDefaultSorter by="locationName">Site</mfDefaultSorter>
               </th>
               <th
                 *ngIf="
@@ -183,11 +183,10 @@
                   .length === 0
               "
             >
-              <td></td>
-              <td class="text-center">No records found</td>
-              <td></td>
+              <td colspan="3" class="text-center">No records found</td>
             </tr>
           </tbody>
+
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="5">

@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
+import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.InviteParticipantEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 
@@ -24,13 +25,13 @@ public class SiteMapper {
     return response;
   }
 
-  public static AppSiteResponse toAppSiteResponse(SiteEntity site) {
+  public static AppSiteResponse toAppSiteResponse(AppStudySiteInfo site) {
     AppSiteResponse appSiteResponse = new AppSiteResponse();
-    appSiteResponse.setSiteId(site.getId());
-    appSiteResponse.setCustomLocationId(site.getLocation().getCustomId());
-    appSiteResponse.setLocationDescription(site.getLocation().getDescription());
-    appSiteResponse.setLocationId(site.getLocation().getId());
-    appSiteResponse.setLocationName(site.getLocation().getName());
+    appSiteResponse.setSiteId(site.getSiteId());
+    appSiteResponse.setCustomLocationId(site.getLocationCustomId());
+    appSiteResponse.setLocationDescription(site.getLocationDescription());
+    appSiteResponse.setLocationId(site.getLocationId());
+    appSiteResponse.setLocationName(site.getLocationName());
     return appSiteResponse;
   }
 
