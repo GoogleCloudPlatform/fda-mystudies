@@ -66,8 +66,6 @@ public class AppConstants {
   public static final String STUDY = "Study";
   public static final String GATEWAY = "Gateway";
 
-  public static final String WITHDRAWN = "Withdrawn";
-
   public static final String MISSING_REQUIRED_PARAMETER = "MissingRequiredParameter";
   public static final String INVALID_REQUEST_EXCEPTION = "InvalidRequestException";
   public static final String INVALID_EMAIL_CODE_EXCEPTION = "InvalidEmailCodeException";
