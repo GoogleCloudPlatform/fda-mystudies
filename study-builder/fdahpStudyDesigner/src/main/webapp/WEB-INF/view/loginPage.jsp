@@ -129,8 +129,7 @@
             <div class="pwd dis-none">
               <div class="mb-lg">
                 <h3 style="    color: #fff; padding-top: 20px;" class="mt-none">Forgot password?</h3>
-                <div class="mt-md white__text">Enter your Email address to get a link to reset your
-                  password
+                <div class="mt-md white__text">Enter your email to receive a password reset link
                 </div>
               </div>
               <div class="mb-lg form-group">
@@ -267,14 +266,14 @@
           $("#errMsg").text(errMsg);
           $("#errMsg").show("fast");
 
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 8000);
         }
         var sucMsg = '${sucMsg}';
         if (sucMsg.length > 0) {
           $("#sucMsg").text(sucMsg);
           $("#sucMsg").show("fast");
           $("#errMsg").hide("fast");
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 8000);
         }
 
         // Internet Explorer 6-11
