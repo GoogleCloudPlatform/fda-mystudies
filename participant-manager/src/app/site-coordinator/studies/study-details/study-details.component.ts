@@ -31,7 +31,7 @@ export class StudyDetailsComponent
   permission = Permission;
   // pagination
   limit = 10;
-  currentPage = 1;
+  currentPage = 0;
   offset = 0;
   searchTerm = '';
   sortBy: string[] | string = ['_email'];
@@ -86,7 +86,7 @@ export class StudyDetailsComponent
   }
 
   search(query: string): void {
-    this.currentPage = 1;
+    this.currentPage = 0;
     this.offset = 0;
     this.searchTerm = query.trim().toLowerCase();
     this.getStudyDetails();
@@ -97,20 +97,24 @@ export class StudyDetailsComponent
       this.currentPage = page;
       this.offset = (page - 1) * this.limit;
       this.getStudyDetails();
+    } else if (page === 0) {
+      this.currentPage = 0;
+      this.offset = 0;
+      this.getStudyDetails();
     }
   }
 
   public onSortOrder(event: string): void {
     this.sortOrder = event;
     this.offset = 0;
-    this.currentPage = 1;
+    this.currentPage = 0;
     this.getStudyDetails();
   }
 
   public onSortBy(event: string | string[]): void {
     this.sortBy = new Array(event) as string[];
     this.offset = 0;
-    this.currentPage = 1;
+    this.currentPage = 0;
     this.getStudyDetails();
   }
   openModal(template: TemplateRef<unknown>): void {
