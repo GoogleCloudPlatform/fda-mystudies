@@ -131,10 +131,11 @@
     <div class="gray-xs-f mb-sm">Date/Time of launch (pick one)
       <span class="requiredStar"> *</span>
       <span
-          class="ml-xs sprites_v3 filled-tooltip"
+      <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
+          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           data-toggle="tooltip"
           data-placement="bottom"
-          title="All date/time selections are based on server timezone.">
+          title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
       </span>
     </div>
     <div class="mt-sm">
@@ -340,7 +341,7 @@
             <span class="requiredStar"> *</span>
             <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                   data-placement="bottom"
-                  title="All date/time selections are based on server timezone."></span>
+                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed."></span>
           </span>
           <br/>
           <input id="startDate" type="text"
@@ -357,9 +358,6 @@
             <span class="form-group m-none dis-inline vertical-align-middle pr-md">
               <span class="gray-xs-f">Start date
                 <span class="requiredStar">*</span>
-                <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="All date/time selections are based on server timezone."></span>
               </span>
               <br/>
               <span class="pr-md">Anchor Date</span>
@@ -418,10 +416,10 @@
     </div>
     <div class="mt-md">
       <div class="gray-xs-f mb-xs">End Date
-        <span class="ml-xs sprites_v3 filled-tooltip"
+        <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
               data-toggle="tooltip"
               data-placement="bottom"
-              title="All date/time selections are based on server timezone.">
+              title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -433,9 +431,9 @@
     <div class="mt-md">
       <div class="gray-xs-f mb-sm">Time(s) of the day for daily occurrence
         <span class="requiredStar"> *</span>
-        <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+        <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip" data-toggle="tooltip"
               data-placement="bottom" id="helpNote"
-              title="All date/time selections are based on server timezone."></span>
+              title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed."></span>
       </div>
       <div class="dailyContainer">
         <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) eq 0}">
@@ -511,7 +509,7 @@
             class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="All date/time selections are based on server timezone.">
+            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </span>
       <br/>
@@ -559,7 +557,7 @@
                 class="ml-xs sprites_v3 filled-tooltip"
                 data-toggle="tooltip"
                 data-placement="bottom"
-                title="All date/time selections are based on server timezone.">
+                title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
             </span>
           </span>
           <br/>
@@ -578,12 +576,7 @@
             <span class="form-group m-none dis-inline vertical-align-middle pr-md">
               <span class="gray-xs-f">Start date
                 <span class="requiredStar">*</span>
-                <span
-                    class="ml-xs sprites_v3 filled-tooltip"
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
-                </span>
+                
               </span>
               <br/>
               <span class="pr-md">Anchor Date</span>
@@ -617,12 +610,6 @@
         <div class="dis_inlinetop p-none">
           <span class="gray-xs-f">Time
             <span class="requiredStar">*</span>
-            <span
-                class="ml-xs sprites_v3 filled-tooltip"
-                data-toggle="tooltip"
-                data-placement="bottom"
-                title="All date/time selections are based on server timezone.">
-            </span>
             <br/></span>
           <span class="form-group m-none dis-inline vertical-align-middle pr-md">
             <input id="selectWeeklyTimeAnchor" type="text"
@@ -677,10 +664,10 @@
     <div class="mt-md">
       <div class="gray-xs-f mb-xs">End Date
         <span
-            class="ml-xs sprites_v3 filled-tooltip"
+            class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="All date/time selections are based on server timezone.">
+            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -722,7 +709,7 @@
             class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="All date/time selections are based on server timezone.">
+            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </span>
       <br/>
@@ -759,7 +746,7 @@
                 class="ml-xs sprites_v3 filled-tooltip"
                 data-toggle="tooltip"
                 data-placement="bottom"
-                title="All date/time selections are based on server timezone.">
+                title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
             </span>
           </span>
           <br/>
@@ -779,12 +766,7 @@
                 <span
                     class="requiredStar">*
                 </span>
-                <span
-                    class="ml-xs sprites_v3 filled-tooltip"
-                    data-toggle="tooltip"
-                    data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
-                </span>
+               
               </span>
               <br/>
               <span class="pr-md">Anchor Date</span>
@@ -821,12 +803,7 @@
         <div class="dis_inlinetop">
           <span class="gray-xs-f">Time
             <span class="requiredStar">*</span>
-            <span
-                class="ml-xs sprites_v3 filled-tooltip"
-                data-toggle="tooltip"
-                data-placement="bottom"
-                title="All date/time selections are based on server timezone.">
-            </span>
+            
           </span>
           <br/>
           <span class="form-group m-none dis-inline vertical-align-middle pr-md">
@@ -882,10 +859,10 @@
     <div class="mt-md col-md-12 p-none">
       <div class="gray-xs-f mb-xs">End Date
         <span
-            class="ml-xs sprites_v3 filled-tooltip"
+            class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="All date/time selections are based on server timezone.">
+            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -919,10 +896,10 @@
     <div class="gray-xs-f mb-sm">Select time period
       <span class="requiredStar"> *</span>
       <span
-          class="ml-xs sprites_v3 filled-tooltip"
+          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           data-toggle="tooltip"
           data-placement="bottom"
-          title="All date/time selections are based on server timezone.">
+          title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
       </span>
     </div>
     <div class="manuallyContainer">
@@ -1300,6 +1277,7 @@
         $('.monthlyStartCls').find('input:text').removeAttr('required');
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
+        $(".Selectedtooltip").hide();
       } else {
 
         localStorage.setItem("IsActiveAnchorDateSelected", "false");
@@ -1344,6 +1322,7 @@
         $('.anchortypeclass').hide();
         $('.anchortypeclass').removeAttr('required');
         $("#anchorDateId").val("");
+        $(".Selectedtooltip").show();
       }
 
       if (schedule_opts == 'One time') {
