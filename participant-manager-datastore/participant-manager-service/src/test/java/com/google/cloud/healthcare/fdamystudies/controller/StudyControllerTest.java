@@ -435,7 +435,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnStudyParticipantsForInProgressStatus() throws Exception {
+  public void shouldReturnStudyParticipantsForEnrolledStatus() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
