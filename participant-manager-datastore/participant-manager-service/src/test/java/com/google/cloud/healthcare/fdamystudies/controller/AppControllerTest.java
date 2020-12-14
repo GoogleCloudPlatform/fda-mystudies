@@ -91,7 +91,7 @@ public class AppControllerTest extends BaseMockIT {
   public void shouldReturnAppsRegisteredByUserForSuperAdmin() throws Exception {
     participantRegistrySiteEntity.setOnboardingStatus("I");
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
-    participantStudyEntity.setStatus("inProgress");
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     userDetailsEntity.setStatus(ACTIVE_STATUS);
     testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
@@ -120,7 +120,7 @@ public class AppControllerTest extends BaseMockIT {
   public void shouldReturnAppsRegisteredByUser() throws Exception {
     participantRegistrySiteEntity.setOnboardingStatus("I");
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
-    participantStudyEntity.setStatus("inProgress");
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     userDetailsEntity.setStatus(ACTIVE_STATUS);
     testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
@@ -152,7 +152,7 @@ public class AppControllerTest extends BaseMockIT {
   public void shouldReturnReturnAppsWithEnrolledCount() throws Exception {
     participantRegistrySiteEntity.setOnboardingStatus("I");
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
-    participantStudyEntity.setStatus("inProgress");
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
     testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     userDetailsEntity.setStatus(ACTIVE_STATUS);
     testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
