@@ -104,7 +104,7 @@
                        id="cfnPassword" tabindex="3" name="" maxlength="64"
                        data-match="#password"
                        data-match-error="Whoops, these don't match"
-                       placeholder="Confirm password" required autocomplete="off"/>
+                       placeholder="Confirm new password" required autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
@@ -122,13 +122,12 @@
             <c:if test="${not isInactiveUser && not isValidToken}">
               <p class="passwordExp">
                 <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                The
-                Password Reset Link is either expired or invalid.
+               This link is no longer valid to be used. Please sign in or request password help again.
               </p>
             </c:if>
             <div>
               <a id="login" class="gray-link backToLogin white__text"
-                 href="javascript:void(0)">Back to Sign in
+                 href="javascript:void(0)">Back to sign in
               </a>
             </div>
             </div>
