@@ -56,6 +56,12 @@
     <div class="right-content-head">
       <div class="mb-xlg" id="displayTitleId">
         <div class="gray-xs-f mb-xs">Add a comprehension test?
+          <span>
+            <span
+               data-toggle="tooltip" data-placement="top"
+               title="This will present a set of questions to the participant to gauge their understanding of the study based on their review of the consent sections."
+               class="filled-tooltip"></span>
+            </span>
           <span class="ct_panel"
                 id="addHelpNote">
             <small>(Please save to continue)</small>
