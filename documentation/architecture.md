@@ -1,4 +1,4 @@
-# Architecture Overview
+# Platform Overview
 
 ## Introduction
 
@@ -8,365 +8,79 @@ This document describes the architecture of FDA MyStudies. It outlines the vario
 
 ## Architecture Diagram
 
-![Architecture diagram](images/architecture.png)
+![Applications diagram](images/apps-reference-architecture.svg)
+
+The diagram above illustrates the various applications that comprise the FDA MyStudies platform. The Android and iOS mobile applications are not shown. The diagram below illustrates how these applications fit into a production deployment that considers security, devops and data governance.
+
+![Deployment diagram](images/deployment-reference-architecture.svg)
 
 ## Terminology
 
-Some of the terms used in the document and to what they refer:
+Some of the terms used in this document include:
 
-1.  Participant - A mobile app user is referred to as a participant when he/she enrolls into a study and is associated with a unique participant id. A single mobile app user can be associated with multiple studies and is a unique participant in each study
-1.  Administrator - Users of the Study Builder UI and Participant Manager UI are referred to as administrators. These administrators could be researchers, clinical coordinators or be associated with other non-participant roles
-1.  Study Content – All the content that is required to carry out a study (e.g. study eligibility criteria, consent forms, questionnaires, response types, etc.)
-1.  Response Data – Responses provided by a participant to questionnaires and activities set up as the part of a study
+1.  *Participant*: A mobile app user is referred to as a participant when he/she enrolls into a study and is associated with a unique participant id. A single mobile app user can be associated with multiple studies and is a unique participant in each study.
+1.  *Administrator*: Users of the `Study builder` UI and `Participant manager` UI are referred to as administrators. These administrators could be researchers, clinical coordinators, sponsor personnel or site investigators and staff. 
+1.  *Study content*: All the content that is required to carry out a study, which could include study eligibility criteria, consent forms, questionnaires or response types.
+1.  *Response data*: The responses provided by a participant to questionnaires and activities that are presented as part of a study.
 
-## Architecture Components
+## Platform components
 
 The platform components are as follows:
 
-1.  Study Builder (UI)
-1.  Study Datastore
-1.  Auth Server
-1.  Participant Manager (UI, targeted for future release)
-1.  Participant Datastore
-1.  Response Datastore
-1.  Mobile Apps (UI, not a server component)
-
-### Study Builder
-
-The Study Builder provides a user interface for study administrators to create and launch studies and to manage study content during the course of a study.
-
-The Study Builder does not handle any patient/participant information. It only deals with content for studies.
-
-The Study Builder is the source of study information for all downstream applications. This information is provided through the Study Datastore, described in the section below.
-
-The Study Builder is a Java application built on the Spring framework. The backend database is a MySQL database, which is shared with the Study Datastore. The application has a built-in authentication and authorization functionality.
-
-When deploying the application on GCP, the cloud resources used are:
-
-1.  Google Kubernetes Engine (GKE)
-1.  Cloud SQL (MySQL)
-
-### Study Datastore
-
-The Study Datastore provides REST APIs for downstream client applications to obtain all content related to studies set up using the Study Builder.
-
-It uses basic authentication with API username and password keys provided to client applications. 
-
-The Study Datastore does not handle or expose any user/participant information. It provides study content only.
-
-It is a Java application built on the Spring framework. The backend database is a MySQL database (the same database used by the Study Builder, which is used to configure the data that is exposed through the Study Datastore APIs).
-
-When deploying the application on GCP, the cloud resources used are:
-
-1.  Google Kubernetes Engine (GKE)
-1.  Cloud SQL (MySQL)
-
-### Auth Server
-
-The Auth Server is the centralized authentication mechanism for the various client applications in the MyStudies platform.
-
-The client applications are:
-
-1.  Mobile Apps
-1.  Participant Manager (targeted for future release)
-
-The Auth Server provides the following functionality to support study participants:
-
-1.  Participant registration
-1.  Participant credentials management
-1.  Participant authentication
-1.  Token management
-1.  Participant logout
-
-The Auth Server provides the following functionality to support server to server authentication:
-
-1.  Client credentials management (client id and secret)
-1.  Client credentials validation
-
-This application is built as a Spring Boot application. The backend datastore is a MySQL database.
-
-When deploying the application on GCP, the cloud resources used are:
-
-1.  Google Kubernetes Engine (GKE)
-1.  Cloud SQL (MySQL)
-
-### Response Datastore
-
-The Response Datastore provides the following functionality:
-
-1.  Stores participant responses to a study
-1.  Stores participant activity state data associated with the study
-
-The Response Datastore platform component provides REST APIs for the functionality above.
-
-The Response Datastore behaves as a resource server that stores participant response data. The Response Datastore requires a valid access token and client token to provide access to the protected resource to the resource owner (the study participant). It does not store data that may identify the participant.
-
-This application is built as a Spring Boot application. The backend database is Cloud Firestore for the response data and a MySQL database for the activity data.
-
-The implementation to store the response data on Cloud Firestore can be swapped out to store the response data in a different location or service. 
-
-When deploying the application on GCP, the cloud resources used are:
-
-1.  Google Kubernetes Engine (GKE)
-1.  Cloud SQL (MySQL)
-1.  Cloud Firestore
-
-### Participant Datastore
-
-The Participant Datastore provides the following functionality:
-
-1.  Manage participant registration and profile (User Management)
-1.  Manage participant enrollment into studies (Enrollment Management)
-1.  Manage participant consent status and documents (Consent Management)
-1.  Manage users of the Participant Manager UI (targeted for future release)
-
-The Participant Datastore consists of 4 REST-based services, corresponding to the functions above. Each service is deployed separately.
-
-The User Management, Enrollment Management and Consent Management services are consumed by the mobile app client application. These services are resource servers that store participant information and require a valid access token and client token to provide access to the protected resource to the resource owner (the study participant).
-
-This platform component does not store any response data provided by the participant who is enrolled and participating in a study.
-
-These services are built as Spring Boot applications. The backend database is a single MySQL database that serves the four applications.
-
-The Enrollment Management is implemented to store the consent documents on Google Cloud Storage with an option to swap out this implementation to store the documents in a different location or service.
-
-When deploying the application on GCP, the cloud resources used are:
-
-1.  Google Kubernetes Engine (GKE)
-1.  Cloud SQL (MySQL)
-1.  Google Cloud Storage
-
-### Participant Manager
-
-Targeted for a future release.
-
-### Mobile Apps
-
-The FDA MyStudies platform also includes mobile applications that study participants interact with to discover, enroll and participate in studies. 
-
-There are two mobile apps:
-
-1.  iOS - The iOS app uses Apple ResearchKit to provide study workflow features.
-1.  Android - The Android app uses ResearchStack to provide study workflow features.
-
-### Deployment
-The various platform components run in their own containers (private GKE cluster) and their deployment is automated.
-Cloud Build  automates the build of the platform components and the release of the containers to the respective locations.
-Cloud Build runs the CI/CD jobs on code commit where the containers are auto-rebuilt, tagged and pushed. 
-
-Detailed deployment information can be found here:
-
-[Kubernetes setup](https://github.com/GoogleCloudPlatform/fda-mystudies/blob/early-access/kubernetes/README.md)
-
-[Terraform setup](https://github.com/GoogleCloudPlatform/fda-mystudies/blob/early-access/Terraform/README.md)
-
-### Administrator Data, Participant Data and Study Data Access
-
-The platform application components are designed in such a way that the study content data, participant profile / enrollment data, and the study response data are stored and managed separately.
-
-The table below shows what type of data the platform components can access:
-
-<table>
-  <tr>
-   <td>
-   </td>
-   <td><strong>Study Builder  and Study Datastore</strong>
-   </td>
-   <td><strong>Auth Server</strong>
-   </td>
-   <td><strong>Participant Datastore</strong>
-   </td>
-   <td><strong>Response Datastore</strong>
-   </td>
-   <td><strong>Mobile App</strong>
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Participant credentials</strong>
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-   <td>NO
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Participant PII</strong>
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Participant study responses</strong>
-   </td>
-   <td>NO
-   </td>
-   <td>NO
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Study content</strong>
-   </td>
-   <td>YES
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-  </tr>
-</table>
-
-### Study Builder and Study Datastore Interaction
-
-![Study Builder flow diagram](images/studybuilder_flow.png)
-
-The study content and configuration that is set up as a part of the Study Builder is stored in the database.
-
-The Study Datastore gets the study content and study configuration from this database and provides this information to other components as ReST APIs. 
-
-The database serves as a common repository for the Study Builder and the Study Datastore.
-There is no direct interaction between the Study Builder component and the Study Datastore or any other platfom components. 
-
-
-### Platform Component Interactions
-
-The various platform component interactions are as shown below:
-
-<table>
-  <tr>
-   <td>
-   </td>
-   <td><strong>Study Builder</strong>
-   </td>
-   <td><strong>Study Datastore</strong>
-   </td>
-   <td><strong>Auth Server</strong>
-   </td>
-   <td><strong>Participant Datastore</strong>
-   </td>
-   <td><strong>Response Datastore</strong>
-   </td>
-   <td><strong>Mobile App</strong>
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Study Builder</strong>
-   </td>
-   <td>N/A
-   </td>
-   <td>See section above
-   </td>
-   <td>NO
-   </td>
-   <td>NO
-   </td>
-   <td>NO
-   </td>
-   <td>NO
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Study Datastore</strong>
-   </td>
-   <td>See section above
-   </td>
-   <td>N/A
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Auth Server</strong>
-   </td>
-   <td>NO
-   </td>
-   <td>NO
-   </td>
-   <td>N/A
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Participant Datastore</strong>
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>N/A
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Response Datastore</strong>
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>N/A
-   </td>
-   <td>YES
-   </td>
-  </tr>
-  <tr>
-   <td><strong>Mobile App</strong>
-   </td>
-   <td>NO
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>YES
-   </td>
-   <td>N/A
-   </td>
-  </tr>
-</table>
-
+-  Administrative interfaces
+   1. [Study builder](/study-builder/) (UI) to create and configure studies
+   1. [Participant manager](/participant-manager) (UI) to enroll sites and participants
+-  Security and access control
+   1. [Hydra](/hydra/) for token management and OAuth 2.0
+   1. [Auth server](/auth-server/) for login and credentials management
+-  Data management
+   1.  [Study datastore](/study-datastore/) to manage study configuration data
+   1.  [Participant manager datastore](/participant-manager-datastore/) to process enrollment and consents
+   1.  [Participant datastore](/participant-datastore/) to manage sensitive participant data
+   1.  [Response datastore](/response-datastore/) to manage pseudonymized study responses
+-  Participant interfaces
+   1.  [Android](/Android/) mobile application (UI) to join and participate in studies
+   1.  [iOS](/iOS/) mobile application (UI) to join and participate in studies 
+
+Each of the components runs in its own Docker container. Blob storage, relational databases and a document store provide data management capabilities. Centralized logging enables auditing and identity and access control compartmentalizes the flow of data. The specific technologies used to fulfil these roles is up to the deploying organization, but in the interest of simplicity, these guides describe an implementation that leverages Google Cloud Platform services. The [deployment guide](/deployment/) and individual component [READMEs](/documentation/) provide detailed instructions for how to set up and run the platform using these services. You might use one or more of the following cloud technologies:
+- Container deployment
+  -  Google Kubernetes Engine (the Kubernetes approach to deployment is described in the automated [deployment guide](/deployment/))
+  - Google Compute Engine (the VM approach to deployment is described in the individual component [READMEs](/documentation/))
+- Blob storage
+  - Independent Google Cloud Storage buckets for (1) study content and (2) participant consent forms
+- Relational database
+  - Independent Cloud SQL databases for (1) study configuration data, (2) sensitive participant data, (3) pseudonymized participant activity data, (4) Hydra client data and (5) user account credentials  
+- Document store
+  -  Cloud Firestore for pseudonymized participant response data
+- Audit logging
+  -  Cloud Logging for ingestion of log events and Cloud Operations / Stackriver for audit log review and analysis
+- Identity and access management
+  - Cloud IAM to create and manage service accounts and role-based access to individual resources
+- Networking
+  -  Cloud DNS to manage domains and Virtual Private Cloud to control ingress 
+- Devops
+  -  (1) Secret Manager for generation, rotation and distribution of secrets, (2) Cloud Build for CI/CD and (3) Container Registry for management of container images
+
+Detailed information about the components and instructions for configuration can be found the README of [each directory](/documentation/). An explanation of how the platform components relate to one another is provided below.
+
+### Study configuration
+
+The [`Study builder`](/study-builder/) application provides a user interface for study administrators to create and launch studies and to manage study content during the course of a study. It does not handle any patient or participant information. It only deals with study content and configuration.
+
+The `Study builder` is the source of study configuration for all downstream applications. As an administrator uses the UI to author their study, that study configuration data is written to a MySQL database that is shared with the [`Study datastore`](/study-datastore/). Once the administrator publishes their study, the `Study builder` notifies the [`Participant datastore`](/participant-datastore/) and [`Response datastore`](/response-datastore/) that new study information is available. Those datastores then retrieve the updated study configuration data from the `Study datastore`. When study administrators upload binary files to the `Study builder`, such as PDF documents or study images, those files are stored in blob storage. The participant mobile applications retrieve study configuration data from the `Study datastore` and the necessary binaries from blob storage directly. The `Study builder` uses built-in authorization and sends emails to study administrators for account creation and recovery purposes.
+
+### Participant enrollment 
+
+The [`Participant manager`](/participant-manager/) application provides a user interface for study administrators to create study sites and invite participants to participate in specific studies. The [`Participant manager datastore`](/participant-manager-datastore/) is the backend component of the `Participant manager` UI. The `Participant manager datastore` shares a MySQL database with the `Participant datastore`. As administrators use the UI to modify sites and manage participants, changes are propagated to the `Participant datastore` through the shared database.
+
+When a new participant is added using the `Participant manager`, the `Participant manager datastore` sends an email to the participant with a link that can be used to enroll in the study. In the case of an *open enrollment* study, participants will be able to discover and join studies even without a specific invitation. The participant goes to the mobile application to create an account, which uses the [`Auth server`](/auth-server/) to provide the necessary backend services. The `Auth server` sends the request for account creation to the `Participant datastore` to confirm that there is a study associated with that mobile application, and if confirmed, the `Auth server` validates the participant’s email and creates the account.
+
+The mobile application populates the list of available studies by making requests to the `Study datastore`. When a participant selects a study to join, the mobile application retrieves the study eligibility questionnaire from the `Study datastore`. In the case where the participant was invited using the `Participant manager`, the mobile application confirms the invitation is valid with the `Participant datastore`. Once the `Participant datastore` determines that the participant is eligible for the study, the mobile application retrieves the study’s consent form from the `Study datastore`. After completion, the mobile application sends the consent form to the `Participant datastore`, which writes the consent PDF to blob storage. The participant is then enrolled in the study and a record is created for them in both the `Participant datastore` and `Response datastore`.
+
+### Ongoing participation
+
+The mobile application retrieves the list of study activities and the study schedule from the `Study datastore`. The mobile application posts updates to the `Response datastore` as participants start, pause, resume or complete study activities. The `Response datastore` writes this study activity data to its MySQL database. When the participant completes a study activity, the mobile application posts the results of that activity to the `Response datastore`, which writes that response data to Cloud Firestore. If a participant sends a message with the mobile application’s contact form, that message is posted to the `Participant datastore`, which then sends an email to the configured destination. The `Participant datastore` can send participation reminders or other types of notifications to study participants through the mobile applications. When participants navigate to the dashboarding section of the mobile application, the mobile application will make a request to the `Response datastore` for the necessary study responses that are used to populate the configured dashboard. 
+
+### Deployment and operation
+
+Detailed deployment instructions can be found in the [deployment guide](/deployment/) and in each of the [directory READMEs](/documentation/). More information about authorization and security can be found in the [auth overview](/documentation/auth.md).
