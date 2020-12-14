@@ -285,6 +285,10 @@ public class AppController {
     return new SimpleDateFormat("hh:mma, MMM dd, yyyy");
   }
 
+  public static SimpleDateFormat getDateFormatForOneTime() {
+    return new SimpleDateFormat("hh:mma 'on' MMM dd, yyyy");
+  }
+
   public static SimpleDateFormat getDateFormatForResourceAvailability() {
     return new SimpleDateFormat("yyyy-MM-dd");
   }

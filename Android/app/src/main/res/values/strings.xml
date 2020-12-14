@@ -496,6 +496,9 @@
     <string name="on">on</string>
     <string name="to">to</string>
     <string name="from">From</string>
+    <string name="starts">Starts</string>
+    <string name="ends">Ends</string>
+    <string name="ended">Ended</string>
     <string name="more">more</string>
     <string name="missed">missed</string>
     <string name="no_charts_display">No charts to display</string>

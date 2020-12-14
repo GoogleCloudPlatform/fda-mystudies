@@ -2194,6 +2194,8 @@ public class SurveyActivitiesFragment extends Fragment
           activitiesWS.setBranching(activitiesArrayList.get(k).getBranching());
           activitiesWS.setStatus(activitiesArrayList.get(k).getStatus());
           activitiesWS.setTitle(activitiesArrayList.get(k).getTitle());
+          activitiesWS.setLaunchStudy(activitiesArrayList.get(k).isLaunchStudy());
+          activitiesWS.setStudyLifeTime(activitiesArrayList.get(k).isStudyLifeTime());
           activitiesWS.setSchedulingType(activitiesArrayList.get(k).getSchedulingType());
           if (activitiesArrayList
                   .get(k)
