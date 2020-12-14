@@ -8,6 +8,7 @@ import {MobileMenuComponent} from './mobile-menu/mobile-menu.component';
 import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.component';
 import {ParticipantDetailsComponent} from './participant-details/participant-details.component';
 import {SharedModule} from '../shared/shared.module';
+import {LoadmoreSpinnerComponent} from './loadmore-spinner/loadmore-spinner.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import {SharedModule} from '../shared/shared.module';
     MobileMenuComponent,
     DashboardHeaderComponent,
     ParticipantDetailsComponent,
+    LoadmoreSpinnerComponent,
   ],
   imports: [
     CommonModule,
@@ -23,5 +25,6 @@ import {SharedModule} from '../shared/shared.module';
     NgxDataTableModule,
     SharedModule,
   ],
+  exports: [LoadmoreSpinnerComponent],
 })
 export class SiteCoordinatorModule {}
