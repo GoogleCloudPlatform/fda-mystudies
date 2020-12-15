@@ -15,10 +15,20 @@ export class AppsService {
     private readonly http: HttpClient,
   ) {}
 
-  getUserApps(): Observable<ManageApps> {
-    return this.entityService.get('apps');
+  getUserApps(
+    limit: number,
+    offset: number,
+    searchTerm: string,
+  ): Observable<ManageApps> {
+    return this.entityService.get(
+      'apps?limit=' +
+        limit.toString() +
+        '&offset=' +
+        offset.toString() +
+        '&searchTerm=' +
+        searchTerm,
+    );
   }
-
   getAllAppsWithStudiesAndSites(): Observable<AppDetails> {
     return this.http.get<AppDetails>(
       `${environment.participantManagerDatastoreUrl}/apps`,

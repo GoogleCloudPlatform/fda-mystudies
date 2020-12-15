@@ -131,10 +131,17 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
             }
             if (isValidPassword) {
               userBO.setFirstName(
-                  null != userBO2.getFirstName() ? userBO2.getFirstName().trim() : "");
-              userBO.setLastName(null != userBO2.getLastName() ? userBO2.getLastName().trim() : "");
+                  null != userBO2.getFirstName()
+                      ? userBO2.getFirstName().trim()
+                      : userBO.getFirstName());
+              userBO.setLastName(
+                  null != userBO2.getLastName()
+                      ? userBO2.getLastName().trim()
+                      : userBO.getLastName());
               userBO.setPhoneNumber(
-                  null != userBO2.getPhoneNumber() ? userBO2.getPhoneNumber().trim() : "");
+                  null != userBO2.getPhoneNumber()
+                      ? userBO2.getPhoneNumber().trim()
+                      : userBO.getPhoneNumber());
               userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
               userBO.setTokenUsed(true);
               userBO.setEnabled(true);

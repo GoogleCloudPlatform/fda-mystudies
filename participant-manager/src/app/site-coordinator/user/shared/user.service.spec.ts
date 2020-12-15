@@ -31,7 +31,7 @@ describe('UserService', () => {
     });
     service = new UserService(httpServiceSpyObj);
     service
-      .getUsers()
+      .getUsers(0, 10, '', '', '')
       .subscribe(
         (manageUser) =>
           expect(manageUser).toEqual(
@@ -52,7 +52,7 @@ describe('UserService', () => {
     });
     service = new UserService(httpServiceSpyObj);
     tick(40);
-    service.getUsers().subscribe(
+    service.getUsers(0, 10, '', '', '').subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');

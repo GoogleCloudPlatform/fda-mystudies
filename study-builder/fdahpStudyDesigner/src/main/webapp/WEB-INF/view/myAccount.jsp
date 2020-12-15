@@ -164,7 +164,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none ">
-                <div class="gray-xs-f line34">Old Password
+                <div class="gray-xs-f line34">Previous password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -202,7 +202,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">Confirm Password
+                <div class="gray-xs-f line34">Confirm new password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>

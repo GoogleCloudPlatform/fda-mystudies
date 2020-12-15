@@ -64,9 +64,24 @@ export class UserService {
       `${environment.participantManagerDatastoreUrl}/users/${adminId}/`,
     );
   }
-  getUsers(): Observable<ManageUsers> {
+  getUsers(
+    offset: number,
+    limit: number,
+    searchTerm: string,
+    sortBy: string,
+    sortOrder: string,
+  ): Observable<ManageUsers> {
     return this.http.get<ManageUsers>(
       `${environment.participantManagerDatastoreUrl}/users`,
+      {
+        params: {
+          offset: offset.toString(),
+          limit: limit.toString(),
+          searchTerm: searchTerm,
+          sortBy: sortBy,
+          sortDirection: sortOrder,
+        },
+      },
     );
   }
 }

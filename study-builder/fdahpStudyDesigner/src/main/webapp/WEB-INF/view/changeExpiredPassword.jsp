@@ -126,7 +126,7 @@
                        name=""
                        maxlength="14" data-match="#password"
                        data-match-error="Whoops, these don't match"
-                       placeholder="Confirm password"
+                       placeholder="Confirm new password"
                        required autocomplete="off"/>
                 <div class="help-block with-errors"></div>
               </div>
