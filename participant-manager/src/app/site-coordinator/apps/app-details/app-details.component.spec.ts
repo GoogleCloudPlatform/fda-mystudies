@@ -12,10 +12,7 @@ import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {AppDetailsService} from '../shared/app-details.service';
 import {AppDetailsComponent} from './app-details.component';
-import {
-  expectedAppDetails,
-  filteredEmail,
-} from '../../../entity/mock-apps-data';
+import {expectedAppDetails} from '../../../entity/mock-apps-data';
 import {AppsModule} from '../apps.module';
 
 describe('AppDetailsComponent', () => {
@@ -72,8 +69,9 @@ describe('AppDetailsComponent', () => {
     component.search('mockittest@grr.la');
     fixture.detectChanges();
     component.appDetail$.subscribe((appDetail) => {
-      expect(appDetail.participants.length).toBe(1);
-      expect(appDetail).toEqual(filteredEmail);
+      expect(appDetail.participants.length).toBe(
+        expectedAppDetails.participants.length,
+      );
     });
   }));
 });

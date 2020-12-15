@@ -616,7 +616,7 @@ class ActivityQuestionStep: ActivityStep {
 
           var maxValue = formatDict?[kStepQuestionNumericMaxValue] as? NSNumber
 
-          var minValue = formatDict?[kStepQuestionNumericMinValue] as? NSNumber
+          let minValue = formatDict?[kStepQuestionNumericMinValue] as? NSNumber
 
           if maxValue != nil && maxValue == 0 {
             if let minValue = minValue,
@@ -624,9 +624,6 @@ class ActivityQuestionStep: ActivityStep {
             {
               maxValue = nil  // Max value can't be zero if the min value is greater than 0.
             }
-          }
-          if minValue != nil && minValue == 0 {
-            minValue = nil
           }
 
           if Utilities.isValidValue(

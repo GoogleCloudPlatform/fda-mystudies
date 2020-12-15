@@ -40,7 +40,7 @@ describe('StudiesService', () => {
     );
     studiesService = new StudiesService(entityServicespy);
     studiesService
-      .getStudies()
+      .getStudies(10, 0, '')
       .subscribe(
         (studies) =>
           expect(studies).toEqual(expectedStudyList, 'expected StudiesList'),
@@ -58,7 +58,7 @@ describe('StudiesService', () => {
     studiesService = new StudiesService(entityServiceSpy);
 
     studiesService
-      .getStudiesWithSites()
+      .getStudiesWithSites(10, 0, '')
       .subscribe(
         (studies) =>
           expect(studies).toEqual(expectedSitesList, 'expected StudiesList'),
@@ -80,7 +80,7 @@ describe('StudiesService', () => {
     studiesService = new StudiesService(entityServicespy);
 
     tick(40);
-    studiesService.getStudiesWithSites().subscribe(
+    studiesService.getStudiesWithSites(10, 0, '').subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');

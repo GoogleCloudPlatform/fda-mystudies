@@ -416,7 +416,7 @@ class Activity {
       }
     )
   }
-  
+
   /// Update and returns StartDate and EndDate which is of type Date
   /// - Parameter anchorDate: instance of AnchorDate
   /// - Parameter frequency: instance of Frequency
