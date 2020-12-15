@@ -53,7 +53,14 @@ describe('StudyDetailsService', () => {
     );
 
     studyDetailsService
-      .getStudyDetails(expectedResult.expectedStudyId.id.toString())
+      .getStudyDetails(
+        expectedResult.expectedStudyId.id.toString(),
+        0,
+        10,
+        '',
+        '',
+        '',
+      )
       .subscribe(
         (studyDetail) =>
           expect(studyDetail).toEqual(
@@ -85,7 +92,14 @@ describe('StudyDetailsService', () => {
 
     tick(40);
     studyDetailsService
-      .getStudyDetails(expectedResult.expectedStudyId.id.toString())
+      .getStudyDetails(
+        expectedResult.expectedStudyId.id.toString(),
+        0,
+        10,
+        '',
+        '',
+        '',
+      )
       .subscribe(
         () => fail('expected an error'),
         (error: ApiResponse) => {

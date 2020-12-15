@@ -282,7 +282,7 @@ class SignInViewController: UIViewController {
       }
     )
   }
-  
+
   /// To Create Menu View before Navigating to DashBoard.
   func navigateToGatewayDashboard() {
     self.createMenuView()
