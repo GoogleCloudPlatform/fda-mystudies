@@ -4,6 +4,7 @@ import {SearchBar} from '../shared/search-bar';
 import {Profile} from './account/shared/profile.model';
 import {UserService} from '../service/user.service';
 import {StateService} from '../service/state.service';
+import {SearchParameterService} from '../service/search-parameter.service';
 
 @Component({
   selector: 'site-coordinator',
@@ -21,6 +22,7 @@ export class SiteCoordinatorComponent implements OnInit {
     private readonly searchService: SearchService,
     private readonly userService: UserService,
     private readonly userState: StateService,
+    private readonly searchParameter: SearchParameterService,
   ) {}
 
   ngOnInit(): void {
@@ -44,11 +46,14 @@ export class SiteCoordinatorComponent implements OnInit {
   }
   public onKeyUp(event: KeyboardEvent): void {
     if (event.key === 'Enter' && this.searchBar) {
+      this.searchParameter.setSearchParameter(this.filterQuery);
       void this.searchBar.search(this.filterQuery);
     } else if (this.searchBar && this.filterQuery === '') {
+      this.searchParameter.setSearchParameter('');
       void this.searchBar.search(this.filterQuery);
     }
   }
+
   onActivate(componentRef: SearchBar): void {
     this.showSearchBar = false;
     this.filterQuery = '';

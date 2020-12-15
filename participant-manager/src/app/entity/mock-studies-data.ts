@@ -185,6 +185,7 @@ export const expectedStudiesDetails = {
   status: 200,
   message: 'Get participant registry successfully',
   code: 'MSG-0013',
+  totalParticipantCount: 3,
 } as StudyDetails;
 
 export const expectedStudyId = {id: '1'} as Study;

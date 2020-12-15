@@ -126,7 +126,7 @@
                        name=""
                        maxlength="14" data-match="#password"
                        data-match-error="Whoops, these don't match"
-                       placeholder="Confirm password"
+                       placeholder="Confirm new password"
                        required autocomplete="off"/>
                 <div class="help-block with-errors"></div>
               </div>
@@ -139,15 +139,10 @@
           <!-- change password box ends-->
         </div>
         <!--container-->
-        <div class="footer">
-          <span>Copyright</span>
-          <span>
-            <a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
-          </span>
-          <span>
-            <a href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a>
-          </span>
-        </div>
+        <jsp:include page="../templates/copyright.jsp">
+          <jsp:param name="footerClass" value="footer" />
+        </jsp:include>
+      
       </div>
     </div>
     <script src="/studybuilder/js/theme.js"></script>
