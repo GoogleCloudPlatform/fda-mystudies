@@ -80,7 +80,7 @@
     <string name="recv_stdy_actrem">Receive Study Activity Reminders?</string>
     <string name="reminder">Set up lead time for study activity reminders</string>
     <string name="sign_out">Sign Out</string>
-    <string name="delete_my_account">Delete App Account</string>
+    <string name="delete_my_account">Delete app account</string>
     <string name="update">Update</string>
     <string name="get_started">Get Started</string>
     <string name="gateway_welcome">Welcome!</string>
@@ -135,7 +135,7 @@
     <string name="enter_enrollmentid">Enter enrollment ID</string>
     <string name="enrollmentdesc">This study allows only pre-screened participants to join the study. If you are one, please enter the enrollment ID provided to you for this study.</string>
     <string name="reviewconformmsg">By Agreeing you confirm that you read the consent and that you wish to take part in this research study.</string>
-    <string name="reviewmsg">Review the form below, and tap Agree if you are ready to continue</string>
+    <string name="reviewmsg">Review the form below, and tap agree if you are ready to continue</string>
     <string name="review">Review</string>
 
     <string name="verification_email_content1">An email has been sent to</string>
