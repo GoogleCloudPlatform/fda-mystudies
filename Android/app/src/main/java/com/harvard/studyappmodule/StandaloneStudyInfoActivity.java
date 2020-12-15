@@ -397,7 +397,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         } else {
           AppController.getHelperSharedPreference()
               .writePreference(
-                  StandaloneStudyInfoActivity.this, getString(R.string.studyStatus), "yetToJoin");
+                  StandaloneStudyInfoActivity.this, getString(R.string.studyStatus), "yetToEnroll");
         }
         AppController.getHelperSharedPreference()
             .writePreference(

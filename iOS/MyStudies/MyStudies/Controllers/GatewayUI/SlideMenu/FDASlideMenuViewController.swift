@@ -37,7 +37,7 @@ open class FDASlideMenuViewController: SlideMenuController {
     if Utilities.isStandaloneApp() {
       let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
 
-      if Study.currentStudy?.userParticipateState.status == .inProgress {
+      if Study.currentStudy?.userParticipateState.status == .enrolled {
         let studyTabBarController =
           studyStoryBoard.instantiateViewController(
             withIdentifier: kStudyDashboardTabbarControllerIdentifier
