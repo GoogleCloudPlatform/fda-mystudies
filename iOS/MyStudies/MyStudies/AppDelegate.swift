@@ -432,7 +432,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func customizeNavigationBar() {
     UINavigationBar.appearance().titleTextAttributes = [
-      NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Medium", size: 18)!,
+      NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Medium", size: 18)!
     ]
   }
 
@@ -825,12 +825,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     if Study.currentStudy != nil
       && Study.currentStudy?.userParticipateState.status
-        == UserStudyStatus.StudyStatus.inProgress
+        == UserStudyStatus.StudyStatus.enrolled
     {
 
       let userStudyStatus = (Study.currentStudy?.userParticipateState.status)!
 
-      if userStudyStatus == .inProgress || userStudyStatus == .yetToJoin {
+      if userStudyStatus == .enrolled || userStudyStatus == .yetToEnroll {
         WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
       }
     }
