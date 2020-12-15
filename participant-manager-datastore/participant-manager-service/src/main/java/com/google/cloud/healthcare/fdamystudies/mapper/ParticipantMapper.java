@@ -213,6 +213,16 @@ public final class ParticipantMapper {
             ? onboardingStatus.getStatus()
             : OnboardingStatus.DISABLED.getStatus();
     participantDetail.setOnboardingStatus(status);
+
+    ParticipantStudyEntity participantStudy = participantRegistry.getParticipantStudies().get(0);
+    participantDetail.setEnrollmentStatus(
+        EnrollmentStatus.getDisplayValue(participantStudy.getStatus()));
+
+    String enrolledDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
+    participantDetail.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE));
+
+    String withdrawalDate = DateTimeUtils.format(participantStudy.getWithdrawalDate());
+    participantDetail.setWithdrawalDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
     return participantDetail;
   }
 
