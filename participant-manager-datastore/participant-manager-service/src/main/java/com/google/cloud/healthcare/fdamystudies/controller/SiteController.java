@@ -105,7 +105,6 @@ public class SiteController {
       @RequestParam(name = "onboardingStatus", required = false) String onboardingStatus,
       @RequestParam(required = false) Integer page,
       @RequestParam(required = false) Integer limit,
-      @RequestParam(required = false) String[] excludeEnrollmentStatus,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
@@ -116,8 +115,7 @@ public class SiteController {
     }
 
     ParticipantRegistryResponse participants =
-        siteService.getParticipants(
-            userId, siteId, onboardingStatus, auditRequest, page, limit, excludeEnrollmentStatus);
+        siteService.getParticipants(userId, siteId, onboardingStatus, auditRequest, page, limit);
     logger.exit(String.format(STATUS_LOG, participants.getHttpStatusCode()));
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
