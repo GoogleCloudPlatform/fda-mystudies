@@ -14,10 +14,6 @@ export class LocationsGuard implements CanActivate {
   }
 
   canActivate(): boolean | UrlTree {
-    return (
-      this.user.superAdmin ||
-      this.user.manageLocations === 1 ||
-      this.user.manageLocations === 0
-    );
+    return this.user.superAdmin || this.user.manageLocations !== null;
   }
 }
