@@ -98,6 +98,11 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: study_resources_bucket_name
+            - name: ORG_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: org_name
             - name: CATALINA_OPTS # server timezone
               value: -Duser.timezone=America/New_York
             - name: GOOGLE_APPLICATION_CREDENTIALS
