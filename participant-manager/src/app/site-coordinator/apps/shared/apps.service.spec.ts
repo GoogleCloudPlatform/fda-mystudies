@@ -40,7 +40,7 @@ describe('AppsService', () => {
     appsService = new AppsService(entityServiceSpy, httpServiceSpyObj);
 
     appsService
-      .getUserApps()
+      .getUserApps(10, 0, '')
       .subscribe(
         (app) => expect(app).toEqual(expectedAppList, 'expected AppsList'),
         fail,
@@ -59,7 +59,7 @@ describe('AppsService', () => {
     appsService = new AppsService(entityServiceSpy, httpServiceSpyObj);
 
     tick(40);
-    appsService.getUserApps().subscribe(
+    appsService.getUserApps(10, 0, '').subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');

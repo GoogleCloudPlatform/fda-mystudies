@@ -8,11 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -134,7 +134,7 @@ public class StudyStateDaoImpl implements StudyStateDao {
       studyEntity = studiesBoList.get(0);
       criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
       participantStudyRoot = criteriaUpdate.from(ParticipantStudyEntity.class);
-      criteriaUpdate.set("status", AppConstants.WITHDRAWN);
+      criteriaUpdate.set("status", EnrollmentStatus.WITHDRAWN.getStatus());
       criteriaUpdate.set("withdrawalDate", new Timestamp(Instant.now().toEpochMilli()));
       predicates.add(
           criteriaBuilder.equal(participantStudyRoot.get("participantId"), participantId));
