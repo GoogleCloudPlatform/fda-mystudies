@@ -16,16 +16,30 @@ export class StudyDetailsService {
     private readonly http: HttpClient,
   ) {}
 
-  getStudyDetails(studyId: string): Observable<StudyDetails> {
+  getStudyDetails(
+    studyId: string,
+    offset: number,
+    limit: number,
+    searchTerm: string,
+    sortBy: string,
+    sortOrder: string,
+  ): Observable<StudyDetails> {
     return this.http.get<StudyDetails>(
       `${
         environment.participantManagerDatastoreUrl
       }/studies/${encodeURIComponent(studyId)}/participants`,
       {
-        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToEnroll']},
+        params: {
+          offset: offset.toString(),
+          limit: limit.toString(),
+          searchTerm: searchTerm,
+          sortBy: sortBy,
+          sortDirection: sortOrder,
+        },
       },
     );
   }
+
   updateTargetEnrollment(
     updateTargetEnrollment: UpdateTargetEnrollmentRequest,
     studyId: string,
