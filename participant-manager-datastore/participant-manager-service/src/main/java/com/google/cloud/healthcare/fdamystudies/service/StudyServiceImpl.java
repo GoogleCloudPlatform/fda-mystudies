@@ -301,14 +301,23 @@ public class StudyServiceImpl implements StudyService {
     if (studyAppDetails.getStudyType().equalsIgnoreCase(OPEN_STUDY)) {
       studyParticipantDetails =
           studyRepository.getStudyParticipantDetailsForOpenStudy(
-              studyAppDetails.getStudyId(), excludeParticipantStudyStatus, limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
+              studyAppDetails.getStudyId(),
+              excludeParticipantStudyStatus,
+              limit,
+              offset,
+              orderByCondition,
+              StringUtils.defaultString(searchTerm));
 
     } else if (studyAppDetails.getStudyType().equalsIgnoreCase(CommonConstants.CLOSE_STUDY)) {
       studyParticipantDetails =
-          studyRepository.getStudyParticipantDetailsForClosedStudy(studyAppDetails.getStudyId(), limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
+          studyRepository.getStudyParticipantDetailsForClosedStudy(
+              studyAppDetails.getStudyId(),
+              limit,
+              offset,
+              orderByCondition,
+              StringUtils.defaultString(searchTerm));
     }
 
-    
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
       ParticipantDetail participantDetail =
           ParticipantMapper.fromParticipantStudy(participantDetails);
@@ -318,12 +327,12 @@ public class StudyServiceImpl implements StudyService {
     participantRegistryDetail.setRegistryParticipants(registryParticipants);
     Long participantCount =
         studyRepository.countParticipantsByStudyIdAndSearchTerm(
-            studyId, StringUtils.defaultString(searchTerm));
-    
+            studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
+
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
-   
+
     participantRegistryResponse.setTotalParticipantCount(participantCount);
 
     auditRequest.setUserId(userId);
