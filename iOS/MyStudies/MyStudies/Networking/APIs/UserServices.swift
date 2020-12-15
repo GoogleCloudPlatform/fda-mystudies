@@ -169,7 +169,7 @@ class UserServices: NSObject {
     }
     let headerParams =
       [
-        kUserId: user.userId ?? "",
+        kUserId: user.userId ?? ""
       ]
 
     let params = [kDeactivateAccountDeleteData: studiesDict]

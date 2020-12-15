@@ -119,7 +119,7 @@ class EnrollServices: NSObject {
       kStudyId: studyId,
     ]
     let headers: [String: String] = [
-      "userId": User.currentUser.userId ?? "",
+      "userId": User.currentUser.userId ?? ""
     ]
     self.sendRequestWith(method: method, params: params, headers: headers)
   }
@@ -141,7 +141,7 @@ class EnrollServices: NSObject {
     ]
 
     let headers = [
-      kUserId: User.currentUser.userId ?? "",
+      kUserId: User.currentUser.userId ?? ""
     ]
 
     self.sendRequestWith(method: method, params: params, headers: headers)

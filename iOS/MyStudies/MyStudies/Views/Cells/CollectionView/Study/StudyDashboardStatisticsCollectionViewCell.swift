@@ -180,12 +180,14 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
     let data = self.stats!
 
     if data.calculation! == StatisticsFormula.maximum.rawValue,
-       let max = array.max() {
+      let max = array.max()
+    {
       let maxValue = String(format: "%.2f", max / 60)
       labelStatisticsCount?.text = maxValue
     }
     if data.calculation! == StatisticsFormula.minimum.rawValue,
-       let min = array.min() {
+      let min = array.min()
+    {
       let minValue = String(format: "%.2f", min / 60)
       labelStatisticsCount?.text = minValue
     }

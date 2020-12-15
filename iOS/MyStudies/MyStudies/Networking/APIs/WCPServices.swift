@@ -135,7 +135,7 @@ class WCPServices: NSObject {
     let method = WCPMethods.consentDocument.method
     self.sendRequestWith(method: method, params: header, headers: nil)
   }
-  
+
   /// Creates a request to receive Eligibility Consent Metadata
   /// - Parameters:
   ///   - studyId: ID of `Study`

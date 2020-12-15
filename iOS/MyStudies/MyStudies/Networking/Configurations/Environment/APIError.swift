@@ -34,7 +34,9 @@ struct ApiError: ErrorPresentable {
         title = LocalizableString.offlineError.localizedString
         message = LocalizableString.checkInternet.localizedString
       }
-    } else { return nil }
+    } else {
+      return nil
+    }
   }
 
   init(error: AFError) {

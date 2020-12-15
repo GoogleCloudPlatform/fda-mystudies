@@ -19,7 +19,7 @@
 
 import RealmSwift
 
-/// DB instance of User model 
+/// DB instance of User model
 class DBUser: Object {
 
   @objc dynamic var firstName: String = ""

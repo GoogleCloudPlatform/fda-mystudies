@@ -27,5 +27,5 @@ class StudyDashboardStudyActivitiesTableViewCell: UITableViewCell {
   @IBOutlet var labelTaskNumber: UILabel?
   @IBOutlet var labelSurveyList: UILabel?
   @IBOutlet var labelTaskList: UILabel?
-  
+
 }

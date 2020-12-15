@@ -311,7 +311,7 @@ class StudyAnchorDate {
       DBHandler.saveAnchorDate(date: self.date!, studyId: (Study.currentStudy?.studyId)!)
     }
   }
-  
+
 }
 
 // MARK: - StudyWithdrawalConfigration

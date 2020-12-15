@@ -96,7 +96,7 @@ class ResponseServices: NSObject {
         ] as [String: Any]
 
       let headers: [String: String] = [
-        JSONKey.userID: currentUser.userId ?? "",
+        JSONKey.userID: currentUser.userId ?? ""
       ]
       self.sendRequestWith(method: method, params: params, headers: headers)
     }

@@ -71,7 +71,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
       options: [
         NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString
           .DocumentType
-          .html,
+          .html
       ],
       documentAttributes: nil
     ) {
@@ -84,7 +84,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
           NSAttributedString.Key.font: UIFont(
             name: "HelveticaNeue",
             size: CGFloat(fontSize)
-          )!,
+          )!
         ],
         range: (attrStr.string as NSString).range(of: attrStr.string)
       )
@@ -104,7 +104,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
     self.labelDescription?.textAlignment = .center
   }
 
-  // MARK: - Button Actions 
+  // MARK: - Button Actions
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
 

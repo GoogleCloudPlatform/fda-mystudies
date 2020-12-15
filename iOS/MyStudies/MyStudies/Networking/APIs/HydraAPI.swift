@@ -34,8 +34,8 @@ struct HydraAPI {
       "redirect_uri": AuthRouter.redirectURL,
       "state": String.randomString(length: 21),
     ]
-    return try?
-      AuthRouter
+    return
+      try? AuthRouter
       .auth(params: parameters)
       .asURLRequest()
   }
