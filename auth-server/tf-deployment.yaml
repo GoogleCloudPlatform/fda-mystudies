@@ -97,6 +97,8 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: base_url
+            - name: PARTICIPANT_MANAGER_URL
+              value: "$PARTICIPANT_MANAGER_BASE_URL/participant-manager"
             - name: IOS_DEEPLINK_URL
               valueFrom:
                 secretKeyRef:
@@ -121,13 +123,13 @@ spec:
             - name: CORS_ALLOWED_ORIGINS
               value: ""
             - name: SSL_ENABLED
-              value: "False"
+              value: "false"
             - name: SSL_KEY_STORE_PATH
               value: ""
             - name: SSL_KEY_STORE_PASSWORD
               value: ""
             - name: COOKIE_SECURE
-              value: "True"
+              value: "true"
             - name: TEMP_REGID_EXPIRY_MINUTES
               value: "30"
             - name: ORG_NAME
