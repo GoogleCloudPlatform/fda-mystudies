@@ -30,6 +30,16 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>com.google.api</groupId>
+				<artifactId>gax</artifactId>
+				<version>1.60.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.api</groupId>
+				<artifactId>gax-grpc</artifactId>
+				<version>1.60.1</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

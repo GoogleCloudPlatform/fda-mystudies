@@ -38,6 +38,10 @@ public class ActivitiesBean {
 
   private Boolean branching = false;
 
+  private Boolean isLaunchStudy = false;
+
+  private Boolean isStudyLifeTime = false;
+
   private String lastModified = "";
 
   private String state = "";
@@ -111,6 +115,22 @@ public class ActivitiesBean {
 
   public void setBranching(Boolean branching) {
     this.branching = branching;
+  }
+
+  public Boolean getIsLaunchStudy() {
+    return isLaunchStudy;
+  }
+
+  public void setIsLaunchStudy(Boolean isLaunchStudy) {
+    this.isLaunchStudy = isLaunchStudy;
+  }
+
+  public Boolean getIsStudyLifeTime() {
+    return isStudyLifeTime;
+  }
+
+  public void setIsStudyLifeTime(Boolean isStudyLifeTime) {
+    this.isStudyLifeTime = isStudyLifeTime;
   }
 
   public String getLastModified() {
