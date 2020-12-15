@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -42,7 +43,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -245,8 +245,10 @@ public class StudyServiceImpl implements StudyService {
       String studyId,
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
-      Integer page,
-      Integer limit) {
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
 
@@ -272,39 +274,69 @@ public class StudyServiceImpl implements StudyService {
         ParticipantMapper.fromStudyAppDetails(studyAppDetails, user);
 
     return prepareRegistryParticipantResponse(
-        participantRegistryDetail, userId, studyId, excludeParticipantStudyStatus, auditRequest);
+        participantRegistryDetail,
+        userId,
+        studyAppDetails,
+        excludeParticipantStudyStatus,
+        limit,
+        offset,
+        orderByCondition,
+        searchTerm,
+        auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
       ParticipantRegistryDetail participantRegistryDetail,
       String userId,
-      String studyId,
+      StudyAppDetails studyAppDetails,
       String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
+    List<StudyParticipantDetails> studyParticipantDetails = new ArrayList<>();
+    if (studyAppDetails.getStudyType().equalsIgnoreCase(OPEN_STUDY)) {
+      studyParticipantDetails =
+          studyRepository.getStudyParticipantDetailsForOpenStudy(
+              studyAppDetails.getStudyId(),
+              excludeParticipantStudyStatus,
+              limit,
+              offset,
+              orderByCondition,
+              StringUtils.defaultString(searchTerm));
 
-    List<StudyParticipantDetails> studyParticipantDetails =
-        studyRepository.getStudyParticipantDetails(studyId);
+    } else if (studyAppDetails.getStudyType().equalsIgnoreCase(CommonConstants.CLOSE_STUDY)) {
+      studyParticipantDetails =
+          studyRepository.getStudyParticipantDetailsForClosedStudy(
+              studyAppDetails.getStudyId(),
+              limit,
+              offset,
+              orderByCondition,
+              StringUtils.defaultString(searchTerm));
+    }
+
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
-      if (ArrayUtils.contains(
-          excludeParticipantStudyStatus, participantDetails.getEnrolledStatus())) {
-        continue;
-      }
       ParticipantDetail participantDetail =
           ParticipantMapper.fromParticipantStudy(participantDetails);
       registryParticipants.add(participantDetail);
     }
+
     participantRegistryDetail.setRegistryParticipants(registryParticipants);
+    Long participantCount =
+        studyRepository.countParticipantsByStudyIdAndSearchTerm(
+            studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
-    Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(studyId);
-    participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
+
+    participantRegistryResponse.setTotalParticipantCount(participantCount);
 
     auditRequest.setUserId(userId);
-    auditRequest.setStudyId(studyId);
+    auditRequest.setStudyId(studyAppDetails.getStudyId());
     auditRequest.setAppId(participantRegistryDetail.getAppId());
     participantManagerHelper.logEvent(STUDY_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
 

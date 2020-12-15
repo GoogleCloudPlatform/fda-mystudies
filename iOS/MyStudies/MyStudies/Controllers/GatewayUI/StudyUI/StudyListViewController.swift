@@ -263,7 +263,7 @@ class StudyListViewController: UIViewController {
       let studyId = (ud.object(forKey: kFetalkickStudyId) as? String)!
       let study = Gateway.instance.studies?.filter { $0.studyId == studyId }.last
 
-      if study?.userParticipateState.status == .inProgress, study?.status == .active {
+      if study?.userParticipateState.status == .enrolled, study?.status == .active {
         Study.updateCurrentStudy(study: study!)
         pushToStudyDashboard(animated: false)
       }
@@ -585,7 +585,7 @@ class StudyListViewController: UIViewController {
   /// Save information for study which feilds need to be updated.
   func handleStudyUpdatedInformation() {
     guard let currentStudy = Study.currentStudy else { return }
-    if currentStudy.userParticipateState.status == UserStudyStatus.StudyStatus.yetToJoin {
+    if currentStudy.userParticipateState.status == UserStudyStatus.StudyStatus.yetToEnroll {
       StudyUpdates.studyConsentUpdated = false
       StudyUpdates.studyActivitiesUpdated = false
       StudyUpdates.studyResourcesUpdated = false
@@ -610,7 +610,7 @@ class StudyListViewController: UIViewController {
         // handle accoring to UserStatus
         let userStudyStatus = currentStudy.userParticipateState.status
 
-        if userStudyStatus == .completed || userStudyStatus == .inProgress {
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
           pushToStudyDashboard()
         } else {
           checkDatabaseForStudyInfo(study: currentStudy)
@@ -631,7 +631,7 @@ class StudyListViewController: UIViewController {
       if study.status == .active {
         let userStudyStatus = study.userParticipateState.status
 
-        if userStudyStatus == .completed || userStudyStatus == .inProgress {
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
           // check if study version is udpated
           if study.version != study.newVersion {
             WCPServices().getStudyUpdates(study: study, delegate: self)
@@ -645,7 +645,7 @@ class StudyListViewController: UIViewController {
       } else if Study.currentStudy?.status == .paused {
         let userStudyStatus = study.userParticipateState.status
 
-        if userStudyStatus == .completed || userStudyStatus == .inProgress {
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
           UIUtilities.showAlertWithTitleAndMessage(
             title: "",
             message: NSLocalizedString(
