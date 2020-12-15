@@ -8,6 +8,7 @@ export interface AppDetails {
   status: number;
   message: string;
   code: string;
+  totalParticipantCount: number;
 }
 
 export interface Participant {

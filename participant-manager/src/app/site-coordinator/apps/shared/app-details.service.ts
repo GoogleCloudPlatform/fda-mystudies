@@ -10,13 +10,27 @@ import {HttpClient} from '@angular/common/http';
 export class AppDetailsService {
   constructor(private readonly http: HttpClient) {}
 
-  get(appId: string): Observable<AppDetails> {
+  get(
+    appId: string,
+    offset: number,
+    limit: number,
+    searchTerm: string,
+    sortBy: string,
+    sortOrder: string,
+  ): Observable<AppDetails> {
     return this.http.get<AppDetails>(
       `${environment.participantManagerDatastoreUrl}/apps/${encodeURIComponent(
         appId,
       )}/participants`,
       {
-        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
+        params: {
+          excludeParticipantStudyStatus: ['notEligible', 'yetToJoin'],
+          offset: offset.toString(),
+          limit: limit.toString(),
+          searchTerm: searchTerm,
+          sortBy: sortBy,
+          sortDirection: sortOrder,
+        },
       },
     );
   }
