@@ -88,7 +88,7 @@ class Schedule {
   /// - Parameter handler: returns completion handler with array of ActivityRun
   func getRunsForActivity(activity: Activity, handler: @escaping ([ActivityRun]) -> Void) {
     guard activity.state == "active" else {
-      handler([])  // Return empty runs array 
+      handler([])  // Return empty runs array
       return
     }
     // get joiningDate
