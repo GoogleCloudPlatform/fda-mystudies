@@ -491,7 +491,7 @@
     <string name="participants_signature">Participant\'s Signature</string>
     <string name="date">Date</string>
     <string name="done2">done</string>
-    <string name="as_scheduled">As Scheduled</string>
+    <string name="as_scheduled">Aperiodic</string>
     <string name="onetime">One-time</string>
     <string name="on">on</string>
     <string name="to">to</string>
