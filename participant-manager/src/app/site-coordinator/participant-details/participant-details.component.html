@@ -173,17 +173,16 @@
               <th>
                 <div class="blue__text__md">Last Invitation Sent</div>
               </th>
-              <table class="width__100">
-                <th>
-                  <div class="blue__text__md">Enrollment Status</div>
-                </th>
-                <th class="mb__mt-sm">
-                  <div class="blue__text__md">Date of Enrollment</div>
-                </th>
-                <th class="mb__mt-sm">
-                  <div class="blue__text__md">Date of Withdrawal</div>
-                </th>
-              </table>
+
+              <th>
+                <div class="blue__text__md">Enrollment Status</div>
+              </th>
+              <th class="mb__mt-sm">
+                <div class="blue__text__md">Date of Enrollment</div>
+              </th>
+              <th class="mb__mt-sm">
+                <div class="blue__text__md">Date of Withdrawal</div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -232,7 +231,36 @@
                 </span>
               </td>
 
-              <div
+              <table
+                class="display__contents"
+                *ngFor="
+                  let enrollmentDetails of participant.participantDetails
+                    .enrollments
+                "
+              >
+                <td class="font14">
+                  <span
+                    [ngClass]="{
+                      'txt__green':
+                        enrollmentDetails.enrollmentStatus ==
+                        enrollmentStatus.Enrolled,
+                      'txt__light-gray':
+                        enrollmentDetails.enrollmentStatus ==
+                        enrollmentStatus.Withdrawn
+                    }"
+                  >
+                    {{ enrollmentDetails.enrollmentStatus }}
+                  </span>
+                </td>
+                <td class="mb__mt-sm inactive__text font14">
+                  <span>{{ enrollmentDetails.enrollmentDate }}</span>
+                </td>
+                <td class="mb__mt-sm inactive__text font14">
+                  <span>{{ enrollmentDetails.withdrawalDate }}</span>
+                </td>
+              </table>
+
+              <!-- <div
                 *ngFor="
                   let enrollmentDetails of participant.participantDetails
                     .enrollments
@@ -264,7 +292,7 @@
                     {{ enrollmentDetails.withdrawalDate }}
                   </td>
                 </table>
-              </div>
+              </div> -->
             </tr>
           </tbody>
         </table>
