@@ -47,11 +47,23 @@ public class StudyController {
 
   @Autowired private SiteService siteService;
 
+  /**
+   * @param userId
+   * @param limit
+   * @param offset The offset specifies the offset of the first row to return. The offset of the
+   *     first row is 0, not 1.
+   * @param request
+   * @return
+   */
   @GetMapping
   public ResponseEntity<StudyResponse> getStudies(
-      @RequestHeader(name = USER_ID_HEADER) String userId, HttpServletRequest request) {
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      @RequestParam(defaultValue = "10") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(required = false) String searchTerm,
+      HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
-    StudyResponse studyResponse = studyService.getStudies(userId);
+    StudyResponse studyResponse = studyService.getStudies(userId, limit, offset, searchTerm);
     logger.exit(String.format(STATUS_LOG, studyResponse.getHttpStatusCode()));
     return ResponseEntity.status(studyResponse.getHttpStatusCode()).body(studyResponse);
   }
