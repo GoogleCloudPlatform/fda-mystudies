@@ -245,8 +245,10 @@ public class StudyServiceImpl implements StudyService {
       String studyId,
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
-      Integer page,
-      Integer limit) {
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
 
@@ -272,7 +274,15 @@ public class StudyServiceImpl implements StudyService {
         ParticipantMapper.fromStudyAppDetails(studyAppDetails, user);
 
     return prepareRegistryParticipantResponse(
-        participantRegistryDetail, userId, studyId, excludeParticipantStudyStatus, auditRequest);
+        participantRegistryDetail,
+        userId,
+        studyId,
+        excludeParticipantStudyStatus,
+        limit,
+        offset,
+        orderByCondition,
+        searchTerm,
+        auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
@@ -280,12 +290,17 @@ public class StudyServiceImpl implements StudyService {
       String userId,
       String studyId,
       String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
     List<StudyParticipantDetails> studyParticipantDetails =
-        studyRepository.getStudyParticipantDetails(studyId);
+        studyRepository.getStudyParticipantDetails(
+            studyId, limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
       if (ArrayUtils.contains(
           excludeParticipantStudyStatus, participantDetails.getEnrolledStatus())) {
@@ -295,13 +310,15 @@ public class StudyServiceImpl implements StudyService {
           ParticipantMapper.fromParticipantStudy(participantDetails);
       registryParticipants.add(participantDetail);
     }
-    participantRegistryDetail.setRegistryParticipants(registryParticipants);
 
+    participantRegistryDetail.setRegistryParticipants(registryParticipants);
+    Long participantCount =
+        studyRepository.countParticipantsByStudyIdAndSearchTerm(
+            studyId, StringUtils.defaultString(searchTerm));
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
-    Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(studyId);
-    participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
+    participantRegistryResponse.setTotalParticipantCount(participantCount);
 
     auditRequest.setUserId(userId);
     auditRequest.setStudyId(studyId);
