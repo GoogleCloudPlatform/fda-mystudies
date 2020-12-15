@@ -13,8 +13,10 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHisto
 import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @ConditionalOnProperty(
@@ -25,19 +27,19 @@ public interface ParticipantEnrollmentHistoryRepository
     extends JpaRepository<ParticipantEnrollmentHistoryEntity, String> {
   @Query(
       value =
-          "SELECT DISTINCT peh.site_id AS siteId, peh.user_details_id AS userDetailsId, peh.study_info_id AS studyId, "
-              + "peh.status AS enrollmentStatus, peh.created_time AS created, loc.custom_id AS locationCustomId, loc.name AS locationName "
+          "SELECT peh.site_id AS siteId, peh.user_details_id AS userDetailsId, peh.study_info_id AS studyId, "
+              + "peh.status AS enrollmentStatus, peh.withdrawal_time AS withdrawalDate,  peh.enrolled_time AS enrolledDate, loc.custom_id AS locationCustomId, loc.name AS locationName "
               + "FROM participant_enrollment_history peh, locations loc, sites s "
               + "WHERE peh.site_id=s.id AND s.location_id=loc.id AND peh.status IN ('enrolled','withdrawn') AND "
               + "peh.user_details_id IN (:userIds) AND peh.app_info_id=:appId "
-              + "ORDER BY peh.user_details_id, peh.study_info_id, peh.site_id, peh.created_time DESC",
+              + "ORDER BY loc.name DESC",
       nativeQuery = true)
   public List<ParticipantEnrollmentHistory> findParticipantEnrollmentHistoryByAppId(
       String appId, List<String> userIds);
 
   @Query(
       value =
-          "SELECT DISTINCT peh.status AS enrollmentStatus, peh.created_time AS created "
+          "SELECT peh.status AS enrollmentStatus, peh.withdrawal_time AS withdrawalDate,  peh.enrolled_time AS enrolledDate "
               + "FROM participant_enrollment_history peh "
               + "WHERE peh.site_id=:siteId AND peh.study_info_id=:studyId AND "
               + "peh.participant_registry_site_id=:participantRegistryId AND peh.app_info_id=:appId "
@@ -45,4 +47,24 @@ public interface ParticipantEnrollmentHistoryRepository
       nativeQuery = true)
   public List<ParticipantEnrollmentHistory> findByAppIdSiteIdAndStudyId(
       String appId, String studyId, String siteId, String participantRegistryId);
+
+  @Modifying
+  @Transactional
+  @Query(
+      value =
+          "UPDATE participant_enrollment_history SET status=:status, withdrawal_time= now() WHERE "
+              + "withdrawal_time IS NULL AND study_info_id=:studyId AND "
+              + "(user_details_id =:userId OR participant_registry_site_id=:participantRegistryId)",
+      nativeQuery = true)
+  public void updateWithdrawalDateAndStatus(
+      String userId, String studyId, String status, String participantRegistryId);
+
+  @Modifying
+  @Transactional
+  @Query(
+      value =
+          "UPDATE participant_enrollment_history SET status=:status, withdrawal_time= now() WHERE "
+              + "withdrawal_time IS NULL AND user_details_id =:userId",
+      nativeQuery = true)
+  public void updateWithdrawalDateAndStatusForDeactivatedUser(String userId, String status);
 }

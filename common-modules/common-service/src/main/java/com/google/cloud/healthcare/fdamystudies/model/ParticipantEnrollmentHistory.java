@@ -22,7 +22,9 @@ public interface ParticipantEnrollmentHistory {
 
   String getEnrollmentStatus();
 
-  Timestamp getCreated();
+  Timestamp getWithdrawalDate();
+
+  Timestamp getEnrolledDate();
 
   default String getUserIdStudyIdKey() {
     return getUserDetailsId() + "-" + getStudyId();

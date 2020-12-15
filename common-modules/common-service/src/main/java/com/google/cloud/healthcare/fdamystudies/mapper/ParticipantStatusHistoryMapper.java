@@ -12,6 +12,8 @@ import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistoryEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 public class ParticipantStatusHistoryMapper {
 
@@ -29,6 +31,12 @@ public class ParticipantStatusHistoryMapper {
     participantStatusEntity.setStudy(participantRegistrySiteEntity.getStudy());
     participantStatusEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     participantStatusEntity.setUserDetails(userDetails);
+    Timestamp now = new Timestamp(Instant.now().toEpochMilli());
+    if (EnrollmentStatus.ENROLLED.equals(enrollment)) {
+      participantStatusEntity.setEnrolledDate(now);
+    } else if (EnrollmentStatus.WITHDRAWN.equals(enrollment)) {
+      participantStatusEntity.setWithdrawalDate(now);
+    }
     return participantStatusEntity;
   }
 }

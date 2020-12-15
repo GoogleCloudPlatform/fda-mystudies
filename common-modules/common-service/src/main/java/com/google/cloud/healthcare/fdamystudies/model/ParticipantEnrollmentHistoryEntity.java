@@ -66,6 +66,12 @@ public class ParticipantEnrollmentHistoryEntity implements Serializable {
   @CreationTimestamp
   private Timestamp created;
 
+  @Column(name = "withdrawal_time")
+  private Timestamp withdrawalDate;
+
+  @Column(name = "enrolled_time")
+  private Timestamp enrolledDate;
+
   @Column(length = SMALL_LENGTH)
   private String status;
 }

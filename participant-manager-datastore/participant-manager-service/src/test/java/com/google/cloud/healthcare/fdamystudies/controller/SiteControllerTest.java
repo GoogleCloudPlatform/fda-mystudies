@@ -1421,6 +1421,9 @@ public class SiteControllerTest extends BaseMockIT {
         .saveAndFlush(participantRegistrySiteEntity);
     siteEntity.setLocation(locationEntity);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
+    participantStudyEntity.setWithdrawalDate(null);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
     participantEnrollmentHistoryEntity =
         testDataHelper.createEnrollmentHistory(appEntity, studyEntity, siteEntity);
     participantEnrollmentHistoryEntity.setParticipantRegistrySite(participantRegistrySiteEntity);

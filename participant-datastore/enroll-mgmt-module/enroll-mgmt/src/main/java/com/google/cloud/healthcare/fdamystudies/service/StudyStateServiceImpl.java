@@ -25,8 +25,6 @@ import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudyStateDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
-import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantStatusHistoryMapper;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistoryEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
@@ -273,12 +271,11 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantRegistrySite.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
 
-      ParticipantEnrollmentHistoryEntity participantStatusHistoryEntity =
-          ParticipantStatusHistoryMapper.toParticipantStatusHistoryEntity(
-              participantRegistrySite,
-              EnrollmentStatus.WITHDRAWN,
-              participantStudy.get().getUserDetails());
-      participantEnrollmentHistoryRepository.save(participantStatusHistoryEntity);
+      participantEnrollmentHistoryRepository.updateWithdrawalDateAndStatus(
+          participantStudy.get().getUserDetails().getId(),
+          participantStudy.get().getStudy().getId(),
+          EnrollmentStatus.WITHDRAWN.getStatus(),
+          participantRegistrySite.getId());
 
       participantStudy.get().setParticipantId(null);
       participantStudyRepository.saveAndFlush(participantStudy.get());

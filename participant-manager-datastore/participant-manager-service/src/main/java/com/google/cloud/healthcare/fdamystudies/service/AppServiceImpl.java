@@ -21,7 +21,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
-import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -50,11 +49,13 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -447,40 +448,24 @@ public class AppServiceImpl implements AppService {
         participantEnrollmentHistoryRepository.findParticipantEnrollmentHistoryByAppId(
             app.getId(), userIds);
 
-    Map<String, AppSiteDetails> enrollmentHistoryMap = new HashMap<>();
     Map<String, List<AppSiteDetails>> sitesByUserIdStudyIdMap = new HashMap<>();
 
     List<AppSiteDetails> appSites = null;
     AppSiteDetails appSiteDetails = null;
-    String createdDate = null;
     for (ParticipantEnrollmentHistory enrollmentHistory : enrollmentHistoryEntities) {
-      createdDate = DateTimeUtils.format(enrollmentHistory.getCreated());
       if (!sitesByUserIdStudyIdMap.containsKey(enrollmentHistory.getUserIdStudyIdKey())) {
         appSites = new ArrayList<>();
         sitesByUserIdStudyIdMap.put(enrollmentHistory.getUserIdStudyIdKey(), appSites);
       }
       appSites = sitesByUserIdStudyIdMap.get(enrollmentHistory.getUserIdStudyIdKey());
-      if (!enrollmentHistoryMap.containsKey(enrollmentHistory.getUserIdStudyIdSiteIdKey())) {
-        appSiteDetails = prepareAppSiteDetails(createdDate, enrollmentHistory);
-        enrollmentHistoryMap.put(enrollmentHistory.getUserIdStudyIdSiteIdKey(), appSiteDetails);
-        appSites.add(appSiteDetails);
-        continue;
-      }
-
-      appSiteDetails = enrollmentHistoryMap.get(enrollmentHistory.getUserIdStudyIdSiteIdKey());
-
-      if (StringUtils.isEmpty(appSiteDetails.getWithdrawlDate())
-          && EnrollmentStatus.WITHDRAWN
-              .getStatus()
-              .equals(enrollmentHistory.getEnrollmentStatus())) {
-        appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
-      } else if (StringUtils.isEmpty(appSiteDetails.getEnrollmentDate())
-          && EnrollmentStatus.ENROLLED
-              .getStatus()
-              .equals(enrollmentHistory.getEnrollmentStatus())) {
-        appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
-      }
+      appSiteDetails = prepareAppSiteDetails(enrollmentHistory);
+      appSites.add(appSiteDetails);
     }
+
+    // H2 Database throws error ORDER_BY_NOT_IN_RESULT Order by expression ID must be in the result
+    // list in this case when DISTINCT is added to the SQL query so removing duplicates using
+    // HashSet
+    Set<String> uniqueStudyIds = new HashSet<>();
 
     for (AppParticipantsInfo appParticipantsInfo : appParticipantsInfoList) {
       ParticipantDetail participantDetail =
@@ -488,7 +473,8 @@ public class AppServiceImpl implements AppService {
               ? participantsMap.get(appParticipantsInfo.getUserDetailsId())
               : ParticipantMapper.toParticipantDetails(appParticipantsInfo);
       participantsMap.put(appParticipantsInfo.getUserDetailsId(), participantDetail);
-      if (StringUtils.isEmpty(appParticipantsInfo.getStudyId())) {
+      if (StringUtils.isEmpty(appParticipantsInfo.getStudyId())
+          || !uniqueStudyIds.add(appParticipantsInfo.getStudyId())) {
         continue;
       }
 
@@ -518,8 +504,7 @@ public class AppServiceImpl implements AppService {
     return appParticipantsResponse;
   }
 
-  private AppSiteDetails prepareAppSiteDetails(
-      String createdDate, ParticipantEnrollmentHistory enrollmentHistory) {
+  private AppSiteDetails prepareAppSiteDetails(ParticipantEnrollmentHistory enrollmentHistory) {
     AppSiteDetails appSiteDetails;
     appSiteDetails = new AppSiteDetails();
     appSiteDetails.setSiteId(enrollmentHistory.getSiteId());
@@ -527,13 +512,10 @@ public class AppServiceImpl implements AppService {
     appSiteDetails.setLocationName(enrollmentHistory.getLocationName());
     appSiteDetails.setParticipantStudyStatus(enrollmentHistory.getEnrollmentStatus());
 
-    if (EnrollmentStatus.WITHDRAWN.getStatus().equals(enrollmentHistory.getEnrollmentStatus())) {
-      appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
-    } else if (EnrollmentStatus.ENROLLED
-        .getStatus()
-        .equals(enrollmentHistory.getEnrollmentStatus())) {
-      appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
-    }
+    String withdrawalDate = DateTimeUtils.format(enrollmentHistory.getWithdrawalDate());
+    String enrolledDate = DateTimeUtils.format(enrollmentHistory.getEnrolledDate());
+    appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
+    appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE));
     return appSiteDetails;
   }
 

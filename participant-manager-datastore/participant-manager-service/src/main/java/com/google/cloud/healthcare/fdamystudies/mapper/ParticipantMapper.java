@@ -169,18 +169,12 @@ public final class ParticipantMapper {
 
     for (ParticipantEnrollmentHistory enrollmentHistory : enrollmentHistoryEntities) {
       Enrollment enrollment = new Enrollment();
+      String withdrawalDate = DateTimeUtils.format(enrollmentHistory.getWithdrawalDate());
+      String enrolledDate = DateTimeUtils.format(enrollmentHistory.getEnrolledDate());
+      enrollment.setWithdrawalDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
+      enrollment.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE));
       enrollment.setEnrollmentStatus(
           EnrollmentStatus.getDisplayValue(enrollmentHistory.getEnrollmentStatus()));
-      String createdDate = DateTimeUtils.format(enrollmentHistory.getCreated());
-      if (EnrollmentStatus.WITHDRAWN.getStatus().equals(enrollmentHistory.getEnrollmentStatus())) {
-        enrollment.setWithdrawalDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
-        enrollment.setEnrollmentDate(NOT_APPLICABLE);
-      } else if (EnrollmentStatus.ENROLLED
-          .getStatus()
-          .equals(enrollmentHistory.getEnrollmentStatus())) {
-        enrollment.setEnrollmentDate(StringUtils.defaultIfEmpty(createdDate, NOT_APPLICABLE));
-        enrollment.setWithdrawalDate(NOT_APPLICABLE);
-      }
       participantDetail.getEnrollments().add(enrollment);
     }
   }
