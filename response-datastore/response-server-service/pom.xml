@@ -115,8 +115,6 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.15</version>
-      <!-- <scope>runtime</scope> -->
     </dependency>
     <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
     <!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
