@@ -124,7 +124,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
   private void setTextForView() {
     cancelBtn.setVisibility(View.GONE);
-    infoIcon.setVisibility(View.VISIBLE);
+    infoIcon.setVisibility(View.GONE);
     title.setText(getResources().getString(R.string.signup));
   }
 

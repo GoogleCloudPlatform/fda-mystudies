@@ -53,13 +53,16 @@ public class SurveyActivitiesListAdapterTest {
   private static final String TEST_RESULT_THREE = "From : 12:10pm, Oct 09, 2020";
   private static final String INVALID_DATE_FORMAT = "Invalid date format";
 
+
   @Test
   public void getDatesAdapterTest() {
     ArrayList<ActivitiesWS> activitiesws = new ArrayList<>();
+    ArrayList<String> status = new ArrayList<>();
     Date startDate = null;
     Date endDate = null;
     Date joiningdate = null;
     activitiesws.add(getactivitieswsdata());
+    status.add("past");
     SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtcNoZone();
     try {
       startDate = simpleDateFormat.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
@@ -77,7 +80,7 @@ public class SurveyActivitiesListAdapterTest {
             TEST_POSITION,
             joiningdate,
             startDate,
-            InstrumentationRegistry.getTargetContext());
+            InstrumentationRegistry.getTargetContext(), status);
     assertTrue(anchordate.toLowerCase().contains(TEST_RESULT_ONE.toLowerCase()));
 
     String regular =
@@ -87,7 +90,7 @@ public class SurveyActivitiesListAdapterTest {
             TEST_POSITION,
             startDate,
             joiningdate,
-            InstrumentationRegistry.getTargetContext());
+            InstrumentationRegistry.getTargetContext(), status);
     assertTrue(regular.toLowerCase().contains(TEST_RESULT_TWO.toLowerCase()));
 
     String studyLifeTime =
@@ -97,7 +100,7 @@ public class SurveyActivitiesListAdapterTest {
             TEST_POSITION,
             startDate,
             joiningdate,
-            InstrumentationRegistry.getTargetContext());
+            InstrumentationRegistry.getTargetContext(), status);
     assertTrue(studyLifeTime.toLowerCase().contains(TEST_RESULT_THREE.toLowerCase()));
   }
 

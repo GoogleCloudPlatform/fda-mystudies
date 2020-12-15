@@ -55,10 +55,10 @@ class EligibilityStepViewController: ORKStepViewController {
 
   // MARK: - UI Properties
   var descriptionText: String?
-  
+
   /// The max characters allowed for user to enter token.
   let maxCharForToken = 8
-  
+
   var taskResult: EligibilityTokenTaskResult = EligibilityTokenTaskResult(
     identifier: kFetalKickCounterStepDefaultIdentifier
   )
