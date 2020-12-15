@@ -32,6 +32,8 @@ public class AppParticipantsResponse extends BaseResponse {
 
   private List<ParticipantDetail> participants = new ArrayList<>();
 
+  private Long totalParticipantCount;
+
   public AppParticipantsResponse(
       MessageCode messageCode, String appId, String customId, String name) {
     super(messageCode);
