@@ -314,7 +314,7 @@ public class UserServiceImpl implements UserService {
     repository.saveAndFlush(userEntity);
     auditHelper.logEvent(PASSWORD_CHANGE_SUCCEEDED, auditRequest);
     logger.exit("Your password has been changed successfully!");
-    return new ChangePasswordResponse(MessageCode.CHANGE_PASSWORD_SUCCESS);
+    return new ChangePasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
   }
 
   private ErrorCode validateChangePasswordRequest(

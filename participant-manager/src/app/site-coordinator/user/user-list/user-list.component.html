@@ -17,24 +17,34 @@
   <div class="cards1 m-none">
     <table
       class="table table-striped custom__table"
-      [mfData]="manageUsers.users"
+      [mfData]="
+        manageUsers.users
+          | paginate
+            : {
+                itemsPerPage: limit,
+                currentPage: currentPage,
+                totalItems: manageUsers.totalUsersCount
+              }
+      "
       #mf="mfDataTable"
-      [mfRowsOnPage]="10"
+      [mfRowsOnPage]="limit"
+      [(mfSortBy)]="sortBy"
+      [(mfSortOrder)]="sortOrder"
+      (mfSortOrderChange)="onSortOrder($event)"
+      (mfSortByChange)="onSortBy($event)"
     >
       <thead class="custom__thead">
         <tr>
           <th>
-            <mfDefaultSorter by="firstName">First Name</mfDefaultSorter>
+            <mfDefaultSorter by="_firstName">First Name</mfDefaultSorter>
           </th>
           <th>
-            <mfDefaultSorter by="lastName">Last Name</mfDefaultSorter>
+            <mfDefaultSorter by="_lastName">Last Name</mfDefaultSorter>
           </th>
           <th>
-            <mfDefaultSorter by="email">Email</mfDefaultSorter>
+            <mfDefaultSorter by="_email">Email</mfDefaultSorter>
           </th>
-          <th>
-            <mfDefaultSorter by="status">Status</mfDefaultSorter>
-          </th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody class="custom__tbody">
@@ -67,14 +77,20 @@
           </td>
         </tr>
         <tr *ngIf="manageUsers.users.length === 0">
-          <td colspan="3" class="text-right">No records found</td>
+          <td colspan="3" class="text-center">No records found</td>
         </tr>
       </tbody>
 
       <tfoot class="custom__tfoot">
         <tr>
           <td colspan="4">
-            <mfBootstrapPaginator></mfBootstrapPaginator>
+            <div class="text-center">
+              <pagination-controls
+                pagination-template
+                #api="paginationApi"
+                (pageChange)="pageChange($event)"
+              ></pagination-controls>
+            </div>
           </td>
         </tr>
       </tfoot>

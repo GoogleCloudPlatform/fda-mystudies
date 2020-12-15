@@ -88,7 +88,6 @@ public class ParticipantStudyEntity implements Serializable {
   private Boolean eligibility;
 
   @Column(name = "enrolled_time")
-  @CreationTimestamp
   private Timestamp enrolledDate;
 
   @Column(name = "data_sharing_status", length = SMALL_LENGTH)

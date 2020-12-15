@@ -434,17 +434,20 @@ $(document)
                       $('#password').attr("pattern", "");
                       $('#password').attr(
                           "data-minlength", "");
+                      var passwordLength = "";
+                      var i;
+                      for (i = 0; i < $('#password').val().length; i++) {
+                        passwordLength += "*";
+                      }
                       $('#password')
-                          .val(
-                              '********************************************************************');
+                          .val(passwordLength);
                       $('#cfnPassword')
                           .unbind()
                           .attr("type", "text")
                           .css(
                               '-webkit-text-security',
                               'disc')
-                          .val(
-                              '********************************************************************');
+                          .val(passwordLength);
                       $('#hideOldPass')
                           .val(
                               $('#oldPassword')
@@ -459,8 +462,7 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc')
-                          .val(
-                              '********************************************************************');
+                          .val(passwordLength);
                       $('#signUpForm').submit();
                     }
 
@@ -502,17 +504,20 @@ $(document)
                             "");
                         $('#password').attr(
                             "data-minlength", "");
+                        var passwordLength = "";
+                        var i;
+                        for (i = 0; i < $('#password').val().length; i++) {
+                          passwordLength += "*";
+                        }
                         $('#password')
-                            .val(
-                                '********************************************************************');
+                            .val(passwordLength);
                         $('#cfnPassword')
                             .unbind()
                             .attr("type", "text")
                             .css(
                                 '-webkit-text-security',
                                 'disc')
-                            .val(
-                                '********************************************************************');
+                            .val(passwordLength);
                         $('#hideOldPass')
                             .val(
                                 $(
@@ -528,8 +533,7 @@ $(document)
                             .css(
                                 '-webkit-text-security',
                                 'disc')
-                            .val(
-                                '********************************************************************');
+                            .val(passwordLength);
                         $('#signUpForm').submit();
                       }
                     }
@@ -567,17 +571,20 @@ $(document)
                       $('#password').attr("pattern", "");
                       $('#password').attr(
                           "data-minlength", "");
+                      var passwordLength = "";
+                      var i;
+                      for (i = 0; i < $('#password').val().length; i++) {
+                        passwordLength += "*";
+                      }
                       $('#password')
-                          .val(
-                              '********************************************************************');
+                          .val(passwordLength);
                       $('#cfnPassword')
                           .unbind()
                           .attr("type", "text")
                           .css(
                               '-webkit-text-security',
                               'disc')
-                          .val(
-                              '********************************************************************');
+                          .val(passwordLength);
                       $('#hideOldPass')
                           .val(
                               $('#oldPassword')
@@ -592,8 +599,7 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc')
-                          .val(
-                              '********************************************************************');
+                          .val(passwordLength);
                       $('#passwordResetForm').submit();
                     }
 
@@ -635,17 +641,20 @@ $(document)
                             "");
                         $('#password').attr(
                             "data-minlength", "");
+                        var passwordLength = "";
+                        var i;
+                        for (i = 0; i < $('#password').val().length; i++) {
+                        	passwordLength += "*";
+                        }
                         $('#password')
-                            .val(
-                                '********************************************************************');
+                            .val(passwordLength);
                         $('#cfnPassword')
                             .unbind()
                             .attr("type", "text")
                             .css(
                                 '-webkit-text-security',
                                 'disc')
-                            .val(
-                                '********************************************************************');
+                            .val(passwordLength);
                         $('#hideOldPass')
                             .val(
                                 $(
@@ -661,8 +670,7 @@ $(document)
                             .css(
                                 '-webkit-text-security',
                                 'disc')
-                            .val(
-                                '********************************************************************');
+                            .val(passwordLength);
                         $('#passwordResetForm')
                             .submit();
                       }
@@ -682,9 +690,13 @@ $(document)
                       var username = $('#email').val();
                       $('#email').val('');
                       var password = $('#password').val();
+                      var passwordLength = "";
+                      var i;
+                      for (i = 0; i < $('#password').val().length; i++) {
+                        passwordLength += "*";
+                      }
                       $('#password')
-                          .val(
-                              '********************************************************************');
+                          .val(passwordLength);
                       $('#password')
                           .attr("type", "text")
                           .css(
@@ -708,8 +720,7 @@ $(document)
                                 $('#email')
                                     .val('');
                                 $('#password')
-                                    .val(
-                                        '********************************************************************');
+                                    .val(text);
                                 $('#landingId')
                                     .submit();
                                 var a = document

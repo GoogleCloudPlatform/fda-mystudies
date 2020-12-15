@@ -20,8 +20,6 @@ public class AppConstants {
   public static final String EMAIL = "email";
   public static final String CUSTOM_STUDY_ID = "customId";
   public static final String STUDY_TYPE = "studyType";
-  public static final String ENROLLED = "Enrolled";
-  public static final String WITHDRAWN = "Withdrawn";
   public static final String SUCCESS = "SUCCESS";
 
   public static final String OPEN_STUDY = "OPEN";
