@@ -1287,7 +1287,7 @@ public class DbServiceSubscriber {
   }
 
   public RealmResults<Studies> getAllStudyIds(Realm realm) {
-    return realm.where(Studies.class).equalTo("status", "inProgress").findAll();
+    return realm.where(Studies.class).equalTo("status", "enrolled").findAll();
   }
 
   public StudyList getStudyTitle(String studyId, Realm realm) {

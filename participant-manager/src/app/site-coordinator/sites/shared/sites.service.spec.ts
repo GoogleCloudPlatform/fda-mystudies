@@ -46,7 +46,7 @@ describe('SitesService', () => {
     studiesServices = new StudiesService(entityServicespy);
 
     tick(40);
-    studiesServices.getStudiesWithSites().subscribe(
+    studiesServices.getStudiesWithSites(10, 0, '').subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');
