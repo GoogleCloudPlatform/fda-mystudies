@@ -6,6 +6,8 @@ import {StudyDetailsComponent} from './study-details/study-details.component';
 import {NgxDataTableModule} from 'angular-9-datatable';
 import {FormsModule} from '@angular/forms';
 import {UpdateTargetComponent} from './update-target/update-target.component';
+import {NgxPaginationModule} from 'ngx-pagination';
+
 import {SiteCoordinatorModule} from '../site-coordinator.module';
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import {SiteCoordinatorModule} from '../site-coordinator.module';
     StudiesRoutingModule,
     NgxDataTableModule,
     FormsModule,
+    NgxPaginationModule,
     SiteCoordinatorModule,
   ],
 })
