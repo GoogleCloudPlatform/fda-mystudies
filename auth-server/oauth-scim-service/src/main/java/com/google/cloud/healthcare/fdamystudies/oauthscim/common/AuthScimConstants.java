@@ -97,6 +97,8 @@ public final class AuthScimConstants {
 
   public static final String AUTO_LOGIN_VIEW_NAME = "autoLogin";
 
+  public static final String REDIRECT_ERROR_VIEW = "redirect:error";
+
   public static final String ERROR_VIEW_NAME = "error";
 
   public static final String LOGIN_VIEW_NAME = "login";
