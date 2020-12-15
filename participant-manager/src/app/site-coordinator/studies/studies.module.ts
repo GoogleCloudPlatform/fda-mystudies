@@ -8,6 +8,7 @@ import {FormsModule} from '@angular/forms';
 import {UpdateTargetComponent} from './update-target/update-target.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 
+import {SiteCoordinatorModule} from '../site-coordinator.module';
 @NgModule({
   declarations: [
     StudyListComponent,
@@ -20,6 +21,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
     NgxDataTableModule,
     FormsModule,
     NgxPaginationModule,
+    SiteCoordinatorModule,
   ],
 })
 export class StudiesModule {}
