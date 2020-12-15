@@ -42,10 +42,9 @@ public class FdahpStudyDesignerConstants {
   public static final String ACTION_PUBLISH = "publishId";
   // Action success Messages
   public static final String ACTION_PUBLISH_SUCCESS_MSG =
-      "The study has been published in the mobile app as an upcoming one.";
+      "The study has been published as an upcoming study.";
   public static final String ACTION_RESUME = "resumeId";
-  public static final String ACTION_RESUME_SUCCESS_MSG =
-      "The study has now been resumed and is no longer in a paused state.";
+  public static final String ACTION_RESUME_SUCCESS_MSG = "The study has been resumed.";
 
   public static final String ACTION_SUC_MSG = "actionSucMsg";
   public static final String ACTION_TYPE = "actionType";
@@ -56,10 +55,9 @@ public class FdahpStudyDesignerConstants {
   public static final String ACTION_TYPE_UPDATE = "update";
   public static final String ACTION_UNPUBLISH = "unpublishId";
   public static final String ACTION_UNPUBLISH_SUCCESS_MSG =
-      "The study has been unpublished from the mobile app.";
+      "The study has been removed from the list of upcoming studies.";
   public static final String ACTION_UPDATES = "updatesId";
-  public static final String ACTION_UPDATES_SUCCESS_MSG =
-      "Study updates have been published to the mobile app.";
+  public static final String ACTION_UPDATES_SUCCESS_MSG = "Study updates have been published.";
 
   public static final String ACTIVE = "active";
   public static final int ACTIVE_STATUS = 1;
