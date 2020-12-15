@@ -495,7 +495,7 @@ public class AppServiceImpl implements AppService {
       AppStudyDetails appStudyDetails = StudyMapper.toAppStudyDetailsList(appParticipantsInfo);
 
       String userIdStudyIdKey =
-          appParticipantsInfo.getUserDetailsId() + appParticipantsInfo.getStudyId();
+          appParticipantsInfo.getUserDetailsId() + "-" + appParticipantsInfo.getStudyId();
       if (sitesByUserIdStudyIdMap.containsKey(userIdStudyIdKey)) {
         appStudyDetails.getSites().addAll(sitesByUserIdStudyIdMap.get(userIdStudyIdKey));
       }

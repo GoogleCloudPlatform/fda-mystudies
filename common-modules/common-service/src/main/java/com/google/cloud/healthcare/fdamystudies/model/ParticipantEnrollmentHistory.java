@@ -25,10 +25,10 @@ public interface ParticipantEnrollmentHistory {
   Timestamp getCreated();
 
   default String getUserIdStudyIdKey() {
-    return getUserDetailsId() + getStudyId();
+    return getUserDetailsId() + "-" + getStudyId();
   }
 
   default String getUserIdStudyIdSiteIdKey() {
-    return getUserDetailsId() + getStudyId() + getSiteId();
+    return getUserDetailsId() + "-" + getStudyId() + "-" + getSiteId();
   }
 }
