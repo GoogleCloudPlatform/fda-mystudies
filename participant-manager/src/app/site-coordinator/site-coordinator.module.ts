@@ -10,12 +10,15 @@ import {ParticipantDetailsComponent} from './participant-details/participant-det
 import {SharedModule} from '../shared/shared.module';
 import {RoleGuard} from '../../app/service/roles.guard';
 import {LocationsGuard} from '../service/locations.guard';
+import {LoadmoreSpinnerComponent} from './loadmore-spinner/loadmore-spinner.component';
+
 @NgModule({
   declarations: [
     SiteCoordinatorComponent,
     MobileMenuComponent,
     DashboardHeaderComponent,
     ParticipantDetailsComponent,
+    LoadmoreSpinnerComponent,
   ],
   imports: [
     CommonModule,
@@ -25,5 +28,6 @@ import {LocationsGuard} from '../service/locations.guard';
     SharedModule,
   ],
   providers: [RoleGuard, LocationsGuard],
+  exports: [LoadmoreSpinnerComponent],
 })
 export class SiteCoordinatorModule {}
