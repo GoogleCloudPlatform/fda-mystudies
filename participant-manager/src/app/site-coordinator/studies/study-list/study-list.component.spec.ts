@@ -85,6 +85,7 @@ describe('StudyListComponent', () => {
         expect(studies.studies.length).toEqual(4);
       });
     }));
+
     it('should display all studies', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       fixture.detectChanges();
