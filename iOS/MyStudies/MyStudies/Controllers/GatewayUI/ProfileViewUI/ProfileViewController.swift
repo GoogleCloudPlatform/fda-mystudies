@@ -76,6 +76,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   lazy var passcodeStateIsEditing: Bool = false
   lazy var isProfileEdited = false
 
+  /// A Boolean indicates the user changing the App password.
+  private var isChangePasswordEditing = false
+
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
   }
@@ -107,21 +110,11 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     super.viewWillAppear(animated)
     user = User.currentUser
 
-    if isPasscodeViewPresented == false {
+    if !isPasscodeViewPresented {
       UserServices().getUserProfile(self as NMWebServiceDelegate)
     }
     self.setNavigationBarItem()
     self.tableViewProfile?.reloadData()
-  }
-
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-
-    if isProfileEdited,
-      User.currentUser.userType == UserType.loggedInUser {
-      isProfileEdited = false
-      UserServices().updateUserProfile(self)
-    }
   }
 
   func leftDidClose() {
@@ -139,7 +132,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       passcodeType: .type4Digit
     )
     passcodeStateIsEditing = true
-
+    isChangePasswordEditing = true
     self.navigationController?.present(passcodeViewController, animated: false, completion: {})
   }
 
@@ -453,48 +446,36 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   @objc func toggleValueChanged(_ sender: UISwitch) {
 
-    isProfileEdited = true
-
-    let toggle: UISwitch? = sender as UISwitch
+    let toggle = sender
 
     if user.settings != nil {
 
       switch ToggelSwitchTags(rawValue: sender.tag)! as ToggelSwitchTags {
       case .usePasscode:
-        user.settings?.passcode = toggle?.isOn
-
-        if toggle?.isOn == true {
-
-          if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
-            ORKPasscodeViewController.removePasscodeFromKeychain()
-          }
-        }
-
         self.checkPasscode()
 
       case .useTouchId:
-        user.settings?.touchId = toggle?.isOn
-
+        user.settings?.touchId = toggle.isOn
+        UserServices().updateUserProfile(self)
       case .receivePush:
-        user.settings?.remoteNotifications = toggle?.isOn
+        user.settings?.remoteNotifications = toggle.isOn
+        UserServices().updateUserProfile(self)
       case .receiveStudyActivityReminders:
-        user.settings?.localNotifications = toggle?.isOn
-
+        user.settings?.localNotifications = toggle.isOn
         if (user.settings?.localNotifications)! {
-          self.addProgressIndicator()
           self.perform(
             #selector(self.registerLocalNotification),
             with: self,
             afterDelay: 1.0
           )
         } else {
-          self.addProgressIndicator()
           self.perform(
             #selector(self.cancelAllLocalNotifications),
             with: self,
             afterDelay: 1.0
           )
         }
+        UserServices().updateUserProfile(self)
       }
       self.editBarButtonItem?.tintColor = UIColor.black
     }
@@ -502,12 +483,10 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   @objc func cancelAllLocalNotifications() {
     LocalNotification.cancelAllLocalNotification()
-    self.removeProgressIndicator()
   }
 
   @objc func registerLocalNotification() {
     LocalNotification.refreshAllLocalNotification()
-    self.removeProgressIndicator()
   }
 
   ///  Button action for Change password button.
@@ -572,7 +551,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
             withText: "",
             delegate: self
           )
+        passcodeStateIsEditing = true
 
+        passcodeViewController.modalPresentationStyle = .fullScreen
         self.navigationController?.present(
           passcodeViewController,
           animated: false,
@@ -780,9 +761,7 @@ extension ProfileViewController: UITextFieldDelegate {
 extension ProfileViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    if requestName as String != RegistrationMethods.updateUserProfile.description {
-      self.addProgressIndicator()
-    }
+    self.addProgressIndicator()
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
@@ -836,7 +815,20 @@ extension ProfileViewController: ORKPasscodeDelegate {
 
   func passcodeViewControllerDidFinish(withSuccess viewController: UIViewController) {
 
-    UserServices().updateUserProfile(self)
+    defer {
+      if let settings = user.settings,
+        !isChangePasswordEditing
+      {
+        settings.passcode = false
+        if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
+          ORKPasscodeViewController.removePasscodeFromKeychain()
+        }
+        DispatchQueue.main.async {
+          UserServices().updateUserProfile(self)
+        }
+      }
+      isChangePasswordEditing = false
+    }
     self.isPasscodeViewPresented = true
 
     // Recent Changes
@@ -887,18 +879,18 @@ extension ProfileViewController: ORKTaskViewControllerDelegate {
       // Following will be executed only when passcode is setted for first time
 
       if taskViewController.task?.identifier != "ChangePassCodeTask" {
-        UserServices().updateUserProfile(self)
+        user.settings?.passcode = true
         self.isPasscodeViewPresented = true
+        DispatchQueue.main.async {
+          UserServices().updateUserProfile(self)
+        }
       }
       let ud = UserDefaults.standard
       ud.set(false, forKey: kPasscodeIsPending)
       ud.synchronize()
 
     case .failed: break
-    case .discarded:
-      if taskViewController.task?.identifier != "ChangePassCodeTask" {
-        user.settings?.passcode = user.settings?.passcode == true ? false : true
-      }
+    case .discarded: break
     case .saved: break
 
     @unknown default:
