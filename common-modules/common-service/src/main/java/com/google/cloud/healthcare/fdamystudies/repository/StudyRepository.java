@@ -84,7 +84,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
       value =
           "SELECT study.id AS studyId, COUNT(psi.site_id) AS COUNT "
               + "FROM study_info study, participant_study_info psi "
-              + "WHERE study.id=psi.study_info_id AND psi.status='inProgress' "
+              + "WHERE study.id=psi.study_info_id AND psi.status='enrolled' "
               + "GROUP BY study.id ",
       nativeQuery = true)
   public List<StudyCount> findEnrolledCountByStudyId();
@@ -138,10 +138,13 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "WHERE si.id=sp.study_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id =:userId AND sp.study_id NOT IN ( "
               + "SELECT st.study_id "
               + "FROM study_permissions st "
-              + "WHERE st.ur_admin_user_id =:userId)) rstAlias GROUP BY created_time,study_id,custom_id,name,type,logo_image_url,edit,study_permission "
-              + "ORDER BY created_time DESC ",
+              + "WHERE st.ur_admin_user_id =:userId)) rstAlias "
+              + "WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% "
+              + "GROUP BY created_time,study_id,custom_id,name,type,logo_image_url,edit,study_permission "
+              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
-  public List<StudyInfo> getStudyDetails(@Param("userId") String userId);
+  public List<StudyInfo> getStudyDetails(
+      @Param("userId") String userId, Integer limit, Integer offset, String searchTerm);
 
   @Query(
       value =
@@ -164,7 +167,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.study_info_id, COUNT(ps.study_info_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='enrolled' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.study_info_id) AS enrolled ON invites.study_id=enrolled.study_info_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCountForStudy> getInvitedEnrolledCountForOpenStudyForStudies(
@@ -181,7 +184,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.study_info_id, COUNT(ps.study_info_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='enrolled' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.study_info_id) AS enrolled ON invites.study_info_id=enrolled.study_info_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCountForStudy> getEnrolledInvitedCountByUserId(
@@ -213,4 +216,11 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<String> findStudyIds(Integer limit, Integer offset, String userId);
+
+  @Query(
+      value =
+          "SELECT * FROM study_info WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+      nativeQuery = true)
+  public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
+  
 }

@@ -253,6 +253,12 @@ public enum ErrorCode {
 
   USER_ID_REQUIRED(400, "EC_0054", Constants.BAD_REQUEST, "User Id is required"),
 
+  LOCATION_ID_UNIQUE(
+      400,
+      "EC_0058",
+      Constants.BAD_REQUEST,
+      "Location ID must be unique across the location directory"),
+
   EMAIL_ID_OR_PASSWORD_NULL(
       400, "EC_0128", Constants.BAD_REQUEST, "EmailId or password is blank in request"),
 
@@ -328,9 +334,6 @@ public enum ErrorCode {
       "This view displays app-wise enrollment if you manage multiple studies."),
 
   USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists"),
-  
-  UNSUPPORTED_SORTBY_VALUE(
-      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sort by value"),
 
   UNSUPPORTED_SORT_DIRECTION_VALUE(
       400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
@@ -340,6 +343,9 @@ public enum ErrorCode {
       "EC_0075",
       "Internal Server Error",
       "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
+
+  UNSUPPORTED_SORTBY_VALUE(
+      400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortBy value"),
 
   FEEDBACK_ERROR_MESSAGE(
       500,
@@ -354,7 +360,13 @@ public enum ErrorCode {
       "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time."),
 
   TEMP_PASSWORD_INCORRECT(
-      400, "EC_0078", Constants.BAD_REQUEST, "The temporary password entered is incorrect.");
+      400, "EC_0078", Constants.BAD_REQUEST, "The temporary password entered is incorrect."),
+
+  ACTIVE_STUDY_ENROLLED_PARTICIPANT(
+      400,
+      "EC_0079",
+      Constants.BAD_REQUEST,
+      "This site belongs to an active study that has one or more actively enrolled participants, and cannot be decommissioned.");
 
   private final int status;
   private final String code;

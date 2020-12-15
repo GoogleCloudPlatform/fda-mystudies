@@ -7,6 +7,8 @@ import {ManageApps, App} from '../shared/app.model';
 import {Permission} from 'src/app/shared/permission-enums';
 import {SearchService} from 'src/app/shared/search.service';
 import {ToastrService} from 'ngx-toastr';
+import {SearchParameterService} from 'src/app/service/search-parameter.service';
+const limit = 10;
 @Component({
   selector: 'app-app-list',
   templateUrl: './app-list.component.html',
@@ -25,42 +27,47 @@ export class AppListComponent implements OnInit {
     '=1': 'One Study',
     'other': '# Studies',
   };
+  loadMoreEnabled = true;
+
+  searchValue = '';
 
   constructor(
     private readonly appService: AppsService,
     private readonly sharedService: SearchService,
     private readonly toastr: ToastrService,
+    private readonly searchParameter: SearchParameterService,
   ) {}
 
   ngOnInit(): void {
+    this.searchParameter.setSearchParameter('');
+    this.searchParameter.searchParam$.subscribe((updatedParameter) => {
+      this.manageAppsBackup = {} as ManageApps;
+      this.searchValue = updatedParameter;
+      this.getApps();
+    });
     this.sharedService.updateSearchPlaceHolder('Search by App ID or Name');
-    this.getApps();
   }
-
   getApps(): void {
     this.manageApp$ = combineLatest(
-      this.appService.getUserApps(),
+      this.appService.getUserApps(limit, 0, this.searchValue),
       this.query$,
     ).pipe(
-      map(([manageApps, query]) => {
+      map(([manageApps]) => {
         this.manageAppsBackup = {...manageApps};
+
         if (!manageApps.superAdmin && manageApps.studyPermissionCount < 2) {
           this.toastr.error(
             'This view displays app-wise enrollment if you manage multiple studies.',
           );
         }
-        this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
-          (app: App) =>
-            app.name?.toLowerCase().includes(query.toLowerCase()) ||
-            app.customId?.toLowerCase().includes(query.toLowerCase()),
-        );
+        this.loadMoreEnabled =
+          (this.manageAppsBackup.apps.length % limit === 0 ? true : false) &&
+          manageApps.apps.length > 0;
         return this.manageAppsBackup;
       }),
     );
   }
-  search(query: string): void {
-    this.query$.next(query.trim());
-  }
+
   progressBarColor(app: App): string {
     if (app.enrollmentPercentage && app.enrollmentPercentage > 70) {
       return 'green__text__sm';
@@ -80,6 +87,30 @@ export class AppListComponent implements OnInit {
   checkViewPermission(permission: number): boolean {
     return (
       permission === Permission.View || permission === Permission.ViewAndEdit
+    );
+  }
+
+  loadMoreSites() {
+    const offset = this.manageAppsBackup.apps.length;
+    this.manageApp$ = combineLatest(
+      this.appService.getUserApps(limit, offset, this.searchValue),
+      this.query$,
+    ).pipe(
+      map(([manageApps]) => {
+        const apps = [];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        apps.push(...this.manageAppsBackup.apps);
+        apps.push(...manageApps.apps);
+        this.manageAppsBackup.apps = apps;
+        if (!manageApps.superAdmin && manageApps.studyPermissionCount < 2) {
+          this.toastr.error(
+            'This view displays app-wise enrollment if you manage multiple studies.',
+          );
+        }
+        this.loadMoreEnabled =
+          this.manageAppsBackup.apps.length % limit === 0 ? true : false;
+        return this.manageAppsBackup;
+      }),
     );
   }
 }

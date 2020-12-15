@@ -109,7 +109,7 @@
       <div class="ed-user-layout row">
         <!-- Edit User Layout-->
 
-        <div class="blue-md-f text-uppercase mb-md">Basic Information</div>
+        <div class="blue-md-f text-uppercase mb-md">Study Information</div>
         <div class="col-md-12 p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
