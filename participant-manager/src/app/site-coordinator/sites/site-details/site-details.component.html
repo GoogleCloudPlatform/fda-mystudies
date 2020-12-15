@@ -578,8 +578,10 @@
                     <div class="form-group mb-none">
                       <div
                         *ngIf="
-                          (participant.enrollmentStatus | uppercase) ==
-                          'YET TO ENROLL'
+                          participant.enrollmentStatus ===
+                            enrollmentStatus.YetToEnroll ||
+                          participant.enrollmentStatus ===
+                            enrollmentStatus.NotEligile
                         "
                       >
                         <input
@@ -610,8 +612,10 @@
                       </div>
                       <div
                         *ngIf="
-                          (participant.enrollmentStatus | uppercase) !=
-                          'YET TO ENROLL'
+                          participant.enrollmentStatus !==
+                            enrollmentStatus.YetToEnroll &&
+                          participant.enrollmentStatus !==
+                            enrollmentStatus.NotEligile
                         "
                       >
                         <span
@@ -668,9 +672,12 @@
                 <td *ngIf="activeTab != onBoardingStatus.New">
                   <div
                     [ngClass]="{
-                      'txt__green': participant.enrollmentStatus == 'Enrolled',
+                      'txt__green':
+                        participant.enrollmentStatus ==
+                        enrollmentStatus.Enrolled,
                       'txt__light-gray':
-                        participant.enrollmentStatus == 'Withdrawn'
+                        participant.enrollmentStatus ==
+                        enrollmentStatus.Withdrawn
                     }"
                   >
                     {{ participant.enrollmentStatus }}

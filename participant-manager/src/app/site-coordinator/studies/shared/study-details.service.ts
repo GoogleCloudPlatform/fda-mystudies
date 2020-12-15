@@ -22,7 +22,7 @@ export class StudyDetailsService {
         environment.participantManagerDatastoreUrl
       }/studies/${encodeURIComponent(studyId)}/participants`,
       {
-        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
+        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToEnroll']},
       },
     );
   }

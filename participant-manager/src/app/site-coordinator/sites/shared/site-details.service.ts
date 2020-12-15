@@ -36,7 +36,6 @@ export class SiteDetailsService {
         {
           params: {
             onboardingStatus: fetchingOptions,
-            excludeEnrollmentStatus: ['notEligible', 'yetToJoin'],
           },
         },
       );
@@ -45,9 +44,6 @@ export class SiteDetailsService {
         `${
           environment.participantManagerDatastoreUrl
         }/sites/${encodeURIComponent(siteId)}/participants`,
-        {
-          params: {excludeEnrollmentStatus: ['notEligible', 'yetToJoin']},
-        },
       );
     }
   }

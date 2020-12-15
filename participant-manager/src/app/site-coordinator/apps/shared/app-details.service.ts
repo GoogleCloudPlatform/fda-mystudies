@@ -15,9 +15,6 @@ export class AppDetailsService {
       `${environment.participantManagerDatastoreUrl}/apps/${encodeURIComponent(
         appId,
       )}/participants`,
-      {
-        params: {excludeParticipantStudyStatus: ['notEligible', 'yetToJoin']},
-      },
     );
   }
 }

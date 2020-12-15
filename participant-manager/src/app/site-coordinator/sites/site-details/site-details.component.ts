@@ -42,6 +42,7 @@ export class SiteDetailsComponent
   newlyImportedParticipants: Participant[] = [];
   selectedAll = false;
   studyStatus = Status;
+  enrollmentStatus = EnrollmentStatus;
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -233,7 +234,10 @@ export class SiteDetailsComponent
       for (const participants of this.siteDetailsBackup
         .participantRegistryDetail.registryParticipants) {
         if (this.activeTab === OnboardingStatus.Invited) {
-          if (participants.enrollmentStatus === EnrollmentStatus.YetToEnroll) {
+          if (
+            participants.enrollmentStatus === EnrollmentStatus.YetToEnroll ||
+            participants.enrollmentStatus === EnrollmentStatus.NotEligile
+          ) {
             participants.newlyCreatedUser = this.selectedAll;
             this.userIds.push(participants.id);
           }
