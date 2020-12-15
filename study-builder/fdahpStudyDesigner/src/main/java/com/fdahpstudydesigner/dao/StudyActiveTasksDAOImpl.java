@@ -131,6 +131,9 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               .setParameter("customStudyId", customStudyId)
               .setParameter("activeTaskId", activeTaskBo.getId())
               .executeUpdate();
+
+          values.put("activetask_id", activeTaskBo.getId().toString());
+          eventEnum = STUDY_ACTIVE_TASK_DELETED;
         } else {
           // hard delete active task before study launch
           session
@@ -235,7 +238,9 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                                   + "(select a.id from active_task a where a.custom_study_id=:customStudyId"
                                   + " and a.active=1 and a.is_live=1)")
                           .setParameter("customStudyId", customStudyId)
-                          .setParameter("identifierNameStat", activeTaskAtrributeValuesBo.getIdentifierNameStat())
+                          .setParameter(
+                              "identifierNameStat",
+                              activeTaskAtrributeValuesBo.getIdentifierNameStat())
                           .uniqueResult();
               if ((statTitleCount != null) && (statTitleCount.intValue() > 0)) {
                 activeTaskAtrributeValuesBo.setIsIdentifierNameStatDuplicate(
@@ -351,10 +356,12 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       // Android platform
       Query query = null;
       if (StringUtils.isNotEmpty(platformType) && platformType.contains("A")) {
-        query = session.createQuery(
-            "from ActiveTaskListBo a where a.taskName not in(:towerOfHanoi, :spatialSpanMemory)")
-            .setParameter("towerOfHanoi", FdahpStudyDesignerConstants.TOWER_OF_HANOI)
-            .setParameter("spatialSpanMemory", FdahpStudyDesignerConstants.SPATIAL_SPAN_MEMORY);
+        query =
+            session
+                .createQuery(
+                    "from ActiveTaskListBo a where a.taskName not in(:towerOfHanoi, :spatialSpanMemory)")
+                .setParameter("towerOfHanoi", FdahpStudyDesignerConstants.TOWER_OF_HANOI)
+                .setParameter("spatialSpanMemory", FdahpStudyDesignerConstants.SPATIAL_SPAN_MEMORY);
       } else {
         query = session.createQuery("from ActiveTaskListBo");
       }
