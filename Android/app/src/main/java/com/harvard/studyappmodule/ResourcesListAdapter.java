@@ -88,23 +88,22 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
   public void onBindViewHolder(final Holder holder, final int position) {
     final int i = holder.getAdapterPosition();
     try {
-      Comparator<Resource> comparator =
-              new Comparator<Resource>() {
-                @Override
-                public int compare(final Resource o1, final Resource o2) {
-                  if (o1.getTitle().contains(context.getResources().getString(R.string.leave_study))
-                          && !o2.getTitle()
-                          .contains(context.getResources().getString(R.string.leave_study))) {
-                    return 1;
-                  } else if (!o1.getTitle()
-                          .contains(context.getResources().getString(R.string.leave_study))
-                          && o2.getTitle()
-                          .contains(context.getResources().getString(R.string.leave_study))) {
-                    return -1;
-                  }
-                  return 0;
-                }
-              };
+      Comparator<Resource> comparator = new Comparator<Resource>() {
+        @Override
+        public int compare(final Resource o1, final Resource o2) {
+          if (o1.getTitle().contains(context.getResources().getString(R.string.leave_study))
+                  && !o2.getTitle()
+                  .contains(context.getResources().getString(R.string.leave_study))) {
+            return 1;
+          } else if (!o1.getTitle()
+                  .contains(context.getResources().getString(R.string.leave_study))
+                  && o2.getTitle()
+                  .contains(context.getResources().getString(R.string.leave_study))) {
+            return -1;
+          }
+          return 0;
+        }
+      };
       Collections.sort(items, comparator);
       holder.resourcesTitle.setText(items.get(i).getTitle());
 
