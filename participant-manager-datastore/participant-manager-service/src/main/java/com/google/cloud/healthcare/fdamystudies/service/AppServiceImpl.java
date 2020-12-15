@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AppMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
@@ -392,7 +393,11 @@ public class AppServiceImpl implements AppService {
       String appId,
       String adminId,
       AuditLogEventRequest auditRequest,
-      String[] excludeParticipantStudyStatus) {
+      String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getAppParticipants(appId, adminId)");
 
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(adminId);
@@ -413,20 +418,14 @@ public class AppServiceImpl implements AppService {
               .getApp();
     }
 
-    List<AppParticipantsInfo> appParticipantsInfoList = null;
-    if (ArrayUtils.isEmpty(excludeParticipantStudyStatus)) {
-      appParticipantsInfoList = appRepository.findUserDetailsByAppId(app.getId());
-    } else {
-      appParticipantsInfoList =
-          appRepository.findUserDetailsByAppIdAndStudyStatus(
-              app.getId(), excludeParticipantStudyStatus);
-    }
     List<String> userIds =
-        appParticipantsInfoList
-            .stream()
-            .distinct()
-            .map(AppParticipantsInfo::getUserDetailsId)
-            .collect(Collectors.toList());
+        appRepository.findUserDetailIds(
+            app.getId(),
+            UserStatus.DEACTIVATED.getValue(),
+            limit,
+            offset,
+            orderByCondition,
+            StringUtils.defaultString(searchTerm));
 
     if (CollectionUtils.isEmpty(userIds)) {
       AppParticipantsResponse appParticipantsResponse =
@@ -434,6 +433,16 @@ public class AppServiceImpl implements AppService {
 
       logger.exit(String.format("No participants found for appId=%s", appId));
       return appParticipantsResponse;
+    }
+
+    List<AppParticipantsInfo> appParticipantsInfoList = null;
+    if (ArrayUtils.isEmpty(excludeParticipantStudyStatus)) {
+      appParticipantsInfoList =
+          appRepository.findUserDetailsByAppId(app.getId(), userIds, orderByCondition);
+    } else {
+      appParticipantsInfoList =
+          appRepository.findUserDetailsByAppIdAndStudyStatus(
+              app.getId(), excludeParticipantStudyStatus, userIds, orderByCondition);
     }
 
     Map<String, ParticipantDetail> participantsMap = new LinkedHashMap<>();
@@ -491,8 +500,13 @@ public class AppServiceImpl implements AppService {
     List<ParticipantDetail> participants =
         participantsMap.values().stream().collect(Collectors.toList());
 
+    Long participantCount =
+        appRepository.countParticipantByAppIdAndSearchTerm(
+            app.getId(), UserStatus.DEACTIVATED.getValue(), StringUtils.defaultString(searchTerm));
+
     AppParticipantsResponse appParticipantsResponse =
         prepareAppParticipantResponse(appId, adminId, auditRequest, app, participants);
+    appParticipantsResponse.setTotalParticipantCount(participantCount);
 
     logger.exit(String.format("%d participant found for appId=%s", participantsMap.size(), appId));
     return appParticipantsResponse;
