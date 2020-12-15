@@ -125,14 +125,14 @@ class NotificationViewController: UIViewController {
     }
 
   }
-  
+
   /// This method checks if the user has joined the study already.
   /// - Parameter study: Instance of `Study`to check.
   private func isUserJoined(study: Study) -> Bool {
 
     let currentStudy = study
     let participatedStatus = (currentStudy.userParticipateState.status)
-    if participatedStatus == .inProgress {
+    if participatedStatus == .enrolled {
       return true
     }
     return false

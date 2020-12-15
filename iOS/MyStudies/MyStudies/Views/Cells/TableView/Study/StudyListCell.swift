@@ -157,9 +157,9 @@ class StudyListCell: UITableViewCell {
       self.progressBarAdherence?.progress = Float(userStudyStatus.adherence) / 100
 
       switch userStudyStatus.status {
-      case .inProgress:
+      case .enrolled:
         studyUserStatusIcon?.image = #imageLiteral(resourceName: "in_progress_icn")
-      case .yetToJoin:
+      case .yetToEnroll:
         studyUserStatusIcon?.image = #imageLiteral(resourceName: "yet_to_join_icn")
       case .notEligible:
         studyUserStatusIcon?.image = #imageLiteral(resourceName: "not_eligible_icn")
@@ -174,7 +174,7 @@ class StudyListCell: UITableViewCell {
       buttonBookmark?.isSelected = userStudyStatus.bookmarked
     } else {
       study.userParticipateState = UserStudyStatus()
-      labelStudyUserStatus?.text = UserStudyStatus.StudyStatus.yetToJoin.description
+      labelStudyUserStatus?.text = UserStudyStatus.StudyStatus.yetToEnroll.description
       studyUserStatusIcon?.image = #imageLiteral(resourceName: "yet_to_join_icn")
       buttonBookmark?.isSelected = false
     }

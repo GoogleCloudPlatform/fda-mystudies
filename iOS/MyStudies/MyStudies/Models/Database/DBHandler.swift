@@ -169,7 +169,7 @@ class DBHandler: NSObject {
             dbStudy?.bookmarked = studyStatus.bookmarked
           }
           if dbStudy?.participatedStatus
-            == UserStudyStatus.StudyStatus.inProgress
+            == UserStudyStatus.StudyStatus.enrolled
             .rawValue
           {
             dbStudy?.updatedVersion = study.version

@@ -261,7 +261,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         let standaloneStudyId = Utilities.standaloneStudyId()
         joinedStudies =
           studies?.filter({
-            ($0.userParticipateState.status == .inProgress
+            ($0.userParticipateState.status == .enrolled
               || $0.userParticipateState
                 .status
                 == .completed)
@@ -270,7 +270,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       } else {
         joinedStudies =
           studies?.filter({
-            $0.userParticipateState.status == .inProgress
+            $0.userParticipateState.status == .enrolled
               || $0.userParticipateState
                 .status
                 == .completed
