@@ -12,17 +12,26 @@ import lombok.Getter;
 
 @Getter
 public enum EnrollmentStatus {
-  IN_PROGRESS("inProgress"),
-  ENROLLED("Enrolled"),
-  YET_TO_JOIN("yetToJoin"),
-  WITHDRAWN("Withdrawn"),
-  NOT_ELIGIBLE("notEligible");
-
-  private String code;
+  ENROLLED("enrolled", "Enrolled"),
+  YET_TO_ENROLL("yetToEnroll", "Yet to enroll"),
+  WITHDRAWN("withdrawn", "Withdrawn"),
+  NOT_ELIGIBLE("notEligible", "Not eligible");
 
   private String status;
 
-  private EnrollmentStatus(String status) {
+  private String displayValue;
+
+  private EnrollmentStatus(String status, String displayValue) {
     this.status = status;
+    this.displayValue = displayValue;
+  }
+
+  public static String getDisplayValue(String value) {
+    for (EnrollmentStatus enrollment : EnrollmentStatus.values()) {
+      if (enrollment.getStatus().equals(value)) {
+        return enrollment.displayValue;
+      }
+    }
+    return null;
   }
 }

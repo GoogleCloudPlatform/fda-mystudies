@@ -20,9 +20,21 @@
         <div class="cards1 m-none">
           <table
             class="table table-striped custom__table"
-            [mfData]="manageLocations.locations"
+            [mfData]="
+              manageLocations.locations
+                | paginate
+                  : {
+                      itemsPerPage: limit,
+                      currentPage: currentPage,
+                      totalItems: manageLocations.totalLocationsCount
+                    }
+            "
             #mf="mfDataTable"
-            [mfRowsOnPage]="10"
+            [mfRowsOnPage]="limit"
+            [(mfSortBy)]="sortBy"
+            [(mfSortOrder)]="sortOrder"
+            (mfSortOrderChange)="onSortOrder($event)"
+            (mfSortByChange)="onSortBy($event)"
           >
             <thead class="custom__thead">
               <tr>
@@ -30,17 +42,19 @@
                   Sort By:
                 </span>
                 <th>
-                  <mfDefaultSorter by="customId">Location ID</mfDefaultSorter>
-                </th>
-                <th>
-                  <mfDefaultSorter by="name">Location Name</mfDefaultSorter>
-                </th>
-                <th>
-                  <mfDefaultSorter by="studiesCount">
-                    Associated Studies
+                  <mfDefaultSorter by="_locationId">
+                    Location ID
                   </mfDefaultSorter>
                 </th>
-                <th>Status</th>
+                <th>
+                  <mfDefaultSorter by="_locationName">
+                    Location Name
+                  </mfDefaultSorter>
+                </th>
+                <th>Associated Studies</th>
+                <th>
+                  <mfDefaultSorter by="_status">Status</mfDefaultSorter>
+                </th>
               </tr>
             </thead>
             <tbody class="custom__tbody">
@@ -82,14 +96,20 @@
                 </td>
               </tr>
               <tr *ngIf="manageLocations.locations.length === 0">
-                <td colspan="3" class="text-right">No records found</td>
+                <td colspan="3" class="text-center">No records found</td>
               </tr>
             </tbody>
 
             <tfoot class="custom__tfoot">
               <tr>
                 <td colspan="4">
-                  <mfBootstrapPaginator></mfBootstrapPaginator>
+                  <div class="text-center">
+                    <pagination-controls
+                      pagination-template
+                      #api="paginationApi"
+                      (pageChange)="pageChange($event)"
+                    ></pagination-controls>
+                  </div>
                 </td>
               </tr>
             </tfoot>

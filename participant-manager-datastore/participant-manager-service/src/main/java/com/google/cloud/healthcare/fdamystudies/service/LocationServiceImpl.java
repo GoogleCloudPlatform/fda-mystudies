@@ -90,7 +90,7 @@ public class LocationServiceImpl implements LocationService {
         locationRepository.findByCustomId(location.getCustomId());
 
     if (optLocation.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.CUSTOM_ID_EXISTS);
+      throw new ErrorCodeException(ErrorCode.LOCATION_ID_UNIQUE);
     }
 
     Optional<LocationEntity> optLocationEntity = locationRepository.findByName(location.getName());

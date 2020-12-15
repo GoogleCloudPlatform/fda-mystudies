@@ -114,6 +114,9 @@
             </div>
           </div>
         </div>
+        <div *ngIf="loadMoreEnabled" (mouseover)="loadMoreSites()">
+          <app-loadmore-spinner></app-loadmore-spinner>
+        </div>
         <div *ngIf="studyList.studies.length === 0">No records found</div>
       </div>
     </ng-container>

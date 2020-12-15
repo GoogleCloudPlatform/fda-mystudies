@@ -5,6 +5,7 @@ import {SuccessCode} from 'src/app/shared/success.codes.enum';
 export interface ManageLocations {
   locations: Location[];
   locationPermission: Permission;
+  totalLocationsCount: number;
 }
 export interface Location extends ApiResponse {
   locationId: string;

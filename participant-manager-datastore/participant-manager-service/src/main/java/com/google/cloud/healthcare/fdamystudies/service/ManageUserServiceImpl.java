@@ -78,9 +78,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -742,28 +739,29 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Override
   public GetUsersResponse getUsers(
-      String superAdminUserId, Integer page, Integer limit, AuditLogEventRequest auditRequest) {
+      String superAdminUserId,
+      Integer limit,
+      Integer offset,
+      AuditLogEventRequest auditRequest,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getUsers()");
     validateSignedInUser(superAdminUserId);
 
     List<User> users = new ArrayList<>();
-    List<UserRegAdminEntity> adminList = null;
-    if (page != null && limit != null) {
-      Page<UserRegAdminEntity> adminPage =
-          userAdminRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
-      adminList = (List<UserRegAdminEntity>) CollectionUtils.emptyIfNull(adminPage.getContent());
-    } else {
-      adminList = userAdminRepository.findAll();
-    }
+    List<UserRegAdminEntity> adminList =
+        userAdminRepository.findByLimitAndOffset(
+            limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
 
     adminList
         .stream()
         .map(admin -> users.add(UserMapper.prepareUserInfo(admin)))
         .collect(Collectors.toList());
 
+    Long usersCount = userAdminRepository.countBySearchTerm(StringUtils.defaultString(searchTerm));
     participantManagerHelper.logEvent(USER_REGISTRY_VIEWED, auditRequest);
     logger.exit(String.format("total users=%d", adminList.size()));
-    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, userAdminRepository.count());
+    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, usersCount);
   }
 
   @Override

@@ -66,7 +66,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   @Transactional(readOnly = true)
-  public StudyResponse getStudies(String userId) {
+  public StudyResponse getStudies(String userId, Integer limit, Integer offset, String searchTerm) {
     logger.entry("getStudies(String userId)");
 
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
@@ -75,13 +75,16 @@ public class StudyServiceImpl implements StudyService {
     }
 
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
-      StudyResponse studyResponse = getStudiesForSuperAdmin(optUserRegAdminEntity.get());
+      StudyResponse studyResponse =
+          getStudiesForSuperAdmin(optUserRegAdminEntity.get(), limit, offset, searchTerm);
       logger.exit(
           String.format("total studies for superadmin=%d", studyResponse.getStudies().size()));
       return studyResponse;
     }
 
-    List<StudyInfo> studyDetails = studyRepository.getStudyDetails(userId);
+    List<StudyInfo> studyDetails =
+        studyRepository.getStudyDetails(
+            userId, limit, offset, StringUtils.defaultString(searchTerm));
 
     if (CollectionUtils.isEmpty(studyDetails)) {
       throw new ErrorCodeException(ErrorCode.NO_STUDIES_FOUND);
@@ -112,7 +115,8 @@ public class StudyServiceImpl implements StudyService {
         studyDetails, sitesCountMap, enrolledInvitedCountMap, optUserRegAdminEntity.get());
   }
 
-  private StudyResponse getStudiesForSuperAdmin(UserRegAdminEntity userRegAdminEntity) {
+  private StudyResponse getStudiesForSuperAdmin(
+      UserRegAdminEntity userRegAdminEntity, Integer limit, Integer offset, String searchTerm) {
 
     List<StudyCount> studyInvitedCountList = studyRepository.findInvitedCountByStudyId();
     Map<String, StudyCount> studyInvitedCountMap =
@@ -130,7 +134,8 @@ public class StudyServiceImpl implements StudyService {
     Map<String, SiteCount> sitesPerStudyMap =
         sitesList.stream().collect(Collectors.toMap(SiteCount::getStudyId, Function.identity()));
 
-    List<StudyEntity> studies = studyRepository.findAll();
+    List<StudyEntity> studies =
+        studyRepository.findAll(limit, offset, StringUtils.defaultString(searchTerm));
     List<StudyDetails> studyDetailsList = new ArrayList<>();
     for (StudyEntity study : studies) {
       if (sitesPerStudyMap.containsKey(study.getId())) {
@@ -240,8 +245,10 @@ public class StudyServiceImpl implements StudyService {
       String studyId,
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
-      Integer page,
-      Integer limit) {
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
 
@@ -267,7 +274,15 @@ public class StudyServiceImpl implements StudyService {
         ParticipantMapper.fromStudyAppDetails(studyAppDetails, user);
 
     return prepareRegistryParticipantResponse(
-        participantRegistryDetail, userId, studyId, excludeParticipantStudyStatus, auditRequest);
+        participantRegistryDetail,
+        userId,
+        studyId,
+        excludeParticipantStudyStatus,
+        limit,
+        offset,
+        orderByCondition,
+        searchTerm,
+        auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
@@ -275,12 +290,17 @@ public class StudyServiceImpl implements StudyService {
       String userId,
       String studyId,
       String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
     List<StudyParticipantDetails> studyParticipantDetails =
-        studyRepository.getStudyParticipantDetails(studyId);
+        studyRepository.getStudyParticipantDetails(
+            studyId, limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
       if (ArrayUtils.contains(
           excludeParticipantStudyStatus, participantDetails.getEnrolledStatus())) {
@@ -290,13 +310,15 @@ public class StudyServiceImpl implements StudyService {
           ParticipantMapper.fromParticipantStudy(participantDetails);
       registryParticipants.add(participantDetail);
     }
-    participantRegistryDetail.setRegistryParticipants(registryParticipants);
 
+    participantRegistryDetail.setRegistryParticipants(registryParticipants);
+    Long participantCount =
+        studyRepository.countParticipantsByStudyIdAndSearchTerm(
+            studyId, StringUtils.defaultString(searchTerm));
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
-    Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(studyId);
-    participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
+    participantRegistryResponse.setTotalParticipantCount(participantCount);
 
     auditRequest.setUserId(userId);
     auditRequest.setStudyId(studyId);

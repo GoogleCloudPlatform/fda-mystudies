@@ -56,7 +56,7 @@
         <ul class="nav nav-tabs review-tabs">
           <li class="shareData active">
             <a data-toggle="tab"
-               href="#menu1">Data-sharing Permission
+               href="#menu1">Data-sharing permission
             </a>
           </li>
           <li class="consentReview">

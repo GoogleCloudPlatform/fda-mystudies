@@ -77,8 +77,14 @@
                 </div>
               </div>
               <div class='col-md-3'>
-                <div class="gray-xs-f mb-xs">Correct Answer
+                <div class="gray-xs-f mb-xs">Is this a 'correct' answer?
                   <span class="requiredStar">*</span>
+                  <span>
+                    <span
+                      data-toggle="tooltip" data-placement="top"
+                      title="Choose Yes if the answer option qualifies as one of the 'correct' answers to the question."
+                      class="filled-tooltip"></span>
+                  </span> 
                 </div>
               </div>
 
@@ -219,7 +225,7 @@
       <div class="clearfix"></div>
 
       <div>
-        <div class="gray-xs-f mb-sm">Choose structure of the correct answer
+      <div class="gray-xs-f mb-sm">Consider the question to be correctly answered if the participant responds with
           <span
               class="requiredStar">*
           </span>
@@ -228,12 +234,12 @@
           <span class="radio radio-info radio-inline p-45">
             <input type="radio" id="inlineRadio1" value="false"
                    name="structureOfCorrectAns" ${!comprehensionQuestionBo.structureOfCorrectAns ? 'checked' : ''}>
-            <label for="inlineRadio1">Any of the ones marked as Correct Answers</label>
+             <label for="inlineRadio1">any of the answer options marked 'correct' above</label>
           </span>
           <span class="radio radio-inline p-45">
             <input type="radio" id="inlineRadio2" value="true"
                    name="structureOfCorrectAns" ${empty comprehensionQuestionBo.structureOfCorrectAns || comprehensionQuestionBo.structureOfCorrectAns ? 'checked' : ''}>
-            <label for="inlineRadio2">All the ones marked as Correct Answers</label>
+            <label for="inlineRadio2">all the answer options marked 'correct' above</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
         </div>

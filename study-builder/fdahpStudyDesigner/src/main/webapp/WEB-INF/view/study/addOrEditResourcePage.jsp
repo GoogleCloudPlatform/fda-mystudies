@@ -290,7 +290,7 @@
             available&nbsp;<small
                 class="viewAct">(250 characters max)
             </small>
-            <span class="requiredStar">*</span>
+         
           </div>
 
           <div class="form-group">
@@ -298,7 +298,7 @@
                       name="resourceText"
                       data-error="Please enter plain text of up to 250 characters max."
                       maxlength="250"
-                      required>${resourceBO.resourceText}</textarea>
+                      >${resourceBO.resourceText}</textarea>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
