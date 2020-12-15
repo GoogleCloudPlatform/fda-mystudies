@@ -231,32 +231,30 @@
                 </span>
               </td>
 
-              <table
-                class="display__contents"
-                *ngFor="
-                  let enrollmentDetails of participant.participantDetails
-                    .enrollments
-                "
-              >
+              <table class="display__contents">
                 <td class="font14">
                   <span
                     [ngClass]="{
                       'txt__green':
-                        enrollmentDetails.enrollmentStatus ==
+                        participant.participantDetails.enrollmentStatus ==
                         enrollmentStatus.Enrolled,
                       'txt__light-gray':
-                        enrollmentDetails.enrollmentStatus ==
+                        participant.participantDetails.enrollmentStatus ==
                         enrollmentStatus.Withdrawn
                     }"
                   >
-                    {{ enrollmentDetails.enrollmentStatus }}
+                    {{ participant.participantDetails.enrollmentStatus }}
                   </span>
                 </td>
                 <td class="mb__mt-sm inactive__text font14">
-                  <span>{{ enrollmentDetails.enrollmentDate }}</span>
+                  <span>
+                    {{ participant.participantDetails.enrollmentDate }}
+                  </span>
                 </td>
                 <td class="mb__mt-sm inactive__text font14">
-                  <span>{{ enrollmentDetails.withdrawalDate }}</span>
+                  <span>
+                    {{ participant.participantDetails.withdrawalDate }}
+                  </span>
                 </td>
               </table>
 
@@ -312,15 +310,32 @@
             </tr>
           </thead>
           <tbody class="custom__tbody">
-            <tr>
-              <td>12/30/2019</td>
-              <td>11/23/2020</td>
-              <td>withdrawn</td>
-            </tr>
-            <tr>
-              <td>12/30/2019</td>
-              <td>11/23/2020</td>
-              <td>withdrawn</td>
+            <tr
+              *ngFor="
+                let enrollmentDetails of participant.participantDetails
+                  .enrollments
+              "
+            >
+              <td>
+                <span>{{ enrollmentDetails.enrollmentDate }}</span>
+              </td>
+              <td>
+                <span>{{ enrollmentDetails.withdrawalDate }}</span>
+              </td>
+              <td>
+                <span
+                  [ngClass]="{
+                    'txt__green':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Enrolled,
+                    'txt__light-gray':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Withdrawn
+                  }"
+                >
+                  {{ enrollmentDetails.enrollmentStatus }}
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>
