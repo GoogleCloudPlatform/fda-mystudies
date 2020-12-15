@@ -738,47 +738,58 @@ public class SurveyActivitiesListAdapter
           ArrayList<String> status) {
     SimpleDateFormat simpleDateFormatForOtherFreq = AppController.getDateFormatForOneTime();
     String date = "";
-    if (items.get(position).isStudyLifeTime() && items.get(position).isLaunchStudy()) {
-      date = "";
-    } else if (!items.get(position).isStudyLifeTime()) {
-      if (!items.get(position).isLaunchStudy()) {
-        if (items.get(position).getSchedulingType().equalsIgnoreCase("AnchorDate")
-                && items.get(position).getAnchorDate() != null
-                && items.get(position).getAnchorDate().getSourceType() != null
-                && items.get(position).getAnchorDate().getSourceType().equalsIgnoreCase("EnrollmentDate")
-                && items.get(position).getAnchorDate().getStart() == null
-                && items.get(position).getAnchorDate().getEnd() != null
-                && joiningDate.after(startDate)) {
-          Calendar joiningCalendar = Calendar.getInstance();
-          joiningCalendar.setTime(joiningDate);
-          Calendar startCalendar = Calendar.getInstance();
-          startCalendar.setTime(startDate);
-          startCalendar.set(Calendar.DAY_OF_MONTH, joiningCalendar.get(Calendar.DAY_OF_MONTH));
-          startCalendar.set(Calendar.MONTH, joiningCalendar.get(Calendar.MONTH));
-          startCalendar.set(Calendar.YEAR, joiningCalendar.get(Calendar.YEAR));
+    if (endDate != null) {
+      if (items.get(position).isStudyLifeTime() && items.get(position).isLaunchStudy()) {
+        date = "";
+      } else if (!items.get(position).isStudyLifeTime()) {
+        if (!items.get(position).isLaunchStudy()) {
+          if (items.get(position).getSchedulingType().equalsIgnoreCase("AnchorDate")
+                  && items.get(position).getAnchorDate() != null
+                  && items.get(position).getAnchorDate().getSourceType() != null
+                  && items.get(position).getAnchorDate().getSourceType().equalsIgnoreCase("EnrollmentDate")
+                  && items.get(position).getAnchorDate().getStart() == null
+                  && items.get(position).getAnchorDate().getEnd() != null
+                  && joiningDate.after(startDate)) {
+            Calendar joiningCalendar = Calendar.getInstance();
+            joiningCalendar.setTime(joiningDate);
+            Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTime(startDate);
+            startCalendar.set(Calendar.DAY_OF_MONTH, joiningCalendar.get(Calendar.DAY_OF_MONTH));
+            startCalendar.set(Calendar.MONTH, joiningCalendar.get(Calendar.MONTH));
+            startCalendar.set(Calendar.YEAR, joiningCalendar.get(Calendar.YEAR));
 
-          date =
-                  simpleDateFormatForOtherFreq.format(startCalendar.getTime())
-                          + " - "
-                          + simpleDateFormatForOtherFreq.format(endDate);
+            date =
+                    simpleDateFormatForOtherFreq.format(startCalendar.getTime())
+                            + " - "
+                            + simpleDateFormatForOtherFreq.format(endDate);
+          } else {
+
+            date =
+                    simpleDateFormatForOtherFreq.format(startDate)
+                            + " - "
+                            + simpleDateFormatForOtherFreq.format(endDate);
+          }
         } else {
-
-          date =
-                  simpleDateFormatForOtherFreq.format(startDate)
-                          + " - "
-                          + simpleDateFormatForOtherFreq.format(endDate);
+          if (status.get(position).equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)) {
+            date =
+                    context.getResources().getString(R.string.ends)
+                            + " : "
+                            + simpleDateFormatForOtherFreq.format(endDate);
+          } else {
+            date =
+                    context.getResources().getString(R.string.ended)
+                            + " : "
+                            + simpleDateFormatForOtherFreq.format(endDate);
+          }
         }
       } else {
-        if (status.get(position).equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)) {
+        if (status.get(position).equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
           date =
-                  context.getResources().getString(R.string.ends)
+                  context.getResources().getString(R.string.starts)
                           + " : "
-                          + simpleDateFormatForOtherFreq.format(endDate);
+                          + simpleDateFormatForOtherFreq.format(startDate);
         } else {
-          date =
-                  context.getResources().getString(R.string.ended)
-                          + " : "
-                          + simpleDateFormatForOtherFreq.format(endDate);
+          date = "";
         }
       }
     } else {
