@@ -24,14 +24,12 @@ export class StudyDetailsService {
     sortBy: string,
     sortOrder: string,
   ): Observable<StudyDetails> {
-    console.log(offset);
     return this.http.get<StudyDetails>(
       `${
         environment.participantManagerDatastoreUrl
       }/studies/${encodeURIComponent(studyId)}/participants`,
       {
         params: {
-          excludeParticipantStudyStatus: ['notEligible', 'yetToEnroll'],
           offset: offset.toString(),
           limit: limit.toString(),
           searchTerm: searchTerm,
