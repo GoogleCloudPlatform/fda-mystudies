@@ -17,6 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
@@ -119,7 +120,7 @@ public class StudyStateServiceImpl implements StudyStateService {
 
                   if (studiesBean
                       .getStatus()
-                      .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+                      .equalsIgnoreCase(EnrollmentStatus.ENROLLED.getStatus())) {
                     participantStudies.setEnrolledDate(Timestamp.from(Instant.now()));
                   }
                 }
@@ -150,14 +151,11 @@ public class StudyStateServiceImpl implements StudyStateService {
           }
           if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
             participantStudyEntity.setStatus(studiesBean.getStatus());
-            if (studiesBean
-                .getStatus()
-                .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+            if (studiesBean.getStatus().equalsIgnoreCase(EnrollmentStatus.ENROLLED.getStatus())) {
               participantStudyEntity.setEnrolledDate(Timestamp.from(Instant.now()));
             }
           } else {
-            participantStudyEntity.setStatus(
-                MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
+            participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
           }
           if (studiesBean.getBookmarked() != null) {
             participantStudyEntity.setBookmark(studiesBean.getBookmarked());

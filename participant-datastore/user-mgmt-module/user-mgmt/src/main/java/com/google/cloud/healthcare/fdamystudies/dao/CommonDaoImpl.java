@@ -223,7 +223,7 @@ public class CommonDaoImpl implements CommonDao {
           session
               .createSQLQuery(
                   "SELECT sp.study_info_id, GROUP_CONCAT(a.device_token) as device_token,GROUP_CONCAT(a.device_type) as device_type FROM participant_study_info sp, auth_info a"
-                      + " where sp.user_details_id = a.user_details_id and sp.status not in('yetToJoin','withdrawn','notEligible') and a.remote_notification_flag=1"
+                      + " where sp.user_details_id = a.user_details_id and sp.status not in('yetToEnroll','withdrawn','notEligible') and a.remote_notification_flag=1"
                       + " and sp.study_info_id in (:studyIds)  and (a.device_token is not NULL and a.device_token != '' and a.device_type is not"
                       + " NULL and a.device_type != '') GROUP BY sp.study_info_id")
               .setParameterList("studyIds", studyInfoIds)

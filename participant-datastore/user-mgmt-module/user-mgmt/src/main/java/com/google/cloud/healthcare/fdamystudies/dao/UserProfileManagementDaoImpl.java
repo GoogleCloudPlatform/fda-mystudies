@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -282,7 +283,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       criteriaParticipantStudiesUpdate =
           criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
       participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudyEntity.class);
-      criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
+      criteriaParticipantStudiesUpdate.set("status", EnrollmentStatus.WITHDRAWN.getStatus());
       criteriaParticipantStudiesUpdate.set("participantId", null);
       criteriaParticipantStudiesUpdate.set(
           "withdrawalDate", new Timestamp(Instant.now().toEpochMilli()));

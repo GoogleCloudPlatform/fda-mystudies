@@ -6,7 +6,7 @@ import {StudyDetailsComponent} from './study-details/study-details.component';
 import {NgxDataTableModule} from 'angular-9-datatable';
 import {FormsModule} from '@angular/forms';
 import {UpdateTargetComponent} from './update-target/update-target.component';
-
+import {SiteCoordinatorModule} from '../site-coordinator.module';
 @NgModule({
   declarations: [
     StudyListComponent,
@@ -18,6 +18,7 @@ import {UpdateTargetComponent} from './update-target/update-target.component';
     StudiesRoutingModule,
     NgxDataTableModule,
     FormsModule,
+    SiteCoordinatorModule,
   ],
 })
 export class StudiesModule {}
