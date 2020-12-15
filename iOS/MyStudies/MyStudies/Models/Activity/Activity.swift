@@ -160,6 +160,12 @@ class Activity {
 
   var schedulingType: ActivityScheduleType = .regular
 
+  /// A boolean indicates the activity start type.
+  var isLaunchWithStudy = false
+
+  /// A boolean indicates the activity end type.
+  var isStudyLifeTime = false
+
   /// Default Initializer
   init() {
 
@@ -202,6 +208,10 @@ class Activity {
 
     // Need to reCheck with actual dictionary when passed
     if Utilities.isValidObject(someObject: infoDict as AnyObject?) {
+
+      isLaunchWithStudy = infoDict["isLaunchStudy"] as? Bool ?? false
+
+      isStudyLifeTime = infoDict["isStudyLifeTime"] as? Bool ?? false
 
       if Utilities.isValidValue(someObject: infoDict[kActivityId] as AnyObject) {
         self.actvityId = (infoDict[kActivityId] as? String)!
