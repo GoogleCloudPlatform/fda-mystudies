@@ -730,5 +730,5 @@ class ActivityStepResult {
     default: break
     }
   }
-  
+
 }
