@@ -93,14 +93,26 @@
       <div class="cards1 m-none">
         <table
           class="table table-striped custom__table"
-          [mfData]="studyDetails.participantRegistryDetail.registryParticipants"
+          [mfData]="
+            studyDetails.participantRegistryDetail.registryParticipants
+              | paginate
+                : {
+                    itemsPerPage: limit,
+                    currentPage: currentPage,
+                    totalItems: studyDetails.totalParticipantCount
+                  }
+          "
           #mf="mfDataTable"
-          [mfRowsOnPage]="10"
+          [mfRowsOnPage]="limit"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
+          (mfSortOrderChange)="onSortOrder($event)"
+          (mfSortByChange)="onSortBy($event)"
         >
           <thead class="custom__thead">
             <tr>
               <th>
-                <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
+                <mfDefaultSorter by="_email">Participant Email</mfDefaultSorter>
               </th>
               <th
                 *ngIf="
@@ -108,7 +120,7 @@
                   studyTypes.Close
                 "
               >
-                <mfDefaultSorter by="locationName">Site</mfDefaultSorter>
+                <mfDefaultSorter by="_locationName">Site</mfDefaultSorter>
               </th>
               <th
                 *ngIf="
@@ -116,17 +128,17 @@
                   studyTypes.Close
                 "
               >
-                <mfDefaultSorter by="onboardingStatus">
+                <mfDefaultSorter by="_onboardingStatus">
                   Onboarding Status
                 </mfDefaultSorter>
               </th>
               <th>
-                <mfDefaultSorter by="enrollmentStatus">
+                <mfDefaultSorter by="_enrollmentStatus">
                   Enrollment Status
                 </mfDefaultSorter>
               </th>
               <th>
-                <mfDefaultSorter by="enrollmentDate">
+                <mfDefaultSorter by="_enrollmentDate">
                   Enrollment Date
                 </mfDefaultSorter>
               </th>
@@ -189,7 +201,13 @@
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="5">
-                <mfBootstrapPaginator></mfBootstrapPaginator>
+                <div class="text-center">
+                  <pagination-controls
+                    pagination-template
+                    #api="paginationApi"
+                    (pageChange)="pageChange($event)"
+                  ></pagination-controls>
+                </div>
               </td>
             </tr>
           </tfoot>
