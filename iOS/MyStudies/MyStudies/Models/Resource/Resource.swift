@@ -38,9 +38,12 @@ let kResourceTitle = "title"
 let kResourceId = "resourcesId"
 let kResourceAudience = "audience"
 
+protocol ResourceRow {
+  var title: String { get }
+}
 /// Resource model stores the resource of any Study or Gateway. Each resource has a unique id and have file and anchor data
 
-class Resource {
+class Resource: ResourceRow {
   var level: ResourceLevel?
   var key: String?
   var type: String?
@@ -53,7 +56,7 @@ class Resource {
   var endDate: Date?
   var anchorDateStartDays: Int?
   var anchorDateEndDays: Int?
-  var title: String?
+  var title: String = ""
   var povAvailable: Bool = false
 
   /// AnchorDate Values
@@ -82,7 +85,7 @@ class Resource {
   init(dbResource: DBResources) {
 
     self.resourcesId = dbResource.resourceId
-    self.title = dbResource.title
+    self.title = dbResource.title ?? ""
     self.anchorDateEndDays = dbResource.anchorDateEndDays
     self.anchorDateStartDays = dbResource.anchorDateStartDays
     self.audience = Audience(rawValue: dbResource.audience!)
@@ -196,10 +199,7 @@ class Resource {
       } else {
         self.povAvailable = false
       }
-
-      if Utilities.isValidValue(someObject: (detail[kResourceTitle]) as AnyObject) {
-        self.title = detail[kResourceTitle] as? String
-      }
+      self.title = detail[kResourceTitle] as? String ?? ""
       self.file = File()
       self.file?.setFileForStudy(dict: detail as NSDictionary)
     }
@@ -305,10 +305,7 @@ class Resource {
       }
 
       self.calculateAvailability()
-
-      if Utilities.isValidValue(someObject: (dict[kResourceTitle]) as AnyObject) {
-        self.title = dict[kResourceTitle] as? String
-      }
+      self.title = dict[kResourceTitle] as? String ?? ""
     }
   }
 
