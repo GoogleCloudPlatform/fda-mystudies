@@ -138,10 +138,13 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "WHERE si.id=sp.study_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id =:userId AND sp.study_id NOT IN ( "
               + "SELECT st.study_id "
               + "FROM study_permissions st "
-              + "WHERE st.ur_admin_user_id =:userId)) rstAlias GROUP BY created_time,study_id,custom_id,name,type,logo_image_url,edit,study_permission "
-              + "ORDER BY created_time DESC ",
+              + "WHERE st.ur_admin_user_id =:userId)) rstAlias "
+              + "WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% "
+              + "GROUP BY created_time,study_id,custom_id,name,type,logo_image_url,edit,study_permission "
+              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
-  public List<StudyInfo> getStudyDetails(@Param("userId") String userId);
+  public List<StudyInfo> getStudyDetails(
+      @Param("userId") String userId, Integer limit, Integer offset, String searchTerm);
 
   @Query(
       value =
@@ -213,4 +216,11 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<String> findStudyIds(Integer limit, Integer offset, String userId);
+
+  @Query(
+      value =
+          "SELECT * FROM study_info WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+      nativeQuery = true)
+  public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
+  
 }

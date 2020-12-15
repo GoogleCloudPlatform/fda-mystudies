@@ -85,7 +85,7 @@
                                                 <c:if
                                                     test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>> <label
-            for="inlineRadio3">Eligibility Test</label>
+            for="inlineRadio3">Eligibility</label>
         </span>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -133,7 +133,7 @@
               <th id="">
                 <span class="marL10">#</span>
               </th>
-              <th id="">QA</th>
+              <th id="">Questions</th>
               <th id="">Actions</th>
             </tr>
           </thead>
