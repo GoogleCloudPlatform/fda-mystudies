@@ -92,6 +92,8 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: base_url
+            - name: PARTICIPANT_MANAGER_URL
+              value: "$(PARTICIPANT_MANAGER_BASE_URL)/participant-manager"
             - name: GCP_BUCKET_NAME
               valueFrom:
                 secretKeyRef:

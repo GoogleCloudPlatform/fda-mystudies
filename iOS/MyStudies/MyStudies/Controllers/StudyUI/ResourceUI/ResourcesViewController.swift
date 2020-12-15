@@ -24,7 +24,8 @@ let kConsentPdfKey = "consent"
 
 let kUnwindToStudyListIdentifier = "unwindeToStudyListResourcesIdentifier"
 
-private enum TableRow {
+private enum TableRow: ResourceRow {
+
   case about, consent, leave
 
   var title: String {
@@ -68,8 +69,7 @@ class ResourcesViewController: UIViewController {
   var aboutTheStudy: String = TableRow.about.title
   var consentPDF: String = TableRow.consent.title
 
-  private var staticTableRows: [TableRow] = [.about, .consent, .leave]
-  private var resources: [Resource] = []
+  private var tableRows: [ResourceRow] = []
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
@@ -84,6 +84,7 @@ class ResourcesViewController: UIViewController {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }
+    tableRows = getStaticResources()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -127,6 +128,12 @@ class ResourcesViewController: UIViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+  }
+
+  // MARK: - Utils
+
+  private func getStaticResources() -> [ResourceRow] {
+    return [TableRow.about, TableRow.consent, TableRow.leave]
   }
 
   func checkForResourceUpdate() {
@@ -196,7 +203,8 @@ class ResourcesViewController: UIViewController {
 
   func handleResourcesReponse() {
 
-    resources = []
+    tableRows.removeAll()
+    var resources: [ResourceRow] = []
 
     let todayDate = Date()
 
@@ -230,7 +238,8 @@ class ResourcesViewController: UIViewController {
       }
 
     }
-
+    tableRows = [TableRow.about, TableRow.consent] + resources
+    tableRows.append(TableRow.leave)
     tableView?.isHidden = false
     tableView?.reloadData()
 
@@ -568,7 +577,7 @@ class ResourcesViewController: UIViewController {
 extension ResourcesViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return resources.count + staticTableRows.count
+    return tableRows.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -576,12 +585,12 @@ extension ResourcesViewController: UITableViewDataSource {
     if let cell = tableView.dequeueReusableCell(withIdentifier: kResourcesTableViewCell, for: indexPath)
       as? ResourcesTableViewCell
     {
-      let rowType = staticTableRows[safe: indexPath.row]
+      let rowType = tableRows[indexPath.row] as? TableRow
       if let row = rowType {
         cell.populateCellData(data: row.title, subTitle: row.subTitle)
-      } else if let resource = self.resources[safe: indexPath.row - staticTableRows.count] {
+      } else if let resource = self.tableRows[indexPath.row] as? Resource {
         // Update UI with resource data
-        cell.populateCellData(data: resource.title ?? "")
+        cell.populateCellData(data: resource.title)
         cell.animateAvailability(for: resource)
       }
       return cell
@@ -619,7 +628,7 @@ extension ResourcesViewController: UITableViewDelegate {
 
     guard let currentStudy = Study.currentStudy else { return }
 
-    let rowType = staticTableRows[safe: indexPath.row]
+    let rowType = tableRows[safe: indexPath.row] as? TableRow
 
     if let row = rowType {
       switch row {
@@ -638,7 +647,7 @@ extension ResourcesViewController: UITableViewDelegate {
       case .leave:
         self.handleLeaveStudy()
       }
-    } else if let resource = self.resources[safe: indexPath.row - staticTableRows.count] {
+    } else if let resource = self.tableRows[indexPath.row] as? Resource {
       resourceLink = resource.file?.getFileLink()
       fileType = resource.file?.getMIMEType()
       self.performSegue(withIdentifier: "ResourceDetailViewSegueIdentifier", sender: resource)
@@ -744,12 +753,10 @@ extension ResourcesViewController: NMWebServiceDelegate {
     } else {
 
       if requestName as String == WCPMethods.resources.method.methodName {
-
         self.removeProgressIndicator()
-        resources = []
+        tableRows = getStaticResources()
         self.tableView?.isHidden = false
         self.tableView?.reloadData()
-
       } else if requestName as String == EnrollmentMethods.withdrawfromstudy.description {
         self.removeProgressIndicator()
         UIUtilities.showAlertWithTitleAndMessage(
