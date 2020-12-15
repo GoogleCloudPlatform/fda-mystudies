@@ -119,10 +119,21 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id "
               + "LEFT JOIN sites si ON si.id=prs.site_id "
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
-              + "WHERE prs.study_info_id=:studyId "
-              + "ORDER BY prs.created_time, prs.email DESC",
+              + "WHERE prs.study_info_id=:studyId  AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) "
+              + "ORDER BY CASE :orderByCondition WHEN 'email_asc' THEN prs.email END ASC, "
+              + "         CASE :orderByCondition WHEN 'locationName_asc' THEN loc.name END ASC, "
+              + "         CASE :orderByCondition WHEN 'onboardingStatus_asc' THEN prs.onboarding_status END ASC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentStatus_asc' THEN psi.status END ASC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_asc' THEN psi.enrolled_time END ASC, "
+              + "         CASE :orderByCondition WHEN 'email_desc' THEN prs.email END DESC, "
+              + "         CASE :orderByCondition WHEN 'locationName_desc' THEN loc.name END DESC, "
+              + "         CASE :orderByCondition WHEN 'onboardingStatus_desc' THEN prs.onboarding_status END DESC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentStatus_desc' THEN psi.status END DESC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_time END DESC "
+              + "LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
-  public List<StudyParticipantDetails> getStudyParticipantDetails(String studyId);
+  public List<StudyParticipantDetails> getStudyParticipantDetails(
+      String studyId, Integer limit, Integer offset, String orderByCondition, String searchTerm);
 
   @Query(
       value =
@@ -219,8 +230,18 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
+          "SELECT  COUNT(prs.id) "
+              + "FROM participant_registry_site prs "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id "
+              + "LEFT JOIN sites si ON si.id=prs.site_id "
+              + "LEFT JOIN locations loc ON loc.id=si.location_id "
+              + "WHERE prs.study_info_id=:studyId  AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) ",
+      nativeQuery = true)
+  public Long countParticipantsByStudyIdAndSearchTerm(String studyId, String searchTerm);
+
+  @Query(
+      value =
           "SELECT * FROM study_info WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
-  
 }
