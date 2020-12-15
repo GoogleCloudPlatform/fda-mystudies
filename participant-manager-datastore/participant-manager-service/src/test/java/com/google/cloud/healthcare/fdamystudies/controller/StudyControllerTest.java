@@ -430,6 +430,8 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .queryParam(
+                    "excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -463,6 +465,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .param("excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -517,6 +520,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .param("excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -571,6 +575,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .param("excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -611,6 +616,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .param("excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
