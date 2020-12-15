@@ -50,6 +50,7 @@ enum LeftMenu: Int {
   case profileReachOut
   case reachOutSignIn
   case signup
+  case signOut
 }
 
 protocol LeftMenuProtocol: class {
@@ -66,7 +67,6 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
   @IBOutlet weak var labelPoweredBy: UILabel!
   @IBOutlet weak var tableHeaderView: UIView!
   @IBOutlet weak var tableFooterView: UIView!
-  @IBOutlet weak var buttonSignOut: UIButton?
 
   // MARK: - Properties
   lazy var menus: [[String: Any]] = [
@@ -264,7 +264,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         "menuTitle": "Home",
         "iconName": "home_menu1-1",
         "menuType": LeftMenu.studyList,
-      ],
+      ]
     ]
 
     if !Utilities.isStandaloneApp() {
@@ -293,8 +293,12 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
             "menuType": LeftMenu.reachOutSignIn,
           ])
       }
-
-      self.buttonSignOut?.isHidden = false
+      menus.append(
+        [
+          "menuTitle": "Sign Out",
+          "iconName": "ic_signout_menu",
+          "menuType": LeftMenu.signOut,
+        ])
     } else {
       if shouldAllowToGiveFeedback {
         menus.append(
@@ -319,7 +323,6 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           "subTitle": "Sign up",
           "menuType": LeftMenu.signup,
         ])
-      self.buttonSignOut?.isHidden = true
     }
 
     // Setting proportion height of the header and footer view
@@ -342,7 +345,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     self.tableView.reloadData()
 
   }
-  
+
   /// Used to change the view controller when clicked from the left menu.
   /// - Parameter menu:  Accepts the data from enum LeftMenu
   func changeViewController(_ menu: LeftMenu) {
@@ -353,7 +356,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     case .studyList:
 
       if isStandalone {
-        if Study.currentStudy?.userParticipateState.status == .inProgress {
+        if Study.currentStudy?.userParticipateState.status == .enrolled {
           self.slideMenuController()?.changeMainViewController(
             self.studyTabBarController,
             close: true
@@ -415,7 +418,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         self.signUpViewController,
         close: true
       )
-
+    case .signOut:
+      buttonActionSignOut()
     }
   }
 
@@ -423,7 +427,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   /// Signout button clicked.
   /// - Parameter sender: Instance of UIButton.
-  @IBAction func buttonActionSignOut(_ sender: UIButton) {
+  private func buttonActionSignOut() {
 
     DBHandler.isDataAvailableToSync { (available) in
       if available {
@@ -519,7 +523,7 @@ extension LeftMenuViewController: UITableViewDelegate {
 
     if let menu = LeftMenu(rawValue: indexPath.row) {
       switch menu {
-      case .studyList, .resources, .profileReachOut, .reachOutSignIn, .signup:
+      case .studyList, .resources, .profileReachOut, .reachOutSignIn, .signup, .signOut:
         return 70.0
       }
     }
