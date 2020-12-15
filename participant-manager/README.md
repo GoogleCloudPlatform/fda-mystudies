@@ -32,7 +32,7 @@ To deploy the [`Participant manager`](/participant-manager/) manually:
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/)
 1. Deploy the `Participant manager` container to the VM
     -    Update the [`environment.prod.ts`](src/environments/environment.prod.ts) file with the values for your deployment (if you change this file you will need to create a new Docker image)
-    -    Create the Docker image using `sudo docker build -t participant-manager-image .` from the `participant-manager/` directory (you may need to [install Docker](https://docs.docker.com/engine/install/debian/))
+    -    Create the Docker image using `sudo docker build --build-arg basehref=/ -t participant-manager-image .` from the `participant-manager/` directory (you may need to [install Docker](https://docs.docker.com/engine/install/debian/))
     -    Run the container on the VM using `sudo docker run --detach -p 80:80 --name participant-manager participant-manager-image`
 1. Visit `http://<CLOUD_VM_INSTANCE_IP>/participant-manager` in your browser to test if the application is running - you should be redirected to the login page if deployed successfully (you can install a [browser and remote desktop connection](https://cloud.google.com/solutions/chrome-desktop-remote-on-compute-engine) if your VM is restricted to IPs within its VPC network, alternatively use `curl -i http://0.0.0.0/` to confirm a `200 OK` response)
 1. Login as the super admin user with the username and password that you created with the `create_superadmin.sh` script that you ran during `Participant datastore` deployment
