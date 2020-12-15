@@ -127,7 +127,7 @@ class EligibilityBuilder {
         stepsArray?.append(eligibilityStep!)
 
         // creating Token Validated Step
-        let eligibilityValidationStep = CustomInstructionStep(
+        let eligibilityValidationStep = EligibilityInstructionStep(
           identifier: kEligibilityValidateScreen
         )
         eligibilityValidationStep.text = kEligibilityValidationDescriptionText
@@ -141,7 +141,7 @@ class EligibilityBuilder {
       } else if self.type == EligibilityStepType.test {  // Eligibility Test
         // add the Instruction step for eligibility Test
 
-        let eligibilityTestInstructionStep = CustomInstructionStep(
+        let eligibilityTestInstructionStep = EligibilityInstructionStep(
           identifier: kEligibilityTestInstructionStep
         )
         eligibilityTestInstructionStep.text = kEligibilityInstructionTestText
@@ -180,7 +180,7 @@ class EligibilityBuilder {
         stepsArray?.append(eligibilityStep!)
 
         // add the Instruction step for eligibility Test
-        let eligibilityTestInstructionStep = CustomInstructionStep(
+        let eligibilityTestInstructionStep = EligibilityInstructionStep(
           identifier: kEligibilityTestInstructionStep
         )
         eligibilityTestInstructionStep.text = kEligibilityInstructionTestText
@@ -212,7 +212,7 @@ class EligibilityBuilder {
         if self.type == EligibilityStepType.test || self.type == .both {
 
           // creating Eligibility Completion Step
-          let eligibilityCompletionStep = CustomInstructionStep(
+          let eligibilityCompletionStep = EligibilityInstructionStep(
             identifier: kEligibilityVerifiedScreen
           )
           eligibilityCompletionStep.text = kEligibilityCompletionTestDescriptionText
@@ -232,7 +232,7 @@ class EligibilityBuilder {
   }
 }
 
-class CustomInstructionStep: ORKInstructionStep {
+class EligibilityInstructionStep: ORKInstructionStep {
 
   /// Returns an bool value
   func showsProgress() -> Bool {

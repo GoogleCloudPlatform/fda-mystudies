@@ -1517,14 +1517,12 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
 
-    if let result = taskViewController.result.stepResult(forStepIdentifier: step.identifier) {
-      self.managedResult[step.identifier] = result
-    }
-
     if let step = step as? QuestionStep,
       step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false
     {
-
+      if let result = taskViewController.result.stepResult(forStepIdentifier: step.identifier) {
+        self.managedResult[step.identifier] = result
+      }
       var textChoiceQuestionController: TextChoiceQuestionController
 
       var result = taskViewController.result.result(forIdentifier: step.identifier)
@@ -1542,6 +1540,10 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
       }
 
       return textChoiceQuestionController
+    }
+
+    if let step = step as? CustomInstructionStep {
+      return CustomInstructionStepViewController(step: step)
     }
 
     let storyboard = UIStoryboard.init(name: "FetalKickCounter", bundle: nil)
