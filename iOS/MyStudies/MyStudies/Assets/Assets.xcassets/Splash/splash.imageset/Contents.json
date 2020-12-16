@@ -6,12 +6,12 @@
     },
     {
       "idiom" : "iphone",
-      "filename" : "splash@2x.png",
+      "filename" : "splash@2x.jpg",
       "scale" : "2x"
     },
     {
       "idiom" : "iphone",
-      "filename" : "splash@3x.png",
+      "filename" : "splash@3x.jpg",
       "scale" : "3x"
     }
   ],

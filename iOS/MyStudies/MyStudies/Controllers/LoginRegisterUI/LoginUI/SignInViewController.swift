@@ -124,12 +124,6 @@ class SignInViewController: UIViewController {
   private func setupNavigation() {
     self.title = NSLocalizedString(kSignInTitleText, comment: "")
     guard viewLoadFrom != .signUp else { return }  // No need to show info icon for auto login with registration.
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem(
-      image: UIImage(named: "info"),
-      style: .done,
-      target: self,
-      action: #selector(self.buttonInfoAction(_:))
-    )
   }
 
   private func setupProgressView() {
@@ -264,14 +258,6 @@ class SignInViewController: UIViewController {
   }
 
   // MARK: - Button Action
-
-  /// To Display registration information.
-  @IBAction func buttonInfoAction(_ sender: Any) {
-    UIUtilities.showAlertWithTitleAndMessage(
-      title: "Why Register?",
-      message: kRegistrationInfoMessage as NSString
-    )
-  }
 
   /// Closes the navigation of Auto Login In.
   @objc private func dismissSignUpNavigation() {
