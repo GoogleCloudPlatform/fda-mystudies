@@ -38,13 +38,14 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.test.web.servlet.MvcResult;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ParticipantIdControllerTest extends BaseMockIT {
   @Autowired private ParticipantInfoRepository repository;
 
   @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
   void shouldAddParticipant() throws Exception {
     // Step-1 call API to details to add participant id
     HttpHeaders headers = TestUtils.newCommonHeaders();
@@ -89,6 +90,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
   }
 
   @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
   void shouldReturnBadRequestForMissingApplicationId() throws Exception {
     HttpHeaders headers = TestUtils.newCommonHeaders();
     mockMvc
@@ -103,6 +105,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
   }
 
   @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
   void shouldReturnBadRequestForBlankStudyId() throws Exception {
 
     HttpHeaders headers = TestUtils.newCommonHeaders();
@@ -130,6 +133,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
   }
 
   @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
   void shouldReturnBadRequestForBlankEnrollmentToken() throws Exception {
 
     HttpHeaders headers = TestUtils.newCommonHeaders();

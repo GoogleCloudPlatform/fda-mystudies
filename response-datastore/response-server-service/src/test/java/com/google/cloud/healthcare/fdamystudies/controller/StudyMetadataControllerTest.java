@@ -29,7 +29,6 @@ import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -39,9 +38,9 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.test.web.servlet.MvcResult;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class StudyMetadataControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "TEST_APP_ID";
@@ -60,7 +59,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
   @Captor ArgumentCaptor<Map<String, Object>> dataToStoreCaptor;
 
   @Test
-  @Disabled
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
   void testStudyMetadataSavedContent() throws Exception {
     Map<String, Object> dataToStore = new HashMap<>();
     dataToStore.put(APP_ID, APP_ID_VALUE);
@@ -104,7 +103,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Disabled
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
   void testStudyMetadataSavedContentInvalidStudyId() throws Exception {
     HttpHeaders headers = TestUtils.newCommonHeaders();
     // Step 1: set empty studyId
