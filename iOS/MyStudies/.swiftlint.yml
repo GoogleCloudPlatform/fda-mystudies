@@ -10,7 +10,6 @@ disabled_rules:
   - cyclomatic_complexity
   - file_length
   - todo
-  - function_parameter_count
   - opening_brace
   - redundant_string_enum_value
   - class_delegate_protocol
