@@ -4338,8 +4338,7 @@ public class StudyDAOImpl implements StudyDAO {
                   .setInteger(FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId())
                   .uniqueResult();
       if (studySequenceBo != null) {
-        if (!studySequenceBo.isBasicInfo()
-            && StringUtils.isNotEmpty(studyBo.getButtonText())
+        if (StringUtils.isNotEmpty(studyBo.getButtonText())
             && studyBo
                 .getButtonText()
                 .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
