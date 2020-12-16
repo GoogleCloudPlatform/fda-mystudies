@@ -91,8 +91,8 @@ public class StandaloneActivity extends AppCompatActivity
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private RealmList<StudyList> studyListArrayList;
-  private static final String YET_TO_JOIN = "yetToJoin";
-  private static final String IN_PROGRESS = "inProgress";
+  private static final String YET_TO_JOIN = "yetToEnroll";
+  private static final String IN_PROGRESS = "enrolled";
   private static final String ACTIVE = "active";
   private static final String UPCOMING = "upcoming";
   private static final String PAUSED = "paused";

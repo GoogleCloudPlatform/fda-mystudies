@@ -22,7 +22,7 @@ import UIKit
 public typealias AlertAction = () -> Void
 
 class UIUtilities: NSObject {
-  
+
   // MARK: - Alert composers
 
   /// Presents alert message
