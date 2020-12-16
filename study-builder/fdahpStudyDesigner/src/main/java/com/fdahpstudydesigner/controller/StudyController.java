@@ -2050,7 +2050,7 @@ public class StudyController {
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           StudyBuilderAuditEvent auditLogEvent = STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE;
           auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
-          mav = new ModelAndView("redirect:getChecklist.do", map);
+          mav = new ModelAndView("redirect:viewStudyNotificationList.do", map);
         } else {
           request
               .getSession()
