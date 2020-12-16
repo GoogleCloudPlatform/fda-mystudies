@@ -280,7 +280,7 @@ class StudyHomeViewController: UIViewController {
       object: nil
     )
   }
-  
+
   /// Creates eligibility Consent Task.
   func createEligibilityConsentTask() {
     var eligibilitySteps = EligibilityBuilder.currentEligibility?.getEligibilitySteps()
@@ -572,7 +572,7 @@ class StudyHomeViewController: UIViewController {
       switch currentStudy.status {
       case .active:
 
-        if participatedStatus == .yetToJoin || participatedStatus == .notEligible {
+        if participatedStatus == .yetToEnroll || participatedStatus == .notEligible {
           // check if enrolling is allowed
           if currentStudy.studySettings.enrollingAllowed {
             WCPServices().getEligibilityConsentMetadata(
@@ -695,11 +695,11 @@ class StudyHomeViewController: UIViewController {
       Study.currentStudy?.userParticipateState = studyStatus
 
       if study.status == .active {
-        if studyStatus.status == .inProgress {
+        if studyStatus.status == .enrolled {
           // go to study dashboard
           removeProgressIndicator()
           pushToStudyDashboard()
-        } else if studyStatus.status == .yetToJoin
+        } else if studyStatus.status == .yetToEnroll
           || studyStatus.status == .notEligible
         {
           // check if enrolling is allowed
@@ -756,7 +756,7 @@ class StudyHomeViewController: UIViewController {
       // update token
       let currentUserStudyStatus = User.currentUser.updateStudyStatus(
         studyId: (Study.currentStudy?.studyId)!,
-        status: .inProgress
+        status: .enrolled
       )
       currentUserStudyStatus.tokenIdentifier = tokenIdentifier
       currentUserStudyStatus.participantId = apptoken
@@ -909,7 +909,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
 
       if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
         == UserStudyStatus
-        .StudyStatus.inProgress
+        .StudyStatus.enrolled
       {
         isGettingJoiningDate = true
         EnrollServices().getStudyStates(self)
@@ -1074,7 +1074,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           if results! {
             let currentUserStudyStatus = User.currentUser.updateStudyStatus(
               studyId: (Study.currentStudy?.studyId)!,
-              status: .yetToJoin
+              status: .yetToEnroll
             )
 
             Study.currentStudy?.userParticipateState = currentUserStudyStatus
@@ -1258,7 +1258,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
 
           //start enrollment process
           let currentStatus = Study.currentStudy?.userParticipateState.status
-          if currentStatus == .yetToJoin
+          if currentStatus == .yetToEnroll
             || currentStatus == .notEligible
             || (currentStatus == .withdrawn
               && Study.currentStudy?.studySettings

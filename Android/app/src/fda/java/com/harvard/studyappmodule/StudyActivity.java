@@ -850,7 +850,7 @@ public class StudyActivity extends AppCompatActivity
           notificationBtn.setVisibility(View.GONE);
           filter.setVisibility(View.GONE);
           searchBtn.setVisibility(View.GONE);
-          infoIcon.setVisibility(View.VISIBLE);
+          infoIcon.setVisibility(View.GONE);
           closeDrawer();
           getSupportFragmentManager()
               .beginTransaction()
@@ -1134,7 +1134,7 @@ public class StudyActivity extends AppCompatActivity
       notificationBtn.setVisibility(View.GONE);
       filter.setVisibility(View.GONE);
       searchBtn.setVisibility(View.GONE);
-      infoIcon.setVisibility(View.VISIBLE);
+      infoIcon.setVisibility(View.GONE);
       closeDrawer();
       SharedPreferenceHelper.writePreference(
           StudyActivity.this, getString(R.string.loginflow), "SideMenu");
