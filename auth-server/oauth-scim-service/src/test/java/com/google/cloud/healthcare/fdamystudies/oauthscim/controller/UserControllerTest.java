@@ -708,7 +708,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message").value(MessageCode.FORGOT_PASSWORD.getMessage()));
 
     String subject = getMailResetSubject();
-    String body = "Thanks for reaching out for password help";
+    String body = "Thank you for reaching out for password help";
 
     MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
