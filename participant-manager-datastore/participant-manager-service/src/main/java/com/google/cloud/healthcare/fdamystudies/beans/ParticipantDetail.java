@@ -35,6 +35,8 @@ public class ParticipantDetail {
 
   private String enrollmentDate;
 
+  private String withdrawalDate;
+
   private String invitedDate;
 
   private String disabledDate;
