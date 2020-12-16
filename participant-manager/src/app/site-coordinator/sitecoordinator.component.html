@@ -2,9 +2,13 @@
   <div (keyup)="onKeyUp($event)" id="desktop-menu">
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
-        <a  [routerLink]="displayHeaderOnResetpassword ?'/coordinator/studies/sites' : []"  
-        [ngClass]="{'cursor__none': displayHeaderOnResetpassword === false}"
-                 class="navbar-brand ">
+        <a
+          [routerLink]="
+            displayHeaderOnResetpassword ? '/coordinator/studies/sites' : []
+          "
+          [ngClass]="{cursor__none: displayHeaderOnResetpassword === false}"
+          class="navbar-brand"
+        >
           <img
             class="mr-sm width__auto"
             src="../../../assets/images/branding/landing-logo.png"
@@ -12,7 +16,11 @@
           />
           <!-- <span class="header__logo__text">FDA MyStudies</span> -->
         </a>
-        <div *ngIf="displayHeaderOnResetpassword" class="collapse navbar-collapse" id="navbarCollapse">
+        <div
+          *ngIf="displayHeaderOnResetpassword"
+          class="collapse navbar-collapse"
+          id="navbarCollapse"
+        >
           <div class="navbar-nav ml-auto">
             <div class="navbar-nav display-flex-center">
               <div
@@ -80,7 +88,7 @@
                 routerLinkActive="active"
                 class="nav-item nav-link"
               >
-                Users
+                Admins
               </a>
               <a
                 routerLink="/coordinator/accounts"
