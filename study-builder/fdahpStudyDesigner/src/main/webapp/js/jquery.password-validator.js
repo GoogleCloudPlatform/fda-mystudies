@@ -34,7 +34,7 @@ this["JST"]["popover"] = function (obj) {
     obj || (obj = {});
     var __t, __p = '', __e = _.escape;
     with (obj) {
-        __p += '<div class="jq-password-validator__popover" style="color:#2d2926;">\n\t<header><b>Your password must:</b></header>\n</div>\n';
+        __p += '<div class="jq-password-validator__popover" style="color:#2d2926;">\n\t<header><b>Your password must</b></header>\n</div>\n';
 
     }
     return __p
