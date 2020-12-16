@@ -81,34 +81,34 @@ this["JST"]["row"] = function (obj) {
             validate : function (password) {
                 return password.match(/[A-Z]/) != null;
             },
-            message : "upper case letter"
+            message : "an upper case letter"
         },
         lower : {
             validate : function (password) {
                 return password.match(/[a-z]/) != null;
             },
-            message : "lower case letter"
+            message : "a lower case letter"
         },
         digit : {
             validate : function (password) {
                 return password.match(/\d/) != null;
             },
-            message : "number"
+            message : "a number"
         },
         spacial : {
             validate : function (password) {
                 return password.match(/[!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]/) != null;
             },
-            message : "<span style='border-bottom: 0px;'>special character<br><span style='font-size:12px;color:#a94442;'>! &quot; # $ %&amp; ' () * + , - . : ; &lt; =&gt; ? @ [ \] ^ _ ` {} | ~</span><span>"
+            message : "<span style='border-bottom: 0px;'>a special character<br><span style='font-size:12px;color:#a94442;'>! &quot; # $ %&amp; ' () * + , - . : ; &lt; =&gt; ? @ [ \] ^ _ ` {} | ~</span><span>"
         },
         length : {
             validate : function (password, settings) {
                 return password.length >= settings.length;
             },
             message : function (settings) {
-                return settings.length + " to 64 characters";
+                return settings.length + " characters";
             },
-            preface : "Be at least"
+            preface : "be at least"
         }
     };
 
@@ -138,7 +138,7 @@ this["JST"]["row"] = function (obj) {
                     message = validators[requirement].message;
                 }
 
-                var preface = validators[requirement].preface || "Contain a";
+                var preface = validators[requirement].preface || "contain";
 
                 var ruleMarkup = JST.row({
                     ruleName : requirement,
