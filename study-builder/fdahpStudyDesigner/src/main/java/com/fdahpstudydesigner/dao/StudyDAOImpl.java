@@ -1795,9 +1795,6 @@ public class StudyDAOImpl implements StudyDAO {
       } else if (!studySequenceBo.isMiscellaneousResources()) {
         message = FdahpStudyDesignerConstants.RESOURCES_ERROR_MSG;
         return message;
-      } else if (!studySequenceBo.isCheckList()) {
-        message = FdahpStudyDesignerConstants.CHECKLIST_ERROR_MSG;
-        return message;
       }
     }
     return message;
