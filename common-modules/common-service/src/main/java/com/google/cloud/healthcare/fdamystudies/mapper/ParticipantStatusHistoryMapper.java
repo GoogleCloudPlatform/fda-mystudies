@@ -34,8 +34,6 @@ public class ParticipantStatusHistoryMapper {
     Timestamp now = new Timestamp(Instant.now().toEpochMilli());
     if (EnrollmentStatus.ENROLLED.equals(enrollment)) {
       participantStatusEntity.setEnrolledDate(now);
-    } else if (EnrollmentStatus.WITHDRAWN.equals(enrollment)) {
-      participantStatusEntity.setWithdrawalDate(now);
     }
     return participantStatusEntity;
   }

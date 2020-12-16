@@ -277,7 +277,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     criteriaBuilder = session.getCriteriaBuilder();
     if (deleteData != null && !deleteData.isEmpty()) {
       participantEnrollmentHistoryRepository.updateWithdrawalDateAndStatusForDeactivatedUser(
-          userId, EnrollmentStatus.WITHDRAWN.getStatus());
+          userDetailsId, EnrollmentStatus.WITHDRAWN.getStatus());
 
       studyInfoQuery = criteriaBuilder.createQuery(StudyEntity.class);
       rootStudy = studyInfoQuery.from(StudyEntity.class);

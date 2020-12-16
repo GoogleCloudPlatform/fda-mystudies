@@ -32,7 +32,6 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -156,17 +155,6 @@ public final class ParticipantMapper {
   public static void addEnrollments(
       ParticipantDetail participantDetail,
       List<ParticipantEnrollmentHistory> enrollmentHistoryEntities) {
-    if (CollectionUtils.isEmpty(enrollmentHistoryEntities)) {
-      Enrollment enrollment =
-          new Enrollment(
-              null,
-              NOT_APPLICABLE,
-              EnrollmentStatus.YET_TO_ENROLL.getDisplayValue(),
-              NOT_APPLICABLE);
-      participantDetail.getEnrollments().add(enrollment);
-      return;
-    }
-
     for (ParticipantEnrollmentHistory enrollmentHistory : enrollmentHistoryEntities) {
       Enrollment enrollment = new Enrollment();
       String withdrawalDate = DateTimeUtils.format(enrollmentHistory.getWithdrawalDate());

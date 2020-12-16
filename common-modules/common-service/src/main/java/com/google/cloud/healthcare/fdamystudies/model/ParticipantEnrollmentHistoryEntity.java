@@ -18,6 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -30,7 +31,16 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @Getter
 @Entity
-@Table(name = "participant_enrollment_history")
+@Table(
+    name = "participant_enrollment_history",
+    indexes = {
+      @Index(
+          name = "withdrawal_time_user_details_id_study_info_id_idx",
+          columnList = "withdrawal_time,user_details_id,study_info_id"),
+      @Index(
+          name = "withdrawal_time_user_details_id_idx",
+          columnList = "withdrawal_time,user_details_id")
+    })
 public class ParticipantEnrollmentHistoryEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
