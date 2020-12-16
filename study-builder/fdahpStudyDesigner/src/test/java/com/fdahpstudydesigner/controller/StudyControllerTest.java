@@ -233,7 +233,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
-        .andExpect(view().name("redirect:getChecklist.do"));
+        .andExpect(view().name("redirect:viewStudyNotificationList.do"));
 
     verifyAuditEventCall(STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE);
   }

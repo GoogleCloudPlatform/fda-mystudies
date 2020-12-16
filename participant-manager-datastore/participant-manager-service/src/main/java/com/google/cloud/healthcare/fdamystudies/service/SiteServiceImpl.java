@@ -616,41 +616,44 @@ public class SiteServiceImpl implements SiteService {
             .map(urAdminId -> urAdminId.getUrAdminUser().getId())
             .collect(Collectors.toList());
 
-    List<StudyPermissionEntity> studyPermissions =
-        (List<StudyPermissionEntity>)
-            CollectionUtils.emptyIfNull(
-                studyPermissionRepository.findByByUserIdsAndStudyIds(siteAdminIds, studyIds));
+    // Check not empty for studyIds and siteAdminIds to avoid SQLSyntaxErrorException
+    if (CollectionUtils.isNotEmpty(studyIds) && CollectionUtils.isNotEmpty(siteAdminIds)) {
+      List<StudyPermissionEntity> studyPermissions =
+          (List<StudyPermissionEntity>)
+              CollectionUtils.emptyIfNull(
+                  studyPermissionRepository.findByUserIdsAndStudyIds(siteAdminIds, studyIds));
 
-    List<String> studyAdminIds =
-        studyPermissions
-            .stream()
-            .distinct()
-            .map(studyAdminId -> studyAdminId.getUrAdminUser().getId())
-            .collect(Collectors.toList());
+      List<String> studyAdminIds =
+          studyPermissions
+              .stream()
+              .distinct()
+              .map(studyAdminId -> studyAdminId.getUrAdminUser().getId())
+              .collect(Collectors.toList());
 
-    List<String> appIds =
-        sitePermissions
-            .stream()
-            .distinct()
-            .map(appId -> appId.getApp().getId())
-            .collect(Collectors.toList());
+      List<String> appIds =
+          sitePermissions
+              .stream()
+              .distinct()
+              .map(appId -> appId.getApp().getId())
+              .collect(Collectors.toList());
 
-    List<AppPermissionEntity> appPermissions =
-        (List<AppPermissionEntity>)
-            CollectionUtils.emptyIfNull(
-                appPermissionRepository.findByUserIdsAndAppIds(siteAdminIds, appIds));
+      List<AppPermissionEntity> appPermissions =
+          (List<AppPermissionEntity>)
+              CollectionUtils.emptyIfNull(
+                  appPermissionRepository.findByUserIdsAndAppIds(siteAdminIds, appIds));
 
-    List<String> appAdminIds =
-        appPermissions
-            .stream()
-            .distinct()
-            .map(appAdminId -> appAdminId.getUrAdminUser().getId())
-            .collect(Collectors.toList());
+      List<String> appAdminIds =
+          appPermissions
+              .stream()
+              .distinct()
+              .map(appAdminId -> appAdminId.getUrAdminUser().getId())
+              .collect(Collectors.toList());
 
-    for (SitePermissionEntity sitePermission : sitePermissions) {
-      if (!(studyAdminIds.contains(sitePermission.getUrAdminUser().getId())
-          || appAdminIds.contains(sitePermission.getUrAdminUser().getId()))) {
-        sitePermissionRepository.delete(sitePermission);
+      for (SitePermissionEntity sitePermission : sitePermissions) {
+        if (!(studyAdminIds.contains(sitePermission.getUrAdminUser().getId())
+            || appAdminIds.contains(sitePermission.getUrAdminUser().getId()))) {
+          sitePermissionRepository.delete(sitePermission);
+        }
       }
     }
   }
