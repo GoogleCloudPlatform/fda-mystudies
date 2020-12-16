@@ -60,6 +60,10 @@ class ActivitiesTableViewCell: UITableViewCell {
     }
   }
 
+  override func prepareForReuse() {
+    labelTime?.text = ""
+    super.prepareForReuse()
+  }
   /// Update cell UI
   /// - Parameters:
   ///   - activity:  Access the value from Activity class.
@@ -200,12 +204,6 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     let frequency = activity.frequencyType
 
-    let startDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: startDate!)
-    var endDateString = ""
-    if endDate != nil {
-      endDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: endDate!)
-    }
-
     if activity.type == ActivityType.activeTask {
       imageIcon?.image = UIImage.init(named: "taskIcon")
     } else {
@@ -215,11 +213,9 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     switch frequency {
     case .oneTime:
-      if endDate != nil {
-        labelTime?.text = startDateString + " to\n" + endDateString
-      } else {
-        labelTime?.text = startDateString
-      }
+      setActivityTimingsForOneTime(startDate: startDate,
+                                   endDate: endDate,
+                                   activity: activity)
 
     case .daily:
       var runStartTimingsList: [String] = []
@@ -252,8 +248,12 @@ class ActivitiesTableViewCell: UITableViewCell {
       var monthlyStartTime = ActivitiesTableViewCell.monthlyformatter.string(from: startDate!)
       monthlyStartTime = monthlyStartTime.replacingOccurrences(of: "+", with: "on day")
       monthlyStartTime = monthlyStartTime.replacingOccurrences(of: ";", with: "each month\n")
-      let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
-      labelTime?.text = monthlyStartTime + " to " + endDate
+      if let endDate = endDate {
+        let endDateString = DateHelper.formattedShortMonthYear(from: endDate)
+        labelTime?.text = monthlyStartTime + " to " + endDateString
+      } else {
+        labelTime?.text = monthlyStartTime
+      }
 
     case .scheduled:
       var runStartDate: Date?
@@ -275,14 +275,49 @@ class ActivitiesTableViewCell: UITableViewCell {
       {
         startDate.updateWithOffset()
         endDate.updateWithOffset()
-        let currentRunStartDate = ActivitiesTableViewCell.oneTimeFormatter.string(
+        let currentRunStartDate = ActivitiesTableViewCell.customScheduleFormatter.string(
           from: startDate
         )
-        let currentRunEndDate = ActivitiesTableViewCell.oneTimeFormatter.string(
+        let currentRunEndDate = ActivitiesTableViewCell.customScheduleFormatter.string(
           from: endDate
         )
         labelTime?.text = currentRunStartDate + " to " + currentRunEndDate
       }
+    }
+  }
+  
+  private func setActivityTimingsForOneTime(startDate: Date?,
+                                            endDate: Date?,
+                                            activity: Activity) {
+    var startDateString = ""
+    if let startDate = startDate {
+      startDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: startDate)
+    }
+    var endDateString = ""
+    if let endDate = endDate {
+      endDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: endDate)
+    }
+    startDateString = startDateString.replacingOccurrences(of: ";", with: "on")
+    endDateString = endDateString.replacingOccurrences(of: ";", with: "on")
+
+    if activity.isStudyLifeTime && activity.isLaunchWithStudy {
+      return
+    } else if activity.isLaunchWithStudy,
+      let endDate = endDate
+    {
+      if endDate > Date() {
+        labelTime?.text = "Ends: " + endDateString
+      } else {
+        labelTime?.text = "Ended: " + endDateString
+      }
+    } else if activity.isStudyLifeTime,
+      let startDate = startDate
+    {
+      if startDate > Date() {
+        labelTime?.text = "Starts: " + startDateString
+      }
+    } else if !endDateString.isEmpty {
+      labelTime?.text = startDateString + " - " + endDateString
     }
   }
 
@@ -308,9 +343,15 @@ class ActivitiesTableViewCell: UITableViewCell {
 
   private static let oneTimeFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd, YYYY"
+    formatter.dateFormat = "hh:mma ; MMM dd, YYYY"
     return formatter
   }()
+
+  private static var customScheduleFormatter: DateFormatter {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "hh:mma, MMM dd, YYYY"
+    return formatter
+  }
 
   private static let weeklyformatter: DateFormatter = {
     let formatter = DateFormatter()
@@ -320,7 +361,7 @@ class ActivitiesTableViewCell: UITableViewCell {
 
   private static let monthlyformatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma + dd ;MMM dd, YYYY"
+    formatter.dateFormat = "hh:mma + dd ;MMM YYYY"
     return formatter
   }()
 

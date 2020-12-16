@@ -113,7 +113,6 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
@@ -342,8 +341,7 @@ public class SiteServiceImpl implements SiteService {
       String onboardingStatus,
       AuditLogEventRequest auditRequest,
       Integer page,
-      Integer limit,
-      String[] excludeEnrollmentStatus) {
+      Integer limit) {
     logger.info("getParticipants()");
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
 
@@ -415,8 +413,7 @@ public class SiteServiceImpl implements SiteService {
       }
     }
 
-    addRegistryParticipants(
-        participantRegistryDetail, participantRegistrySites, excludeEnrollmentStatus);
+    addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
@@ -458,8 +455,7 @@ public class SiteServiceImpl implements SiteService {
 
   private void addRegistryParticipants(
       ParticipantRegistryDetail participantRegistryDetail,
-      List<ParticipantRegistrySiteEntity> participantRegistrySites,
-      String[] excludeEnrollmentStatus) {
+      List<ParticipantRegistrySiteEntity> participantRegistrySites) {
     List<String> registryIds =
         CollectionUtils.emptyIfNull(participantRegistrySites)
             .stream()
@@ -481,9 +477,7 @@ public class SiteServiceImpl implements SiteService {
       participant =
           ParticipantMapper.toParticipantDetails(
               participantStudies, participantRegistrySite, participant);
-      if (!ArrayUtils.contains(excludeEnrollmentStatus, participant.getEnrollmentStatus())) {
-        participantRegistryDetail.getRegistryParticipants().add(participant);
-      }
+      participantRegistryDetail.getRegistryParticipants().add(participant);
     }
   }
 
@@ -594,7 +588,7 @@ public class SiteServiceImpl implements SiteService {
     if (optParticipantStudyCount.isPresent()
         && optParticipantStudyCount.get() > 0
         && study.getStatus().equals(STATUS_ACTIVE)) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS);
+      throw new ErrorCodeException(ErrorCode.ACTIVE_STUDY_ENROLLED_PARTICIPANT);
     }
   }
 
@@ -618,41 +612,44 @@ public class SiteServiceImpl implements SiteService {
             .map(urAdminId -> urAdminId.getUrAdminUser().getId())
             .collect(Collectors.toList());
 
-    List<StudyPermissionEntity> studyPermissions =
-        (List<StudyPermissionEntity>)
-            CollectionUtils.emptyIfNull(
-                studyPermissionRepository.findByByUserIdsAndStudyIds(siteAdminIds, studyIds));
+    // Check not empty for studyIds and siteAdminIds to avoid SQLSyntaxErrorException
+    if (CollectionUtils.isNotEmpty(studyIds) && CollectionUtils.isNotEmpty(siteAdminIds)) {
+      List<StudyPermissionEntity> studyPermissions =
+          (List<StudyPermissionEntity>)
+              CollectionUtils.emptyIfNull(
+                  studyPermissionRepository.findByUserIdsAndStudyIds(siteAdminIds, studyIds));
 
-    List<String> studyAdminIds =
-        studyPermissions
-            .stream()
-            .distinct()
-            .map(studyAdminId -> studyAdminId.getUrAdminUser().getId())
-            .collect(Collectors.toList());
+      List<String> studyAdminIds =
+          studyPermissions
+              .stream()
+              .distinct()
+              .map(studyAdminId -> studyAdminId.getUrAdminUser().getId())
+              .collect(Collectors.toList());
 
-    List<String> appIds =
-        sitePermissions
-            .stream()
-            .distinct()
-            .map(appId -> appId.getApp().getId())
-            .collect(Collectors.toList());
+      List<String> appIds =
+          sitePermissions
+              .stream()
+              .distinct()
+              .map(appId -> appId.getApp().getId())
+              .collect(Collectors.toList());
 
-    List<AppPermissionEntity> appPermissions =
-        (List<AppPermissionEntity>)
-            CollectionUtils.emptyIfNull(
-                appPermissionRepository.findByUserIdsAndAppIds(siteAdminIds, appIds));
+      List<AppPermissionEntity> appPermissions =
+          (List<AppPermissionEntity>)
+              CollectionUtils.emptyIfNull(
+                  appPermissionRepository.findByUserIdsAndAppIds(siteAdminIds, appIds));
 
-    List<String> appAdminIds =
-        appPermissions
-            .stream()
-            .distinct()
-            .map(appAdminId -> appAdminId.getUrAdminUser().getId())
-            .collect(Collectors.toList());
+      List<String> appAdminIds =
+          appPermissions
+              .stream()
+              .distinct()
+              .map(appAdminId -> appAdminId.getUrAdminUser().getId())
+              .collect(Collectors.toList());
 
-    for (SitePermissionEntity sitePermission : sitePermissions) {
-      if (!(studyAdminIds.contains(sitePermission.getUrAdminUser().getId())
-          || appAdminIds.contains(sitePermission.getUrAdminUser().getId()))) {
-        sitePermissionRepository.delete(sitePermission);
+      for (SitePermissionEntity sitePermission : sitePermissions) {
+        if (!(studyAdminIds.contains(sitePermission.getUrAdminUser().getId())
+            || appAdminIds.contains(sitePermission.getUrAdminUser().getId()))) {
+          sitePermissionRepository.delete(sitePermission);
+        }
       }
     }
   }
@@ -1106,11 +1103,14 @@ public class SiteServiceImpl implements SiteService {
     auditRequest.setStudyId(site.getStudyId());
     auditRequest.setAppId(site.getStudy().getAppId());
 
+    MessageCode messageCode = null;
     Map<String, String> map = Collections.singletonMap("site_id", optSite.get().getId());
     if (participantStatusRequest.getStatus().equals(OnboardingStatus.DISABLED.getCode())) {
       participantManagerHelper.logEvent(PARTICIPANT_INVITATION_DISABLED, auditRequest, map);
+      messageCode = MessageCode.INVITATION_DISABLED_SUCCESS;
     } else if (participantStatusRequest.getStatus().equals(OnboardingStatus.NEW.getCode())) {
       participantManagerHelper.logEvent(PARTICIPANT_INVITATION_ENABLED, auditRequest, map);
+      messageCode = MessageCode.INVITATION_ENABLED_SUCCESS;
     }
     logger.exit(
         String.format(
@@ -1118,7 +1118,7 @@ public class SiteServiceImpl implements SiteService {
             participantStatusRequest.getStatus(),
             participantStatusRequest.getIds().size(),
             participantStatusRequest.getSiteId()));
-    return new ParticipantStatusResponse(MessageCode.UPDATE_STATUS_SUCCESS);
+    return new ParticipantStatusResponse(messageCode);
   }
 
   @Override

@@ -13,7 +13,7 @@
 		<array>
 			<dict>
 				<key>name</key>
-				<string>In Progress</string>
+				<string>Enrolled</string>
 				<key>isEnabled</key>
 				<true/>
 			</dict>
@@ -37,7 +37,7 @@
 			</dict>
 			<dict>
 				<key>name</key>
-				<string>Yet To Join</string>
+				<string>Yet To Enroll</string>
 				<key>isEnabled</key>
 				<true/>
 			</dict>

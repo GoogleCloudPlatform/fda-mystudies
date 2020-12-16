@@ -35,6 +35,10 @@ public class ActivitiesWS extends RealmObject {
 
   private boolean branching;
 
+  private boolean isLaunchStudy;
+
+  private boolean isStudyLifeTime;
+
   private String activityVersion;
 
   private String schedulingType;
@@ -139,5 +143,21 @@ public class ActivitiesWS extends RealmObject {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public boolean isLaunchStudy() {
+    return isLaunchStudy;
+  }
+
+  public void setLaunchStudy(boolean launchStudy) {
+    isLaunchStudy = launchStudy;
+  }
+
+  public boolean isStudyLifeTime() {
+    return isStudyLifeTime;
+  }
+
+  public void setStudyLifeTime(boolean studyLifeTime) {
+    isStudyLifeTime = studyLifeTime;
   }
 }

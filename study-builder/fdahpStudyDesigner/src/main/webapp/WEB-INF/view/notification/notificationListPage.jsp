@@ -16,7 +16,7 @@
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none">
       <div class="black-lg-f">
-        Manage App-level Notifications
+        Manage app-level notifications
       </div>
       <div class="dis-line pull-right ml-md">
         <c:if

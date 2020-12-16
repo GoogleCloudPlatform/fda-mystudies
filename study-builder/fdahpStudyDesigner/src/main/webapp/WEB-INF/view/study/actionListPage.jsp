@@ -213,33 +213,11 @@
                 var checkListMessage = data.checkListMessage;
                 var checkFailureMessage = data.checkFailureMessage;
                 if (message == "SUCCESS") {
-                  if (checkListMessage == "Yes") {
-                    showBootBoxMessage(buttonText,
-                        messageText);
-                  } else {
-                    bootbox.confirm({
-                      closeButton: false,
-                      message: checkFailureMessage,
-                      buttons: {
-                        'cancel': {
-                          label: 'Cancel',
-                        },
-                        'confirm': {
-                          label: 'OK',
-                        },
-                      },
-                      callback: function (result) {
-                        if (result) {
-                          showBootBoxMessage(
-                              buttonText,
-                              messageText);
-                        }
-                      }
-                    })
-                  }
+                	showBootBoxMessage(buttonText,
+                            messageText);
                 } else {
                   if (buttonText == 'publishId') {
-                    messageText = "To publish a study as an Upcoming study, the  Basic Information, Settings, Overview and Consent sections need to be marked as Completed indicating you have finished adding all mandatory and sufficient content in those sections to give mobile app users a fair idea about the upcoming study. Please complete these sections and try again.";
+                    messageText = "To publish a study as an Upcoming study, the  Study Information, Settings, Overview and Consent sections need to be marked as Completed indicating you have finished adding all mandatory and sufficient content in those sections to give mobile app users a fair idea about the upcoming study. Please complete these sections and try again.";
                   } else if (buttonText == 'lunchId') {
                     messageText = "Launching to a study requires that all sections be marked as Completed indicating that you have finished adding all mandatory and intended content in the section. Please complete all the sections and try again.";
                   } else if (buttonText == 'updatesId') {

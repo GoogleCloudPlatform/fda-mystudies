@@ -14,8 +14,10 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.FEE
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.FEEDBACK_CONTENT_EMAIL_FAILED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
@@ -42,13 +44,15 @@ public class UserSupportServiceImpl implements UserSupportService {
 
   @Override
   @Transactional()
-  public EmailResponse feedback(String subject, String body, AuditLogEventRequest auditRequest) {
+  public EmailResponse feedback(
+      FeedbackReqBean feedbackRequest, AuditLogEventRequest auditRequest) {
     logger.info("UserManagementProfileServiceImpl - feedback() :: Starts");
-    String feedbackSubject = appConfig.getFeedbackMailSubject() + subject;
+    String feedbackSubject = appConfig.getFeedbackMailSubject() + feedbackRequest.getSubject();
     String feedbackBody = appConfig.getFeedbackMailBody();
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("body", body);
+    templateArgs.put("body", feedbackRequest.getBody());
     templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("appName", feedbackRequest.getAppName());
 
     EmailRequest emailRequest =
         new EmailRequest(
@@ -79,23 +83,17 @@ public class UserSupportServiceImpl implements UserSupportService {
   @Transactional()
   @Override
   public EmailResponse contactUsDetails(
-      String appName,
-      String subject,
-      String body,
-      String firstName,
-      String email,
-      AuditLogEventRequest auditRequest)
-      throws Exception {
+      ContactUsReqBean contactUsRequest, AuditLogEventRequest auditRequest) throws Exception {
     logger.info("AppMetaDataOrchestration - contactUsDetails() :: Starts");
-    String contactUsSubject = appConfig.getContactusMailSubject() + subject;
+    String contactUsSubject = appConfig.getContactusMailSubject() + contactUsRequest.getSubject();
     String contactUsContent = appConfig.getContactusMailBody();
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("firstName", firstName);
-    templateArgs.put("email", email);
-    templateArgs.put("subject", subject);
-    templateArgs.put("body", body);
+    templateArgs.put("firstName", contactUsRequest.getFirstName());
+    templateArgs.put("email", contactUsRequest.getEmail());
+    templateArgs.put("subject", contactUsRequest.getSubject());
+    templateArgs.put("body", contactUsRequest.getBody());
     templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("appName", appName);
+    templateArgs.put("appName", contactUsRequest.getAppName());
 
     EmailRequest emailRequest =
         new EmailRequest(

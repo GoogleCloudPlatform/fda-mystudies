@@ -60,7 +60,7 @@ enum DayValue: String {
 
 enum AccountStatus: Int {
 
-  /// User account verified  
+  /// User account verified
   case verified = 0
 
   /// User account not verified
@@ -259,7 +259,7 @@ class User {
     if let study = studies?.filter({ $0.studyId == studyId }).first {
       return study.status
     }
-    return .yetToJoin
+    return .yetToEnroll
   }
 
   // MARK: Activity Status
@@ -403,17 +403,17 @@ class UserStudyStatus {
 
   enum StudyStatus: Int {
 
-    case yetToJoin
+    case yetToEnroll
     case notEligible
-    case inProgress
+    case enrolled
     case completed
     case withdrawn
 
     var sortIndex: Int {
       switch self {
-      case .inProgress:
+      case .enrolled:
         return 0
-      case .yetToJoin:
+      case .yetToEnroll:
         return 1
       case .completed:
         return 2
@@ -426,10 +426,10 @@ class UserStudyStatus {
 
     var description: String {
       switch self {
-      case .yetToJoin:
-        return "Yet To Join"
-      case .inProgress:
-        return "In Progress"
+      case .yetToEnroll:
+        return "Yet To Enroll"
+      case .enrolled:
+        return "Enrolled"
       case .completed:
         return "Completed"
       case .notEligible:
@@ -442,9 +442,9 @@ class UserStudyStatus {
 
     var closedStudyDescription: String {
       switch self {
-      case .yetToJoin:
+      case .yetToEnroll:
         return "No participation"
-      case .inProgress:
+      case .enrolled:
         return "Partial Participation"
       case .completed:
         return "Completed"
@@ -462,10 +462,10 @@ class UserStudyStatus {
 
     var paramValue: String {
       switch self {
-      case .yetToJoin:
-        return "yetToJoin"
-      case .inProgress:
-        return "inProgress"
+      case .yetToEnroll:
+        return "yetToEnroll"
+      case .enrolled:
+        return "enrolled"
       case .completed:
         return "completed"
       case .notEligible:
@@ -480,7 +480,7 @@ class UserStudyStatus {
 
   lazy var bookmarked: Bool = false
   lazy var studyId: String = ""
-  lazy var status: StudyStatus = .yetToJoin
+  lazy var status: StudyStatus = .yetToEnroll
   lazy var consent: String = ""
 
   /// User joined Date for study
@@ -527,8 +527,8 @@ class UserStudyStatus {
 
         let statusValue = (detail[kStatus] as? String)!
 
-        if StudyStatus.inProgress.paramValue == statusValue {
-          self.status = .inProgress
+        if StudyStatus.enrolled.paramValue == statusValue {
+          self.status = .enrolled
 
         } else if StudyStatus.notEligible.paramValue == statusValue {
           self.status = .notEligible
@@ -540,7 +540,7 @@ class UserStudyStatus {
           self.status = .withdrawn
         }
       }
-      if self.status == .yetToJoin || self.status == .withdrawn || self.status == .notEligible {
+      if self.status == .yetToEnroll || self.status == .withdrawn || self.status == .notEligible {
         self.participantId = nil
         self.tokenIdentifier = ""
         self.siteID = ""
