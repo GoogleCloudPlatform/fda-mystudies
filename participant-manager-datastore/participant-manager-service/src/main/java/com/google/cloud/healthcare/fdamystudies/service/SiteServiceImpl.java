@@ -611,6 +611,8 @@ public class SiteServiceImpl implements SiteService {
             .distinct()
             .map(urAdminId -> urAdminId.getUrAdminUser().getId())
             .collect(Collectors.toList());
+
+    // Check not empty for studyIds and siteAdminIds to avoid SQLSyntaxErrorException
     if (CollectionUtils.isNotEmpty(studyIds) && CollectionUtils.isNotEmpty(siteAdminIds)) {
       List<StudyPermissionEntity> studyPermissions =
           (List<StudyPermissionEntity>)
