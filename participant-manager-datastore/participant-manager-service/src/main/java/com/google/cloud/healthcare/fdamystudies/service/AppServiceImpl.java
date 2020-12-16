@@ -462,9 +462,6 @@ public class AppServiceImpl implements AppService {
       appSites.add(appSiteDetails);
     }
 
-    // H2 Database throws error ORDER_BY_NOT_IN_RESULT Order by expression ID must be in the result
-    // list in this case when DISTINCT is added to the SQL query so removing duplicates using
-    // HashSet
     Set<String> uniqueStudyIds = new HashSet<>();
 
     for (AppParticipantsInfo appParticipantsInfo : appParticipantsInfoList) {
