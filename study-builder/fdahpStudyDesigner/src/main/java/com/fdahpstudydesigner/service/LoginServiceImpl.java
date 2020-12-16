@@ -131,10 +131,17 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
             }
             if (isValidPassword) {
               userBO.setFirstName(
-                  null != userBO2.getFirstName() ? userBO2.getFirstName().trim() : "");
-              userBO.setLastName(null != userBO2.getLastName() ? userBO2.getLastName().trim() : "");
+                  null != userBO2.getFirstName()
+                      ? userBO2.getFirstName().trim()
+                      : userBO.getFirstName());
+              userBO.setLastName(
+                  null != userBO2.getLastName()
+                      ? userBO2.getLastName().trim()
+                      : userBO.getLastName());
               userBO.setPhoneNumber(
-                  null != userBO2.getPhoneNumber() ? userBO2.getPhoneNumber().trim() : "");
+                  null != userBO2.getPhoneNumber()
+                      ? userBO2.getPhoneNumber().trim()
+                      : userBO.getPhoneNumber());
               userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
               userBO.setTokenUsed(true);
               userBO.setEnabled(true);
@@ -473,6 +480,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               keyValueForSubject.put("$oldMail", oldEmail);
               contact = propMap.get("phone.number.to");
               keyValueForSubject.put("$contact", contact);
+              keyValueForSubject.put("$orgName", propMap.get("orgName"));
+              keyValueForSubject2.put("$orgName", propMap.get("orgName"));
               if ("USER".equals(type) && !userdetails.isEnabled()) {
                 dynamicContent =
                     FdahpStudyDesignerUtil.genarateEmailContent(
@@ -617,6 +626,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
           String customerCareMail = propMap.get("email.address.customer.service");
           keyValueForSubject.put("$customerCareMail", customerCareMail);
+          keyValueForSubject.put("$orgName", propMap.get("orgName"));
           String dynamicContent =
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "accountLockedContent", keyValueForSubject);

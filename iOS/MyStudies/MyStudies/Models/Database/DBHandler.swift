@@ -169,7 +169,7 @@ class DBHandler: NSObject {
             dbStudy?.bookmarked = studyStatus.bookmarked
           }
           if dbStudy?.participatedStatus
-            == UserStudyStatus.StudyStatus.inProgress
+            == UserStudyStatus.StudyStatus.enrolled
             .rawValue
           {
             dbStudy?.updatedVersion = study.version
@@ -634,7 +634,8 @@ class DBHandler: NSObject {
     dbActivity.completedRuns = activity.userParticipationStatus.compeltedRuns
     dbActivity.id = activity.studyId! + activity.actvityId!
     dbActivity.taskSubType = activity.taskSubType
-
+    dbActivity.isLaunchWithStudy = activity.isLaunchWithStudy
+    dbActivity.isStudyLifeTime = activity.isStudyLifeTime
     let activityFrequencyDict = ["data": activity.frequencyRuns]
     let frequencyRunsData = try? JSONSerialization.data(
       withJSONObject: activityFrequencyDict,
@@ -1034,6 +1035,8 @@ class DBHandler: NSObject {
     activity.branching = dbActivity.branching
     activity.state = dbActivity.state
     activity.taskSubType = dbActivity.taskSubType
+    activity.isStudyLifeTime = dbActivity.isStudyLifeTime
+    activity.isLaunchWithStudy = dbActivity.isLaunchWithStudy
 
     let frequencyRuns =
       try? JSONSerialization.jsonObject(

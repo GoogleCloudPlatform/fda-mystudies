@@ -6,6 +6,7 @@
 # Stage 1
 # Installing all the dependencies and creating Dist file or building angular application
 FROM node:12.16.1 AS compile-image
+ARG basehref=/participant-manager/
 WORKDIR /app
 COPY . ./
 RUN npm set progress=false

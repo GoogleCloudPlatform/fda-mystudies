@@ -377,6 +377,17 @@ class Utilities: NSObject {
     else { return nil }
     return theJSONData
   }
+
+  /// This method will get the user defined name of the app from info.plist.
+  /// - Returns: Name of the app.
+  static func appName() -> String {
+    if let bundleDisplayName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String {
+      return bundleDisplayName
+    } else if let bundleName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String {
+      return bundleName
+    }
+    return ""
+  }
 }
 
 extension FileManager {
