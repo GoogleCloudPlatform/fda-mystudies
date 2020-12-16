@@ -6,7 +6,7 @@ export const environment = {
   participantManagerDatastoreUrl:
     'https://35.193.185.224:8093/participant-manager-datastore',
   hydraLoginUrl: 'https://35.193.185.224:9000/oauth2/auth',
-  authServerUrl: 'https://35.193.185.224:8087/auth-server',
+  authServerUrl: 'http://35.193.185.224:8087/auth-server',
   authServerRedirectUrl: 'https://34.69.210.52/qa/auth-server/callback',
   hydraClientId: 'MYSTUDIES_OAUTH_CLIENT',
   appVersion: 'v0.1',
