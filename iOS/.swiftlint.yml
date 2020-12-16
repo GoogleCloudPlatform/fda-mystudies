@@ -27,3 +27,6 @@ line_length:
   ignores_comments: true
   warning: 140
   error: 150
+function_parameter_count:
+  warning: 8
+  error: 8
