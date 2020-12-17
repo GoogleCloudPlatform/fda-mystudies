@@ -65,7 +65,7 @@ For a detailed list of changes to the FDA MyStudies codebase, see *[What’s new
 
 ## Feedback
 
-Feature requests and bug reports should be submitted as [Github Issues](https://github.com/GoogleCloudPlatform/fda-mystudies/issues). All feedback is greatly appreciated.
+Feature requests and bug reports should be submitted as [Github Issues](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/new/choose). All feedback is greatly appreciated.
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
