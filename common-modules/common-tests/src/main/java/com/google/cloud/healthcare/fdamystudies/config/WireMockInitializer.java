@@ -42,8 +42,11 @@ public class WireMockInitializer
               || applicationEvent instanceof ContextRefreshedEvent) {
             try {
               logger.info("stop the WireMockServer");
+              // We have to sleep briefly to finish serving the shutdown request before stopping the
+              // server, as there's no support in Jetty for shutting down after the current request.
+              // See http://stackoverflow.com/questions/4650713
+              Thread.sleep(1000);
               wireMockServer.stop();
-              wireMockServer.shutdownServer();
               wireMockServer.start();
             } catch (Exception e) {
               logger.error("Unable to restart WireMockServer", e);
@@ -52,8 +55,13 @@ public class WireMockInitializer
 
           if (applicationEvent instanceof ContextClosedEvent) {
             try {
+              // We have to sleep briefly to finish serving the shutdown request before stopping the
+              // server, as
+              // there's no support in Jetty for shutting down after the current request.
+              // See http://stackoverflow.com/questions/4650713
+              Thread.sleep(1000);
               if (wireMockServer.isRunning()) {
-                wireMockServer.shutdownServer();
+                wireMockServer.stop();
               }
             } catch (Exception e) {
               logger.error("Unable to stop WireMockServer", e);
