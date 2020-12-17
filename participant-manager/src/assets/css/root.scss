@@ -1474,18 +1474,11 @@ select {
   }
 }
 
-// .tr_shadow_hover :hover {
-//   box-shadow: 1px 1px 5px 0px #ccd7e2;
-
-//   background: #000 !important;
-// }
-
 .custom__tbody tr {
   position: relative;
 }
 .custom__tbody tr:hover {
   box-shadow: 1px 1px 6px 1px #ccd7e2;
-  // border-top: 1px solid var(--periwinkle-gray);
   cursor: pointer;
   -webkit-transition: all 200ms ease-in;
   -webkit-transform: scale(1);
