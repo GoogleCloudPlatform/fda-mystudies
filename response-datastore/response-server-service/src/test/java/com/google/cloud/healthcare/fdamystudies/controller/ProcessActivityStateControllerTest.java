@@ -46,13 +46,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProcessActivityStateControllerTest extends BaseMockIT {
   @Autowired ParticipantActivitiesRepository participantActivitiesRepository;
   @Autowired ParticipantActivityStateResponseService participantActivitiesResponseService;
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+  //  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   void shouldGetActivityStateValidParams() throws Exception {
     // Step 1: Save the activity first
     String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
@@ -97,7 +97,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
   @ParameterizedTest
   @CsvSource({"RT4,567", "RT3,568"})
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+  //  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   void shouldGetEmptyActivityStateParamsNotFound(ArgumentsAccessor argumentsAccessor)
       throws Exception {
     // Step 1: Save the activity first
@@ -135,7 +135,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
   @ParameterizedTest
   @CsvSource({",567", "RT3,"})
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+  //  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   void shouldGetActivityStateBadRequestInvalidParams(ArgumentsAccessor argumentsAccessor)
       throws Exception {
 
@@ -172,7 +172,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+  //  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   void shouldUpdateActivityState() throws Exception {
 
     String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
@@ -226,7 +226,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+  //  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   void shouldUpdateActivityStateMultiple() throws Exception {
 
     String inputJsonContent =
