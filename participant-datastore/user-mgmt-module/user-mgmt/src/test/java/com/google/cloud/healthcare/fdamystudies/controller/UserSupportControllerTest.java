@@ -61,6 +61,7 @@ public class UserSupportControllerTest extends BaseMockIT {
     appConfig.setFeedbackToEmail("feedback_app_test@grr.la");
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
+    headers.set("appName", Constants.APP_NAME);
     String requestJson = getFeedBackDetails(Constants.SUBJECT, Constants.BODY);
 
     mockMvc
@@ -94,7 +95,7 @@ public class UserSupportControllerTest extends BaseMockIT {
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.USER_ID_HEADER);
-
+    headers.set("appName", Constants.APP_NAME);
     String requestJson =
         getContactUsRequest(
             Constants.SUBJECT, Constants.BODY, Constants.FIRST_NAME, Constants.EMAIL_ID);
@@ -133,12 +134,12 @@ public class UserSupportControllerTest extends BaseMockIT {
 
   private String getContactUsRequest(String subject, String body, String firstName, String email)
       throws JsonProcessingException {
-    ContactUsReqBean contactUsReqBean = new ContactUsReqBean(subject, body, firstName, email);
+    ContactUsReqBean contactUsReqBean = new ContactUsReqBean(subject, body, firstName, email, "");
     return getObjectMapper().writeValueAsString(contactUsReqBean);
   }
 
   private String getFeedBackDetails(String subject, String body) throws JsonProcessingException {
-    FeedbackReqBean feedbackReqBean = new FeedbackReqBean(subject, body);
+    FeedbackReqBean feedbackReqBean = new FeedbackReqBean(subject, body, "");
     return getObjectMapper().writeValueAsString(feedbackReqBean);
   }
 

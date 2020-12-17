@@ -26,11 +26,12 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
-import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistoryEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -63,6 +64,7 @@ public class AppControllerTest extends BaseMockIT {
   private SiteEntity siteEntity;
   private UserDetailsEntity userDetailsEntity;
   private LocationEntity locationEntity;
+  private ParticipantEnrollmentHistoryEntity participantEnrollmentHistoryEntity;
 
   public static final String EMAIL_VALUE = "mockit_email@grr.la";
 
@@ -496,8 +498,13 @@ public class AppControllerTest extends BaseMockIT {
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);
-    participantStudyEntity.setUserDetails(userDetailsEntity);
-    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+    participantEnrollmentHistoryEntity =
+        testDataHelper.createEnrollmentHistory(appEntity, studyEntity, siteEntity);
+    participantEnrollmentHistoryEntity.setUserDetails(userDetailsEntity);
+    participantEnrollmentHistoryEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
+    testDataHelper
+        .getParticipantEnrollmentHistoryRepository()
+        .saveAndFlush(participantEnrollmentHistoryEntity);
 
     // Step 2: Call API to return GET_APPS_PARTICIPANTS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -517,8 +524,10 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participants[0].email").value(userDetailsEntity.getEmail()))
         .andExpect(
             jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
+        .andExpect(jsonPath("$.participants[0].enrolledStudies[0].sites", hasSize(1)))
         .andExpect(
-            jsonPath("$.participants[0].enrolledStudies[0].studyType").value(studyEntity.getType()))
+            jsonPath("$.participants[0].enrolledStudies[0].sites[0].locationName")
+                .value(locationEntity.getName()))
         .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.name").value(appEntity.getAppName()));
 
@@ -542,8 +551,13 @@ public class AppControllerTest extends BaseMockIT {
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);
-    participantStudyEntity.setUserDetails(userDetailsEntity);
-    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+    participantEnrollmentHistoryEntity =
+        testDataHelper.createEnrollmentHistory(appEntity, studyEntity, siteEntity);
+    participantEnrollmentHistoryEntity.setUserDetails(userDetailsEntity);
+    participantEnrollmentHistoryEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
+    testDataHelper
+        .getParticipantEnrollmentHistoryRepository()
+        .saveAndFlush(participantEnrollmentHistoryEntity);
 
     // Step 2: Call API to return GET_APPS_PARTICIPANTS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -565,7 +579,11 @@ public class AppControllerTest extends BaseMockIT {
             jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
         .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.name").value(appEntity.getAppName()))
-        .andExpect(jsonPath("$.participants[0].enrolledStudies").isNotEmpty());
+        .andExpect(jsonPath("$.participants[0].enrolledStudies").isNotEmpty())
+        .andExpect(jsonPath("$.participants[0].enrolledStudies[0].sites", hasSize(1)))
+        .andExpect(
+            jsonPath("$.participants[0].enrolledStudies[0].sites[0].locationName")
+                .value(locationEntity.getName()));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());

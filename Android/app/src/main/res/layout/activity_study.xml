@@ -205,6 +205,35 @@
                         </RelativeLayout>
 
                     </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/mSignoutLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/signoutImg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/signout_menu1" />
+                        <RelativeLayout
+                            android:id="@+id/mSignOutLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/mSignOutLabel"
+                                android:layout_marginLeft="30dp"
+                                android:textColor="@android:color/black"
+                                style="@style/textTypeMenuItem"
+
+                                android:text="@string/side_menu_sign_out"
+                                />
+                        </RelativeLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 
@@ -219,25 +248,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp">
 
-
-                    <RelativeLayout
-                        android:id="@+id/mSignOutLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <android.support.v7.widget.AppCompatTextView
-                            android:id="@+id/mSignOutLabel"
-                            style="@style/textTypeMenuItem"
-                            android:layout_marginLeft="10dp"
-                            android:text="@string/side_menu_sign_out"
-                            android:textColor="@color/colorSecondary" />
-                    </RelativeLayout>
                     <TextView
                         android:id="@+id/version"
                         style="@style/TextType3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/mSignOutLayout"
                         android:layout_marginLeft="10dp"
                         android:text="@string/side_menu_version"
                         android:textColor="@color/colorSecondary" />

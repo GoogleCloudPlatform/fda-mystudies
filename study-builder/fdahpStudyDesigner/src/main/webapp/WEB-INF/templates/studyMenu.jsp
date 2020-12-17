@@ -102,12 +102,6 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="nine commonCls <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'cursor-none':''}">
-        Checklist
-        <c:if test="${studyBo.studySequenceBo.checkList}">
-          <span class="sprites-icons-2 tick pull-right mt-xs"></span>
-        </c:if>
-      </li>
       <li class="tenth commonCls <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'cursor-none':''}">
         Actions
       </li>
@@ -213,11 +207,6 @@
     $('.eigthNotification').click(function () {
       $('.eigthNotification').addClass('cursor-none');
       a.href = "/studybuilder/adminStudies/viewStudyNotificationList.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-    $('.nine').click(function () {
-      $('.nine').addClass('cursor-none');
-      a.href = "/studybuilder/adminStudies/getChecklist.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
     $('.tenth').click(function () {

@@ -20,7 +20,7 @@ import ResearchKit
 import UIKit
 
 let kConsentCompletionResultIdentifier = "ConsentCompletion"
-let kMainTitle = "Thanks for providing consent for this Study"
+let kMainTitle = "Consent confirmed"
 let kSubTitle = "You can now start participating in the Study"
 
 /// Consent Completion Step.

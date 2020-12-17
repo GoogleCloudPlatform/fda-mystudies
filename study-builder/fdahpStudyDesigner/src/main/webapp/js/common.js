@@ -720,7 +720,7 @@ $(document)
                                 $('#email')
                                     .val('');
                                 $('#password')
-                                    .val(text);
+                                    .val(passwordLength);
                                 $('#landingId')
                                     .submit();
                                 var a = document
