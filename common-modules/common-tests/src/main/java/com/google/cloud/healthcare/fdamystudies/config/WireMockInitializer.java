@@ -44,7 +44,6 @@ public class WireMockInitializer
               logger.info("stop the WireMockServer");
               wireMockServer.stop();
               wireMockServer.shutdownServer();
-              Thread.sleep(10000);
               wireMockServer.start();
             } catch (Exception e) {
               logger.error("Unable to restart WireMockServer", e);
@@ -52,8 +51,12 @@ public class WireMockInitializer
           }
 
           if (applicationEvent instanceof ContextClosedEvent) {
-            if (wireMockServer.isRunning()) {
-              wireMockServer.shutdownServer();
+            try {
+              if (wireMockServer.isRunning()) {
+                wireMockServer.shutdownServer();
+              }
+            } catch (Exception e) {
+              logger.error("Unable to stop WireMockServer", e);
             }
           }
         });
