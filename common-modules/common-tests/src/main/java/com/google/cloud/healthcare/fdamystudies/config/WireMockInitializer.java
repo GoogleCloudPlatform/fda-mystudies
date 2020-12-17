@@ -12,6 +12,8 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -20,6 +22,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 public class WireMockInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+  private XLogger logger = XLoggerFactory.getXLogger(WireMockInitializer.class.getName());
 
   @Override
   public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
@@ -38,21 +41,17 @@ public class WireMockInitializer
           if (applicationEvent instanceof ApplicationStartedEvent
               || applicationEvent instanceof ContextRefreshedEvent) {
             try {
+              wireMockServer.shutdownServer();
               Thread.sleep(2000);
-            } catch (InterruptedException e) {
-            }
-            if (!wireMockServer.isRunning()) {
               wireMockServer.start();
+            } catch (Exception e) {
+              logger.error("Unable to restart WireMockServer", e);
             }
           }
 
           if (applicationEvent instanceof ContextClosedEvent) {
             if (wireMockServer.isRunning()) {
               wireMockServer.shutdownServer();
-              try {
-                Thread.sleep(3000);
-              } catch (InterruptedException e) {
-              }
             }
           }
         });

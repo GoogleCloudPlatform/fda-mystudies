@@ -52,7 +52,6 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
   @Autowired ParticipantActivityStateResponseService participantActivitiesResponseService;
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   void shouldGetActivityStateValidParams() throws Exception {
     // Step 1: Save the activity first
     String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
