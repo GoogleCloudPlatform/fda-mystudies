@@ -623,10 +623,7 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ng8-aL-gj9">
-                                            <rect key="frame" x="36" y="143.5" width="331" height="14"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="14" id="Ndx-nV-38m"/>
-                                            </constraints>
+                                            <rect key="frame" x="36" y="126.5" width="331" height="14"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                             <color key="textColor" red="0.50196078431372548" green="0.49803921568627452" blue="0.49803921568627452" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -634,8 +631,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="ng8-aL-gj9" secondAttribute="bottom" constant="20.5" id="Bxl-3Y-yC1"/>
-                                        <constraint firstItem="ng8-aL-gj9" firstAttribute="leading" secondItem="u0K-d2-T6j" secondAttribute="leading" constant="36" id="flQ-Vp-voL"/>
+                                        <constraint firstItem="ng8-aL-gj9" firstAttribute="centerY" secondItem="u0K-d2-T6j" secondAttribute="centerY" multiplier="1.5" id="R7a-cg-h8D"/>
                                         <constraint firstItem="ng8-aL-gj9" firstAttribute="leading" secondItem="u0K-d2-T6j" secondAttribute="leading" constant="36" id="rIa-Sq-Ja6"/>
                                         <constraint firstAttribute="trailing" secondItem="ng8-aL-gj9" secondAttribute="trailing" constant="8" id="tHx-vA-D4n"/>
                                     </constraints>
@@ -1103,9 +1099,9 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1BA-M1-mXf">
-                                            <rect key="frame" x="108" y="154" width="159" height="34"/>
+                                            <rect key="frame" x="104" y="154" width="167" height="34"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
-                                            <state key="normal" title="Delete My Account">
+                                            <state key="normal" title="Delete App Account">
                                                 <color key="titleColor" red="0.92835003140000005" green="0.14133504029999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </state>
                                             <connections>

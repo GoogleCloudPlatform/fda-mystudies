@@ -286,7 +286,6 @@ class ResourcesViewController: UIViewController {
             errorMessage: kRetainDataOnLeaveStudy,
             errorAlertActionTitle: "Retain my data",
             errorAlertActionTitle2: "Delete my data",
-            errorAlertActionTitle3: "Cancel",
             viewControllerUsed: self,
             action1: {
               // Retain Action
@@ -301,9 +300,6 @@ class ResourcesViewController: UIViewController {
               self.shouldDeleteData = true
               self.withdrawalFromStudy(deleteResponse: true)
 
-            },
-            action3: {
-              // Cancel Action
             }
           )
 

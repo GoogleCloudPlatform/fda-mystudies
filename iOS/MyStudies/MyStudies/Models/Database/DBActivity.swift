@@ -59,6 +59,9 @@ class DBActivity: Object {
 
   @objc dynamic var taskSubType: String?
 
+  @objc dynamic var isLaunchWithStudy: Bool = false
+  @objc dynamic var isStudyLifeTime: Bool = false
+
   var activityRuns = List<DBActivityRun>()
 
   override static func primaryKey() -> String? {
