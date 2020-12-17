@@ -35,11 +35,11 @@ import org.hibernate.annotations.GenericGenerator;
     name = "participant_enrollment_history",
     indexes = {
       @Index(
-          name = "withdrawal_time_user_details_id_study_info_id_idx",
-          columnList = "withdrawal_time,user_details_id,study_info_id"),
+          name = "withdrawal_timestamp_user_details_id_study_info_id_idx",
+          columnList = "withdrawal_timestamp,user_details_id,study_info_id"),
       @Index(
-          name = "withdrawal_time_user_details_id_idx",
-          columnList = "withdrawal_time,user_details_id")
+          name = "withdrawal_timestamp_user_details_id_idx",
+          columnList = "withdrawal_timestamp,user_details_id")
     })
 public class ParticipantEnrollmentHistoryEntity implements Serializable {
 
@@ -76,10 +76,10 @@ public class ParticipantEnrollmentHistoryEntity implements Serializable {
   @CreationTimestamp
   private Timestamp created;
 
-  @Column(name = "withdrawal_time")
+  @Column(name = "withdrawal_timestamp")
   private Timestamp withdrawalDate;
 
-  @Column(name = "enrolled_time")
+  @Column(name = "enrolled_timestamp")
   private Timestamp enrolledDate;
 
   @Column(length = SMALL_LENGTH)
