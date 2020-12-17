@@ -25,10 +25,10 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 1. Update the following in the [`Android/app/src/fda/res/values/strings.xml`](app/src/fda/res/values/strings.xml) file:
     -    Set `deeplink_host` to redirect to the app from the [`Hydra`](/hydra/) auth server (for example, `app://mystudies.<your-domain>/mystudies` - more information about deep links within Android applications is located [here](https://developer.android.com/training/app-links/deep-linking))
     -    Set `google_maps_key` to the API key obtained following the instructions located [here](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
-    -    Set `package_name` and `app_name` to correspond to a value you define for `applicationId` in [`Android/app/build.gradle`](app/build.gradle) ([details](https://developer.android.com/studio/build/application-id)) 
+    -    Set `package_name` and `app_name` to correspond to a value you define for `applicationId` in [`Android/app/build.gradle`](app/build.gradle) ([details](https://developer.android.com/studio/build/application-id))
     -    Customize user-facing text strings as necessary
 1. Configure push notifications
-    -    Go to the [Firebase console](https://console.firebase.google.com/) and select the project you configured for Cloud Firestore during [`Response datastore`](/response-datastore/) deployment 
+    -    Go to the [Firebase console](https://console.firebase.google.com/) and select the project you configured for Cloud Firestore during [`Response datastore`](/response-datastore/) deployment
     -    [Register your Android app](https://firebase.google.com/docs/android/setup) in the Cloud Messaging section of the Firebase console (the `Android package name` is the `applicationID` value in the [`Android/app/build.gradle`](app/build.gradle) file)
     -    Download the `google-services.json` file from the [Firebase project settings](https://console.firebase.google.com/project/_/settings/general/) page and replace [`Android/app/src/fda/google-services.json`](app/src/fda/google-services.json)
 1. Configure your [`Participant datastore`](/participant-datastore/) instance to interface with your mobile application
@@ -39,13 +39,13 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
      -    Replace images at the appropriate resolution in the [`Android/app/src/fda/res/`](app/src/fda/res/) directories: `mipmap-hdpi`, `mipmap-mdpi`, `mipmap-xhdpi`, `mipmap-xxhdpi`, `mipmap-xxxhdpi`, `drawable-560dpi`, `drawable-xhdpi`, `drawable-xxhdpi`, `drawable-xxxhdpi`
      -    Customize user-facing text in the [`Android/app/src/main/res/values/strings.xml`](app/src/main/res/values/strings.xml) file 
 1. Open the [`Android/`](../Android/) directory that contains your modifications as an existing project in [Android Studio](https://developer.android.com/studio/index.html)
-1. If necessary, install the Android 10 SDK using Tools &rarr; [SDK Manager](https://developer.android.com/studio/intro/update#sdk-manager), then File &rarr; Sync Project with Gradle Files (do not update Gradle plugin)	
+1. If necessary, install the Android 10 SDK using Tools &rarr; [SDK Manager](https://developer.android.com/studio/intro/update#sdk-manager), then File &rarr; Sync Project with Gradle Files (do not update Gradle plugin)
 
 # Building and deploying
 
 To build and run your **FDA MyStudies** application, follow the instructions [here](https://developer.android.com/studio/run).
 
-To distribute your application to users, review the options [here](https://developer.android.com/studio/publish). 
+To distribute your application to users, review the options [here](https://developer.android.com/studio/publish).
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
