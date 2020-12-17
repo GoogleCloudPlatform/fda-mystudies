@@ -126,13 +126,17 @@ public class BaseMockIT {
 
   @BeforeAll
   public void initBeforeAll() {
-    wireMockServer.start();
+    if (!wireMockServer.isRunning()) {
+      wireMockServer.start();
+    }
   }
 
   @AfterAll
   public void tearDownAfterAll() throws InterruptedException {
-    wireMockServer.stop();
-    Thread.sleep(3000);
+    if (wireMockServer.isRunning()) {
+      wireMockServer.stop();
+      Thread.sleep(3000);
+    }
   }
 
   @PostConstruct
