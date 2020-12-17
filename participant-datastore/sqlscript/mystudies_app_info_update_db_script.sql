@@ -1,22 +1,33 @@
 
 /*
-before running this script make sure you have completed the below points
-1.Study should be published
-2.Mobile App should be ready
-
-Notes:
-1.Please set the values which you want to update 
-2.set @custom_app_id to column custom_app_id's value of app_info table for which you want to update 
+This script is intended to be run on the `Participant datastore` database each time a new set of mobile applications
+are added to your MyStudies deployment. For example, once you have decided what the value of your 'App ID' is going
+to be (configured on the Settings page of the Study Builder UI), and you have determined the bundle information for the
+corresponding mobile applications (iOS and/or Android -- see their respective README files), you can update this script
+with those values. After running this script, your `Participant datastore` will know how to interact with those mobile
+applications. 
 */
-SET @android_bundle_id := ''; /*This is the value of applicationId residing in Android/app/build.gradle*/
-SET @android_server_key := ''; /*This is the Firebase Cloud Messaging Server key*/
-SET @app_description := '';  /*Description about the app.*/
-SET @app_name := ''; /*Name of the app*/
-SET @ios_bundle_id := '';     /*Get the bundle id using Xcode: Project target > General tab > Identity section > Bundle identifier*/
-SET @ios_certificate := '';   /*Base64 converted p12 file*/
-SET @ios_certificate_password := '';   /*If the p12 file is encripted then the password used to encript this file has to be passed as value for iOS certificate password.*/
 
-SET @custom_app_id := '';
+/*
+Configure the values below. If you are do not have an Android or iOS application, leave those fields empty.
+*/
+
+/* General configuration */
+SET @custom_app_id := '';                /* The `App ID` that you configured on the Settings page of the Study Builder UI */
+SET @app_name := '';                     /* A name for the application. Used to identify the application in messages to admins and participants. */
+SET @app_description := '';              /* A brief description of this application. Used to describe the application in messages to admins. */
+
+
+/* Android configuration */
+SET @android_bundle_id := '';            /* This is the value of `applicationId` that you configured in Android/app/build.gradle during Android configuration */
+SET @android_server_key := '';           /* This is the Firebase Cloud Messaging server key that you obtained during Android configuration */
+
+/* iOS configuration */
+SET @ios_bundle_id := '';                /* Obtain this value using Xcode: Project target > General tab > Identity section > Bundle identifier */
+SET @ios_certificate := '';              /* This is the Base64 converted p12 file that you obtained during iOS configuration */
+SET @ios_certificate_password := '';     /* This is the password for the p12 certificate (necessary if your certificate is encrypted - otherwise leave empty) */
+
+/* No need to modify below this line */
 UPDATE mystudies_participant_datastore.app_info a 
    SET
 a.android_bundle_id=CASE WHEN @android_bundle_id<>'' THEN @android_bundle_id ELSE a.android_bundle_id END , 
