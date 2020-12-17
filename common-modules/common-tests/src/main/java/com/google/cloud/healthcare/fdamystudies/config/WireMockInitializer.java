@@ -16,6 +16,7 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.ContextRefreshedEvent;
 
 public class WireMockInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -34,7 +35,12 @@ public class WireMockInitializer
 
     configurableApplicationContext.addApplicationListener(
         applicationEvent -> {
-          if (applicationEvent instanceof ApplicationStartedEvent) {
+          if (applicationEvent instanceof ApplicationStartedEvent
+              || applicationEvent instanceof ContextRefreshedEvent) {
+            try {
+              Thread.sleep(2000);
+            } catch (InterruptedException e) {
+            }
             if (!wireMockServer.isRunning()) {
               wireMockServer.start();
             }
