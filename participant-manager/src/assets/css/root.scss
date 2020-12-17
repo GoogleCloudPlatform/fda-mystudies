@@ -1480,12 +1480,12 @@ select {
 //   background: #000 !important;
 // }
 
-.table_row_hover_shadow {
+.custom__tbody tr {
   position: relative;
 }
-.table_row_hover_shadow:hover {
+.custom__tbody tr:hover {
   box-shadow: 1px 1px 6px 1px #ccd7e2;
-  border-top: 2px solid var(--periwinkle-gray);
+  // border-top: 1px solid var(--periwinkle-gray);
   cursor: pointer;
   -webkit-transition: all 200ms ease-in;
   -webkit-transform: scale(1);
@@ -1495,4 +1495,13 @@ select {
   -moz-transform: scale(1);
   transition: all 200ms ease-in;
   transform: scale(1);
+}
+
+.text_decoration_underline {
+  text-decoration: underline;
+  text-underline-position: under;
+}
+
+.text_decoration_underline:hover {
+  text-decoration-color: var (--dark-blue);
 }
