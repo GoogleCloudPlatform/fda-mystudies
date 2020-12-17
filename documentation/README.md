@@ -24,7 +24,7 @@ Deployment instructions | [`/deployment/README.md`](/deployment/README.md)
 `Android` configuration and installation | [`/Android/README.md`](/Android/README.md)
 `iOS` configuration and installation  | [`/iOS/README.md`](/iOS/README.md)
 Kubernetes guide | [`/deployment/kubernetes/README.md`](/deployment/kubernetes/README.md)
-Auth overview | [`/documentation/auth.md`](/documentation/auth.md)
+<!-- TODO Auth overview | [`/documentation/auth.md`](/documentation/auth.md) -->
 
 <!-- TODO Add the following rows to the table after Deployment but before Hydra
 
