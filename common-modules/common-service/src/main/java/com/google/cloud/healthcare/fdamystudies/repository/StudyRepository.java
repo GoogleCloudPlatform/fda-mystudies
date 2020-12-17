@@ -135,8 +135,12 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
   public List<StudyParticipantDetails> getStudyParticipantDetailsForOpenStudy(
-      String studyId, String[] excludeParticipantStudyStatus, Integer limit, Integer offset, String orderByCondition, String searchTerm);
-             
+      String studyId,
+      String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm);
 
   @Query(
       value =
@@ -256,10 +260,12 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_time END DESC "
               + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
-  public List<StudyParticipantDetails> getStudyParticipantDetailsForClosedStudy(String studyId,  Integer limit, Integer offset, String orderByCondition, String searchTerm);
-  
-       @Query(
-          value= "SELECT  COUNT(prs.id) "
+  public List<StudyParticipantDetails> getStudyParticipantDetailsForClosedStudy(
+      String studyId, Integer limit, Integer offset, String orderByCondition, String searchTerm);
+
+  @Query(
+      value =
+          "SELECT  COUNT(prs.id) "
               + "FROM participant_registry_site prs "
               + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id "
               + "LEFT JOIN sites si ON si.id=prs.site_id "
@@ -270,7 +276,9 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT * FROM study_info WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+          "SELECT * FROM study_info stu WHERE stu.id IN( "
+              + "SELECT study_id FROM sites WHERE study_id=stu.id) "
+              + "AND (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% ) ORDER BY stu.created_time DESC  LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
 }

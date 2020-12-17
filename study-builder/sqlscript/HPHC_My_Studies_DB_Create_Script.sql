@@ -222,22 +222,6 @@ CREATE TABLE IF NOT EXISTS `app_versions` (
 
 
 -- Data exporting was unselected.
--- Dumping structure for table fda_hphc.auth_info
-DROP TABLE IF EXISTS `auth_info`;
-CREATE TABLE IF NOT EXISTS `auth_info` (
-  `auth_id` int(11) NOT NULL,
-  `participant_id` int(11) DEFAULT NULL,
-  `device_token` varchar(1000) DEFAULT NULL,
-  `device_type` char(1) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `modified_on` datetime DEFAULT NULL,
-  `auth_key` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`auth_id`),
-  KEY `participant_id_idx` (`participant_id`),
-  CONSTRAINT `FK_participant_auth_info_id` FOREIGN KEY (`participant_id`) REFERENCES `participant_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
 -- Dumping structure for table fda_hphc.bar_chart
 DROP TABLE IF EXISTS `bar_chart`;
 CREATE TABLE IF NOT EXISTS `bar_chart` (
@@ -752,55 +736,6 @@ CREATE TABLE IF NOT EXISTS `notification_history` (
   CONSTRAINT `notification_history_id` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`notification_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
--- Dumping structure for table fda_hphc.participant_activities_status
-DROP TABLE IF EXISTS `participant_activities_status`;
-CREATE TABLE IF NOT EXISTS `participant_activities_status` (
-  `id` int(11) NOT NULL,
-  `participant_id` int(11) DEFAULT NULL,
-  `study_id` int(11) DEFAULT NULL,
-  `activity_id` int(11) DEFAULT NULL COMMENT 'Active Task Id / Survey Id',
-  `activity_complete_id` int(11) DEFAULT NULL,
-  `activity_type` varchar(50) DEFAULT NULL COMMENT 'Active Tasks + Questionnaires',
-  PRIMARY KEY (`id`),
-  KEY `study_id_idx` (`study_id`),
-  KEY `participant_id_idx` (`participant_id`),
-  CONSTRAINT `FK_participant_status_id` FOREIGN KEY (`participant_id`) REFERENCES `participant_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_study_parti_status_id` FOREIGN KEY (`study_id`) REFERENCES `studies` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
--- Dumping structure for table fda_hphc.participant_details
-DROP TABLE IF EXISTS `participant_details`;
-CREATE TABLE IF NOT EXISTS `participant_details` (
-  `id` int(11) NOT NULL,
-  `first_name` varchar(100) DEFAULT NULL,
-  `last_name` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `use_passcode` tinyint(1) DEFAULT NULL,
-  `touch_id` tinyint(1) DEFAULT NULL,
-  `local_notification_flag` tinyint(1) DEFAULT NULL,
-  `remote_notification_flag` tinyint(1) DEFAULT NULL,
-  `reminder_flag` tinyint(1) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL COMMENT 'Active / Deleted',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
--- Dumping structure for table fda_hphc.participant_studies
-DROP TABLE IF EXISTS `participant_studies`;
-CREATE TABLE IF NOT EXISTS `participant_studies` (
-  `id` int(11) NOT NULL,
-  `participant_id` int(11) DEFAULT NULL,
-  `study_id` int(11) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT NULL COMMENT 'started / Paused / Not Eligility / Quit ...',
-  `bookmark` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `participant_id_idx` (`participant_id`),
-  KEY `study_id_idx` (`study_id`),
-  CONSTRAINT `FK_participant_id` FOREIGN KEY (`participant_id`) REFERENCES `participant_details` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_study_participant_studies_id` FOREIGN KEY (`study_id`) REFERENCES `studies` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table fda_hphc.pie_chart
