@@ -61,14 +61,6 @@
             </th>
             <th id="">RESOURCE TITLE</th>
             <th class="text-right" id=""><c:if test="${empty permission}">
-              <div class="dis-line form-group mb-none mr-sm">
-                <button type="button" id="studyProtocolId"
-                        class="btn btn-primary blue-btn"
-                        onclick="addStudyProtocol(${studyProtocolResourceBO.id});">
-                  Study Protocol
-                </button>
-              </div>
-
               <div class="dis-line form-group mb-none">
                 <button type="button" id="addResourceId"
                         class="btn btn-primary blue-btn" onclick="addResource();">Add Resource
