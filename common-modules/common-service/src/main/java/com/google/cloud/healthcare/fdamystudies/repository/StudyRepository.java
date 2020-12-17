@@ -111,7 +111,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_time AS enrolledDate, psi.status AS enrolledStatus "
+          "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_timestamp AS enrolledDate, psi.status AS enrolledStatus "
               + ",prs.site_id AS siteId, prs.onboarding_status AS onboardingStatus, "
               + "loc.name AS locationName, loc.custom_id AS locationCustomId, "
               + "prs.invitation_time AS invitedDate, prs.id AS participantId, stu.type AS studyType "
@@ -126,17 +126,21 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "         CASE :orderByCondition WHEN 'locationName_asc' THEN loc.name END ASC, "
               + "         CASE :orderByCondition WHEN 'onboardingStatus_asc' THEN prs.onboarding_status END ASC, "
               + "         CASE :orderByCondition WHEN 'enrollmentStatus_asc' THEN psi.status END ASC, "
-              + "         CASE :orderByCondition WHEN 'enrollmentDate_asc' THEN psi.enrolled_time END ASC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_asc' THEN psi.enrolled_timestamp END ASC, "
               + "         CASE :orderByCondition WHEN 'email_desc' THEN prs.email END DESC, "
               + "         CASE :orderByCondition WHEN 'locationName_desc' THEN loc.name END DESC, "
               + "         CASE :orderByCondition WHEN 'onboardingStatus_desc' THEN prs.onboarding_status END DESC, "
               + "         CASE :orderByCondition WHEN 'enrollmentStatus_desc' THEN psi.status END DESC, "
-              + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_time END DESC "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_timestamp END DESC "
               + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
   public List<StudyParticipantDetails> getStudyParticipantDetailsForOpenStudy(
-      String studyId, String[] excludeParticipantStudyStatus, Integer limit, Integer offset, String orderByCondition, String searchTerm);
-             
+      String studyId,
+      String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm);
 
   @Query(
       value =
@@ -233,7 +237,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_time AS enrolledDate, psi.status AS enrolledStatus "
+          "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_timestamp AS enrolledDate, psi.status AS enrolledStatus "
               + ",prs.site_id AS siteId, prs.onboarding_status AS onboardingStatus, "
               + "loc.name AS locationName, loc.custom_id AS locationCustomId, "
               + "prs.invitation_time AS invitedDate, prs.id AS participantId, stu.type AS studyType "
@@ -248,18 +252,20 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "         CASE :orderByCondition WHEN 'locationName_asc' THEN loc.name END ASC, "
               + "         CASE :orderByCondition WHEN 'onboardingStatus_asc' THEN prs.onboarding_status END ASC, "
               + "         CASE :orderByCondition WHEN 'enrollmentStatus_asc' THEN psi.status END ASC, "
-              + "         CASE :orderByCondition WHEN 'enrollmentDate_asc' THEN psi.enrolled_time END ASC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_asc' THEN psi.enrolled_timestamp END ASC, "
               + "         CASE :orderByCondition WHEN 'email_desc' THEN prs.email END DESC, "
               + "         CASE :orderByCondition WHEN 'locationName_desc' THEN loc.name END DESC, "
               + "         CASE :orderByCondition WHEN 'onboardingStatus_desc' THEN prs.onboarding_status END DESC, "
               + "         CASE :orderByCondition WHEN 'enrollmentStatus_desc' THEN psi.status END DESC, "
-              + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_time END DESC "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_timestamp END DESC "
               + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
-  public List<StudyParticipantDetails> getStudyParticipantDetailsForClosedStudy(String studyId,  Integer limit, Integer offset, String orderByCondition, String searchTerm);
-  
-       @Query(
-          value= "SELECT  COUNT(prs.id) "
+  public List<StudyParticipantDetails> getStudyParticipantDetailsForClosedStudy(
+      String studyId, Integer limit, Integer offset, String orderByCondition, String searchTerm);
+
+  @Query(
+      value =
+          "SELECT  COUNT(prs.id) "
               + "FROM participant_registry_site prs "
               + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id "
               + "LEFT JOIN sites si ON si.id=prs.site_id "
@@ -270,7 +276,9 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT * FROM study_info WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+          "SELECT * FROM study_info stu WHERE stu.id IN( "
+              + "SELECT study_id FROM sites WHERE study_id=stu.id) "
+              + "AND (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% ) ORDER BY stu.created_time DESC  LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
 }
