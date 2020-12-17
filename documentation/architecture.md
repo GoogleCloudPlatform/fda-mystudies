@@ -1,10 +1,8 @@
 # Platform Overview
 
-## Introduction
+FDA MyStudies consists of several components that work together as a platform. These components include web-based UIs for building studies and enrolling participants, backend services for managing the flow of data, and mobile applications that participants use to discover, enroll and participate in studies.
 
-FDA MyStudies consists of several components that work together as a platform. These components include web-based UIs for building studies and enrolling participants, back-end services for managing the flow of data, and mobile applications that participants use to discover, enroll and participate in studies.
-
-This document describes the architecture of FDA MyStudies. It outlines the various platform components and their roles, interdependencies and interactions
+This document describes the architecture of FDA MyStudies. It outlines the various platform components and how they work together.
 
 ## Architecture
 
@@ -42,10 +40,10 @@ The platform components are as follows:
    1.  [Android](/Android/) mobile application (UI) to join and participate in studies
    1.  [iOS](/iOS/) mobile application (UI) to join and participate in studies 
 
-Each of the components runs in its own Docker container. Blob storage, relational databases and a document store provide data management capabilities. Centralized logging enables auditing and identity and access control compartmentalizes the flow of data. The specific technologies used to fulfil these roles is up to the deploying organization, but in the interest of simplicity, these guides describe an implementation that leverages Google Cloud Platform services. The [deployment guide](/deployment/) and individual component [READMEs](/documentation/) provide detailed instructions for how to set up and run the platform using these services. You might use one or more of the following cloud technologies:
+Each of the components runs in its own Docker container. Blob storage, relational databases and a document store provide data management capabilities. Centralized logging enables auditing, and identity and access control compartmentalizes the flow of data. The specific technologies used to fulfil these roles is up to the deploying organization, but in the interest of simplicity, these guides describe an implementation that leverages Google Cloud Platform services. The [deployment guide](/deployment/) and individual component [READMEs](/documentation/) provide detailed instructions for how to set up and run the platform using these services. You might use one or more of the following cloud technologies:
 - Container deployment
-  -  Google Kubernetes Engine (the Kubernetes approach to deployment is described in the automated [deployment guide](/deployment/))
-  - Google Compute Engine (the VM approach to deployment is described in the individual component [READMEs](/documentation/))
+  -  [Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (the Kubernetes approach to deployment is described in the automated [deployment guide](/deployment/))
+  - [Compute Engine](https://cloud.google.com/compute) (the VM approach to deployment is described in the individual component [READMEs](/documentation/))
 - Blob storage
   - [Cloud Storage](https://cloud.google.com/storage) buckets for (1) study content and (2) participant consent forms
 - Relational database
@@ -75,17 +73,20 @@ The `Study builder` is the source of study configuration for all downstream appl
 ### Participant enrollment 
 
 The [`Participant manager`](/participant-manager/) application provides a user interface for study administrators to create study sites and invite participants to participate in specific studies. The [`Participant manager datastore`](/participant-manager-datastore/) is the backend component of the `Participant manager` UI. The `Participant manager datastore` shares a MySQL database with the `Participant datastore`. As administrators use the UI to modify sites and manage participants, changes are propagated to the `Participant datastore` through the shared database.
-<br\>
+
+
 When a new participant is added using the `Participant manager`, the `Participant manager datastore` sends an email to the participant with a link that can be used to enroll in the study. In the case of an *open enrollment* study, participants will be able to discover and join studies even without a specific invitation. The participant goes to the mobile application to create an account, which uses the [`Auth server`](/auth-server/) to provide the necessary backend services. The `Auth server` sends the request for account creation to the `Participant datastore` to confirm that there is a study associated with that mobile application, and if confirmed, the `Auth server` validates the participant’s email and creates the account.
-<br\>
+
+
 The mobile application populates the list of available studies by making requests to the `Study datastore`. When a participant selects a study to join, the mobile application retrieves the study eligibility questionnaire from the `Study datastore`. In the case where the participant was invited using the `Participant manager`, the mobile application confirms the invitation is valid with the `Participant datastore`. Once the `Participant datastore` determines that the participant is eligible for the study, the mobile application retrieves the study’s consent form from the `Study datastore`. After completion, the mobile application sends the consent form to the `Participant datastore`, which writes the consent PDF to blob storage. The participant is then enrolled in the study and a record is created for them in both the `Participant datastore` and `Response datastore`.
 
 ### Ongoing participation
 
 The mobile application retrieves the list of study activities and the study schedule from the `Study datastore`. The mobile application posts updates to the `Response datastore` as participants start, pause, resume or complete study activities. The `Response datastore` writes this study activity data to its MySQL database. When the participant completes a study activity, the mobile application posts the results of that activity to the `Response datastore`, which writes that response data to Cloud Firestore.
-<br\>
+
+
 If a participant sends a message with the mobile application’s contact form, that message is posted to the `Participant datastore`, which then sends an email to the configured destination. The `Participant datastore` can send participation reminders or other types of notifications to study participants through the mobile applications. When participants navigate to the dashboarding section of the mobile application, the mobile application will make a request to the `Response datastore` for the necessary study responses that are used to populate the configured dashboard. 
 
 ## Deployment and operation
 
-Detailed deployment instructions can be found in the [deployment guide](/deployment/) and in each of the [directory READMEs](/documentation/). More information about authorization and security can be found in the [auth overview](/documentation/auth.md).
+Detailed deployment instructions can be found in the [deployment guide](/deployment/) and in each of the [directory READMEs](/documentation/).
