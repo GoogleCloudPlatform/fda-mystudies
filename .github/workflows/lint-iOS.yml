@@ -6,7 +6,7 @@ on:
       - develop
     paths:
       - 'iOS/**'
-      - '.github/workflows/swiftlint.yml'
+      - '.github/workflows/lint-iOS.yml'
 jobs:
   SwiftLint:
     runs-on: ubuntu-latest
