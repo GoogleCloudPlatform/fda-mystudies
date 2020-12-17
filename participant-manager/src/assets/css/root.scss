@@ -1473,3 +1473,26 @@ select {
     width: calc(100% - 30px);
   }
 }
+
+// .tr_shadow_hover :hover {
+//   box-shadow: 1px 1px 5px 0px #ccd7e2;
+
+//   background: #000 !important;
+// }
+
+.table_row_hover_shadow {
+  position: relative;
+}
+.table_row_hover_shadow:hover {
+  box-shadow: 1px 1px 6px 1px #ccd7e2;
+  border-top: 2px solid var(--periwinkle-gray);
+  cursor: pointer;
+  -webkit-transition: all 200ms ease-in;
+  -webkit-transform: scale(1);
+  -ms-transition: all 200ms ease-in;
+  -ms-transform: scale(1);
+  -moz-transition: all 200ms ease-in;
+  -moz-transform: scale(1);
+  transition: all 200ms ease-in;
+  transform: scale(1);
+}
