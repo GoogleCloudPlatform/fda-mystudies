@@ -21,7 +21,7 @@ Open-source [deployment tools](deployment) are included for semi-automated deplo
 
 Information related to the deployment and operation of FDA Mystudies can be found within each directory’s `README`, and also in the following guides:
 
-* [High-level platform and repo overview](README.md) (this document)<!--TODO * [Feature and functionality demonstrations](documentation/demo.md)-->
+<!--TODO * [Feature and functionality demonstrations](documentation/demo.md)-->
 * [Detailed platform overview](documentation/architecture.md)
 * [Instructions for semi-automated deployment](deployment/README.md)
 <!-- TODO
