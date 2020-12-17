@@ -48,9 +48,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.slf4j.ext.XLogger;
@@ -73,6 +76,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -119,6 +123,16 @@ public class BaseMockIT {
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   @LocalServerPort int randomServerPort;
+
+  @BeforeAll
+  public void setUp() {
+    wireMockServer.start();
+  }
+
+  @AfterAll
+  public void tearDown() {
+    wireMockServer.stop();
+  }
 
   @PostConstruct
   public void logServerPort() {
