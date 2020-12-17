@@ -244,7 +244,7 @@ public class FdahpStudyDesignerConstants {
   public static final String NOTIFICATION_DEACTIVATE_TEXT =
       "The study $customId has been closed. We thank you for your participation.";
   public static final String NOTIFICATION_ERROR_MSG =
-      "One or more of the notifications for the study is scheduled for a date that has already occured. Please correct the dates and try again.";
+      "One or more of the notifications for the study is scheduled for a date that has already occurred. Please correct the dates and try again.";
   public static final String NOTIFICATION_GT = "GT";
   public static final String NOTIFICATION_IMMEDIATE = "immediate";
 
