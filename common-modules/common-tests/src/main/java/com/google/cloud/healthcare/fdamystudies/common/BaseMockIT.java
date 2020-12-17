@@ -125,12 +125,12 @@ public class BaseMockIT {
   @LocalServerPort int randomServerPort;
 
   @BeforeAll
-  public void setUp() {
+  public void initBeforeAll() {
     wireMockServer.start();
   }
 
   @AfterAll
-  public void tearDown() {
+  public void tearDownAfterAll() {
     wireMockServer.stop();
   }
 
