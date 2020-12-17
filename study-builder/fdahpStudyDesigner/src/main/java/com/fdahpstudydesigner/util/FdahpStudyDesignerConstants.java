@@ -33,7 +33,7 @@ public class FdahpStudyDesignerConstants {
 
   public static final String ACTION_LUNCH = "lunchId";
   public static final String ACTION_LUNCH_SUCCESS_MSG =
-      "The study has been launched and is now available in the mobile app.";
+      "The study has been launched and is now available to participants in the mobile applications.";
   public static final String ACTION_ON = "actionOn";
   public static final String ACTION_PAGE = "actionPage";
   public static final String ACTION_PAUSE = "pauseId";
@@ -118,7 +118,7 @@ public class FdahpStudyDesignerConstants {
   public static final String CONTENT = "content";
   public static final String COPY_STUDY = "copy";
   public static final String COPY_STUDY_FAILURE_MSG =
-      "Sorry, a technical error occurred and the copy-into-new operation failed.";
+      "An error occurred and the copy operation could not be completed.";
   public static final String COPY_STUDY_SUCCESS_MSG =
       "A new study has been created by replicating the existing study.";
 
@@ -180,11 +180,11 @@ public class FdahpStudyDesignerConstants {
   public static final String FORM_STEP_SELECTEDIMAGE = "FormSelectedImage";
   public static final String FORMSTEP_ACTIVITY = "Form step";
   public static final String FORMSTEP_DELETED = "Form step deleted from questionnaire";
-  public static final String FORMSTEP_DONE = "Form step marked content-complete";
+  public static final String FORMSTEP_DONE = "Form step marked complete";
   public static final String FORMSTEP_QUESTION_ACTIVITY = "Form step question";
 
   public static final String FORMSTEP_QUESTION_DELETED = "Question deleted from form step";
-  public static final String FORMSTEP_QUESTION_DONE = "Question step marked content-complete";
+  public static final String FORMSTEP_QUESTION_DONE = "Question step marked complete";
   public static final String FORMSTEP_QUESTION_SAVED = "Question step content saved";
   public static final String DRAFT_QUESTIONNAIRE = "draftQuestionnaire";
 
@@ -212,7 +212,7 @@ public class FdahpStudyDesignerConstants {
   public static final String INSTRUCTION_ACTIVITY = "Instruction step";
   public static final String INSTRUCTION_ADDED_SUCCESSFULLY =
       "Instruction step added to questionnaire";
-  public static final String INSTRUCTION_DONE = "Instruction step marked content-complete";
+  public static final String INSTRUCTION_DONE = "Instruction step marked complete";
   public static final String INSTRUCTION_ID = "instructionId";
 
   public static final String INSTRUCTION_SAVED = "Instruction step content saved";
@@ -225,12 +225,12 @@ public class FdahpStudyDesignerConstants {
   public static final String LOGOUPLOAD = "LOGOUPLOAD";
   public static final String LOGOUT_LOGIN_USER = "logout_login_user";
   public static final String LUNCH_CHECKLIST_ERROR_MSG =
-      "The Checklist section does not have all items marked as completed. Are you sure you still want to go ahead and launch the study?";
+      "The Checklist section does not have all items marked as completed. Do you want to proceed?";
   public static final String LUNCH_ENROLLMENT_ERROR_MSG =
-      "The Participant Enrollment Allowed setting must be set to Yes in the Settings section, in order to launch the study.";
+      "To launch the study, you must enable \"Participant Enrollment Allowed\" in the Settings section.";
   public static final String MAILFAILURE = "MAILFAILURE";
   public static final String MARK_AS_COMPLETE_DONE_ERROR_MSG =
-      "One or more items in this section need to be completed (marked Done) in order to proceed with this action. Look for the dot indicator on the Edit icon to identify the incomplete ones.";
+      "One or more items in this section need to be marked as complete to proceed with this action.";
   public static final String MESSAGE = "message";
   public static final String MONTHS_OF_THE_CURRENT_YEAR = "Months of the current year";
   public static final String MULTIPLE_TIMES_A_DAY = "24 hours of current day";
@@ -244,7 +244,7 @@ public class FdahpStudyDesignerConstants {
   public static final String NOTIFICATION_DEACTIVATE_TEXT =
       "The study $customId has been closed. We thank you for your participation.";
   public static final String NOTIFICATION_ERROR_MSG =
-      "One or more of the notifications for the study is scheduled for a date that has already expired. Please correct the dates and try again.";
+      "One or more of the notifications for the study is scheduled for a date that has already occured. Please correct the dates and try again.";
   public static final String NOTIFICATION_GT = "GT";
   public static final String NOTIFICATION_IMMEDIATE = "immediate";
 
@@ -277,15 +277,15 @@ public class FdahpStudyDesignerConstants {
   public static final String PERMISSION = "permission";
 
   public static final String PLATFORM_ACTIVETASK_ERROR_MSG_ANDROID =
-      "One or more Active tasks are not supported for the selected platform(s). Please correct the same and try again. Note that there is help text available on this page that explains differences in supported features for iOS vs. Android.";
+      "One or more active tasks that you have selected are not supported by the mobile platform that is configured in the Settings section.";
   public static final String PLATFORM_ERROR_MSG_ANDROID =
-      "One or more questionnaires have questions with response types that are not supported for the selected platform(s). Please correct the same and try again. Note that there is help text available on this page that explains differences in supported features for iOS vs. Android.";
+      "One or more questionnaires have questions with response types that are not supported by the mobile platform that is configured in the Settings section.";
   public static final String PRE_PUBLISH_ENROLLMENT_ERROR_MSG =
-      "The Participant Enrollment Allowed setting must be set to No in the Settings section, when publishing the study as an upcoming one. Please make the change and try again.";
+      "You must set \"Allow participants to enroll?\" to \"No\" in the Settings section to publish your study as an upcoming study.";
   public static final String PUBLISH_ENROLLMENT_ERROR_MSG =
-      "You are attempting to publish updates to the study. Please ensure you set the Participant Enrollment Allowed setting to Yes in the Settings section and try again.";
+      "You must set \"Allow participants to enroll?\" to \"Yes\" in the Settings section to publish updates to your study.";
   public static final String PUBLISH_UPDATE_CHECKLIST_ERROR_MSG =
-      "The Checklist section does not have all items marked as completed. Are you sure you still want to go ahead and publish updates to the study?";
+      "The Checklist section does not have all items marked complete. Do you want to proceed?";
 
   public static final String PW_DATE_FORMAT = "MMddyy";
   public static final String QUESTION_ID = "questionId";
@@ -299,13 +299,13 @@ public class FdahpStudyDesignerConstants {
   public static final String QUESTIONNAIRE_DELETED = "Questionnaire deleted";
   public static final String QUESTIONNAIRE_LIST = "questionnaireList";
   public static final String QUESTIONNAIRELIST_MARKED_AS_COMPLETED =
-      "This section has been marked as content-complete";
+      "This section has been marked as complete";
   public static final String QUESTIONNARIE_STUDY_ID = "questionnarieStudyId";
   public static final String QUESTIONNARIES_ERROR_MSG =
-      "One or more of the study's questionnaires for the study is scheduled for a date that has already expired. Please correct the dates and try again.";
+      "One or more of the study's questionnaires for the study is scheduled for a date that has already occurred. Please correct the dates and try again.";
   public static final String QUESTIONSTEP_ACTIVITY = "Question step";
   public static final String QUESTIONSTEP_DELETED = "Question step deleted";
-  public static final String QUESTIONSTEP_DONE = "Question step marled content-complete";
+  public static final String QUESTIONSTEP_DONE = "Question step marked complete";
   public static final String QUESTIONSTEP_SAVED = "Question step saved";
   public static final String REDIRECT_SESSION_PARAM_NAME = "sessionUserId=";
   public static final String REFERENCE_TYPE_CATEGORIES = "Categories";
@@ -320,13 +320,13 @@ public class FdahpStudyDesignerConstants {
       "One or more resources has a period of visibility that uses anchor date. However, there is no anchor date set for the study yet. Please visit the Questionnaires section, select a question for the anchor date and then try again.";
   // Action Failure message
   public static final String RESOURCE_DATE_ERROR_MSG =
-      "One or more of the study resources has a period of visibility with a start date that has already expired. Please correct the date and try again.";
+      "One or more study resources has a visibility period with a start date that has already occurred. Please adjust the date and try again.";
   public static final String RESOURCE_INFO_ID = "resourceInfoId";
   public static final String RESOURCEPDFFILES = "studyResources";
   public static final String RESOURCES_ERROR_MSG =
       "One or more of the study's sections are not marked as completed. Please complete all the sections and try again.";
   public static final String RESUME_CHECKLIST_ERROR_MSG =
-      "The Checklist section does not have all items marked as completed. Are you sure you still want to go ahead and resume the paused study?";
+      "The Checklist section does not have all items marked complete. Do you want to proceed?";
   public static final Integer ROLE_CREATE_MANAGE_STUDIES = 8;
   public static final Integer ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT = 6;
   public static final Integer ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW = 4;
@@ -419,7 +419,7 @@ public class FdahpStudyDesignerConstants {
 
   public static final String UI_SDF_TIME = "HH:mm";
   public static final String UNABLE_TO_MARK_AS_COMPLETE =
-      "The section could not be marked content-complete.Please try again.";
+      "The section could not be marked complete.Please try again.";
   public static final String USER_EMAIL_FAIL_ACTIVITY_DEATILS_MESSAGE = "Invalid email";
   public static final String USER_EMAIL_FAIL_ACTIVITY_MESSAGE = "Invalid email";
   public static final String USER_LOCKED_ACTIVITY_DEATILS_MESSAGE =

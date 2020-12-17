@@ -217,11 +217,11 @@
                             messageText);
                 } else {
                   if (buttonText == 'publishId') {
-                    messageText = "To publish a study as an upcoming one, the  Study Information, Settings, Overview and Consent sections need to be marked complete. Please complete these sections and try again.";
+                    messageText = "The Basic Information, Settings, Overview and Consent sections must be marked complete before publishing a study as upcoming. Please complete these sections and try again.";
                   } else if (buttonText == 'lunchId') {
-                    messageText = "Launching a study requires that all sections be marked complete. Please complete all the sections and try again.";
+                    messageText = "All Study Builder sections must be marked complete to publish the study. Please complete these sections to proceed.";
                   } else if (buttonText == 'updatesId') {
-                    messageText = "Publishing updates to a study requires that all sections be marked complete. Please complete all the sections and try again.";
+                    messageText = "All Study Builder sections must be marked complete to publish updates to the study. Please complete these sections to proceed.";
                   }
                   bootbox.confirm(message, function (result) {
                     bootbox.alert(messageText);
@@ -249,13 +249,13 @@
 
   function showBootBoxMessage(buttonText, messageText) {
     if (buttonText == 'resumeId') {
-      messageText = "You are attempting to resume a paused study. This will activate the study and allow mobile app users to resume participation. Are you sure you wish to proceed?";
+      messageText = "Resuming the study will allow mobile app users to resume participation. Would you like to proceed?";
     } else if (buttonText == 'publishId') {
-      messageText = "You are attempting to publish the study. Are you sure you wish to proceed?";
+      messageText = "Publishing the study as \"upcoming\" will enable mobile app users to see the study overview and consent form, but will not allow enrollment. Would you like to proceed?";
     } else if (buttonText == 'lunchId') {
-      messageText = "You are attempting to launch the study which will make it available in the mobile app. Are you sure you wish to proceed?";
+      messageText = "Launching the study will allow mobile application users to see the study and start participating. Would you like to proceed?";
     } else if (buttonText == 'updatesId') {
-      messageText = "You are attempting to publish updates to the study in the mobile app. Are you sure you wish to proceed?";
+      messageText = "Publishing study updates will allow mobile application users to see the changes to the study. Would you like to proceed?";
     }
     bootbox.confirm({
       closeButton: false,
