@@ -73,8 +73,10 @@
                         totalItems: appDetails.totalParticipantCount
                       }
               "
+              class="table_row_hover_shadow"
+              [routerLink]="['/coordinator/participant', applists.id]"
             >
-              <td [routerLink]="['/coordinator/participant', applists.id]">
+              <td>
                 <span class="tbl__td__label">Participant Email:</span>
                 <span>{{ applists.email }}</span>
               </td>
