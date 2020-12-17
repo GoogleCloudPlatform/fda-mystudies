@@ -123,10 +123,6 @@ export class ParticipantDetailsComponent
     this.locationLibrary.back();
   }
   hasCompletedEnrollment(participantDetails: RegistryParticipant): boolean {
-    return (
-      participantDetails.enrollments.length > 0 &&
-      participantDetails.enrollments[0].enrollmentStatus ===
-        EnrollmentStatus.Enrolled
-    );
+    return participantDetails.enrollmentStatus === EnrollmentStatus.Enrolled;
   }
 }

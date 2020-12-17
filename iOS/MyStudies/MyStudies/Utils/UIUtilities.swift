@@ -100,11 +100,9 @@ class UIUtilities: NSObject {
     errorMessage: String,
     errorAlertActionTitle: String,
     errorAlertActionTitle2: String?,
-    errorAlertActionTitle3: String?,
     viewControllerUsed: UIViewController,
     action1: @escaping AlertAction,
-    action2: @escaping AlertAction,
-    action3: @escaping AlertAction
+    action2: @escaping AlertAction
   ) {
     let alert = UIAlertController(
       title: errorTitle,
@@ -133,17 +131,13 @@ class UIUtilities: NSObject {
       )
     }
 
-    if errorAlertActionTitle3 != nil {
-      alert.addAction(
-        UIAlertAction(
-          title: errorAlertActionTitle3,
-          style: UIAlertAction.Style.default,
-          handler: { (_) in
-            action3()
-          }
-        )
+    alert.addAction(
+      UIAlertAction(
+        title: "Cancel",
+        style: .cancel,
+        handler: nil
       )
-    }
+    )
 
     viewControllerUsed.present(alert, animated: true, completion: nil)
   }
