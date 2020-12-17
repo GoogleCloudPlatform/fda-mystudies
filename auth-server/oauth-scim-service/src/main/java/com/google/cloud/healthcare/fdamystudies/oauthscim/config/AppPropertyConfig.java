@@ -39,6 +39,12 @@ public class AppPropertyConfig implements Serializable {
   @Value("${mail.body.reset-password}")
   private String mailResetPasswordBody;
 
+  @Value("${mail.subject.reset-password-mobile}")
+  private String mailResetPasswordSubjectForMobileApp;
+
+  @Value("${mail.body.reset-password-mobile}")
+  private String mailResetPasswordBodyForMobileApp;
+
   @Value("${oauth.scim.service.max.invalid.login.attempts:5}")
   private int maxInvalidLoginAttempts;
 
@@ -48,11 +54,17 @@ public class AppPropertyConfig implements Serializable {
   @Value("${oauth.scim.service.reset.password.expiry.hours:48}")
   private int resetPasswordExpiryInHours;
 
-  @Value("${oauth.scim.service.email.account.locked.subject}")
+  @Value("${mail.account.locked.subject}")
   private String mailAccountLockedSubject;
 
-  @Value("${oauth.scim.service.email.account.locked.content}")
+  @Value("${mail.account.locked.content}")
   private String mailAccountLockedBody;
+
+  @Value("${mail.account.locked.subject-mobile}")
+  private String mailAccountLockedSubjectForMobileApp;
+
+  @Value("${mail.account.locked.content-mobile}")
+  private String mailAccountLockedBodyForMobileApp;
 
   @Value("${cookie.secure:true}")
   private boolean secureCookie;
