@@ -49,6 +49,7 @@
           <div class="form-group">
             <label for="fname">First Name</label>
             <input
+               [ngClass]="{'not-allowed': user.status === userStatus.Deactivated}"
             [readonly]="user.status === userStatus.Deactivated"
               placeholder="Enter First Name"
               type="text"
@@ -86,6 +87,8 @@
           <div class="form-group">
             <label for="lname">Last Name</label>
             <input
+           
+           [ngClass]="{'not-allowed': user.status === userStatus.Deactivated}"
            [readonly]="user.status === userStatus.Deactivated"
               type="text"
               maxlength="50"
@@ -124,7 +127,7 @@
             <label for="emailId">Email ID</label>
             <input
               type="email"
-              class="form-control"
+              class="form-control not-allowed"
               id="emailId"
               placeholder="Enter Email"
               [(ngModel)]="user.email"
@@ -139,6 +142,7 @@
             <label>Role</label>
             <div class="custom__labels">
               <input
+                [ngClass]="{'not-allowed': user.status === userStatus.Deactivated}"
               [disabled]="user.status === userStatus.Deactivated"
                 type="checkbox"
                 id="role"
@@ -328,7 +332,6 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                           }}
                         </div>
                         <div 
-                        *ngIf="user.status !== userStatus.Deactivated"
                           class="fa__plus__minus mob_pull_right"
                           type="button"
                           data-toggle="collapse"
