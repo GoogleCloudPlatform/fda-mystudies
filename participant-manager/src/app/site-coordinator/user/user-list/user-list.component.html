@@ -51,13 +51,11 @@
         <tr
           class="border__bottom__red border-top__c4d1e6 progress__bar"
           *ngFor="let user of mf.data"
+          routerLink="/coordinator/users/{{ user.id }}"
         >
           <td>
             <span class="tbl__td__label">First Name:</span>
-            <span
-              class="no_st_en outline__none"
-              routerLink="/coordinator/users/{{ user.id }}"
-            >
+            <span class="no_st_en outline__none">
               {{ user.firstName }}
             </span>
           </td>

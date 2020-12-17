@@ -70,8 +70,11 @@
               <th>Associated Study Enrollments</th>
             </tr>
           </thead>
-          <tbody class="custom__tbody">
-            <tr *ngFor="let applists of mf.data">
+          <tbody class="custom__tbody table_row_hover_shadow">
+            <tr
+              *ngFor="let applists of mf.data"
+              [routerLink]="['/coordinator/participant', applists.id]"
+            >
               <td [routerLink]="['/coordinator/participant', applists.id]">
                 <span class="tbl__td__label">Participant Email:</span>
                 <span>{{ applists.email }}</span>
