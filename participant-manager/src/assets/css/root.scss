@@ -1474,3 +1474,28 @@ select {
     width: calc(100% - 30px);
   }
 }
+
+.custom__tbody tr {
+  position: relative;
+}
+.custom__tbody tr:hover {
+  box-shadow: 1px 1px 6px 1px #ccd7e2;
+  cursor: pointer;
+  -webkit-transition: all 200ms ease-in;
+  -webkit-transform: scale(1);
+  -ms-transition: all 200ms ease-in;
+  -ms-transform: scale(1);
+  -moz-transition: all 200ms ease-in;
+  -moz-transform: scale(1);
+  transition: all 200ms ease-in;
+  transform: scale(1);
+}
+
+.text_decoration_underline {
+  text-decoration: underline;
+  text-underline-position: under;
+}
+
+.text_decoration_underline:hover {
+  text-decoration-color: var (--dark-blue);
+}
