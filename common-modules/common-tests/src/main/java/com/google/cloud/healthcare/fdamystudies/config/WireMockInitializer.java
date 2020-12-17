@@ -12,8 +12,10 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ContextClosedEvent;
 
 public class WireMockInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -29,6 +31,25 @@ public class WireMockInitializer
     configurableApplicationContext
         .getBeanFactory()
         .registerSingleton("wireMockServer", wireMockServer);
+
+    configurableApplicationContext.addApplicationListener(
+        applicationEvent -> {
+          if (applicationEvent instanceof ApplicationStartedEvent) {
+            if (!wireMockServer.isRunning()) {
+              wireMockServer.start();
+            }
+          }
+
+          if (applicationEvent instanceof ContextClosedEvent) {
+            if (wireMockServer.isRunning()) {
+              wireMockServer.shutdownServer();
+              try {
+                Thread.sleep(3000);
+              } catch (InterruptedException e) {
+              }
+            }
+          }
+        });
   }
 
   /*
