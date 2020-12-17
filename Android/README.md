@@ -31,13 +31,15 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Go to the [Firebase console](https://console.firebase.google.com/) and select the project you configured for Cloud Firestore during [`Response datastore`](/response-datastore/) deployment 
     -    [Register your Android app](https://firebase.google.com/docs/android/setup) in the Cloud Messaging section of the Firebase console (the `Android package name` is the `applicationID` value in the [`Android/app/build.gradle`](app/build.gradle) file)
     -    Download the `google-services.json` file from the [Firebase project settings](https://console.firebase.google.com/project/_/settings/general/) page and replace [`Android/app/src/fda/google-services.json`](app/src/fda/google-services.json)
-    -    Set the `android_server_key` field of [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) to the `Server key` retrieved from the [Firebase project settings](https://console.firebase.google.com/project/_/settings/general/) page
-    -    Run the updated [`mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) script on the `mystudies_participant_datastore` database that you created during [`Participant datastore`](/participant-datastore/) deployment  ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))
+1. Configure your [`Participant datastore`](/participant-datastore/) instance to interface with your mobile application
+    -    Make a copy of the [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) and update the values to match your Android configuration
+    -   Optionally, configure the iOS fields to match your iOS configuration (not necessary if you are not configuring an iOS application)
+    -    Run your updated [`mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) script on the `mystudies_participant_datastore` database that you created during [`Participant datastore`](/participant-datastore/) deployment  ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))
 1. *Optional.* Customize images and text
      -    Replace images at the appropriate resolution in the [`Android/app/src/fda/res/`](app/src/fda/res/) directories: `mipmap-hdpi`, `mipmap-mdpi`, `mipmap-xhdpi`, `mipmap-xxhdpi`, `mipmap-xxxhdpi`, `drawable-560dpi`, `drawable-xhdpi`, `drawable-xxhdpi`, `drawable-xxxhdpi`
      -    Customize user-facing text in the [`Android/app/src/main/res/values/strings.xml`](app/src/main/res/values/strings.xml) file 
 1. Open the [`Android/`](../Android/) directory that contains your modifications as an existing project in [Android Studio](https://developer.android.com/studio/index.html)
-1. If necessary, install the Android 10 SDK using Tools &rarr; [SDK Manager](https://developer.android.com/studio/intro/update#sdk-manager), then File &rarr; Sync Project with Gradle Files (do not update Gradle plugin)
+1. If necessary, install the Android 10 SDK using Tools &rarr; [SDK Manager](https://developer.android.com/studio/intro/update#sdk-manager), then File &rarr; Sync Project with Gradle Files (do not update Gradle plugin)	
 
 # Building and deploying
 
