@@ -134,7 +134,7 @@ public class BaseMockIT {
   @AfterAll
   public void tearDownAfterAll() throws InterruptedException {
     if (wireMockServer.isRunning()) {
-      wireMockServer.stop();
+      wireMockServer.shutdownServer();
       Thread.sleep(3000);
     }
   }
