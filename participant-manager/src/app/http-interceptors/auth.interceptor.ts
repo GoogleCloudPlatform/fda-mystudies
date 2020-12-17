@@ -7,7 +7,7 @@ import {
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-import {finalize} from 'rxjs/operators';
+import {filter, finalize, switchMap, take} from 'rxjs/operators';
 import {BehaviorSubject, Observable, OperatorFunction, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
@@ -44,45 +44,59 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (!this.authService.hasCredentials()) {
       return next.handle(req).pipe(
-        this.handleError(req, next),
+        this.handleError(),
         finalize(() => {
           void this.spinner.hide();
         }),
       );
     }
-
     return next.handle(this.setHeaders(req)).pipe(
-      this.handleError(req, next),
+      catchError((error) => {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          return this.handle401Error(req, next);
+        } else {
+          return throwError(error);
+        }
+      }),
+      this.handleError(),
       finalize(() => {
         void this.spinner.hide();
       }),
     );
   }
   private handle401Error(request: HttpRequest<unknown>, next: HttpHandler) {
-    this.isRefreshing = true;
-    this.refreshTokenSubject.next(null);
-    return this.authService.refreshToken().subscribe(
-      (authServerResponse: AccessToken) => {
-        this.refreshTokenSubject.next(authServerResponse);
-        sessionStorage.setItem('accessToken', authServerResponse.access_token);
-        sessionStorage.setItem(
-          'refreshToken',
-          authServerResponse.refresh_token,
-        );
-        return next.handle(this.setHeaders(request)).pipe(
-          catchError((error: unknown) => {
-            return throwError(error);
-          }),
-        );
-      },
-      (error: unknown) => {
-        if (error instanceof HttpErrorResponse) {
-          sessionStorage.clear();
-          void this.router.navigate(['/']);
-        }
-      },
-    );
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+      return this.authService.refreshToken().pipe(
+        switchMap((authServerResponse: AccessToken) => {
+          this.isRefreshing = false;
+          this.refreshTokenSubject.next(authServerResponse.access_token);
+          sessionStorage.setItem(
+            'accessToken',
+            authServerResponse.access_token,
+          );
+          sessionStorage.setItem(
+            'refreshToken',
+            authServerResponse.refresh_token,
+          );
+          return next.handle(this.setHeaders(request));
+        }),
+        catchError((error: unknown) => {
+          return throwError(error);
+        }),
+      );
+    } else {
+      return this.refreshTokenSubject.pipe(
+        filter((token) => token !== null),
+        take(1),
+        switchMap(() => {
+          return next.handle(this.setHeaders(request));
+        }),
+      );
+    }
   }
+
   private setHeaders(req: HttpRequest<unknown>) {
     if (req.url.includes(`${environment.authServerUrl}`)) {
       let headers = req.headers
@@ -126,16 +140,13 @@ export class AuthInterceptor implements HttpInterceptor {
     }
   }
 
-  handleError<T>(
-    request: HttpRequest<unknown>,
-    next: HttpHandler,
-  ): OperatorFunction<T, T> {
+  handleError<T>(): OperatorFunction<T, T> {
     return catchError(
       (err: unknown): Observable<T> => {
         if (err instanceof HttpErrorResponse) {
-          if (err.status === 401) {
-            this.handle401Error(request, next);
-          } else if (err.url === `${environment.authServerUrl}/oauth2/token`) {
+          if (err.url === `${environment.authServerUrl}/oauth2/token`) {
+            sessionStorage.clear();
+            void this.router.navigate(['/']);
             this.toasterService.error(
               'Your session has expired. Please sign in again.',
             );
