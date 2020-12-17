@@ -40,7 +40,7 @@ To deploy the [`Participant datastore`](/participant-datastore/) manually:
          sudo mvn -B package -Pprod com.google.cloud.tools:jib-maven-plugin:2.5.2:dockerBuild -f enroll-mgmt-module/pom.xml -Dimage=enroll-mgmt-image && \
          sudo mvn -B package -Pprod com.google.cloud.tools:jib-maven-plugin:2.5.2:dockerBuild -f consent-mgmt-module/pom.xml -Dimage=consent-mgmt-image
          ```
-    -    Update the Docker environment files [`user-mgmt-module/variables.env`](user-mgmt-module/variables.env), [`enroll-mgmt-module/variables.env`](enroll-mgmt-module/variables.env) and [`consent-mgmt-module/variables.env`](consent-mgmt-module/variables.env) with values that configure the `application.properties` files for your deployment
+    -    Update the Docker environment files [`user-mgmt-module/variables.env`](user-mgmt-module/variables.env), [`enroll-mgmt-module/variables.env`](enroll-mgmt-module/variables.env) and [`consent-mgmt-module/variables.env`](consent-mgmt-module/variables.env), which will configure the `application.properties` files for your deployment
     -    Run the containers on the VM using:
          ```bash
          sudo docker run --detach --env-file user-mgmt-module/variables.env -p 8080:8080 --name user-mgmt user-mgmt-image && \
