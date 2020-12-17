@@ -101,8 +101,11 @@
             </div>
           </div>
         </div>
-        <div class="text-center" *ngIf="manageApps.apps.length === 0">
-          No records found
+
+        <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+          <div class="text-center p-2" *ngIf="manageApps.apps.length === 0">
+            No records found
+          </div>
         </div>
       </div>
     </ng-container>
