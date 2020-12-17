@@ -70,7 +70,7 @@ enum Frequency: String {
   var description: String {
     switch self {
     case .oneTime:
-      return "One-Time"
+      return "One-time"
     case .daily:
       return "Daily"
     case .weekly:
