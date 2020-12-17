@@ -2,10 +2,11 @@ name: SwiftLint
 
 on:
   pull_request:
+    branches:
+      - develop
     paths:
       - 'iOS/**'
       - '.github/workflows/swiftlint.yml'
-
 jobs:
   SwiftLint:
     runs-on: ubuntu-latest
