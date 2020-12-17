@@ -29,6 +29,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEnt
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
@@ -71,6 +72,8 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
+
+  @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -267,6 +270,12 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
       participantRegistrySite.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+      participantEnrollmentHistoryRepository.updateWithdrawalDateAndStatus(
+          participantStudy.get().getUserDetails().getId(),
+          participantStudy.get().getStudy().getId(),
+          EnrollmentStatus.WITHDRAWN.getStatus());
+
       participantStudy.get().setParticipantId(null);
       participantStudyRepository.saveAndFlush(participantStudy.get());
 
