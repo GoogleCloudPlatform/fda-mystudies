@@ -397,7 +397,7 @@ class Schedule {
         return f
       } else {
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-mm-dd"
+        formatter.dateFormat = "yyyy-mm-dd"
         formatter.dateStyle = .short
         formatter.timeZone = TimeZone.init(abbreviation: "UTC")
         utcFormatter = formatter
@@ -419,7 +419,7 @@ class Schedule {
         return f
       } else {
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-mm-dd"
+        formatter.dateFormat = "yyyy-mm-dd"
         formatter.dateStyle = .short
         formatter.timeZone = TimeZone.current  // TimeZone.init(abbreviation:"IST")
         currentZoneFormatter = formatter

@@ -48,14 +48,14 @@ class StudyDashboardViewController: UIViewController {
   private static let responseDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.timeZone = TimeZone.init(identifier: "America/New_York")
-    formatter.dateFormat = "YYYY/MM/dd HH:mm:ss"
+    formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
     return formatter
   }()
 
   private static let localDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.timeZone = TimeZone.current
-    formatter.dateFormat = "YYYY/MM/dd HH:mm:ss"
+    formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
     return formatter
   }()
 
