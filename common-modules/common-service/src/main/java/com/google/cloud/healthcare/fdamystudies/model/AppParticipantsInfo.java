@@ -33,4 +33,8 @@ public interface AppParticipantsInfo {
   Timestamp getWithdrawalTime();
 
   Timestamp getEnrolledTime();
+
+  default String getUserIdStudyIdKey() {
+    return getUserDetailsId() + "-" + getStudyId();
+  }
 }

@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -20,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
@@ -56,6 +58,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   @Autowired UserDetailsRepository userDetailsRepository;
 
   @Autowired CommonDao commonDao;
+
+  @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
   @Override
   public UserDetailsEntity getParticipantInfoDetails(String userId) {
@@ -272,6 +276,9 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
     if (deleteData != null && !deleteData.isEmpty()) {
+      participantEnrollmentHistoryRepository.updateWithdrawalDateAndStatusForDeactivatedUser(
+          userDetailsId, EnrollmentStatus.WITHDRAWN.getStatus());
+
       studyInfoQuery = criteriaBuilder.createQuery(StudyEntity.class);
       rootStudy = studyInfoQuery.from(StudyEntity.class);
       studyIdExpression = rootStudy.get("customId");
@@ -282,7 +289,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       criteriaParticipantStudiesUpdate =
           criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
       participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudyEntity.class);
-      criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
+      criteriaParticipantStudiesUpdate.set("status", EnrollmentStatus.WITHDRAWN.getStatus());
       criteriaParticipantStudiesUpdate.set("participantId", null);
       criteriaParticipantStudiesUpdate.set(
           "withdrawalDate", new Timestamp(Instant.now().toEpochMilli()));

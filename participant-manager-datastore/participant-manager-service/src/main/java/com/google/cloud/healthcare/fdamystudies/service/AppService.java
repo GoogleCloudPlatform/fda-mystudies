@@ -18,5 +18,11 @@ public interface AppService {
   public AppResponse getAppsWithOptionalFields(String userId, String[] fields);
 
   public AppParticipantsResponse getAppParticipants(
-      String appId, String userId, AuditLogEventRequest auditRequest, String[] excludeSiteStatus);
+      String appId,
+      String userId,
+      AuditLogEventRequest auditRequest,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm);
 }

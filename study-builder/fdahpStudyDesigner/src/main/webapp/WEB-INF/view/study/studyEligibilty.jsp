@@ -75,8 +75,7 @@
                                                      <c:if
                                                          test="${eligibility.eligibilityMechanism eq 2}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
-          <label for="inlineRadio2">Token Validation and Eligibility
-            Test</label>
+          <label for="inlineRadio2">Token Validation and Eligibility</label>
         </span>
         <span class="radio radio-inline"><input type="radio"
                                                 id="inlineRadio3" value="3"
@@ -85,7 +84,7 @@
                                                 <c:if
                                                     test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>> <label
-            for="inlineRadio3">Eligibility Test</label>
+            for="inlineRadio3">Eligibility</label>
         </span>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -114,7 +113,6 @@
       <div class="right-content-head">
         <div class="text-right">
           <div class="black-md-f  dis-line pull-left line34">Eligibility
-            Test
           </div>
           <div class="dis-line form-group mb-none mr-sm">
             <c:if test="${empty permission}">
@@ -133,7 +131,7 @@
               <th id="">
                 <span class="marL10">#</span>
               </th>
-              <th id="">QA</th>
+              <th id="">Questions</th>
               <th id="">Actions</th>
             </tr>
           </thead>

@@ -179,11 +179,11 @@ CREATE TABLE IF NOT EXISTS `participant_study_info` (
   `completion` int(11) DEFAULT NULL,
   `consent_status` bit(1) DEFAULT NULL,
   `eligibility` bit(1) DEFAULT NULL,
-  `enrolled_time` datetime DEFAULT NULL,
+  `enrolled_timestamp` datetime DEFAULT NULL,
   `participant_id` varchar(64) DEFAULT NULL,
   `data_sharing_status` varchar(64) DEFAULT NULL,
   `status` varchar(64) DEFAULT NULL,
-  `withdrawal_time` datetime DEFAULT NULL,
+  `withdrawal_timestamp` datetime DEFAULT NULL,
   `participant_registry_site_id` varchar(255) DEFAULT NULL,
   `site_id` varchar(255) DEFAULT NULL,
   `study_info_id` varchar(255) DEFAULT NULL,
@@ -200,24 +200,6 @@ CREATE TABLE IF NOT EXISTS `participant_study_info` (
   CONSTRAINT `FKeppgsoyc8ldsx8mciwjo49j9u` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`),
   CONSTRAINT `FKodfgu8how5y9w4n048u2k4q79` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`),
   CONSTRAINT `FKog8x3evjo4h227yc1jgtm2m4u` FOREIGN KEY (`study_info_id`) REFERENCES `study_info` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
--- Dumping structure for table mystudies_participant_datastore.personalized_user_report
-DROP TABLE IF EXISTS `personalized_user_report`;
-CREATE TABLE IF NOT EXISTS `personalized_user_report` (
-  `id` varchar(255) NOT NULL,
-  `activity_date_time` datetime DEFAULT NULL,
-  `report_content` longtext,
-  `report_title` varchar(128) DEFAULT NULL,
-  `study_info_id` varchar(255) DEFAULT NULL,
-  `user_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKlc6i0t4lygxvvkorf3dsridox` (`study_info_id`),
-  KEY `FKo472wtrii4vfs2ouur00t696` (`user_id`),
-  CONSTRAINT `FKlc6i0t4lygxvvkorf3dsridox` FOREIGN KEY (`study_info_id`) REFERENCES `study_info` (`id`),
-  CONSTRAINT `FKo472wtrii4vfs2ouur00t696` FOREIGN KEY (`user_id`) REFERENCES `user_details` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -413,18 +395,6 @@ CREATE TABLE IF NOT EXISTS `user_details` (
 
 -- Data exporting was unselected.
 
--- Dumping structure for table mystudies_participant_datastore.user_institution
-DROP TABLE IF EXISTS `user_institution`;
-CREATE TABLE IF NOT EXISTS `user_institution` (
-  `id` varchar(255) NOT NULL,
-  `institution_id` varchar(128) DEFAULT NULL,
-  `user_details_id` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKrwwx4csj1ske5o4m74lmusqbv` (`user_details_id`),
-  CONSTRAINT `FKrwwx4csj1ske5o4m74lmusqbv` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 -- Dumping structure for table mystudies_participant_datastore.user_account_email_scheduler_tasks
 DROP TABLE IF EXISTS `user_account_email_scheduler_tasks`;
 CREATE TABLE IF NOT EXISTS `user_account_email_scheduler_tasks` (
@@ -460,6 +430,33 @@ CREATE TABLE IF NOT EXISTS `invite_participants` (
   `user_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `participant_enrollment_history`;
+CREATE TABLE IF NOT EXISTS `participant_enrollment_history` (
+  `id` varchar(255) NOT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `enrolled_timestamp` datetime DEFAULT NULL,
+  `status` varchar(64) DEFAULT NULL,
+  `withdrawal_timestamp` datetime DEFAULT NULL,
+  `app_info_id` varchar(255) DEFAULT NULL,
+  `participant_registry_site_id` varchar(255) DEFAULT NULL,
+  `site_id` varchar(255) DEFAULT NULL,
+  `study_info_id` varchar(255) DEFAULT NULL,
+  `user_details_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `withdrawal_timestamp_user_details_id_study_info_id_idx` (`withdrawal_timestamp`,`user_details_id`,`study_info_id`),
+  KEY `withdrawal_timestamp_user_details_id_idx` (`withdrawal_timestamp`,`user_details_id`),
+  KEY `FKf67cshsfhjae6if1vgskre3jo` (`app_info_id`),
+  KEY `FKahlmyi1rkt3odfyvt7wax433w` (`participant_registry_site_id`),
+  KEY `FKt54o4s9tiiv74ni6urb8k4fq2` (`site_id`),
+  KEY `FK1bmomoc73pe9g97g4ih69mh3u` (`study_info_id`),
+  KEY `FKbvetsdb2isivd8q95sly7md99` (`user_details_id`),
+  CONSTRAINT `FK1bmomoc73pe9g97g4ih69mh3u` FOREIGN KEY (`study_info_id`) REFERENCES `study_info` (`id`),
+  CONSTRAINT `FKahlmyi1rkt3odfyvt7wax433w` FOREIGN KEY (`participant_registry_site_id`) REFERENCES `participant_registry_site` (`id`),
+  CONSTRAINT `FKbvetsdb2isivd8q95sly7md99` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`),
+  CONSTRAINT `FKf67cshsfhjae6if1vgskre3jo` FOREIGN KEY (`app_info_id`) REFERENCES `app_info` (`id`),
+  CONSTRAINT `FKt54o4s9tiiv74ni6urb8k4fq2` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 

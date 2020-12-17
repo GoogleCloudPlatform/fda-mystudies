@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.repository;
 import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
-import com.google.cloud.healthcare.fdamystudies.model.AppSiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudyInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
 import java.util.List;
@@ -55,7 +54,7 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
           "SELECT app.id AS appId, COUNT(psi.site_id) AS count "
               + "FROM app_info app, study_info AS si, participant_study_info psi "
               + "WHERE app.id=si.app_info_id AND si.id=psi.study_info_id "
-              + "AND psi.status='inProgress' "
+              + "AND psi.status='enrolled' "
               + "GROUP BY app.id ",
       nativeQuery = true)
   public List<AppCount> findEnrolledCountByAppId();
@@ -105,7 +104,7 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
       value =
           "SELECT sp.app_info_id as appId, COUNT(ps.site_id) AS count "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='enrolled' "
               + "AND sp.ur_admin_user_id = :userId "
               + "GROUP BY sp.app_info_id ",
       nativeQuery = true)
@@ -115,7 +114,7 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
       value =
           "SELECT sp.app_info_id as appId, COUNT(ps.site_id) AS count "
               + "FROM participant_study_info ps, sites_permissions sp, study_info si, sites st "
-              + "WHERE si.id=sp.study_id AND ps.site_id=sp.site_id AND si.type='OPEN' AND ps.status='inProgress' AND st.id=sp.site_id "
+              + "WHERE si.id=sp.study_id AND ps.site_id=sp.site_id AND si.type='OPEN' AND ps.status='enrolled' AND st.id=sp.site_id "
               + "AND (st.target_enrollment=0 OR st.target_enrollment IS NULL) "
               + "AND sp.ur_admin_user_id = :userId "
               + "GROUP BY sp.app_info_id",
@@ -126,7 +125,7 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
       value =
           "SELECT ai.id as appId, COUNT(ps.site_id) AS count "
               + "FROM participant_study_info ps, study_info si, sites st, app_info ai "
-              + "WHERE ai.id=si.app_info_id AND si.id=st.study_id AND ps.site_id=st.id AND si.type='OPEN' AND ps.status='inProgress' "
+              + "WHERE ai.id=si.app_info_id AND si.id=st.study_id AND ps.site_id=st.id AND si.type='OPEN' AND ps.status='enrolled' "
               + "AND (st.target_enrollment=0 OR st.target_enrollment IS NULL) "
               + "GROUP BY appId",
       nativeQuery = true)
@@ -134,50 +133,21 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
 
   @Query(
       value =
-          "SELECT DISTINCT ud.id AS userDetailsId, ud.email AS email,ud.status AS registrationStatus, ud.verification_time AS registrationDate, "
-              + "st.name AS studyName, st.id AS studyId, st.custom_id AS customStudyId, st.type AS studyType,ps.status AS participantStudyStatus, ps.withdrawal_time AS withdrawalTime,ps.enrolled_time AS enrolledTime "
+          "SELECT ud.id AS userDetailsId, ud.email AS email,ud.status AS registrationStatus, ud.verification_time AS registrationDate, "
+              + "st.name AS studyName, st.id AS studyId, st.custom_id AS customStudyId, st.type AS studyType "
               + "FROM user_details ud "
-              + "LEFT JOIN participant_study_info ps ON ud.id = ps.user_details_id "
-              + "LEFT JOIN study_info st ON st.id=ps.study_info_id  AND ps.status NOT IN (:excludeParticipantStudyStatus) "
-              + "WHERE ud.app_info_id=:appId "
-              + "ORDER BY ud.verification_time,ud.id DESC ",
+              + "LEFT JOIN participant_enrollment_history peh ON ud.id = peh.user_details_id "
+              + "LEFT JOIN study_info st ON st.id=peh.study_info_id "
+              + "WHERE ud.app_info_id=:appId AND ud.id IN (:userDetailIds) "
+              + "ORDER BY CASE :orderByCondition WHEN 'email_asc' THEN ud.email END ASC, "
+              + "         CASE :orderByCondition WHEN 'registrationDate_asc' THEN ud.verification_time END ASC, "
+              + "         CASE :orderByCondition WHEN 'registrationStatus_asc' THEN ud.status END ASC, "
+              + "         CASE :orderByCondition WHEN 'email_desc' THEN ud.email END DESC, "
+              + "         CASE :orderByCondition WHEN 'registrationDate_desc' THEN ud.verification_time END DESC, "
+              + "         CASE :orderByCondition WHEN 'registrationStatus_desc' THEN ud.status END DESC ",
       nativeQuery = true)
-  public List<AppParticipantsInfo> findUserDetailsByAppIdAndStudyStatus(
-      String appId, String[] excludeParticipantStudyStatus);
-
-  @Query(
-      value =
-          "SELECT DISTINCT ud.id AS userDetailsId, ud.email AS email,ud.status AS registrationStatus, ud.verification_time AS registrationDate, "
-              + "st.name AS studyName, st.id AS studyId, st.custom_id AS customStudyId, st.type AS studyType,ps.status AS participantStudyStatus, ps.withdrawal_time AS withdrawalTime,ps.enrolled_time AS enrolledTime "
-              + "FROM user_details ud "
-              + "LEFT JOIN participant_study_info ps ON ud.id = ps.user_details_id "
-              + "LEFT JOIN study_info st ON st.id=ps.study_info_id "
-              + "WHERE ud.app_info_id=:appId "
-              + "ORDER BY ud.verification_time,ud.id DESC ",
-      nativeQuery = true)
-  public List<AppParticipantsInfo> findUserDetailsByAppId(String appId);
-
-  @Query(
-      value =
-          "SELECT ud.id AS userDetailsId, psi.site_id as siteId, psi.study_info_id AS studyId, "
-              + "loc.custom_id AS locationCustomId, loc.name AS locationName "
-              + "FROM participant_study_info psi, locations loc, sites s, user_details ud "
-              + "WHERE ud.id=psi.user_details_id AND psi.study_info_id=s.study_id "
-              + "AND psi.site_id=s.id AND loc.id=s.location_id AND "
-              + "ud.app_info_id=:appId AND psi.status NOT IN (:excludeParticipantStudyStatus) "
-              + "AND ud.id IN (:userIds)",
-      nativeQuery = true)
-  public List<AppSiteInfo> findSitesByAppIdAndStudyStatusAndUserIds(
-      String appId, String[] excludeParticipantStudyStatus, List<String> userIds);
-
-  @Query(
-      value =
-          "SELECT ud.id AS userDetailsId, psi.site_id as siteId, psi.study_info_id AS studyId, loc.custom_id AS locationCustomId, loc.name AS locationName "
-              + "FROM participant_study_info psi, locations loc, sites s, user_details ud "
-              + "WHERE ud.id=psi.user_details_id AND psi.study_info_id=s.study_id AND psi.site_id=s.id AND loc.id=s.location_id AND "
-              + "ud.app_info_id=:appId AND ud.id IN (:userIds) ",
-      nativeQuery = true)
-  public List<AppSiteInfo> findSitesByAppIdAndUserIds(String appId, List<String> userIds);
+  public List<AppParticipantsInfo> findUserDetailsByAppId(
+      String appId, List<String> userDetailIds, String orderByCondition);
 
   @Query(
       value =
@@ -238,6 +208,37 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
       nativeQuery = true)
   public List<AppStudySiteInfo> findUnselectedAppsStudiesSites(
       List<String> appIds, @Param("userId") String userId);
+
+  @Query(
+      value =
+          "SELECT ud.id FROM user_details ud "
+              + "WHERE ud.app_info_id=:appId "
+              + "AND ud.status != :excludeStatus "
+              + "AND ud.email LIKE %:searchTerm% "
+              + "ORDER BY CASE :orderByCondition WHEN 'email_asc' THEN ud.email END ASC, "
+              + "         CASE :orderByCondition WHEN 'registrationDate_asc' THEN ud.verification_time END ASC, "
+              + "         CASE :orderByCondition WHEN 'registrationStatus_asc' THEN ud.status END ASC, "
+              + "         CASE :orderByCondition WHEN 'email_desc' THEN ud.email END DESC, "
+              + "         CASE :orderByCondition WHEN 'registrationDate_desc' THEN ud.verification_time END DESC, "
+              + "         CASE :orderByCondition WHEN 'registrationStatus_desc' THEN ud.status END DESC "
+              + "LIMIT :limit OFFSET :offset",
+      nativeQuery = true)
+  public List<String> findUserDetailIds(
+      String appId,
+      Integer excludeStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm);
+
+  @Query(
+      value =
+          "SELECT COUNT(ud.id) FROM user_details ud "
+              + "WHERE ud.app_info_id=:appId AND ud.status != :excludeStatus "
+              + "AND ud.email LIKE %:searchTerm% ",
+      nativeQuery = true)
+  public Long countParticipantByAppIdAndSearchTerm(
+      String appId, Integer excludeStatus, String searchTerm);
 
   @Query(
       value =

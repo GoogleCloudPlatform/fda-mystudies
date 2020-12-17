@@ -15,11 +15,14 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +50,23 @@ public class StudyController {
 
   @Autowired private SiteService siteService;
 
+  /**
+   * @param userId
+   * @param limit
+   * @param offset The offset specifies the offset of the first row to return. The offset of the
+   *     first row is 0, not 1.
+   * @param request
+   * @return
+   */
   @GetMapping
   public ResponseEntity<StudyResponse> getStudies(
-      @RequestHeader(name = USER_ID_HEADER) String userId, HttpServletRequest request) {
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      @RequestParam(defaultValue = "10") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(required = false) String searchTerm,
+      HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
-    StudyResponse studyResponse = studyService.getStudies(userId);
+    StudyResponse studyResponse = studyService.getStudies(userId, limit, offset, searchTerm);
     logger.exit(String.format(STATUS_LOG, studyResponse.getHttpStatusCode()));
     return ResponseEntity.status(studyResponse.getHttpStatusCode()).body(studyResponse);
   }
@@ -64,15 +79,36 @@ public class StudyController {
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @PathVariable String studyId,
       @RequestParam(required = false) String[] excludeParticipantStudyStatus,
-      @RequestParam(required = false) Integer page,
-      @RequestParam(required = false) Integer limit,
+      @RequestParam(defaultValue = "10") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(defaultValue = "email") String sortBy,
+      @RequestParam(defaultValue = "asc") String sortDirection,
+      @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    String[] allowedSortByValues = {
+      "email", "locationName", "onboardingStatus", "enrollmentStatus", "enrollmentDate"
+    };
+    if (!ArrayUtils.contains(allowedSortByValues, sortBy)) {
+      throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORTBY_VALUE);
+    }
+
+    String[] allowedSortDirection = {"asc", "desc"};
+    if (!ArrayUtils.contains(allowedSortDirection, sortDirection)) {
+      throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORT_DIRECTION_VALUE);
+    }
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ParticipantRegistryResponse participantRegistryResponse =
         studyService.getStudyParticipants(
-            userId, studyId, excludeParticipantStudyStatus, auditRequest, page, limit);
+            userId,
+            studyId,
+            excludeParticipantStudyStatus,
+            auditRequest,
+            limit,
+            offset,
+            sortBy + "_" + sortDirection,
+            searchTerm);
     logger.exit(String.format(STATUS_LOG, participantRegistryResponse.getHttpStatusCode()));
     return ResponseEntity.status(participantRegistryResponse.getHttpStatusCode())
         .body(participantRegistryResponse);

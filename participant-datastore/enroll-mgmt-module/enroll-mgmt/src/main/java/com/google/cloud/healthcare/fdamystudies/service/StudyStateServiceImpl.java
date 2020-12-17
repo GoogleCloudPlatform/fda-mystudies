@@ -17,6 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
@@ -28,6 +29,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEnt
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
@@ -71,6 +73,8 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
+  @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
+
   @Override
   @Transactional(readOnly = true)
   public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user) {
@@ -113,19 +117,13 @@ public class StudyStateServiceImpl implements StudyStateService {
             if (studyEntity != null) {
               if (studyEntity.getId().equals(participantStudies.getStudy().getId())) {
                 isExists = true;
-                if (participantStudies.getStatus() != null
-                    && participantStudies
-                        .getStatus()
-                        .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue())) {
-                  participantStudies.setEnrolledDate(Timestamp.from(Instant.now()));
-                }
                 if (studiesBean.getStatus() != null
                     && !StringUtils.isEmpty(studiesBean.getStatus())) {
                   participantStudies.setStatus(studiesBean.getStatus());
 
                   if (studiesBean
                       .getStatus()
-                      .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+                      .equalsIgnoreCase(EnrollmentStatus.ENROLLED.getStatus())) {
                     participantStudies.setEnrolledDate(Timestamp.from(Instant.now()));
                   }
                 }
@@ -156,14 +154,11 @@ public class StudyStateServiceImpl implements StudyStateService {
           }
           if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
             participantStudyEntity.setStatus(studiesBean.getStatus());
-            if (studiesBean
-                .getStatus()
-                .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+            if (studiesBean.getStatus().equalsIgnoreCase(EnrollmentStatus.ENROLLED.getStatus())) {
               participantStudyEntity.setEnrolledDate(Timestamp.from(Instant.now()));
             }
           } else {
-            participantStudyEntity.setStatus(
-                MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
+            participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
           }
           if (studiesBean.getBookmarked() != null) {
             participantStudyEntity.setBookmark(studiesBean.getBookmarked());
@@ -275,6 +270,12 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
       participantRegistrySite.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+
+      participantEnrollmentHistoryRepository.updateWithdrawalDateAndStatus(
+          participantStudy.get().getUserDetails().getId(),
+          participantStudy.get().getStudy().getId(),
+          EnrollmentStatus.WITHDRAWN.getStatus());
+
       participantStudy.get().setParticipantId(null);
       participantStudyRepository.saveAndFlush(participantStudy.get());
 

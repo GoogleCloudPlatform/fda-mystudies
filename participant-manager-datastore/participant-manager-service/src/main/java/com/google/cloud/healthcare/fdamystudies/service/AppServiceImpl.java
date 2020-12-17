@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AppMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
@@ -34,12 +35,13 @@ import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppParticipantsInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
-import com.google.cloud.healthcare.fdamystudies.model.AppSiteInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudyInfo;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistory;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
@@ -47,11 +49,13 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -80,6 +84,8 @@ public class AppServiceImpl implements AppService {
   @Autowired private StudyRepository studyRepository;
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
+  @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -392,7 +398,10 @@ public class AppServiceImpl implements AppService {
       String appId,
       String adminId,
       AuditLogEventRequest auditRequest,
-      String[] excludeParticipantStudyStatus) {
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getAppParticipants(appId, adminId)");
 
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(adminId);
@@ -413,20 +422,14 @@ public class AppServiceImpl implements AppService {
               .getApp();
     }
 
-    List<AppParticipantsInfo> appParticipantsInfoList = null;
-    if (ArrayUtils.isEmpty(excludeParticipantStudyStatus)) {
-      appParticipantsInfoList = appRepository.findUserDetailsByAppId(app.getId());
-    } else {
-      appParticipantsInfoList =
-          appRepository.findUserDetailsByAppIdAndStudyStatus(
-              app.getId(), excludeParticipantStudyStatus);
-    }
     List<String> userIds =
-        appParticipantsInfoList
-            .stream()
-            .distinct()
-            .map(AppParticipantsInfo::getUserDetailsId)
-            .collect(Collectors.toList());
+        appRepository.findUserDetailIds(
+            app.getId(),
+            UserStatus.DEACTIVATED.getValue(),
+            limit,
+            offset,
+            orderByCondition,
+            StringUtils.defaultString(searchTerm));
 
     if (CollectionUtils.isEmpty(userIds)) {
       AppParticipantsResponse appParticipantsResponse =
@@ -436,53 +439,46 @@ public class AppServiceImpl implements AppService {
       return appParticipantsResponse;
     }
 
-    Map<String, ParticipantDetail> participantsMap = new LinkedHashMap<>();
+    List<AppParticipantsInfo> appParticipantsInfoList =
+        appRepository.findUserDetailsByAppId(app.getId(), userIds, orderByCondition);
 
-    List<AppSiteInfo> appSiteInfoList = null;
+    List<ParticipantEnrollmentHistory> enrollmentHistoryEntities =
+        participantEnrollmentHistoryRepository.findParticipantEnrollmentHistoryByAppId(
+            app.getId(), userIds);
 
-    if (ArrayUtils.isEmpty(excludeParticipantStudyStatus)) {
-      appSiteInfoList = appRepository.findSitesByAppIdAndUserIds(app.getId(), userIds);
-    } else {
-      appSiteInfoList =
-          appRepository.findSitesByAppIdAndStudyStatusAndUserIds(
-              app.getId(), excludeParticipantStudyStatus, userIds);
+    Map<String, List<AppSiteDetails>> sitesByUserIdStudyIdMap = new HashMap<>();
+
+    List<AppSiteDetails> appSites = null;
+    AppSiteDetails appSiteDetails = null;
+    for (ParticipantEnrollmentHistory enrollmentHistory : enrollmentHistoryEntities) {
+      if (!sitesByUserIdStudyIdMap.containsKey(enrollmentHistory.getUserIdStudyIdKey())) {
+        appSites = new ArrayList<>();
+        sitesByUserIdStudyIdMap.put(enrollmentHistory.getUserIdStudyIdKey(), appSites);
+      }
+      appSites = sitesByUserIdStudyIdMap.get(enrollmentHistory.getUserIdStudyIdKey());
+      appSiteDetails = prepareAppSiteDetails(enrollmentHistory);
+      appSites.add(appSiteDetails);
     }
 
-    Map<String, AppSiteInfo> appSiteInfoMap =
-        appSiteInfoList
-            .stream()
-            .collect(Collectors.toMap(AppSiteInfo::getUserIdStudyIdKey, Function.identity()));
-
+    Set<String> uniqueUserStudyIds = new HashSet<>();
+    Map<String, ParticipantDetail> participantsMap = new LinkedHashMap<>();
     for (AppParticipantsInfo appParticipantsInfo : appParticipantsInfoList) {
       ParticipantDetail participantDetail =
           participantsMap.containsKey(appParticipantsInfo.getUserDetailsId())
               ? participantsMap.get(appParticipantsInfo.getUserDetailsId())
               : ParticipantMapper.toParticipantDetails(appParticipantsInfo);
       participantsMap.put(appParticipantsInfo.getUserDetailsId(), participantDetail);
-      if (StringUtils.isEmpty(appParticipantsInfo.getStudyId())) {
+      if (StringUtils.isEmpty(appParticipantsInfo.getStudyId())
+          || !uniqueUserStudyIds.add(appParticipantsInfo.getUserIdStudyIdKey())) {
         continue;
       }
 
       AppStudyDetails appStudyDetails = StudyMapper.toAppStudyDetailsList(appParticipantsInfo);
 
-      AppSiteInfo appSite =
-          appSiteInfoMap.get(
-              appParticipantsInfo.getUserDetailsId() + appParticipantsInfo.getStudyId());
-
-      if (appSite != null) {
-        AppSiteDetails appSiteDetails = new AppSiteDetails();
-        appSiteDetails.setSiteId(appSite.getSiteId());
-        appSiteDetails.setCustomLocationId(appSite.getLocationCustomId());
-        appSiteDetails.setLocationName(appSite.getLocationName());
-        appSiteDetails.setParticipantStudyStatus(appParticipantsInfo.getParticipantStudyStatus());
-
-        String withdrawalDate = DateTimeUtils.format(appParticipantsInfo.getWithdrawalTime());
-        appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
-
-        String enrollmentDate = DateTimeUtils.format(appParticipantsInfo.getEnrolledTime());
-        appSiteDetails.setEnrollmentDate(
-            StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-        appStudyDetails.getSites().add(appSiteDetails);
+      String userIdStudyIdKey =
+          appParticipantsInfo.getUserDetailsId() + "-" + appParticipantsInfo.getStudyId();
+      if (sitesByUserIdStudyIdMap.containsKey(userIdStudyIdKey)) {
+        appStudyDetails.getSites().addAll(sitesByUserIdStudyIdMap.get(userIdStudyIdKey));
       }
 
       participantDetail.getEnrolledStudies().add(appStudyDetails);
@@ -491,11 +487,31 @@ public class AppServiceImpl implements AppService {
     List<ParticipantDetail> participants =
         participantsMap.values().stream().collect(Collectors.toList());
 
+    Long participantCount =
+        appRepository.countParticipantByAppIdAndSearchTerm(
+            app.getId(), UserStatus.DEACTIVATED.getValue(), StringUtils.defaultString(searchTerm));
+
     AppParticipantsResponse appParticipantsResponse =
         prepareAppParticipantResponse(appId, adminId, auditRequest, app, participants);
+    appParticipantsResponse.setTotalParticipantCount(participantCount);
 
     logger.exit(String.format("%d participant found for appId=%s", participantsMap.size(), appId));
     return appParticipantsResponse;
+  }
+
+  private AppSiteDetails prepareAppSiteDetails(ParticipantEnrollmentHistory enrollmentHistory) {
+    AppSiteDetails appSiteDetails;
+    appSiteDetails = new AppSiteDetails();
+    appSiteDetails.setSiteId(enrollmentHistory.getSiteId());
+    appSiteDetails.setCustomLocationId(enrollmentHistory.getLocationCustomId());
+    appSiteDetails.setLocationName(enrollmentHistory.getLocationName());
+    appSiteDetails.setParticipantStudyStatus(enrollmentHistory.getEnrollmentStatus());
+
+    String withdrawalDate = DateTimeUtils.format(enrollmentHistory.getWithdrawalDate());
+    String enrolledDate = DateTimeUtils.format(enrollmentHistory.getEnrolledDate());
+    appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
+    appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE));
+    return appSiteDetails;
   }
 
   private AppParticipantsResponse prepareAppParticipantResponse(

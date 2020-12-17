@@ -20,7 +20,7 @@
     <div class="right-content-head">
       <div class="text-right">
         <div class="black-md-f text-uppercase dis-line pull-left line34">
-          Basic Information
+          Study Information
           <c:set var="isLive">${_S}isLive</c:set>
             ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </div>
@@ -1063,7 +1063,8 @@
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         appId
-                        + " has already been used in the past.</li></ul>"));
+                        + " has already been used in the past. Switch app type to 'gateway' or choose a unique App ID."))
+                    .append("</br>");
                 callback(false);
               }
             },

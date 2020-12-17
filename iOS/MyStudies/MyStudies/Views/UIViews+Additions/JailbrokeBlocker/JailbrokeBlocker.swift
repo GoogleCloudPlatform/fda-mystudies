@@ -30,7 +30,7 @@ class JailbrokeBlocker: UIView {
     buttonUpgrade?.layer.borderColor = UIColor.white.cgColor
   }
 
-  /// Class func to Initialize the `JailbrokeBlocker` 
+  /// Class func to Initialize the `JailbrokeBlocker`
   ///
   /// - Parameters:
   ///   - frame: Rect for the view

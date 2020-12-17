@@ -8,6 +8,7 @@ import {UserDetailsComponent} from './user-details/user-details.component';
 import {FormsModule} from '@angular/forms';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {NgxDataTableModule} from 'angular-9-datatable';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import {NgxDataTableModule} from 'angular-9-datatable';
     FormsModule,
     NgSelectModule,
     NgxDataTableModule,
+    NgxPaginationModule,
   ],
 })
 export class UserModule {}

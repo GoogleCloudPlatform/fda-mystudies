@@ -37,7 +37,7 @@
                   class="pr-xlg"
                 >
                   <div class="banner__label">SITE</div>
-                  <div class="banner__text">NA (Open study)</div>
+                  <div class="banner__text">NA (Open Study)</div>
                 </div>
                 <div class="pr-xlg">
                   <div class="banner__label">
@@ -231,39 +231,80 @@
                 </span>
               </td>
 
-              <table
-                class="display__contents"
-                *ngFor="
-                  let enrollmentDetails of participant.participantDetails
-                    .enrollments
-                "
-              >
+              <table class="display__contents">
                 <td class="font14">
                   <span
                     [ngClass]="{
                       'txt__green':
-                        enrollmentDetails.enrollmentStatus ==
+                        participant.participantDetails.enrollmentStatus ==
                         enrollmentStatus.Enrolled,
                       'txt__light-gray':
-                        enrollmentDetails.enrollmentStatus ==
+                        participant.participantDetails.enrollmentStatus ==
                         enrollmentStatus.Withdrawn
                     }"
                   >
-                    {{ enrollmentDetails.enrollmentStatus }}
+                    {{ participant.participantDetails.enrollmentStatus }}
                   </span>
                 </td>
                 <td class="mb__mt-sm inactive__text font14">
-                  <span>{{ enrollmentDetails.enrollmentDate }}</span>
+                  <span>
+                    {{ participant.participantDetails.enrollmentDate }}
+                  </span>
                 </td>
                 <td class="mb__mt-sm inactive__text font14">
-                  <span>{{ enrollmentDetails.withdrawalDate }}</span>
+                  <span>
+                    {{ participant.participantDetails.withdrawalDate }}
+                  </span>
                 </td>
               </table>
             </tr>
           </tbody>
         </table>
       </div>
+      <h2 class="subheader__title text-weight-semibold mb-sm">
+        Enrollment History
+      </h2>
 
+      <div class="cards1 m-none">
+        <table class="table table-striped custom__table">
+          <thead class="custom__thead">
+            <tr>
+              <th>Date of Enrollment</th>
+              <th>Date of withdrawal</th>
+              <th>Last Enrollment Status</th>
+            </tr>
+          </thead>
+          <tbody class="custom__tbody">
+            <tr
+              *ngFor="
+                let enrollmentDetails of participant.participantDetails
+                  .enrollments
+              "
+            >
+              <td>
+                <span>{{ enrollmentDetails.enrollmentDate }}</span>
+              </td>
+              <td>
+                <span>{{ enrollmentDetails.withdrawalDate }}</span>
+              </td>
+              <td>
+                <span
+                  [ngClass]="{
+                    'txt__green':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Enrolled,
+                    'txt__light-gray':
+                      enrollmentDetails.enrollmentStatus ==
+                      enrollmentStatus.Withdrawn
+                  }"
+                >
+                  {{ enrollmentDetails.enrollmentStatus }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <h2 class="subheader__title text-weight-semibold mb-sm">
         Consent History
       </h2>
@@ -337,7 +378,7 @@
             <tr
               *ngIf="participant.participantDetails.consentHistory.length === 0"
             >
-              <td colspan="3" class="text-right">No records found</td>
+              <td colspan="4" class="text-center">No records found</td>
             </tr>
           </tbody>
 

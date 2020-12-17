@@ -14,13 +14,15 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 
 public interface StudyService {
 
-  public StudyResponse getStudies(String userId);
+  public StudyResponse getStudies(String userId, Integer limit, Integer offset, String searchTerm);
 
   public ParticipantRegistryResponse getStudyParticipants(
       String userId,
       String studyId,
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
-      Integer page,
-      Integer limit);
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm);
 }

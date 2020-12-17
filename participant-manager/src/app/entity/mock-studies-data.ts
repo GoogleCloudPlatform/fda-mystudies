@@ -138,6 +138,7 @@ export const expectedStudiesDetails = {
         studyType: StudyType.Close,
         sitePermission: Permission.ViewAndEdit,
         disabledDate: '06/05/2020',
+        withdrawalDate: '06/05/2020',
       },
       {
         customLocationId: '',
@@ -185,6 +186,7 @@ export const expectedStudiesDetails = {
   status: 200,
   message: 'Get participant registry successfully',
   code: 'MSG-0013',
+  totalParticipantCount: 3,
 } as StudyDetails;
 
 export const expectedStudyId = {id: '1'} as Study;
