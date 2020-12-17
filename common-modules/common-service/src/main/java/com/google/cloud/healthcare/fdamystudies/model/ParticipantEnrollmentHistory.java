@@ -9,32 +9,28 @@ package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.sql.Timestamp;
 
-public interface AppParticipantsInfo {
-  String getUserDetailsId();
+public interface ParticipantEnrollmentHistory {
+  String getLocationCustomId();
 
-  String getEmail();
-
-  String getStatus();
-
-  int getRegistrationStatus();
-
-  Timestamp getRegistrationDate();
+  String getLocationName();
 
   String getStudyId();
 
-  String getCustomStudyId();
+  String getSiteId();
 
-  String getStudyName();
+  String getUserDetailsId();
 
-  String getStudyType();
+  String getEnrollmentStatus();
 
-  String getParticipantStudyStatus();
+  Timestamp getWithdrawalDate();
 
-  Timestamp getWithdrawalTime();
-
-  Timestamp getEnrolledTime();
+  Timestamp getEnrolledDate();
 
   default String getUserIdStudyIdKey() {
     return getUserDetailsId() + "-" + getStudyId();
+  }
+
+  default String getUserIdStudyIdSiteIdKey() {
+    return getUserDetailsId() + "-" + getStudyId() + "-" + getSiteId();
   }
 }

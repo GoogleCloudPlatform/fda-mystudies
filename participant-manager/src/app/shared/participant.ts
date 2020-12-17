@@ -30,6 +30,7 @@ export interface RegistryParticipant {
   studyType: StudyType;
   sitePermission: Permission;
   disabledDate: string;
+  withdrawalDate: string;
 }
 export interface Site {
   siteId: string;

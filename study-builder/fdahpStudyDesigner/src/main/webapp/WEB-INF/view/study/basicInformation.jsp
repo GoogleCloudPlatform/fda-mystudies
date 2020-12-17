@@ -1063,7 +1063,8 @@
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         appId
-                        + " has already been used in the past.</li></ul>"));
+                        + " has already been used in the past. Switch app type to 'gateway' or choose a unique App ID."))
+                    .append("</br>");
                 callback(false);
               }
             },
