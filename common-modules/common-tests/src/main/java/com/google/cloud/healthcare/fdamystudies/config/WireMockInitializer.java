@@ -43,8 +43,9 @@ public class WireMockInitializer
               // We have to sleep briefly to finish serving the shutdown request before stopping the
               // server, as there's no support in Jetty for shutting down after the current request.
               // See http://stackoverflow.com/questions/4650713
-              Thread.sleep(1000);
+              Thread.sleep(2000);
               wireMockServer.stop();
+              Thread.sleep(20000);
               logger.error("WireMockServer stopped,starting the server again");
               wireMockServer.start();
             } catch (Exception e) {
@@ -59,7 +60,7 @@ public class WireMockInitializer
               // server, as
               // there's no support in Jetty for shutting down after the current request.
               // See http://stackoverflow.com/questions/4650713
-              Thread.sleep(1000);
+              Thread.sleep(2000);
               wireMockServer.stop();
             } catch (Exception e) {
               logger.error("Unable to stop WireMockServer", e);
