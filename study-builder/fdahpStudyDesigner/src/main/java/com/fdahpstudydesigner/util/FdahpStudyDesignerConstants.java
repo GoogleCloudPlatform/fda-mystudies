@@ -227,7 +227,7 @@ public class FdahpStudyDesignerConstants {
   public static final String LUNCH_CHECKLIST_ERROR_MSG =
       "The Checklist section does not have all items marked as completed. Do you want to proceed?";
   public static final String LUNCH_ENROLLMENT_ERROR_MSG =
-      "To launch the study, you must enable \"Participant Enrollment Allowed\" in the Settings section.";
+      "set \"Allow participants to enroll?\" to \"Yes\"";
   public static final String MAILFAILURE = "MAILFAILURE";
   public static final String MARK_AS_COMPLETE_DONE_ERROR_MSG =
       "One or more items in this section need to be marked as complete to proceed with this action.";
