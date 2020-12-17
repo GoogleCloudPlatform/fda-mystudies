@@ -146,8 +146,12 @@
             </tr>
           </thead>
           <tbody class="custom__tbody">
-            <tr *ngFor="let lists of mf.data">
-              <td [routerLink]="['/coordinator/participant', lists.id]">
+            <tr
+              *ngFor="let lists of mf.data"
+              class="table_row_hover_shadow"
+              [routerLink]="['/coordinator/participant', lists.id]"
+            >
+              <td>
                 <span class="no_st_en">{{ lists.email }}</span>
               </td>
               <td
