@@ -41,7 +41,7 @@ public class WireMockInitializer
           if (applicationEvent instanceof ApplicationStartedEvent
               || applicationEvent instanceof ContextRefreshedEvent) {
             try {
-              logger.info("stop the WireMockServer");
+              logger.error("stop the WireMockServer");
               // We have to sleep briefly to finish serving the shutdown request before stopping the
               // server, as there's no support in Jetty for shutting down after the current request.
               // See http://stackoverflow.com/questions/4650713
