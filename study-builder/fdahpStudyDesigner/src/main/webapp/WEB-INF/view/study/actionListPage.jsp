@@ -213,30 +213,8 @@
                 var checkListMessage = data.checkListMessage;
                 var checkFailureMessage = data.checkFailureMessage;
                 if (message == "SUCCESS") {
-                  if (checkListMessage == "Yes") {
-                    showBootBoxMessage(buttonText,
-                        messageText);
-                  } else {
-                    bootbox.confirm({
-                      closeButton: false,
-                      message: checkFailureMessage,
-                      buttons: {
-                        'cancel': {
-                          label: 'Cancel',
-                        },
-                        'confirm': {
-                          label: 'OK',
-                        },
-                      },
-                      callback: function (result) {
-                        if (result) {
-                          showBootBoxMessage(
-                              buttonText,
-                              messageText);
-                        }
-                      }
-                    })
-                  }
+                	showBootBoxMessage(buttonText,
+                            messageText);
                 } else {
                   if (buttonText == 'publishId') {
                     messageText = "To publish a study as an upcoming one, the  Study Information, Settings, Overview and Consent sections need to be marked complete. Please complete these sections and try again.";
