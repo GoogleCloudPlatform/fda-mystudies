@@ -463,7 +463,14 @@
                   Sort By:
                 </span>
                 <th>
-                  <span *ngIf="activeTab !== onBoardingStatus.All">
+                  <span
+                    *ngIf="
+                      activeTab == onBoardingStatus.New ||
+                      activeTab == onBoardingStatus.Disabled ||
+                      (invitedYetToEnrollCount > 0 &&
+                        activeTab == onBoardingStatus.Invited)
+                    "
+                  >
                     <input
                       type="checkbox"
                       id="css"
@@ -511,10 +518,11 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="custom__tbody">
+            <tbody class="custom__tbody table_row_hover_shadow">
               <tr
                 *ngFor="let participant of mf.data"
                 class="border__bottom__red border-top__c4d1e6 progress__bar"
+                [routerLink]="['/coordinator/participant', participant.id]"
               >
                 <!-- for all Selected -->
                 <td
@@ -619,6 +627,7 @@
                         "
                       >
                         <span
+                          [ngClass]="{'ml-4 pl-3': invitedYetToEnrollCount > 0}"
                           class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
