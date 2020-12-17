@@ -99,7 +99,7 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
 
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd, YYYY"
+    formatter.dateFormat = "hh:mma, MMM dd, yyyy"
     return formatter
   }()
 }
@@ -133,7 +133,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
   public static let localDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.timeZone = TimeZone.current
-    formatter.dateFormat = "YYYY/MM/dd HH:mm:ss"
+    formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
     return formatter
   }()
 
