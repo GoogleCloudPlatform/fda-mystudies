@@ -25,7 +25,6 @@ Information related to the deployment and operation of FDA Mystudies can be foun
 * [Detailed platform architecture](documentation/architecture.md)
 * [Instructions for semi-automated deployment](deployment/README.md)
 <!-- TODO
-* Quick-start guide for manual deployment(documentation/manual-quickstart.md
 * User guides study builder, participant manager and mobile applications(documentation/user-guides.md)
 * API reference(documentation/api-reference.md)
 -->
