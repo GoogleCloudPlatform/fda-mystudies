@@ -337,6 +337,11 @@
                 </span>
               </td>
             </tr>
+            <tr *ngIf="participant.participantDetails.enrollments.length === 0">
+              <td></td>
+              <td class="text-right">No records found</td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
       </div>
