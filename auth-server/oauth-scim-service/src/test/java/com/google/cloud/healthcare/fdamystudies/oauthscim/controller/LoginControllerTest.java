@@ -689,9 +689,9 @@ public class LoginControllerTest extends BaseMockIT {
     String body =
         String.join(
             "<br/>",
-            "This is to inform you that, as a security measure, your user account for MyStudies Participant Manager portal",
-            "has been temporarily locked for a period of 15 minutes, due to multiple consecutive failed sign-in",
-            "attempts with incorrect password.");
+            "This is to inform you that, as a security measure, your user account has been temporarily locked",
+            " for a period of 15 minutes, due to multiple consecutive failed sign-in attempts",
+            " with incorrect password.");
 
     MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
