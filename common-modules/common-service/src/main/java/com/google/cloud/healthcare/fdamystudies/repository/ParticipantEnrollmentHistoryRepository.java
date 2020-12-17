@@ -28,7 +28,7 @@ public interface ParticipantEnrollmentHistoryRepository
   @Query(
       value =
           "SELECT peh.site_id AS siteId, peh.user_details_id AS userDetailsId, peh.study_info_id AS studyId, "
-              + "peh.status AS enrollmentStatus, peh.withdrawal_time AS withdrawalDate,  peh.enrolled_time AS enrolledDate, loc.custom_id AS locationCustomId, loc.name AS locationName "
+              + "peh.status AS enrollmentStatus, peh.withdrawal_timestamp AS withdrawalDate,  peh.enrolled_timestamp AS enrolledDate, loc.custom_id AS locationCustomId, loc.name AS locationName "
               + "FROM participant_enrollment_history peh, locations loc, sites s "
               + "WHERE peh.site_id=s.id AND s.location_id=loc.id AND peh.status IN ('enrolled','withdrawn') AND "
               + "peh.user_details_id IN (:userIds) AND peh.app_info_id=:appId "
@@ -39,7 +39,7 @@ public interface ParticipantEnrollmentHistoryRepository
 
   @Query(
       value =
-          "SELECT peh.status AS enrollmentStatus, peh.withdrawal_time AS withdrawalDate,  peh.enrolled_time AS enrolledDate "
+          "SELECT peh.status AS enrollmentStatus, peh.withdrawal_timestamp AS withdrawalDate,  peh.enrolled_timestamp AS enrolledDate "
               + "FROM participant_enrollment_history peh "
               + "WHERE peh.site_id=:siteId AND peh.study_info_id=:studyId AND "
               + "peh.participant_registry_site_id=:participantRegistryId AND peh.app_info_id=:appId "
@@ -52,8 +52,8 @@ public interface ParticipantEnrollmentHistoryRepository
   @Transactional
   @Query(
       value =
-          "UPDATE participant_enrollment_history SET status=:status, withdrawal_time= now() WHERE "
-              + "withdrawal_time IS NULL AND study_info_id=:studyId AND user_details_id =:userDetailsId",
+          "UPDATE participant_enrollment_history SET status=:status, withdrawal_timestamp= now() WHERE "
+              + "withdrawal_timestamp IS NULL AND study_info_id=:studyId AND user_details_id =:userDetailsId",
       nativeQuery = true)
   public void updateWithdrawalDateAndStatus(String userDetailsId, String studyId, String status);
 
@@ -61,8 +61,8 @@ public interface ParticipantEnrollmentHistoryRepository
   @Transactional
   @Query(
       value =
-          "UPDATE participant_enrollment_history SET status=:status, withdrawal_time= now() WHERE "
-              + "withdrawal_time IS NULL AND user_details_id =:userDetailsId",
+          "UPDATE participant_enrollment_history SET status=:status, withdrawal_timestamp= now() WHERE "
+              + "withdrawal_timestamp IS NULL AND user_details_id =:userDetailsId",
       nativeQuery = true)
   public void updateWithdrawalDateAndStatusForDeactivatedUser(String userDetailsId, String status);
 }
