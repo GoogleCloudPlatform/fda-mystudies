@@ -46,9 +46,8 @@ public class WireMockInitializer
               // server, as there's no support in Jetty for shutting down after the current request.
               // See http://stackoverflow.com/questions/4650713
               Thread.sleep(1000);
-              if (wireMockServer.isRunning()) {
-                wireMockServer.stop();
-              }
+              wireMockServer.stop();
+              logger.error("WireMockServer stopped,starting the server again");
               wireMockServer.start();
             } catch (Exception e) {
               logger.error("Unable to restart WireMockServer", e);
@@ -63,9 +62,7 @@ public class WireMockInitializer
               // there's no support in Jetty for shutting down after the current request.
               // See http://stackoverflow.com/questions/4650713
               Thread.sleep(1000);
-              if (wireMockServer.isRunning()) {
-                wireMockServer.stop();
-              }
+              wireMockServer.stop();
             } catch (Exception e) {
               logger.error("Unable to stop WireMockServer", e);
             }
