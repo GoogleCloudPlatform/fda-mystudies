@@ -130,8 +130,9 @@ public class BaseMockIT {
   }
 
   @AfterAll
-  public void tearDownAfterAll() {
+  public void tearDownAfterAll() throws InterruptedException {
     wireMockServer.stop();
+    Thread.sleep(3000);
   }
 
   @PostConstruct
