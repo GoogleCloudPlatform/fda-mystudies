@@ -41,7 +41,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class StudyMetadataControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "TEST_APP_ID";
@@ -60,7 +60,6 @@ public class StudyMetadataControllerTest extends BaseMockIT {
   @Captor ArgumentCaptor<Map<String, Object>> dataToStoreCaptor;
 
   @Test
-  @Disabled
   void testStudyMetadataSavedContent() throws Exception {
     Map<String, Object> dataToStore = new HashMap<>();
     dataToStore.put(APP_ID, APP_ID_VALUE);
@@ -104,7 +103,6 @@ public class StudyMetadataControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Disabled
   void testStudyMetadataSavedContentInvalidStudyId() throws Exception {
     HttpHeaders headers = TestUtils.newCommonHeaders();
     // Step 1: set empty studyId
