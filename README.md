@@ -22,7 +22,7 @@ Open-source [deployment tools](deployment) are included for semi-automated deplo
 Information related to the deployment and operation of FDA Mystudies can be found within each directory’s `README`, and also in the following guides:
 
 * [High-level platform and repo overview](README.md) (this document)<!--TODO * [Feature and functionality demonstrations](documentation/demo.md)-->
-* [Detailed platform architecture](documentation/architecture.md)
+* [Detailed platform overview](documentation/architecture.md)
 * [Instructions for semi-automated deployment](deployment/README.md)
 <!-- TODO
 * User guides study builder, participant manager and mobile applications(documentation/user-guides.md)
@@ -45,7 +45,7 @@ Deployment | System administrators | Infrastructure-as-code to build and maintai
 
 Each high-level directory contains a `README.md` and the necessary deployment configuration files.
 
-For more information about the platform architecture, visit the [Architecture overview](documentation/architecture.md). An example of how this architecture can be deployed on Google Cloud is diagrammed below.
+For more information about the platform architecture, visit the [Platform overview](documentation/architecture.md). An example of how this architecture can be deployed on Google Cloud is diagrammed below.
 
 ![Example architecture](documentation/images/apps-reference-architecture.svg "Example architecture")
 
