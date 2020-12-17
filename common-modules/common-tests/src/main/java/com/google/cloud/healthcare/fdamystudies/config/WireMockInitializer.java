@@ -41,6 +41,7 @@ public class WireMockInitializer
           if (applicationEvent instanceof ApplicationStartedEvent
               || applicationEvent instanceof ContextRefreshedEvent) {
             try {
+              logger.info("stop the WireMockServer");
               wireMockServer.stop();
               wireMockServer.shutdownServer();
               Thread.sleep(10000);
