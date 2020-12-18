@@ -87,7 +87,7 @@ public class ParticipantStudyEntity implements Serializable {
 
   private Boolean eligibility;
 
-  @Column(name = "enrolled_time")
+  @Column(name = "enrolled_timestamp")
   private Timestamp enrolledDate;
 
   @Column(name = "data_sharing_status", length = SMALL_LENGTH)
@@ -97,7 +97,7 @@ public class ParticipantStudyEntity implements Serializable {
 
   private Integer adherence;
 
-  @Column(name = "withdrawal_time")
+  @Column(name = "withdrawal_timestamp")
   private Timestamp withdrawalDate;
 
   @Transient

@@ -2,9 +2,11 @@ name: lint-participant-consent-datastore
 
 on:
   pull_request:
+    branches:
+      - develop
     paths:
-    - 'participant-datastore/consent-mgmt-module/**'
-    - '.github/workflows/lint-participant-consent-datastore.yml'
+      - 'participant-datastore/consent-mgmt-module/**'
+      - '.github/workflows/lint-participant-consent-datastore.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest

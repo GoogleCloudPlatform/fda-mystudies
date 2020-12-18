@@ -63,7 +63,7 @@ let kTitleMessage = "Message"
 let kImportantNoteMessage = "Important Note"
 let kTitleOk = "Ok"
 let kTitleCancel = "Cancel"
-let kTitleDeleteAccount = "Delete App Account"
+let kTitleDeleteAccount = "Delete app account"
 
 let kDeleteAccountConfirmationMessage =
   "Are you sure you wish to permanently delete your #APPNAME# account? You will need to register again if you wish to join a study."

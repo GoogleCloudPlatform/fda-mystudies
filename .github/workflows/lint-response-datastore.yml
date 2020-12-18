@@ -2,9 +2,11 @@ name: lint-response-datastore
 
 on:
   pull_request:
+    branches:
+      - develop
     paths:
-    - 'response-datastore/response-server-service/**'
-    - '.github/workflows/lint-response-datastore.yml'
+      - 'response-datastore/response-server-service/**'
+      - '.github/workflows/lint-response-datastore.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest
