@@ -151,7 +151,7 @@
                 #superAdminCheckBox="ngModel"
                 (change)="superAdminCheckBoxChange()"
               />
-              <label class="mt-xs custom_text_transform" for="role">
+              <label   [ngClass]="{'not-allowed': user.status === userStatus.Deactivated}" class="mt-xs custom_text_transform" for="role">
                 Assign superadmin role
                 <span
                   class="tool"
