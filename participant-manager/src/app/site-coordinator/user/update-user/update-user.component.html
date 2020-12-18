@@ -49,9 +49,9 @@
           <div class="form-group">
             <label for="fname">First Name</label>
             <input
-              [ngClass]="{
-                'not-allowed': user.status === userStatus.Deactivated
-              }"
+               [ngClass]="{
+                  'custom_not-allowed': user.status === userStatus.Deactivated
+                }"
               [readonly]="user.status === userStatus.Deactivated"
               placeholder="Enter First Name"
               type="text"
@@ -89,9 +89,9 @@
           <div class="form-group">
             <label for="lname">Last Name</label>
             <input
-              [ngClass]="{
-                'not-allowed': user.status === userStatus.Deactivated
-              }"
+               [ngClass]="{
+                  'custom_not-allowed': user.status === userStatus.Deactivated
+                }"
               [readonly]="user.status === userStatus.Deactivated"
               type="text"
               maxlength="50"
