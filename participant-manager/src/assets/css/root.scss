@@ -1330,6 +1330,12 @@ select {
 .not-allowed {
   cursor: not-allowed !important;
 }
+.custom_not-allowed {
+  cursor: not-allowed !important;
+}
+.custom_not-allowed:before {
+  cursor: not-allowed !important;
+}
 
 @-webkit-keyframes rotation {
   from {
