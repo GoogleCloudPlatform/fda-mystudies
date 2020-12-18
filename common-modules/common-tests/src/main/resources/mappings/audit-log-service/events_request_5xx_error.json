@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/audit-log-service/events",
+		"bodyPatterns": [
+			{
+				"contains": "CorrelationIdValue_For_5XX_ERROR"
+			}
+		]
+	},
+	"response": {
+		"status": 500,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "internal_server_error_response.json"
+	}
+}

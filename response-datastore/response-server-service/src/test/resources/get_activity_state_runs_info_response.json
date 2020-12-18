@@ -1,0 +1,18 @@
+{
+  "activities": [
+    {
+      "activityId": "questionnaire_1",
+      "bookmarked": true,
+      "activityState": "Completed",
+      "activityRunId": "7",
+      "activityVersion": "9.0",
+      "activityRun": {
+        "total": 11,
+        "completed": 5,
+        "missed": 6
+      }
+    }
+  ],
+  "message": "SUCCESS"
+}
+

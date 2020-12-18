@@ -1,0 +1,12 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/response-datastore/participant/withdraw?studyId=OpenStudy02&participantId=&deleteResponses=true"
+	},
+	"response": {
+		"status": 400,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		}
+	}
+}

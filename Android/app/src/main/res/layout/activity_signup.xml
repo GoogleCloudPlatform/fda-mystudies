@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context="com.harvard.userModule.SignupActivity">
+    tools:context="com.harvard.usermodule.SignupActivity">
 
     <include layout="@layout/top_bar_layout" />
 

@@ -8,18 +8,31 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="24dp"
         android:paddingLeft="18dp"
+        android:paddingTop="24dp"
         android:paddingRight="18dp"
-        android:paddingTop="24dp">
+        android:paddingBottom="24dp">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/resourcesTitle"
-            style="@style/TextType2"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:paddingRight="20dp"
-            android:text=""
-            android:textColor="@color/colorPrimaryBlack" />
+            android:orientation="vertical"
+            android:paddingRight="20dp">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/resourcesTitle"
+                style="@style/TextType2"
+                android:text=""
+                android:textColor="@color/colorPrimaryBlack" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/resourcesDesc"
+                style="@style/TextType4"
+                android:visibility="visible"
+                android:text=""
+                android:textColor="@color/colorPrimaryBlack" />
+        </LinearLayout>
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/dayTimeDisplay"

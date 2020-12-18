@@ -1,0 +1,40 @@
+<form (ngSubmit)="addParticipant()" #addParticipantForm="ngForm">
+  <div class="row border__bottom__c4d1e6">
+    <div class="col-xs-12 col-md-12 p-none">
+      <div class="form-group border-radius__77">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Enter Email"
+          maxlength="50"
+          pattern="[a-zA-Z0-9\+\.\_\%\-\+]{1,256}\@[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+"
+          required
+          [(ngModel)]="model.email"
+          name="email"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="p-xlg flex__justify__space-between">
+    <div>
+      <button
+        name="addEmail"
+        type="submit"
+        [disabled]="!addParticipantForm.form.valid"
+        class="btn bt__add mr-sm"
+      >
+        Add
+      </button>
+      <button
+        name="cancel"
+        type="button"
+        class="btn bt__cancel"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,13 @@
+**/.terraform
+*.tfstate
+*.tfstate.*
+**/.settings
+**/*.log.gz
+**/.idea
+**/target
+**/.classpath
+**/.factorypath
+**/*.log
+participant-datastore/consent-mgmt/ConsentMgmtServicesWs.iml
+participant-manager/coverage/
+participant-manager/node_modules/

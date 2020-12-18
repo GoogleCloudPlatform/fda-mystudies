@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/response-datastore/participant/add"
+	},
+	"response": {
+		"status": 200,
+		"body": "i4ts7dsf50c6me154sfsdfdv",
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		}
+	}
+}

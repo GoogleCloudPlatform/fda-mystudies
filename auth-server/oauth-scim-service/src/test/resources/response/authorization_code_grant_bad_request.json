@@ -1,0 +1,27 @@
+{
+	"violations": [
+		{
+			"path": "code",
+			"message": "must not be blank"
+		},
+		{
+			"path": "redirect_uri",
+			"message": "must not be blank"
+		},
+		{
+			"path": "scope",
+			"message": "must not be blank"
+		},
+		{
+			"path": "userId",
+			"message": "must not be blank"
+		},
+		{
+			"path": "code_verifier",
+			"message": "must not be blank"
+		}
+	],
+	"error_description": "Invalid entries found in the submitted form. Please try again.",
+	"error_type": "BAD REQUEST",
+	"error_code": "EC-400"
+}

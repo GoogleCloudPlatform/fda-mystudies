@@ -1,0 +1,7 @@
+{
+  "quoteProps": "consistent",
+  "trailingComma": "all",
+  "bracketSpacing": false,
+  "xmlWhitespaceSensitivity": "ignore",
+  "htmlWhitespaceSensitivity": "ignore"
+}

@@ -1,0 +1,8 @@
+{
+	"access_token": "EFCN_DNUcSG0z5az917XnKvmteF-ziV8Gh2BAQbx4PWUUa6chVcmoV6WrD8F1OBld-gioiC3xPo.8QeDveVsAmz",
+	"expires_in": 3600,
+	"id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6InB1Ymx1ZDFhODciLCJ0eXA-pYzo0ZTY2OTNjMC1kZmZjLTQ2ZmItOGJmNy02NDQ1ODMiOiJKV1QifQ..",
+	"refresh_token": "bMYV9whRYGSz96ZWyyGo5IFQ8VNYDJjMbt7R_h1tKlY.oGKV6foP3y_ta8QlIMg-Xvz_h134Wft87lcssHxqGew",
+	"scope": "offline_access offline openid",
+	"token_type": "bearer"
+}

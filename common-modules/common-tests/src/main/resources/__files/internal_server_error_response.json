@@ -1,0 +1,6 @@
+{
+	"status": 500,
+	"code": "EC-500",
+	"error_type": "Internal Server Error",
+	"error_description": "Sorry, an error has occurred and your request could not be processed. Please try again later."
+}

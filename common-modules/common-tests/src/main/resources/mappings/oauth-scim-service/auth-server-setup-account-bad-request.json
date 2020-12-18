@@ -1,0 +1,20 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/auth-server/users",
+		"bodyPatterns": [
+			{
+				"contains": "AuthServerBadRequest@b0ston"
+			}
+		]
+		
+	},
+	"response": {
+		"status": 400,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "oauth-scim-service/auth-server-setup-account-bad-request.json"
+	}
+}
+

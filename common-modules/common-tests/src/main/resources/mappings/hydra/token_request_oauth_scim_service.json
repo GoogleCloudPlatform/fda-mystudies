@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/auth-server/oauth2/token"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "hydra/token_response_oauth_scim_service.json"
+	}
+}

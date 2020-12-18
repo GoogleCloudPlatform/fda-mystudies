@@ -1,0 +1,20 @@
+{
+  "studyId": "REGteststudy",
+  "message": "weekly",
+  "activities": [
+    {
+      "activityId": "WeeklyTest",
+      "activityVersion": 1.0,
+      "studyId": "REGteststudy",
+      "activityState": "inProgress",
+      "activityRunId": 1,
+      "bookmarked": false,
+      "activityRun": {
+        "total": 5,
+        "missed": 0,
+        "completed": 0
+      }
+    }
+  ]
+}
+

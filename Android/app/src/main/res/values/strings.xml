@@ -1,26 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY app_name "App Name"><!ENTITY learn_more_txt "Learn more">]>
 <resources>
     <!--Shared Preference-->
     <string name="auth">authentication</string>
+    <string name="filter_signup">signup</string>
+    <string name="filter_callback">callback</string>
+    <string name="filter_activation">activation</string>
+    <string name="filter_error">error</string>
+    <string name="filter_forgotPassword">forgotPassword</string>
+    <string name="filter_privacy">privacy</string>
+    <string name="filter_terms">terms</string>
     <string name="userid">UserId</string>
     <string name="verified">Verified</string>
     <string name="join">Join</string>
     <string name="studyId">studyId</string>
-
-    <string name="app_name">MyStudies</string>
     <string name="ok">OK</string>
     <string name="app_stage">development</string>
     <string name="signup">SIGN UP</string>
     <string name="cancel">Cancel</string>
     <string name="first_name">First Name</string>
     <string name="account_deletion">Account has been deleted.</string>
-    <string name="signOut">Signed Out Successfully.</string>
     <string name="enter_first_name">enter first name</string>
     <string name="enter_last_name">enter last name</string>
     <string name="last_name">Last Name</string>
-    <string name="email_id">Email ID</string>
-    <string name="enter_email">enter email</string>
+    <string name="email_id">Email</string>
+    <string name="username">Username</string>
+    <string name="enter_email">Enter email</string>
     <string name="enter_new_password">enter new password</string>
     <string name="enter_old_password">enter current password</string>
+    <string name="enter_temp_password">enter temporary password</string>
     <string name="password">Password</string>
     <string name="passcode">Passcode</string>
     <string name="enter_password">enter password</string>
@@ -45,21 +52,21 @@
     <string name="resend">Resend Verification Code</string>
     <string name="congrats_txt">Congrats!</string>
     <string name="survey_completed">Activity Completed</string>
-    <string name="signup_process_complete">Your Sign Up process is\n now complete</string>
+    <string name="signup_process_complete">Thank you for registering. Your app account is now set up and ready to use.</string>
     <string name="next">Next</string>
     <string name="setup_passcode">Create Passcode</string>
     <string name="sign_in">SIGN IN</string>
     <string name="sign_in_btn">Sign In</string>
     <string name="usr_pwd">with username and\n password</string>
     <string name="email">Email</string>
-    <string name="new_password">New Password</string>
-    <string name="old_pasword">Current Password</string>
+    <string name="new_password">New password</string>
+    <string name="old_pasword">Current password</string>
+    <string name="temp_password">Temporary password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="new_usr_signup">New User? Sign Up</string>
     <string name="use_touch_id">Use Touch ID</string>
     <string name="or">OR</string>
     <string name="passcode_to_access_app">Enter Passcode to\n access app</string>
-    <string name="fda_listens">FDA MyStudies</string>
     <string name="notifictions">NOTIFICATIONS</string>
     <string name="resources">RESOURCES</string>
     <string name="reachout">REACH OUT</string>
@@ -73,17 +80,13 @@
     <string name="recv_stdy_actrem">Receive Study Activity Reminders?</string>
     <string name="reminder">Set up lead time for study activity reminders</string>
     <string name="sign_out">Sign Out</string>
-    <string name="delete_my_account">Delete My Account</string>
+    <string name="delete_my_account">Delete app account</string>
     <string name="update">Update</string>
     <string name="get_started">Get Started</string>
-    <string name="website">https://www.fda.gov/</string>
-    <string name="websitetxt">www.fda.gov</string>
     <string name="gateway_welcome">Welcome!</string>
     <string name="gateway_welcome1">Leveraging the Power of Mobility for Research</string>
     <string name="gateway_welcome2">Improving Health Outcomes</string>
     <string name="gateway_welcome3">Protecting Your Privacy</string>
-    <string name="gateway_des">The FDA is pleased to offer the FDA MyStudies app as a tool to gather real time, contextual data about medication use and other health issues facing the people we serve.</string>
-    <string name="gateway_des1">Available for iOS and Android devices, this app will house studies conducted by FDA and other institutions, enabling researchers to engage more directly with people to gather data via questionnaires.</string>
     <string name="gateway_des2">Explore and participate in studies for which you are eligible and help generate more data, better insights and improved outcomes.</string>
     <string name="gateway_des3">All studies in this app have been approved by an Institutional Review Board, follow strict federal research guidelines, and securely store your responses to ensure your privacy is always protected.</string>
     <string name="new_user">New User?</string>
@@ -95,6 +98,7 @@
     <string name="forgot_password_text">Please enter your registered email to receive password help.</string>
     <string name="change_password_heading">CHANGE PASSWORD</string>
     <string name="change_password_heading1">CREATE PASSWORD</string>
+    <string name="change_password_heading2">SET UP PASSWORD</string>
     <string name="watch_video">Watch Video</string>
 
     <string name="learn_more">Learn More</string>
@@ -103,7 +107,6 @@
     <string name="terms">TERMS OF USE</string>
     <string name="privacy_policy">PRIVACY POLICY</string>
     <string name="privacy_policy_content">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. \n\nThe point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. \n \nThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isnt anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</string>
-    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
     <string name="medication_survey">Medication survey</string>
     <string name="response_retained">Response data will be retained</string>
     <string name="study_pregnant_women">A Study for pregnant women</string>
@@ -123,7 +126,7 @@
     <string name="side_menu_sign_up">Sign up</string>
     <string name="side_menu_sign_out">Sign Out</string>
     <string name="side_menu_version">v</string>
-    <string name="poweredby">Powered by FDA MyStudies</string>
+
     <string name="survey">Survey</string>
     <string name="no_study">Sorry, no studies available right now. Please remain signed in to get notified when there are new studies available. </string>
     <string name="surveyjsonname">survey.json</string>
@@ -132,7 +135,7 @@
     <string name="enter_enrollmentid">Enter enrollment ID</string>
     <string name="enrollmentdesc">This study allows only pre-screened participants to join the study. If you are one, please enter the enrollment ID provided to you for this study.</string>
     <string name="reviewconformmsg">By Agreeing you confirm that you read the consent and that you wish to take part in this research study.</string>
-    <string name="reviewmsg">Review the form below, and tap Agree if you\'re ready to continue</string>
+    <string name="reviewmsg">Review the form below, and tap agree if you are ready to continue</string>
     <string name="review">Review</string>
 
     <string name="verification_email_content1">An email has been sent to</string>
@@ -159,6 +162,7 @@
     <string name="password_mismatch_error">The Password and Confirm password fields don\'t match.</string>
     <string name="password_mismatch_error1">New password and confirm password fields don\'t match.</string>
     <string name="password_change_message">Your password has been changed successfully</string>
+    <string name="password_change_message_signin">Your password has been changed successfully. Please login again</string>
     <string name="email_verification">An email verification link has been sent to your registered email.</string>
     <string name="verify_email">Please verify your email address.</string>
     <string name="registration_message">Registration (or sign up) for the app  is requested only to provide you with a seamless experience of using the app. Your registration information does not become part of the data collected for any study(ies) housed in the app.  Each study has its own consent process and your data for the study will not be collected without you providing your informed consent prior to joining the study.</string>
@@ -166,7 +170,7 @@
     <string name="resend_success">An email verification code has been sent to your registered email.</string>
 
 
-    <string name="consentthanksmsg">Thanks for providing consent for this Study</string>
+    <string name="consentthanksmsg">Consent confirmed</string>
     <string name="studystartmsg">You can now start using the app to participate in the study.</string>
     <string name="viewpdf">View/Email eConsent PDF</string>
 
@@ -176,7 +180,6 @@
     <string name="delete_account">Delete Account</string>
     <string name="sign_out_message">Are you sure you want to sign out?</string>
     <string name="sign_out_message_data_lost">Are you sure you want to sign out? Incomplete activities and activities completed while offline must be re-started when you next sign in.</string>
-    <string name="delete_message">Are you sure you wish to permanently delete your FDA Health Studies Gateway app account?  You will need to register again if you wish to join a study.</string>
     <string name="first_name_empty">Please enter your first name.</string>
     <string name="subject_empty">Please enter your subject.</string>
     <string name="message_empty">Please enter your message.</string>
@@ -186,9 +189,9 @@
     <string name="feedback_empty">Please enter your feedback.</string>
     <string name="feedback_submit_success">Thank you. Your Form has been successfully submitted!</string>
 
+    <string name="eligibledesc">Based on the answers you provided, you are eligible to participate in this study. You may proceed to the next steps.</string>
+    <string name="enrollvalidated">Your eligibility to participate in this study has been successfully verified. You may proceed to the next steps.</string>
 
-    <string name="enrollvalidated">Your enrollment token has been successfully validated. You are eligible to join the study. Please click Continue to proceed to the Consent section.</string>
-    <string name="validated">You are Eligible!</string>
     <string name="search_location">search location</string>
     <string name="survey_message">This survey is not available right now please try after some time.</string>
     <string name="feedbacktitle">Feedback</string>
@@ -219,12 +222,7 @@
     <string name="false_text">False</string>
     <string name="signature">Signature</string>
     <string name="signature_form_step">SIGNATURE_FORM_STEP</string>
-    <string name="first_name1">First Name</string>
-    <string name="first_name2">First name</string>
-    <string name="first_name3">Required</string>
-    <string name="last_name1">Last Name</string>
-    <string name="last_name2">Last name</string>
-    <string name="last_name3">Required</string>
+    <string name="required">Required</string>
     <string name="next1">next</string>
     <string name="exit_message">Are you sure you want to exit?</string>
     <string name="end_task">End Task</string>
@@ -237,8 +235,8 @@
     <string name="setected_location">selected location</string>
     <string name="enter_a_time">Enter a Time</string>
     <string name="setelct_time">Select Time</string>
-    <string name="activities_not_found">Activities Not Found</string>
-    <string name="unable_to_parse">No internet connection/cannot connect to server</string>
+    <string name="activities_not_found">None</string>
+    <string name="unable_to_parse">Oops! something went wrong</string>
     <string name="enter_enrollment_id">Please Enter a Enrollment ID</string>
     <string name="not_able_create_pdf">Not able to create PDF</string>
     <string name="remainder_settings">Please enable remainder settings to set time.</string>
@@ -254,10 +252,10 @@
     <string name="study_resume">This Study is closed</string>
     <string name="completed">Completed</string>
     <string name="not_eligible">Not Eligible</string>
-    <string name="in_progress">In Progress</string>
-    <string name="yet_to_join_filter">Yet To Join</string>
+    <string name="in_progress">Enrolled</string>
+    <string name="yet_to_join_filter">Yet To Enroll</string>
     <string name="partial_participation">Partial Participation</string>
-    <string name="yet_to_join">Yet To Join</string>
+    <string name="yet_to_join">Yet To Enroll</string>
     <string name="no_participation">No Participation</string>
     <string name="withdrawn">Withdrawn</string>
     <string name="current1">Current</string>
@@ -384,7 +382,7 @@
     <string name="runchartmaxindex">runchartmaxindex</string>
     <string name="passcode_confirm_reenter">Re-enter the 4-digit passcode</string>
     <string name="enter_your_passcode">Enter your passcode</string>
-    <string name="thank_you_for_your_time">Thank you for your time!</string>
+    <string name="thank_you_for_your_time">Thank you for your time</string>
     <string name="permission_enable_message_screenshot">Please enable the permission from settings to share the Screen Shot</string>
     <string name="search">Search</string>
     <string name="apply">Apply</string>
@@ -392,8 +390,8 @@
     <string name="paused_first_cap">Paused</string>
     <string name="active_caps">Active</string>
     <string name="closed_caps">Closed</string>
-    <string name="participation_status_small">Participation\nStatus</string>
-    <string name="bookmarked">Bookmarked</string>
+    <string name="participation_status_small">Participation Status</string>
+    <string name="bookmarked">Show bookmarked studies only</string>
     <string name="categories">Categories</string>
     <string name="pregnancy">Pregnancy</string>
     <string name="fitness">Fitness</string>
@@ -433,8 +431,6 @@
     <string name="json_object_filter">jsondata</string>
 
     <!--Localization-->
-    <string name="my_studies">MyStudies</string>
-    <string name="studie_your_enrolled">It\'s been a while since you visited the FDA MyStudies app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
     <string name="resource_available">A new resource is available Please check.</string>
     <string name="the_activity">The activity</string>
     <string name="participation_is_important">will expire in 24 hours. Your participation is important. Please visit the study to complete it now.</string>
@@ -453,10 +449,9 @@
     <string name="step_couldnt_add">from step couldn\'t add</string>
     <string name="cm">CM</string>
     <string name="permission_deny">Unable to get current location due to permission deny</string>
-    <string name="unable_search_loc">Unable to search location. If issue continous please restart the device.</string>
+    <string name="unable_search_loc">Unable to search location. If issue continuous please restart the device.</string>
     <string name="selected_location">selected location</string>
     <string name="search_data_empty">Sorry, no studies found. Please try different filter options.</string>
-    <string name="prject_name">FDA</string>
     <string name="delete">DELETE</string>
     <string name="retain_my_data_caps">RETAIN MY DATA</string>
     <string name="cancel_caps">CANCEL</string>
@@ -496,11 +491,14 @@
     <string name="participants_signature">Participant\'s Signature</string>
     <string name="date">Date</string>
     <string name="done2">done</string>
-    <string name="as_scheduled">As Scheduled</string>
+    <string name="as_scheduled">Aperiodic</string>
     <string name="onetime">One-time</string>
     <string name="on">on</string>
     <string name="to">to</string>
     <string name="from">From</string>
+    <string name="starts">Starts</string>
+    <string name="ends">Ends</string>
+    <string name="ended">Ended</string>
     <string name="more">more</string>
     <string name="missed">missed</string>
     <string name="no_charts_display">No charts to display</string>
@@ -517,8 +515,8 @@
     <string name="fetal_kick_recorder_activity">Fetal Kick Recorder Activity - Started</string>
     <string name="fetal_kick_recorder_activity_in_progress">Fetal Kick Recorder Activity - In Progress</string>
     <string name="noteligibledesc">Sorry, you are not eligible for participation in this study. We thank you for your interest and time, and encourage you to explore other studies as they are available in the app. </string>
-    <string name="you_are_eligible">You are Eligible!</string>
-    <string name="eligibledesc">Based on the answers you provided, you are eligible to participate in this study. Please click Continue to proceed to the Consent section.</string>
+    <string name="you_are_eligible">Eligibility Confirmed</string>
+    <string name="validated">Eligibility Confirmed</string>
     <string name="continuetxt">Continue</string>
     <string name="ComprehensionSuccessDesc">You answered all of the questions correctly. Tap Next to continue.</string>
     <string name="great_job">Great Job!</string>
@@ -531,18 +529,53 @@
 
     <string name="activetaskremindertxt">Reminder: The fetal kick activity timer is currently running. Please record kicks or movements you have felt in the app.</string>
     <string name="notificatinturnoffnotification">Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activity in a timely manner.</string>
-
     <string name="enable_location_permission">Please allow the app to access the device location to continue</string>
     <string name="permission_denied">Permission denied to read/write files</string>
     <string name="app_standalone">Standalone</string>
     <string name="app_gateway">Gateway</string>
     <string name="otherValuetxt">Please provide an input for the text field too.</string>
+    <string name="passcode_setup">A passcode helps with quick and secure access to the app. You can turn off the passcode at any time by using a setting provided in the app.</string>
+    <string name="we_will_get_back_to_you_as_soon_as_possible">We will get back to you as soon as possible.</string>
+    <string name="signed_out">You have been signed out of the app.</string>
+    <string name="pdf_consent_error">Error in processing consent</string>
+    <string name="delete_account_msg">This will also delete your app account.</string>
+    <string name="activity_loading_msg">Please wait as we set up the study for you, this may take a few seconds</string>
+    <string name="rsb_consent_section_more_info_welcome">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_data_gathering">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_privacy">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_data_use">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_time_commitment">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_study_survey">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_study_tasks">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_withdrawing">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info">&learn_more_txt;</string>
 
-
-    <string name="termsurl">https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/</string>
-    <string name="privacyurl">https://www.fda.gov/AboutFDA/AboutThisWebsite/WebsitePolicies/#privacy</string>
-
-
-    <!--must change strings-->
-    <string name="FileProvider_authorities">com.myfileprovider</string>
+    <string name="app_name">&app_name;</string>
+    <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>
+    <string name="website">https://www.google.com/</string>
+    <string name="websitetxt">App Website</string>
+    <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
+    <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
+    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
+    <string name="delete_message">Are you sure you wish to permanently delete your FDA MyStudies Gateway app account?  You will need to register again if you wish to join a study.</string>
+    <string name="studie_your_enrolled">It\'s been a while since you visited the FDA MyStudies app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
+    <string name="termsurl">https://www.google.com/</string>
+    <string name="privacyurl">https://www.google.com/</string>
+    <string name="view_consent">View Consent</string>
+    <string name="visit_website">Visit Website</string>
+    <string name="join_study">Join Study</string>
+    <string name="clientToken">clientToken</string>
+    <string name="server_connect_error">Couldn\'t connect to server. Please try again later.</string>
+    <string name="loginflow">loginflow</string>
+    <string name="logintype">logintype</string>
+    <string name="login_studyinfo_studyId">login_studyinfo_studyId</string>
+    <string name="login_studyinfo_title">login_studyinfo_title</string>
+    <string name="login_studyinfo_bookmark">login_studyinfo_bookmark</string>
+    <string name="login_studyinfo_status">login_studyinfo_status</string>
+    <string name="login_studyinfo_studyStatus">login_studyinfo_studyStatus</string>
+    <string name="login_studyinfo_position">login_studyinfo_position</string>
+    <string name="login_studyinfo_enroll">login_studyinfo_enroll</string>
+    <string name="login_studyinfo_rejoin">login_studyinfo_rejoin</string>
+    <string name="login_studyinfo_about_this_study">login_studyinfo_about_this_study</string>
+    <string name="invalid_client">Invalid Client</string>
 </resources>

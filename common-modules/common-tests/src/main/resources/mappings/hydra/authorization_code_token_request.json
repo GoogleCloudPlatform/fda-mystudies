@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/oauth2/token",
+    "bodyPatterns": [
+      {
+        "contains": "authorization_code"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "hydra/authroization_code_token_response.json"
+  }
+}

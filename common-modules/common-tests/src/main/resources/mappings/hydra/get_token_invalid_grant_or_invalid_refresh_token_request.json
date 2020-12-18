@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/oauth2/token",
+		"headers": {
+      "Authorization": {
+        "contains": "invalid_grant_or_invalid_refresh_token"
+      }
+    }
+	},
+	"response": {
+		"status": 400,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "hydra/invalid_grant_or_invalid_refresh_token_error_response.json"
+	}
+}

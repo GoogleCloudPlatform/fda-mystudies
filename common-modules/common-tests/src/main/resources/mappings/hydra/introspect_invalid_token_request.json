@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/auth-server/oauth2/introspect",
+		"bodyPatterns": [
+			{
+				"equalTo": "token=cd57710c-1d19-4058-8bfe-a6aac3a39e35"
+			}
+		]
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "hydra/introspect_invalid_token_response.json"
+	}
+}

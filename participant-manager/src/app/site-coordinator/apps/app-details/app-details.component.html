@@ -1,0 +1,190 @@
+<ng-container *ngIf="appDetail$ | async as appDetails">
+  <div class="app__details">
+    <section class="subheader p-none pl-none">
+      <div class="max__w__1280 m-none">
+        <div class="flex__justify__space-between">
+          <div
+            class="subheader__title flex__justify__space-between align__items__baseline"
+          >
+            <div>
+              <a routerLink="/coordinator/apps" class="cursor__pointer">
+                <img src="assets/svgs/back-arrow.svg" alt="go back" />
+              </a>
+            </div>
+            <div class="pl-1">
+              <div class="mb-xs">App User Registry</div>
+              <div>
+                <div class="pr-xlg flex__justify__space-between">
+                  <div class="banner__label mr-xs">
+                    {{ appDetails.customId }}
+                    <span class="banner__text">{{ appDetails.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="max__w__1280 m-none site__participant">
+      <div class="cards1 m-none">
+        <table
+          class="table table-striped custom__table"
+          [mfData]="
+            appDetails.participants
+              | paginate
+                : {
+                    itemsPerPage: limit,
+                    currentPage: currentPage,
+                    totalItems: appDetails.totalParticipantCount
+                  }
+          "
+          #mf="mfDataTable"
+          [mfRowsOnPage]="limit"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
+          (mfSortOrderChange)="onSortOrder($event)"
+          (mfSortByChange)="onSortBy($event)"
+        >
+          <thead class="custom__thead">
+            <tr>
+              <span
+                class="sort__by__text mobile__view mr-sm"
+                style="background: transparent"
+              >
+                Sort By:
+              </span>
+              <th>
+                <mfDefaultSorter by="_email">App User Email</mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter by="_registrationDate">
+                  App Registration Date
+                </mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter by="_registrationStatus">
+                  App Account Status
+                </mfDefaultSorter>
+              </th>
+              <th>Associated Study Enrollments</th>
+            </tr>
+          </thead>
+          <tbody class="custom__tbody">
+            <tr *ngFor="let applists of mf.data">
+              <td [routerLink]="['/coordinator/participant', applists.id]">
+                <span class="tbl__td__label">Participant Email:</span>
+                <span>{{ applists.email }}</span>
+              </td>
+              <td>
+                <span class="tbl__td__label">App Registration Date:</span>
+                {{ applists.registrationDate }}
+              </td>
+              <td>
+                <span class="tbl__td__label">App Account Status:</span>
+                <div
+                  [ngClass]="{
+                    'txt__green':
+                      applists.registrationStatus === statusEnum.Active,
+                    'txt__light-gray':
+                      applists.registrationStatus === statusEnum.Deactivated
+                  }"
+                >
+                  {{
+                    applists.registrationStatus == "Deactivated"
+                      ? "Inactive"
+                      : applists.registrationStatus
+                  }}
+                </div>
+              </td>
+              <td>
+                <span class="tbl__td__label">Studies:</span>
+                <span
+                  class="text_decoration_underline"
+                  [class.no_st_en]="applists.enrolledStudies.length > 0"
+                  (click)="openModal(appEnrollList, applists.enrolledStudies)"
+                >
+                  {{ applists.enrolledStudies.length }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="appDetails.participants.length === 0">
+              <td colspan="4" class="text-center">No records found</td>
+            </tr>
+          </tbody>
+
+          <tfoot class="custom__tfoot">
+            <tr>
+              <td colspan="4">
+                <div class="text-center">
+                  <pagination-controls
+                    pagination-template
+                    #api="paginationApi"
+                    (pageChange)="pageChange($event)"
+                  ></pagination-controls>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </div>
+</ng-container>
+
+<ng-template #appEnrollList>
+  <div #appsListData class="modal-body modal__body">
+    <button type="button" class="close pad__15__20" (click)="modalRef.hide()">
+      &times;
+    </button>
+
+    <ul class="app__level__pop__list mt-3">
+      <li *ngFor="let applists of enrolledStudies">
+        <div class="blue__text__md text-uppercase">
+          {{ applists.customStudyId }}
+        </div>
+        <div class="font20 text_light-black">
+          {{ applists.studyName }}
+        </div>
+        <div *ngFor="let sitelists of applists.sites" class="mt-2">
+          <div class="p-none">
+            <div class="p-none cursor__none">
+              <span class="text-grey__sm">Site :</span>
+              <span
+                *ngIf="applists.studyType !== studyTypes.Open"
+                class="blue__text__md blue__link cursor__none"
+              >
+                {{ sitelists.locationName }}
+              </span>
+              <span
+                *ngIf="applists.studyType === studyTypes.Open"
+                class="blue__text__md blue__link cursor__none"
+              >
+                NA(Open Study)
+              </span>
+            </div>
+            <div>
+              <div
+                class="row flex-wrap-unset flex__justify__space-between line_height_normal"
+              >
+                <div class="col-xs-6 col-md-6 p-none">
+                  <span class="text-grey__sm">Date of Enrollment:</span>
+                  <span class="text__date__sm">
+                    {{ sitelists.enrollmentDate }}
+                  </span>
+                </div>
+
+                <div class="col-xs-6 col-md-6 p-none">
+                  <span class="text-grey__sm">Date of Withdrawal:</span>
+                  <span class="text__date__sm">
+                    {{ sitelists.withdrawlDate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</ng-template>

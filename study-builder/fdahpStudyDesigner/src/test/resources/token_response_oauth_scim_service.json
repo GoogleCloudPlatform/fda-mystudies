@@ -1,0 +1,6 @@
+{
+	"access_token": "7fd50c2c-d618-493c-89d6-f1887e3e4bb8",
+	"expires_in": 3599,
+	"scope": "openid offline",
+	"token_type": "bearer"
+}

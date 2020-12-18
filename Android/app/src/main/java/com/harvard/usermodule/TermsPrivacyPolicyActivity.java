@@ -1,0 +1,82 @@
+/*
+ * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.harvard.usermodule;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
+import com.harvard.R;
+import com.harvard.utils.AppController;
+import com.harvard.utils.Logger;
+
+public class TermsPrivacyPolicyActivity extends AppCompatActivity {
+  private RelativeLayout backBtn;
+  private AppCompatTextView title;
+  private WebView webView;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_terms_privacy_policy);
+    initializeXmlId();
+    setTextForView();
+    setFont();
+    bindEvents();
+  }
+
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    webView = (WebView) findViewById(R.id.webView);
+  }
+
+  private void setTextForView() {
+    try {
+      String titleTxt = getIntent().getStringExtra("title");
+      title.setText(titleTxt);
+      webView.getSettings().setLoadsImagesAutomatically(true);
+      webView.getSettings().setJavaScriptEnabled(true);
+      webView.setWebViewClient(new WebViewClient());
+      webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+      webView.loadUrl(getIntent().getStringExtra("url"));
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+  }
+
+  private void setFont() {
+    try {
+      title.setTypeface(AppController.getTypeface(TermsPrivacyPolicyActivity.this, "medium"));
+
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+  }
+
+  private void bindEvents() {
+    backBtn.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            finish();
+          }
+        });
+  }
+}

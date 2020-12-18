@@ -1,0 +1,20 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-server-np
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}' # Creates a NEG after an Ingress is created
+spec:
+  type: NodePort
+  selector:
+    app: auth-server
+  ports:
+    - protocol: TCP
+      port: 50000
+      targetPort: 8080
+      name: http

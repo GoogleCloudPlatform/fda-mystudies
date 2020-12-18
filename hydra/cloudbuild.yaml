@@ -1,0 +1,15 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
+# build the hydra-ic image for gke with cloudbuild:
+# gcloud builds submit --config deploy/build-gke/hydra-ic/cloudbuild.yaml .
+
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-f', "hydra/Dockerfile", '-t', 'gcr.io/$PROJECT_ID/hydra', '.' ]
+
+images:
+- 'gcr.io/$PROJECT_ID/hydra'

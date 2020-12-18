@@ -4,6 +4,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/hrLine1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:background="@color/colorSecondaryBg" />
+
     <RelativeLayout
         android:id="@+id/stateLayout"
         android:layout_width="match_parent"
@@ -117,14 +125,6 @@
 
         </RelativeLayout>
     </RelativeLayout>
-
-    <View
-        android:id="@+id/hrLine1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
-        android:background="@color/colorSecondaryBg" />
 
     <RelativeLayout
         android:id="@+id/container2"

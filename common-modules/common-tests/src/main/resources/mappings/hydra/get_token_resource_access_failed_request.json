@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/oauth2/token",
+		"headers": {
+      "Authorization": {
+        "contains": "resource_access_failed"
+      }
+    }
+	},
+	"response": {
+		"status": 503,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "hydra/service_unavailable_error_response"
+	}
+}

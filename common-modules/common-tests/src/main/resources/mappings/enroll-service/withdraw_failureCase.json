@@ -1,0 +1,9 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/response-datastore/participant/withdraw?studyId=StudyofHealthNew&participantId=4&deleteResponses=true"
+	},
+	"response": {
+		
+	}
+}

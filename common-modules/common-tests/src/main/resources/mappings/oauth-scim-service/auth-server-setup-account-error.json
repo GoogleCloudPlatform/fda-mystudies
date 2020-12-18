@@ -1,0 +1,20 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/auth-server/users",
+		"bodyPatterns": [
+			{
+				"contains": "AuthServerError@b0ston"
+			}
+		]
+		
+	},
+	"response": {
+		"status": 500,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "internal_server_error_response.json"
+	}
+}
+

@@ -1,0 +1,30 @@
+name: Build-iOS
+on:
+  pull_request:
+    paths:
+    - 'iOS/**'
+    - '.github/workflows/build-iOS.yml'
+jobs:
+  test:
+    name: Build and test
+    runs-on: macOS-latest
+    strategy:
+        matrix:
+          destination: ['platform=iOS Simulator,OS=13.7,name=iPhone 11']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Force XCode 11.7
+        run: sudo xcode-select -switch /Applications/Xcode_11.7.app
+      - name: Build
+        run: |
+          cd iOS/MyStudies
+          xcodebuild clean build -workspace MyStudies.xcworkspace -scheme MyStudies -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=YES
+        env: 
+         destination: ${{ matrix.destination }}
+      - name: Test
+        run: |
+          cd iOS/MyStudies
+          xcodebuild test -workspace MyStudies.xcworkspace -scheme MyStudies -destination "${destination}"
+        env: 
+         destination: ${{ matrix.destination }}

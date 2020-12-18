@@ -8,9 +8,9 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="24dp"
         android:paddingLeft="18dp"
-        android:paddingTop="24dp">
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/studyImg"
@@ -24,15 +24,16 @@
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/mImgTitle"
             style="@style/TextType5wMatchParent"
-            android:layout_alignBottom="@id/studyImg"
             android:layout_alignLeft="@id/studyImg"
             android:layout_alignRight="@id/studyImg"
+            android:layout_alignBottom="@id/studyImg"
             android:background="#96000000"
             android:ellipsize="end"
             android:padding="4dp"
             android:singleLine="true"
             android:text=""
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:visibility="invisible" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -94,10 +95,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="8dp"
-                android:paddingBottom="7dp"
                 android:paddingLeft="10dp"
+                android:paddingTop="1dp"
                 android:paddingRight="10dp"
-                android:paddingTop="1dp">
+                android:paddingBottom="7dp">
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/statusImgRight"
@@ -139,6 +140,7 @@
                         android:layout_below="@id/study_title_latin"
                         android:layout_marginTop="7dp"
                         android:text=""
+                        android:visibility="gone"
                         android:textColor="@color/colorSecondary" />
                 </RelativeLayout>
 
@@ -173,8 +175,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="4dp"
                             android:layout_alignBottom="@+id/completion"
-                            android:layout_marginBottom="3dp"
                             android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="3dp"
                             android:layout_toRightOf="@+id/completion_val"
                             android:paddingRight="0dp"
                             android:progress="50"

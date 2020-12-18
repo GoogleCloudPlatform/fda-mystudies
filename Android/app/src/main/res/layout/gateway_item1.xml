@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="0dp"
-                    android:background="@drawable/fda_logo1" />
+                    android:background="@drawable/logo1" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/welcome"

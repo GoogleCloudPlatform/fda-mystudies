@@ -1,73 +1,62 @@
-# My Studies
-My Studies is an open-source project to take part in health surveys. ‘My Studies’ is developed using [ResearchKit](https://github.com/ResearchKit/ResearchKit#charts) which is an open-source framework provided by Apple.
-My Studies project is FISMA & HIPPA compliant.
+<!--
+ Copyright 2020 Google LLC
+ Use of this source code is governed by an MIT-style
+ license that can be found in the LICENSE file or at
+ https://opensource.org/licenses/MIT.
+-->
+
+![Build iOS](https://github.com/GoogleCloudPlatform/fda-mystudies/workflows/Build%20iOS/badge.svg) 
+![SwiftLint](https://github.com/GoogleCloudPlatform/fda-mystudies/workflows/SwiftLint/badge.svg)
+
+# Overview
+This directory contains all the code necessary to build the **FDA MyStudies** iOS application for study participants. Customization of the [`Default.xcconfig`](MyStudies/MyStudies/Default.xcconfig) and [`Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) files will enable your iOS application to interact with the other components of your **FDA MyStudies** deployment. Further customization of app branding can be accomplished by replacing the default application images with your own. All configuration related to the creation and operation of studies is done using the [`Study builder`](../study-builder/) without need for code changes or redeployment of the mobile application.
+
+<!--TODO A demonstration of the iOS mobile application can be found [here](todo). --->
+
+![Example screens](../documentation/images/mobile-screens.png "Example screens")
+
 # Requirements
-My Studies requires Xcode 11 or newer and can be run on iOS 11 and above.
-# Backend Server Integration
-My Studies fetches all the Studies, Activities, Consent and Resources from the backend, and responses provided by users is stored on the backend.
-#### Registration Server
-Registration Server stores user information & user’s status for each study and activity.
-Once you have successfully setup Registration Server, replace registration server URL in RegistrationServerConfiguration.swift
-```swift
-struct RegistrationServerURLConstants {
-//TODO: Set the server end points
+The **FDA MyStudies** iOS application requires [Xcode 11](https://developer.apple.com/xcode/) or newer, and can be run on iOS versions 11 and above.
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
+# Platform integration
+The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth-server/) using OAuth 2.0.
 
-}
-```
+# Configuration instructions
+1. Open the [`iOS/MyStudies/MyStudies.xcworkspace`](MyStudies/MyStudies.xcworkspace) in Xcode
+1. Map your project’s [build configuration](https://help.apple.com/xcode/mac/current/#/dev745c5c974) to [`iOS/MyStudies/MyStudies/Default.xcconfig`](MyStudies/MyStudies/Default.xcconfig) ([instructions](https://help.apple.com/xcode/mac/current/#/deve97bde215?sub=devf0d495219))
+1. Update the following in the [`Default.xcconfig`](MyStudies/MyStudies/Default.xcconfig) file:
+    -    Update `STUDY_DATASTORE_URL` with your [`Study datastore`](../study-datastore) URL
+    -    Update `RESPONSE_DATASTORE_URL` with your [`Response datastore`](../response-datastore/) URL
+    -    Update `USER_DATASTORE_URL` with your [`User datastore`](../participant-datastore/user-mgmt-module/) URL
+    -    Update `ENROLLMENT_DATASTORE_URL` with your [`Enrollment datastore`](../participant-datastore/enroll-mgmt-module/) URL
+    -    Update `CONSENT_DATASTORE_URL` with your [`Consent datastore`](../participant-datastore/consent-mgmt-module/) URL
+    -    Update `AUTH_URL` with your [`Auth server`](../auth-server/) URL
+    -    Update `HYDRA_BASE_URL` with your [`Hydra server`](../hydra/) URL
+    -    Update `HYDRA_CLIENT_ID` with the `client_id` you configured during [`Hydra`](/hydra/) deployment (the mobile applications share a `client_id` with each other, the `Auth server` and the `Participant manager`) 
+    -    Update `API_KEY` with the `bundle_id` and `app_token` that you configured [`study-datastore/src/main/resources/authorizationResource.properties`](../study-datastore/src/main/resources/authorizationResource.properties) during [`Study datastore`](/study-datastore/) deployment with format `<value of ios.bundleid>:<value of ios.apptoken>`
+    -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
+    -    Set `APP_TYPE` to either “gateway” or “standalone”
+    -    Update `STUDY_ID` key with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
+1. Enable push notifications by creating [push notification certificates](https://help.apple.com/developer-account/#/dev82a71386a) in encrypted `.p12` format (for more information, visit [Establishing a Certificate-Based Connection to APNs](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_certificate-based_connection_to_apns))
+1. Configure your [`Participant datastore`](/participant-datastore/) instance to interface with your mobile application
+    -    Make a copy of the [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) and update the values to match your iOS configuration
+    -   Optionally, configure the Android fields to match your Android configuration (not necessary if you are not configuring an Android application, or if you have already completed this step during Android configuration)
+    -    Run your updated [`mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) script on the `mystudies_participant_datastore` database that you created during [`Participant datastore`](/participant-datastore/) deployment  ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))   
+1. *Optional.* Customize images and text
+    -    Replace icons and images in [`iOS/MyStudies/MyStudies/Assets/Assets.xcassets`](MyStudies/MyStudies/Assets/Assets.xcassets/)
+    -    Update user-facing text in the [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) file, fields to consider include:
+         -    `ProductTitleName` - Application name that is shown to the user
+         -    `WebsiteButtonTitle` - Text of the link that is shown on the overview screen
+         -    `WebsiteLink` - Destination of the link that is shown on the overview screen
+         -    `TermsAndConditionURL` - Destination for the terms and conditions link
+         -    `PrivacyPolicyURL` - Destination for the privacy policy link
+         -    `NavigationTitleName` - The navigation bar title that is shown to users
+    -    Update introductory information presented to users in the [`iOS/MyStudies/MyStudies/Utils/Resources/Plists/UI/GatewayOverview.plist`](MyStudies/MyStudies/Utils/Resources/Plists/UI/GatewayOverview.plist) file
+    -    Additional resource documents can be made available to users by adding PDF files to [`iOS/MyStudies/MyStudies/Assets/OtherAssets/`](MyStudies/MyStudies/Assets/OtherAssets/) and creating a corresponding entry in [`iOS/MyStudies/MyStudies/Models/Resource/Resources.plist`](MyStudies/MyStudies/Models/Resource/Resources.plist)
 
-#### WCP Server
-WCP Server provides the platform to create study, activities, consent, and Resources.
-Once you have successfully setup WCP Server, replace server URL in WCPConfiguration.swift
-```swift
-struct WCPServerURLConstants {
-//TODO: Set the server end points
+# Building and deploying
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
-}
-```
-#### Response Server
-Response Server stores all user’s response to each study activity.
-Once you have successfully setup WCP Server, replace server URL in ResponseServerConfiguration.swift
-```swift
-struct ResponseServerURLConstants {
-//TODO: Set the server end points
+Instructions for building and deploying iOS applications can be found [here](https://help.apple.com/xcode/mac/current/#/devdc0193470).
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
-
-}
-```
-
-# Author
-Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
-
-# License
-License Agreement for FDA My Studies
-Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
-limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
-Software, and to permit persons to whom the Software is furnished to do so, subject to the following
-conditions:
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
-Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as
-Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
-THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
-OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-# Libraries We Used
-[IQKeyboardManagerSwift](https://github.com/hackiftekhar/IQKeyboardManager)
-[SlideMenuControllerSwift](https://github.com/dekatotoro/SlideMenuControllerSwift)
-[Crashlytics](https://cocoapods.org/pods/Crashlytics)
-[SDWebImage](https://github.com/rs/SDWebImage)
-[RealmSwift](https://github.com/realm/realm-cocoa)
-[CryptoSwift](https://github.com/krzyzanowskim/CryptoSwift)
-[ActionSheetPicker-3.0](https://github.com/skywinder/ActionSheetPicker-3.0)
+***
+<p align="center">Copyright 2020 Google LLC</p>

@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/auth-server/users",
+		"bodyPatterns": [
+			{
+				"contains": "Kantharaj#1123"
+			}
+		]
+	},
+	"response": {
+		"status": 201,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		},
+		"bodyFileName": "oauth-scim-service/auth-server-setup-account-response.json"
+	}
+}

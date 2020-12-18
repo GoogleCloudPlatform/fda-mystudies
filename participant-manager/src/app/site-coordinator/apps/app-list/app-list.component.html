@@ -1,0 +1,102 @@
+<div class="max__w__1280">
+  <div class="tab-content">
+    <ng-container *ngIf="manageApp$ | async as manageApps">
+      <div
+        *ngIf="manageApps.superAdmin || manageApps.studyPermissionCount >= 2"
+      >
+        <div
+          *ngFor="let app of manageApps.apps"
+          class="bg__white cards box__shadow-cmn p-xl ml-none mr-none apps_row"
+        >
+          <div
+            [routerLink]="
+              checkViewPermission(app.permission)
+                ? ['/coordinator/apps', app.id]
+                : []
+            "
+            class="flex__justify__space-between flex__wrap"
+            [ngClass]="
+              checkViewPermission(app.permission) ? ' cursor__pointer' : ''
+            "
+          >
+            <div>
+              <div class="blue__text__md text-capitalize">
+                {{ app.customId }}
+              </div>
+              <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
+                {{ app.name }}
+              </div>
+              <div
+                class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
+              >
+                <div class="col-xs-6 col-md-12 p-none">
+                  {{ app.studiesCount | i18nPlural: studiesMessageMapping }}
+                  <span *ngIf="checkEditPermission(app.permission)">
+                    ,
+                    <span *ngIf="app.appUsersCount">
+                      {{
+                        app.appUsersCount | i18nPlural: appUsersMessageMapping
+                      }}
+                    </span>
+                    <span *ngIf="!app.appUsersCount">No App Users</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="mb__width__100">
+              <div class="flex__ flex__row align__items__center">
+                <div class="mb__width__100">
+                  <div class="col-xs-12 p-none lh__6">
+                    <div class="prog">
+                      <div class="pro__base">
+                        <div
+                          class="pro__top"
+                          [style.width.%]="app.enrollmentPercentage"
+                        ></div>
+                      </div>
+                      <div
+                        class="progress-label font__bold"
+                        [ngClass]="progressBarColor(app)"
+                      >
+                        <span *ngIf="app.invitedCount != 0">
+                          {{ app.enrolledCount }} / {{ app.invitedCount }}
+                        </span>
+                        <span *ngIf="app.invitedCount == 0">
+                          {{ app.enrolledCount }} Enrolled
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right progress__bar__next">
+                  <div class="progress-bar-next__title">
+                    <span *ngIf="app.invitedCount != 0">
+                      {{ app.enrollmentPercentage | number: ".2-2" }}%
+                    </span>
+                    <span *ngIf="app.invitedCount == 0">N/A</span>
+                  </div>
+                  <span
+                    class="tool"
+                    data-tip="Represents the Enrollment Progress for all studies in this app, across the Sites you have permissions to view or manage. This is calculated considering the number of enrolled participants versus how many were invited or what the target was (in case of open studies). Studies for which targets are yet to be defined are not included in this number."
+                    tabindex="1"
+                  >
+                    <div class="text-grey__sm">Enrollment Progress</div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="loadMoreEnabled" (mouseover)="loadMoreSites()">
+          <app-loadmore-spinner></app-loadmore-spinner>
+        </div>
+
+        <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+          <div class="text-center p-2" *ngIf="manageApps.apps.length === 0">
+            No records found
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

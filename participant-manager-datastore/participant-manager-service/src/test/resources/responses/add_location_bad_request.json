@@ -1,0 +1,19 @@
+{
+	"violations": [
+		{
+			"path": "customId",
+			"message": "must not be blank"
+		},
+		{
+			"path": "description",
+			"message": "must not be blank"
+		},
+		{
+			"path": "name",
+			"message": "must not be blank"
+		}
+	],
+	"error_description": "Invalid entries found in the submitted form. Please try again.",
+	"error_type": "BAD REQUEST",
+	"error_code": "EC-400"
+}

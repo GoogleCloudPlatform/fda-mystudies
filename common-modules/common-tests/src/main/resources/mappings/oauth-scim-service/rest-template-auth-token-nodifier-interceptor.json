@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/restTemplateAuthTokenModifierInterceptor",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json;charset=UTF-8"
+    }
+  }
+}

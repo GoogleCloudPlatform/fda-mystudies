@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/restTemplateAuthTokenModifierInterceptor",
+    "headers": {
+      "Authorization": {
+        "contains": "cd57710c-1d19-4058-8bfe-a6aac3a39e35"
+      }
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json;charset=UTF-8"
+    },
+    "bodyFileName": "oauth-scim-service/unauthorized.json"
+  }
+}

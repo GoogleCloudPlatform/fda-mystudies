@@ -1,0 +1,6 @@
+extends: ["../.eslintrc.js"]
+parserOptions:
+  ecmaVersion: 11
+  sourceType: "module"
+  tsconfigRootDir: "e2e"
+  project: "tsconfig.e2e.json"

@@ -1,0 +1,19 @@
+{
+  "studyId": "REGteststudy",
+  "message": "manuallschedule",
+  "activities": [
+    {
+      "activityId": "CustomTest",
+      "activityVersion": 1.0,
+      "studyId": "REGteststudy",
+      "activityState": "inProgress",
+      "activityRunId": 1,
+      "bookmarked": false,
+      "activityRun": {
+        "total": 2,
+        "missed": 0,
+        "completed": 0
+      }
+    }
+  ]
+}

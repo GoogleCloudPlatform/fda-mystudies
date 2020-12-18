@@ -14,9 +14,9 @@
   -->
 
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-              android:accountType="com.harvard.fda.offlineModule.auth.syncadapterexample"
+              android:accountType="@string/account_type"
               android:allowParallelSyncs="false"
-              android:contentAuthority="com.harvard.fda.offlineModule.auth.syncadapterexample.provider"
+              android:contentAuthority="@string/sync_provider"
               android:isAlwaysSyncable="true"
               android:supportsUploading="false"
               android:userVisible="false" />

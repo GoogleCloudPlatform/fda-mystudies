@@ -1,0 +1,117 @@
+<header>
+  <div (keyup)="onKeyUp($event)" id="desktop-menu">
+    <div class="bs-example bs__example">
+      <nav class="navbar navbar-expand-md p-none">
+        <a
+          [routerLink]="
+            displayHeaderOnResetpassword ? '/coordinator/studies/sites' : []
+          "
+          [ngClass]="{cursor__none: displayHeaderOnResetpassword === false}"
+          class="navbar-brand"
+        >
+          <img
+            class="mr-sm width__auto"
+            src="assets/images/landing-logo.png"
+            alt="main logo "
+          />
+        </a>
+        <div
+          *ngIf="displayHeaderOnResetpassword"
+          class="collapse navbar-collapse"
+          id="navbarCollapse"
+        >
+          <div class="navbar-nav ml-auto">
+            <div class="navbar-nav display-flex-center">
+              <div
+                *ngIf="showSearchBar"
+                class="navbar-nav inner-addon right-addon search-icon"
+              >
+                <input
+                  type="text"
+                  [attr.placeholder]="searchPlaceholder"
+                  autocomplete="off"
+                  [(ngModel)]="filterQuery"
+                  class="form-control search-box search__"
+                />
+              </div>
+              <a
+                class="nav-item nav-link"
+                routerLink="/coordinator/studies/sites"
+                [ngClass]="{
+                  active: apps.isActive || sites.isActive || studies.isActive
+                }"
+              >
+                Dashboard
+              </a>
+              <a
+                class="nav-item nav-link"
+                routerLink="/coordinator/studies"
+                routerLinkActive
+                #studies="routerLinkActive"
+                style="display: none"
+                [routerLinkActiveOptions]="{exact: true}"
+              >
+                sites
+              </a>
+              <a
+                class="nav-item nav-link"
+                routerLink="/coordinator/apps"
+                routerLinkActive
+                #apps="routerLinkActive"
+                style="display: none"
+                [routerLinkActiveOptions]="{exact: true}"
+              >
+                apps
+              </a>
+              <a
+                class="nav-item nav-link"
+                routerLink="/coordinator/studies/sites"
+                routerLinkActive
+                #sites="routerLinkActive"
+                style="display: none"
+                [routerLinkActiveOptions]="{exact: true}"
+              >
+                studies
+              </a>
+              <a
+                *ngIf="user?.manageLocations !== null || user?.superAdmin"
+                routerLink="/coordinator/locations"
+                routerLinkActive="active"
+                class="nav-item nav-link"
+              >
+                Locations
+              </a>
+              <a
+                *ngIf="user?.superAdmin"
+                routerLink="/coordinator/users"
+                routerLinkActive="active"
+                class="nav-item nav-link"
+              >
+                Admins
+              </a>
+              <a
+                routerLink="/coordinator/accounts"
+                routerLinkActive="active"
+                class="nav-item nav-link"
+              >
+                My Account
+                <span class="navbar__name">{{ userName | slice: 0:1 }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <mobile-menu
+    [searchPlaceholder]="searchPlaceholder"
+    [showSearchBar]="showSearchBar"
+    [filterQuery]="filterQuery"
+    (keyup)="onKeyUp($event)"
+  ></mobile-menu>
+</header>
+
+<router-outlet (activate)="onActivate($event)"></router-outlet>
+
+<app-footer></app-footer>

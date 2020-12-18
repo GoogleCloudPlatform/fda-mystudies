@@ -1,0 +1,20 @@
+on:
+  pull_request:
+    paths:
+    - 'common-modules/**'
+    - 'participant-datastore/consent-mgmt-module/**'
+    - '.github/workflows/build-participant-consent-datastore.yml'
+name: Build participant-datastore-consent-module
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Build with Maven
+      run: |
+          cd participant-datastore/consent-mgmt-module
+          mvn -B package --file pom.xml
