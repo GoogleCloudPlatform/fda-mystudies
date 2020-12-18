@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {Component, OnInit} from '@angular/core';
 import {SearchService} from '../shared/search.service';
 import {SearchBar} from '../shared/search-bar';
@@ -6,6 +7,7 @@ import {UserService} from '../service/user.service';
 import {StateService} from '../service/state.service';
 import {HeaderDisplayService} from '../service/header-display.service';
 import {SearchParameterService} from '../service/search-parameter.service';
+import {BnNgIdleService} from 'bn-ng-idle';
 
 @Component({
   selector: 'site-coordinator',
@@ -26,9 +28,17 @@ export class SiteCoordinatorComponent implements OnInit {
     private readonly userState: StateService,
     private readonly displayHeader: HeaderDisplayService,
     private readonly searchParameter: SearchParameterService,
+    private readonly bnIdle: BnNgIdleService,
   ) {}
 
   ngOnInit(): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    // this.bnIdle.startWatching(1800).subscribe((isTimedOut: boolean) => {
+    //   // if (res) {
+    //   //   console.log(res);
+    //   console.log('works as we expected');
+    //   // }
+    // });
     this.showSearchBar = false;
     this.user = this.userService.getUserProfile();
     this.userState.currentUserName$.subscribe((upadtedUsername) => {
