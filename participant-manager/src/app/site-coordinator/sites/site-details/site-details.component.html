@@ -524,7 +524,10 @@
                 class="border__bottom__red border-top__c4d1e6 progress__bar"
               >
                 <!-- for all Selected -->
-                <td *ngIf="activeTab == onBoardingStatus.All">
+                <td
+                  [routerLink]="['/coordinator/participant', participant.id]"
+                  *ngIf="activeTab == onBoardingStatus.All"
+                >
                   <span class="no_st_en cursor__pointer outline__none">
                     {{ participant.email }}
                   </span>
