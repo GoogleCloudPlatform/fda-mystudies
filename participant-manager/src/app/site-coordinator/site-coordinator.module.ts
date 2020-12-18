@@ -10,6 +10,7 @@ import {ParticipantDetailsComponent} from './participant-details/participant-det
 import {SharedModule} from '../shared/shared.module';
 import {RoleGuard} from '../../app/service/role.guard';
 import {LocationsGuard} from '../service/locations.guard';
+import {BnNgIdleService} from 'bn-ng-idle';
 @NgModule({
   declarations: [
     SiteCoordinatorComponent,
@@ -24,6 +25,6 @@ import {LocationsGuard} from '../service/locations.guard';
     NgxDataTableModule,
     SharedModule,
   ],
-  providers: [RoleGuard, LocationsGuard],
+  providers: [RoleGuard, LocationsGuard, BnNgIdleService],
 })
 export class SiteCoordinatorModule {}

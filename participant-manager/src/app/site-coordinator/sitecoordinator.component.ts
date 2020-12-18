@@ -6,6 +6,9 @@ import {UserService} from '../service/user.service';
 import {StateService} from '../service/state.service';
 import {SearchTermService} from '../service/search-term.service';
 import {DisplayHeaderService} from '../service/display-header.service';
+import {BnNgIdleService} from 'bn-ng-idle';
+import {AccountService} from './account/shared/account.service';
+import {Router} from '@angular/router';
 @Component({
   selector: 'site-coordinator',
   templateUrl: './sitecoordinator.component.html',
@@ -26,9 +29,21 @@ export class SiteCoordinatorComponent implements OnInit {
     private readonly userState: StateService,
     private readonly searchTerm: SearchTermService,
     private readonly displayHeader: DisplayHeaderService,
+    private readonly bnIdle: BnNgIdleService,
+    private readonly accountService: AccountService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
+    this.bnIdle.startWatching(1800).subscribe((isTimedOut: boolean) => {
+      if (isTimedOut) {
+        this.accountService.logout().subscribe(() => {
+          sessionStorage.clear();
+          void this.router.navigate(['/']);
+        });
+      }
+    });
+
     this.showSearchBar = false;
     this.user = this.userService.getUserProfile();
     this.userState.currentUserName$.subscribe((upadtedUsername) => {
