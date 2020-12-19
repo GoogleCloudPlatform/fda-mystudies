@@ -166,7 +166,7 @@ regenerating the Terraform configs several times.
     the Teraform configs.
 
     ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     ```
 
 1. Backup the state of the `devops` project to the newly created state bucket
