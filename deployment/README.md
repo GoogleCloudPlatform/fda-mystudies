@@ -155,7 +155,7 @@ regenerating the Terraform configs several times.
     Terraform state bucket.
 
     ```bash
-    cd $GIT_ROOT/terraform/devops
+    cd $GIT_ROOT/deployment/terraform/devops
     terraform init
     terraform apply
     ```
@@ -189,7 +189,7 @@ regenerating the Terraform configs several times.
 1. Deploy the `cicd/` folder to set up CICD pipelines.
 
     ```bash
-    cd $GIT_ROOT/terraform/cicd
+    cd $GIT_ROOT/deployment/terraform/cicd
     terraform init
     terraform apply
     ```
@@ -260,7 +260,7 @@ regenerating the Terraform configs several times.
     regenerate the Terraform configs:
 
     ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     ```
 
 1. Commit your current local git working dir and send a Pull Request to merge
@@ -273,7 +273,7 @@ regenerating the Terraform configs several times.
     and regenerate the Terraform configs:
 
     ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     ```
 
 1. Commit your current local git working dir and send a Pull Request to merge
