@@ -22,7 +22,7 @@ solution guide.
 ## Prerequisites
 
 Follow
-[Prerequisites](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#prerequisites)
+[Prerequisites](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/templates-v0.4.0/docs/tfengine#prerequisites)
 and prepare to deploy FDA MyStudies platform infrastructure in a folder.
 
 In addition, [Create](https://support.google.com/a/answer/33343?hl=en) the
