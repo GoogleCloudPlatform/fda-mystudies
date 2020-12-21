@@ -730,7 +730,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   private void validateSignedInUser(String adminUserId) {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(adminUserId);
     UserRegAdminEntity user =
-        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     if (!user.isSuperAdmin()) {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
@@ -794,7 +794,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
 
     UserRegAdminEntity loggedInUserDetails =
-        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     if (!loggedInUserDetails.isSuperAdmin()) {
       logger.error("Signed in user is not having super admin privileges");
