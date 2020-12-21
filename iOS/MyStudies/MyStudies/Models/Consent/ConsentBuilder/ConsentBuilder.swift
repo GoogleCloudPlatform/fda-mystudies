@@ -220,7 +220,7 @@ class ConsentBuilder {
 
       let investigatorSignature = ORKConsentSignature(
         forPersonWithTitle: kConsentSignaturePageTitle,
-        dateFormatString: "MM/dd/YYYY",
+        dateFormatString: "MM/dd/yyyy",
         identifier: "Signature"
       )
 

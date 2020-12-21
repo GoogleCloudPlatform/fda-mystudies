@@ -118,7 +118,7 @@ public class LoginControllerTest extends BaseMockIT {
         .andExpect(
             view()
                 .name(
-                    "redirect:sessionOut.do?sucMsg=Your password has been changed successfully. Please login again with new password."));
+                    "redirect:sessionOut.do?sucMsg=Your password has been changed successfully. Please sign in again with the new password."));
 
     verifyAuditEventCall(PASSWORD_CHANGE_SUCCEEDED);
   }

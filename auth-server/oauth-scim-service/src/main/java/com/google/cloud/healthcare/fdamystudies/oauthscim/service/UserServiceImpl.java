@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_SOURCE_NAME;
 import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
 import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
@@ -268,7 +267,6 @@ public class UserServiceImpl implements UserService {
           String.format(
               "'%s' is invalid source value. Allowed values: MOBILE APPS or PARTICIPANT MANAGER",
               auditRequest.getSource()));
-      throw new ErrorCodeException(INVALID_SOURCE_NAME);
     }
 
     String emailSubject =
@@ -437,7 +435,6 @@ public class UserServiceImpl implements UserService {
           String.format(
               "'%s' is invalid source value. Allowed values: MOBILE APPS or PARTICIPANT MANAGER",
               auditRequest.getSource()));
-      throw new ErrorCodeException(INVALID_SOURCE_NAME);
     }
 
     String emailSubject =
