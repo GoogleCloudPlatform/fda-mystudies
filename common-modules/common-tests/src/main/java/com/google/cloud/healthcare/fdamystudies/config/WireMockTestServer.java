@@ -12,40 +12,30 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.stereotype.Component;
 
-public class WireMockInitializer
-    implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+@Component
+public class WireMockTestServer {
 
-  @Override
-  public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-    WireMockServer wireMockServer =
+  private WireMockServer wireMockServer = null;
+
+  public void start() throws InterruptedException {
+    wireMockServer =
         new WireMockServer(
             new WireMockConfiguration()
                 .port(8080)
                 .fileSource(new ClasspathFileSourceWithoutLeadingSlash()));
 
-    configurableApplicationContext
-        .getBeanFactory()
-        .registerSingleton("wireMockServer", wireMockServer);
+    wireMockServer.start();
+    Thread.sleep(2000);
+  }
 
-    configurableApplicationContext.addApplicationListener(
-        applicationEvent -> {
-          if (applicationEvent instanceof ApplicationStartedEvent) {
-            if (!wireMockServer.isRunning()) {
-              wireMockServer.start();
-            }
-          }
-
-          if (applicationEvent instanceof ContextClosedEvent) {
-            if (wireMockServer.isRunning()) {
-              wireMockServer.stop();
-            }
-          }
-        });
+  public void stop() throws InterruptedException {
+    // "Unexpected end of file" implies that the remote server accepted and closed the connection
+    // without sending a response. 2 seconds sleep added to avoid this error.
+    Thread.sleep(2000);
+    wireMockServer.stop();
+    Thread.sleep(2000);
   }
 
   /*
