@@ -15,13 +15,13 @@ The [`Hydra server`](../hydra/) provides the following functionality:
 1. Token introspection
 1. OAuth 2.0 flows
  
-The [`/hydra/Dockerfile`](./Dockerfile) builds a [Hydra v1.7.4 container](https://github.com/ory/hydra/releases/tag/v1.7.4), then starts Hydra using [`entrypoint.bash`](./entrypoint.bash). This entrypoint script sets all necessary environment variables and executes [`migrate`](https://www.ory.sh/hydra/docs/cli/hydra-migrate-sql/) to update the schema of the backend database. 
+The [`/hydra/Dockerfile`](./Dockerfile) builds a [Hydra container](https://github.com/ory/hydra), then starts Hydra using [`entrypoint.bash`](./entrypoint.bash). This entrypoint script sets all necessary environment variables and executes [`migrate`](https://www.ory.sh/hydra/docs/cli/hydra-migrate-sql/) to update the schema of the backend database. 
  
 # Deployment
 > **_NOTE:_** Holistic deployment of the **FDA MyStudies** platform with Terraform and infrastructure-as-code is the recommended approach to deploying this component. A step-by-step guide to semi-automated deployment can be found in the [`deployment/`](/deployment) directory. The following instructions are provided in case manual deployment in a VM is required. Google Cloud infrastructure is indicated, but equivalent alternative infrastructure can be used as well. It is important for the deploying organization to consider the identity and access control choices made when configuring the selected services. If pursuing a manual deployment, a convenient sequence is [`hydra/`](/hydra)&rarr;[`auth-server/`](/auth-server/)&rarr;[`participant-datastore/`](/participant-datastore/)&rarr;[`participant-manager-datastore/`](/participant-manager-datastore/)&rarr;[`participant-manager/`](/participant-manager/)&rarr;[`study-datastore/`](/study-datastore/)&rarr;[`response-datastore/`](/response-datastore/)&rarr;[`study-builder/`](/study-builder/)&rarr;[`Android/`](/Android/)&rarr;[`iOS/`](/iOS/).
  
 To deploy [`Hydra`](/hydra) manually:
-1. [Create](https://cloud.google.com/compute/docs/instances/create-start-instance) a Compute Engine VM instance and [reserve a static IP](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-internal-ip-address)
+1. [Create](https://cloud.google.com/compute/docs/instances/create-start-instance) a Compute Engine VM instance with your preferred machine type and OS (for example, e2-medium and Debian 10), then [reserve a static IP](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-internal-ip-address)
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/)
 1. Create a Cloud SQL instance with MySQL v5.7 ([instructions](https://cloud.google.com/sql/docs/mysql/create-instance))
 1. Configure the `Hydra` database on the Cloud SQL instance
@@ -31,8 +31,8 @@ To deploy [`Hydra`](/hydra) manually:
 1. To enable `https`, obtain a certificate from a certificate authority or prepare a self-signed certificate
     -   For example, you could generate a self-signed certificate by configuring [`cert.config`](cert.config) with the IP or domain of your Hydra deployment and then executing `openssl req -newkey rsa:2048 -x509 -nodes -days 365 -config cert.config -keyout mystudies-private.key -out mystudies-cert.pem`
 1. Set a [system secret](https://www.ory.sh/hydra/docs/configure-deploy/#deploy-ory-hydra), for example using `export SYSTEM_SECRET=$(export LC_CTYPE=C; cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)` (this secret is used to encrypt your Hydra database and needs to be the same value every time)
-1. Deploy the [Hydra v1.7.4 container](https://github.com/ory/hydra/releases/tag/v1.7.4) to the VM
-    -    Create the Docker image using `sudo docker build -t hydra-image .` from the `hydra/` directory (you may need to [install Docker](https://docs.docker.com/engine/install/debian/))
+1. Deploy [Hydra](https://github.com/ory/hydra) to the VM
+    -    Create the Docker image using `sudo docker build -t hydra-image hydra` from the `fda-mystudies/` root directory (you may need to [install Docker](https://docs.docker.com/engine/install/debian/))
     -    Update the Docker environment file [`variables.env`](variables.env) with the values for your deployment
     -    Run the container on your VM using `sudo docker run --detach -v ~/certs:/certs --env-file variables.env -p 4444:4444 -p 4445:4445 --name hydra hydra-image`
 1. Test if the application is running with `curl -k https://0.0.0.0:4445/health/ready`

@@ -2,9 +2,11 @@ name: lint-oauth-scim
 
 on:
   pull_request:
+    branches:
+      - develop
     paths:
-    - 'auth-server/oauth-scim-service/**'
-    - '.github/workflows/lint-oauth-scim-service.yml'
+      - 'auth-server/oauth-scim-service/**'
+      - '.github/workflows/lint-oauth-scim-service.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest

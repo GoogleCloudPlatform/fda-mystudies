@@ -305,21 +305,21 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
   // MARK: - FORMATERS
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "dd, MMM YYYY"
+    formatter.dateFormat = "dd, MMM yyyy"
     formatter.timeZone = TimeZone.current
     return formatter
   }()
 
   private static let yearFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "YYYY"
+    formatter.dateFormat = "yyyy"
     formatter.timeZone = TimeZone.current
     return formatter
   }()
 
   private static let monthFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "MMM YYYY"
+    formatter.dateFormat = "MMM yyyy"
     formatter.timeZone = TimeZone.current
     return formatter
   }()
