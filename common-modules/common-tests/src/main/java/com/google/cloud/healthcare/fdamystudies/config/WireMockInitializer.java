@@ -12,30 +12,29 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import org.springframework.stereotype.Component;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 
-@Component
-public class WireMockTestServer {
+public class WireMockInitializer
+    implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-  private WireMockServer wireMockServer = null;
+  public static boolean wireMockRunning = false;
 
-  public void start() throws InterruptedException {
-    wireMockServer =
+  @Override
+  public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+    WireMockServer wireMockServer =
         new WireMockServer(
             new WireMockConfiguration()
                 .port(8080)
                 .fileSource(new ClasspathFileSourceWithoutLeadingSlash()));
 
-    wireMockServer.start();
-    Thread.sleep(2000);
-  }
-
-  public void stop() throws InterruptedException {
-    // "Unexpected end of file" implies that the remote server accepted and closed the connection
-    // without sending a response. 2 seconds sleep added to avoid this error.
-    Thread.sleep(2000);
-    wireMockServer.stop();
-    Thread.sleep(2000);
+    configurableApplicationContext
+        .getBeanFactory()
+        .registerSingleton("wireMockServer", wireMockServer);
+    if (!wireMockRunning) {
+      wireMockServer.start();
+      wireMockRunning = true;
+    }
   }
 
   /*

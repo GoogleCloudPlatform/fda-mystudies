@@ -25,11 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
-import com.google.cloud.healthcare.fdamystudies.config.WireMockTestServer;
+import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,12 +48,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.TestInstance;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.slf4j.ext.XLogger;
@@ -68,13 +66,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ContextConfiguration(initializers = {WireMockInitializer.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("mockit")
@@ -107,7 +106,7 @@ public class BaseMockIT {
 
   protected static final ResultMatcher NOT_FOUND = status().isNotFound();
 
-  @Autowired private WireMockTestServer wireMockServer;
+  @Autowired private WireMockServer wireMockServer;
 
   @Autowired protected MockMvc mockMvc;
 
@@ -126,16 +125,8 @@ public class BaseMockIT {
     logger.debug(String.format("server port=%d", randomServerPort));
   }
 
-  @BeforeAll
-  public void initBeforeAll() throws InterruptedException {
-    System.out.println("start wiremock");
-    wireMockServer.start();
-  }
-
-  @AfterAll
-  public void tearDownAfterAll() throws InterruptedException {
-    System.out.println("stop wiremock");
-    wireMockServer.stop();
+  protected WireMockServer getWireMockServer() {
+    return wireMockServer;
   }
 
   protected String getContextPath() {
