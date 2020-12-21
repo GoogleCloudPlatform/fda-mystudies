@@ -128,11 +128,13 @@ public class BaseMockIT {
 
   @BeforeAll
   public void initBeforeAll() throws InterruptedException {
+    System.out.println("start wiremock");
     wireMockServer.start();
   }
 
   @AfterAll
   public void tearDownAfterAll() throws InterruptedException {
+    System.out.println("stop wiremock");
     wireMockServer.stop();
   }
 
