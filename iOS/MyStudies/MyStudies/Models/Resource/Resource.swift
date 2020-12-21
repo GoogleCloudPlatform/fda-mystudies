@@ -151,13 +151,13 @@ class Resource: ResourceRow {
           someObject: (configuration["availableDate"]) as AnyObject
         ) {
           self.startDate = Utilities.getDateFromStringWithFormat(
-            "YYYY-MM-dd",
+            "yyyy-MM-dd",
             resultDate: configuration["availableDate"] as! String
           )
         }
         if Utilities.isValidValue(someObject: (configuration["expiryDate"]) as AnyObject) {
           self.endDate = Utilities.getDateFromStringWithFormat(
-            "YYYY-MM-dd",
+            "yyyy-MM-dd",
             resultDate: configuration["expiryDate"] as! String
           )
         }
@@ -252,13 +252,13 @@ class Resource: ResourceRow {
           someObject: (configuration["availableDate"]) as AnyObject
         ) {
           self.startDate = Utilities.getDateFromStringWithFormat(
-            "YYYY-MM-dd",
+            "yyyy-MM-dd",
             resultDate: configuration["availableDate"] as! String
           )
         }
         if Utilities.isValidValue(someObject: (configuration["expiryDate"]) as AnyObject) {
           self.endDate = Utilities.getDateFromStringWithFormat(
-            "YYYY-MM-dd",
+            "yyyy-MM-dd",
             resultDate: configuration["expiryDate"] as! String
           )
         }

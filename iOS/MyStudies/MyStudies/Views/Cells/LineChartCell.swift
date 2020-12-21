@@ -727,21 +727,21 @@ class LineChartCell: GraphChartTableViewCell {
   // MARK: - FORMATERS
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "dd, MMM YYYY"
+    formatter.dateFormat = "dd, MMM yyyy"
     formatter.timeZone = TimeZone.init(abbreviation: "GMT")
     return formatter
   }()
 
   private static let yearFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "YYYY"
+    formatter.dateFormat = "yyyy"
     formatter.timeZone = TimeZone.init(abbreviation: "GMT")
     return formatter
   }()
 
   private static let monthFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "MMM YYYY"
+    formatter.dateFormat = "MMM yyyy"
     formatter.timeZone = TimeZone.init(abbreviation: "GMT")
     return formatter
   }()
@@ -775,7 +775,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   private static let oneTimeFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd YYYY"
+    formatter.dateFormat = "hh:mma, MMM dd yyyy"
     formatter.timeZone = TimeZone.init(abbreviation: "GMT")
     return formatter
   }()

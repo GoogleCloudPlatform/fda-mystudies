@@ -10,7 +10,7 @@ enum DateHelper {
 
   static private let runDateFormat = "yyyy-MM-dd HH:mm:ss Z"
   static private let fullDayHourFormat = "HH:mm:ss"  // 15:25:25
-  static private let shortMonthYearFormat = "MMM YYYY"  // Jul 2020
+  static private let shortMonthYearFormat = "MMM yyyy"  // Jul 2020
 
   static var iso8601DateFormatter: DateFormatter {
     let dateFormatter = DateFormatter()
