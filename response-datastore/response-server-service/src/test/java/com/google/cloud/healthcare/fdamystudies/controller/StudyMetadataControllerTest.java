@@ -29,7 +29,6 @@ import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -60,7 +59,6 @@ public class StudyMetadataControllerTest extends BaseMockIT {
   @Captor ArgumentCaptor<Map<String, Object>> dataToStoreCaptor;
 
   @Test
-  @Disabled
   void testStudyMetadataSavedContent() throws Exception {
     Map<String, Object> dataToStore = new HashMap<>();
     dataToStore.put(APP_ID, APP_ID_VALUE);
@@ -104,7 +102,6 @@ public class StudyMetadataControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Disabled
   void testStudyMetadataSavedContentInvalidStudyId() throws Exception {
     HttpHeaders headers = TestUtils.newCommonHeaders();
     // Step 1: set empty studyId
