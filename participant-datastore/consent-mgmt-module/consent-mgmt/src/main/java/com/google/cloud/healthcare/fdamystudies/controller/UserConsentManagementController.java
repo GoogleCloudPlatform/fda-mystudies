@@ -123,7 +123,6 @@ public class UserConsentManagementController {
 
       List<ParticipantStudyEntity> participantStudiesList = new ArrayList<ParticipantStudyEntity>();
       participantStudiesList.add(participantStudies);
-      String message = userConsentManagementService.saveParticipantStudies(participantStudiesList);
 
       userDetailId = userConsentManagementService.getUserDetailsId(userId);
       Optional<UserDetailsEntity> optUser = userDetailsRepository.findById(userDetailId);
@@ -152,6 +151,7 @@ public class UserConsentManagementController {
             auditRequest, underDirectory, consentDocumentFileName, consentStatusBean, studyConsent);
         consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
       }
+      String message = userConsentManagementService.saveParticipantStudies(participantStudiesList);
       String addConsentMessage = userConsentManagementService.saveStudyConsent(studyConsent);
       if ((addConsentMessage.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
           && message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
