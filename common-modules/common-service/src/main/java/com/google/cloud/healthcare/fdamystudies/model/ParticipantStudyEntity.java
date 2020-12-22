@@ -104,4 +104,9 @@ public class ParticipantStudyEntity implements Serializable {
   public String getUserDetailsId() {
     return userDetails != null ? userDetails.getId() : StringUtils.EMPTY;
   }
+
+  @Transient
+  public String getStudyId() {
+    return study != null ? study.getId() : StringUtils.EMPTY;
+  }
 }
