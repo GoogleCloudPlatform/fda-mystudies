@@ -408,7 +408,6 @@ public class DbServiceSubscriber {
   public void updateStudyPreferenceToDb(
           Context context,
           String lastUpdatedStudyId,
-          boolean lastUpdatedBookMark,
           String lastUpdatedStatusStatus) {
     realm = AppController.getRealmobj(context);
     Studies studies = realm.where(Studies.class).equalTo("studyId", lastUpdatedStudyId).findFirst();
@@ -416,7 +415,6 @@ public class DbServiceSubscriber {
     if (studies == null) {
       studies = new Studies();
       studies.setStudyId(lastUpdatedStudyId);
-      studies.setBookmarked(lastUpdatedBookMark);
       studies.setStatus(lastUpdatedStatusStatus);
 
       StudyData studyData = getStudyPreferencesListFromDB(realm);
@@ -425,7 +423,6 @@ public class DbServiceSubscriber {
       }
       studyData.getStudies().add(studies);
     } else {
-      studies.setBookmarked(lastUpdatedBookMark);
       studies.setStatus(lastUpdatedStatusStatus);
     }
 
@@ -911,7 +908,6 @@ public class DbServiceSubscriber {
     } else {
       Studies studies1 = new Studies();
       studies1.setStudyId(studyId);
-      studies1.setBookmarked(false);
       studies1.setStatus(status);
       studies1.setVersion(version);
       studies1.setEnrolledDate(enrolleddate);
@@ -935,7 +931,6 @@ public class DbServiceSubscriber {
     } else {
       Studies studies1 = new Studies();
       studies1.setStudyId(studyId);
-      studies1.setBookmarked(false);
       studies1.setVersion(version);
       StudyData studyData = getStudyPreferencesListFromDB(realm);
       studyData.getStudies().add(studies1);
@@ -1014,7 +1009,6 @@ public class DbServiceSubscriber {
       activities1.setActivityId(activityId);
       activities1.setActivityRunId("" + runId);
       activities1.setActivityVersion(activityVersion);
-      activities1.setBookmarked("false");
       activityRunPreference.setTotal(totalRun);
       activityRunPreference.setCompleted(completedRun);
       activityRunPreference.setMissed(missedRun);
@@ -1152,7 +1146,6 @@ public class DbServiceSubscriber {
                     .get(i)
                     .getStudyId()
                     .equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
-              studyListArrayList.get(j).setBookmarked(userPreferenceStudies.get(i).isBookmarked());
               studyListArrayList.get(j).setStudyStatus(userPreferenceStudies.get(i).getStatus());
             }
           }

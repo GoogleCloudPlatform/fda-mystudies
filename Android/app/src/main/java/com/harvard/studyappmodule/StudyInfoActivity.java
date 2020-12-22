@@ -88,9 +88,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private static final int JOIN_ACTION_SIGIN = 100;
   private static final int GET_PREFERENCES = 101;
   private RelativeLayout backBtn;
-  private RelativeLayout rightBtn;
-  private AppCompatImageView bookmarkimage;
-  private boolean bookmarked = false;
   private String studyId = "";
   private String status = "";
   private String studyStatus = "";
@@ -131,7 +128,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       studyStatus = getIntent().getStringExtra("studyStatus");
       position = getIntent().getStringExtra("position");
       title = getIntent().getStringExtra("title");
-      bookmarked = getIntent().getBooleanExtra("bookmark", false);
       enroll = getIntent().getStringExtra("enroll");
       rejoin = getIntent().getStringExtra("rejoin");
       aboutThisStudy = getIntent().getBooleanExtra("about_this_study", false);
@@ -139,17 +135,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       Logger.log(e);
     }
 
-    if (AppController.getHelperSharedPreference()
-        .readPreference(this, getResources().getString(R.string.userid), "")
-        .equalsIgnoreCase("")) {
-      bookmarkimage.setVisibility(View.GONE);
-      rightBtn.setClickable(false);
-    }
-    if (bookmarked) {
-      bookmarkimage.setImageResource(R.drawable.star_yellow_big);
-    } else {
-      bookmarkimage.setImageResource(R.drawable.star_grey_big);
-    }
     AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
     callGetStudyInfoWebservice();
 
@@ -158,20 +143,13 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       joinButton.setVisibility(View.GONE);
     }
 
-    if (status.equalsIgnoreCase(getString(R.string.closed))) {
-      bookmarkimage.setVisibility(View.GONE);
-    }
-
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-      bookmarkimage.setVisibility(View.GONE);
       backBtn.setVisibility(View.VISIBLE);
     }
   }
 
   private void initializeXmlId() {
     backBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    rightBtn = (RelativeLayout) findViewById(R.id.rightBtn);
-    bookmarkimage = (AppCompatImageView) findViewById(R.id.imageViewRight);
     joinButton = (AppCompatTextView) findViewById(R.id.joinButton);
     visitWebsiteButton = (AppCompatTextView) findViewById(R.id.mVisitWebsiteButton);
     learnMoreButton = (AppCompatTextView) findViewById(R.id.mLernMoreButton);
@@ -194,18 +172,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           @Override
           public void onClick(View view) {
             backClicked();
-          }
-        });
-
-    rightBtn.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            if (bookmarked) {
-              updatebookmark(false);
-            } else {
-              updatebookmark(true);
-            }
           }
         });
 
@@ -326,7 +292,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     } else {
       Intent intent = new Intent();
       intent.putExtra("position", position);
-      intent.putExtra("bookmark", bookmarked);
       intent.putExtra("status", status);
       intent.putExtra("studyId", studyId);
       intent.putExtra("action", "refresh");
@@ -667,15 +632,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       LoginData loginData = (LoginData) response;
       AppController.getHelperProgressDialog().dismissDialog();
       if (loginData != null) {
-        if (bookmarked) {
-          bookmarkimage.setImageResource(R.drawable.star_grey_big);
-          bookmarked = false;
-        } else {
-          bookmarkimage.setImageResource(R.drawable.star_yellow_big);
-          bookmarked = true;
-        }
 
-        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, bookmarked, studyStatus);
+        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, studyStatus);
         /// delete offline row
         dbServiceSubscriber.deleteOfflineDataRow(this, deleteIndexNumberDb);
       }
@@ -780,10 +738,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         || status.equalsIgnoreCase(getString(R.string.closed))) {
       joinButton.setVisibility(View.GONE);
     }
-
-    if (status.equalsIgnoreCase(getString(R.string.closed))) {
-      bookmarkimage.setVisibility(View.GONE);
-    }
   }
 
   @Override
@@ -794,14 +748,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     } else {
       // offline update
       if (responseCode == UPDATE_PREFERENCES) {
-        if (bookmarked) {
-          bookmarkimage.setImageResource(R.drawable.star_grey_big);
-          bookmarked = false;
-        } else {
-          bookmarkimage.setImageResource(R.drawable.star_yellow_big);
-          bookmarked = true;
-        }
-        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, bookmarked, studyStatus);
+        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, studyStatus);
       }
       studyHome = dbServiceSubscriber.getStudyInfoListFromDB(studyId, realm);
       if (studyHome != null) {
@@ -858,7 +805,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     JSONObject studies = new JSONObject();
     try {
       studies.put("studyId", studyId);
-      studies.put("bookmarked", b);
     } catch (JSONException e) {
       Logger.log(e);
     }

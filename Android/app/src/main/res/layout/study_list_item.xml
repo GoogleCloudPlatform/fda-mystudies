@@ -91,24 +91,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="8dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="1dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="7dp">
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/statusImgRight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/star_grey"
-                    android:visibility="invisible" />
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/right_padding_set_rel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

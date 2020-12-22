@@ -555,10 +555,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     try {
       JSONObject jsonObj = new JSONObject(jsonObjectString);
 
-      boolean bookmarked = false;
-      if (jsonObj.getBoolean("bookmarked")) {
-        bookmarked = true;
-      }
       JSONObject studyStatus = jsonObj.getJSONObject("studyStatus");
       if (studyStatus.getBoolean("active")) {
         temp1.add("active");
@@ -589,44 +585,12 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (participationStatus.getBoolean("notEligible")) {
         temp2.add(StudyFragment.NOT_ELIGIBLE);
       }
-      JSONObject categories = jsonObj.getJSONObject("categories");
-      ArrayList<String> temp3 = new ArrayList<>();
-      if (categories.getBoolean("biologicsSafety")) {
-        temp3.add("Biologics Safety");
-      }
-      if (categories.getBoolean("clinicalTrials")) {
-        temp3.add("Clinical Trials");
-      }
-      if (categories.getBoolean("cosmeticsSafety")) {
-        temp3.add("Cosmetics Safety");
-      }
-      if (categories.getBoolean("drugSafety")) {
-        temp3.add("Drug Safety");
-      }
-      if (categories.getBoolean("foodSafety")) {
-        temp3.add("Food Safety");
-      }
-      if (categories.getBoolean("medicalDeviceSafety")) {
-        temp3.add("Medical Device Safety");
-      }
-      if (categories.getBoolean("observationalStudies")) {
-        temp3.add("Observational Studies");
-      }
-      if (categories.getBoolean("publicHealth")) {
-        temp3.add("Public Health");
-      }
-      if (categories.getBoolean("radiationEmittingProducts")) {
-        temp3.add("Radiation-Emitting Products");
-      }
-      if (categories.getBoolean("tobaccoUse")) {
-        temp3.add("Tobacco Use");
-      }
       // to avoid duplicate list
       if (filteredStudyList.size() > 0) {
         filteredStudyList.clear();
       }
       filteredStudyList =
-          fiterMatchingStudyList(filteredStudyList, temp1, temp2, temp3, bookmarked);
+          fiterMatchingStudyList(filteredStudyList, temp1, temp2);
       if (filteredStudyList.size() == 0) {
         Toast.makeText(
                 context,
@@ -697,27 +661,13 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     temp2.add(StudyFragment.IN_PROGRESS);
     temp2.add(StudyFragment.YET_TO_JOIN);
 
-    ArrayList<String> temp3 = new ArrayList<>();
-    temp3.add("Biologics Safety");
-    temp3.add("Clinical Trials");
-    temp3.add("Cosmetics Safety");
-    temp3.add("Drug Safety");
-    temp3.add("Food Safety");
-    temp3.add("Medical Device Safety");
-    temp3.add("Observational Studies");
-    temp3.add("Public Health");
-    temp3.add("Radiation-Emitting Products");
-    temp3.add("Tobacco Use");
-    boolean bookmarked = false;
-    return fiterMatchingStudyList(filteredStudyList, temp1, temp2, temp3, bookmarked);
+    return fiterMatchingStudyList(filteredStudyList, temp1, temp2);
   }
 
   private RealmList<StudyList> fiterMatchingStudyList(
       RealmList<StudyList> studyList,
       ArrayList<String> list1,
-      ArrayList<String> list2,
-      ArrayList<String> list3,
-      boolean bookmarked) {
+      ArrayList<String> list2) {
     try {
       try {
         if (filteredCompletionAdherenceCalcs.size() > 0) {
@@ -735,13 +685,9 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
           for (int i = 0; studyListArrayList.size() > i; i++) {
             for (int j = 0; list1.size() > j; j++) {
               if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(list1.get(j))) {
-                for (int l = 0; list3.size() > l; l++) {
-                  if (studyListArrayList.get(i).getCategory().equalsIgnoreCase(list3.get(l))) {
-                    studyList.add(studyListArrayList.get(i));
-                    filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
-                    break;
-                  }
-                }
+                studyList.add(studyListArrayList.get(i));
+                filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
+                break;
               }
             }
           }
@@ -750,48 +696,13 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         // list2 is mandatory // logged User
         if (studyListArrayList.size() > 0) {
           for (int i = 0; studyListArrayList.size() > i; i++) {
-            // check only in bookmarked study list
-            if (bookmarked) {
-              if (studyListArrayList.get(i).isBookmarked()) {
-                for (int j = 0; list1.size() > j; j++) {
-                  if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(list1.get(j))) {
-                    for (int k = 0; list2.size() > k; k++) {
-                      if (studyListArrayList
-                          .get(i)
-                          .getStudyStatus()
-                          .equalsIgnoreCase(list2.get(k))) {
-                        for (int l = 0; list3.size() > l; l++) {
-                          if (studyListArrayList
-                              .get(i)
-                              .getCategory()
-                              .equalsIgnoreCase(list3.get(l))) {
-                            studyList.add(studyListArrayList.get(i));
-                            filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
-                            break;
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            } else {
-              // not bookmarked
-              for (int j = 0; list1.size() > j; j++) {
-                if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(list1.get(j))) {
-                  for (int k = 0; list2.size() > k; k++) {
-                    if (studyListArrayList.get(i).getStudyStatus().equalsIgnoreCase(list2.get(k))) {
-                      for (int l = 0; list3.size() > l; l++) {
-                        if (studyListArrayList
-                            .get(i)
-                            .getCategory()
-                            .equalsIgnoreCase(list3.get(l))) {
-                          studyList.add(studyListArrayList.get(i));
-                          filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
-                          break;
-                        }
-                      }
-                    }
+            for (int j = 0; list1.size() > j; j++) {
+              if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(list1.get(j))) {
+                for (int k = 0; list2.size() > k; k++) {
+                  if (studyListArrayList.get(i).getStudyStatus().equalsIgnoreCase(list2.get(k))) {
+                    studyList.add(studyListArrayList.get(i));
+                    filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
+                    break;
                   }
                 }
               }
@@ -920,9 +831,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
                   .get(i)
                   .getStudyId()
                   .equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
-                studyListArrayList
-                    .get(j)
-                    .setBookmarked(userPreferenceStudies.get(i).isBookmarked());
                 studyListArrayList.get(j).setStudyStatus(userPreferenceStudies.get(i).getStatus());
               }
               // update study completed status
@@ -943,18 +851,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (loginData != null && loginData.getMessage().equalsIgnoreCase("success")) {
         Toast.makeText(context, R.string.update_success, Toast.LENGTH_SHORT).show();
 
-        realm.beginTransaction();
-        if (searchResultList.size() > 0) {
-          // searchlist
-          int pos = getFilterdArrayListPosition(lastUpdatedStudyId);
-          copyOfFilteredStudyList().get(pos).setBookmarked(lastUpdatedBookMark);
-        } else {
-          // study or filtered list
-          copyOfFilteredStudyList().get(lastUpdatedPosition).setBookmarked(lastUpdatedBookMark);
-        }
-        realm.commitTransaction();
         dbServiceSubscriber.updateStudyPreferenceToDb(
-            context, lastUpdatedStudyId, lastUpdatedBookMark, lastUpdatedStatusStatus);
+            context, lastUpdatedStudyId, lastUpdatedStatusStatus);
         studyListAdapter.notifyItemChanged(lastUpdatedPosition);
         /// delete offline row
         dbServiceSubscriber.deleteOfflineDataRow(context, deleteIndexNumberDb);
@@ -1307,19 +1205,9 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     } else {
       // offline handling
       if (responseCode == UPDATE_PREFERENCES) {
-        realm.beginTransaction();
-        if (searchResultList.size() > 0) {
-          // searchlist
-          int pos = getFilterdArrayListPosition(lastUpdatedStudyId);
-          copyOfFilteredStudyList().get(pos).setBookmarked(lastUpdatedBookMark);
-        } else {
-          // study or filtered list
-          copyOfFilteredStudyList().get(lastUpdatedPosition).setBookmarked(lastUpdatedBookMark);
-        }
 
-        realm.commitTransaction();
         dbServiceSubscriber.updateStudyPreferenceToDb(
-            context, lastUpdatedStudyId, lastUpdatedBookMark, lastUpdatedStatusStatus);
+            context, lastUpdatedStudyId, lastUpdatedStatusStatus);
         studyListAdapter.notifyItemChanged(lastUpdatedPosition);
       } else {
         emptyListMessage.setVisibility(View.GONE);
@@ -1361,7 +1249,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     JSONObject studies = new JSONObject();
     try {
       studies.put("studyId", studyId);
-      studies.put("bookmarked", b);
     } catch (JSONException e) {
       Logger.log(e);
     }

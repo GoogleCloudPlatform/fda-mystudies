@@ -47,48 +47,22 @@ public class FilterActivity extends AppCompatActivity {
   private RelativeLayout participationStatusLayout;
   private AppCompatTextView inProgressLabel;
   private AppCompatTextView yettoJoinLabel;
-  private AppCompatTextView bookmarkedLabel;
   private AppCompatTextView completedLabel;
   private AppCompatTextView withdrawnLabel;
   private AppCompatTextView notEligibleLabel;
-  private AppCompatTextView categoriesLabel;
-  private AppCompatTextView category1Label;
-  private AppCompatTextView category2Label;
-  private AppCompatTextView category3Label;
-  private AppCompatTextView category4Label;
-  private AppCompatTextView category5Label;
-  private AppCompatTextView category6Label;
-  private AppCompatTextView category7Label;
-  private AppCompatTextView category8Label;
-  private AppCompatTextView category9Label;
-  private AppCompatTextView category10Label;
   private AppCompatCheckBox activeSelectBtn;
   private AppCompatCheckBox closedSelectBtn;
   private AppCompatCheckBox upcomingSelectBtn;
   private AppCompatCheckBox inProgressSelctBtn;
   private AppCompatCheckBox yettoJoinSelctBtn;
-  private AppCompatCheckBox bookmarkedSelctBtn;
   private AppCompatCheckBox completedSelectBtn;
   private AppCompatCheckBox withdrawnSelectBtn;
   private AppCompatCheckBox notEligibleSelectBtn;
-  private AppCompatCheckBox category1SelectBtn;
-  private AppCompatCheckBox category2SelectBtn;
-  private AppCompatCheckBox category3SelectBtn;
-  private AppCompatCheckBox category4SelectBtn;
-  private AppCompatCheckBox category5SelectBtn;
-  private AppCompatCheckBox category6SelectBtn;
-  private AppCompatCheckBox category7SelectBtn;
-  private AppCompatCheckBox category8SelectBtn;
-  private AppCompatCheckBox category9SelectBtn;
-  private AppCompatCheckBox category10SelectBtn;
-
   private RelativeLayout inProgressLayout;
   private RelativeLayout yettoJoinLayout;
   private RelativeLayout completedLayout;
   private RelativeLayout withdrawnLayout;
   private RelativeLayout notEligibleLayout;
-  private RelativeLayout bookmarkedLayout;
-
   private AppCompatCheckBox pausedSelectBtn;
   private AppCompatTextView pausedLabel;
   private String userId;
@@ -130,21 +104,9 @@ public class FilterActivity extends AppCompatActivity {
     participationStatusLayout = findViewById(R.id.mParticipationStatusLayout);
     inProgressLabel = (AppCompatTextView) findViewById(R.id.mInProgressLabel);
     yettoJoinLabel = (AppCompatTextView) findViewById(R.id.mYettoJoinLabel);
-    bookmarkedLabel = (AppCompatTextView) findViewById(R.id.mBookmarkedLabel);
     completedLabel = (AppCompatTextView) findViewById(R.id.mCompletedLabel);
     withdrawnLabel = (AppCompatTextView) findViewById(R.id.mWithdrawnLabel);
     notEligibleLabel = (AppCompatTextView) findViewById(R.id.mNotEligibleLabel);
-    categoriesLabel = (AppCompatTextView) findViewById(R.id.mCategoriesLabel);
-    category1Label = (AppCompatTextView) findViewById(R.id.mCategory1Label);
-    category2Label = (AppCompatTextView) findViewById(R.id.mCategory2Label);
-    category3Label = (AppCompatTextView) findViewById(R.id.mCategory3Label);
-    category4Label = (AppCompatTextView) findViewById(R.id.mCategory4Label);
-    category5Label = (AppCompatTextView) findViewById(R.id.mCategory5Label);
-    category6Label = (AppCompatTextView) findViewById(R.id.mCategory6Label);
-    category7Label = (AppCompatTextView) findViewById(R.id.mCategory7Label);
-    category8Label = (AppCompatTextView) findViewById(R.id.mCategory8Label);
-    category9Label = (AppCompatTextView) findViewById(R.id.mCategory9Label);
-    category10Label = (AppCompatTextView) findViewById(R.id.mCategory10Label);
     cancelTextView = (AppCompatTextView) findViewById(R.id.mCancelTextView);
     applyTextView = (AppCompatTextView) findViewById(R.id.mApplyTextView);
 
@@ -154,27 +116,15 @@ public class FilterActivity extends AppCompatActivity {
     upcomingSelectBtn = (AppCompatCheckBox) findViewById(R.id.mUpcomingSelectBtn);
     inProgressSelctBtn = (AppCompatCheckBox) findViewById(R.id.mInProgressSelctBtn);
     yettoJoinSelctBtn = (AppCompatCheckBox) findViewById(R.id.mYettoJoinSelctBtn);
-    bookmarkedSelctBtn = (AppCompatCheckBox) findViewById(R.id.mBookmarkedSelctBtn);
     completedSelectBtn = (AppCompatCheckBox) findViewById(R.id.mCompletedSelectBtn);
     withdrawnSelectBtn = (AppCompatCheckBox) findViewById(R.id.mWithdrawnSelectBtn);
     notEligibleSelectBtn = (AppCompatCheckBox) findViewById(R.id.mNotEligibleSelectBtn);
-    category1SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory1SelectBtn);
-    category2SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory2SelectBtn);
-    category3SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory3SelectBtn);
-    category4SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory4SelectBtn);
-    category5SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory5SelectBtn);
-    category6SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory6SelectBtn);
-    category7SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory7SelectBtn);
-    category8SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory8SelectBtn);
-    category9SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory9SelectBtn);
-    category10SelectBtn = (AppCompatCheckBox) findViewById(R.id.mCategory10SelectBtn);
 
     inProgressLayout = (RelativeLayout) findViewById(R.id.mInProgressLayout);
     yettoJoinLayout = (RelativeLayout) findViewById(R.id.mYettoJoinLayout);
     completedLayout = (RelativeLayout) findViewById(R.id.mCompletedLayout);
     withdrawnLayout = (RelativeLayout) findViewById(R.id.mWithdrawnLayout);
     notEligibleLayout = (RelativeLayout) findViewById(R.id.mNotEligibleLayout);
-    bookmarkedLayout = (RelativeLayout) findViewById(R.id.mBookmarkedLayout);
   }
 
   private void disableParticipationStatusBtn() {
@@ -185,7 +135,6 @@ public class FilterActivity extends AppCompatActivity {
     completedLayout.setVisibility(View.GONE);
     withdrawnLayout.setVisibility(View.GONE);
     notEligibleLayout.setVisibility(View.GONE);
-    bookmarkedLayout.setVisibility(View.GONE);
   }
 
   private void enableParticipationStatusBtn() {
@@ -196,7 +145,6 @@ public class FilterActivity extends AppCompatActivity {
     completedLayout.setVisibility(View.VISIBLE);
     withdrawnLayout.setVisibility(View.VISIBLE);
     notEligibleLayout.setVisibility(View.VISIBLE);
-    bookmarkedLayout.setVisibility(View.VISIBLE);
   }
 
   // default filter criteria; if any changes here then accordingly make changes in
@@ -206,17 +154,6 @@ public class FilterActivity extends AppCompatActivity {
     upcomingSelectBtn.setChecked(true);
     inProgressSelctBtn.setChecked(true);
     yettoJoinSelctBtn.setChecked(true);
-    bookmarkedSelctBtn.setChecked(false);
-    category1SelectBtn.setChecked(true);
-    category2SelectBtn.setChecked(true);
-    category3SelectBtn.setChecked(true);
-    category4SelectBtn.setChecked(true);
-    category5SelectBtn.setChecked(true);
-    category6SelectBtn.setChecked(true);
-    category7SelectBtn.setChecked(true);
-    category8SelectBtn.setChecked(true);
-    category9SelectBtn.setChecked(true);
-    category10SelectBtn.setChecked(true);
   }
 
   private void setBackgroundColorView() {
@@ -237,21 +174,9 @@ public class FilterActivity extends AppCompatActivity {
           AppController.getTypeface(FilterActivity.this, "medium"));
       inProgressLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
       yettoJoinLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      bookmarkedLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
       completedLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
       withdrawnLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
       notEligibleLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      categoriesLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "medium"));
-      category1Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category2Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category3Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category4Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category5Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category6Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category7Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category8Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category9Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      category10Label.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
 
       cancelTextView.setTypeface(AppController.getTypeface(FilterActivity.this, "medium"));
       applyTextView.setTypeface(AppController.getTypeface(FilterActivity.this, "medium"));
@@ -274,10 +199,8 @@ public class FilterActivity extends AppCompatActivity {
           @Override
           public void onClick(View view) {
 
-            Filter filter = new Filter();
             StudyStatus studyStatus = new StudyStatus();
             ParticipationStatus participationStatus = new ParticipationStatus();
-            Categories categories = new Categories();
 
             if (activeSelectBtn.isChecked()) {
               studyStatus.setActive(true);
@@ -327,69 +250,14 @@ public class FilterActivity extends AppCompatActivity {
             } else {
               participationStatus.setNotEligible(false);
             }
-            if (bookmarkedSelctBtn.isChecked()) {
-              filter.setBookmarked(true);
-            } else {
-              filter.setBookmarked(false);
-            }
-            if (category1SelectBtn.isChecked()) {
-              categories.setBiologicsSafety(true);
-            } else {
-              categories.setBiologicsSafety(false);
-            }
-            if (category2SelectBtn.isChecked()) {
-              categories.setClinicalTrials(true);
-            } else {
-              categories.setClinicalTrials(false);
-            }
-            if (category3SelectBtn.isChecked()) {
-              categories.setCosmeticsSafety(true);
-            } else {
-              categories.setCosmeticsSafety(false);
-            }
-            if (category4SelectBtn.isChecked()) {
-              categories.setDrugSafety(true);
-            } else {
-              categories.setDrugSafety(false);
-            }
-            if (category5SelectBtn.isChecked()) {
-              categories.setFoodSafety(true);
-            } else {
-              categories.setFoodSafety(false);
-            }
-            if (category6SelectBtn.isChecked()) {
-              categories.setMedicalDeviceSafety(true);
-            } else {
-              categories.setMedicalDeviceSafety(false);
-            }
-            if (category7SelectBtn.isChecked()) {
-              categories.setObservationalStudies(true);
-            } else {
-              categories.setObservationalStudies(false);
-            }
-            if (category8SelectBtn.isChecked()) {
-              categories.setPublicHealth(true);
-            } else {
-              categories.setPublicHealth(false);
-            }
-            if (category9SelectBtn.isChecked()) {
-              categories.setRadiationEmittingProducts(true);
-            } else {
-              categories.setRadiationEmittingProducts(false);
-            }
-            if (category10SelectBtn.isChecked()) {
-              categories.setTobaccoUse(true);
-            } else {
-              categories.setTobaccoUse(false);
-            }
-
+            Filter filter = new Filter();
+            Categories categories = new Categories();
             filter.setStudyStatus(studyStatus);
             filter.setParticipationStatus(participationStatus);
             filter.setCategories(categories);
 
             boolean flag1;
             boolean flag2;
-            boolean flag3;
             // enable/disable Apply button
             if (!filter.getStudyStatus().isActive()
                 && !filter.getStudyStatus().isPaused()
@@ -400,22 +268,9 @@ public class FilterActivity extends AppCompatActivity {
               flag1 = false;
             }
 
-            if (!filter.getCategories().isBiologicsSafety()
-                && !filter.getCategories().isClinicalTrials()
-                && !filter.getCategories().isCosmeticsSafety()
-                && !filter.getCategories().isDrugSafety()
-                && !filter.getCategories().isMedicalDeviceSafety()
-                && !filter.getCategories().isObservationalStudies()
-                && !filter.getCategories().isPublicHealth()
-                && !filter.getCategories().isRadiationEmittingProducts()
-                && !filter.getCategories().isTobaccoUse()) {
-              flag3 = true;
-            } else {
-              flag3 = false;
-            }
 
             if (userId.equalsIgnoreCase("")) {
-              if (flag1 || flag3) {
+              if (flag1) {
                 Toast.makeText(
                         FilterActivity.this,
                         getResources().getString(R.string.search_data_empty),
@@ -448,7 +303,7 @@ public class FilterActivity extends AppCompatActivity {
                 flag2 = false;
               }
 
-              if (flag1 || flag2 || flag3) {
+              if (flag1 || flag2) {
                 Toast.makeText(
                         FilterActivity.this,
                         getResources().getString(R.string.search_data_empty),
@@ -481,9 +336,6 @@ public class FilterActivity extends AppCompatActivity {
       JSONObject jsonObj = new JSONObject(jsonObjectString);
       JSONObject studyStatus = jsonObj.getJSONObject("studyStatus");
 
-      if (jsonObj.getBoolean("bookmarked")) {
-        bookmarkedSelctBtn.setChecked(true);
-      }
       if (studyStatus.getBoolean("active")) {
         activeSelectBtn.setChecked(true);
       } else {
@@ -529,57 +381,6 @@ public class FilterActivity extends AppCompatActivity {
         notEligibleSelectBtn.setChecked(true);
       } else {
         notEligibleSelectBtn.setChecked(false);
-      }
-      JSONObject categories = jsonObj.getJSONObject("categories");
-      if (categories.getBoolean("biologicsSafety")) {
-        category1SelectBtn.setChecked(true);
-      } else {
-        category1SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("clinicalTrials")) {
-        category2SelectBtn.setChecked(true);
-      } else {
-        category2SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("cosmeticsSafety")) {
-        category3SelectBtn.setChecked(true);
-      } else {
-        category3SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("drugSafety")) {
-        category4SelectBtn.setChecked(true);
-      } else {
-        category4SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("foodSafety")) {
-        category5SelectBtn.setChecked(true);
-      } else {
-        category5SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("medicalDeviceSafety")) {
-        category6SelectBtn.setChecked(true);
-      } else {
-        category6SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("observationalStudies")) {
-        category7SelectBtn.setChecked(true);
-      } else {
-        category7SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("publicHealth")) {
-        category8SelectBtn.setChecked(true);
-      } else {
-        category8SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("radiationEmittingProducts")) {
-        category9SelectBtn.setChecked(true);
-      } else {
-        category9SelectBtn.setChecked(false);
-      }
-      if (categories.getBoolean("tobaccoUse")) {
-        category10SelectBtn.setChecked(true);
-      } else {
-        category10SelectBtn.setChecked(false);
       }
 
     } catch (JSONException e) {

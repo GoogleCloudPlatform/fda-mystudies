@@ -84,7 +84,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     AppCompatImageView statusImg;
     AppCompatImageView studyImg;
     AppCompatTextView imgTitle;
-    AppCompatImageView statusImgRight;
     AppCompatTextView status;
     AppCompatTextView studyTitle;
     AppCompatTextView studyTitleLatin;
@@ -104,7 +103,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       imgTitle = (AppCompatTextView) itemView.findViewById(R.id.mImgTitle);
       state = (AppCompatTextView) itemView.findViewById(R.id.state);
       statusImg = (AppCompatImageView) itemView.findViewById(R.id.statusImg);
-      statusImgRight = (AppCompatImageView) itemView.findViewById(R.id.statusImgRight);
       status = (AppCompatTextView) itemView.findViewById(R.id.status);
       studyTitle = (AppCompatTextView) itemView.findViewById(R.id.study_title);
       studyTitleLatin = (AppCompatTextView) itemView.findViewById(R.id.study_title_latin);
@@ -148,7 +146,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       holder.completion.setVisibility(View.VISIBLE);
       holder.adherenceVal.setVisibility(View.VISIBLE);
       holder.adherence.setVisibility(View.VISIBLE);
-      holder.statusImgRight.setVisibility(View.VISIBLE);
       holder.progressBar1.setVisibility(View.VISIBLE);
       holder.progressBar2.setVisibility(View.VISIBLE);
 
@@ -194,16 +191,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
         holder.status.setText(R.string.yet_to_join);
       }
 
-      if (items.get(position).isBookmarked()) {
-        holder.statusImgRight.setImageResource(R.drawable.star_yellow);
-      } else {
-        holder.statusImgRight.setImageResource(R.drawable.star_grey);
-      }
-
-      if (items.get(position).getStatus().equalsIgnoreCase("closed")) {
-        holder.statusImgRight.setVisibility(View.GONE);
-      }
-
       if (completionAdherenceCalcs.size() > 0) {
         try {
           holder.completionVal.setText(
@@ -232,7 +219,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       holder.completion.setVisibility(View.GONE);
       holder.adherenceVal.setVisibility(View.GONE);
       holder.adherence.setVisibility(View.GONE);
-      holder.statusImgRight.setVisibility(View.GONE);
       holder.progressBar1.setVisibility(View.GONE);
       holder.progressBar2.setVisibility(View.GONE);
     }
@@ -291,11 +277,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                 AppController.getHelperSharedPreference()
                     .writePreference(
                         context,
-                        context.getString(R.string.bookmark),
-                        "" + items.get(holder.getAdapterPosition()).isBookmarked());
-                AppController.getHelperSharedPreference()
-                    .writePreference(
-                        context,
                         context.getString(R.string.status),
                         "" + items.get(holder.getAdapterPosition()).getStatus());
                 AppController.getHelperSharedPreference()
@@ -347,7 +328,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                     new Intent(context.getApplicationContext(), StudyInfoActivity.class);
                 intent.putExtra("studyId", items.get(holder.getAdapterPosition()).getStudyId());
                 intent.putExtra("title", items.get(holder.getAdapterPosition()).getTitle());
-                intent.putExtra("bookmark", items.get(holder.getAdapterPosition()).isBookmarked());
                 intent.putExtra("status", items.get(holder.getAdapterPosition()).getStatus());
                 intent.putExtra(
                     "studyStatus", items.get(holder.getAdapterPosition()).getStudyStatus());
@@ -359,26 +339,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                     "rejoin", "" + items.get(holder.getAdapterPosition()).getSetting().getRejoin());
                 ((StudyActivity) context).startActivityForResult(intent, 100);
               }
-            }
-          }
-        });
-
-    holder.statusImgRight.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            if (items.get(holder.getAdapterPosition()).isBookmarked()) {
-              studyFragment.updatebookmark(
-                  false,
-                  holder.getAdapterPosition(),
-                  items.get(holder.getAdapterPosition()).getStudyId(),
-                  items.get(holder.getAdapterPosition()).getStudyStatus());
-            } else {
-              studyFragment.updatebookmark(
-                  true,
-                  holder.getAdapterPosition(),
-                  items.get(holder.getAdapterPosition()).getStudyId(),
-                  items.get(holder.getAdapterPosition()).getStudyStatus());
             }
           }
         });

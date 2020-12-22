@@ -271,11 +271,6 @@ public class StandaloneActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .writePreference(
                 StandaloneActivity.this,
-                getString(R.string.bookmark),
-                "" + studyListArrayList.get(0).isBookmarked());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                StandaloneActivity.this,
                 getString(R.string.status),
                 "" + studyListArrayList.get(0).getStatus());
         if (!studies.getStudies().isEmpty()) {
@@ -315,9 +310,6 @@ public class StandaloneActivity extends AppCompatActivity
                   .get(i)
                   .getStudyId()
                   .equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
-                studyListArrayList
-                    .get(j)
-                    .setBookmarked(userPreferenceStudies.get(i).isBookmarked());
                 studyListArrayList.get(j).setStudyStatus(userPreferenceStudies.get(i).getStatus());
                 userAlreadyJoined = true;
 
@@ -336,7 +328,6 @@ public class StandaloneActivity extends AppCompatActivity
                   intent.putExtra("flow", getIntent().getStringExtra("flow"));
                   intent.putExtra("studyId", studyListArrayList.get(j).getStudyId());
                   intent.putExtra("title", studyListArrayList.get(j).getTitle());
-                  intent.putExtra("bookmark", studyListArrayList.get(j).isBookmarked());
                   intent.putExtra("status", studyListArrayList.get(j).getStatus());
                   intent.putExtra("studyStatus", studyListArrayList.get(j).getStudyStatus());
                   intent.putExtra("position", "0");
@@ -353,14 +344,12 @@ public class StandaloneActivity extends AppCompatActivity
           }
           if (!userAlreadyJoined && !studyListArrayList.isEmpty()) {
 
-            studyListArrayList.get(0).setBookmarked(false);
             studyListArrayList.get(0).setStudyStatus(YET_TO_JOIN);
 
             Intent intent = new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
             intent.putExtra("flow", getIntent().getStringExtra("flow"));
             intent.putExtra("studyId", studyListArrayList.get(0).getStudyId());
             intent.putExtra("title", studyListArrayList.get(0).getTitle());
-            intent.putExtra("bookmark", studyListArrayList.get(0).isBookmarked());
             intent.putExtra("status", studyListArrayList.get(0).getStatus());
             intent.putExtra("studyStatus", studyListArrayList.get(0).getStudyStatus());
             intent.putExtra("position", "0");
@@ -496,7 +485,6 @@ public class StandaloneActivity extends AppCompatActivity
           intent.putExtra("flow", getIntent().getStringExtra("flow"));
           intent.putExtra("studyId", studyListArrayList.get(0).getStudyId());
           intent.putExtra("title", studyListArrayList.get(0).getTitle());
-          intent.putExtra("bookmark", studyListArrayList.get(0).isBookmarked());
           intent.putExtra("status", studyListArrayList.get(0).getStatus());
           intent.putExtra("studyStatus", studyListArrayList.get(0).getStudyStatus());
           intent.putExtra("position", "0");
@@ -549,11 +537,6 @@ public class StandaloneActivity extends AppCompatActivity
                               StandaloneActivity.this,
                               getString(R.string.title),
                               "" + studyListArrayList.get(i).getTitle());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StandaloneActivity.this,
-                              getString(R.string.bookmark),
-                              "" + studyListArrayList.get(i).isBookmarked());
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StandaloneActivity.this,
@@ -620,7 +603,6 @@ public class StandaloneActivity extends AppCompatActivity
                       intent.putExtra("flow", getIntent().getStringExtra("flow"));
                       intent.putExtra("studyId", studyListArrayList.get(i).getStudyId());
                       intent.putExtra("title", studyListArrayList.get(i).getTitle());
-                      intent.putExtra("bookmark", studyListArrayList.get(i).isBookmarked());
                       intent.putExtra("status", studyListArrayList.get(i).getStatus());
                       intent.putExtra("studyStatus", studyListArrayList.get(i).getStudyStatus());
                       intent.putExtra("position", "" + i);
@@ -666,11 +648,6 @@ public class StandaloneActivity extends AppCompatActivity
                               StandaloneActivity.this,
                               getString(R.string.title),
                               "" + studyListArrayList.get(i).getTitle());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StandaloneActivity.this,
-                              getString(R.string.bookmark),
-                              "" + studyListArrayList.get(i).isBookmarked());
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StandaloneActivity.this,
@@ -1371,7 +1348,7 @@ public class StandaloneActivity extends AppCompatActivity
     super.onDestroy();
   }
 
-  private void addClearTopFlag(Intent intent){
+  private void addClearTopFlag(Intent intent) {
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
   }

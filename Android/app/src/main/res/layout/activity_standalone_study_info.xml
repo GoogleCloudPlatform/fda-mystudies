@@ -55,20 +55,6 @@
                     android:background="@drawable/back_btn1_grey" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rightBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
-
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/imageViewRight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/star_grey_big" />
-            </RelativeLayout>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
