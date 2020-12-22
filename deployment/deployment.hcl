@@ -14,20 +14,20 @@ template "mystudies" {
   data = {
     prefix           = "btc-track2"
     env              = "dev"
-    folder_id        = "0000000000"
-    billing_account  = "XXXXXX-XXXXXX-XXXXXX"
+    folder_id        = "440087619763"
+    billing_account  = "01EA90-3519E1-89CB1F"
     domain           = "example.com"
     default_location = "us-central1"
     default_zone     = "a"
     github_owner     = "GoogleCloudPlatform"
-    github_repo      = "example"
-    github_branch    = "master"
+    github_repo      = "fda-mystudies"
+    github_branch    = "btc-develop"
     # GKE master authorized networks.
     # Comment out this block if you would like to allow connections from anywhere.
     master_authorized_networks = [
       {
         cidr_block   = "0.0.0.0/0"
-        display_name = "Example diplay name"
+        display_name = "btc-track2"
       },
     ]
   }
