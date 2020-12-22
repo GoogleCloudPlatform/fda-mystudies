@@ -12,7 +12,7 @@ template "mystudies" {
   # The following values are placeholder values, change and adjust them according to
   # your use case and organization needs.
   data = {
-    prefix           = "example"
+    prefix           = "btc-track2"
     env              = "dev"
     folder_id        = "0000000000"
     billing_account  = "XXXXXX-XXXXXX-XXXXXX"
