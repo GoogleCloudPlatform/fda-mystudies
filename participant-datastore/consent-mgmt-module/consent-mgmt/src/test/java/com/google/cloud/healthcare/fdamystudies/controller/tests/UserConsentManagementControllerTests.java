@@ -635,7 +635,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     // Invoke http api endpoint to Add new study consent pdf version
     ConsentReqBean consent =
-        new ConsentReqBean(Constants.VERSION_1_2, Constants.STATUS_COMPLETE, "");
+        new ConsentReqBean(Constants.VERSION_1_2, Constants.STATUS_COMPLETE, Constants.CONTENT_1_0);
     ConsentStatusBean consentRequest =
         new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     String requestJson = getObjectMapper().writeValueAsString(consentRequest);
@@ -652,7 +652,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     verifyTokenIntrospectRequest();
 
     // Invoke http api endpoint to Add new study consent pdf version
-    consent = new ConsentReqBean(Constants.VERSION_1_3, Constants.STATUS_COMPLETE, "");
+    consent =
+        new ConsentReqBean(Constants.VERSION_1_3, Constants.STATUS_COMPLETE, Constants.CONTENT_1_0);
     consentRequest =
         new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
@@ -689,7 +690,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isInternalServerError());
+        .andExpect(status().isBadRequest());
 
     // check transaction rollback is successful
     StudyInfoBean studyInfoBean =
