@@ -37,7 +37,7 @@ import org.hibernate.annotations.GenericGenerator;
     name = "participant_study_info",
     uniqueConstraints = {
       @UniqueConstraint(
-          columnNames = {"user_details_id", "study_info_id"},
+          columnNames = {"user_details_id", "study_info_id", "site_id"},
           name = "participant_study_info_user_details_id_study_info_id__uidx")
     },
     indexes = {
