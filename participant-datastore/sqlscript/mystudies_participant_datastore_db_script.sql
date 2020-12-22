@@ -456,7 +456,7 @@ CREATE TABLE IF NOT EXISTS `participant_enrollment_history` (
   CONSTRAINT `FKbvetsdb2isivd8q95sly7md99` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`),
   CONSTRAINT `FKf67cshsfhjae6if1vgskre3jo` FOREIGN KEY (`app_info_id`) REFERENCES `app_info` (`id`),
   CONSTRAINT `FKt54o4s9tiiv74ni6urb8k4fq2` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 
