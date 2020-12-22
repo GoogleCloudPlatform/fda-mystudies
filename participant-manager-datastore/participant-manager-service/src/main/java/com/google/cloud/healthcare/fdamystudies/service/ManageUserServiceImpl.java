@@ -228,7 +228,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     UserRegAdminEntity adminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireInHours()));
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
@@ -408,7 +408,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("saveSuperAdminDetails()");
     UserRegAdminEntity superAdminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireInHours()));
 
     superAdminDetails = userAdminRepository.saveAndFlush(superAdminDetails);
 
@@ -778,7 +778,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     user.setSecurityCodeExpireDate(
         new Timestamp(
             Instant.now()
-                .plus(Long.valueOf(appConfig.getSecurityCodeExpireDate()), ChronoUnit.MINUTES)
+                .plus(Long.valueOf(appConfig.getSecurityCodeExpireInHours()), ChronoUnit.HOURS)
                 .toEpochMilli()));
     user = userAdminRepository.saveAndFlush(user);
 
