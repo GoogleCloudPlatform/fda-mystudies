@@ -159,7 +159,7 @@ public class AppController {
     notificationManager.cancelAll();
 
     if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
-      Intent intent = new Intent(context, StudyActivity.class);
+      Intent intent = new Intent(context, GatewayActivity.class);
       ComponentName cn = intent.getComponent();
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
       context.startActivity(mainIntent);
