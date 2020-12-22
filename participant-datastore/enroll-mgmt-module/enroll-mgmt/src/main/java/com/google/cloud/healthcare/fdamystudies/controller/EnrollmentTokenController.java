@@ -105,10 +105,7 @@ public class EnrollmentTokenController {
         enrollAuditEventHelper.logEvent(ENROLLMENT_TOKEN_FOUND_INVALID, auditRequest);
         return null;
       }
-    }
-    // Allow for the possibility that someone can enroll without using an enrollment
-    // token
-    else if (enrollmentTokenfService.enrollmentTokenRequired(enrollmentBean.getStudyId())) {
+    } else if (enrollmentTokenfService.enrollmentTokenRequired(enrollmentBean.getStudyId())) {
       ErrorResponseUtil.getFailureResponse(
           ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
           ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),

@@ -216,31 +216,31 @@ public class StudyStateServiceImpl implements StudyStateService {
     List<ParticipantStudyEntity> participantStudiesList =
         participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsEntity.getUserId());
     if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
-      for (ParticipantStudyEntity participantStudiesBO : participantStudiesList) {
+      for (ParticipantStudyEntity participantStudy : participantStudiesList) {
         StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);
-        if (participantStudiesBO.getParticipantRegistrySite() != null) {
+        if (participantStudy.getParticipantRegistrySite() != null) {
           String enrolledTokenVal =
               studyStateDao.getEnrollTokenForParticipant(
-                  participantStudiesBO.getParticipantRegistrySite().getId());
+                  participantStudy.getParticipantRegistrySite().getId());
           studyStateBean.setHashedToken(
               EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
         }
-        if (participantStudiesBO.getStudy() != null) {
-          studyStateBean.setStudyId(participantStudiesBO.getStudy().getCustomId());
+        if (participantStudy.getStudy() != null) {
+          studyStateBean.setStudyId(participantStudy.getStudy().getCustomId());
         }
-        studyStateBean.setStatus(participantStudiesBO.getStatus());
-        if (participantStudiesBO.getParticipantId() != null) {
-          studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());
+        studyStateBean.setStatus(participantStudy.getStatus());
+        if (participantStudy.getParticipantId() != null) {
+          studyStateBean.setParticipantId(participantStudy.getParticipantId());
         }
-        studyStateBean.setCompletion(participantStudiesBO.getCompletion());
-        studyStateBean.setBookmarked(participantStudiesBO.getBookmark());
-        studyStateBean.setAdherence(participantStudiesBO.getAdherence());
-        if (participantStudiesBO.getEnrolledDate() != null) {
+        studyStateBean.setCompletion(participantStudy.getCompletion());
+        studyStateBean.setBookmarked(participantStudy.getBookmark());
+        studyStateBean.setAdherence(participantStudy.getAdherence());
+        if (participantStudy.getEnrolledDate() != null) {
           studyStateBean.setEnrolledDate(
-              MyStudiesUserRegUtil.getIsoDateFormat(participantStudiesBO.getEnrolledDate()));
+              MyStudiesUserRegUtil.getIsoDateFormat(participantStudy.getEnrolledDate()));
         }
-        if (participantStudiesBO.getSite() != null) {
-          studyStateBean.setSiteId(participantStudiesBO.getSite().getId().toString());
+        if (participantStudy.getSite() != null) {
+          studyStateBean.setSiteId(participantStudy.getSite().getId().toString());
         }
         serviceResponseList.add(studyStateBean);
       }
