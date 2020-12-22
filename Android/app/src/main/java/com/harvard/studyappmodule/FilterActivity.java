@@ -42,7 +42,6 @@ public class FilterActivity extends AppCompatActivity {
   private AppCompatTextView allStudiesLabel;
   private AppCompatTextView activeLabel;
   private AppCompatTextView closedLabel;
-  private AppCompatTextView upcomingLabel;
   private AppCompatTextView participationStatusLabel;
   private RelativeLayout participationStatusLayout;
   private AppCompatTextView inProgressLabel;
@@ -52,7 +51,6 @@ public class FilterActivity extends AppCompatActivity {
   private AppCompatTextView notEligibleLabel;
   private AppCompatCheckBox activeSelectBtn;
   private AppCompatCheckBox closedSelectBtn;
-  private AppCompatCheckBox upcomingSelectBtn;
   private AppCompatCheckBox inProgressSelctBtn;
   private AppCompatCheckBox yettoJoinSelctBtn;
   private AppCompatCheckBox completedSelectBtn;
@@ -99,7 +97,6 @@ public class FilterActivity extends AppCompatActivity {
     activeLabel = (AppCompatTextView) findViewById(R.id.mActiveLabel);
     pausedLabel = (AppCompatTextView) findViewById(R.id.mPausedLabel);
     closedLabel = (AppCompatTextView) findViewById(R.id.mClosedLabel);
-    upcomingLabel = (AppCompatTextView) findViewById(R.id.mUpcomingLabel);
     participationStatusLabel = (AppCompatTextView) findViewById(R.id.mParticipationStatusLabel);
     participationStatusLayout = findViewById(R.id.mParticipationStatusLayout);
     inProgressLabel = (AppCompatTextView) findViewById(R.id.mInProgressLabel);
@@ -113,7 +110,6 @@ public class FilterActivity extends AppCompatActivity {
     activeSelectBtn = (AppCompatCheckBox) findViewById(R.id.mActiveSelectBtn);
     pausedSelectBtn = (AppCompatCheckBox) findViewById(R.id.mPausedSelectBtn);
     closedSelectBtn = (AppCompatCheckBox) findViewById(R.id.mClosedSelectBtn);
-    upcomingSelectBtn = (AppCompatCheckBox) findViewById(R.id.mUpcomingSelectBtn);
     inProgressSelctBtn = (AppCompatCheckBox) findViewById(R.id.mInProgressSelctBtn);
     yettoJoinSelctBtn = (AppCompatCheckBox) findViewById(R.id.mYettoJoinSelctBtn);
     completedSelectBtn = (AppCompatCheckBox) findViewById(R.id.mCompletedSelectBtn);
@@ -151,7 +147,6 @@ public class FilterActivity extends AppCompatActivity {
   // StudyFragment.defaultSelectedFilterOption()
   private void defaultSelectedFilterOption() {
     activeSelectBtn.setChecked(true);
-    upcomingSelectBtn.setChecked(true);
     inProgressSelctBtn.setChecked(true);
     yettoJoinSelctBtn.setChecked(true);
   }
@@ -169,7 +164,6 @@ public class FilterActivity extends AppCompatActivity {
       allStudiesLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "medium"));
       activeLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
       closedLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
-      upcomingLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
       participationStatusLabel.setTypeface(
           AppController.getTypeface(FilterActivity.this, "medium"));
       inProgressLabel.setTypeface(AppController.getTypeface(FilterActivity.this, "regular"));
@@ -211,11 +205,6 @@ public class FilterActivity extends AppCompatActivity {
               studyStatus.setPaused(true);
             } else {
               studyStatus.setPaused(false);
-            }
-            if (upcomingSelectBtn.isChecked()) {
-              studyStatus.setUpcoming(true);
-            } else {
-              studyStatus.setUpcoming(false);
             }
             if (closedSelectBtn.isChecked()) {
               studyStatus.setClosed(true);
@@ -261,7 +250,6 @@ public class FilterActivity extends AppCompatActivity {
             // enable/disable Apply button
             if (!filter.getStudyStatus().isActive()
                 && !filter.getStudyStatus().isPaused()
-                && !filter.getStudyStatus().isUpcoming()
                 && !filter.getStudyStatus().isClosed()) {
               flag1 = true;
             } else {
@@ -345,11 +333,6 @@ public class FilterActivity extends AppCompatActivity {
         pausedSelectBtn.setChecked(true);
       } else {
         pausedSelectBtn.setChecked(false);
-      }
-      if (studyStatus.getBoolean("upcoming")) {
-        upcomingSelectBtn.setChecked(true);
-      } else {
-        upcomingSelectBtn.setChecked(false);
       }
       if (studyStatus.getBoolean("closed")) {
         closedSelectBtn.setChecked(true);

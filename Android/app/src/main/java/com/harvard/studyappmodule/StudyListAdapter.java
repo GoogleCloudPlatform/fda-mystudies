@@ -227,8 +227,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     GradientDrawable bgShape = (GradientDrawable) holder.stateIcon.getBackground();
     if (items.get(position).getStatus().equalsIgnoreCase("active")) {
       bgShape.setColor(context.getResources().getColor(R.color.bullet_green_color));
-    } else if (items.get(position).getStatus().equalsIgnoreCase("upcoming")) {
-      bgShape.setColor(context.getResources().getColor(R.color.colorPrimary));
     } else if (items.get(position).getStatus().equalsIgnoreCase("closed")) {
       bgShape.setColor(context.getResources().getColor(R.color.red));
     } else if (items.get(position).getStatus().equalsIgnoreCase("paused")) {

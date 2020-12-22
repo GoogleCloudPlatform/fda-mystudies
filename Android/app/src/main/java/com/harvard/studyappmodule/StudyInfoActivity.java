@@ -138,8 +138,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
     callGetStudyInfoWebservice();
 
-    if (status.equalsIgnoreCase(getString(R.string.upcoming))
-        || status.equalsIgnoreCase(getString(R.string.closed))) {
+    if (status.equalsIgnoreCase(getString(R.string.closed))) {
       joinButton.setVisibility(View.GONE);
     }
 
@@ -301,9 +300,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   }
 
   private void joinStudy() {
-    if (status.equalsIgnoreCase(StudyFragment.UPCOMING)) {
-      Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-    } else if (enroll.equalsIgnoreCase("false")) {
+    if (enroll.equalsIgnoreCase("false")) {
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
     } else if (status.equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -662,9 +659,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
         userPreferenceStudies = studies.getStudies();
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, realm);
-        if (studyList.getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
-          Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-        } else if (!studyList.getSetting().isEnrolling()) {
+        if (!studyList.getSetting().isEnrolling()) {
           Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
         } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
           Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -734,8 +729,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       learnMoreButton.setClickable(true);
     }
 
-    if (status.equalsIgnoreCase(getString(R.string.upcoming))
-        || status.equalsIgnoreCase(getString(R.string.closed))) {
+    if (status.equalsIgnoreCase(getString(R.string.closed))) {
       joinButton.setVisibility(View.GONE);
     }
   }

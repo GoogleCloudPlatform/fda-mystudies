@@ -205,7 +205,6 @@
     <string name="leave_study">Leave Study</string>
 
     <string name="active">active</string>
-    <string name="upcoming">upcoming</string>
     <string name="paused">paused</string>
     <string name="closed">closed</string>
     <string name="notxt">\u0020</string>
@@ -243,7 +242,6 @@
     <string name="anonymous_feedback">Leave Anonymous Feedback</string>
     <string name="need_help">Need Help? Contact Us</string>
     <string name="press_back_to_exit">Press back again to exit.</string>
-    <string name="upcoming_study">This Study is an upcoming study</string>
     <string name="study_not_available">Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join.</string>
     <string name="cannot_rejoin_study">Sorry, this study currently does not allow previously enrolled participants to rejoin the study after they have withdrawn from the study. Please check back later or explore other studies.</string>
     <string name="study_paused">This study has been temporarily paused. Please check back later.</string>
@@ -399,7 +397,6 @@
     <!--filter screen keys are:-->
     <string name="active_filter_key">active</string>
     <string name="closed_filter_key">closed</string>
-    <string name="upcoming_filter_key">upcoming</string>
     <string name="inprogress_filter_key">inprogress</string>
     <string name="completed_filter_key">completed</string>
     <string name="withdrawn_filter_key">withdrawn</string>
