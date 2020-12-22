@@ -136,10 +136,6 @@ public class StudyStateServiceImpl implements StudyStateService {
                 if (studiesBean.getAdherence() != null) {
                   participantStudies.setAdherence(studiesBean.getAdherence());
                 }
-                if (studiesBean.getParticipantId() != null
-                    && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
-                  participantStudies.setParticipantId(studiesBean.getParticipantId());
-                }
                 placeHolder.put("study_state_value", participantStudies.getStatus());
                 addParticipantStudiesList.add(participantStudies);
               }
@@ -171,10 +167,6 @@ public class StudyStateServiceImpl implements StudyStateService {
           }
           if (studiesBean.getAdherence() != null) {
             participantStudyEntity.setAdherence(studiesBean.getAdherence());
-          }
-          if (studiesBean.getParticipantId() != null
-              && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
-            participantStudyEntity.setParticipantId(studiesBean.getParticipantId());
           }
           placeHolder.put("study_state_value", participantStudyEntity.getStatus());
           addParticipantStudiesList.add(participantStudyEntity);
