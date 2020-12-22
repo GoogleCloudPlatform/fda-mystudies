@@ -18,23 +18,25 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class WireMockInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-  public static boolean wireMockRunning = false;
+  private static WireMockServer wireMockServer = null;
 
   @Override
   public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-    WireMockServer wireMockServer =
-        new WireMockServer(
-            new WireMockConfiguration()
-                .port(8080)
-                .fileSource(new ClasspathFileSourceWithoutLeadingSlash()));
-
     configurableApplicationContext
         .getBeanFactory()
-        .registerSingleton("wireMockServer", wireMockServer);
-    if (!wireMockRunning) {
+        .registerSingleton("wireMockServer", getWiremockServerInstance());
+  }
+
+  private WireMockServer getWiremockServerInstance() {
+    if (wireMockServer == null) {
+      wireMockServer =
+          new WireMockServer(
+              new WireMockConfiguration()
+                  .port(8080)
+                  .fileSource(new ClasspathFileSourceWithoutLeadingSlash()));
       wireMockServer.start();
-      wireMockRunning = true;
     }
+    return wireMockServer;
   }
 
   /*
