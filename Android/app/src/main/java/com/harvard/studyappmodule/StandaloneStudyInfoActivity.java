@@ -87,11 +87,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
 
   private RelativeLayout backBtn;
   private AppCompatImageView bookmarkimage;
-  private AppCompatTextView visitWebsiteButton;
-  private AppCompatTextView learnMoreButton;
   private AppCompatTextView consentLayButton;
   private AppCompatTextView joinButton;
-  private LinearLayout bottombar;
   private LinearLayout bottombar1;
   private RelativeLayout consentLay;
   private ConsentDocumentData consentDocumentData;
@@ -146,20 +143,13 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     backBtn = (RelativeLayout) findViewById(R.id.backBtn);
     bookmarkimage = (AppCompatImageView) findViewById(R.id.imageViewRight);
     joinButton = (AppCompatTextView) findViewById(R.id.joinButton);
-    visitWebsiteButton = (AppCompatTextView) findViewById(R.id.mVisitWebsiteButton);
-    learnMoreButton = (AppCompatTextView) findViewById(R.id.mLernMoreButton);
     consentLayButton = (AppCompatTextView) findViewById(R.id.consentLayButton);
-    bottombar = (LinearLayout) findViewById(R.id.bottom_bar);
     bottombar1 = (LinearLayout) findViewById(R.id.bottom_bar1);
     consentLay = (RelativeLayout) findViewById(R.id.consentLay);
   }
 
   private void setFont() {
     joinButton.setTypeface(AppController.getTypeface(this, "regular"));
-    visitWebsiteButton.setTypeface(
-        AppController.getTypeface(StandaloneStudyInfoActivity.this, "regular"));
-    learnMoreButton.setTypeface(
-        AppController.getTypeface(StandaloneStudyInfoActivity.this, "regular"));
     consentLayButton.setTypeface(
         AppController.getTypeface(StandaloneStudyInfoActivity.this, "regular"));
   }
@@ -203,33 +193,6 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
               startActivity(customTabsIntent.intent);
             } else {
               loginCallback();
-            }
-          }
-        });
-
-    visitWebsiteButton.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            try {
-              Intent browserIntent =
-                  new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
-              startActivity(browserIntent);
-            } catch (Exception e) {
-              Logger.log(e);
-            }
-          }
-        });
-    learnMoreButton.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            try {
-              Intent intent = new Intent(StandaloneStudyInfoActivity.this, WebViewActivity.class);
-              intent.putExtra("consent", consentDocumentData.getConsent().getContent());
-              startActivity(intent);
-            } catch (Exception e) {
-              Logger.log(e);
             }
           }
         });
@@ -724,17 +687,11 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     joinButton.setVisibility(View.VISIBLE);
     boolean aboutThisStudy = false;
     if ((aboutThisStudy) && studyHome.getStudyWebsite().equalsIgnoreCase("")) {
-      bottombar.setVisibility(View.INVISIBLE);
-      bottombar1.setVisibility(View.GONE);
+      bottombar1.setVisibility(View.INVISIBLE);
       joinButton.setVisibility(View.INVISIBLE);
-      visitWebsiteButton.setClickable(false);
-      learnMoreButton.setClickable(false);
     } else if (aboutThisStudy) {
-      bottombar.setVisibility(View.INVISIBLE);
       bottombar1.setVisibility(View.VISIBLE);
       joinButton.setVisibility(View.INVISIBLE);
-      visitWebsiteButton.setClickable(false);
-      learnMoreButton.setClickable(false);
       if (studyHome.getStudyWebsite() != null
           && !studyHome.getStudyWebsite().equalsIgnoreCase("")) {
         consentLayButton.setText(getResources().getString(R.string.visit_website));
@@ -748,31 +705,22 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
               }
             });
       } else {
-        consentLay.setVisibility(View.GONE);
+        consentLay.setVisibility(View.INVISIBLE);
       }
-    } else if (studyHome.getStudyWebsite().equalsIgnoreCase("")) {
-      bottombar.setVisibility(View.INVISIBLE);
+    } else if (!studyHome.getStudyWebsite().equalsIgnoreCase("")) {
       bottombar1.setVisibility(View.VISIBLE);
-      visitWebsiteButton.setClickable(false);
-      learnMoreButton.setClickable(false);
+      consentLayButton.setText(getResources().getString(R.string.visit_website));
       consentLay.setOnClickListener(
-          new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              try {
-                Intent intent = new Intent(StandaloneStudyInfoActivity.this, WebViewActivity.class);
-                intent.putExtra("consent", consentDocumentData.getConsent().getContent());
-                startActivity(intent);
-              } catch (Exception e) {
-                Logger.log(e);
-              }
-            }
-          });
+              new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  Intent browserIntent =
+                          new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
+                  startActivity(browserIntent);
+                }
+              });
     } else {
-      bottombar.setVisibility(View.VISIBLE);
-      bottombar1.setVisibility(View.GONE);
-      visitWebsiteButton.setClickable(true);
-      learnMoreButton.setClickable(true);
+      bottombar1.setVisibility(View.INVISIBLE);
     }
 
     if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.upcoming))

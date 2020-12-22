@@ -72,68 +72,6 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-
-    <LinearLayout
-        android:id="@+id/bottom_bar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
-        android:alpha=".6"
-        android:background="@color/colorPrimaryBlack"
-        android:baselineAligned="true"
-        android:visibility="invisible"
-        android:orientation="horizontal"
-        android:weightSum="5">
-
-        <RelativeLayout
-            android:id="@+id/mVisitWebsiteButtonLayout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2.4">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/mVisitWebsiteButton"
-                style="@style/TextType2"
-                android:layout_centerInParent="true"
-                android:text="@string/visit_website"
-                android:gravity="center"
-                android:textColor="@color/white" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/center"
-            android:layout_width="0dp"
-            android:gravity="center"
-            android:layout_height="match_parent"
-            android:layout_weight=".2">
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/hrLine2"
-                android:layout_width="1dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:alpha=".4"
-                android:background="@android:color/white" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/mLernMoreButtonLayout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2.4">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/mLernMoreButton"
-                style="@style/TextType2"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:text="@string/view_consent"
-                android:textColor="@color/white" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
     <LinearLayout
         android:id="@+id/bottom_bar1"
         android:layout_width="match_parent"
@@ -157,7 +95,7 @@
                 android:id="@+id/consentLayButton"
                 style="@style/TextType2"
                 android:layout_centerInParent="true"
-                android:text="@string/view_consent"
+                android:text="@string/visit_website"
                 android:textColor="@color/white" />
 
         </RelativeLayout>
@@ -168,7 +106,7 @@
         style="@style/TextType2"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:layout_above="@+id/bottom_bar"
+        android:layout_above="@+id/bottom_bar1"
         android:background="@drawable/rectangle_blue_white"
         android:gravity="center"
         android:visibility="invisible"
