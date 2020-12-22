@@ -74,12 +74,14 @@ public class AuditLogDAOImpl implements AuditLogDAO {
                 + " , modifiedBy = :userId"
                 + " , modifiedOn = now() where id = :studyId";
         if (newSession != null) {
-          newSession.createQuery(queryString)
+          newSession
+              .createQuery(queryString)
               .setParameter("userId", userId)
               .setParameter("studyId", studyId)
               .executeUpdate();
         } else {
-          session.createQuery(queryString)
+          session
+              .createQuery(queryString)
               .setParameter("userId", userId)
               .setParameter("studyId", studyId)
               .executeUpdate();
