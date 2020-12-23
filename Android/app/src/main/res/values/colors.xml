@@ -19,4 +19,6 @@
     <color name="dark_gray">#cccccc</color>
     <color name="black_shade">#666666</color>
     <color name="search_bg">#eceded</color>
+    <color name="percent">#646464</color>
+    <color name="studylist_divider">#D5DFE4</color>
 </resources>

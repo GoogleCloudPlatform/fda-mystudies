@@ -226,6 +226,16 @@ public class AppController {
     return retTypeface;
   }
 
+  public static Typeface getHelveticaTypeface(Context context) {
+    Typeface retTypeface = null;
+    try {
+        retTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/HLM.ttf");
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    return retTypeface;
+  }
+
   public static Realm getRealmobj(Context context) {
     if (config == null) {
       RealmEncryptionHelper realmEncryptionHelper =

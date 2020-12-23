@@ -17,6 +17,9 @@ package com.harvard.studyappmodule;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
@@ -30,6 +33,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
@@ -79,7 +84,9 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   class Holder extends RecyclerView.ViewHolder {
 
     RelativeLayout container;
+    RelativeLayout progresslayout;
     AppCompatImageView stateIcon;
+    AppCompatImageView defaultthumbnail;
     AppCompatTextView state;
     AppCompatImageView statusImg;
     AppCompatImageView studyImg;
@@ -88,7 +95,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     AppCompatTextView studyTitle;
     AppCompatTextView studyTitleLatin;
     AppCompatTextView sponser;
-    AppCompatTextView completion;
     AppCompatTextView completionVal;
     AppCompatTextView adherence;
     AppCompatTextView adherenceVal;
@@ -98,8 +104,10 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     Holder(View itemView) {
       super(itemView);
       container = (RelativeLayout) itemView.findViewById(R.id.container);
+      progresslayout = (RelativeLayout) itemView.findViewById(R.id.progresslayout);
       stateIcon = (AppCompatImageView) itemView.findViewById(R.id.stateIcon);
       studyImg = (AppCompatImageView) itemView.findViewById(R.id.studyImg);
+      defaultthumbnail = (AppCompatImageView) itemView.findViewById(R.id.defaultthumbnail);
       imgTitle = (AppCompatTextView) itemView.findViewById(R.id.mImgTitle);
       state = (AppCompatTextView) itemView.findViewById(R.id.state);
       statusImg = (AppCompatImageView) itemView.findViewById(R.id.statusImg);
@@ -107,7 +115,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       studyTitle = (AppCompatTextView) itemView.findViewById(R.id.study_title);
       studyTitleLatin = (AppCompatTextView) itemView.findViewById(R.id.study_title_latin);
       sponser = (AppCompatTextView) itemView.findViewById(R.id.sponser);
-      completion = (AppCompatTextView) itemView.findViewById(R.id.completion);
       completionVal = (AppCompatTextView) itemView.findViewById(R.id.completion_val);
       adherence = (AppCompatTextView) itemView.findViewById(R.id.adherence);
       adherenceVal = (AppCompatTextView) itemView.findViewById(R.id.adherence_val);
@@ -119,12 +126,11 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     private void setFont() {
       try {
         imgTitle.setTypeface(AppController.getTypeface(context, "medium"));
-        state.setTypeface(AppController.getTypeface(context, "medium"));
-        status.setTypeface(AppController.getTypeface(context, "bold"));
-        studyTitle.setTypeface(AppController.getTypeface(context, "medium"));
+        state.setTypeface(AppController.getHelveticaTypeface(context));
+        status.setTypeface(AppController.getHelveticaTypeface(context));
+        studyTitle.setTypeface(AppController.getHelveticaTypeface(context), Typeface.BOLD);
         studyTitleLatin.setTypeface(AppController.getTypeface(context, "regular"));
         sponser.setTypeface(AppController.getTypeface(context, "regular"));
-        completion.setTypeface(AppController.getTypeface(context, "regular"));
         completionVal.setTypeface(AppController.getTypeface(context, "bold"));
         adherence.setTypeface(AppController.getTypeface(context, "regular"));
         adherenceVal.setTypeface(AppController.getTypeface(context, "bold"));
@@ -143,7 +149,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       holder.status.setVisibility(View.VISIBLE);
       holder.statusImg.setVisibility(View.VISIBLE);
       holder.completionVal.setVisibility(View.VISIBLE);
-      holder.completion.setVisibility(View.VISIBLE);
       holder.adherenceVal.setVisibility(View.VISIBLE);
       holder.adherence.setVisibility(View.VISIBLE);
       holder.progressBar1.setVisibility(View.VISIBLE);
@@ -191,6 +196,13 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
         holder.status.setText(R.string.yet_to_join);
       }
 
+      if (items.get(position).getStudyStatus().equalsIgnoreCase(StudyFragment.IN_PROGRESS)
+              || items.get(position).getStudyStatus().equalsIgnoreCase(StudyFragment.COMPLETED)) {
+        holder.progresslayout.setVisibility(View.VISIBLE);
+      } else {
+        holder.progresslayout.setVisibility(View.GONE);
+      }
+
       if (completionAdherenceCalcs.size() > 0) {
         try {
           holder.completionVal.setText(
@@ -216,14 +228,13 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       holder.status.setVisibility(View.GONE);
       holder.statusImg.setVisibility(View.GONE);
       holder.completionVal.setVisibility(View.GONE);
-      holder.completion.setVisibility(View.GONE);
       holder.adherenceVal.setVisibility(View.GONE);
       holder.adherence.setVisibility(View.GONE);
       holder.progressBar1.setVisibility(View.GONE);
       holder.progressBar2.setVisibility(View.GONE);
     }
 
-    holder.state.setText(items.get(position).getStatus().toUpperCase());
+    holder.state.setText(items.get(position).getStatus());
     GradientDrawable bgShape = (GradientDrawable) holder.stateIcon.getBackground();
     if (items.get(position).getStatus().equalsIgnoreCase("active")) {
       bgShape.setColor(context.getResources().getColor(R.color.bullet_green_color));
@@ -234,11 +245,22 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     }
 
     Glide.with(context)
-        .load(items.get(position).getLogo())
-        .thumbnail(0.5f)
-        .crossFade()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .into(holder.studyImg);
+            .load(items.get(position).getLogo())
+            .asBitmap()
+            .thumbnail(0.5f)
+            .crossFade()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(new SimpleTarget<Bitmap>(200, 200) {
+              @Override
+              public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                holder.defaultthumbnail.setVisibility(View.VISIBLE);
+              }
+
+              @Override
+              public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                holder.studyImg.setImageBitmap(resource);
+              }
+            });
 
     holder.studyTitle.setText(items.get(position).getTitle());
     holder.studyTitleLatin.setText(Html.fromHtml(items.get(position).getTagline()));
