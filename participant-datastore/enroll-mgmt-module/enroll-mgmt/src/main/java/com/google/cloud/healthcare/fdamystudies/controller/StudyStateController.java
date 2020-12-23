@@ -141,7 +141,6 @@ public class StudyStateController {
     WithDrawFromStudyRespBean respBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-
     auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
     auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
 
@@ -149,7 +148,8 @@ public class StudyStateController {
         studyStateService.withdrawFromStudy(
             withdrawFromStudyBean.getParticipantId(),
             withdrawFromStudyBean.getStudyId(),
-            withdrawFromStudyBean.isDelete());
+            withdrawFromStudyBean.isDelete(),
+            auditRequest);
     if (respBean != null) {
       logger.info("StudyStateController withdrawFromStudy() - Ends ");
       respBean.setCode(ErrorCode.EC_200.code());
@@ -158,49 +158,6 @@ public class StudyStateController {
       enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
 
       return new ResponseEntity<>(respBean, HttpStatus.OK);
-    if (withdrawFromStudyBean != null) {
-      if (withdrawFromStudyBean.getParticipantId() != null
-          && !withdrawFromStudyBean.getParticipantId().isEmpty()
-          && withdrawFromStudyBean.getStudyId() != null
-          && !withdrawFromStudyBean.getStudyId().isEmpty()) {
-
-        auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
-        auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
-
-        respBean =
-            studyStateService.withdrawFromStudy(
-                withdrawFromStudyBean.getParticipantId(),
-                withdrawFromStudyBean.getStudyId(),
-                withdrawFromStudyBean.isDelete(),
-                auditRequest);
-        if (respBean != null) {
-          logger.info("StudyStateController withdrawFromStudy() - Ends ");
-          respBean.setCode(ErrorCode.EC_200.code());
-          respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
-
-          enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
-
-          return new ResponseEntity<>(respBean, HttpStatus.OK);
-        } else {
-          MyStudiesUserRegUtil.getFailureResponse(
-              MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-              response);
-
-          enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_FAILED, auditRequest);
-
-          return null;
-        }
-      } else {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        return null;
-      }
-
     } else {
       MyStudiesUserRegUtil.getFailureResponse(
           MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
