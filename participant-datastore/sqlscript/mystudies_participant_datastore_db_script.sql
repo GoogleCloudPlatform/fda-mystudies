@@ -454,8 +454,6 @@ CREATE TABLE IF NOT EXISTS `participant_enrollment_history` (
   KEY `FKt54o4s9tiiv74ni6urb8k4fq2` (`site_id`),
   KEY `FK1bmomoc73pe9g97g4ih69mh3u` (`study_info_id`),
   KEY `FKbvetsdb2isivd8q95sly7md99` (`user_details_id`),
-  KEY `withdrawal_timestamp_user_details_id_study_info_id_idx` (`withdrawal_timestamp`,`user_details_id`,`study_info_id`),
-  KEY `withdrawal_timestamp_user_details_id_idx` (`withdrawal_timestamp`,`user_details_id`),
   CONSTRAINT `FK1bmomoc73pe9g97g4ih69mh3u` FOREIGN KEY (`study_info_id`) REFERENCES `study_info` (`id`),
   CONSTRAINT `FKahlmyi1rkt3odfyvt7wax433w` FOREIGN KEY (`participant_registry_site_id`) REFERENCES `participant_registry_site` (`id`),
   CONSTRAINT `FKbvetsdb2isivd8q95sly7md99` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`),
