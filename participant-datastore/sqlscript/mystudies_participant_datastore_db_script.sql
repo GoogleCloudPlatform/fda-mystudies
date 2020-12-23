@@ -264,6 +264,8 @@ CREATE TABLE IF NOT EXISTS `study_consent` (
   `participant_study_id` varchar(255) DEFAULT NULL,
   `study_info_id` varchar(255) DEFAULT NULL,
   `user_details_id` varchar(255) DEFAULT NULL,
+  `consent_date` datetime DEFAULT NULL,
+  `data_sharing_status` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK585y9moi8wkwmurn0w54ebl36` (`participant_study_id`),
   KEY `FKck8ax0pv7ehm0tsyv4lrch3x0` (`study_info_id`),
@@ -294,6 +296,7 @@ CREATE TABLE IF NOT EXISTS `study_info` (
   `type` varchar(32) DEFAULT NULL,
   `version` float DEFAULT NULL,
   `app_info_id` varchar(255) DEFAULT NULL,
+  `logo_image_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `study_info_custom_id_app_info_id_uidx` (`custom_id`,`app_info_id`),
   KEY `FK7q83jdpn6sguh4ly7fi8ahb7o` (`app_info_id`),
@@ -451,16 +454,17 @@ CREATE TABLE IF NOT EXISTS `participant_enrollment_history` (
   KEY `FKt54o4s9tiiv74ni6urb8k4fq2` (`site_id`),
   KEY `FK1bmomoc73pe9g97g4ih69mh3u` (`study_info_id`),
   KEY `FKbvetsdb2isivd8q95sly7md99` (`user_details_id`),
+  KEY `withdrawal_timestamp_user_details_id_study_info_id_idx` (`withdrawal_timestamp`,`user_details_id`,`study_info_id`),
+  KEY `withdrawal_timestamp_user_details_id_idx` (`withdrawal_timestamp`,`user_details_id`),
   CONSTRAINT `FK1bmomoc73pe9g97g4ih69mh3u` FOREIGN KEY (`study_info_id`) REFERENCES `study_info` (`id`),
   CONSTRAINT `FKahlmyi1rkt3odfyvt7wax433w` FOREIGN KEY (`participant_registry_site_id`) REFERENCES `participant_registry_site` (`id`),
   CONSTRAINT `FKbvetsdb2isivd8q95sly7md99` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`),
   CONSTRAINT `FKf67cshsfhjae6if1vgskre3jo` FOREIGN KEY (`app_info_id`) REFERENCES `app_info` (`id`),
   CONSTRAINT `FKt54o4s9tiiv74ni6urb8k4fq2` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-
