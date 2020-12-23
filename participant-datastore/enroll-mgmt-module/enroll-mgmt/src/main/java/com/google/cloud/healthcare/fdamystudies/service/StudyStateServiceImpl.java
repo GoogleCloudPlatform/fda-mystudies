@@ -45,6 +45,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.transaction.SystemException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,27 +109,31 @@ public class StudyStateServiceImpl implements StudyStateService {
       for (StudiesBean studyBean : studiesBeenList) {
         auditRequest.setStudyId(studyBean.getStudyId());
         auditRequest.setParticipantId(studyBean.getParticipantId());
-        ParticipantStudyEntity participantStudyEntity1 = null;
+        ParticipantStudyEntity participantStudyEntity = null;
+
         if (studyParticipantbyIdMap.containsKey(studyBean.getStudyId().trim())) {
-          participantStudyEntity1 = studyParticipantbyIdMap.get(studyBean.getStudyId().trim());
+          participantStudyEntity = studyParticipantbyIdMap.get(studyBean.getStudyId().trim());
         } else {
           StudyEntity studyEntity = commonDao.getStudyDetails(studyBean.getStudyId().trim());
-          participantStudyEntity1 = new ParticipantStudyEntity();
-          participantStudyEntity1.setStudy(studyEntity);
+          participantStudyEntity = new ParticipantStudyEntity();
+          participantStudyEntity.setStudy(studyEntity);
+          participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
         }
 
-        participantStudyEntity1.setStatus(studyBean.getStatus());
-        if (EnrollmentStatus.ENROLLED.getStatus().equalsIgnoreCase(studyBean.getStatus())) {
-          participantStudyEntity1.setEnrolledDate(Timestamp.from(Instant.now()));
-          participantStudyEntity1.setParticipantId(studyBean.getParticipantId());
+        if (studyBean.getStatus() != null && !StringUtils.isEmpty(studyBean.getStatus())) {
+          participantStudyEntity.setStatus(studyBean.getStatus());
+          if (EnrollmentStatus.ENROLLED.getStatus().equalsIgnoreCase(studyBean.getStatus())) {
+            participantStudyEntity.setEnrolledDate(Timestamp.from(Instant.now()));
+            participantStudyEntity.setParticipantId(studyBean.getParticipantId());
+          }
         }
 
-        participantStudyEntity1.setBookmark(studyBean.getBookmarked());
-        participantStudyEntity1.setCompletion(studyBean.getCompletion());
-        participantStudyEntity1.setAdherence(studyBean.getAdherence());
+        participantStudyEntity.setBookmark(studyBean.getBookmarked());
+        participantStudyEntity.setCompletion(studyBean.getCompletion());
+        participantStudyEntity.setAdherence(studyBean.getAdherence());
 
-        placeHolder.put("study_state_value", participantStudyEntity1.getStatus());
-        participantStudies.add(participantStudyEntity1);
+        placeHolder.put("study_state_value", participantStudyEntity.getStatus());
+        participantStudies.add(participantStudyEntity);
       }
       message = studyStateDao.saveParticipantStudies(participantStudies);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
