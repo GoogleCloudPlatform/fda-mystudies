@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `study_info` (
   `name` varchar(64) DEFAULT NULL,
   `sponsor` varchar(32) DEFAULT NULL,
   `status` varchar(32) DEFAULT NULL,
-  `tagline` varchar(128) DEFAULT NULL,
+  `tagline` varchar(64) DEFAULT NULL,
   `type` varchar(32) DEFAULT NULL,
   `version` float DEFAULT NULL,
   `app_info_id` varchar(255) DEFAULT NULL,
