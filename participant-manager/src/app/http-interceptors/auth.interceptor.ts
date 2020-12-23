@@ -14,7 +14,7 @@ import {ToastrService} from 'ngx-toastr';
 import {getMessage} from '../shared/error.codes.enum';
 import {AuthService} from '../service/auth.service';
 import {ApiResponse} from '../entity/api.response.model';
-import {environment} from 'src/environments/environment';
+import {environment} from '@environment';
 import {CookieService} from 'ngx-cookie-service';
 import {AccessToken} from '../entity/access-token';
 import {Router} from '@angular/router';
@@ -28,6 +28,9 @@ export class AuthInterceptor implements HttpInterceptor {
   private readonly refreshTokenSubject: BehaviorSubject<
     unknown
   > = new BehaviorSubject<unknown>(null);
+  appId = 'PARTICIPANT MANAGER';
+  mobilePlatform = 'DESKTOP';
+  source = 'PARTICIPANT MANAGER';
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
@@ -112,7 +115,13 @@ export class AuthInterceptor implements HttpInterceptor {
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
-        );
+        )
+        .set('correlationId', sessionStorage.getItem('correlationId') || '')
+        .set('appId', this.appId)
+        .set('mobilePlatform', this.mobilePlatform)
+        .set('source', this.source)
+        .set('userId', sessionStorage.getItem('userId') || '')
+        .set('appVersion', environment.appVersion || '');
       if (!req.headers.has('Content-Type')) {
         headers = headers.append(
           'Content-Type',
@@ -131,8 +140,12 @@ export class AuthInterceptor implements HttpInterceptor {
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
-        );
-
+        )
+        .set('correlationId', sessionStorage.getItem('correlationId') || '')
+        .set('appId', this.appId)
+        .set('mobilePlatform', this.mobilePlatform)
+        .set('source', this.source)
+        .set('appVersion', environment.appVersion || '');
       if (!req.headers.get('skipIfUpload')) {
         headers = headers.append('Content-Type', 'application/json');
       }
