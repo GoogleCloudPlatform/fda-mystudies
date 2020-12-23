@@ -1475,9 +1475,6 @@ select {
   }
 }
 
-.table_row_hover_shadow tr {
-  position: relative;
-}
 .table_row_hover_shadow tr:hover {
   box-shadow: 1px 1px 6px 1px #ccd7e2;
   cursor: pointer;
