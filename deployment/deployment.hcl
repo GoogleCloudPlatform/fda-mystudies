@@ -27,7 +27,7 @@ template "mystudies" {
     master_authorized_networks = [
       {
         cidr_block   = "34.87.0.25/32"
-        display_name = "Example diplay name"
+        display_name = "cloudshell2"
       },
     ]
   }
