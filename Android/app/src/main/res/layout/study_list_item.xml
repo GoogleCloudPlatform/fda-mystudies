@@ -16,6 +16,8 @@
         <android.support.v7.widget.CardView
             android:id="@+id/studyImglayout"
             app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardUseCompatPadding="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
