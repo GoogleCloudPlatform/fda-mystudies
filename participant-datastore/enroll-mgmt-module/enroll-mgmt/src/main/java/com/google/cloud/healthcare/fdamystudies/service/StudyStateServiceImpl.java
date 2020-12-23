@@ -103,8 +103,11 @@ public class StudyStateServiceImpl implements StudyStateService {
     Map<String, ParticipantStudyEntity> studyParticipantbyIdMap =
         existParticipantStudies
             .stream()
-            .collect(Collectors.toMap(ParticipantStudyEntity::getStudyId, Function.identity()));
-
+            .collect(
+                Collectors.toMap(
+                    ParticipantStudyEntity::getStudyId,
+                    Function.identity(),
+                    (existing, replacement) -> existing));
     try {
       for (StudiesBean studyBean : studiesBeenList) {
         auditRequest.setStudyId(studyBean.getStudyId());
