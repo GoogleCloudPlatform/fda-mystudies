@@ -32,6 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
   appId = 'PARTICIPANT MANAGER';
   mobilePlatform = 'DESKTOP';
   source = 'PARTICIPANT MANAGER';
+
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
