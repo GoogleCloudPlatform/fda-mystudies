@@ -127,7 +127,6 @@ public class StudyStateServiceImpl implements StudyStateService {
           participantStudyEntity.setStatus(studyBean.getStatus());
           if (EnrollmentStatus.ENROLLED.getStatus().equalsIgnoreCase(studyBean.getStatus())) {
             participantStudyEntity.setEnrolledDate(Timestamp.from(Instant.now()));
-            participantStudyEntity.setParticipantId(studyBean.getParticipantId());
           }
         }
 
