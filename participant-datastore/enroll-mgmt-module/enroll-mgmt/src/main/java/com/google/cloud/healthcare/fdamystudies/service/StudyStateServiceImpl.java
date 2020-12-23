@@ -118,15 +118,20 @@ public class StudyStateServiceImpl implements StudyStateService {
           participantStudyEntity1.setStudy(studyEntity);
         }
 
-        if (studyBean.getStatus() != null && StringUtils.isNotEmpty(studyBean.getStatus())) {
-          participantStudyEntity1.setStatus(studyBean.getStatus());
-          if (studyBean.getStatus().equalsIgnoreCase(EnrollmentStatus.ENROLLED.getStatus())) {
+        if (studyParticipantbyIdMap.containsKey(studyBean.getStudyId().trim())) {
+          if (EnrollmentStatus.ENROLLED.getStatus().equalsIgnoreCase(studyBean.getStatus())) {
             participantStudyEntity1.setEnrolledDate(Timestamp.from(Instant.now()));
           }
         } else {
-          participantStudyEntity1.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
+          if (studyBean.getStatus() != null && StringUtils.isNotEmpty(studyBean.getStatus())) {
+            participantStudyEntity1.setStatus(studyBean.getStatus());
+            if (EnrollmentStatus.ENROLLED.getStatus().equalsIgnoreCase(studyBean.getStatus())) {
+              participantStudyEntity1.setEnrolledDate(Timestamp.from(Instant.now()));
+            }
+          } else {
+            participantStudyEntity1.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
+          }
         }
-
         participantStudyEntity1.setBookmark(studyBean.getBookmarked());
         participantStudyEntity1.setCompletion(studyBean.getCompletion());
         participantStudyEntity1.setAdherence(studyBean.getAdherence());
