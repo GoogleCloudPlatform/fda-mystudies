@@ -45,7 +45,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.transaction.SystemException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,23 +117,16 @@ public class StudyStateServiceImpl implements StudyStateService {
           participantStudyEntity1.setStudy(studyEntity);
         }
 
-        if (studyParticipantbyIdMap.containsKey(studyBean.getStudyId().trim())) {
-          if (EnrollmentStatus.ENROLLED.getStatus().equalsIgnoreCase(studyBean.getStatus())) {
-            participantStudyEntity1.setEnrolledDate(Timestamp.from(Instant.now()));
-          }
-        } else {
-          if (studyBean.getStatus() != null && StringUtils.isNotEmpty(studyBean.getStatus())) {
-            participantStudyEntity1.setStatus(studyBean.getStatus());
-            if (EnrollmentStatus.ENROLLED.getStatus().equalsIgnoreCase(studyBean.getStatus())) {
-              participantStudyEntity1.setEnrolledDate(Timestamp.from(Instant.now()));
-            }
-          } else {
-            participantStudyEntity1.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
-          }
+        participantStudyEntity1.setStatus(studyBean.getStatus());
+        if (EnrollmentStatus.ENROLLED.getStatus().equalsIgnoreCase(studyBean.getStatus())) {
+          participantStudyEntity1.setEnrolledDate(Timestamp.from(Instant.now()));
+          participantStudyEntity1.setParticipantId(studyBean.getParticipantId());
         }
+
         participantStudyEntity1.setBookmark(studyBean.getBookmarked());
         participantStudyEntity1.setCompletion(studyBean.getCompletion());
         participantStudyEntity1.setAdherence(studyBean.getAdherence());
+
         placeHolder.put("study_state_value", participantStudyEntity1.getStatus());
         participantStudies.add(participantStudyEntity1);
       }
