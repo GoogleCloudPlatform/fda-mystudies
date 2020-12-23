@@ -9,9 +9,11 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantStudyInformation;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 
 public interface ParticipantStudyInfoService {
-  ParticipantStudyInformation getParticipantStudyInfo(String studyId, String participantId)
+  ParticipantStudyInformation getParticipantStudyInfo(
+      String studyId, String participantId, AuditLogEventRequest auditRequest)
       throws ProcessResponseException;
 }
