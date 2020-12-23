@@ -25,10 +25,8 @@ protocol StudyFilterDelegates: class {
 
   func appliedFilter(
     studyStatus: [String],
-    pariticipationsStatus: [String],
-    categories: [String],
-    searchText: String,
-    bookmarked: Bool
+    participationStatus: [String],
+    searchText: String
   )
 
   func didCancelFilter(_ cancel: Bool)
@@ -38,15 +36,12 @@ protocol StudyFilterDelegates: class {
 enum FilterType: String {
   case participantStatus
   case studyStatus
-  case bookmark
-  case category
 }
 
 struct StudyFilter {
   var studyStatus: [String] = []
   var pariticipationsStatus: [String] = []
   var categories: [String] = []
-  var bookmark = true
   var searchText = ""
 }
 
@@ -67,10 +62,9 @@ class StudyFilterViewController: UIViewController {
   private lazy var pariticipationsStatus: [String] = []
   private lazy var categories: [String] = []
   private lazy var searchText: String = ""
-  private lazy var bookmark = true
   private var filterTypes: [FilterType] {
     if User.currentUser.userType == .loggedInUser {
-      return [.participantStatus, .studyStatus, .bookmark]
+      return [.participantStatus, .studyStatus]
     } else {
       return [.studyStatus]
     }
@@ -102,32 +96,17 @@ class StudyFilterViewController: UIViewController {
   /// Navigate to Studylist screen on Apply button clicked.
   @IBAction func applyButtonAction(_ sender: AnyObject) {
 
-    var isbookmarked = false
-
     for filterOptions in StudyFilterHandler.instance.filterOptions {
 
       let filterType = filterOptions.type
       let filterValues = (filterOptions.filterValues.filter({ $0.isSelected == true }))
       for value in filterValues {
         switch filterType {
-
         case .studyStatus:
           studyStatus.append(value.title)
 
         case .participantStatus:
           pariticipationsStatus.append(value.title)
-
-        case .bookmark:
-          if User.currentUser.userType == .loggedInUser {
-            bookmark = (value.isSelected)
-            isbookmarked = true
-          } else {
-            categories.append(value.title)
-          }
-
-        case .category:
-          categories.append(value.title)
-
         }
       }
     }
@@ -135,27 +114,16 @@ class StudyFilterViewController: UIViewController {
     previousCollectionData = []
     previousCollectionData.append(studyStatus)
 
-    if User.currentUser.userType == .loggedInUser {
-      if isbookmarked {
-        previousCollectionData.append((bookmark == true ? ["Bookmarked"] : []))
-      } else {
-        previousCollectionData.append([])
-        bookmark = false
-      }
-    } else {
+    if !(User.currentUser.userType == .loggedInUser) {
       previousCollectionData.append(categories)
-      bookmark = false
-
     }
     previousCollectionData.append(pariticipationsStatus)
     previousCollectionData.append(categories.count == 0 ? [] : categories)
 
     delegate?.appliedFilter(
       studyStatus: studyStatus,
-      pariticipationsStatus: pariticipationsStatus,
-      categories: categories,
-      searchText: searchText,
-      bookmarked: bookmark
+      participationStatus: pariticipationsStatus,
+      searchText: searchText
     )
     self.dismiss(animated: true, completion: nil)
 
@@ -311,10 +279,7 @@ extension AppDelegate {
   func getDefaultFilterStrings() -> StudyFilter {
 
     var studyStatus: [String] = []
-    var pariticipationsStatus: [String] = []
-    var categories: [String] = []
-    var bookmark = true
-
+    var participationStatus: [String] = []
     // Parsing the filter options
     for filterOptions in StudyFilterHandler.instance.filterOptions {
 
@@ -322,37 +287,18 @@ extension AppDelegate {
       let filterValues = (filterOptions.filterValues.filter({ $0.isSelected == true }))
       for value in filterValues {
         switch filterType {
-
         case .studyStatus:
           studyStatus.append(value.title)
 
         case .participantStatus:
-          pariticipationsStatus.append(value.title)
-
-        case .bookmark:
-          if User.currentUser.userType == .loggedInUser {
-            bookmark = (value.isSelected)
-          } else {
-            categories.append(value.title)
-          }
-
-        case .category:
-          categories.append(value.title)
+          participationStatus.append(value.title)
         }
       }
     }
 
-    if User.currentUser.userType == .loggedInUser {
-      bookmark = false
-    } else {
-      bookmark = false
-    }
-
     return StudyFilter(
       studyStatus: studyStatus,
-      pariticipationsStatus: pariticipationsStatus,
-      categories: categories,
-      bookmark: bookmark,
+      pariticipationsStatus: participationStatus,
       searchText: ""
     )
   }
