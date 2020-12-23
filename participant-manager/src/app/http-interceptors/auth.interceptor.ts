@@ -25,12 +25,16 @@ import {
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
+
   private readonly refreshTokenSubject: BehaviorSubject<
     unknown
   > = new BehaviorSubject<unknown>(null);
   appId = 'PARTICIPANT MANAGER';
   mobilePlatform = 'DESKTOP';
   source = 'PARTICIPANT MANAGER';
+
+
+
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
