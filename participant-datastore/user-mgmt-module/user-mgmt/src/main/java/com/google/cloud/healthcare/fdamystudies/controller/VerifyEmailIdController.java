@@ -117,7 +117,7 @@ public class VerifyEmailIdController {
       return new ResponseEntity<>(respBean, HttpStatus.BAD_REQUEST);
     }
 
-    String tempRegId = userDetailsService.updateStatus(participantDetails);
+    String tempRegId = userDetailsService.updateStatus(participantDetails, auditRequest);
 
     AuditLogEvent auditEvent =
         StringUtils.isNotEmpty(tempRegId) ? USER_ACCOUNT_ACTIVATED : ACCOUNT_ACTIVATION_FAILED;
