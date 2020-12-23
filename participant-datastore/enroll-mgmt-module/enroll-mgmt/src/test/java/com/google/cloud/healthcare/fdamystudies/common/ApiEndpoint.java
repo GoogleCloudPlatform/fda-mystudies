@@ -12,18 +12,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-  UPDATE_STUDY_STATE_PATH("http://localhost:8080/participant-enroll-datastore/updateStudyState"),
+  UPDATE_STUDY_STATE_PATH("http://localhost:54904/participant-enroll-datastore/updateStudyState"),
 
-  STUDY_STATE_PATH("http://localhost:8080/participant-enroll-datastore/studyState"),
+  STUDY_STATE_PATH("http://localhost:54904/participant-enroll-datastore/studyState"),
 
-  WITHDRAW_FROM_STUDY_PATH("http://localhost:8080/participant-enroll-datastore/withdrawfromstudy"),
+  WITHDRAW_FROM_STUDY_PATH("http://localhost:54904/participant-enroll-datastore/withdrawfromstudy"),
 
-  PARTICIPANT_INFO("http://localhost:8080/participant-enroll-datastore/participantInfo"),
+  PARTICIPANT_INFO("http://localhost:54904/participant-enroll-datastore/participantInfo"),
 
   VALIDATE_ENROLLMENT_TOKEN_PATH(
-      "http://localhost:8080/participant-enroll-datastore/validateEnrollmentToken"),
+      "http://localhost:54904/participant-enroll-datastore/validateEnrollmentToken"),
 
-  ENROLL_PATH("http://localhost:8080/participant-enroll-datastore/enroll");
+  ENROLL_PATH("http://localhost:54904/participant-enroll-datastore/enroll");
 
   private String url;
 

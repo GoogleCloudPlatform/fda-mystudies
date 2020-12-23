@@ -7,7 +7,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.2.6.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>ConsentMgmtServicesWs</artifactId>
@@ -36,11 +36,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-storage</artifactId>
       <version>1.96.0</version>
@@ -62,19 +57,14 @@
       <artifactId>spring-boot-starter-web</artifactId>
       <exclusions>
         <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-logging</artifactId>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-to-slf4j</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-log4j2</artifactId>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -217,6 +207,14 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-gcp-starter-storage</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-ext</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
     </dependency>
   </dependencies>
 

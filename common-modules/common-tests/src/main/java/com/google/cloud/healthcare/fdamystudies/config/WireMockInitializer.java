@@ -20,6 +20,8 @@ public class WireMockInitializer
 
   private static WireMockServer wireMockServer = null;
 
+  private static final int WIREMOCK_PORT = 54804;
+
   @Override
   public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
     configurableApplicationContext
@@ -32,7 +34,7 @@ public class WireMockInitializer
       wireMockServer =
           new WireMockServer(
               new WireMockConfiguration()
-                  .port(8080)
+                  .port(WIREMOCK_PORT)
                   .fileSource(new ClasspathFileSourceWithoutLeadingSlash()));
       wireMockServer.start();
     }

@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent;
@@ -85,8 +84,6 @@ public class OAuthControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void init() {
-    WireMock.resetAllRequests();
-
     userEntity = newUserEntity();
     userEntity = userRepository.saveAndFlush(userEntity);
   }

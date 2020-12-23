@@ -70,7 +70,8 @@ public class StudiesControllerTest extends BaseMockIT {
 
   @Autowired private UserRegAdminRepository userRegAdminUserRepository;
 
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired(required = true)
+  private ObjectMapper objectMapper;
 
   @Autowired private SitePermissionRepository sitePermissionRepository;
 

@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE;
@@ -184,7 +183,8 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     assertNotNull(userDetails);
     assertTrue(VERIFIED_STATUS == userDetails.getStatus());
 
-    verify(1, putRequestedFor(urlEqualTo("/auth-server/users/" + Constants.VALID_USER_ID)));
+    getWireMockServer()
+        .verify(1, putRequestedFor(urlEqualTo("/auth-server/users/" + Constants.VALID_USER_ID)));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);

@@ -3,7 +3,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED;
@@ -24,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
@@ -79,7 +77,6 @@ public class UserProfileControllerTest extends BaseMockIT {
   @BeforeEach
   public void setUp() {
     userRegAdminEntity = testDataHelper.createUserRegAdmin();
-    WireMock.resetAllRequests();
   }
 
   @Test
@@ -317,7 +314,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertEquals(request.getFirstName(), user.getFirstName());
     assertEquals(request.getLastName(), user.getLastName());
 
-    verify(1, postRequestedFor(urlEqualTo("/auth-server/users")));
+    getWireMockServer().verify(1, postRequestedFor(urlEqualTo("/auth-server/users")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(user.getId());
@@ -429,9 +426,11 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertEquals(UserStatus.DEACTIVATED.getValue(), user.getStatus());
 
     // verify external API call
-    verify(
-        1,
-        putRequestedFor(urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
+    getWireMockServer()
+        .verify(
+            1,
+            putRequestedFor(
+                urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
 
     verifyTokenIntrospectRequest();
   }
@@ -464,9 +463,11 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertEquals(UserStatus.ACTIVE.getValue(), user.getStatus());
 
     // verify external API call
-    verify(
-        1,
-        putRequestedFor(urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
+    getWireMockServer()
+        .verify(
+            1,
+            putRequestedFor(
+                urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
 
     verifyTokenIntrospectRequest();
   }

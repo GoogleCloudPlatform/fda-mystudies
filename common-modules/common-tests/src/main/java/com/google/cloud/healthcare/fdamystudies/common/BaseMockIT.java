@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.common;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -26,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
@@ -74,7 +72,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @ContextConfiguration(initializers = {WireMockInitializer.class})
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("mockit")
 @TestPropertySource({
@@ -277,7 +275,7 @@ public class BaseMockIT {
   void setUp(TestInfo testInfo) {
     logger.entry(String.format("TEST STARTED: %s", testInfo.getDisplayName()));
 
-    WireMock.resetAllRequests();
+    wireMockServer.resetAll();
 
     Mockito.reset(mockAuditService);
     auditRequests.clear();
@@ -287,7 +285,6 @@ public class BaseMockIT {
                     SerializationUtils.clone((AuditLogEventRequest) invocation.getArguments()[0])))
         .when(mockAuditService)
         .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
-    WireMock.resetAllRequests();
   }
 
   @AfterEach
@@ -304,10 +301,11 @@ public class BaseMockIT {
   }
 
   protected void verifyTokenIntrospectRequest(int times) {
-    verify(
-        times,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            times,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   protected MimeMessage verifyMimeMessage(

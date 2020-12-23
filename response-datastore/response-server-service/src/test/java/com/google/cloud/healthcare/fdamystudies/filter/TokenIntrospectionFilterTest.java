@@ -4,12 +4,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import java.util.Collections;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -19,11 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class TokenIntrospectionFilterTest extends BaseMockIT {
-
-  @BeforeEach
-  public void setUp() {
-    WireMock.resetAllRequests();
-  }
 
   @ParameterizedTest
   @EnumSource(

@@ -6,8 +6,8 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.6.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <version>2.2.6.RELEASE</version>
+    <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>UserManagementServiceBundle</artifactId>
@@ -19,7 +19,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
-
     <sonar.coverage.exclusions>**/*</sonar.coverage.exclusions>
     <junit-jupiter.version>5.5.2</junit-jupiter.version>
     <wiremock.version>2.26.3</wiremock.version>
@@ -44,10 +43,6 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-rest</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
     <dependency>
@@ -59,20 +54,18 @@
       <artifactId>spring-boot-starter-web</artifactId>
       <exclusions>
         <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-logging</artifactId>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-to-slf4j</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-log4j2</artifactId>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
-    <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.12.0</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -103,6 +96,20 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.vaadin.external.google</groupId>
+          <artifactId>android-json</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -123,7 +130,6 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.9</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
     <dependency>
@@ -135,7 +141,6 @@
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
-      <version>2.8.5</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
@@ -178,7 +183,6 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -195,16 +199,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-runner</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -226,17 +220,6 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.wildfly.plugins</groupId>
-        <artifactId>wildfly-maven-plugin</artifactId>
-        <version>1.0.2.Final</version>
-        <configuration>
-          <hostname>${hostname}</hostname>
-          <port>9990</port>
-          <username>admin</username>
-          <password>jbo55@dmin</password>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.openclover</groupId>

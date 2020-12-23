@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ACCOUNT_LOCKED;
 import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
@@ -53,7 +52,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
@@ -123,8 +121,6 @@ public class UserControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
-    WireMock.resetAllRequests();
-
     // create a user
     UserResponse userResponse = userService.createUser(newUserRequest());
     userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
@@ -150,10 +146,11 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:4200"))
         .andReturn();
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(INVALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(INVALID_TOKEN)));
 
     verifyAuditEventCall(CommonAuditEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED);
   }
@@ -182,10 +179,11 @@ public class UserControllerTest extends BaseMockIT {
     String expectedResponse = readJsonFile("/response/create_user_bad_request.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @ParameterizedTest
@@ -218,10 +216,11 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations[0].path").value("password"))
         .andExpect(jsonPath("$.violations[0].message").value(PASSWORD_REGEX_MESSAGE));
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
@@ -259,10 +258,11 @@ public class UserControllerTest extends BaseMockIT {
     assertTrue(userInfo.get(PASSWORD).get(EXPIRE_TIMESTAMP).isLong());
     assertTrue(userInfo.get(PASSWORD_HISTORY).isArray());
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
@@ -285,10 +285,11 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.userId").doesNotExist())
         .andExpect(jsonPath("$.error_description").value(ErrorCode.EMAIL_EXISTS.getDescription()));
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @ParameterizedTest
@@ -325,10 +326,11 @@ public class UserControllerTest extends BaseMockIT {
     String expectedResponse = readJsonFile("/response/password_regex_match_failed.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
@@ -358,10 +360,11 @@ public class UserControllerTest extends BaseMockIT {
         readJsonFile("/response/change_password_bad_request_response_from_annotations.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
@@ -391,10 +394,11 @@ public class UserControllerTest extends BaseMockIT {
             jsonPath("$.error_description")
                 .value(ErrorCode.CURRENT_PASSWORD_INVALID.getDescription()));
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
@@ -430,10 +434,11 @@ public class UserControllerTest extends BaseMockIT {
             jsonPath("$.error_description")
                 .value(ErrorCode.TEMP_PASSWORD_INCORRECT.getDescription()));
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
@@ -464,10 +469,11 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
@@ -512,10 +518,11 @@ public class UserControllerTest extends BaseMockIT {
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
@@ -558,10 +565,11 @@ public class UserControllerTest extends BaseMockIT {
             jsonPath("$.error_description")
                 .value(ErrorCode.ENFORCE_PASSWORD_HISTORY.getDescription()));
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PASSWORD_CHANGE_FAILED.getEventCode(), auditRequest);
@@ -863,10 +871,11 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()));
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/oauth2/introspect"))
+                .withRequestBody(new ContainsPattern(VALID_TOKEN)));
 
     // Step-3 verify updated email
     userEntity = repository.findByUserId(userEntity.getUserId()).get();

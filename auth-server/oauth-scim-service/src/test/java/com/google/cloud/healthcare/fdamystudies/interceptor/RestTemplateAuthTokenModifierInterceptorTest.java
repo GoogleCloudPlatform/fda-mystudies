@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.interceptor;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -31,7 +30,7 @@ public class RestTemplateAuthTokenModifierInterceptorTest extends BaseMockIT {
 
   @Test
   public void shouldReturnSuccess() {
-    String url = "http://localhost:8080/restTemplateAuthTokenModifierInterceptor";
+    String url = "http://localhost:54804/restTemplateAuthTokenModifierInterceptor";
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", INVALID_BEARER_TOKEN);
@@ -42,9 +41,10 @@ public class RestTemplateAuthTokenModifierInterceptorTest extends BaseMockIT {
         restTemplate.exchange(url, HttpMethod.GET, requestEntity, Void.class);
     assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 
-    verify(
-        1,
-        getRequestedFor(urlEqualTo("/restTemplateAuthTokenModifierInterceptor"))
-            .withHeader("Authorization", equalTo(VALID_BEARER_TOKEN)));
+    getWireMockServer()
+        .verify(
+            1,
+            getRequestedFor(urlEqualTo("/restTemplateAuthTokenModifierInterceptor"))
+                .withHeader("Authorization", equalTo(VALID_BEARER_TOKEN)));
   }
 }

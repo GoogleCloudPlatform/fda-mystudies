@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_ALREADY_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
@@ -19,7 +18,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.REG
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_SENT;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -126,10 +125,11 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isInternalServerError());
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/users"))
-            .withRequestBody(new ContainsPattern(Constants.INVALID_PASSWORD)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/auth-server/users"))
+                .withRequestBody(new ContainsPattern(Constants.INVALID_PASSWORD)));
   }
 
   @Test
@@ -196,10 +196,11 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     verifyMimeMessage(Constants.EMAIL, appConfig.getFromEmail(), subject, body);
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/auth-server/users"))
-            .withRequestBody(new ContainsPattern(Constants.PASSWORD)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(urlEqualTo("/auth-server/users"))
+                .withRequestBody(new ContainsPattern(Constants.PASSWORD)));
 
     Optional<UserAppDetailsEntity> optUserAppDetails =
         userAppDetailsRepository.findByUserDetails(userDetails);

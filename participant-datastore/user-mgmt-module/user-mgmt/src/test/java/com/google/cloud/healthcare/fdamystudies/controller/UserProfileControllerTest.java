@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
@@ -23,9 +22,9 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VER
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -300,12 +299,14 @@ public class UserProfileControllerTest extends BaseMockIT {
             .equals(OnboardingStatus.DISABLED.getCode()));
     assertNotNull(participant.get().getParticipantRegistrySite().getDisabledDate());
 
-    verify(1, deleteRequestedFor(urlEqualTo("/auth-server/users/" + Constants.USER_ID)));
-    verify(
-        1,
-        postRequestedFor(
-            urlEqualTo(
-                "/response-datastore/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true")));
+    getWireMockServer()
+        .verify(1, deleteRequestedFor(urlEqualTo("/auth-server/users/" + Constants.USER_ID)));
+    getWireMockServer()
+        .verify(
+            1,
+            postRequestedFor(
+                urlEqualTo(
+                    "/response-datastore/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);

@@ -30,7 +30,7 @@ public class AuthenticationEntryPointImpl extends BasicAuthenticationEntryPoint 
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     // RealmName appears in the login window (Firefox).
     setRealmName("participant-enroll-datastore");
     super.afterPropertiesSet();

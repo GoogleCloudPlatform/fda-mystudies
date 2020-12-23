@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA;
@@ -154,19 +153,21 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
             activityCollectionNameCaptor.capture(),
             dataToStoreCaptor.capture());
 
-    verify(
-        1,
-        getRequestedFor(
-            urlEqualTo(
-                "/participant-enroll-datastore/participantInfo?studyId=ASignature01&participantId="
-                    + participantBo.getParticipantId())));
+    getWireMockServer()
+        .verify(
+            1,
+            getRequestedFor(
+                urlEqualTo(
+                    "/participant-enroll-datastore/participantInfo?studyId=ASignature01&participantId="
+                        + participantBo.getParticipantId())));
 
-    verify(
-        1,
-        getRequestedFor(
-            urlEqualTo(
-                "/study-datastore/activity?studyId=ASignature01"
-                    + "&activityId=Activity&activityVersion=1.0")));
+    getWireMockServer()
+        .verify(
+            1,
+            getRequestedFor(
+                urlEqualTo(
+                    "/study-datastore/activity?studyId=ASignature01"
+                        + "&activityId=Activity&activityVersion=1.0")));
 
     // Step-4: assert argument capture
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());

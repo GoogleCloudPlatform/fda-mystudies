@@ -11,4 +11,9 @@ public class ErrorCodeException extends RuntimeException {
   public ErrorCodeException(ErrorCode errorCode) {
     this.errorCode = errorCode;
   }
+
+  @Override
+  public String getMessage() {
+    return errorCode.getCode() + ": " + errorCode.getDescription();
+  }
 }

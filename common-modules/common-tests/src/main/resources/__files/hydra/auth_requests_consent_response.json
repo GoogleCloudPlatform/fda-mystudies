@@ -13,8 +13,8 @@
     "client_id": "oauth-scim-client-id",
     "client_name": "oauth-scim-client",
     "redirect_uris": [
-      "http://localhost:8002/auth-server/login",
-      "http://localhost:8002/auth-server/consent",
+      "http://localhost:54904/auth-server/login",
+      "http://localhost:54904/auth-server/consent",
       "https://35.222.67.4:5555/callback"
     ],
     "grant_types": [

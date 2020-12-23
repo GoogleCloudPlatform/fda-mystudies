@@ -13,9 +13,9 @@ import java.net.URL;
 
 public enum ApiEndpoint {
   UPDATE_ELIGIBILITY_CONSENT(
-      "http://localhost:8080/participant-consent-datastore/updateEligibilityConsentStatus"),
+      "http://localhost:54904/participant-consent-datastore/updateEligibilityConsentStatus"),
 
-  CONSENT_DOCUMENT("http://localhost:8080/participant-consent-datastore/consentDocument");
+  CONSENT_DOCUMENT("http://localhost:54904/participant-consent-datastore/consentDocument");
 
   private String url;
 
