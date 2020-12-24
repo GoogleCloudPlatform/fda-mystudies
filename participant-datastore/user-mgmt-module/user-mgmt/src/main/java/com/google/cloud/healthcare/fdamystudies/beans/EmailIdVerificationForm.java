@@ -20,5 +20,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EmailIdVerificationForm {
   @NotBlank private String code;
-  private String emailId;
+  @NotBlank private String emailId;
 }

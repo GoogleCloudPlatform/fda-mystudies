@@ -24,5 +24,5 @@ public class SettingsRespBean {
   private Boolean touchId;
   private Boolean passcode;
   private String reminderLeadTime;
-  private String locale = "";
+  private String locale;
 }
