@@ -16,8 +16,6 @@
         <android.support.v7.widget.CardView
             android:id="@+id/studyImglayout"
             app:cardCornerRadius="20dp"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardUseCompatPadding="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -27,8 +25,8 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/studyImg"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
                     android:background="@color/colorSecondaryBg"
                     android:scaleType="centerCrop" />
 
@@ -121,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/prg_rel"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:paddingRight="18dp">
 
                 <RelativeLayout
@@ -158,7 +156,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/inside_secd_box_rel"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="10dp">
 
                     <RelativeLayout
                         android:id="@+id/progresslayout"
