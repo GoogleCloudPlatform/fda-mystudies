@@ -688,10 +688,9 @@ public class LoginControllerTest extends BaseMockIT {
     String subject = getMailAccountLockedSubject();
     String body =
         String.join(
-            "<br/>",
             "This is to inform you that, as a security measure, your admin user "
-                + "account for the MyStudies Participant Manager portal"
-                + "<br/>has been temporarily locked");
+                + "account for the MyStudies Participant Manager portal "
+                + "has been temporarily locked");
 
     MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
