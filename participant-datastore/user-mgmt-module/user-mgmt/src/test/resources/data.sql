@@ -22,4 +22,4 @@ INSERT INTO `app_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_
 
 INSERT INTO `study_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `study_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:43:33', '0', '1', '1', '1', '1');
 
-INSERT INTO `sites_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `study_id`, `site_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:43:33', '0', '1', '1', '1', '1');
+INSERT INTO `sites_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `study_id`, `site_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:43:33', '1', '0', '1', '1', '1', '1');
