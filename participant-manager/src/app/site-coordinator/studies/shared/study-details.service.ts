@@ -30,6 +30,7 @@ export class StudyDetailsService {
       }/studies/${encodeURIComponent(studyId)}/participants`,
       {
         params: {
+          excludeParticipantStudyStatus: ['notEligible', 'yetToEnroll'],
           offset: offset.toString(),
           limit: limit.toString(),
           searchTerm: searchTerm,
