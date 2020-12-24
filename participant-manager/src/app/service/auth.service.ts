@@ -5,7 +5,7 @@ import {User} from '../entity/user';
 import {EntityService} from './entity.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {AccessToken} from '../entity/access-token';
-import {environment} from 'src/environments/environment';
+import {environment} from '@environment';
 import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
 import getPkce from 'oauth-pkce';
