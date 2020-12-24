@@ -27,7 +27,7 @@ const successMessages = {
   MSG_0025: 'User record updated',
   MSG_0026: 'Your account is now set up',
   MSG_0027: 'Admin details fetched successfully',
-  MSG_0028: 'User deactivated successfully',
+  MSG_0028: 'Admin user deactivated successfully',
   MSG_0029: 'Admin user reactivated',
   MSG_0030: 'Location decommisioned',
   MSG_0031: 'Location activated',
