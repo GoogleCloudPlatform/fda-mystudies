@@ -24,6 +24,8 @@ public interface StudyInfo {
 
   String getType();
 
+  String getStatus();
+
   Timestamp getCreatedTimestamp();
 
   /** @return 0- site level permission only, 1- study and site level permissions */
