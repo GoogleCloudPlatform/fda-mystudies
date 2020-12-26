@@ -145,7 +145,7 @@ Group name | Description
     ```
     . ./set_env_var.sh
     ```
-         ```bash
+bash
     export GIT_ROOT=</path/to/your/local/repo/root>
     export ENGINE_CONFIG=${GIT_ROOT}/deployment/deployment.hcl
     export MYSTUDIES_TEMPLATE=${GIT_ROOT}/deployment/mystudies.hcl
@@ -153,7 +153,6 @@ Group name | Description
     export ENV=<your_deployment_environment>
     export LOCATION=<your_deployment_location>
     export DOMAIN=${PREFIX}.<your_deployment_domain>
-         ```
 1. Authenticate as a user with the permissions described above (this deployment assumes gcloud and Terraform commands are made as a user, rather than a service account)
     - Update your [application default credentials](https://cloud.google.com/docs/authentication/production), for example you could run `gcloud auth application-default login` (when using a Google Compute Engine VM you must update the application default credentials, otherwise requests will continue to be made with its default service account)
     - Remember to run `gcloud auth revoke` to log your user account out once your deployment is complete
@@ -248,7 +247,7 @@ Group name | Description
          ```
 1. [Enable](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com) the [Cloud SQL Admin API](https://cloud.google.com/sql/docs/mysql/admin-api) for your `{PREFIX}-{ENV}-apps` project
 
-### Deploy your application infrastructure
+### Configure and deploy your applications
 
 1. Make a [request](https://cloud.google.com/compute/quotas#requesting_additional_quota) to increase the [Global Compute Engine API Backend Services quota]((https://console.cloud.google.com/iam-admin/quotas/details;servicem=compute.googleapis.com;metricm=compute.googleapis.com%2Fbackend_services;limitIdm=1%2F%7Bproject%7D)) for your `{PREFIX}-{ENV}-apps` project to 20 (if it is not already set at, or beyond, this value).
 1. Enable CICD for the application directories of your cloned GitHub repository so that changes you make to the application code will automatically build the application containers for your deployment
@@ -262,9 +261,6 @@ Group name | Description
          git push origin enable-apps-CICD
          ```
     - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
-
-### Configure and deploy your applications
-
 1. Update the Kubernetes and application configuration files with the values specific to your deployment
     -  Replace the `<PREFIX>`, `<ENV>` and `<LOCATION>` values for each `tf-deployment.yaml` in your repo, for example:
          ```bash
@@ -301,28 +297,28 @@ Group name | Description
     - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to build your container images, after which they will be available in the Container Registry of your apps project at `http://gcr.io/{PREFIX}-{ENV}-apps` (this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `{PREFIX}-{ENV}-apps` project)
 1. Open [Secret Manager](https://console.cloud.google.com/security/secret-manager) for your `{PREFIX}-{ENV}-secrets` project and fill in the values for the secrets with prefix “manual-”
 
-Manually set secret | Description | When to set
---------------------------|-------------------|----------------------
-manual-mystudies-email-address | The login of the email account you want MyStudies to use to send system-generated emails | Set this value now or enter a placeholder
-manual-mystudies-email-password | The password for that email account | Set this value now or enter a placeholder
-manual-mystudies-contact-email-address | The email address that the in-app contact and feedback forms will send messages to | Set this value now or enter a placeholder
-manual-mystudies-from-email-address | The return email address that is shown is system-generated messages (you may want to use a no-reply@ address) | Set this value now or enter a placeholder
-manual-mystudies-from-email-domain | The domain of the above email address (just the value after “@”) | Set this value now or enter a placeholder
-manual-mystudies-smtp-hostname | The hostname for your email account’s SMTP server (for example, smtp.gmail.com) | Set this value now or enter a placeholder
-manual-mystudies-smtp-use-ip-allowlist | Typically ‘False’; if ‘True’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value now or enter a placeholder
-manual-log-path | The path to a directory within each application’s container where your logs will be written (for example `/logs`) | Set this value now
-manual-org-name | The name of your organization that is displayed to users, for example ‘Sincerely, the <manual-org-name> support team’ | Set this value now
-manual-terms-url | URL for a terms and conditions page that the applications will link to | Set this value now or enter a placeholder
-manual-privacy-url | URL for a privacy policy page that the applications will link to | Set this value now or enter a placeholder
-manual-mobile-app-appid | The value of the `App ID` that you will configure on the Settings page of the [`Study builder`](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder)
-manual-android-bundle-id | The value of `applicationId` that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only)
-manual-fcm-api-url | # URL of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
+    Manually set secret | Description | When to set
+    --------------------------|-------------------|----------------------
+    `manual-mystudies-email-address` | The login of the email account you want MyStudies to use to send system-generated emails | Set this value now or enter a placeholder
+    `manual-mystudies-email-password` | The password for that email account | Set this value now or enter a placeholder
+    `manual-mystudies-contact-email-address` | The email address that the in-app contact and feedback forms will send messages to | Set this value now or enter a placeholder
+    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (you may want to use a no-reply@ address) | Set this value now or enter a placeholder
+    `manual-mystudies-from-email-domain` | The domain of the above email address (just the value after “@”) | Set this value now or enter a placeholder
+    `manual-mystudies-smtp-hostname` | The hostname for your email account’s SMTP server (for example, smtp.gmail.com) | Set this value now or enter a placeholder
+    `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘False’; if ‘True’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value now or enter a placeholder
+    `manual-log-path` | The path to a directory within each application’s container where your logs will be written (for example `/logs`) | Set this value now
+    `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the <manual-org-name> support team’ | Set this value now
+    `manual-terms-url` | URL for a terms and conditions page that the applications will link to | Set this value now or enter a placeholder
+    `manual-privacy-url` | URL for a privacy policy page that the applications will link to | Set this value now or enter a placeholder
+    `manual-mobile-app-appid` | The value of the `App ID` that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder)
+    `manual-android-bundle-id` | The value of `applicationId` that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only)
+    `manual-fcm-api-url` | URL of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
 manual-android-server-key | The Firebase Cloud Messaging server key that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
-manual-android-deeplink-url | The URL to redirect to after Android login (for example, app://{PREFIX}.{DOMAIN}/mystudies) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
-manual-ios-bundle-id | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
-manual-ios-certificate | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
-manual-ios-certificate-password | The value of the password for the `.p12` certificate (necessary if your certificate is encrypted - otherwise leave empty) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
-manual-ios-deeplink-url | The URL to redirect to after iOS login (for example, app://{PREFIX}.{DOMAIN}/mystudies) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
+    `manual-android-deeplink-url` | The URL to redirect to after Android login (for example, `app://{PREFIX}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
+    `manual-ios-bundle-id` | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
+    `manual-ios-certificate` | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
+    `manual-ios-certificate-password` | The value of the password for the `.p12` certificate (necessary if your certificate is encrypted - otherwise leave empty) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
+    `manual-ios-deeplink-url` | The URL to redirect to after iOS login (for example, `app://{PREFIX}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
 
 1. Finish Kubernetes cluster configuration and deployment
     - Configure the remaining resources with Terraform, for example: 
@@ -380,7 +376,7 @@ manual-ios-deeplink-url | The URL to redirect to after iOS login (for example, a
     - Update Firewalls - as of now there is a known issue with Firewalls in ingress-gce (references [kubernetes/ingress-gce#485](https://github.com/kubernetes/ingress-gce/issues/485) and [kubernetes/ingress-gce#584](https://github.com/kubernetes/ingress-gce/issues/584))
         - Run `kubectl describe ingress $PREFIX-$ENV`
         - Look at the suggested commands under "Events", in the form of "Firewall
-        change required by network admin: `<gcloud command>`"
+        change required by network admin: <gcloud command>"
         - Run each of the suggested commands
 1. Check the [Kubernetes dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your deployment
     - tbd
