@@ -94,8 +94,7 @@ The deployment process takes the following approach:
 Group name | Description
 ------------------|----------------
 `{PREFIX}-{ENV}-folder-admins@{DOMAIN}` | Members of this group have the [resourcemanager.folderAdmin](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) role for your deployment’s folder (for example, a deployment with prefix `mystudies`, environment `prod` and domain `example.com`, would require a group named `mystudies-prod-folder-admins@example.com`)
-`{PREFIX}-{ENV}-devops-owners@{DOMAIN}` | Members of this group have owners access
-        for the devops project, which is required to make changes to the CICD pipeline and Terraform state
+`{PREFIX}-{ENV}-devops-owners@{DOMAIN}` | Members of this group have owners access for the devops project, which is required to make changes to the CICD pipeline and Terraform state
 `{PREFIX}-{ENV}-auditors@{DOMAIN}` | Members of this group have the [iam.securityReviewer](https://cloud.google.com/iam/docs/understanding-roles#iam-roles) role for your deployment’s folder, and the bigquery.user and storage.objectViewer roles for your audit log project
 `{PREFIX}-{ENV}-cicd-viewers@{DOMAIN}` | Members of this group can view CICD results in Cloud Build, for example the results of the `terraform plan` presubmit and `terraform apply` postsubmit
 `{PREFIX}-{ENV}-bastion-accessors@{DOMAIN}` | Members of this group have permission to access the [bastion host](https://cloud.google.com/solutions/connecting-securely#bastion) project, which provides access to the private Cloud SQL instance
@@ -106,40 +105,43 @@ Group name | Description
 
 1. You can work in an existing environment, or you can configure a new environment by [creating](https://cloud.google.com/compute/docs/instances/create-start-instance) a VM instance in the Google Cloud project of your choice
 1. Confirm you have the following dependencies installed and added to your `$PATH`:
-    - [Install](https://cloud.google.com/sdk/docs/install) the Google Cloud command line tool `gcloud` (already installed if using a Google Compute Engine VM), for example: `apt-get install google-cloud-sdk`
+    - [Install](https://cloud.google.com/sdk/docs/install) the Google Cloud command line tool `gcloud` (already installed if using a Google Compute Engine VM), for example:
+         ```
+apt-get install google-cloud-sdk
+         ```
     - [Install](https://cloud.google.com/storage/docs/gsutil_install) the Cloud Storage command line tool `gsutil` (already installed if using a Google Compute Engine VM)
     - [Install](https://kubernetes.io/docs/tasks/tools/install-kubectl) the Kubernetes command line tool `kubectl`, for example:
-```bash
+         ```bash
 sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update
 sudo apt-get install -y kubectl
-```
+         ```
     - Install [`Terraform 0.12.29`](https://learn.hashicorp.com/tutorials/terraform/install-cli), for example:
-```shell
+         ```shell
 sudo apt-get install software-properties-common
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 sudo apt-get update && sudo apt-get install terraform=0.12.29
-```
+         ```
     - Install [`Go 1.14+`](https://golang.org/doc/install), for example:
-```shell
+         ```shell
 sudo apt install wget
 wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
-```
+         ```
     - Install [`Terraform Engine`](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
-```shell
+         ```shell
 VERSION=v0.4.0
 sudo wget -O /usr/local/bin/tfengine https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64
 sudo chmod +x /usr/local/bin/tfengine
-```
+         ```
 1. [Duplicate](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/duplicating-a-repository) the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies), then clone locally
 1. Update [/deployment/deployment.hcl](/deployment/deployment.hcl) with the values for your deployment
 1. Update [`/deployment/scripts/set_env_var.sh`](/deployment/scripts/set_env_var.sh) with the values for deployment, then use the script to set your environment variables, for example: `. set_env_var.sh`
-    ```bash
+         ```bash
     export GIT_ROOT=</path/to/your/local/repo/root>
     export ENGINE_CONFIG=${GIT_ROOT}/deployment/deployment.hcl
     export MYSTUDIES_TEMPLATE=${GIT_ROOT}/deployment/mystudies.hcl
@@ -147,7 +149,7 @@ sudo chmod +x /usr/local/bin/tfengine
     export ENV=<your_deployment_environment>
     export LOCATION=<your_deployment_location>
     export DOMAIN=${PREFIX}.<your_deployment_domain>
-    ```
+         ```
 1. Authenticate as a user with the permissions described above (this deployment assumes gcloud and Terraform commands are made as a user, rather than a service account)
     - Update your [application default credentials](https://cloud.google.com/docs/authentication/production), for example you could run `gcloud auth application-default login` (when using a Google Compute Engine VM you must update the application default credentials, otherwise requests will continue to be made with its default service account)
     - Remember to run `gcloud auth revoke` to log your user account out once your deployment is complete
@@ -155,42 +157,42 @@ sudo chmod +x /usr/local/bin/tfengine
 ### Set up your CICD pipelines
 
 1. Generate your Terraform configuration files
-    -     Set the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `false`
-    -    Execute the `tfengine` command to generate the configs (by default, CICD
+    - Set the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `false`
+    - Execute the `tfengine` command to generate the configs (by default, CICD
     will look for Terraform configs under the `deployment/terraform/` directory in the
     GitHub repo, so set the `--output_path` to point to the `deployment/terraform/`
     directory inside the local root of your GitHub repository), for example:
-    ```bash
+        ```bash
     tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
-    ```
+         ```
 1. Create the `devops` project and Terraform state bucket (if this step fails confirm you have updated your application default credentials and that the required version of Terraform installed), for example:
-    ```bash
+        ```bash
     cd $GIT_ROOT/deployment/terraform/devops
     terraform init
     terraform apply
-    ```
+        ```
 1. Backup the state of the `devops` project to the newly created state bucket by setting the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl to `true` and regenerating the Terraform configs, for example:
-    ```bash
+         ```bash
     tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     cd $GIT_ROOT/deployment/terraform/devops
     terraform init -force-copy
-    ```
+         ```
 1. Open [Cloud Build](https://console.cloud.google.com/cloud-build/triggers) in your new `devops` project and [connect](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app) your cloned GitHub repository (skip adding triggers as Terraform will create them in the next step)
 1. Create the CICD pipeline for your deployment (this will create the Cloud Builder triggers that will run whenever a pull request containing changes to files in `$GIT_ROOT/deployment/terraform/` is raised against the GitHub branch that you specified in [`deployment.hcl`](/deployment/deployment.hcl)), for example:
-    ```bash
+         ```bash
     cd $GIT_ROOT/deployment/terraform/cicd
     terraform init
     terraform apply
-    ```
+         ```
 ### Deploy your platform infrastructure
 
 1. Commit your local git working directory (which now represents your desired infrastructure state) to a new branch in your cloned FDA MyStudies repository, for example using:
-```bash
+     ```bash
 git checkout -b initial-deployment
 git add $GIT_ROOT/deployment/terraform
 git commit -m "Perform initial deployment"
 git push origin initial-deployment
-```
+     ```
 1. Trigger Cloud Build to run the Terraform pre-submits by using this new branch to [create](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) a pull request against the branch you specified in [`deployment.hcl`](/deployment/deployment.hcl) (you can view the status of your pre-submit checks and re-run jobs as necessary in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Once your pre-submit checks have completed successfully, and you have received code review approval, merge your pull request into the main branch to trigger the `terraform apply` post-submit operation (this operation may take up to 45 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 
