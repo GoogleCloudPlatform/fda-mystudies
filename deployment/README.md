@@ -118,30 +118,33 @@ Group name | Description
          sudo apt-get update
          sudo apt-get install -y kubectl
          ```
-    - Install [`Terraform 0.12.29`](https://learn.hashicorp.com/tutorials/terraform/install-cli), for example:
+    - Install [Terraform 0.12.29](https://learn.hashicorp.com/tutorials/terraform/install-cli), for example:
          ```shell
          sudo apt-get install software-properties-common
          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
          sudo apt-get update && sudo apt-get install terraform=0.12.29
          ```
-    - Install [`Go 1.14+`](https://golang.org/doc/install), for example:
+    - Install [Go 1.14+](https://golang.org/doc/install), for example:
          ```shell
          sudo apt install wget
          wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
          sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz
          export PATH=$PATH:/usr/local/go/bin
          ```
-    - Install [`Terraform Engine`](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
+    - Install [Terraform Engine](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
          ```shell
          VERSION=v0.4.0
          sudo wget -O /usr/local/bin/tfengine                             
          https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64
          sudo chmod +x /usr/local/bin/tfengine
          ```
-1. [Duplicate](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/duplicating-a-repository) the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies), then clone locally
-1. Update [/deployment/deployment.hcl](/deployment/deployment.hcl) with the values for your deployment
-1. Update [`/deployment/scripts/set_env_var.sh`](/deployment/scripts/set_env_var.sh) with the values for deployment, then use the script to set your environment variables, for example: `. set_env_var.sh`
+1. [Duplicate](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/duplicating-a-repository) the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies), then clone it locally
+1. Update [`/deployment/deployment.hcl`](/deployment/deployment.hcl) with the values for your deployment
+1. Update [`/deployment/scripts/set_env_var.sh`](/deployment/scripts/set_env_var.sh) for your deployment, then use the script to set your environment variables, for example:
+    ```
+    . ./set_env_var.sh
+    ```
          ```bash
     export GIT_ROOT=</path/to/your/local/repo/root>
     export ENGINE_CONFIG=${GIT_ROOT}/deployment/deployment.hcl
@@ -166,13 +169,13 @@ Group name | Description
          ```bash
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          ```
-1. Create the `devops` project and Terraform state bucket (if this step fails confirm you have updated your application default credentials and that the required version of Terraform installed), for example:
+1. Create the `devops` project and Terraform state bucket (if this step fails, confirm you have updated your application default credentials and that the required version of Terraform is installed), for example:
     ```bash
     cd $GIT_ROOT/deployment/terraform/devops
     terraform init
     terraform apply
     ```
-1. Backup the state of the `devops` project to the newly created state bucket by setting the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl to `true` and regenerating the Terraform configs, for example:
+1. Backup the state of the `devops` project to the newly created state bucket by setting the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `true` and regenerating the Terraform configs, for example:
     ```bash
     tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     cd $GIT_ROOT/deployment/terraform/devops
@@ -194,14 +197,14 @@ Group name | Description
     git commit -m "Perform initial deployment"
     git push origin initial-deployment
     ```
-1. Trigger Cloud Build to run the Terraform pre-submits by using this new branch to [create](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) a pull request against the branch you specified in [`deployment.hcl`](/deployment/deployment.hcl) (you can view the status of your pre-submit checks and re-run jobs as necessary in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
+1. Trigger Cloud Build to run the Terraform pre-submit checks by using this new branch to [create](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) a pull request against the branch you specified in [`deployment.hcl`](/deployment/deployment.hcl) (you can view the status of your pre-submit checks and re-run jobs as necessary in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Once your pre-submit checks have completed successfully, and you have received code review approval, merge your pull request into the main branch to trigger the `terraform apply` post-submit operation (this operation may take up to 45 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 
-> If your pre-submit checks or post-submit `terraform apply` fail with an error related to billing accounts, you may not have the [quota](https://support.google.com/cloud/answer/6330231?hl=en) necessary to attach all of your projects to the specified billing account. You can request additional quota [here](https://support.google.com/code/contact/billing_quota_increase).
+    > Note: If your pre-submit checks or post-submit `terraform apply` fail with an error related to billing accounts, you may not have the [quota](https://support.google.com/cloud/answer/6330231?hl=en) necessary to attach all of your projects to the specified billing account. You may need to [request additional quota](https://support.google.com/code/contact/billing_quota_increase).
 
 ### Configure your deployment’s databases
 
-1. [Create](https://console.cloud.google.com/datastore/) a Cloud Firestore database operating in [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) in your `{PREFIX}-{ENV}-firebase` project
+1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project
 1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
     - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
@@ -211,7 +214,7 @@ Group name | Description
          git commit -m "Configure databases"
          git push origin database-configuration
          ```
-    - Once your pull request pre-submits have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 20 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
+    - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 20 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Configure the permissions of your SQL script bucket so that your Cloud SQL instance can import the necessary initialization scripts
     - Uncomment the blocks for Steps 6 in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
@@ -247,8 +250,8 @@ Group name | Description
 
 ### Deploy your application infrastructure
 
-1. Make a [request](https://cloud.google.com/compute/quotas#requesting_additional_quota) to increase the [Global Compute Engine API Backend Services quota]((https://console.cloud.google.com/iam-admin/quotas/details;servicem=compute.googleapis.com;metricm=compute.googleapis.com%2Fbackend_services;limitIdm=1%2F%7Bproject%7D)) for your `{PREFIX}-{ENV}-apps` project to 20 (if it is not already set at or beyond this value).
-1. Enable CICD for the application directories so that changes you make to the application code will automatically build the application containers for your deployment
+1. Make a [request](https://cloud.google.com/compute/quotas#requesting_additional_quota) to increase the [Global Compute Engine API Backend Services quota]((https://console.cloud.google.com/iam-admin/quotas/details;servicem=compute.googleapis.com;metricm=compute.googleapis.com%2Fbackend_services;limitIdm=1%2F%7Bproject%7D)) for your `{PREFIX}-{ENV}-apps` project to 20 (if it is not already set at, or beyond, this value).
+1. Enable CICD for the application directories of your cloned GitHub repository so that changes you make to the application code will automatically build the application containers for your deployment
     - Enable [Cloud Build](https://console.cloud.google.com/cloud-build/triggers) in your `{PREFIX}-{ENV}-apps` project and [connect](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app) your cloned GitHub repository (skip adding triggers as Terraform will create them in the next step)
     - Uncomment  the Cloud Build triggers portion of the apps project in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
@@ -258,14 +261,16 @@ Group name | Description
          git commit -m "Enable CICD for applications"
          git push origin enable-apps-CICD
          ```
-    - Once your pull request pre-submits have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
+    - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 
 ### Configure and deploy your applications
 
 1. Update the Kubernetes and application configuration files with the values specific to your deployment
     -  Replace the `<PREFIX>`, `<ENV>` and `<LOCATION>` values for each `tf-deployment.yaml` in your repo, for example:
          ```bash
-         find $GIT_ROOT -name 'tf-deployment.yaml' -exec sed -e 's/<PREFIX>-<ENV>/'$PREFIX'-'$ENV'/g' -e 's/<LOCATION>/'$LOCATION'/g' -i.backup '{}' \;
+         find $GIT_ROOT -name 'tf-deployment.yaml' \
+         -exec sed -e 's/<PREFIX>-<ENV>/'$PREFIX'-'$ENV'/g' \
+         -e 's/<LOCATION>/'$LOCATION'/g' -i.backup '{}' \;
          ```
     -  Replace the `<PREFIX>`, `<ENV>` and `<DOMAIN>` values in [`/deployment/kubernetes/cert.yaml`](/deployment/kubernetes/cert.yaml) and [`/deployment/kubernetes/ingress.yaml`](/deployment/kubernetes/ingress.yaml), for example:
          ```bash
@@ -273,6 +278,7 @@ Group name | Description
          -e 's/<ENV>/'$ENV'/g' \
          -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
          $GIT_ROOT/deployment/kubernetes/cert.yaml
+         
          sed -e 's/<PREFIX>/'$PREFIX'/g' \
          -e 's/<ENV>/'$ENV'/g' \
          -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
@@ -293,9 +299,10 @@ Group name | Description
          git push origin configure-application-properties
          ```
     - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to build your container images, after which they will be available in the Container Registry of your apps project at `http://gcr.io/{PREFIX}-{ENV}-apps` (this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `{PREFIX}-{ENV}-apps` project)
-1. Open [Secret Manager](https://console.cloud.google.com/security/secret-manager) for your `{PREFIX}-{ENV}-secrets` project and fill in the values for the secrets with prefix `manual-`
+1. Open [Secret Manager](https://console.cloud.google.com/security/secret-manager) for your `{PREFIX}-{ENV}-secrets` project and fill in the values for the secrets with prefix “manual-”
+
 Manually set secret | Description | When to set
---------------------------|-------------------|------------------------------------------------------------
+--------------------------|-------------------|----------------------
 manual-mystudies-email-address | The login of the email account you want MyStudies to use to send system-generated emails | Set this value now or enter a placeholder
 manual-mystudies-email-password | The password for that email account | Set this value now or enter a placeholder
 manual-mystudies-contact-email-address | The email address that the in-app contact and feedback forms will send messages to | Set this value now or enter a placeholder
@@ -370,15 +377,15 @@ manual-ios-deeplink-url | The URL to redirect to after iOS login (for example, a
          -f $GIT_ROOT/deployment/kubernetes/cert.yaml \
          -f $GIT_ROOT/deployment/kubernetes/ingress.yaml
          ```
-    - Update Firewalls - as of now there is a known issue with Firewalls in ingress-gce (references [kubernetes/ingress-gce#485](https://github.com/kubernetes/ingress-gce/issues/485) and [kubernetes/ingress-gce#584](https://github.com/kubernetes/ingress-gce/issues/584)
-    - Run `kubectl describe ingress $PREFIX-$ENV`
-    - Look at the suggested commands under "Events", in the form of "Firewall
-        change required by network admin: `<gcloud command>`".
-    - Run each of the suggested commands.
+    - Update Firewalls - as of now there is a known issue with Firewalls in ingress-gce (references [kubernetes/ingress-gce#485](https://github.com/kubernetes/ingress-gce/issues/485) and [kubernetes/ingress-gce#584](https://github.com/kubernetes/ingress-gce/issues/584))
+        - Run `kubectl describe ingress $PREFIX-$ENV`
+        - Look at the suggested commands under "Events", in the form of "Firewall
+        change required by network admin: `<gcloud command>`"
+        - Run each of the suggested commands
 1. Check the [Kubernetes dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your deployment
-    - 
+    - tbd
 1. Configure your initial application credentials
-    - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [register_clients_in_hydra.sh](/deployment/scripts/register_clients_in_hydra.sh), for example:
+    - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [`register_clients_in_hydra.sh`](/deployment/scripts/register_clients_in_hydra.sh), for example:
          ```bash
          $GIT_ROOT/deployment/scripts/register_clients_in_hydra.sh \
          $PREFIX $ENV https://participants.$DOMAIN
@@ -397,10 +404,9 @@ manual-ios-deeplink-url | The URL to redirect to after iOS login (for example, a
 ### Set up mobile applications
 
 1. Build and distribute iOS and Android apps following their individual
-    instructions. See [iOS](../iOS/README.md) and [Android](../Android/README.md) 
-    configuration instructions.
-
-Add XYZ values to the secret manager
+    instructions (see [iOS](../iOS/README.md) and [Android](../Android/README.md) 
+    configuration instructions)
+1. Add XYZ values to the secret manager
    
 ### Step 12: Mobile app setup in participant manager
 
