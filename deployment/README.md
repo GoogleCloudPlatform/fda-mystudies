@@ -82,7 +82,7 @@ The deployment process takes the following approach:
 1. Make sure you have access to a Google Cloud environment that contains an [organization resource](https://cloud.google.com/resource-manager/docs/creating-managing-organization#acquiring) (if you don’t have an organization resource, you can obtain one by [creating](https://support.google.com/a/answer/9983832) a Google Workspace and selecting a domain)
 1. Confirm the billing account that you will use has [quota](https://support.google.com/cloud/answer/6330231?hl=en) for 10 or more projects (newly created billing accounts may default to a 3-5 project quota)
     - You can test how many projects your billing account can support by manually [creating projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects) and [linking them](https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project) to your billing account, if you are able to link 10 projects to your billing account then you can proceed, otherwise [request additional quota](https://support.google.com/code/contact/billing_quota_increase) (don’t forget to unlink the test projects from your billing account, otherwise your quota may be exhausted) 
-1. [Create a folder](https://cloud.google.com/resource-manager/docs/creating-managing-folders) to deploy your FDA MyStudies infrastructure into (or have your Google Cloud administrator do this for you - the [`Folder Admin`](https://cloud.google.com/resource-manager/docs/access-control-folders) role for the organization is required)
+1. [Create a folder](https://cloud.google.com/resource-manager/docs/creating-managing-folders) to deploy your FDA MyStudies infrastructure into (or have your Google Cloud administrator do this for you - the [`resourcemanager.folderAdmin`](https://cloud.google.com/resource-manager/docs/access-control-folders) role for the organization is required)
 1. Confirm you have access to a user account with the following Cloud IAM roles:
     - `roles/resourcemanager.folderAdmin` for the folder you created
     - `roles/resourcemanager.projectCreator` for the folder you created
@@ -95,7 +95,7 @@ Group name | Description
 ------------------|----------------
 `{PREFIX}-{ENV}-folder-admins@{DOMAIN}` | Members of this group have the [resourcemanager.folderAdmin](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) role for your deployment’s folder (for example, a deployment with prefix `mystudies`, environment `prod` and domain `example.com`, would require a group named `mystudies-prod-folder-admins@example.com`)
 `{PREFIX}-{ENV}-devops-owners@{DOMAIN}` | Members of this group have owners access for the devops project, which is required to make changes to the CICD pipeline and Terraform state
-`{PREFIX}-{ENV}-auditors@{DOMAIN}` | Members of this group have the [iam.securityReviewer](https://cloud.google.com/iam/docs/understanding-roles#iam-roles) role for your deployment’s folder, and the bigquery.user and storage.objectViewer roles for your audit log project
+`{PREFIX}-{ENV}-auditors@{DOMAIN}` | Members of this group have the [`iam.securityReviewer`](https://cloud.google.com/iam/docs/understanding-roles#iam-roles) role for your deployment’s folder, and the `bigquery.user` and `storage.objectViewer` roles for your audit log project
 `{PREFIX}-{ENV}-cicd-viewers@{DOMAIN}` | Members of this group can view CICD results in Cloud Build, for example the results of the `terraform plan` presubmit and `terraform apply` postsubmit
 `{PREFIX}-{ENV}-bastion-accessors@{DOMAIN}` | Members of this group have permission to access the [bastion host](https://cloud.google.com/solutions/connecting-securely#bastion) project, which provides access to the private Cloud SQL instance
 `{PREFIX}-{ENV}-project-owners@{DOMAIN}` | Members of this group have owners access to each of the deployment’s projects
@@ -106,37 +106,38 @@ Group name | Description
 1. You can work in an existing environment, or you can configure a new environment by [creating](https://cloud.google.com/compute/docs/instances/create-start-instance) a VM instance in the Google Cloud project of your choice
 1. Confirm you have the following dependencies installed and added to your `$PATH`:
     - [Install](https://cloud.google.com/sdk/docs/install) the Google Cloud command line tool `gcloud` (already installed if using a Google Compute Engine VM), for example:
-         ```
-apt-get install google-cloud-sdk
+         ```bash
+         apt-get install google-cloud-sdk
          ```
     - [Install](https://cloud.google.com/storage/docs/gsutil_install) the Cloud Storage command line tool `gsutil` (already installed if using a Google Compute Engine VM)
     - [Install](https://kubernetes.io/docs/tasks/tools/install-kubectl) the Kubernetes command line tool `kubectl`, for example:
          ```bash
-sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubectl
+         sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+         curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+         echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+         sudo apt-get update
+         sudo apt-get install -y kubectl
          ```
     - Install [`Terraform 0.12.29`](https://learn.hashicorp.com/tutorials/terraform/install-cli), for example:
          ```shell
-sudo apt-get install software-properties-common
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-sudo apt-get update && sudo apt-get install terraform=0.12.29
+         sudo apt-get install software-properties-common
+         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+         sudo apt-get update && sudo apt-get install terraform=0.12.29
          ```
     - Install [`Go 1.14+`](https://golang.org/doc/install), for example:
          ```shell
-sudo apt install wget
-wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz
-export PATH=$PATH:/usr/local/go/bin
+         sudo apt install wget
+         wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
+         sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz
+         export PATH=$PATH:/usr/local/go/bin
          ```
     - Install [`Terraform Engine`](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
          ```shell
-VERSION=v0.4.0
-sudo wget -O /usr/local/bin/tfengine https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64
-sudo chmod +x /usr/local/bin/tfengine
+         VERSION=v0.4.0
+         sudo wget -O /usr/local/bin/tfengine                             
+         https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64
+         sudo chmod +x /usr/local/bin/tfengine
          ```
 1. [Duplicate](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/duplicating-a-repository) the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies), then clone locally
 1. Update [/deployment/deployment.hcl](/deployment/deployment.hcl) with the values for your deployment
@@ -162,37 +163,37 @@ sudo chmod +x /usr/local/bin/tfengine
     will look for Terraform configs under the `deployment/terraform/` directory in the
     GitHub repo, so set the `--output_path` to point to the `deployment/terraform/`
     directory inside the local root of your GitHub repository), for example:
-        ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
+         ```bash
+         tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          ```
 1. Create the `devops` project and Terraform state bucket (if this step fails confirm you have updated your application default credentials and that the required version of Terraform installed), for example:
-        ```bash
+    ```bash
     cd $GIT_ROOT/deployment/terraform/devops
     terraform init
     terraform apply
-        ```
+    ```
 1. Backup the state of the `devops` project to the newly created state bucket by setting the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl to `true` and regenerating the Terraform configs, for example:
-         ```bash
+    ```bash
     tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     cd $GIT_ROOT/deployment/terraform/devops
     terraform init -force-copy
-         ```
+    ```
 1. Open [Cloud Build](https://console.cloud.google.com/cloud-build/triggers) in your new `devops` project and [connect](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app) your cloned GitHub repository (skip adding triggers as Terraform will create them in the next step)
 1. Create the CICD pipeline for your deployment (this will create the Cloud Builder triggers that will run whenever a pull request containing changes to files in `$GIT_ROOT/deployment/terraform/` is raised against the GitHub branch that you specified in [`deployment.hcl`](/deployment/deployment.hcl)), for example:
-         ```bash
+    ```bash
     cd $GIT_ROOT/deployment/terraform/cicd
     terraform init
     terraform apply
-         ```
+    ```
 ### Deploy your platform infrastructure
 
 1. Commit your local git working directory (which now represents your desired infrastructure state) to a new branch in your cloned FDA MyStudies repository, for example using:
-     ```bash
-git checkout -b initial-deployment
-git add $GIT_ROOT/deployment/terraform
-git commit -m "Perform initial deployment"
-git push origin initial-deployment
-     ```
+    ```bash
+    git checkout -b initial-deployment
+    git add $GIT_ROOT/deployment/terraform
+    git commit -m "Perform initial deployment"
+    git push origin initial-deployment
+    ```
 1. Trigger Cloud Build to run the Terraform pre-submits by using this new branch to [create](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) a pull request against the branch you specified in [`deployment.hcl`](/deployment/deployment.hcl) (you can view the status of your pre-submit checks and re-run jobs as necessary in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Once your pre-submit checks have completed successfully, and you have received code review approval, merge your pull request into the main branch to trigger the `terraform apply` post-submit operation (this operation may take up to 45 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 
@@ -203,45 +204,45 @@ git push origin initial-deployment
 1. [Create](https://console.cloud.google.com/datastore/) a Cloud Firestore database operating in [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) in your `{PREFIX}-{ENV}-firebase` project
 1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
     - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
-    ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
-git checkout -b database-configuration
-git add $GIT_ROOT/deployment/terraform
-git commit -m "Configure databases"
-git push origin database-configuration
-```
+         ```bash
+         tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
+         git checkout -b database-configuration
+         git add $GIT_ROOT/deployment/terraform
+         git commit -m "Configure databases"
+         git push origin database-configuration
+         ```
     - Once your pull request pre-submits have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 20 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Configure the permissions of your SQL script bucket so that your Cloud SQL instance can import the necessary initialization scripts
     - Uncomment the blocks for Steps 6 in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
-    ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
-git checkout -b sql-bucket-permissions
-git add $GIT_ROOT/deployment/terraform
-git commit -m "Set SQL bucket permissions"
-git push origin sql-bucket-permissions
-```
+         ```bash
+         tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
+         git checkout -b sql-bucket-permissions
+         git add $GIT_ROOT/deployment/terraform
+         git commit -m "Set SQL bucket permissions"
+         git push origin sql-bucket-permissions
+         ```
     - Once your pull request pre-submits have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Initialize your MySQL databases by importing SQL scripts
     - Upload the necessary SQL script files to the `{PREFIX}-{ENV}-mystudies-sql-import` storage bucket that you created during Terraform deployment, for example:
-```bash
-gsutil cp \
-  ${GIT_ROOT}/study-builder/sqlscript/* \
-  ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
-  ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
-  ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
-  ${GIT_ROOT}/hydra/sqlscript/create_hydra_db_script.sql \
-  gs://${PREFIX}-${ENV}-mystudies-sql-import
-```
+         ```bash
+         gsutil cp \
+         ${GIT_ROOT}/study-builder/sqlscript/* \
+         ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
+         ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
+         ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
+         ${GIT_ROOT}/hydra/sqlscript/create_hydra_db_script.sql \
+         gs://${PREFIX}-${ENV}-mystudies-sql-import
+         ```
     - Import the SQL scripts from cloud storage to your Cloud SQL instance, for example:
-```bash
-gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/create_hydra_db_script.sql -q
-gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/HPHC_My_Studies_DB_Create_Script.sql -q
-gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/procedures.sql -q
-gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/version_info_script.sql -q
-gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_response_server_db_script.sql -q
-gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_participant_datastore_db_script.sql -q
-gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_app_info_update_db_script.sql -q
-```
+         ```bash
+         gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/create_hydra_db_script.sql -q
+         gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/HPHC_My_Studies_DB_Create_Script.sql -q
+         gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/procedures.sql -q
+         gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/version_info_script.sql -q
+         gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_response_server_db_script.sql -q
+         gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_participant_datastore_db_script.sql -q
+         gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_app_info_update_db_script.sql -q
+         ```
 1. [Enable](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com) the [Cloud SQL Admin API](https://cloud.google.com/sql/docs/mysql/admin-api) for your `{PREFIX}-{ENV}-apps` project
 
 ### Deploy your application infrastructure
@@ -250,40 +251,48 @@ gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-$
 1. Enable CICD for the application directories so that changes you make to the application code will automatically build the application containers for your deployment
     - Enable [Cloud Build](https://console.cloud.google.com/cloud-build/triggers) in your `{PREFIX}-{ENV}-apps` project and [connect](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app) your cloned GitHub repository (skip adding triggers as Terraform will create them in the next step)
     - Uncomment  the Cloud Build triggers portion of the apps project in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
-```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
-git checkout -b enable-apps-CICD
-git add $GIT_ROOT/deployment/terraform
-git commit -m "Enable CICD for applications"
-git push origin enable-apps-CICD
-```
+         ```bash
+         tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
+         git checkout -b enable-apps-CICD
+         git add $GIT_ROOT/deployment/terraform
+         git commit -m "Enable CICD for applications"
+         git push origin enable-apps-CICD
+         ```
     - Once your pull request pre-submits have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 
 ### Configure and deploy your applications
 
 1. Update the Kubernetes and application configuration files with the values specific to your deployment
     -  Replace the `<PREFIX>`, `<ENV>` and `<LOCATION>` values for each `tf-deployment.yaml` in your repo, for example:
-```bash
-find $GIT_ROOT -name 'tf-deployment.yaml' -exec sed -e 's/<PREFIX>-<ENV>/'$PREFIX'-'$ENV'/g' -e 's/<LOCATION>/'$LOCATION'/g' -i.backup '{}' \;
-```
+         ```bash
+         find $GIT_ROOT -name 'tf-deployment.yaml' -exec sed -e 's/<PREFIX>-<ENV>/'$PREFIX'-'$ENV'/g' -e 's/<LOCATION>/'$LOCATION'/g' -i.backup '{}' \;
+         ```
     -  Replace the `<PREFIX>`, `<ENV>` and `<DOMAIN>` values in [`/deployment/kubernetes/cert.yaml`](/deployment/kubernetes/cert.yaml) and [`/deployment/kubernetes/ingress.yaml`](/deployment/kubernetes/ingress.yaml), for example:
-```bash
-sed -e 's/<PREFIX>/'$PREFIX'/g' -e 's/<ENV>/'$ENV'/g' -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup $GIT_ROOT/deployment/kubernetes/cert.yaml
-sed -e 's/<PREFIX>/'$PREFIX'/g' -e 's/<ENV>/'$ENV'/g' -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup $GIT_ROOT/deployment/kubernetes/ingress.yaml
-```
+         ```bash
+         sed -e 's/<PREFIX>/'$PREFIX'/g' \
+         -e 's/<ENV>/'$ENV'/g' \
+         -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
+         $GIT_ROOT/deployment/kubernetes/cert.yaml
+         sed -e 's/<PREFIX>/'$PREFIX'/g' \
+         -e 's/<ENV>/'$ENV'/g' \
+         -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
+         $GIT_ROOT/deployment/kubernetes/ingress.yaml
+         ```
     - In [`/participant-manager/src/environments/environment.prod.ts`](/participant-manager/src/environments/environment.prod.ts), replace `<DOMAIN>` with your `participants.{DOMAIN}` value and `<auth-server-client-id>` with the value of your `auto-auth-server-client-id` secret (you can find this value in the [Secret Manager](https://console.cloud.google.com/security/secret-manager/) of your `{PREFIX}-{ENV}-secrets` project), for example:
-```bash
-export auth_server_client_id=<YOUR_VALUE>
-sed -e 's/<DOMAIN>/participants.'$DOMAIN'/g' -e 's/<auth-server-client-id>/'$auth_server_client_id'/g' -i.backup $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
-```
+         ```bash
+         export auth_server_client_id=<YOUR_VALUE>
+         sed -e 's/<DOMAIN>/participants.'$DOMAIN'/g' \
+         -e 's/<auth-server-client-id>/'$auth_server_client_id'/g' -i.backup \
+         $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
+         ```
     - Commit the changes to your repo, for example:
-```bash
-git checkout -b configure-application-properties
-git add $GIT_ROOT
-git commit -m "Initial configuration of application properties"
-git push origin configure-application-properties
-```
-    - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to build your container images, after which they will be available in the Container Registry of your apps project at http://gcr.io/{PREFIX}-{ENV}-apps (this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `{PREFIX}-{ENV}-apps` project)
+         ```bash
+         git checkout -b configure-application-properties
+         git add $GIT_ROOT
+         git commit -m "Initial configuration of application properties"
+         git push origin configure-application-properties
+         ```
+    - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to build your container images, after which they will be available in the Container Registry of your apps project at `http://gcr.io/{PREFIX}-{ENV}-apps` (this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `{PREFIX}-{ENV}-apps` project)
 1. Open [Secret Manager](https://console.cloud.google.com/security/secret-manager) for your `{PREFIX}-{ENV}-secrets` project and fill in the values for the secrets with prefix `manual-`
 Manually set secret | Description | When to set
 --------------------------|-------------------|------------------------------------------------------------
@@ -310,56 +319,57 @@ manual-ios-deeplink-url | The URL to redirect to after iOS login (for example, a
 
 1. Finish Kubernetes cluster configuration and deployment
     - Configure the remaining resources with Terraform, for example: 
-```bash
-cd $GIT_ROOT/deployment/terraform/kubernetes/
-terraform init
-terraform plan
-terraform apply
-```
+         ```bash
+         cd $GIT_ROOT/deployment/terraform/kubernetes/
+         terraform init
+         terraform plan
+         terraform apply
+         ```
     - Set your `kubectl` credentials, for example:
-```bash
-gcloud container clusters get-credentials "$PREFIX-$ENV-gke-cluster" --region=$LOCATION --project="$PREFIX-$ENV-apps"
-```
+         ```bash
+         gcloud container clusters get-credentials "$PREFIX-$ENV-gke-cluster" \
+         --region=$LOCATION --project="$PREFIX-$ENV-apps"
+         ```
     - Apply the pod security policies, for example:
-```bash
-  kubectl apply \
-  -f $GIT_ROOT/deployment/kubernetes/pod_security_policy.yaml \
-  -f $GIT_ROOT/deployment/kubernetes/pod_security_policy-istio.yaml
-```
+         ```bash
+         kubectl apply \
+         -f $GIT_ROOT/deployment/kubernetes/pod_security_policy.yaml \
+         -f $GIT_ROOT/deployment/kubernetes/pod_security_policy-istio.yaml
+         ```
     - Apply all deployments, for example:
-```bash
-   kubectl apply \
-  -f $GIT_ROOT/study-datastore/tf-deployment.yaml \
-  -f $GIT_ROOT/response-datastore/tf-deployment.yaml \
-  -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-deployment.yaml \
-  -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
-  -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-deployment.yaml \
-  -f $GIT_ROOT/study-builder/tf-deployment.yaml \
-  -f $GIT_ROOT/auth-server/tf-deployment.yaml \
-  -f $GIT_ROOT/participant-manager-datastore/tf-deployment.yaml \
-  -f $GIT_ROOT/hydra/tf-deployment.yaml \
-  -f $GIT_ROOT/participant-manager/tf-deployment.yaml
-```
+         ```bash
+         kubectl apply \
+         -f $GIT_ROOT/study-datastore/tf-deployment.yaml \
+         -f $GIT_ROOT/response-datastore/tf-deployment.yaml \
+         -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-deployment.yaml \
+         -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
+         -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-deployment.yaml \
+         -f $GIT_ROOT/study-builder/tf-deployment.yaml \
+         -f $GIT_ROOT/auth-server/tf-deployment.yaml \
+         -f $GIT_ROOT/participant-manager-datastore/tf-deployment.yaml \
+         -f $GIT_ROOT/hydra/tf-deployment.yaml \
+         -f $GIT_ROOT/participant-manager/tf-deployment.yaml
+         ```
     - Apply all services, for example:
-```bash
-   kubectl apply \
-  -f $GIT_ROOT/study-datastore/tf-service.yaml \
-  -f $GIT_ROOT/response-datastore/tf-service.yaml \
-  -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-service.yaml \
-  -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-service.yaml \
-  -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-service.yaml \
-  -f $GIT_ROOT/study-builder/tf-service.yaml \
-  -f $GIT_ROOT/auth-server/tf-service.yaml \
-  -f $GIT_ROOT/participant-manager-datastore/tf-service.yaml \
-  -f $GIT_ROOT/hydra/tf-service.yaml \
-  -f $GIT_ROOT/participant-manager/tf-service.yaml
-```
+         ```bash
+         kubectl apply \
+         -f $GIT_ROOT/study-datastore/tf-service.yaml \
+         -f $GIT_ROOT/response-datastore/tf-service.yaml \
+         -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-service.yaml \
+         -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-service.yaml \
+         -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-service.yaml \
+         -f $GIT_ROOT/study-builder/tf-service.yaml \
+         -f $GIT_ROOT/auth-server/tf-service.yaml \
+         -f $GIT_ROOT/participant-manager-datastore/tf-service.yaml \
+         -f $GIT_ROOT/hydra/tf-service.yaml \
+         -f $GIT_ROOT/participant-manager/tf-service.yaml
+         ```
     - Apply the certificate and the ingress, for example:
-```bash
-   kubectl apply \
-  -f $GIT_ROOT/deployment/kubernetes/cert.yaml \
-  -f $GIT_ROOT/deployment/kubernetes/ingress.yaml
-```
+         ```bash
+         kubectl apply \
+         -f $GIT_ROOT/deployment/kubernetes/cert.yaml \
+         -f $GIT_ROOT/deployment/kubernetes/ingress.yaml
+         ```
     - Update Firewalls - as of now there is a known issue with Firewalls in ingress-gce (references [kubernetes/ingress-gce#485](https://github.com/kubernetes/ingress-gce/issues/485) and [kubernetes/ingress-gce#584](https://github.com/kubernetes/ingress-gce/issues/584)
     - Run `kubectl describe ingress $PREFIX-$ENV`
     - Look at the suggested commands under "Events", in the form of "Firewall
@@ -368,17 +378,21 @@ gcloud container clusters get-credentials "$PREFIX-$ENV-gke-cluster" --region=$L
 1. Check the [Kubernetes dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your deployment
     - 
 1. Configure your initial application credentials
-    - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [register_clients_in_hydra.sh](/deployment/scripts/register_clients_in_hydra.sh), for example: ```bash
-$GIT_ROOT/deployment/scripts/register_clients_in_hydra.sh $PREFIX $ENV https://participants.$DOMAIN
-```
+    - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [register_clients_in_hydra.sh](/deployment/scripts/register_clients_in_hydra.sh), for example:
+         ```bash
+         $GIT_ROOT/deployment/scripts/register_clients_in_hydra.sh \
+         $PREFIX $ENV https://participants.$DOMAIN
+         ```
     - Create your first admin user account for the [`Participant manager`](/participant-manager/) application by running the [`create_participant_manager_superadmin.sh`](/deployment/scripts/create_participant_manager_superadmin.sh) script to generate and import a SQL dump file for the [`Participant datastore`](/participant-datastore/) database, for example:
-```bash
-$GIT_ROOT/deployment/scripts/create_participant_manager_superadmin.sh $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
-```
+         ```bash
+         $GIT_ROOT/deployment/scripts/create_participant_manager_superadmin.sh \
+         $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
+         ```
     - Create your first admin user account for the [`Study builder`](/study-builder/) application by running the [`create_study_builder_superadmin.sh`](/deployment/scripts/create_study_builder_superadmin.sh) script to generate and import a SQL dump file for the [`Study datastore`](/study-datastore/) database, for example:
-```bash
-$GIT_ROOT/deployment/scripts/create_study_builder_superadmin.sh $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
-```
+         ```bash
+         $GIT_ROOT/deployment/scripts/create_study_builder_superadmin.sh \
+         $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
+         ```
 
 ### Set up mobile applications
 
@@ -387,7 +401,6 @@ $GIT_ROOT/deployment/scripts/create_study_builder_superadmin.sh $PREFIX $ENV <YO
     configuration instructions.
 
 Add XYZ values to the secret manager
-   
    
 ### Step 12: Mobile app setup in participant manager
 
