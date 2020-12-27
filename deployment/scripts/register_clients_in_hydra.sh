@@ -80,5 +80,3 @@ HYDRA_POD=`kubectl get pods --no-headers -o custom-columns=":metadata.name" | gr
 
 echo "Running registration commands in Hydra pod"
 kubectl exec ${HYDRA_POD} -c hydra-ic -- bash -c "${OUTPUT}"
-
-rm ${TMPFILE}
