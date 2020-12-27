@@ -21,15 +21,16 @@ Following this guide will result in your own unique instance of the FDA MyStudie
 
 Project | Name | Purpose
 ---------|------------|---------------
-Devops | `{PREFIX}-{ENV}-devops` | tbd
-Apps | `{PREFIX}-{ENV}-apps` | tbd
-Data | `{PREFIX}-{ENV}-data` | tbd
-Firebase | `{PREFIX}-{ENV}-firebase` | tbd
-Networks | `{PREFIX}-{ENV}-networks` | tbd
-Secrets | `{PREFIX}-{ENV}-secrets` | tbd
-Audit | `{PREFIX}-{ENV}-audit` | tbd
+Devops | `{PREFIX}-{ENV}-devops` | This project executes the Terraform CICD pipelines that keep your infrastructure aligned with the state defined in your GitHub repository’s [`deployment/terraform/`](/deployment/terraform/) directory  
+Apps | `{PREFIX}-{ENV}-apps` | This project stores the container images for each of your FDA MyStudies applications, updates those images with CICD pipelines that monitor changes you make to the application directories of your GitHub repository, and administers the Kubernetes cluster that operates those images
+Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications and the blob storage buckets that hold study resources and consent documents
+Firebase | `{PREFIX}-{ENV}-firebase` | This project contains the NoSQL database that stores the study response data
+Networks | `{PREFIX}-{ENV}-networks` | This project administers the DNS and network ingress 
+Secrets | `{PREFIX}-{ENV}-secrets` | This project manages the deployment’s secrets, such as client ids and client secrets
+Audit | `{PREFIX}-{ENV}-audit` | This project stores the audit logs for the FDA MyStudies platform and applications
 
 The `{PREFIX}-{ENV}-apps` project is where the various FDA MyStudies applications will run. [**Figure 2**](#figure-2-application-architecture) diagrams each the applications and how they related to their data sources. This deployment configures the applications URLs as follows:
+
 Application | URL | Notes
 --------------|-----------|-----------
 [Study builder](/study-builder/) | `studies.{PREFIX}.{DOMAIN}/study-builder` | This URL navigates an administrative user to the `Study builder` user interface
@@ -91,15 +92,15 @@ The deployment process takes the following approach:
 1. [Create](https://support.google.com/a/answer/33343?hl=en) the following
     administrative [IAM](https://cloud.google.com/iam/docs/overview#concepts_related_identity) groups that will be used during deployment:
 
-Group name | Description
-------------------|----------------
-`{PREFIX}-{ENV}-folder-admins@{DOMAIN}` | Members of this group have the [resourcemanager.folderAdmin](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) role for your deployment’s folder (for example, a deployment with prefix `mystudies`, environment `prod` and domain `example.com`, would require a group named `mystudies-prod-folder-admins@example.com`)
-`{PREFIX}-{ENV}-devops-owners@{DOMAIN}` | Members of this group have owners access for the devops project, which is required to make changes to the CICD pipeline and Terraform state
-`{PREFIX}-{ENV}-auditors@{DOMAIN}` | Members of this group have the [`iam.securityReviewer`](https://cloud.google.com/iam/docs/understanding-roles#iam-roles) role for your deployment’s folder, and the `bigquery.user` and `storage.objectViewer` roles for your audit log project
-`{PREFIX}-{ENV}-cicd-viewers@{DOMAIN}` | Members of this group can view CICD results in Cloud Build, for example the results of the `terraform plan` presubmit and `terraform apply` postsubmit
-`{PREFIX}-{ENV}-bastion-accessors@{DOMAIN}` | Members of this group have permission to access the [bastion host](https://cloud.google.com/solutions/connecting-securely#bastion) project, which provides access to the private Cloud SQL instance
-`{PREFIX}-{ENV}-project-owners@{DOMAIN}` | Members of this group have owners access to each of the deployment’s projects
-
+    Group name | Description
+    ------------------|----------------
+    `{PREFIX}-{ENV}-folder-admins@{DOMAIN}` | Members of this group have the [resourcemanager.folderAdmin](https://cloud.google.com/iam/docs/understanding-roles#resource-manager-roles) role for your deployment’s folder (for example, a deployment with prefix `mystudies`, environment `prod` and domain `example.com`, would require a group named `mystudies-prod-folder-admins@example.com`)
+    `{PREFIX}-{ENV}-devops-owners@{DOMAIN}` | Members of this group have owners access for the devops project, which is required to make changes to the CICD pipeline and Terraform state
+    `{PREFIX}-{ENV}-auditors@{DOMAIN}` | Members of this group have the [`iam.securityReviewer`](https://cloud.google.com/iam/docs/understanding-roles#iam-roles) role for your deployment’s folder, and the `bigquery.user` and `storage.objectViewer` roles for your audit log project
+    `{PREFIX}-{ENV}-cicd-viewers@{DOMAIN}` | Members of this group can view CICD results in Cloud Build, for example the results of the `terraform plan` presubmit and `terraform apply` postsubmit
+    `{PREFIX}-{ENV}-bastion-accessors@{DOMAIN}` | Members of this group have permission to access the [bastion host](https://cloud.google.com/solutions/connecting-securely#bastion) project, which provides access to the private Cloud SQL instance
+    `{PREFIX}-{ENV}-project-owners@{DOMAIN}` | Members of this group have owners access to each of the deployment’s projects
+1. Add the user account that you will be using for deployment to these groups (if it is not already a member)
 
 ### Set up your environment
 
@@ -168,7 +169,7 @@ bash
          ```bash
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          ```
-1. Create the `devops` project and Terraform state bucket (if this step fails, confirm you have updated your application default credentials and that the required version of Terraform is installed), for example:
+1. Use Terraform to create the `devops` project and Terraform state bucket (if this step fails, confirm you have updated your application default credentials and that the required version of Terraform is installed), for example:
     ```bash
     cd $GIT_ROOT/deployment/terraform/devops
     terraform init
@@ -198,8 +199,8 @@ bash
     ```
 1. Trigger Cloud Build to run the Terraform pre-submit checks by using this new branch to [create](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) a pull request against the branch you specified in [`deployment.hcl`](/deployment/deployment.hcl) (you can view the status of your pre-submit checks and re-run jobs as necessary in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Once your pre-submit checks have completed successfully, and you have received code review approval, merge your pull request into the main branch to trigger the `terraform apply` post-submit operation (this operation may take up to 45 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
-
     > Note: If your pre-submit checks or post-submit `terraform apply` fail with an error related to billing accounts, you may not have the [quota](https://support.google.com/cloud/answer/6330231?hl=en) necessary to attach all of your projects to the specified billing account. You may need to [request additional quota](https://support.google.com/code/contact/billing_quota_increase).
+1. [Manually grant](https://cloud.google.com/iam/docs/granting-changing-revoking-access) the [`roles/owner`](https://cloud.google.com/resource-manager/docs/access-control-proj#using_basic_roles) permission to the `{PREFIX}-{ENV}-project-owners@{DOMAIN}` group for each of your newly created projects (you may need your Google Cloud administrator to do this for you)  
 
 ### Configure your deployment’s databases
 
@@ -313,7 +314,7 @@ bash
     `manual-mobile-app-appid` | The value of the `App ID` that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder)
     `manual-android-bundle-id` | The value of `applicationId` that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only)
     `manual-fcm-api-url` | URL of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
-manual-android-server-key | The Firebase Cloud Messaging server key that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
+    `manual-android-server-key` | The Firebase Cloud Messaging server key that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
     `manual-android-deeplink-url` | The URL to redirect to after Android login (for example, `app://{PREFIX}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only)
     `manual-ios-bundle-id` | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
     `manual-ios-certificate` | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only)
@@ -373,13 +374,12 @@ manual-android-server-key | The Firebase Cloud Messaging server key that you wil
          -f $GIT_ROOT/deployment/kubernetes/cert.yaml \
          -f $GIT_ROOT/deployment/kubernetes/ingress.yaml
          ```
-    - Update Firewalls - as of now there is a known issue with Firewalls in ingress-gce (references [kubernetes/ingress-gce#485](https://github.com/kubernetes/ingress-gce/issues/485) and [kubernetes/ingress-gce#584](https://github.com/kubernetes/ingress-gce/issues/584))
+    - Update firewalls:
         - Run `kubectl describe ingress $PREFIX-$ENV`
         - Look at the suggested commands under "Events", in the form of "Firewall
         change required by network admin: <gcloud command>"
         - Run each of the suggested commands
 1. Check the [Kubernetes dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your deployment
-    - tbd
 1. Configure your initial application credentials
     - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [`register_clients_in_hydra.sh`](/deployment/scripts/register_clients_in_hydra.sh), for example:
          ```bash
@@ -397,53 +397,45 @@ manual-android-server-key | The Firebase Cloud Messaging server key that you wil
          $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
          ```
 
-### Set up mobile applications
+### Configure your first study
 
-1. Build and distribute iOS and Android apps following their individual
-    instructions (see [iOS](../iOS/README.md) and [Android](../Android/README.md) 
-    configuration instructions)
-1. Add XYZ values to the secret manager
-   
-### Step 12: Mobile app setup in participant manager
+1. Navigate your browser to `studies.{PREFIX}.{DOMAIN}/study-builder` and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
+1. Change your password, then create any additional administrative accounts that you might need
+1. Create a new study with the `App ID` that you set in the `manual-mobile-app-appid` secret, or choose a new `App ID` that you will update `manual-mobile-app-appid` with
+1. Publish your study to propagate your study values to the other platform components
+1. Navigate your browser to `participants.{PREFIX}.{DOMAIN}/participant-manager` and use the account credentials that you created with the `create_participant_manager_superadmin.sh` script to log into the [`Participant manager`](/participant-manager/) user interface
+1. Change your password, then create any additional administrative accounts that you might need
+1. Confirm your new study is visible in the `Participant manager` interface
 
-An app record is a representation of your mobile apps associated with an 
-FDA MyStudies deployment. App is identified by APP_ID, which is the value you 
-set in secret manager for `manual-mobile-app-appid`.
+### Prepare your mobile applications
 
-After a study is created (in study builder) that uses this App ID, a corresponding 
-app record will be created in the Participant Manager.
-
-**Note** Current deployment only supports a single App 
-(using `manual-mobile-app-appid`); and it requires the following
-manual step to pass mobile info from Secret Manager to CloudSQL.
-
-1. Once the app is available in Participant Manager, Run
-    [copy_app_info_to_sql.sh](scripts/copy_app_info_to_sql.sh)
-    passing your deployment PREFIX and ENV.
-    
-    The secrets accessed by this script are: 
-    ```bash
-    # bundleID used for the Android App.
-    manual-android-bundle-id
-    # found under settings > cloud messaging in the android app defined in your firebase project.
-    manual-android-server-key
-    # bundleID used to build and distribute the iOS App.
-    manual-ios-bundle-id
-    # push notifications certificate in encrypted .p12 format.
-    manual-ios-certificate
-    # push notifications certificate password.
-    manual-ios-certificate-password
-    # redirect links to mobile apps, e.g. app://mydeploymentdomain.com/mystudies
-    manual-ios-deeplink-url
-    manual-android-deeplink-url
-    ```
-### Confirm deployment
- 
+1. Follow the instructions in either or both [`Android`](/Android/) and [`iOS`](/iOS/) deployment guides (if you haven’t created a study yet, you can configure the mobile applications with the `APP_ID` you plan on using when you create your first study in the [`Study builder`](/study-builder/))
+1. Open Secret Manager in your `{PREFIX}-{ENV}-secrets` project and update the secrets you previously configured with placeholder values (you can skip this step if you already configured your secrets with the appropriate values)
+    - `manual-mobile-app-appid` is the value of the `App ID` that you configured, or will configure, on the Settings page of the [`Study builder`](/study-builder/)
+    - `manual-android-bundle-id` is the value of `applicationId` that you configured in [`Android/app/build.gradle`](/Android/app/build.gradle)
+    - `manual-fcm-api-url` is the URL of your Firebase Cloud Messaging API
+    - `manual-android-server-key` is your Firebase Cloud Messaging server key
+    - `manual-android-deeplink-url` is the URL to redirect to after Android login
+    - `manual-ios-bundle-id` is the value you obtained from Xcode
+    - `manual-ios-certificate` is the value of the Base64 converted `.p12` file
+    - `manual-ios-certificate-password` is the value of the password for the `.p12` certificate 
+    - `manual-ios-deeplink-url` is the URL to redirect to after iOS login
+1. Initialize your `Participant datastore` database to work with your mobile applications
+    - Once a study with the `App ID` corresponding to the `manual-mobile-app-appid` secret is created and published using the [`Study builder`](/study-builder) user interface, a corresponding 
+app record will appear in the [`Participant manager`](/participant-manager/) user interface (if you created a study before all of your platform components were operational, you can reinitialize this process by using the `Study builder` user interface to pause and resume the study) 
+    - Once the `App ID` appears in `Participant manager`, run the [deployment/scripts/copy_app_info_to_sql.sh](/deployment/scripts/copy_app_info_to_sql.sh) script to update the remaining databases, for example:
+         ```bash
+         $GIT_ROOT/deployment/scripts/copy_app_info_to_sql.sh $PREFIX $ENV
+         ```
 
 ### Clean up
 
 1. Remove your user account from the groups you no longer need access to
 1. Revoke user access in your environment by running `gcloud auth revoke`
+
+### Troubleshooting
+
+See the [*Troubleshooting*](/documentation/troubleshooting.md) guide for more information.
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
