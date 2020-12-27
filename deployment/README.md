@@ -424,8 +424,8 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
 
 1. Remove your user account from the groups you no longer need access to
 1. Revoke user access in your environment by running `gcloud auth revoke`
-
-/*### Troubleshooting
+/*
+### Troubleshooting
 
 See the [*Troubleshooting*](/documentation/troubleshooting.md) guide for more information.
 */
