@@ -5,6 +5,261 @@
  https://opensource.org/licenses/MIT.
 -->
 
+![FDA MyStudies](documentation/images/MyStudies_banner.svg "FDA MyStudies") 
+
+## Overview
+
+The FDA’s MyStudies platform enables organizations to quickly build and deploy studies that interact with participants through purpose-built apps on iOS and Android. MyStudies apps can be distributed to participants privately or made available through the App Store and Google Play.
+
+This open-source repository contains the code necessary to run a complete FDA MyStudies instance, inclusive of all web and mobile applications.
+
+Open-source [deployment tools](deployment) are included for semi-automated deployment to Google Cloud Platform (GCP). These tools can be used to deploy the FDA MyStudies platform in just a few hours. These tools follow compliance guidelines to simplify the end-to-end compliance journey. Deployment to other platforms and on-premise systems can be performed manually.
+
+![Platform Illustration](documentation/images/platform_illustration.png "Platform Illustration")
+
+## Documentation and guides
+
+Information related to the deployment and operation of FDA Mystudies can be found within each directory’s `README`, and also in the following guides:
+
+* [High-level platform and repo overview](README.md) (this document)<!--TODO * [Feature and functionality demonstrations](documentation/demo.md)-->
+* [Detailed platform architecture](documentation/architecture.md)
+* [Instructions for semi-automated deployment](deployment/README.md)
+<!-- TODO
+* Quick-start guide for manual deployment(documentation/manual-quickstart.md
+* User guides study builder, participant manager and mobile applications(documentation/user-guides.md)
+* API reference(documentation/api-reference.md)
+-->
+
+For the complete list of FDA MyStudies documentation, visit [`documentation/README.md`](/documentation/README.md). 
+
+## Platform components and repo organization
+
+Component | Intended users | Purpose | Directories
+----------------|----------------------|------------|----------------
+Study builder | Researchers and clinicians | No-code user interface for authoring studies ([demo screens](documentation/images/study-builder-screens.png)) | [`study-builder/`](study-builder/)<br/>[`study-datastore/`](study-datastore/)
+Participant manager | Study coordinators | No-code user interface to manage participant enrollment ([demo screens](documentation/images/participant-manager-screens.png)) | [`participant-manager/`](participant-manager/)<br/>[`participant-manager-datastore/`](participant-manager-datastore/)
+Mobile applications | Study participants | Apps to discover, enroll and participate in studies ([demo screens](documentation/images/mobile-screens.png)) | [`iOS/`](iOS/)<br/>[`Android/`](Android/)
+Response datastore | Researchers and analysts | Collects and stores participant response data for downstream analysis | [`response-datastore/`](response-datastore/)
+Participant datastore | Platform component | Manages participant data such as contact information and consent forms | [`participant-datastore/`](participant-datastore/)
+Auth | Platform component | Manages account creation, login, logout and resource requests | [`hydra/`](/hydra/)<br/>[`auth-server/`](/auth-server/)
+Deployment | System administrators | Infrastructure-as-code to build and maintain platform | [`deployment/`](deployment/)
+
+Each high-level directory contains a `README.md` and the necessary deployment configuration files.
+
+For more information about the platform architecture, visit the [Architecture overview](documentation/architecture.md). An example of how this architecture can be deployed on Google Cloud is diagrammed below.
+
+![Example architecture](documentation/images/apps-reference-architecture.svg "Example architecture")
+
+## Data and compliance
+
+FDA MyStudies is designed so that all data stays within the deploying organization’s environment (unless that organization chooses to export their data). Any identifiable data is stored separately from study and response data to help organizations minimize access to sensitive data.
+
+The FDA MyStudies platform has been designed to support auditing requirements for compliance with 21 CFR Part 11, allowing the platform to be used for trials under Investigational New Drug (IND) oversight. If an organization chooses to run FDA MyStudies on Google Cloud, a variety of infrastructure options are available that support HIPAA and other compliance requirements. More information about compliance on Google Cloud and an up-to-date list of products covered under BAA can be found [here](https://cloud.google.com/security/compliance/hipaa/).
+
+In addition to the platform itself, the open-source [deployment tools](deployment) are designed to assist organizations with their end-to-end compliance journey. Although achieving compliance is the responsibility of the deploying organization, these toolkits enable organizations to deploy FDA MyStudies in a way that helps meet compliance requirements. More details of the deployment patterns used by these automation tools can be found [here](https://cloud.google.com/solutions/architecture-hipaa-aligned-project). 
+
+Google Cloud can support compliance with 21 CFR Part 11 regulations when using GCP services in a prescribed manner to handle related data and workloads. While Google has a cloud technology stack ready for many 21 CFR Part 11 compliant workloads, the ultimate compliance determination depends on configuration choices made by the deploying organization.
+
+## Release notes
+
+For a detailed list of changes to the FDA MyStudies codebase, see *[What’s new](/documentation/whats-new.md)*.
+
+## Feedback
+
+Feature requests and bug reports should be submitted as [Github Issues](https://github.com/GoogleCloudPlatform/fda-mystudies/issues). All feedback is greatly appreciated.
+
+***
+<p align="center">Copyright 2020 Google LLC</p>
+What’s changed README
+
+<!--
+ Copyright 2020 Google LLC
+ Use of this source code is governed by an MIT-style
+ license that can be found in the LICENSE file or at
+ https://opensource.org/licenses/MIT.
+-->
+
+## What’s changed?
+The overall goals, compliance principles and functionality of this FDA MyStudies release are similar to previous releases. Notable changes from version [`2019.10`](https://github.com/PopMedNet-Team/FDA-My-Studies-Mobile-Application-System/tree/2019.10) of FDA MyStudies include:
+
+## Functionality
+*   Removed dependencies on the LabKey framework  
+*   Added the [`Response datastore`](/response-datastore/) as a platform-agnostic service to handle study response storage and access
+*   Added the [`Participant manager`](/participant-manager/) graphical user interface and [`Participant datastore`](/participant-datastore/) backend to manage participant enrollment
+*   Added support for [OAuth 2.0](https://oauth.net/2/) and [OIDC](https://openid.net/connect/)
+*   Added [templates](/deployment/) for semi-automated deployment
+*   Added support for infrastructure-as-code and CICD
+*   Upgraded the [`Android`](/Android/) application for compatibility with Android 10
+*   Improved exception handling
+*   Improved request and data validation
+*   Introduced unit tests and test frameworks to the codebase
+
+## Architecture
+*   Migrated to a modular [container-based](/deployment/kubernetes/) architecture
+*   Refactored and extended `mobileAppStudy-ResponseServer` to [`Response datastore`](/response-datastore/)
+*   Refactored `UserReg-WS` to [`Participant datastore`](/participant-datastore/)
+*   Refactored `WCP-WS` and `Resources-WCP` to [`Study datastore`](/study-datastore/)
+*   Reduced code duplication by extracting [`Common modules`](/common-modules) that are used by all new services
+*   Migrated restrictive open-source dependencies to alternatives with permissive licenses 
+*   Removed dependencies that require commercial licenses
+*   Simplified mobile application calls and moved some functionality server-side to reduce dependencies between services
+*   Adjusted data storage based on usage and security requirements (for example, study and participant status storage and calls were moved to[ `Response datastore`](/response-datastore/); enrollment generation logic was moved to [`Participant datastore`](/participant-datastore/))
+    
+## Security
+* Replaced hard-coded credentials with scripts that inject initial users into each component
+* Fixed potential cross-site scripting vulnerabilities
+* Added query binding to all existing queries to prevent SQL injection
+* Enhanced auth throughout codebase:
+   * Unified distributed auth implementation into a single [`Auth server`](/auth-server/) (`Study builder` retains built-in auth)
+   * Integrated with [Hydra](https://ory.sh/hydra), an OAuth 2.0 and OpenID Connect provider for OAuth 2.0 Access & Refresh token generation and authentication
+   * Improved remaining authentication (for example, removed `client_secret` from being transmitted in all calls)
+* Created [deployment templates](/deployment/) that support security best practices, such as:
+  * Automation of secret generation and handling:
+    * Configured secrets to be generated and stored with a [Secret Manager](https://cloud.google.com/secret-manager/docs/overview) instance deployed in an isolated cloud project
+    * Configured secret values to be transmitted automatically within the private Kubernetes cluster
+  * Implementation of [centralized network control](https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control):
+    * Configured deployment to use a [VPC host project](https://cloud.google.com/vpc/docs/shared-vpc) to manage networks and subnets in a centralized way (enabling network administration to be separated from project administration)
+    * Enabled resources in different projects to communicate securely with internal IPs
+  * Separation of projects with the security principle of least privilege:
+    * Configured dedicated projects for different purposes (secrets, networks, applications, audit) for management by teams with isolated permissions - for example, a centralized network team can administer the network without having access the secrets project)
+  * Implementation of [external access limitations](https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#limit-access):
+    * Configured databases and VMs to be isolated from the internet with only internal IP addresses ([Private Google Access](https://cloud.google.com/vpc/docs/configure-private-google-access))
+    * Established [bastion host](https://cloud.google.com/solutions/connecting-securely#external) for secure on-demand connections to private instances
+  * Implementation of DevOps best practices:
+    * Configured [Continuous Integration and Continuous Deployment](https://cloud.google.com/solutions/managing-infrastructure-as-code) (CICD) pipelines to automate Cloud resource deployment and minimize direct human access
+  * [Delegation of responsibility](https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#groups-and-service-accounts) through groups and service accounts:
+    * Configured deployment to assign IAM roles to groups and service accounts so that individuals obtain permissions through groups rather than direct IAM roles
+
+## Usability
+*   Made interactions more intuitive for participants using the [`Android`](/Android/) and [`iOS`](/iOS/) mobile applications
+*   Updated text for clarity in user interfaces and messages throughout the platform
+*   Moved hard-coded values to centralized configuration files to streamline platform customization 
+*   Improved code readability to simplify usability and extensibility for developers
+*   Added support for unit testing, linter and CICD
+*   Added detailed documentation and deployment instructions
+    
+## Bug fixes
+*   Fixed stability and usability bugs throughout the applications and platform
+
+***
+<p align="center">Copyright 2020 Google LLC</p>
+
+Platform overview
+Staged here: https://github.com/GoogleCloudPlatform/fda-mystudies/blob/user-guide-updates/documentation/architecture.md
+
+<!--
+ Copyright 2020 Google LLC
+ Use of this source code is governed by an MIT-style
+ license that can be found in the LICENSE file or at
+ https://opensource.org/licenses/MIT.
+-->
+
+# Platform Overview
+
+FDA MyStudies consists of several components that work together as a platform. These components include web-based UIs for building studies and enrolling participants, backend services for managing the flow of data, and mobile applications that participants use to discover, enroll and participate in studies.
+
+This document describes the architecture of FDA MyStudies. It outlines the various platform components and how they work together.
+
+## Architecture
+
+![Applications diagram](images/apps-reference-architecture.svg)
+
+The diagram above illustrates the various applications that comprise the FDA MyStudies platform. The Android and iOS mobile applications are not shown. The diagram below illustrates how these applications fit into a production deployment that considers security, devops and data governance.
+
+![Deployment diagram](images/deployment-reference-architecture.svg)
+
+## Terminology
+
+Some of the terms used in this document include:
+
+1.  *Participant*: A mobile app user is referred to as a participant when he/she enrolls into a study and is associated with a unique participant id. A single mobile app user can be associated with multiple studies and is a unique participant in each study.
+1.  *Administrator*: Users of the `Study builder` UI and `Participant manager` UI are referred to as administrators. These administrators could be researchers, clinical coordinators, sponsor personnel or site investigators and staff. 
+1.  *Study content*: All the content that is required to carry out a study, which could include study eligibility criteria, consent forms, questionnaires or response types.
+1.  *Response data*: The responses provided by a participant to questionnaires and activities that are presented as part of a study.
+
+## Platform components
+
+The platform components are as follows:
+
+-  Administrative interfaces
+   1. [Study builder](/study-builder/) (UI) to create and configure studies
+   1. [Participant manager](/participant-manager) (UI) to enroll sites and participants
+-  Security and access control
+   1. [Hydra](/hydra/) for token management and OAuth 2.0
+   1. [Auth server](/auth-server/) for login and credentials management
+-  Data management
+   1.  [Study datastore](/study-datastore/) to manage study configuration data
+   1.  [Participant manager datastore](/participant-manager-datastore/) to process enrollment and consents
+   1.  [Participant datastore](/participant-datastore/) to manage sensitive participant data
+   1.  [Response datastore](/response-datastore/) to manage pseudonymized study responses
+-  Participant interfaces
+   1.  [Android](/Android/) mobile application (UI) to join and participate in studies
+   1.  [iOS](/iOS/) mobile application (UI) to join and participate in studies 
+
+Each of the components runs in its own Docker container. Blob storage, relational databases and a document store provide data management capabilities. Centralized logging enables auditing, and identity and access control compartmentalizes the flow of data. The specific technologies used to fulfil these roles is up to the deploying organization, but in the interest of simplicity, these guides describe an implementation that leverages Google Cloud Platform services. The [deployment guide](/deployment/) and individual component [READMEs](/documentation/) provide detailed instructions for how to set up and run the platform using these services. You might use one or more of the following cloud technologies:
+- Container deployment
+  -  [Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (the Kubernetes approach to deployment is described in the automated [deployment guide](/deployment/))
+  - [Compute Engine](https://cloud.google.com/compute) (the VM approach to deployment is described in the individual component [READMEs](/documentation/))
+- Blob storage
+  - [Cloud Storage](https://cloud.google.com/storage) buckets for (1) study content and (2) participant consent forms
+- Relational database
+  - [Cloud SQL](https://cloud.google.com/sql/) databases for (1) study configuration data, (2) sensitive participant data, (3) pseudonymized participant activity data, (4) Hydra client data and (5) user account credentials  
+- Document store
+  -  [Cloud Firestore](https://cloud.google.com/firestore) for pseudonymized participant response data
+- Audit logging
+  -  [Operations Logging](https://cloud.google.com/logging) for audit log writing and subsequent analysis
+- Identity and access management
+  - [Cloud IAM](https://cloud.google.com/iam) to create and manage service accounts and role-based access to individual resources
+- Networking
+  -  [Cloud DNS](https://cloud.google.com/dns) to manage domains
+  -  [Virtual Private Cloud](https://cloud.google.com/vpc) to control ingress 
+- Devops
+  -  [Secret Manager](https://cloud.google.com/secret-manager) for generation, rotation and distribution of secrets
+  -  [Cloud Build](https://cloud.google.com/cloud-build) for CI/CD
+  -  [Container Registry](https://cloud.google.com/container-registry) for management of container images
+
+Detailed information about the components and instructions for configuration can be found the README of [each directory](/documentation/). An explanation of how the platform components relate to one another is provided below.
+
+### Study configuration
+
+The [`Study builder`](/study-builder/) application provides a user interface for study administrators to create and launch studies and to manage study content during the course of a study. It does not handle any patient or participant information. It only deals with study content and configuration.
+
+
+The `Study builder` is the source of study configuration for all downstream applications. As an administrator uses the UI to author their study, that study configuration data is written to a MySQL database that is shared with the [`Study datastore`](/study-datastore/). Once the administrator publishes their study, the `Study builder` notifies the [`Participant datastore`](/participant-datastore/) and [`Response datastore`](/response-datastore/) that new study information is available. Those datastores then retrieve the updated study configuration data from the `Study datastore`. When study administrators upload binary files to the `Study builder`, such as PDF documents or study images, those files are stored in blob storage. The participant mobile applications retrieve study configuration data from the `Study datastore` and the necessary binaries from blob storage directly. The `Study builder` uses built-in authorization and sends emails to study administrators for account creation and recovery purposes.
+
+### Participant enrollment 
+
+The [`Participant manager`](/participant-manager/) application provides a user interface for study administrators to create study sites and invite participants to participate in specific studies. The [`Participant manager datastore`](/participant-manager-datastore/) is the backend component of the `Participant manager` UI. The `Participant manager datastore` shares a MySQL database with the `Participant datastore`. As administrators use the UI to modify sites and manage participants, changes are propagated to the `Participant datastore` through the shared database.
+
+
+When a new participant is added using the `Participant manager`, the `Participant manager datastore` sends an email to the participant with a link that can be used to enroll in the study. In the case of an *open enrollment* study, participants will be able to discover and join studies without a specific invitation. The participant goes to the mobile application to create an account, which uses the [`Auth server`](/auth-server/) to provide the necessary backend services. The `Auth server` sends the request for account creation to the `Participant datastore` to confirm that there is a study associated with that mobile application, and if confirmed, the `Auth server` validates the participant’s email and creates the account.
+
+
+The mobile application populates the list of available studies by making requests to the `Study datastore`. When a participant selects a study to join, the mobile application retrieves the study eligibility questionnaire from the `Study datastore`. In the case where the participant was invited using the `Participant manager`, the mobile application confirms the invitation is valid with the `Participant datastore`. Once the `Participant datastore` determines that the participant is eligible for the study, the mobile application retrieves the study’s consent form from the `Study datastore`. After completion, the mobile application sends the consent form to the `Participant datastore`, which writes the consent PDF to blob storage. The participant is then enrolled in the study and a record is created for them in both the `Participant datastore` and `Response datastore`.
+
+### Ongoing participation
+
+The mobile application retrieves the list of study activities and the study schedule from the `Study datastore`. The mobile application posts updates to the `Response datastore` as participants start, pause, resume or complete study activities. The `Response datastore` writes this study activity data to its MySQL database. When the participant completes a study activity, the mobile application posts the results of that activity to the `Response datastore`, which writes that response data to Cloud Firestore.
+
+
+If a participant sends a message with the mobile application’s contact form, that message is posted to the `Participant datastore`, which then sends an email to the configured destination. The `Participant datastore` can send participation reminders or other types of notifications to study participants through the mobile applications. When participants navigate to the dashboarding section of the mobile application, the mobile application will make a request to the `Response datastore` for the necessary study responses that are used to populate the configured dashboard. 
+
+## Deployment and operation
+
+Detailed deployment instructions can be found in the [deployment guide](/deployment/) and in each of the [directory READMEs](/documentation/).
+
+***
+<p align="center">Copyright 2020 Google LLC</p>
+
+Deployment README
+
+<!--
+ Copyright 2020 Google LLC
+ Use of this source code is governed by an MIT-style
+ license that can be found in the LICENSE file or at
+ https://opensource.org/licenses/MIT.
+-->
+
 ## Deploying FDA MyStudies
 ### Introduction
 
@@ -265,7 +520,6 @@ The deployment process takes the following approach:
     -  Replace the `<PREFIX>`, `<ENV>` and `<DOMAIN>` values in [`/deployment/kubernetes/cert.yaml`](/deployment/kubernetes/cert.yaml) and [`/deployment/kubernetes/ingress.yaml`](/deployment/kubernetes/ingress.yaml), for example:
          ```bash
          sed -e 's/<PREFIX>/'$PREFIX'/g' \
-         -e 's/<ENV>/'$ENV'/g' \
          -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
          $GIT_ROOT/deployment/kubernetes/cert.yaml
          
@@ -274,11 +528,11 @@ The deployment process takes the following approach:
          -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
          $GIT_ROOT/deployment/kubernetes/ingress.yaml
          ```
-    - In [`/participant-manager/src/environments/environment.prod.ts`](/participant-manager/src/environments/environment.prod.ts), replace `<DOMAIN>` with your `participants.{DOMAIN}` value and `<auth-server-client-id>` with the value of your `auto-auth-server-client-id` secret (you can find this value in the [Secret Manager](https://console.cloud.google.com/security/secret-manager/) of your `{PREFIX}-{ENV}-secrets` project), for example:
+    - In [`/participant-manager/src/environments/environment.prod.ts`](/participant-manager/src/environments/environment.prod.ts), replace `<BASE_URL>` with your `participants.{PREFIX}.{DOMAIN}` value and `<auth-server-client-id>` with the value of your `auto-auth-server-client-id` secret (you can find this value in the [Secret Manager](https://console.cloud.google.com/security/secret-manager/) of your `{PREFIX}-{ENV}-secrets` project), for example:
          ```bash
          export auth_server_client_id=<YOUR_VALUE>
-         sed -e 's/<DOMAIN>/participants.'$DOMAIN'/g' \
-         -e 's/<auth-server-client-id>/'$auth_server_client_id'/g' -i.backup \
+         sed -e 's/<BASE_URL>/participants.’$PREFIX’.'$DOMAIN’/g' \
+         -e 's/<AUTH_SERVER_CLIENT_ID>/'$auth_server_client_id'/g' -i.backup \
          $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
          ```
     - Commit the changes to your repo, for example:
@@ -426,9 +680,9 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
 1. Remove your user account from the groups you no longer need access to
 1. Revoke user access in your environment by running `gcloud auth revoke`
 
-### Troubleshooting
+/*### Troubleshooting
 
 See the [*Troubleshooting*](/documentation/troubleshooting.md) guide for more information.
-
+*/
 ***
 <p align="center">Copyright 2020 Google LLC</p>
