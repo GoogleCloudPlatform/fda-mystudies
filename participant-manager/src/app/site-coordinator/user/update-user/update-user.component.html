@@ -49,9 +49,9 @@
           <div class="form-group">
             <label for="fname">First Name</label>
             <input
-               [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+              [ngClass]="{
+                'custom_not-allowed': user.status === userStatus.Deactivated
+              }"
               [readonly]="user.status === userStatus.Deactivated"
               placeholder="Enter First Name"
               type="text"
@@ -89,9 +89,9 @@
           <div class="form-group">
             <label for="lname">Last Name</label>
             <input
-               [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+              [ngClass]="{
+                'custom_not-allowed': user.status === userStatus.Deactivated
+              }"
               [readonly]="user.status === userStatus.Deactivated"
               type="text"
               maxlength="50"
@@ -190,9 +190,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
             <div class="form-group">
               <div class="custom__labels">
                 <input
-                   [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                  [ngClass]="{
+                    'custom_not-allowed': user.status === userStatus.Deactivated
+                  }"
                   [disabled]="user.status === userStatus.Deactivated"
                   type="checkbox"
                   id="location"
@@ -202,10 +202,13 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                   [ngModelOptions]="{standalone: true}"
                   (change)="locationsCheckBoxChange()"
                 />
-                <label 
-                 [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"  class="text-initial" for="location">
+                <label
+                  [ngClass]="{
+                    'custom_not-allowed': user.status === userStatus.Deactivated
+                  }"
+                  class="text-initial"
+                  for="location"
+                >
                   Allow access to locations
                 </label>
               </div>
@@ -224,10 +227,14 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                     [disabled]="!user.manageLocationsSelected"
                   />
                   <label
-                   [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
-                         for="location_view_permssion">View</label>
+                    [ngClass]="{
+                      'custom_not-allowed':
+                        user.status === userStatus.Deactivated
+                    }"
+                    for="location_view_permssion"
+                  >
+                    View
+                  </label>
                 </span>
                 <span>
                   <input
@@ -243,10 +250,12 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                     [disabled]="!user.manageLocationsSelected"
                   />
                   <label
-                  [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
-                  for="location_view_edit_permssion">
+                    [ngClass]="{
+                      'custom_not-allowed':
+                        user.status === userStatus.Deactivated
+                    }"
+                    for="location_view_edit_permssion"
+                  >
                     View And Edit
                   </label>
                 </span>
@@ -259,15 +268,15 @@ Superadmins can manage users of the Participant Manager and in addition, can man
         <div class="form-group">
           <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
           <div class="select__form-control__parent">
-            <label     [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
-                
-                class="wrap pb-1 text-initial">
+            <label
+              [ngClass]="{
+                'custom_not-allowed': user.status === userStatus.Deactivated
+              }"
+              class="wrap pb-1 text-initial"
+            >
               Add an app
               <ng-select
-
-                    [ngClass]="{
+                [ngClass]="{
                   'custom_not-allowed': user.status === userStatus.Deactivated
                 }"
                 [disabled]="user.status === userStatus.Deactivated"
@@ -307,10 +316,13 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                             [ngModelOptions]="{standalone: true}"
                             (change)="appCheckBoxChange(app)"
                           />
-                          <label            
-                             [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }" for="appCheckBox{{ app.id }}">
+                          <label
+                            [ngClass]="{
+                              'custom_not-allowed':
+                                user.status === userStatus.Deactivated
+                            }"
+                            for="appCheckBox{{ app.id }}"
+                          >
                             {{ app.name }}
                             <span class="app__id ml-xs">
                               ({{ app.customId }})
@@ -334,8 +346,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                             />
                             <label
                               [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                                'custom_not-allowed':
+                                  user.status === userStatus.Deactivated
+                              }"
                               class="font12"
                               for="appRadioView{{ app.id }}"
                             >
@@ -358,8 +371,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                             />
                             <label
                               [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                                'custom_not-allowed':
+                                  user.status === userStatus.Deactivated
+                              }"
                               class="font12"
                               for="appRadioEdit{{ app.id }}"
                             >
@@ -420,8 +434,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                   />
                                   <label
                                     [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                                      'custom_not-allowed':
+                                        user.status === userStatus.Deactivated
+                                    }"
                                     class="font14"
                                     for="studyCheckBox{{ study.studyId }}"
                                   >
@@ -431,11 +446,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                 <div class="custom__labels__radio">
                                   <span>
                                     <input
-
- [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
-
+                                      [ngClass]="{
+                                        'custom_not-allowed':
+                                          user.status === userStatus.Deactivated
+                                      }"
                                       [disabled]="
                                         app.selected ||
                                         !study.selected ||
@@ -451,8 +465,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     />
                                     <label
                                       [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                                        'custom_not-allowed':
+                                          user.status === userStatus.Deactivated
+                                      }"
                                       class="font12"
                                       for="studyRadioView{{ study.studyId }}"
                                     >
@@ -475,10 +490,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                       (change)="studyRadioButtonChange(study)"
                                     />
                                     <label
-  [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
-
+                                      [ngClass]="{
+                                        'custom_not-allowed':
+                                          user.status === userStatus.Deactivated
+                                      }"
                                       class="font12"
                                       for="studyRadioEdit{{ study.studyId }}"
                                     >
@@ -513,10 +528,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                               <div *ngFor="let site of study.sites">
                                 <div class="custom__labels">
                                   <input
-
-                                   [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                                    [ngClass]="{
+                                      'custom_not-allowed':
+                                        user.status === userStatus.Deactivated
+                                    }"
                                     #permissionCheckBox
                                     (change)="
                                       siteCheckBoxChange(site, study, app)
@@ -531,9 +546,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     [(ngModel)]="site.selected"
                                   />
                                   <label
-                                   [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                                    [ngClass]="{
+                                      'custom_not-allowed':
+                                        user.status === userStatus.Deactivated
+                                    }"
                                     class="font12"
                                     for="siteCheckBox{{ site.siteId }}"
                                   >
@@ -543,8 +559,6 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                 <div class="custom__labels__radio">
                                   <span>
                                     <input
-
-                                    
                                       [disabled]="
                                         study.selected ||
                                         !site.selected ||
@@ -558,9 +572,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                       name="siteRadioGroup{{ site.siteId }}"
                                     />
                                     <label
-                                     [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                                      [ngClass]="{
+                                        'custom_not-allowed':
+                                          user.status === userStatus.Deactivated
+                                      }"
                                       class="font12"
                                       for="siteRadioRead{{ site.siteId }}"
                                     >
@@ -582,9 +597,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                       name="siteRadioGroup{{ site.siteId }}"
                                     />
                                     <label
-                                     [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                                      [ngClass]="{
+                                        'custom_not-allowed':
+                                          user.status === userStatus.Deactivated
+                                      }"
                                       class="font12"
                                       for="siteRadioEdit{{ site.siteId }}"
                                     >
