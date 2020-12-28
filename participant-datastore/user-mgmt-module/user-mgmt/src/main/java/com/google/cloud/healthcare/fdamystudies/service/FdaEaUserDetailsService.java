@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public interface FdaEaUserDetailsService {
@@ -18,5 +19,5 @@ public interface FdaEaUserDetailsService {
 
   boolean verifyCode(String code, UserDetailsEntity participantDetails);
 
-  String updateStatus(UserDetailsEntity participantDetails);
+  String updateStatus(UserDetailsEntity participantDetails, AuditLogEventRequest auditRequest);
 }
