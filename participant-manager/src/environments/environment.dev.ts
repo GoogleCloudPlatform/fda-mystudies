@@ -11,4 +11,5 @@ export const environment = {
   termsPageDescription: 'terms description goes here',
   aboutPageTitle: 'about page title goes here',
   aboutPageDescription: 'about page description goes here',
+  copyright: 'Copyright 2020 Google LLC.',
 };
