@@ -17,7 +17,7 @@ export GIT_ROOT=
 export LOCATION=
 
 # DOMAIN is the domain you will be using for your URLs (for example, 
-# `${PREFIX}.your_company_name.com` or `${PREFIX}.your_medical_center.edu`)
+# `your_company_name.com` or `your_medical_center.edu`)
 export DOMAIN=
 
 # ENGINE_CONFIG and MYSTUDIES_TEMPLATE do not need to be changed unless
