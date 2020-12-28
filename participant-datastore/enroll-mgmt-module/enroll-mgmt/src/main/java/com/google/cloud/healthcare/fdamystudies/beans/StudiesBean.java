@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,10 +32,13 @@ public class StudiesBean {
     this.adherence = adherence;
   }
 
-  private String studyId = "";
-  private String status = "";
+  private String studyId;
+
+  @Size(max = SMALL_LENGTH)
+  private String status;
+
   private Boolean bookmarked;
-  private String enrolledDate = "";
+  private String enrolledDate;
   private Integer completion;
   private Integer adherence;
   private String participantId;
