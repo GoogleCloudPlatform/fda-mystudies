@@ -60,8 +60,8 @@ The deployment process takes the following approach:
 1. Create a Kubernetes cluster to run your application containers
 1. Create your initial user accounts and configure the required certificates, secrets, URLs, policies and network mesh
 1. Customize branding and text content as desired
-1. Configure and deploy your mobile applications
 1. Create your first study
+1. Configure and deploy your mobile applications
 
 ### Before you begin
 
@@ -71,11 +71,11 @@ The deployment process takes the following approach:
     -    [CICD](https://en.wikipedia.org/wiki/CI/CD) and [Google Cloud Build](https://cloud.google.com/kubernetes-engine/docs/tutorials/gitops-cloud-build)
     -    [IAM](https://en.wikipedia.org/wiki/Identity_management) and Google Cloud’s [resource hierarchy](https://cloud.google.com/resource-manager/docs/cloud-platform-resource-hierarchy)
 1. Understand how the Terraform config files and cloud resources are named and organized in the deployment:
-    -  `{PREFIX}` is a name you choose for your deployment that will be prepended to various directories, cloud resources and URLs (for example this could be `mystudies`)
-    -  `{ENV}` is a label you choose that will be appended to `{PREFIX}` in your directories and cloud resources (for example this could be `dev`, `test` or `prod`)
-    - `{DOMAIN}` is the domain you will be using for your URLs (for example, `your_company_name.com` or `your_medical_center.edu`)
+    -  `{PREFIX}` is a name you choose for your deployment that will be prepended to various directories, cloud resources and URLs (for example this could be ‘mystudies’)
+    -  `{ENV}` is a label you choose that will be appended to `{PREFIX}` in your directories and cloud resources (for example this could be ‘dev’, ‘test’ or ‘prod’)
+    - `{DOMAIN}` is the domain you will be using for your URLs (for example, ‘your_company_name.com’ or ‘your_medical_center.edu’)
     - [`deployment/deployment.hcl`](/deployment/deployment.hcl) is the file where you will specify top-level parameters for your deployment (for example, the values of `{PREFIX}`, `{ENV}` and `{DOMAIN}`)
-    - [`deployment/mystudies.hcl`](/deployment/mystudies.hcl) is the file that represents the overall recipe for the deployment (you will uncomment various aspects of this recipe as your deployment progresses)
+    - [`/deployment/mystudies.hcl`](/deployment/mystudies.hcl) is the file that represents the overall recipe for the deployment (you will uncomment various aspects of this recipe as your deployment progresses)
     - The directories created in [`/deployment/terraform/`](/deployment/terraform/) by the `tfengine` command represent distinct cloud projects that the CICD pipeline monitors to create, update or destroy resources based on the changes you make to those directories
     -  The other directories in the FDA MyStudies repository map to the various components of the platform and contain Terraform and Kubernetes configuration files, such as `tf-deployment.yaml` and `tf-service.yaml`, that support each component’s deployment
 
@@ -84,13 +84,13 @@ The deployment process takes the following approach:
 1. Make sure you have access to a Google Cloud environment that contains an [organization resource](https://cloud.google.com/resource-manager/docs/creating-managing-organization#acquiring) (if you don’t have an organization resource, you can obtain one by [creating](https://support.google.com/a/answer/9983832) a Google Workspace and selecting a domain)
 1. Confirm the billing account that you will use has [quota](https://support.google.com/cloud/answer/6330231?hl=en) for 10 or more projects (newly created billing accounts may default to a 3-5 project quota)
     - You can test how many projects your billing account can support by manually [creating projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects) and [linking them](https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project) to your billing account, if you are able to link 10 projects to your billing account then you can proceed, otherwise [request additional quota](https://support.google.com/code/contact/billing_quota_increase) (don’t forget to unlink the test projects from your billing account, otherwise your quota may be exhausted) 
-1. [Create a folder](https://cloud.google.com/resource-manager/docs/creating-managing-folders) to deploy your FDA MyStudies infrastructure into (or have your Google Cloud administrator do this for you - the [`resourcemanager.folderAdmin`](https://cloud.google.com/resource-manager/docs/access-control-folders) role for the organization is required)
+1. Use the [resource manager](https://console.cloud.google.com/cloud-resource-manager) to [create a folder](https://cloud.google.com/resource-manager/docs/creating-managing-folders) to deploy your FDA MyStudies infrastructure into, for example you could name this folder `{PREFIX}-{ENV}` (if you do not have the [`resourcemanager.folderAdmin`](https://cloud.google.com/resource-manager/docs/access-control-folders) role for your organization, you may need to ask your Google Cloud IT administrator to do this for you)
 1. Confirm you have access to a user account with the following Cloud IAM roles:
     - `roles/resourcemanager.folderAdmin` for the folder you created
     - `roles/resourcemanager.projectCreator` for the folder you created
     - `roles/compute.xpnAdmin` for the folder you created
     - `roles/billing.admin` for the billing account that you will use
-1. [Create](https://support.google.com/a/answer/33343?hl=en) the following
+1. Use the [groups manager](https://console.cloud.google.com/identity/groups) to [create](https://support.google.com/a/answer/33343?hl=en) the following
     administrative [IAM](https://cloud.google.com/iam/docs/overview#concepts_related_identity) groups that will be used during deployment:
 
     Group name | Description
@@ -114,38 +114,41 @@ The deployment process takes the following approach:
     - [Install](https://cloud.google.com/storage/docs/gsutil_install) the Cloud Storage command line tool `gsutil` (already installed if using a Google Compute Engine VM)
     - [Install](https://kubernetes.io/docs/tasks/tools/install-kubectl) the Kubernetes command line tool `kubectl`, for example:
          ```bash
-         sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
-         curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-         echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-         sudo apt-get update
+         sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl && \
+         curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
+         echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list && \
+         sudo apt-get update && \
          sudo apt-get install -y kubectl
          ```
     - Install [Terraform 0.12.29](https://learn.hashicorp.com/tutorials/terraform/install-cli), for example:
          ```shell
-         sudo apt-get install software-properties-common
-         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+         sudo apt-get install software-properties-common -y && \
+         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && \
+         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
          sudo apt-get update && sudo apt-get install terraform=0.12.29
          ```
     - Install [Go 1.14+](https://golang.org/doc/install), for example:
          ```shell
-         sudo apt install wget
-         wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz
-         sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz
+         sudo apt install wget -y && \
+         wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz && \
+         sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz && \
          export PATH=$PATH:/usr/local/go/bin
          ```
     - Install [Terraform Engine](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
          ```shell
-         VERSION=v0.4.0
-         sudo wget -O /usr/local/bin/tfengine                             
-         https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64
+         VERSION=v0.4.0 && \
+         sudo wget -O /usr/local/bin/tfengine https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64 && \
          sudo chmod +x /usr/local/bin/tfengine
+         ```
+    - Install [Git](https://github.com/git-guides/install-git), for example:
+         ```shell
+         sudo apt-get install git-all
          ```
 1. [Duplicate](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/duplicating-a-repository) the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies), then clone it locally
 1. Update [`/deployment/deployment.hcl`](/deployment/deployment.hcl) with the values for your deployment
 1. Update [`/deployment/scripts/set_env_var.sh`](/deployment/scripts/set_env_var.sh) for your deployment, then use the script to set your environment variables, for example:
     ```
-    . ./set_env_var.sh # Executed from the deployment/scripts directory
+    . ./set_env_var.sh           # executed from your /deployment/scripts directory
     ```
 1. Authenticate as a user with the permissions described above (this deployment assumes gcloud and Terraform commands are made as a user, rather than a service account)
     - Update your [application default credentials](https://cloud.google.com/docs/authentication/production), for example you could run `gcloud auth application-default login` (when using a Google Compute Engine VM you must update the application default credentials, otherwise requests will continue to be made with its default service account)
@@ -166,26 +169,24 @@ The deployment process takes the following approach:
          ```bash
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          ```
-1. Use Terraform to create the `devops` project and Terraform state bucket (if this step fails, confirm you have updated your application default credentials and that the required version of Terraform is installed), for example:
+1. Use Terraform to create the `{PREFIX}-{ENV}-devops` project and Terraform state bucket (if this step fails, confirm you have updated your application default credentials and that the required version of Terraform is installed), for example:
     ```bash
     cd $GIT_ROOT/deployment/terraform/devops
-    terraform init
-    terraform apply
+    terraform init && terraform apply
     ```
-1. Backup the state of the `devops` project to the newly created state bucket by setting the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `true` and regenerating the Terraform configs, for example:
+1. Backup the state of your `{PREFIX}-{ENV}-devops` project to the newly created state bucket by setting the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `true` and regenerating the Terraform configs, for example:
     ```bash
     sed -e 's/enable_gcs_backend = false/enable_gcs_backend = true/g' \
-    -i.backup $GIT_ROOT/deployment/mystudies.hcl    
+      -i.backup $GIT_ROOT/deployment/mystudies.hcl    
     tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     cd $GIT_ROOT/deployment/terraform/devops
     terraform init -force-copy
     ```
-1. Open [Cloud Build](https://console.cloud.google.com/cloud-build/triggers) in your new `devops` project and [connect](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app) your cloned GitHub repository (skip adding triggers as Terraform will create them in the next step)
+1. Open [Cloud Build](https://console.cloud.google.com/cloud-build/triggers) in your new `{PREFIX}-{ENV}-devops` project and [connect](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app) your cloned GitHub repository (skip adding triggers as Terraform will create them in the next step)
 1. Create the CICD pipeline for your deployment (this will create the Cloud Builder triggers that will run whenever a pull request containing changes to files in `$GIT_ROOT/deployment/terraform/` is raised against the GitHub branch that you specified in [`deployment.hcl`](/deployment/deployment.hcl)), for example:
     ```bash
     cd $GIT_ROOT/deployment/terraform/cicd
-    terraform init
-    terraform apply
+    terraform init && terraform apply
     ```
 ### Deploy your platform infrastructure
 
@@ -447,5 +448,84 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
 
 See the [*Troubleshooting*](/documentation/troubleshooting.md) guide for more information.
 --->
+***
+<p align="center">Copyright 2020 Google LLC</p>
+[TODO] Kubernetes README
+Link: https://github.com/GoogleCloudPlatform/fda-mystudies/tree/develop/kubernetes
+
+<!--
+ Copyright 2020 Google LLC
+ Use of this source code is governed by an MIT-style
+ license that can be found in the LICENSE file or at
+ https://opensource.org/licenses/MIT.
+-->
+
+# Kubernetes Setup
+
+This directory contains some Kubernetes resources common to all the apps.
+
+## Kubernetes Files Locations
+
+All files below are relative to the root of the repo.
+
+* kubernetes/
+  * cert.yaml
+    * A Kubernetes ManagedCertificate for using
+            [Google-managed SSL certificates](https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs).
+  * ingress.yaml
+    * A Kubernetes Ingress for routing HTTP calls to services in the
+            cluster.
+  * pod_security_policy.yaml
+    * A restrictive Pod Security Policy that applies to the cluster apps.
+  * pod_security_policy-istio.yaml
+    * A looser Pod Security Policy that only applies to Istio containers
+            in the cluster.
+  * kubeapply.sh
+    * A helper script that applies all resources to the cluster. Not
+            required, the manual steps will be described below.
+* auth-server/
+  * tf-deployment.yaml
+    * A Kubernetes Deployment, deploying the app along with its secrets.
+    * This is forked from deployment.yaml with modifications for the Terraform
+        setup.
+  * tf-service.yaml
+    * A Kubernetes Service, exposing the app to communicate with other apps
+        and the Ingress.
+    * This is forked from service.yaml with modifications for the Terraform
+        setup.
+* response-datastore/
+  * same as auth-server
+* study-builder/
+  * same as auth-server
+* study-datastore/
+  * same as auth-server
+* participant-datastore/consent-mgmt-module
+  * same as auth-server
+* participant-datastore/enroll-mgmt-module
+  * same as auth-server
+* participant-datastore/user-mgmt-module
+  * same as auth-server
+* participant-manager/
+  * same as auth-server
+
+## Troubleshooting
+
+If the cluster has issues, there are a few things you can check:
+
+* Wait. It can take some time for all deployments to come up.
+* Run `kubectl describe pods` and `kubectl logs <pod> <container>`. 
+  Application logs are set to `warning` level by default, if you need more information, 
+  consider changing the log level to `info`.
+* Make sure all the secrets in Secret Manager have values and are not empty. 
+  After updating the value of a secret, make sure you refresh Kubernetes secrets
+  by running `terraform init` and `terraform apply` in `./deployment/terraform/kubernetes`.
+* Make sure Pod Security Polices were applied. The cluster has enforcement
+    enabled, and will not start any containers if there are no Pod Security
+    Policies.
+* Make sure your cluster ingress is healthy.
+* Follow a troubleshooting guide. Examples are
+    [this](https://learnk8s.io/troubleshooting-deployments) and
+    [this](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/).
+
 ***
 <p align="center">Copyright 2020 Google LLC</p>
