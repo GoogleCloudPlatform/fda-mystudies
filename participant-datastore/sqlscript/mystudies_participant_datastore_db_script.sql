@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `participant_study_info` (
   `user_details_id` varchar(255) DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `participant_study_info_user_details_id_study_info_id__uidx` (`user_details_id`,`study_info_id`),
+  UNIQUE KEY `participant_study_info_user_details_id_study_info_id__uidx` (`user_details_id`,`study_info_id`,`site_id`),
   UNIQUE KEY `UK_wic7o2oog14p35skw71ix3q0` (`participant_id`),
   KEY `FKb9362vga03lqkb0k46wsmi53x` (`participant_registry_site_id`),
   KEY `FKeppgsoyc8ldsx8mciwjo49j9u` (`site_id`),
