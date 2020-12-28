@@ -154,7 +154,11 @@ The deployment process takes the following approach:
 ### Set up your CICD pipelines
 
 1. Generate your Terraform configuration files
-    - Set the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `false`
+    - Set the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `false`, for example:
+         ```bash
+         sed -e 's/enable_gcs_backend = true/enable_gcs_backend = false/g' \
+          -i.backup $GIT_ROOT/deployment/mystudies.hcl
+         ``` 
     - Execute the `tfengine` command to generate the configs (by default, CICD
     will look for Terraform configs under the `deployment/terraform/` directory in the
     GitHub repo, so set the `--output_path` to point to the `deployment/terraform/`
@@ -170,6 +174,8 @@ The deployment process takes the following approach:
     ```
 1. Backup the state of the `devops` project to the newly created state bucket by setting the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `true` and regenerating the Terraform configs, for example:
     ```bash
+    sed -e 's/enable_gcs_backend = false/enable_gcs_backend = true/g' \
+    -i.backup $GIT_ROOT/deployment/mystudies.hcl    
     tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     cd $GIT_ROOT/deployment/terraform/devops
     terraform init -force-copy
@@ -200,7 +206,11 @@ The deployment process takes the following approach:
 
 1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project
 1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
-    - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
+    - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
+         ```bash
+         sed -e 's/#5# //g' -i.backup $GIT_ROOT/deployment/mystudies.hcl
+         ```
+    - Regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          git checkout -b database-configuration
@@ -210,7 +220,11 @@ The deployment process takes the following approach:
          ```
     - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 20 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Configure the permissions of your SQL script bucket so that your Cloud SQL instance can import the necessary initialization scripts
-    - Uncomment the blocks for Steps 6 in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
+    - Uncomment the blocks for Steps 6 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
+         ```bash
+         sed -e 's/#6# //g' -i.backup $GIT_ROOT/deployment/mystudies.hcl
+         ```
+    - Regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          git checkout -b sql-bucket-permissions
@@ -246,7 +260,11 @@ The deployment process takes the following approach:
 1. Make a [request](https://cloud.google.com/compute/quotas#requesting_additional_quota) to increase the [Global Compute Engine API Backend Services quota]((https://console.cloud.google.com/iam-admin/quotas/details;servicem=compute.googleapis.com;metricm=compute.googleapis.com%2Fbackend_services;limitIdm=1%2F%7Bproject%7D)) for your `{PREFIX}-{ENV}-apps` project to 20 (if it is not already set at, or beyond, this value)
 1. Enable CICD for the application directories of your cloned GitHub repository so that changes you make to the application code will automatically build the application containers for your deployment
     - Enable [Cloud Build](https://console.cloud.google.com/cloud-build/triggers) in your `{PREFIX}-{ENV}-apps` project and [connect](https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app) your cloned GitHub repository (skip adding triggers as Terraform will create them in the next step)
-    - Uncomment  the Cloud Build triggers portion of the apps project in [`mystudies.hcl`](/deployment/mystudies.hcl), then regenerate the Terraform configs and commit the changes to your repo, for example:
+    - Uncomment  the Cloud Build triggers portion of the apps project (step 7) in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
+         ```bash
+         sed -e 's/#7# //g' -i.backup $GIT_ROOT/deployment/mystudies.hcl
+         ```
+    - Regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          git checkout -b enable-apps-CICD
