@@ -19,7 +19,7 @@ template "mystudies" {
     # For example, "dev"
     env              = "<ENV>"
     # Id of the folder you are deploying into
-    # In the form of "0000000000"
+    # In the form of "0000000000000"
     folder_id        = "<FOLDER_ID>"
     # Billing account that your projects will be attached to
     # In the form of "XXXXXX-XXXXXX-XXXXXX"
