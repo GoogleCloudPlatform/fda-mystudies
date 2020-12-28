@@ -228,7 +228,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     UserRegAdminEntity adminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireInHours()));
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
@@ -408,7 +408,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("saveSuperAdminDetails()");
     UserRegAdminEntity superAdminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireInHours()));
 
     superAdminDetails = userAdminRepository.saveAndFlush(superAdminDetails);
 
@@ -730,7 +730,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   private void validateSignedInUser(String adminUserId) {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(adminUserId);
     UserRegAdminEntity user =
-        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     if (!user.isSuperAdmin()) {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
@@ -778,7 +778,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     user.setSecurityCodeExpireDate(
         new Timestamp(
             Instant.now()
-                .plus(Long.valueOf(appConfig.getSecurityCodeExpireDate()), ChronoUnit.MINUTES)
+                .plus(Long.valueOf(appConfig.getSecurityCodeExpireInHours()), ChronoUnit.HOURS)
                 .toEpochMilli()));
     user = userAdminRepository.saveAndFlush(user);
 
@@ -794,7 +794,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
 
     UserRegAdminEntity loggedInUserDetails =
-        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     if (!loggedInUserDetails.isSuperAdmin()) {
       logger.error("Signed in user is not having super admin privileges");
