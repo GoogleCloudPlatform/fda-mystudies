@@ -115,30 +115,30 @@ The deployment process takes the following approach:
     - [Install](https://kubernetes.io/docs/tasks/tools/install-kubectl) the Kubernetes command line tool `kubectl`, for example:
          ```bash
          sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl && \
-         curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
-         echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list && \
-         sudo apt-get update && \
-         sudo apt-get install -y kubectl
+           curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
+           echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list && \
+           sudo apt-get update && \
+           sudo apt-get install -y kubectl
          ```
     - Install [Terraform 0.12.29](https://learn.hashicorp.com/tutorials/terraform/install-cli), for example:
          ```shell
          sudo apt-get install software-properties-common -y && \
-         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && \
-         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
-         sudo apt-get update && sudo apt-get install terraform=0.12.29
+           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && \
+           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
+           sudo apt-get update && sudo apt-get install terraform=0.12.29
          ```
     - Install [Go 1.14+](https://golang.org/doc/install), for example:
          ```shell
          sudo apt install wget -y && \
-         wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz && \
-         sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz && \
-         export PATH=$PATH:/usr/local/go/bin
+           wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz && \
+           sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz && \
+           export PATH=$PATH:/usr/local/go/bin
          ```
     - Install [Terraform Engine](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
          ```shell
          VERSION=v0.4.0 && \
-         sudo wget -O /usr/local/bin/tfengine https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64 && \
-         sudo chmod +x /usr/local/bin/tfengine
+           sudo wget -O /usr/local/bin/tfengine https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64 && \
+           sudo chmod +x /usr/local/bin/tfengine
          ```
     - Install [Git](https://github.com/git-guides/install-git), for example:
          ```shell
@@ -238,12 +238,13 @@ The deployment process takes the following approach:
     - Upload the necessary SQL script files to the `{PREFIX}-{ENV}-mystudies-sql-import` storage bucket that you created during Terraform deployment, for example:
          ```bash
          gsutil cp \
-         ${GIT_ROOT}/study-builder/sqlscript/* \
-         ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
-         ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
-         ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
-         ${GIT_ROOT}/hydra/sqlscript/create_hydra_db_script.sql \
-         gs://${PREFIX}-${ENV}-mystudies-sql-import
+           ${GIT_ROOT}/study-builder/sqlscript/* \
+           ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
+           ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
+           
+${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
+           ${GIT_ROOT}/hydra/sqlscript/create_hydra_db_script.sql \
+           gs://${PREFIX}-${ENV}-mystudies-sql-import
          ```
     - Import the SQL scripts from cloud storage to your Cloud SQL instance, for example:
          ```bash
@@ -284,20 +285,19 @@ The deployment process takes the following approach:
     -  Replace the `<PREFIX>`, `<ENV>` and `<DOMAIN>` values in [`/deployment/kubernetes/cert.yaml`](/deployment/kubernetes/cert.yaml) and [`/deployment/kubernetes/ingress.yaml`](/deployment/kubernetes/ingress.yaml), for example:
          ```bash
          sed -e 's/<PREFIX>/'$PREFIX'/g' \
-         -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
-         $GIT_ROOT/deployment/kubernetes/cert.yaml
-         
+           -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
+           $GIT_ROOT/deployment/kubernetes/cert.yaml
          sed -e 's/<PREFIX>/'$PREFIX'/g' \
-         -e 's/<ENV>/'$ENV'/g' \
-         -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
-         $GIT_ROOT/deployment/kubernetes/ingress.yaml
+           -e 's/<ENV>/'$ENV'/g' \
+           -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
+           $GIT_ROOT/deployment/kubernetes/ingress.yaml
          ```
     - In [`/participant-manager/src/environments/environment.prod.ts`](/participant-manager/src/environments/environment.prod.ts), replace `<BASE_URL>` with your `participants.{PREFIX}.{DOMAIN}` value and `<auth-server-client-id>` with the value of your `auto-auth-server-client-id` secret (you can find this value in the [Secret Manager](https://console.cloud.google.com/security/secret-manager/) of your `{PREFIX}-{ENV}-secrets` project), for example:
          ```bash
          export auth_server_client_id=<YOUR_VALUE>
          sed -e 's/<BASE_URL>/participants.’$PREFIX’.'$DOMAIN’/g' \
-         -e 's/<AUTH_SERVER_CLIENT_ID>/'$auth_server_client_id'/g' -i.backup \
-         $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
+           -e 's/<AUTH_SERVER_CLIENT_ID>/'$auth_server_client_id'/g' -i.backup \
+           $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
          ```
     - Commit the changes to your repo, for example:
          ```bash
@@ -336,54 +336,53 @@ The deployment process takes the following approach:
     - Configure the remaining resources with Terraform, for example: 
          ```bash
          cd $GIT_ROOT/deployment/terraform/kubernetes/
-         terraform init
-         terraform plan
+         terraform init && terraform plan
          terraform apply
          ```
     - Set your `kubectl` credentials, for example:
          ```bash
          gcloud container clusters get-credentials "$PREFIX-$ENV-gke-cluster" \
-         --region=$LOCATION --project="$PREFIX-$ENV-apps"
+           --region=$LOCATION --project="$PREFIX-$ENV-apps"
          ```
     - Apply the pod security policies, for example:
          ```bash
          kubectl apply \
-         -f $GIT_ROOT/deployment/kubernetes/pod_security_policy.yaml \
-         -f $GIT_ROOT/deployment/kubernetes/pod_security_policy-istio.yaml
+           -f $GIT_ROOT/deployment/kubernetes/pod_security_policy.yaml \
+           -f $GIT_ROOT/deployment/kubernetes/pod_security_policy-istio.yaml
          ```
     - Apply all deployments, for example:
          ```bash
          kubectl apply \
-         -f $GIT_ROOT/study-datastore/tf-deployment.yaml \
-         -f $GIT_ROOT/response-datastore/tf-deployment.yaml \
-         -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-deployment.yaml \
-         -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
-         -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-deployment.yaml \
-         -f $GIT_ROOT/study-builder/tf-deployment.yaml \
-         -f $GIT_ROOT/auth-server/tf-deployment.yaml \
-         -f $GIT_ROOT/participant-manager-datastore/tf-deployment.yaml \
-         -f $GIT_ROOT/hydra/tf-deployment.yaml \
-         -f $GIT_ROOT/participant-manager/tf-deployment.yaml
+           -f $GIT_ROOT/study-datastore/tf-deployment.yaml \
+           -f $GIT_ROOT/response-datastore/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-deployment.yaml \
+           -f $GIT_ROOT/study-builder/tf-deployment.yaml \
+           -f $GIT_ROOT/auth-server/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-manager-datastore/tf-deployment.yaml \
+           -f $GIT_ROOT/hydra/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-manager/tf-deployment.yaml
          ```
     - Apply all services, for example:
          ```bash
          kubectl apply \
-         -f $GIT_ROOT/study-datastore/tf-service.yaml \
-         -f $GIT_ROOT/response-datastore/tf-service.yaml \
-         -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-service.yaml \
-         -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-service.yaml \
-         -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-service.yaml \
-         -f $GIT_ROOT/study-builder/tf-service.yaml \
-         -f $GIT_ROOT/auth-server/tf-service.yaml \
-         -f $GIT_ROOT/participant-manager-datastore/tf-service.yaml \
-         -f $GIT_ROOT/hydra/tf-service.yaml \
-         -f $GIT_ROOT/participant-manager/tf-service.yaml
+           -f $GIT_ROOT/study-datastore/tf-service.yaml \
+           -f $GIT_ROOT/response-datastore/tf-service.yaml \
+           -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-service.yaml \
+           -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-service.yaml \
+           -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-service.yaml \
+           -f $GIT_ROOT/study-builder/tf-service.yaml \
+           -f $GIT_ROOT/auth-server/tf-service.yaml \
+           -f $GIT_ROOT/participant-manager-datastore/tf-service.yaml \
+           -f $GIT_ROOT/hydra/tf-service.yaml \
+           -f $GIT_ROOT/participant-manager/tf-service.yaml
          ```
     - Apply the certificate and the ingress, for example:
          ```bash
          kubectl apply \
-         -f $GIT_ROOT/deployment/kubernetes/cert.yaml \
-         -f $GIT_ROOT/deployment/kubernetes/ingress.yaml
+           -f $GIT_ROOT/deployment/kubernetes/cert.yaml \
+           -f $GIT_ROOT/deployment/kubernetes/ingress.yaml
          ```
     - Update firewalls:
         - Run `kubectl describe ingress $PREFIX-$ENV`
@@ -395,17 +394,17 @@ The deployment process takes the following approach:
     - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [`register_clients_in_hydra.sh`](/deployment/scripts/register_clients_in_hydra.sh), for example:
          ```bash
          $GIT_ROOT/deployment/scripts/register_clients_in_hydra.sh \
-         $PREFIX $ENV https://participants.$DOMAIN
+           $PREFIX $ENV https://participants.$DOMAIN
          ```
     - Create your first admin user account for the [`Participant manager`](/participant-manager/) application by running the [`create_participant_manager_superadmin.sh`](/deployment/scripts/create_participant_manager_superadmin.sh) script to generate and import a SQL dump file for the [`Participant datastore`](/participant-datastore/) database, for example:
          ```bash
          $GIT_ROOT/deployment/scripts/create_participant_manager_superadmin.sh \
-         $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
+           $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
          ```
     - Create your first admin user account for the [`Study builder`](/study-builder/) application by running the [`create_study_builder_superadmin.sh`](/deployment/scripts/create_study_builder_superadmin.sh) script to generate and import a SQL dump file for the [`Study datastore`](/study-datastore/) database, for example:
          ```bash
          $GIT_ROOT/deployment/scripts/create_study_builder_superadmin.sh \
-         $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
+           $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
          ```
 
 ### Configure your first study
@@ -448,84 +447,5 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
 
 See the [*Troubleshooting*](/documentation/troubleshooting.md) guide for more information.
 --->
-***
-<p align="center">Copyright 2020 Google LLC</p>
-[TODO] Kubernetes README
-Link: https://github.com/GoogleCloudPlatform/fda-mystudies/tree/develop/kubernetes
-
-<!--
- Copyright 2020 Google LLC
- Use of this source code is governed by an MIT-style
- license that can be found in the LICENSE file or at
- https://opensource.org/licenses/MIT.
--->
-
-# Kubernetes Setup
-
-This directory contains some Kubernetes resources common to all the apps.
-
-## Kubernetes Files Locations
-
-All files below are relative to the root of the repo.
-
-* kubernetes/
-  * cert.yaml
-    * A Kubernetes ManagedCertificate for using
-            [Google-managed SSL certificates](https://cloud.google.com/kubernetes-engine/docs/how-to/managed-certs).
-  * ingress.yaml
-    * A Kubernetes Ingress for routing HTTP calls to services in the
-            cluster.
-  * pod_security_policy.yaml
-    * A restrictive Pod Security Policy that applies to the cluster apps.
-  * pod_security_policy-istio.yaml
-    * A looser Pod Security Policy that only applies to Istio containers
-            in the cluster.
-  * kubeapply.sh
-    * A helper script that applies all resources to the cluster. Not
-            required, the manual steps will be described below.
-* auth-server/
-  * tf-deployment.yaml
-    * A Kubernetes Deployment, deploying the app along with its secrets.
-    * This is forked from deployment.yaml with modifications for the Terraform
-        setup.
-  * tf-service.yaml
-    * A Kubernetes Service, exposing the app to communicate with other apps
-        and the Ingress.
-    * This is forked from service.yaml with modifications for the Terraform
-        setup.
-* response-datastore/
-  * same as auth-server
-* study-builder/
-  * same as auth-server
-* study-datastore/
-  * same as auth-server
-* participant-datastore/consent-mgmt-module
-  * same as auth-server
-* participant-datastore/enroll-mgmt-module
-  * same as auth-server
-* participant-datastore/user-mgmt-module
-  * same as auth-server
-* participant-manager/
-  * same as auth-server
-
-## Troubleshooting
-
-If the cluster has issues, there are a few things you can check:
-
-* Wait. It can take some time for all deployments to come up.
-* Run `kubectl describe pods` and `kubectl logs <pod> <container>`. 
-  Application logs are set to `warning` level by default, if you need more information, 
-  consider changing the log level to `info`.
-* Make sure all the secrets in Secret Manager have values and are not empty. 
-  After updating the value of a secret, make sure you refresh Kubernetes secrets
-  by running `terraform init` and `terraform apply` in `./deployment/terraform/kubernetes`.
-* Make sure Pod Security Polices were applied. The cluster has enforcement
-    enabled, and will not start any containers if there are no Pod Security
-    Policies.
-* Make sure your cluster ingress is healthy.
-* Follow a troubleshooting guide. Examples are
-    [this](https://learnk8s.io/troubleshooting-deployments) and
-    [this](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/).
-
 ***
 <p align="center">Copyright 2020 Google LLC</p>
