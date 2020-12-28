@@ -241,8 +241,7 @@ The deployment process takes the following approach:
            ${GIT_ROOT}/study-builder/sqlscript/* \
            ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
            ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
-           
-${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
+           ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
            ${GIT_ROOT}/hydra/sqlscript/create_hydra_db_script.sql \
            gs://${PREFIX}-${ENV}-mystudies-sql-import
          ```
