@@ -69,7 +69,6 @@ public class StudyStateDaoImpl implements StudyStateDao {
         session.update(participantStudy);
       }
     }
-
     logger.info("StudyStateDaoImpl saveParticipantStudies() - Ends ");
     return MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
   }

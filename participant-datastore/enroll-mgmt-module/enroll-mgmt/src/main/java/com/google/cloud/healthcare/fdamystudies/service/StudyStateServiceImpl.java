@@ -152,7 +152,6 @@ public class StudyStateServiceImpl implements StudyStateService {
       logger.error("StudyStateServiceImpl saveParticipantStudies() - error ", e);
       throw e;
     }
-
     logger.info("StudyStateServiceImpl saveParticipantStudies() - Ends ");
     return studyStateRespBean;
   }
