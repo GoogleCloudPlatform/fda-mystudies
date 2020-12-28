@@ -112,11 +112,7 @@ class RegistrationServerConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-
-    var header = [
-      "appId": AppConfiguration.appID
-    ]
-
+    var header = SessionService.Audit.headers
     if User.currentUser.authToken != nil {
       header[kAuthorization] = User.currentUser.authToken
     }

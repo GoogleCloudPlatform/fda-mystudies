@@ -208,43 +208,41 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     List<StudyStateBean> serviceResponseList = new ArrayList<>();
 
-    if (userId != null) {
-      UserDetailsEntity userDetailsEntity = userRegAdminUserDao.getRecord(userId);
-      if (userDetailsEntity == null) {
-        throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
-      }
+    UserDetailsEntity userDetailsEntity = userRegAdminUserDao.getRecord(userId);
+    if (userDetailsEntity == null) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
 
-      List<ParticipantStudyEntity> participantStudiesList =
-          participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsEntity.getUserId());
-      if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
-        for (ParticipantStudyEntity participantStudiesBO : participantStudiesList) {
-          StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);
-          if (participantStudiesBO.getParticipantRegistrySite() != null) {
-            String enrolledTokenVal =
-                studyStateDao.getEnrollTokenForParticipant(
-                    participantStudiesBO.getParticipantRegistrySite().getId());
-            studyStateBean.setHashedToken(
-                EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
-          }
-          if (participantStudiesBO.getStudy() != null) {
-            studyStateBean.setStudyId(participantStudiesBO.getStudy().getCustomId());
-          }
-          studyStateBean.setStatus(participantStudiesBO.getStatus());
-          if (participantStudiesBO.getParticipantId() != null) {
-            studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());
-          }
-          studyStateBean.setCompletion(participantStudiesBO.getCompletion());
-          studyStateBean.setBookmarked(participantStudiesBO.getBookmark());
-          studyStateBean.setAdherence(participantStudiesBO.getAdherence());
-          if (participantStudiesBO.getEnrolledDate() != null) {
-            studyStateBean.setEnrolledDate(
-                MyStudiesUserRegUtil.getIsoDateFormat(participantStudiesBO.getEnrolledDate()));
-          }
-          if (participantStudiesBO.getSite() != null) {
-            studyStateBean.setSiteId(participantStudiesBO.getSite().getId().toString());
-          }
-          serviceResponseList.add(studyStateBean);
+    List<ParticipantStudyEntity> participantStudiesList =
+        participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsEntity.getUserId());
+    if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
+      for (ParticipantStudyEntity participantStudy : participantStudiesList) {
+        StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);
+        if (participantStudy.getParticipantRegistrySite() != null) {
+          String enrolledTokenVal =
+              studyStateDao.getEnrollTokenForParticipant(
+                  participantStudy.getParticipantRegistrySite().getId());
+          studyStateBean.setHashedToken(
+              EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
         }
+        if (participantStudy.getStudy() != null) {
+          studyStateBean.setStudyId(participantStudy.getStudy().getCustomId());
+        }
+        studyStateBean.setStatus(participantStudy.getStatus());
+        if (participantStudy.getParticipantId() != null) {
+          studyStateBean.setParticipantId(participantStudy.getParticipantId());
+        }
+        studyStateBean.setCompletion(participantStudy.getCompletion());
+        studyStateBean.setBookmarked(participantStudy.getBookmark());
+        studyStateBean.setAdherence(participantStudy.getAdherence());
+        if (participantStudy.getEnrolledDate() != null) {
+          studyStateBean.setEnrolledDate(
+              MyStudiesUserRegUtil.getIsoDateFormat(participantStudy.getEnrolledDate()));
+        }
+        if (participantStudy.getSite() != null) {
+          studyStateBean.setSiteId(participantStudy.getSite().getId().toString());
+        }
+        serviceResponseList.add(studyStateBean);
       }
     }
 
@@ -254,7 +252,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Override
   @Transactional
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete) {
+      String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest) {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
 
@@ -279,7 +277,7 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantStudy.get().setParticipantId(null);
       participantStudyRepository.saveAndFlush(participantStudy.get());
 
-      enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete);
+      enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete, auditRequest);
       respBean = new WithDrawFromStudyRespBean();
       respBean.setCode(HttpStatus.OK.value());
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
