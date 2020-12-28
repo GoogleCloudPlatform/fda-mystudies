@@ -39,7 +39,6 @@ import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
-import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
 import java.util.List;
@@ -78,10 +77,6 @@ public interface StudyDAO {
       Session session, Transaction transaction, String studyId, String customStudyId);
 
   public int eligibilityTestOrderCount(Integer eligibilityId);
-
-  public List<UserBO> getActiveNonAddedUserList(Integer studyId, Integer userId);
-
-  public List<StudyPermissionBO> getAddedUserListToStudy(Integer studyId, Integer userId);
 
   public List<StudyBo> getAllStudyList();
 

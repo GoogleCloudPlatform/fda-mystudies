@@ -40,7 +40,6 @@ import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
-import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -202,32 +201,6 @@ public class StudyServiceImpl implements StudyService {
     }
     logger.info("StudyServiceImpl - deleteStudyByCustomStudyId() - Ends");
     return flag;
-  }
-
-  @Override
-  public List<UserBO> getActiveNonAddedUserList(Integer studyId, Integer userId) {
-    logger.info("StudyServiceImpl - getActiveNonAddedUserList() - Starts");
-    List<UserBO> userList = null;
-    try {
-      userList = studyDAO.getActiveNonAddedUserList(studyId, userId);
-    } catch (Exception e) {
-      logger.error("StudyServiceImpl - getActiveNonAddedUserList() - ERROR", e);
-    }
-    logger.info("StudyServiceImpl - getActiveNonAddedUserList() - Ends");
-    return userList;
-  }
-
-  @Override
-  public List<StudyPermissionBO> getAddedUserListToStudy(Integer studyId, Integer userId) {
-    logger.info("StudyServiceImpl - getAddedUserListToStudy() - Starts");
-    List<StudyPermissionBO> studyPermissionList = null;
-    try {
-      studyPermissionList = studyDAO.getAddedUserListToStudy(studyId, userId);
-    } catch (Exception e) {
-      logger.error("StudyServiceImpl - getAddedUserListToStudy() - ERROR", e);
-    }
-    logger.info("StudyServiceImpl - getAddedUserListToStudy() - Ends");
-    return studyPermissionList;
   }
 
   @Override

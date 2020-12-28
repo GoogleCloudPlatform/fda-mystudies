@@ -65,7 +65,6 @@ import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.StudySequenceBo;
-import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
@@ -4587,9 +4586,6 @@ public class StudyController {
     StudyBo studyBo = null;
     String sucMsg = "";
     String errMsg = "";
-    List<UserBO> userList = null;
-    List<StudyPermissionBO> studyPermissionList = null;
-    List<Integer> permissions = null;
     String user = "";
     boolean isAnchorForEnrollmentLive = false;
     boolean isAnchorForEnrollmentDraft = false;
@@ -4658,24 +4654,9 @@ public class StudyController {
                         sessionStudyCount + FdahpStudyDesignerConstants.LOGOUT_LOGIN_USER);
         if (FdahpStudyDesignerUtil.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-          /*
-           * Get the active user list whom are not yet added to the particular study
-           */
-          userList =
-              studyService.getActiveNonAddedUserList(Integer.parseInt(studyId), sesObj.getUserId());
-          /*
-           * This method is used to get the uses whom are already added to the particular
-           * study
-           */
-          studyPermissionList =
-              studyService.getAddedUserListToStudy(Integer.parseInt(studyId), sesObj.getUserId());
-          /* Get the permissions of the user */
-          permissions = usersService.getPermissionsByUserId(sesObj.getUserId());
+
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
-          map.addAttribute("userList", userList);
-          map.addAttribute("studyPermissionList", studyPermissionList);
-          map.addAttribute("permissions", permissions);
           map.addAttribute("user", user);
           request
               .getSession()
