@@ -45,8 +45,8 @@ body {
 }
 
 .terms__logo .main__container {
-	padding-top: 30px;
-	padding-bottom: 0px;
-	margin-bottom: 30px;
-	line-height: 0;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  margin-bottom: 30px;
+  line-height: 0;
 }
