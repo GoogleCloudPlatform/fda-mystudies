@@ -17,6 +17,8 @@
           <label>Location Name</label>
           <input
             type="text"
+            [ngClass]="{'custom_not-allowed': statusUpdate.status !== 1}"
+            [readonly]="statusUpdate.status !== 1"
             class="form-control"
             placeholder="Enter Location Name"
             [(ngModel)]="fieldUpdate.name"
@@ -59,6 +61,8 @@
           <label for="description">Description</label>
           <input
             type="text"
+            [ngClass]="{'custom_not-allowed': statusUpdate.status !== 1}"
+            [readonly]="statusUpdate.status !== 1"
             class="form-control"
             placeholder="Enter Description"
             [(ngModel)]="fieldUpdate.description"
