@@ -201,7 +201,7 @@ The deployment process takes the following approach:
 
 1. [View created DNS zones](https://console.cloud.google.com/net-services/dns/zones) in your `{PREFIX}-{ENV}-apps` project
 1. Click on the zone named `{PREFIX}-{ENV}` and then click `Registrar Setup` in the upper right for details
-1. Enter this information into your domain registrar’s DNS settings to add nameserver records for the subdomain listed here. You may need an administrator for your domain to do this step. You will be creating an `NS` record for the name `{PREFIX)-{ENV}.domain.com` that has the Data values listed such as `ns-cloud-a1.googledomains.com.` Note that it may take up to 48 hours for these changes to propagate.
+1. Enter this information into your domain registrar’s DNS settings to add nameserver records for the subdomain listed here. You may need an administrator for your domain to do this step. You will be creating an `NS` record for the name `{PREFIX)-{ENV}.{DOMAIN}` that has the data values listed such as `ns-cloud-a1.googledomains.com.` Note that it may take up to 48 hours for these changes to propagate.
 
 ### Configure your deployment’s databases
 
