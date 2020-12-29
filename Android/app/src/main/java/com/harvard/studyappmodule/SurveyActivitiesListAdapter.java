@@ -206,7 +206,7 @@ public class SurveyActivitiesListAdapter
               .getStatus()
               .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
         holder.process.setVisibility(View.VISIBLE);
-        holder.process.setText(R.string.incompleted2);
+        holder.process.setText(R.string.missedrun);
         bgShape.setColor(context.getResources().getColor(R.color.red));
       } else {
         holder.process.setVisibility(View.VISIBLE);
@@ -258,7 +258,7 @@ public class SurveyActivitiesListAdapter
           bgShape.setColor(context.getResources().getColor(R.color.black_shade));
         } else if (missedRunVal > 0) {
           holder.process.setVisibility(View.VISIBLE);
-          holder.process.setText(R.string.incompleted2);
+          holder.process.setText(R.string.missedrun);
           bgShape.setColor(context.getResources().getColor(R.color.red));
         } else {
           // completed
@@ -688,6 +688,19 @@ public class SurveyActivitiesListAdapter
           c.show();
         }
       });
+
+      if (!items.get(holder.getAdapterPosition()).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
+        if (currentRunStatusForActivities
+                .get(holder.getAdapterPosition())
+                .getStatus()
+                .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
+                .get(holder.getAdapterPosition())
+                .getStatus()
+                .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
+          holder.container.setBackgroundColor(context.getResources().getColor(R.color.rsb_warm_gray_20));
+          holder.container.setClickable(false);
+        }
+      }
     }
   }
 
