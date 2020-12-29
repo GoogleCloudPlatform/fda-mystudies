@@ -41,6 +41,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -2195,6 +2196,12 @@ public class SiteControllerTest extends BaseMockIT {
         participantStatusRequest.getStatus(), participantRegistrySiteEntity.getOnboardingStatus());
     assertNotNull(participantRegistrySiteEntity.getDisabledDate());
 
+    Optional<ParticipantStudyEntity> optParticipantStudyEntity =
+        participantStudyRepository.findByParticipantRegistrySiteId(
+            optParticipantRegistrySiteEntity.get(0).getId());
+    assertNull(optParticipantStudyEntity.get().getEnrolledDate());
+    assertNull(optParticipantStudyEntity.get().getWithdrawalDate());
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setSiteId(siteEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
@@ -2500,6 +2507,27 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     assertEquals(sitePermission.getSite().getStatus(), siteEntity.getStatus());
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldNotReturnSitesForUserNotHavingSitePermission() throws Exception {
+    // Step 1: set the user with no site permission
+    UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+    testDataHelper.getSitePermissionRepository().deleteAll();
+
+    // Step 2: call API and expect NO_SITES_FOUND
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, nonSuperAdmin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.NO_SITES_FOUND.getDescription())));
 
     verifyTokenIntrospectRequest();
   }

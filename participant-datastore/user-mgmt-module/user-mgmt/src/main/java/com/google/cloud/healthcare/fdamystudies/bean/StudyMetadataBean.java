@@ -8,8 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,16 +32,38 @@ public class StudyMetadataBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
   @NotBlank private String studyId;
+
+  @Size(max = SMALL_LENGTH)
   private String studyTitle;
+
   @NotBlank private String studyVersion;
+
+  @Size(max = XS_LENGTH)
   private String studyType;
+
+  @Size(max = XS_LENGTH)
   private String studyStatus;
+
+  @Size(max = SMALL_LENGTH)
   private String studyCategory;
+
+  @Size(max = MEDIUM_LENGTH)
   private String studyTagline;
+
+  @Size(max = XS_LENGTH)
   private String studySponsor;
+
+  @Size(max = TINY_LENGTH)
   private String studyEnrolling;
+
   @NotBlank private String appId;
+
+  @Size(max = SMALL_LENGTH)
+  @NotBlank
   private String appName;
+
   private String appDescription;
+
+  @Size(max = LARGE_LENGTH)
   private String logoImageUrl;
 }

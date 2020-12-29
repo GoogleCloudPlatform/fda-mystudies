@@ -50,6 +50,24 @@
                     {{
                       siteParticipants.participantRegistryDetail.customStudyId
                     }}
+                    -
+                    <span
+                      [ngClass]="{
+                        active_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Active,
+                        paused_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Paused,
+                        deactivated_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Deactivated
+                      }"
+                    >
+                      {{
+                        siteParticipants.participantRegistryDetail.studyStatus
+                      }}
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ siteParticipants.participantRegistryDetail.studyName }}
