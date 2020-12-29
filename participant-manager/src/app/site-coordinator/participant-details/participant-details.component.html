@@ -42,6 +42,22 @@
                 <div class="pr-xlg">
                   <div class="banner__label">
                     {{ participant.participantDetails.customStudyId }}
+                    -
+                    <span
+                      [ngClass]="{
+                        active_text:
+                          participant.participantDetails.studyStatus ===
+                          studyStatus.Active,
+                        paused_text:
+                          participant.participantDetails.studyStatus ===
+                          studyStatus.Paused,
+                        deactivated_text:
+                          participant.participantDetails.studyStatus ===
+                          studyStatus.Deactivated
+                      }"
+                    >
+                      {{ participant.participantDetails.studyStatus }}
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ participant.participantDetails.studyName }}

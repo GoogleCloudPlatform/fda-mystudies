@@ -44,6 +44,22 @@
                 <div class="pr-xlg">
                   <div class="banner__label">
                     {{ studyDetails.participantRegistryDetail.customStudyId }}
+                    -
+                    <span
+                      [ngClass]="{
+                        active_text:
+                          studyDetails.participantRegistryDetail.studyStatus ===
+                          studyStatus.Active,
+                        paused_text:
+                          studyDetails.participantRegistryDetail.studyStatus ===
+                          studyStatus.Paused,
+                        deactivated_text:
+                          studyDetails.participantRegistryDetail.studyStatus ===
+                          studyStatus.Deactivated
+                      }"
+                    >
+                      {{ studyDetails.participantRegistryDetail.studyStatus }}
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ studyDetails.participantRegistryDetail.studyName }}
@@ -150,7 +166,7 @@
               [routerLink]="['/coordinator/participant', lists.id]"
             >
               <td [routerLink]="['/coordinator/participant', lists.id]">
-                <span class="no_st_en">{{ lists.email }}</span>
+                <span class="outline__none">{{ lists.email }}</span>
               </td>
               <td
                 *ngIf="

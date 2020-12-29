@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ParticipantInfoBean {
-  private String studyId = "";
-  private String participantId = "";
-  private String enrolledDate = "";
+  private String studyId;
+  private String participantId;
+  private String enrolledDate;
 }

@@ -80,29 +80,27 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     Root<ParticipantStudyEntity> participantStudiesBoRoot =
         participantStudiesBoCriteria.from(ParticipantStudyEntity.class);
 
-    if (!StringUtils.isEmpty(userId)) {
-      userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
-      userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
-      userDetailspredicates[0] =
-          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
-      userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
-      userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
+    userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
+    userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
+    userDetailspredicates[0] =
+        criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
+    userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
+    userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
 
-      if (!userDetailsBoList.isEmpty() && !studiesBoList.isEmpty()) {
-        userDetailsEntity = userDetailsBoList.get(0);
-        studyInfo = studiesBoList.get(0);
-        predicates[0] =
-            criteriaBuilder.equal(participantStudiesBoRoot.get("userDetails"), userDetailsEntity);
-        predicates[1] = criteriaBuilder.equal(participantStudiesBoRoot.get("study"), studyInfo);
-        participantStudiesBoCriteria.select(participantStudiesBoRoot).where(predicates);
-        participantStudiesBoList =
-            session.createQuery(participantStudiesBoCriteria).getResultList();
+    if (!userDetailsBoList.isEmpty() && !studiesBoList.isEmpty()) {
+      userDetailsEntity = userDetailsBoList.get(0);
+      studyInfo = studiesBoList.get(0);
+      predicates[0] =
+          criteriaBuilder.equal(participantStudiesBoRoot.get("userDetails"), userDetailsEntity);
+      predicates[1] = criteriaBuilder.equal(participantStudiesBoRoot.get("study"), studyInfo);
+      participantStudiesBoCriteria.select(participantStudiesBoRoot).where(predicates);
+      participantStudiesBoList = session.createQuery(participantStudiesBoCriteria).getResultList();
 
-        if (!participantStudiesBoList.isEmpty()) {
-          participantStudiesEntity = participantStudiesBoList.get(0);
-        }
+      if (!participantStudiesBoList.isEmpty()) {
+        participantStudiesEntity = participantStudiesBoList.get(0);
       }
     }
+
     logger.info("UserConsentManagementDaoImpl getParticipantStudies() - Ends ");
     return participantStudiesEntity;
   }
@@ -165,17 +163,16 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
 
     criteriaBuilder = session.getCriteriaBuilder();
-    if (!StringUtils.isEmpty(userId)) {
-      userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
-      userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
-      userDetailspredicates[0] =
-          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
-      userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
-      userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
-      if (!userDetailsBoList.isEmpty()) {
-        userDetailsEntity = userDetailsBoList.get(0);
-      }
+    userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
+    userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
+    userDetailspredicates[0] =
+        criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
+    userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
+    userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
+    if (!userDetailsBoList.isEmpty()) {
+      userDetailsEntity = userDetailsBoList.get(0);
     }
+
     criteriaQuery = criteriaBuilder.createQuery(StudyConsentEntity.class);
     Root<StudyConsentEntity> studyConsentBoRoot = criteriaQuery.from(StudyConsentEntity.class);
     if ((consentVersion != null) && !StringUtils.isEmpty(consentVersion)) {
@@ -313,18 +310,18 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     UserDetailsEntity userDetailsEntity = null;
     String userDetailsId = String.valueOf(0);
     criteriaBuilder = session.getCriteriaBuilder();
-    if (!StringUtils.isEmpty(userId)) {
-      userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
-      userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
-      userDetailspredicates[0] =
-          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
-      userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
-      userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
-      if (!userDetailsBoList.isEmpty()) {
-        userDetailsEntity = userDetailsBoList.get(0);
-        userDetailsId = userDetailsEntity.getId();
-      }
+
+    userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
+    userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
+    userDetailspredicates[0] =
+        criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
+    userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
+    userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
+    if (!userDetailsBoList.isEmpty()) {
+      userDetailsEntity = userDetailsBoList.get(0);
+      userDetailsId = userDetailsEntity.getId();
     }
+
     logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
     return userDetailsId;
   }
