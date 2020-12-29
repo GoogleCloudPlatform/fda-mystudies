@@ -734,13 +734,13 @@ template "project_firebase" {
              role   = "roles/storage.admin"
              member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
            }]
-           TTL 7 days.
+          # TTL 7 days.
           lifecycle_rules = [{
             action = {
               type = "Delete"
             }
             condition = {
-              age        = 7 # 7 days
+              age        = 7
               with_state = "ANY"
             }
           }]
