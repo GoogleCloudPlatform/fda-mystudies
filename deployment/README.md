@@ -302,10 +302,10 @@ The deployment process takes the following approach:
            $GIT_ROOT/deployment/kubernetes/ingress.yaml
          ```
     - In [`/participant-manager/src/environments/environment.prod.ts`](/participant-manager/src/environments/environment.prod.ts), replace `<BASE_URL>` with your `participants.{PREFIX}.{DOMAIN}` value and `<auth-server-client-id>` with the value of your `auto-auth-server-client-id` secret (you can find this value in the [Secret Manager](https://console.cloud.google.com/security/secret-manager/) of your `{PREFIX}-{ENV}-secrets` project), for example:
-        ```bash
-        export auth_server_client_id=<YOUR_VALUE>
-        ```
-        ```bash
+         ```bash
+         gcloud config set project $PREFIX-$ENV-secrets
+         export auth_server_client_id=$( \
+           gcloud secrets versions access latest --secret="auto-auth-server-client-id")
          sed -e 's/<BASE_URL>/participants.'$PREFIX'.'$DOMAIN'/g' \
            -e 's/<AUTH_SERVER_CLIENT_ID>/'$auth_server_client_id'/g' -i.backup \
            $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
@@ -452,7 +452,11 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
 ### Clean up
 
 1. Remove your user account from the groups you no longer need access to
-1. Revoke user access in your environment by running `gcloud auth revoke`
+1. Revoke user access in your environment, for example:
+    ```bash
+    gcloud auth revoke --all -q && \
+      gcloud auth application-default revoke -q
+    ```
 <!--
 ### Troubleshooting
 
