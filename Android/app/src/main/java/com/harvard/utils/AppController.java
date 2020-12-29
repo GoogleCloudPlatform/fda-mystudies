@@ -906,6 +906,49 @@ public class AppController {
     }
   }
 
+  public static void signout(Context context) {
+    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
+    settings.edit().clear().apply();
+    // delete passcode from keystore
+    String pass = AppController.refreshKeys("passcode");
+    if (pass != null) {
+      AppController.deleteKey("passcode_" + pass);
+    }
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = getRealmobj(context);
+    dbServiceSubscriber.deleteDb(context);
+    try {
+      NotificationModuleSubscriber notificationModuleSubscriber =
+              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+      notificationModuleSubscriber.cancleActivityLocalNotification(context);
+      notificationModuleSubscriber.cancleResourcesLocalNotification(context);
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    NotificationModuleSubscriber notificationModuleSubscriber =
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+    notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
+    dbServiceSubscriber.closeRealmObj(realm);
+
+    // clear notifications from notification tray
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+    notificationManager.cancelAll();
+
+    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
+      Intent intent = new Intent(context, GatewayActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    } else {
+      Intent intent = new Intent(context, StandaloneActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    }
+  }
+
   public static String getHashedValue(String valueToHash) {
     String generatedHash = null;
     try {
