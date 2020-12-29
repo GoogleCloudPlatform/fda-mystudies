@@ -652,7 +652,7 @@ template "project_apps" {
       raw_config = <<EOF
 # Reserve a static external IP for the Ingress.
 resource "google_compute_global_address" "ingress_static_ip" {
-  name         = "mystudies-ingress-ip"
+  name         = "{{.prefix}}-{{.env}}-ingress-ip"
   description  = "Reserved static external IP for the GKE cluster Ingress and DNS configurations."
   address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
   project      = module.project.project_id
