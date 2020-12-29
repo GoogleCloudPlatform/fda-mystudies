@@ -90,10 +90,7 @@ public class StudyStateControllerTest extends BaseMockIT {
   public void updateStudyStateSuccess() throws Exception {
     StudiesBean studiesBean =
         new StudiesBean(
-            Constants.STUDYOF_HEALTH,
-            Constants.BOOKMARKED,
-            Constants.COMPLETION,
-            Constants.ADHERENCE);
+            "StudyofHealthClose", Constants.BOOKMARKED, Constants.COMPLETION, Constants.ADHERENCE);
 
     List<StudiesBean> listStudies = new ArrayList<StudiesBean>();
     listStudies.add(studiesBean);
@@ -114,7 +111,7 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyId("StudyofHealthClose");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT.getEventCode(), auditRequest);
@@ -144,7 +141,7 @@ public class StudyStateControllerTest extends BaseMockIT {
         response
             .getStudies()
             .stream()
-            .filter(s -> s.getStudyId().equals(Constants.STUDYOF_HEALTH))
+            .filter(s -> s.getStudyId().equals("StudyofHealthClose"))
             .findFirst();
 
     assertTrue(study.isPresent());
