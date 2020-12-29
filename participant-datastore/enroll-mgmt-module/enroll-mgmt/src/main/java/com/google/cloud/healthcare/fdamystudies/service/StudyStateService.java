@@ -31,5 +31,5 @@ public interface StudyStateService {
       throws javax.transaction.SystemException;
 
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete);
+      String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest);
 }

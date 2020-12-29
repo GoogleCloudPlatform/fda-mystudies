@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnrollmentBean {
+  @Size(max = 8)
   private String token;
-  private String studyId;
+
+  @NotBlank private String studyId;
 }

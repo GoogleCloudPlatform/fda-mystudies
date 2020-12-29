@@ -33,7 +33,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Override
   @Transactional(readOnly = true)
-  public boolean enrollmentTokenRequired(@NotNull String studyId) {
+  public boolean enrollmentTokenRequired(String studyId) {
     logger.info("EnrollmentTokenServiceImpl enrollmentTokenRequired() - Starts ");
     boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(studyId);
     logger.info("EnrollmentTokenServiceImpl enrollmentTokenRequired() - Ends ");
@@ -42,7 +42,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Override
   @Transactional(readOnly = true)
-  public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue) {
+  public boolean hasParticipant(String studyId, @NotNull String tokenValue) {
     logger.info("EnrollmentTokenServiceImpl hasParticipant() - Starts ");
     boolean hasParticipant = enrollmentTokenDao.hasParticipant(studyId, tokenValue);
     logger.info("EnrollmentTokenServiceImpl hasParticipant() - Ends ");
@@ -51,8 +51,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Override
   @Transactional(readOnly = true)
-  public boolean isValidStudyToken(
-      @NotNull String token, @NotNull String studyId, @NotNull String userId) {
+  public boolean isValidStudyToken(@NotNull String token, String studyId, String userId) {
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Starts ");
     // fetching registered emailid
     UserDetailsEntity userDetails = commonService.getUserInfoDetails(userId);
@@ -64,7 +63,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Override
   @Transactional(readOnly = true)
-  public boolean studyExists(@NotNull String studyId) {
+  public boolean studyExists(String studyId) {
     logger.info("EnrollmentTokenServiceImpl studyExists() - Starts ");
     boolean isStudyExist = enrollmentTokenDao.studyExists(studyId);
     logger.info("EnrollmentTokenServiceImpl studyExists() - Ends ");
@@ -74,10 +73,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   @Override
   @Transactional
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String shortName,
-      String tokenValue,
-      String userId,
-      AuditLogEventRequest auditRequest) {
+      String shortName, String tokenValue, String userId, AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
     boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
     String hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue.toUpperCase());

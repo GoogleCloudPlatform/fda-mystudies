@@ -23,6 +23,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -60,20 +61,16 @@ public class StudyStateDaoImpl implements StudyStateDao {
   @Override
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
     logger.info("StudyStateDaoImpl saveParticipantStudies() - Starts ");
-    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    boolean isUpdated = false;
     Session session = this.sessionFactory.getCurrentSession();
-    for (ParticipantStudyEntity participantStudies : participantStudiesList) {
-      session.saveOrUpdate(participantStudies);
-      isUpdated = true;
+    for (ParticipantStudyEntity participantStudy : participantStudiesList) {
+      if (StringUtils.isEmpty(participantStudy.getId())) {
+        session.save(participantStudy);
+      } else {
+        session.update(participantStudy);
+      }
     }
-
-    if (isUpdated && !participantStudiesList.isEmpty()) {
-      message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-    }
-
     logger.info("StudyStateDaoImpl saveParticipantStudies() - Ends ");
-    return message;
+    return MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
   }
 
   @Override

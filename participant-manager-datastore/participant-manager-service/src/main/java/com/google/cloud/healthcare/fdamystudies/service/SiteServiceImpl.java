@@ -1136,8 +1136,13 @@ public class SiteServiceImpl implements SiteService {
 
     List<String> studyIds = studyRepository.findStudyIds(limit, offset, userId);
 
-    List<StudySiteInfo> studySiteDetails =
-        siteRepository.getStudySiteDetails(userId, studyIds, StringUtils.defaultString(searchTerm));
+    List<StudySiteInfo> studySiteDetails = null;
+    if (CollectionUtils.isNotEmpty(studyIds)) {
+      studySiteDetails =
+          siteRepository.getStudySiteDetails(
+              userId, studyIds, StringUtils.defaultString(searchTerm));
+    }
+
     if (CollectionUtils.isEmpty(studySiteDetails)) {
       throw new ErrorCodeException(ErrorCode.NO_SITES_FOUND);
     }
@@ -1416,7 +1421,7 @@ public class SiteServiceImpl implements SiteService {
 
       Map<String, String> templateArgs = new HashMap<>();
       templateArgs.put("study name", optStudy.get().getName());
-      templateArgs.put("org name", appPropertyConfig.getOrgName());
+      templateArgs.put("App Name", optStudy.get().getApp().getAppName());
       templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
       templateArgs.put("contact email address", appPropertyConfig.getContactEmail());
       EmailRequest emailRequest =
