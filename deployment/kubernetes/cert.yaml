@@ -6,15 +6,15 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: <PREFIX>-cert-participants
+  name: <PREFIX>-<ENV>-cert-participants
 spec:
   domains:
-    - participants.<PREFIX>.<DOMAIN>
+    - participants.<PREFIX>-<ENV>.<DOMAIN>
 ---
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: <PREFIX>-cert-studies
+  name: <PREFIX>-<ENV>-cert-studies
 spec:
   domains:
-    - studies.<PREFIX>.<DOMAIN>
+    - studies.<PREFIX>-<ENV>.<DOMAIN>
