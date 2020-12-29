@@ -205,13 +205,13 @@ The deployment process takes the following approach:
 
 ### Update your domain’s DNS records
 
-1. [View created DNS zones](https://console.cloud.google.com/net-services/dns/zones) in your `{PREFIX}-{ENV}-apps` project.
-1. Click on the zone named `{PREFIX}-{ENV}` and then click `Registrar Setup` in the upper right for details.
+1. [View created DNS zones](https://console.cloud.google.com/net-services/dns/zones) in your `{PREFIX}-{ENV}-apps` project
+1. Click on the zone named `{PREFIX}-{ENV}` and then click `Registrar Setup` in the upper right for details
 1. Enter this information into your domain registrar’s DNS settings to add nameserver records for the subdomain listed here. You may need an administrator for your domain to do this step. You will be creating an `NS` record for the name `{PREFIX)-{ENV}.domain.com` that has the Data values listed such as `ns-cloud-a1.googledomains.com.` Note that it may take up to 48 hours for these changes to propagate.
 
 ### Configure your deployment’s databases
 
-1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project. The location selected here does not have to match the region configured in your `deployment.hcl` file as Firestore is not available in all regions. 
+1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project (the location selected here does not need to match the region configured in your `deployment.hcl` file) 
 1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
     - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
          ```bash
@@ -318,21 +318,21 @@ The deployment process takes the following approach:
          git push origin configure-application-properties
          ```
     - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to build your container images, after which they will be available in the Container Registry of your apps project at `http://gcr.io/{PREFIX}-{ENV}-apps` (this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `{PREFIX}-{ENV}-apps` project)
-1. Open [Secret Manager](https://console.cloud.google.com/security/secret-manager) for your `{PREFIX}-{ENV}-secrets` project and fill in the values for the secrets with the prefix “manual-” (or set your `gcloud` project with `gcloud config set project $PREFIX-$ENV-secrets` and use the commands described below - afterwards clear your shell history with `history -c`):
+1. Open [Secret Manager](https://console.cloud.google.com/security/secret-manager) for your `{PREFIX}-{ENV}-secrets` project and fill in the values for secrets with the prefix “manual-” (or set your `gcloud` project with `gcloud config set project $PREFIX-$ENV-secrets` and use the commands described below - afterwards clear your shell history with `history -c`)
 
     Manually set secret | Description | When to set | Example command
     --------------------------|-------------------|----------------------|-------------------
     `manual-mystudies-email-address` | The login of the email account you want MyStudies to use to send system-generated emails | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-email-address" --data-file=-`
     `manual-mystudies-email-password` | The password for that email account | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-email-password" --data-file=-`
     `manual-mystudies-contact-email-address` | The email address that the in-app contact and feedback forms will send messages to | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-contact-email-address" --data-file=-`
-    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (you may want to use a no-reply@ address) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
+    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (for example, no-reply@example.com) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
     `manual-mystudies-from-email-domain` | The domain of the above email address (just the value after “@”) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-domain" --data-file=-`
     `manual-mystudies-smtp-hostname` | The hostname for your email account’s SMTP server (for example, smtp.gmail.com) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-hostname" --data-file=-`
     `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘False’; if ‘True’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-use-ip-allowlist" --data-file=-`
     `manual-log-path` | The path to a directory within each application’s container where your logs will be written (for example `/logs`) | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-log-path" --data-file=-`
     `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the <manual-org-name> support team’ | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-org-name" --data-file=-`
-    `manual-terms-url` | URL for a terms and conditions page that the applications will link to | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
-    `manual-privacy-url` | URL for a privacy policy page that the applications will link to | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
+    `manual-terms-url` | URL for a terms and conditions page that the applications will link to (for example, https://example.com/terms) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
+    `manual-privacy-url` | URL for a privacy policy page that the applications will link to (for example, https://example.com/privacy) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
     `manual-mobile-app-appid` | The value of the `App ID` that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mobile-app-appid" --data-file=-`
     `manual-android-bundle-id` | The value of `applicationId` that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-bundle-id" --data-file=-`
     `manual-fcm-api-url` | URL of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fcm-api-url" --data-file=-`
@@ -398,7 +398,7 @@ The deployment process takes the following approach:
     - Update firewalls:
         - Run `kubectl describe ingress $PREFIX-$ENV`
         - Look at the suggested commands under "Events", in the form of "Firewall
-        change required by network admin: <gcloud command>"
+        change required by network admin"
         - Run each of the suggested commands
 1. Check the [Kubernetes dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your deployment
 1. Configure your initial application credentials
