@@ -33,22 +33,16 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
     List<UserDetailsEntity> userList = null;
     UserDetailsEntity user = null;
 
-    if (userId != null) {
-      Session session = this.sessionFactory.getCurrentSession();
-      Query<UserDetailsEntity> query =
-          session.createQuery("from UserDetailsEntity where userId = :userId");
-      query.setParameter("userId", userId);
-      userList = query.getResultList();
+    Session session = this.sessionFactory.getCurrentSession();
+    Query<UserDetailsEntity> query =
+        session.createQuery("from UserDetailsEntity where userId = :userId");
+    query.setParameter("userId", userId);
+    userList = query.getResultList();
 
-      if (userList != null && !userList.isEmpty()) {
-        user = userList.get(0);
-      }
-      logger.info("(DAO)...UserRegAdminUserDaoImpl.getRecord()...Ended ");
-      return user;
-
-    } else {
-      logger.error("(DAO)...UserRegAdminUserDaoImpl - getRecord Ended");
-      return null;
+    if (userList != null && !userList.isEmpty()) {
+      user = userList.get(0);
     }
+    logger.info("(DAO)...UserRegAdminUserDaoImpl.getRecord()...Ended ");
+    return user;
   }
 }
