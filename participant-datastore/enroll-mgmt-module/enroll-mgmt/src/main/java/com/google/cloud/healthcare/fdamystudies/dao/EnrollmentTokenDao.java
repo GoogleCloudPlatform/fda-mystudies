@@ -15,17 +15,16 @@ import org.springframework.lang.Nullable;
 
 public interface EnrollmentTokenDao {
 
-  public boolean studyExists(@NotNull String shortName);
+  public boolean studyExists(String shortName);
 
-  public boolean hasParticipant(@NotNull String shortName, @NotNull String tokenValue);
+  public boolean hasParticipant(String shortName, @NotNull String tokenValue);
 
-  public boolean isValidStudyToken(
-      @NotNull String token, @NotNull String shortName, @NotNull String email);
+  public boolean isValidStudyToken(@NotNull String token, String shortName, @NotNull String email);
 
-  public boolean enrollmentTokenRequired(@NotNull String shortName);
+  public boolean enrollmentTokenRequired(String shortName);
 
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String shortName,
+      String shortName,
       @Nullable String tokenValue,
       UserDetailsEntity userDetailsEntity,
       boolean isTokenRequired,
