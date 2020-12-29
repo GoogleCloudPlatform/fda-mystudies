@@ -47,7 +47,7 @@ spec:
             backend:
               serviceName: participant-manager-datastore-np
               servicePort: 50000
-    - host: studies.<PREFIX>-ENV.<DOMAIN>
+    - host: studies.<PREFIX>-<ENV>.<DOMAIN>
       http:
         paths:
           - path: /study-datastore/*
