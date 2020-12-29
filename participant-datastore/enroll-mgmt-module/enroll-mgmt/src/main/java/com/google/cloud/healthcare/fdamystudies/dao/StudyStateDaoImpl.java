@@ -12,7 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -37,26 +36,6 @@ public class StudyStateDaoImpl implements StudyStateDao {
   private static final Logger logger = LoggerFactory.getLogger(StudyStateDaoImpl.class);
 
   @Autowired private SessionFactory sessionFactory;
-
-  @Override
-  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user) {
-    logger.info("StudyStateDaoImpl getParticipantStudiesList() - Starts ");
-    CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<ParticipantStudyEntity> criteriaQuery = null;
-    Root<ParticipantStudyEntity> root = null;
-    Predicate[] predicates = new Predicate[1];
-    List<ParticipantStudyEntity> participantStudiesList = null;
-    Session session = this.sessionFactory.getCurrentSession();
-    criteriaBuilder = session.getCriteriaBuilder();
-    criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
-    root = criteriaQuery.from(ParticipantStudyEntity.class);
-    predicates[0] = criteriaBuilder.equal(root.get("userDetails"), user);
-    criteriaQuery.select(root).where(predicates);
-    participantStudiesList = session.createQuery(criteriaQuery).getResultList();
-
-    logger.info("StudyStateDaoImpl getParticipantStudiesList() - Ends ");
-    return participantStudiesList;
-  }
 
   @Override
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
