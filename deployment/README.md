@@ -34,14 +34,14 @@ This deployment configures the applications URLs as follows:
 
 Application | URL | Notes
 --------------|-----------|-----------
-[Study builder](/study-builder/) | `studies.{PREFIX}.{DOMAIN}/study-builder` | This URL navigates an administrative user to the `Study builder` user interface
-[Study datastore](/study-datastore/) | `studies.{PREFIX}.{DOMAIN}/study-datastore` | This URL is for the `Study datastore` back-end service
-[Participant manager](/participant-manager/) | `participants.{PREFIX}.{DOMAIN}/participant-manager` | This URL navigates an administrative user to the `Participant manager` user interface
-[Participant manager datastore](/participant-manager-datastore/) | `participants.{PREFIX}.{DOMAIN}/participant-manager-datastore` | This URL is for the `Participant manager datastore` back-end service
-[Participant datastore](/participant-datastore/) | `participants.{PREFIX}.{DOMAIN}/participant-user-datastore`<br/>`participants.{PREFIX}.{DOMAIN}/participant-enroll-datastore`<br/>`participants.{PREFIX}.{DOMAIN}/participant-consent-datastore` | These URLs are for the `Participant datastore` back-end services
-[Response datastore](/response-datastore/) | `participants.{PREFIX}.{DOMAIN}/response-datastore` | This URL is for the `Response datastore` back-end service
-[Auth server](/auth-server/) | `participants.{PREFIX}.{DOMAIN}/auth-server` | This URL is for the administrative users and study participants to log into their respective applications
-[Hydra](/hydra/) | `participants.{PREFIX}.{DOMAIN}/oauth2` | This URL is used by the `Auth server` to complete OAuth 2.0 consent flows
+[Study builder](/study-builder/) | `studies.{PREFIX}-{ENV}.{DOMAIN}/study-builder` | This URL navigates an administrative user to the `Study builder` user interface
+[Study datastore](/study-datastore/) | `studies.{PREFIX}-{ENV}.{DOMAIN}/study-datastore` | This URL is for the `Study datastore` back-end service
+[Participant manager](/participant-manager/) | `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-manager` | This URL navigates an administrative user to the `Participant manager` user interface
+[Participant manager datastore](/participant-manager-datastore/) | `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-manager-datastore` | This URL is for the `Participant manager datastore` back-end service
+[Participant datastore](/participant-datastore/) | `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-user-datastore`<br/>`participants.{PREFIX}-{ENV}.{DOMAIN}/participant-enroll-datastore`<br/>`participants.{PREFIX}-{ENV}.{DOMAIN}/participant-consent-datastore` | These URLs are for the `Participant datastore` back-end services
+[Response datastore](/response-datastore/) | `participants.{PREFIX}-{ENV}.{DOMAIN}/response-datastore` | This URL is for the `Response datastore` back-end service
+[Auth server](/auth-server/) | `participants.{PREFIX}-{ENV}.{DOMAIN}/auth-server` | This URL is for the administrative users and study participants to log into their respective applications
+[Hydra](/hydra/) | `participants.{PREFIX}-{ENV}.{DOMAIN}/oauth2` | This URL is used by the `Auth server` to complete OAuth 2.0 consent flows
 
 More information about the purpose of each application can be found in the [*Platform Overview*](/documentation/architecture.md) guide. Detailed information about configuration and operation of each application can be found in their [respective READMEs](/documentation/README.md).
 
@@ -127,13 +127,6 @@ The deployment process takes the following approach:
            sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
            sudo apt-get update && sudo apt-get install terraform=0.12.29
          ```
-    - Install [Go 1.14+](https://golang.org/doc/install), for example:
-         ```shell
-         sudo apt install wget -y && \
-           wget https://golang.org/dl/go1.15.6.linux-amd64.tar.gz && \
-           sudo tar -C /usr/local -xzf go1.15.6.linux-amd64.tar.gz && \
-           export PATH=$PATH:/usr/local/go/bin
-         ```
     - Install [Terraform Engine](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
          ```shell
          VERSION=v0.4.0 && \
@@ -154,7 +147,7 @@ The deployment process takes the following approach:
     - Login and update your [application default credentials](https://cloud.google.com/docs/authentication/production), for example you could run `gcloud auth login --update-adc` (when using a Google Compute Engine VM you must update the application default credentials, otherwise requests will continue to be made with its default service account)
     - Remember to run `gcloud auth revoke` to log your user account out once your deployment is complete
 
-### Set up your CICD pipelines
+### Create your devops project and configure CICD pipelines
 
 1. Generate your Terraform configuration files
     - Set the `enable_gcs_backend` flag in [`mystudies.hcl`](/deployment/mystudies.hcl) to `false`, for example:
@@ -192,6 +185,7 @@ The deployment process takes the following approach:
 
 1. Commit your local git working directory (which now represents your desired infrastructure state) to a new branch in your cloned FDA MyStudies repository, for example using:
     ```bash
+    cd $GIT_ROOT
     git checkout -b initial-deployment
     git add $GIT_ROOT/deployment/terraform
     git commit -m "Perform initial deployment"
@@ -219,6 +213,7 @@ The deployment process takes the following approach:
          ```
     - Regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
+         cd $GIT_ROOT
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          git checkout -b database-configuration
          git add $GIT_ROOT/deployment/terraform
@@ -233,6 +228,7 @@ The deployment process takes the following approach:
          ```
     - Regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
+         cd $GIT_ROOT
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          git checkout -b sql-bucket-permissions
          git add $GIT_ROOT/deployment/terraform
@@ -277,6 +273,7 @@ The deployment process takes the following approach:
          ```
     - Regenerate the Terraform configs and commit the changes to your repo, for example:
          ```bash
+         cd $GIT_ROOT
          tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
          git checkout -b enable-apps-CICD
          git add $GIT_ROOT/deployment/terraform
@@ -294,6 +291,7 @@ The deployment process takes the following approach:
     -  Replace the `<PREFIX>`, `<ENV>` and `<DOMAIN>` values in [`/deployment/kubernetes/cert.yaml`](/deployment/kubernetes/cert.yaml) and [`/deployment/kubernetes/ingress.yaml`](/deployment/kubernetes/ingress.yaml), for example:
          ```bash
          sed -e 's/<PREFIX>/'$PREFIX'/g' \
+           -e 's/<ENV>/'$ENV'/g' \
            -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
            $GIT_ROOT/deployment/kubernetes/cert.yaml
          sed -e 's/<PREFIX>/'$PREFIX'/g' \
@@ -301,17 +299,18 @@ The deployment process takes the following approach:
            -e 's/<DOMAIN>/'$DOMAIN'/g' -i.backup \
            $GIT_ROOT/deployment/kubernetes/ingress.yaml
          ```
-    - In [`/participant-manager/src/environments/environment.prod.ts`](/participant-manager/src/environments/environment.prod.ts), replace `<BASE_URL>` with your `participants.{PREFIX}.{DOMAIN}` value and `<auth-server-client-id>` with the value of your `auto-auth-server-client-id` secret (you can find this value in the [Secret Manager](https://console.cloud.google.com/security/secret-manager/) of your `{PREFIX}-{ENV}-secrets` project), for example:
+    - In [`/participant-manager/src/environments/environment.prod.ts`](/participant-manager/src/environments/environment.prod.ts), replace `<BASE_URL>` with your `participants.{PREFIX}-{ENV}.{DOMAIN}` value and `<auth-server-client-id>` with the value of your `auto-auth-server-client-id` secret (you can find this value in the [Secret Manager](https://console.cloud.google.com/security/secret-manager/) of your `{PREFIX}-{ENV}-secrets` project), for example:
          ```bash
          gcloud config set project $PREFIX-$ENV-secrets
          export auth_server_client_id=$( \
            gcloud secrets versions access latest --secret="auto-auth-server-client-id")
-         sed -e 's/<BASE_URL>/participants.'$PREFIX'.'$DOMAIN'/g' \
+         sed -e 's/<BASE_URL>/participants.'$PREFIX'-’$ENV’.'$DOMAIN'/g' \
            -e 's/<AUTH_SERVER_CLIENT_ID>/'$auth_server_client_id'/g' -i.backup \
            $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
          ```
     - Commit the changes to your repo, for example:
          ```bash
+         cd $GIT_ROOT
          git checkout -b configure-application-properties
          git add $GIT_ROOT
          git commit -m "Initial configuration of application properties"
@@ -325,23 +324,24 @@ The deployment process takes the following approach:
     `manual-mystudies-email-address` | The login of the email account you want MyStudies to use to send system-generated emails | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-email-address" --data-file=-`
     `manual-mystudies-email-password` | The password for that email account | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-email-password" --data-file=-`
     `manual-mystudies-contact-email-address` | The email address that the in-app contact and feedback forms will send messages to | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-contact-email-address" --data-file=-`
-    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (for example, no-reply@example.com) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
+    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (for example, `no-reply@example.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
     `manual-mystudies-from-email-domain` | The domain of the above email address (just the value after “@”) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-domain" --data-file=-`
-    `manual-mystudies-smtp-hostname` | The hostname for your email account’s SMTP server (for example, smtp.gmail.com) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-hostname" --data-file=-`
-    `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘False’; if ‘True’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-use-ip-allowlist" --data-file=-`
+    `manual-mystudies-smtp-hostname` | The hostname for your email account’s SMTP server (for example, `smtp.gmail.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-hostname" --data-file=-`
+    `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘false’; if ‘true’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-use-ip-allowlist" --data-file=-`
     `manual-log-path` | The path to a directory within each application’s container where your logs will be written (for example `/logs`) | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-log-path" --data-file=-`
     `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the <manual-org-name> support team’ | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-org-name" --data-file=-`
-    `manual-terms-url` | URL for a terms and conditions page that the applications will link to (for example, https://example.com/terms) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
-    `manual-privacy-url` | URL for a privacy policy page that the applications will link to (for example, https://example.com/privacy) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
+    `manual-terms-url` | URL for a terms and conditions page that the applications will link to (for example, `https://example.com/terms`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
+    `manual-privacy-url` | URL for a privacy policy page that the applications will link to (for example, `https://example.com/privacy`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
     `manual-mobile-app-appid` | The value of the `App ID` that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mobile-app-appid" --data-file=-`
     `manual-android-bundle-id` | The value of `applicationId` that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-bundle-id" --data-file=-`
     `manual-fcm-api-url` | URL of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fcm-api-url" --data-file=-`
     `manual-android-server-key` | The Firebase Cloud Messaging server key that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-server-key" --data-file=-`
-    `manual-android-deeplink-url` | The URL to redirect to after Android login (for example, `app://{PREFIX}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
-    `manual-ios-bundle-id` | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-bundle-id" --data-file=-`
+    `manual-android-deeplink-url` | The URL to redirect to after Android login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
+    `manual-ios-bundle-id` | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) - for a production application, the bundle ID needs to be verified with Apple and is usually a reverse domain name that you own; it is a unique app identifier and application capabilities are mapped to this value ([details](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids))
+ | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-bundle-id" --data-file=-`
     `manual-ios-certificate` | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate" --data-file=-`
     `manual-ios-certificate-password` | The value of the password for the `.p12` certificate (necessary if your certificate is encrypted - otherwise leave empty) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate-password" --data-file=-`
-    `manual-ios-deeplink-url` | The URL to redirect to after iOS login (for example, `app://{PREFIX}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
+    `manual-ios-deeplink-url` | The URL to redirect to after iOS login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
 
 1. Finish Kubernetes cluster configuration and deployment
     - Configure the remaining resources with Terraform, for example: 
@@ -400,7 +400,7 @@ The deployment process takes the following approach:
         - Look at the suggested commands under "Events", in the form of "Firewall
         change required by network admin"
         - Run each of the suggested commands
-1. Check the [Kubernetes dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your deployment
+1. Check the [Kubernetes dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your deployment (confirm all applications and ingress are ‘healthy’ before proceeding)
 1. Configure your initial application credentials
     - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [`register_clients_in_hydra.sh`](/deployment/scripts/register_clients_in_hydra.sh), for example:
          ```bash
@@ -420,11 +420,11 @@ The deployment process takes the following approach:
 
 ### Configure your first study
 
-1. Navigate your browser to `studies.{PREFIX}.{DOMAIN}/study-builder` and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
+1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/study-builder` and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
 1. Change your password, then create any additional administrative accounts that you might need
 1. Create a new study with the `App ID` that you set in the `manual-mobile-app-appid` secret, or choose a new `App ID` that you will update `manual-mobile-app-appid` with
 1. Publish your study to propagate your study values to the other platform components
-1. Navigate your browser to `participants.{PREFIX}.{DOMAIN}/participant-manager` and use the account credentials that you created with the `create_participant_manager_superadmin.sh` script to log into the [`Participant manager`](/participant-manager/) user interface
+1. Navigate your browser to `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-manager` and use the account credentials that you created with the `create_participant_manager_superadmin.sh` script to log into the [`Participant manager`](/participant-manager/) user interface
 1. Change your password, then create any additional administrative accounts that you might need
 1. Confirm your new study is visible in the `Participant manager` interface
 
@@ -437,7 +437,7 @@ The deployment process takes the following approach:
     - `manual-fcm-api-url` is the URL of your Firebase Cloud Messaging API
     - `manual-android-server-key` is your Firebase Cloud Messaging server key
     - `manual-android-deeplink-url` is the URL to redirect to after Android login
-    - `manual-ios-bundle-id` is the value you obtained from Xcode
+    - `manual-ios-bundle-id` is the value you obtained from Xcode (in production use-cases, this  bundle ID needs to be [verified with Apple](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids))
     - `manual-ios-certificate` is the value of the Base64 converted `.p12` file
     - `manual-ios-certificate-password` is the value of the password for the `.p12` certificate 
     - `manual-ios-deeplink-url` is the URL to redirect to after iOS login
@@ -457,10 +457,6 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
     gcloud auth revoke --all -q && \
       gcloud auth application-default revoke -q
     ```
-<!--
-### Troubleshooting
 
-See the [*Troubleshooting*](/documentation/troubleshooting.md) guide for more information.
---->
 ***
 <p align="center">Copyright 2020 Google LLC</p>
