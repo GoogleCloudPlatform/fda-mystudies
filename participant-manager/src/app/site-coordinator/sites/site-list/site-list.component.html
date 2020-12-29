@@ -16,6 +16,16 @@
               <div class="row">
                 <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                   {{ study.name }}
+                  <div
+                    [ngClass]="{
+                      active_bg: study.studyStatus === studyStatus.Active,
+                      paused_bg: study.studyStatus === studyStatus.Paused,
+                      deactivated_bg:
+                        study.studyStatus === studyStatus.Deactivated
+                    }"
+                  >
+                    {{ study.studyStatus }}
+                  </div>
                 </div>
                 <div
                   class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
