@@ -94,7 +94,6 @@ public class StandaloneActivity extends AppCompatActivity
   private static final String YET_TO_JOIN = "yetToEnroll";
   private static final String IN_PROGRESS = "enrolled";
   private static final String ACTIVE = "active";
-  private static final String UPCOMING = "upcoming";
   private static final String PAUSED = "paused";
   private static final String CLOSED = "closed";
   private String eligibilityType = "";
@@ -1049,7 +1048,6 @@ public class StandaloneActivity extends AppCompatActivity
     ArrayList<StudyList> activeInprogress = new ArrayList<>();
     ArrayList<StudyList> activeYetToJoin = new ArrayList<>();
     ArrayList<StudyList> activeOthers = new ArrayList<>();
-    ArrayList<StudyList> upComing = new ArrayList<>();
     ArrayList<StudyList> paused = new ArrayList<>();
     ArrayList<StudyList> closed = new ArrayList<>();
     ArrayList<StudyList> others = new ArrayList<>();
@@ -1057,7 +1055,6 @@ public class StandaloneActivity extends AppCompatActivity
     ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeYetToJoinCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeOthersCompletionAdherenceCalc = new ArrayList<>();
-    ArrayList<CompletionAdherence> upComingCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> pausedCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> closedCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> othersCompletionAdherenceCalc = new ArrayList<>();
@@ -1126,13 +1123,6 @@ public class StandaloneActivity extends AppCompatActivity
         } catch (Exception e) {
           Logger.log(e);
         }
-      } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(UPCOMING)) {
-        upComing.add(studyListArrayList.get(i));
-        try {
-          upComingCompletionAdherenceCalc.add(completionAdherenceCalcSort);
-        } catch (Exception e) {
-          Logger.log(e);
-        }
       } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(PAUSED)) {
         paused.add(studyListArrayList.get(i));
         try {
@@ -1185,13 +1175,6 @@ public class StandaloneActivity extends AppCompatActivity
       }
 
       try {
-        studyListArrayList =
-            dbServiceSubscriber.updateStudyList(studyListArrayList, upComing, realm);
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-
-      try {
         studyListArrayList = dbServiceSubscriber.updateStudyList(studyListArrayList, paused, realm);
       } catch (Exception e) {
         Logger.log(e);
@@ -1228,12 +1211,6 @@ public class StandaloneActivity extends AppCompatActivity
 
       try {
         studyListArrayList.addAll(activeOthers);
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-
-      try {
-        studyListArrayList.addAll(upComing);
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -1281,12 +1258,6 @@ public class StandaloneActivity extends AppCompatActivity
     }
 
     try {
-      completionAdherenceCalcs.addAll(upComingCompletionAdherenceCalc);
-    } catch (Exception e) {
-      Logger.log(e);
-    }
-
-    try {
       completionAdherenceCalcs.addAll(pausedCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
@@ -1318,11 +1289,6 @@ public class StandaloneActivity extends AppCompatActivity
     activeOthers = null;
     activeOthersCompletionAdherenceCalc.clear();
     activeOthersCompletionAdherenceCalc = null;
-
-    upComing.clear();
-    upComing = null;
-    upComingCompletionAdherenceCalc.clear();
-    upComingCompletionAdherenceCalc = null;
 
     paused.clear();
     paused = null;

@@ -256,37 +256,11 @@
                             android:textColor="@color/colorSecondary" />
                     </RelativeLayout>
 
-
-                    <RelativeLayout
-                        android:id="@+id/mUpcomingLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/mPausedLayout"
-                        android:layout_marginTop="15dp">
-
-                        <android.support.v7.widget.AppCompatCheckBox
-                            android:id="@+id/mUpcomingSelectBtn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:button="@drawable/radio_button_netwok_selector"
-                            android:padding="2dp"
-                            android:saveEnabled="false" />
-
-                        <android.support.v7.widget.AppCompatTextView
-                            android:id="@+id/mUpcomingLabel"
-                            style="@style/TextType2"
-                            android:layout_marginLeft="13dp"
-                            android:layout_toRightOf="@+id/mUpcomingSelectBtn"
-                            android:text="@string/upcoming1"
-                            android:textColor="@color/colorSecondary" />
-                    </RelativeLayout>
-
                     <RelativeLayout
                         android:id="@+id/mClosedLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/mUpcomingLayout"
+                        android:layout_below="@id/mPausedLayout"
                         android:layout_marginTop="15dp">
 
                         <android.support.v7.widget.AppCompatCheckBox

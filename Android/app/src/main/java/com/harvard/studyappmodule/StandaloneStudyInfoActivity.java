@@ -229,8 +229,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           dbServiceSubscriber.saveStudyListToDB(this, study);
           if (study.getStudies().get(0).getStatus().equalsIgnoreCase("active")) {
             callGetStudyInfoWebservice();
-            if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.upcoming))
-                || study
+            if (study
                     .getStudies()
                     .get(0)
                     .getStatus()
@@ -369,9 +368,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         userPreferenceStudies = studies.getStudies();
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(AppConfig.StudyId, realm);
         if (studyList != null) {
-          if (studyList.getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
-            Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-          } else if (!studyList.getSetting().isEnrolling()) {
+          if (!studyList.getSetting().isEnrolling()) {
             Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
           } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
             Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -580,9 +577,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   }
 
   private void joinStudy() {
-    if (study.getStudies().get(0).getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
-      Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-    } else if (!study.getStudies().get(0).getSetting().isEnrolling()) {
+    if (!study.getStudies().get(0).getSetting().isEnrolling()) {
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
     } else if (study.getStudies().get(0).getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -707,8 +702,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       bottombar1.setVisibility(View.INVISIBLE);
     }
 
-    if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.upcoming))
-        || study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.closed))) {
+    if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.closed))) {
       joinButton.setVisibility(View.GONE);
     }
   }
