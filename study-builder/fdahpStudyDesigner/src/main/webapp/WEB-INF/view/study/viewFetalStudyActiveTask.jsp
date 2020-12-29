@@ -19,11 +19,11 @@
       </span>
       <span class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
-            title="This must be a human-readable activity identifier and unique across all activities of the study.Note that this field cannot be edited once the study is Launched."></span>
+            title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."></span>
     </div>
     <div class="add_notify_option">
       <div class="form-group shortTitleClass">
-        <input autofocus="autofocus" type="text" custAttType="cust"
+        <input autofocus="autofocus" type="text" autocomplete="off" custAttType="customValidate"
                class="form-control shortTitleIdCls"
                id="shortTitleId" name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
             <c:if
@@ -1054,6 +1054,24 @@
       $('[data-toggle="tooltip"]').tooltip();
       $('input').on('drop', function () {
         return false;
+      });
+      $(document).find('input[type = text][custAttType = customValidate	]').keyup(function (e) {
+          var evt = (e) ? e : window.event;
+          var charCode = (evt.which) ? evt.which : evt.keyCode;
+          if (charCode == 16)
+            isShift = false;
+          if (!isShift && $(this).val()) {
+            var regularExpression = /^[a-z0-9_-]*$/;
+            if (!regularExpression.test($(this).val())) {
+              var newVal = $(this).val().replace(/[^a-z0-9_-]/g,
+                  '');
+              e.preventDefault();
+              $(this).val(newVal);
+              $(this).parent().addClass("has-danger has-error");
+              $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
+                  "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."));
+          }
+        }
       });
       $(document).find('input[type = text][custAttType != cust]').keyup(function (e) {
         var evt = (e) ? e : window.event;
