@@ -86,7 +86,6 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   private static final int GET_PREFERENCES = 101;
 
   private RelativeLayout backBtn;
-  private AppCompatImageView bookmarkimage;
   private AppCompatTextView consentLayButton;
   private AppCompatTextView joinButton;
   private LinearLayout bottombar1;
@@ -134,14 +133,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
 
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-      bookmarkimage.setVisibility(View.GONE);
       backBtn.setVisibility(View.GONE);
     }
   }
 
   private void initializeXmlId() {
     backBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    bookmarkimage = (AppCompatImageView) findViewById(R.id.imageViewRight);
     joinButton = (AppCompatTextView) findViewById(R.id.joinButton);
     consentLayButton = (AppCompatTextView) findViewById(R.id.consentLayButton);
     bottombar1 = (LinearLayout) findViewById(R.id.bottom_bar1);
@@ -232,20 +229,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           dbServiceSubscriber.saveStudyListToDB(this, study);
           if (study.getStudies().get(0).getStatus().equalsIgnoreCase("active")) {
             callGetStudyInfoWebservice();
-            if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.upcoming))
-                || study
+            if (study
                     .getStudies()
                     .get(0)
                     .getStatus()
                     .equalsIgnoreCase(getString(R.string.closed))) {
               joinButton.setVisibility(View.GONE);
-            }
-            if (study
-                .getStudies()
-                .get(0)
-                .getStatus()
-                .equalsIgnoreCase(getString(R.string.closed))) {
-              bookmarkimage.setVisibility(View.GONE);
             }
           } else {
             Toast.makeText(
@@ -344,11 +333,6 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .writePreference(
                 StandaloneStudyInfoActivity.this,
-                getString(R.string.bookmark),
-                "" + study.getStudies().get(0).isBookmarked());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                StandaloneStudyInfoActivity.this,
                 getString(R.string.status),
                 "" + study.getStudies().get(0).getStatus());
         if (!studies.getStudies().isEmpty()) {
@@ -384,9 +368,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         userPreferenceStudies = studies.getStudies();
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(AppConfig.StudyId, realm);
         if (studyList != null) {
-          if (studyList.getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
-            Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-          } else if (!studyList.getSetting().isEnrolling()) {
+          if (!studyList.getSetting().isEnrolling()) {
             Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
           } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
             Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -595,9 +577,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   }
 
   private void joinStudy() {
-    if (study.getStudies().get(0).getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
-      Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-    } else if (!study.getStudies().get(0).getSetting().isEnrolling()) {
+    if (!study.getStudies().get(0).getSetting().isEnrolling()) {
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
     } else if (study.getStudies().get(0).getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -710,26 +690,20 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     } else if (!studyHome.getStudyWebsite().equalsIgnoreCase("")) {
       bottombar1.setVisibility(View.VISIBLE);
       consentLayButton.setText(getResources().getString(R.string.visit_website));
-      consentLay.setOnClickListener(
-              new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                  Intent browserIntent =
-                          new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
-                  startActivity(browserIntent);
-                }
-              });
+      consentLay.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent browserIntent =
+                  new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
+          startActivity(browserIntent);
+        }
+      });
     } else {
       bottombar1.setVisibility(View.INVISIBLE);
     }
 
-    if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.upcoming))
-        || study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.closed))) {
-      joinButton.setVisibility(View.GONE);
-    }
-
     if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.closed))) {
-      bookmarkimage.setVisibility(View.GONE);
+      joinButton.setVisibility(View.GONE);
     }
   }
 

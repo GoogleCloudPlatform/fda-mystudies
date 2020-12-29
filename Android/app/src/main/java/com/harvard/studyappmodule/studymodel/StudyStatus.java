@@ -6,7 +6,6 @@ public class StudyStatus extends RealmObject {
 
   private boolean active;
   private boolean paused;
-  private boolean upcoming;
   private boolean closed;
 
   public boolean isActive() {
@@ -23,14 +22,6 @@ public class StudyStatus extends RealmObject {
 
   public void setPaused(boolean paused) {
     this.paused = paused;
-  }
-
-  public boolean isUpcoming() {
-    return upcoming;
-  }
-
-  public void setUpcoming(boolean upcoming) {
-    this.upcoming = upcoming;
   }
 
   public boolean isClosed() {
