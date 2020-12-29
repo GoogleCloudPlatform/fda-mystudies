@@ -175,12 +175,7 @@ public interface StudyDAO {
   public String saveOrUpdateStudyEligibilty(
       EligibilityBo eligibilityBo, SessionObject sesObj, String customStudyId);
 
-  public String saveOrUpdateStudySettings(
-      StudyBo studyBo,
-      SessionObject sesObj,
-      String userIds,
-      String permissions,
-      String projectLead);
+  public String saveOrUpdateStudySettings(StudyBo studyBo, SessionObject sesObj);
 
   public String saveResourceNotification(NotificationBO notificationBO, boolean notiFlag);
 

@@ -313,17 +313,7 @@
 <script>
   $(document).ready(function () {
     <c:if test="${empty permission && fn:contains(permissions,5)}">
-    <c:if test="${user eq 'logout_login_user'}">
-    bootbox.alert({
-      closeButton: false,
-      message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
-      callback: function (result) {
-        var a = document.createElement('a');
-        a.href = "/studybuilder/sessionOut.do";
-        document.body.appendChild(a).click();
-      }
-    });
-    </c:if>
+   
     $('[data-toggle="tooltip"]').tooltip();
     $('#adminsId').hide();
     $('.studyAdminRowCls').each(function () {

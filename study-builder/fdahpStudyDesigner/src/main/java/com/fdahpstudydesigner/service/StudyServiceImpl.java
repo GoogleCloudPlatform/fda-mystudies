@@ -1250,17 +1250,11 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public String saveOrUpdateStudySettings(
-      StudyBo studyBo,
-      SessionObject sesObj,
-      String userIds,
-      String permissions,
-      String projectLead) {
+  public String saveOrUpdateStudySettings(StudyBo studyBo, SessionObject sesObj) {
     logger.info("StudyServiceImpl - saveOrUpdateStudySettings() - Starts");
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
-      result =
-          studyDAO.saveOrUpdateStudySettings(studyBo, sesObj, userIds, permissions, projectLead);
+      result = studyDAO.saveOrUpdateStudySettings(studyBo, sesObj);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrUpdateStudySettings() - ERROR ", e);
     }

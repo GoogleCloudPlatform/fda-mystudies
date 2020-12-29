@@ -3500,18 +3500,7 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        String userIds =
-            FdahpStudyDesignerUtil.isEmpty(request.getParameter("userIds"))
-                ? ""
-                : request.getParameter("userIds");
-        String permissions =
-            FdahpStudyDesignerUtil.isEmpty(request.getParameter("permissions"))
-                ? ""
-                : request.getParameter("permissions");
-        String projectLead =
-            FdahpStudyDesignerUtil.isEmpty(request.getParameter("projectLead"))
-                ? ""
-                : request.getParameter("projectLead");
+
         String buttonText =
             FdahpStudyDesignerUtil.isEmpty(
                     request.getParameter(FdahpStudyDesignerConstants.BUTTON_TEXT))
@@ -3519,23 +3508,13 @@ public class StudyController {
                 : request.getParameter(FdahpStudyDesignerConstants.BUTTON_TEXT);
         studyBo.setButtonText(buttonText);
         studyBo.setUserId(sesObj.getUserId());
-        message =
-            studyService.saveOrUpdateStudySettings(
-                studyBo, sesObj, userIds, permissions, projectLead);
+        message = studyService.saveOrUpdateStudySettings(studyBo, sesObj);
         request
             .getSession()
             .setAttribute(
                 sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId() + "");
         map.addAttribute("_S", sessionStudyCount);
-        if (FdahpStudyDesignerConstants.SUCCESS.equals(message)
-            || FdahpStudyDesignerConstants.WARNING.equals(message)) {
-          if (FdahpStudyDesignerConstants.WARNING.equals(message)) {
-            request
-                .getSession()
-                .setAttribute(
-                    sessionStudyCount + FdahpStudyDesignerConstants.LOGOUT_LOGIN_USER,
-                    FdahpStudyDesignerConstants.LOGOUT_LOGIN_USER);
-          }
+        if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
             request
                 .getSession()
