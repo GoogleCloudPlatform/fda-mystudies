@@ -1421,7 +1421,7 @@ public class SiteServiceImpl implements SiteService {
 
       Map<String, String> templateArgs = new HashMap<>();
       templateArgs.put("study name", optStudy.get().getName());
-      templateArgs.put("org name", appPropertyConfig.getOrgName());
+      templateArgs.put("App Name", optStudy.get().getApp().getAppName());
       templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
       templateArgs.put("contact email address", appPropertyConfig.getContactEmail());
       EmailRequest emailRequest =
