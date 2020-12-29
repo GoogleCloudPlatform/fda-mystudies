@@ -148,10 +148,10 @@ The deployment process takes the following approach:
 1. Update [`/deployment/deployment.hcl`](/deployment/deployment.hcl) with the values for your deployment
 1. Update [`/deployment/scripts/set_env_var.sh`](/deployment/scripts/set_env_var.sh) for your deployment, then use the script to set your environment variables, for example:
     ```
-    . ./set_env_var.sh           # executed from your /deployment/scripts directory
+    source set_env_var.sh         # executed from your /deployment/scripts directory
     ```
 1. Authenticate as a user with the permissions described above (this deployment assumes gcloud and Terraform commands are made as a user, rather than a service account)
-    - Update your [application default credentials](https://cloud.google.com/docs/authentication/production), for example you could run `gcloud auth application-default login` (when using a Google Compute Engine VM you must update the application default credentials, otherwise requests will continue to be made with its default service account)
+    - Login and update your [application default credentials](https://cloud.google.com/docs/authentication/production), for example you could run `gcloud auth login --update-adc` (when using a Google Compute Engine VM you must update the application default credentials, otherwise requests will continue to be made with its default service account)
     - Remember to run `gcloud auth revoke` to log your user account out once your deployment is complete
 
 ### Set up your CICD pipelines
@@ -201,11 +201,17 @@ The deployment process takes the following approach:
 1. Once your pre-submit checks have completed successfully, and you have received code review approval, merge your pull request into the main branch to trigger the `terraform apply` post-submit operation (this operation may take up to 45 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 
     > Note: If your pre-submit checks or post-submit `terraform apply` fail with an error related to billing accounts, you may not have the [quota](https://support.google.com/cloud/answer/6330231?hl=en) necessary to attach all of your projects to the specified billing account. You may need to [request additional quota](https://support.google.com/code/contact/billing_quota_increase).
-1. [Grant](https://cloud.google.com/iam/docs/granting-changing-revoking-access) the [`roles/owner`](https://cloud.google.com/resource-manager/docs/access-control-proj#using_basic_roles) permission to the `{PREFIX}-{ENV}-project-owners@{DOMAIN}` group for each of your newly created projects (you may need your Google Cloud administrator to do this for you)  
+1. [Grant](https://cloud.google.com/iam/docs/granting-changing-revoking-access) the [`roles/owner`](https://cloud.google.com/resource-manager/docs/access-control-proj#using_basic_roles) permission to the `{PREFIX}-{ENV}-project-owners@{DOMAIN}` group for each of your newly created projects
+
+### Update your domain’s DNS records
+
+1. [View created DNS zones](https://console.cloud.google.com/net-services/dns/zones) in your `{PREFIX}-{ENV}-apps` project.
+1. Click on the zone named `{PREFIX}-{ENV}` and then click `Registrar Setup` in the upper right.
+1. Enter this information into your domain registrar’s DNS settings. You may need an administrator for your domain to do this step.
 
 ### Configure your deployment’s databases
 
-1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project
+1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project. The location selected here does not have to match the region configured in your `deployment.hcl` file as Firestore is not available in all regions. 
 1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
     - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
          ```bash
@@ -233,7 +239,7 @@ The deployment process takes the following approach:
          git commit -m "Set SQL bucket permissions"
          git push origin sql-bucket-permissions
          ```
-    - Once your pull request pre-submits have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
+    - Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to trigger `terraform apply`(this may take up to 10 minutes - you can view the status of the operation in the [Cloud Build history](https://console.cloud.google.com/cloud-build/builds) of your `devops` project)
 1. Initialize your MySQL databases by importing SQL scripts
     - Upload the necessary SQL script files to the `{PREFIX}-{ENV}-mystudies-sql-import` storage bucket that you created during Terraform deployment, for example:
          ```bash
@@ -254,7 +260,11 @@ The deployment process takes the following approach:
          gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_response_server_db_script.sql -q
          gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_participant_datastore_db_script.sql -q
          ```
-1. [Enable](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com) the [Cloud SQL Admin API](https://cloud.google.com/sql/docs/mysql/admin-api) for your `{PREFIX}-{ENV}-apps` project
+1. [Enable](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com) the [Cloud SQL Admin API](https://cloud.google.com/sql/docs/mysql/admin-api) for your `{PREFIX}-{ENV}-apps` project, for example:
+    ```bash
+    gcloud config set project $PREFIX-$ENV-apps && \
+      gcloud services enable sqladmin.googleapis.com
+    ```
 
 ### Configure and deploy your applications
 
@@ -278,8 +288,8 @@ The deployment process takes the following approach:
     -  Replace the `<PREFIX>`, `<ENV>` and `<LOCATION>` values for each `tf-deployment.yaml` in your repo, for example:
          ```bash
          find $GIT_ROOT -name 'tf-deployment.yaml' \
-         -exec sed -e 's/<PREFIX>-<ENV>/'$PREFIX'-'$ENV'/g' \
-         -e 's/<LOCATION>/'$LOCATION'/g' -i.backup '{}' \;
+           -exec sed -e 's/<PREFIX>-<ENV>/'$PREFIX'-'$ENV'/g' \
+           -e 's/<LOCATION>/'$LOCATION'/g' -i.backup '{}' \;
          ```
     -  Replace the `<PREFIX>`, `<ENV>` and `<DOMAIN>` values in [`/deployment/kubernetes/cert.yaml`](/deployment/kubernetes/cert.yaml) and [`/deployment/kubernetes/ingress.yaml`](/deployment/kubernetes/ingress.yaml), for example:
          ```bash
@@ -292,9 +302,11 @@ The deployment process takes the following approach:
            $GIT_ROOT/deployment/kubernetes/ingress.yaml
          ```
     - In [`/participant-manager/src/environments/environment.prod.ts`](/participant-manager/src/environments/environment.prod.ts), replace `<BASE_URL>` with your `participants.{PREFIX}.{DOMAIN}` value and `<auth-server-client-id>` with the value of your `auto-auth-server-client-id` secret (you can find this value in the [Secret Manager](https://console.cloud.google.com/security/secret-manager/) of your `{PREFIX}-{ENV}-secrets` project), for example:
-         ```bash
-         export auth_server_client_id=<YOUR_VALUE>
-         sed -e 's/<BASE_URL>/participants.’$PREFIX’.'$DOMAIN’/g' \
+        ```bash
+        export auth_server_client_id=<YOUR_VALUE>
+        ```
+        ```bash
+         sed -e 's/<BASE_URL>/participants.'$PREFIX'.'$DOMAIN'/g' \
            -e 's/<AUTH_SERVER_CLIENT_ID>/'$auth_server_client_id'/g' -i.backup \
            $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
          ```
