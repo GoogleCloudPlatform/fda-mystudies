@@ -19,10 +19,13 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.ParticipantInformationController;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,8 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
 
   @Autowired private ParticipantInformationService participantInfoService;
 
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
+
   @Test
   public void contextLoads() {
     assertNotNull(controller);
@@ -45,6 +50,13 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
 
   @Test
   public void getParticipantDetailsSuccess() throws Exception {
+    Optional<ParticipantStudyEntity> optParticipantStudy =
+        participantStudyRepository.findByParticipantId("i4ts7dsf50c6me154sfsdfdv");
+
+    ParticipantStudyEntity participantStudy = optParticipantStudy.get();
+    participantStudy.setParticipantId(PARTICIPANT_ID);
+    participantStudyRepository.saveAndFlush(participantStudy);
+
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
@@ -52,14 +64,14 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.PARTICIPANT_INFO.getPath())
                 .headers(headers)
-                .param("participantId", "i4ts7dsf50c6me154sfsdfdv")
+                .param("participantId", PARTICIPANT_ID)
                 .param("studyId", Constants.STUDYOF_HEALTH_CLOSE)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
+    auditRequest.setParticipantId(PARTICIPANT_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
