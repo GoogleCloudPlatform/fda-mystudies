@@ -64,4 +64,6 @@ public final class Constants {
   public static final int ADHERENCE = 0;
 
   public static final boolean DELETE = true;
+
+  public static final String SITE_ID = "1";
 }

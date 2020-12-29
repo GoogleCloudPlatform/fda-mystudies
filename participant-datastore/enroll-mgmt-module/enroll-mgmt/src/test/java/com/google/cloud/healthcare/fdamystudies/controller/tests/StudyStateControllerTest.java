@@ -85,7 +85,8 @@ public class StudyStateControllerTest extends BaseMockIT {
             Constants.STUDYOF_HEALTH,
             Constants.BOOKMARKED,
             Constants.COMPLETION,
-            Constants.ADHERENCE);
+            Constants.ADHERENCE,
+            Constants.SITE_ID);
 
     List<StudiesBean> listStudies = new ArrayList<StudiesBean>();
     listStudies.add(studiesBean);
@@ -153,7 +154,8 @@ public class StudyStateControllerTest extends BaseMockIT {
             Constants.STUDYOF_HEALTH,
             Constants.BOOKMARKED,
             Constants.COMPLETION,
-            Constants.ADHERENCE);
+            Constants.ADHERENCE,
+            Constants.SITE_ID);
 
     List<StudiesBean> listStudies = new ArrayList<StudiesBean>();
     listStudies.add(studiesBean);
