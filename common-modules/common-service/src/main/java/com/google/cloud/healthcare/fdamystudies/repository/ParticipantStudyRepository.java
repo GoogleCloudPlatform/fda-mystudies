@@ -94,7 +94,7 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
       value =
           "SELECT ps.id "
               + "FROM participant_registry_site prs, participant_study_info ps "
-              + "WHERE prs.id=ps.participant_registry_site_id AND prs.study_info_id=ps.study_info_id AND prs.email=:email",
+              + "WHERE prs.id=ps.participant_registry_site_id AND prs.study_info_id=ps.study_info_id AND prs.email=:email AND ps.site_id IN (:siteIds)",
       nativeQuery = true)
-  public List<String> findByEmail(String email);
+  public List<String> findByEmailAndSiteIds(String email, List<String> siteIds);
 }
