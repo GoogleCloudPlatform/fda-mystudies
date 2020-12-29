@@ -9,12 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import java.util.List;
 
 public interface StudyStateDao {
-
-  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user);
 
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList);
 
