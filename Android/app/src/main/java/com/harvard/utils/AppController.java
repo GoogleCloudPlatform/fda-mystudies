@@ -229,7 +229,7 @@ public class AppController {
   public static Typeface getHelveticaTypeface(Context context) {
     Typeface retTypeface = null;
     try {
-        retTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/HLM.ttf");
+      retTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/HLM.ttf");
     } catch (Exception e) {
       Logger.log(e);
     }
