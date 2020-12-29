@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
@@ -109,7 +110,7 @@ public class StudyEntity implements Serializable {
   @Column(length = SMALL_LENGTH)
   private String category;
 
-  @Column(length = SMALL_LENGTH)
+  @Column(length = MEDIUM_LENGTH)
   private String tagline;
 
   @Column(length = XS_LENGTH)
