@@ -714,9 +714,9 @@ template "project_firebase" {
     resources = {
       iam_members = {
         # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
-        # "roles/datastore.importExportAdmin" = [
-        #   "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
-        # ]
+         "roles/datastore.importExportAdmin" = [
+           "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
+         ]
         "roles/datastore.user" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
@@ -730,11 +730,11 @@ template "project_firebase" {
           # Firestore data export
           name = "{{.prefix}}-{{.env}}-mystudies-firestore-raw-data"
           # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
-          # iam_members = [{
-          #   role   = "roles/storage.admin"
-          #   member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
-          # }]
-          # TTL 7 days.
+           iam_members = [{
+             role   = "roles/storage.admin"
+             member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
+           }]
+           TTL 7 days.
           lifecycle_rules = [{
             action = {
               type = "Delete"
@@ -770,22 +770,22 @@ resource "google_firebase_project" "firebase" {
 }
 
 # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
-# resource "google_firestore_index" "activities_index" {
-#   project    = module.project.project_id
-#   collection = "Activities"
-#   fields {
-#     field_path = "participantId"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "createdTimestamp"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "__name__"
-#     order      = "ASCENDING"
-#   }
-# }
+ resource "google_firestore_index" "activities_index" {
+   project    = module.project.project_id
+   collection = "Activities"
+   fields {
+     field_path = "participantId"
+     order      = "ASCENDING"
+   }
+   fields {
+     field_path = "createdTimestamp"
+     order      = "ASCENDING"
+   }
+   fields {
+     field_path = "__name__"
+     order      = "ASCENDING"
+   }
+ }
 EOF
     }
   }
@@ -850,13 +850,13 @@ EOF
     } */
     resources = {
       # Step 5.5: uncomment and re-run the engine once all previous steps have been completed.
-      # cloud_sql_instances = [{
-      #   name               = "mystudies"
-      #   type               = "mysql"
-      #   network_project_id = "{{.prefix}}-{{.env}}-networks"
-      #   network            = "{{.prefix}}-{{.env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
-      # }]
+       cloud_sql_instances = [{
+         name               = "mystudies"
+         type               = "mysql"
+         network_project_id = "{{.prefix}}-{{.env}}-networks"
+         network            = "{{.prefix}}-{{.env}}-network"
+         user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
+       }]
       iam_members = {
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{.prefix}}-{{.env}}-networks.iam.gserviceaccount.com",
@@ -872,12 +872,12 @@ EOF
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         # Step 5.6: uncomment and re-run the engine once all previous steps have been completed.
-        # "roles/bigquery.jobUser" = [
-        #   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
-        # ]
-        # "roles/bigquery.dataEditor" = [
-        #   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
-        # ]
+         "roles/bigquery.jobUser" = [
+           "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
+         ]
+         "roles/bigquery.dataEditor" = [
+           "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
+         ]
       }
       storage_buckets = [
         {
