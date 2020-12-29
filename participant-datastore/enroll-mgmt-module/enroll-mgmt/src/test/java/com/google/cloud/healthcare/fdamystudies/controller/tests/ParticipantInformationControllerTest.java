@@ -53,9 +53,11 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
     Optional<ParticipantStudyEntity> optParticipantStudy =
         participantStudyRepository.findByParticipantId("i4ts7dsf50c6me154sfsdfdv");
 
-    ParticipantStudyEntity participantStudy = optParticipantStudy.get();
-    participantStudy.setParticipantId(PARTICIPANT_ID);
-    participantStudyRepository.saveAndFlush(participantStudy);
+    if (optParticipantStudy.isPresent()) {
+      ParticipantStudyEntity participantStudy = optParticipantStudy.get();
+      participantStudy.setParticipantId(PARTICIPANT_ID);
+      participantStudyRepository.saveAndFlush(participantStudy);
+    }
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
