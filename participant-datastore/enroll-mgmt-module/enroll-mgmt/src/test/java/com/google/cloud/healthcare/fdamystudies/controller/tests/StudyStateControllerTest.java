@@ -36,6 +36,7 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.controller.StudyStateController;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
@@ -79,6 +80,12 @@ public class StudyStateControllerTest extends BaseMockIT {
 
   @Test
   public void updateStudyStateSuccess() throws Exception {
+    Optional<ParticipantStudyEntity> optParticipantStudy =
+        participantStudyRepository.findById("101");
+    ParticipantStudyEntity participantStudy = optParticipantStudy.get();
+    participantStudy.setAdherence(20);
+    participantStudy.setCompletion(45);
+    participantStudyRepository.saveAndFlush(participantStudy);
 
     StudiesBean studiesBean =
         new StudiesBean(
