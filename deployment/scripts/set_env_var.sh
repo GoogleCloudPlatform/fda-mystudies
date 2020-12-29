@@ -1,5 +1,11 @@
-#!/bin/bash
-#This script sets environment variables that are used throughout the deployment
+# !/bin/bash
+
+# Copyright 2020 Google LLC
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
+# This script sets environment variables that are used throughout the deployment
 
 # PREFIX is a name you choose for your deployment that will be prepended to various
 # directories, cloud resources and URLs (for example this could be `mystudies`)
