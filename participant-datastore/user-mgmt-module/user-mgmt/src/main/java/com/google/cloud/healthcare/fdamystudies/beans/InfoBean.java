@@ -18,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InfoBean {
-  private String os = "";
-  private String appVersion = "";
-  private String deviceToken = "";
+  private String os;
+  private String appVersion;
+  private String deviceToken;
 }

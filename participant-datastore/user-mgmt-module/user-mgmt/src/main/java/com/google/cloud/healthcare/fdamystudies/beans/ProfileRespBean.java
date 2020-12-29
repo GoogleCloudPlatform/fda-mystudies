@@ -18,5 +18,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfileRespBean {
-  private String emailId = "";
+  private String emailId;
 }
