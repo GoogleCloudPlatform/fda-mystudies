@@ -65,6 +65,8 @@ public class ChangePasswordActivity extends AppCompatActivity
   private boolean isVerified;
   private String emailId;
   private boolean clicked;
+  String passwordPattern =
+          "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -140,14 +142,23 @@ public class ChangePasswordActivity extends AppCompatActivity
           }
         });
 
+    newPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!newPassword.getText().toString().matches(passwordPattern)) {
+            newPassword.setError(getResources().getString(R.string.password_validation));
+          }
+        }
+      }
+    });
+
     submitButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             if (!clicked) {
               clicked = true;
-              String passwordPattern =
-                  "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
               if (newPassword.getText().toString().equalsIgnoreCase("")
                   && oldPassword.getText().toString().equalsIgnoreCase("")
                   && confirmPassword.getText().toString().equalsIgnoreCase("")) {
@@ -169,11 +180,7 @@ public class ChangePasswordActivity extends AppCompatActivity
                         Toast.LENGTH_SHORT)
                     .show();
               } else if (!newPassword.getText().toString().matches(passwordPattern)) {
-                Toast.makeText(
-                        ChangePasswordActivity.this,
-                        getResources().getString(R.string.password_validation),
-                        Toast.LENGTH_SHORT)
-                    .show();
+                newPassword.setError(getResources().getString(R.string.password_validation));
               } else if (checkPasswordContainsEmailID(newPassword.getText().toString())) {
                 Toast.makeText(
                         ChangePasswordActivity.this,
