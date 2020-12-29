@@ -52,14 +52,14 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.PARTICIPANT_INFO.getPath())
                 .headers(headers)
-                .param("participantId", PARTICIPANT_ID)
+                .param("participantId", "i4ts7dsf50c6me154sfsdfdv")
                 .param("studyId", Constants.STUDYOF_HEALTH_CLOSE)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setParticipantId(PARTICIPANT_ID);
+    auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
