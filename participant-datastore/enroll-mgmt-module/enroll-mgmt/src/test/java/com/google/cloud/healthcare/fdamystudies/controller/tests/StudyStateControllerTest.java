@@ -36,9 +36,11 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.controller.StudyStateController;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
@@ -63,6 +65,12 @@ public class StudyStateControllerTest extends BaseMockIT {
 
   @Autowired protected MockMvc mockMvc;
 
+  @Autowired private StudyRepository studyRepository;
+
+  @Autowired private SiteRepository siteRepository;
+
+  @Autowired private UserDetailsRepository userDetailsRepository;
+
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
@@ -80,13 +88,6 @@ public class StudyStateControllerTest extends BaseMockIT {
 
   @Test
   public void updateStudyStateSuccess() throws Exception {
-    Optional<ParticipantStudyEntity> optParticipantStudy =
-        participantStudyRepository.findById("101");
-    ParticipantStudyEntity participantStudy = optParticipantStudy.get();
-    participantStudy.setAdherence(20);
-    participantStudy.setCompletion(45);
-    participantStudyRepository.saveAndFlush(participantStudy);
-
     StudiesBean studiesBean =
         new StudiesBean(
             Constants.STUDYOF_HEALTH,
