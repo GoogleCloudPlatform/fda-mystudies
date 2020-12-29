@@ -45,6 +45,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.transaction.SystemException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,11 +81,16 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Transactional(readOnly = true)
   public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
-    List<ParticipantStudyEntity> participantStudiesList = null;
-    participantStudiesList = studyStateDao.getParticipantStudiesList(user);
+
+    List<String> participantStudyIds = participantStudyRepository.findByEmail(user.getEmail());
+
+    List<ParticipantStudyEntity> participantStudies = null;
+    if (CollectionUtils.isNotEmpty(participantStudyIds)) {
+      participantStudies = participantStudyRepository.findAllById(participantStudyIds);
+    }
 
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Ends ");
-    return participantStudiesList;
+    return (List<ParticipantStudyEntity>) CollectionUtils.emptyIfNull(participantStudies);
   }
 
   @Override
