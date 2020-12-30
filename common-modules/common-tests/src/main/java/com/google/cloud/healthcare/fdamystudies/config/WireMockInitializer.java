@@ -12,40 +12,33 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextClosedEvent;
 
 public class WireMockInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
+  private static WireMockServer wireMockServer = null;
+
+  private static final int WIREMOCK_PORT = 8080;
+
   @Override
   public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-    WireMockServer wireMockServer =
-        new WireMockServer(
-            new WireMockConfiguration()
-                .port(8080)
-                .fileSource(new ClasspathFileSourceWithoutLeadingSlash()));
-
     configurableApplicationContext
         .getBeanFactory()
-        .registerSingleton("wireMockServer", wireMockServer);
+        .registerSingleton("wireMockServer", getWiremockServerInstance());
+  }
 
-    configurableApplicationContext.addApplicationListener(
-        applicationEvent -> {
-          if (applicationEvent instanceof ApplicationStartedEvent) {
-            if (!wireMockServer.isRunning()) {
-              wireMockServer.start();
-            }
-          }
-
-          if (applicationEvent instanceof ContextClosedEvent) {
-            if (wireMockServer.isRunning()) {
-              wireMockServer.stop();
-            }
-          }
-        });
+  private WireMockServer getWiremockServerInstance() {
+    if (wireMockServer == null) {
+      wireMockServer =
+          new WireMockServer(
+              new WireMockConfiguration()
+                  .port(WIREMOCK_PORT)
+                  .fileSource(new ClasspathFileSourceWithoutLeadingSlash()));
+      wireMockServer.start();
+    }
+    return wireMockServer;
   }
 
   /*
