@@ -290,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `study_info` (
   `updated_time` datetime DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
   `name` varchar(64) DEFAULT NULL,
-  `sponsor` varchar(32) DEFAULT NULL,
+  `sponsor` varchar(128) DEFAULT NULL,
   `status` varchar(32) DEFAULT NULL,
   `tagline` varchar(128) DEFAULT NULL,
   `type` varchar(32) DEFAULT NULL,
