@@ -515,8 +515,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    // without study id
-    String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, null);
+    // unknown token id
+    String requestJson = getEnrollmentJson(Constants.UNKOWN_TOKEN, Constants.STUDYOF_HEALTH_CLOSE);
 
     mockMvc
         .perform(
@@ -529,6 +529,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(USER_FOUND_INELIGIBLE_FOR_STUDY.getEventCode(), auditRequest);
@@ -550,8 +551,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(2);
 
-    // unknown token id
-    requestJson = getEnrollmentJson(Constants.UNKOWN_TOKEN, Constants.STUDYOF_HEALTH_CLOSE);
+    // without study id
+    requestJson = getEnrollmentJson(Constants.TOKEN, null);
 
     // Reset Audit Event calls
     clearAuditRequests();

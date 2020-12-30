@@ -74,15 +74,11 @@ class WCPConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-
+    var headers = SessionService.Audit.headers
     let token = API.apiKey
     let base64token = "Basic " + token.toBase64()
-
-    let headers = [
-      kAuthorization: base64token,
-      "applicationId": AppConfiguration.appID,
-    ]
-
+    headers[kAuthorization] = base64token
+    headers["applicationId"] = AppConfiguration.appID
     return headers
   }
 

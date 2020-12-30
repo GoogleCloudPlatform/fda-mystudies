@@ -24,8 +24,8 @@ public class AppPropertyConfig implements Serializable {
   @Value("${security.xsrf.enabled}")
   private boolean isXsrfEnabled;
 
-  @Value("${securityCodeExpireDate}")
-  private String securityCodeExpireDate;
+  @Value("${securityCodeExpireInHours}")
+  private String securityCodeExpireInHours;
 
   @Value("${enrollmentTokenExpiryInHours}")
   private Integer enrollmentTokenExpiryInHours;
