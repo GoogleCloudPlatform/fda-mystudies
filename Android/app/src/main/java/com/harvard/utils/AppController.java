@@ -72,6 +72,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Random;
+import java.util.regex.Pattern;
+
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -93,6 +95,13 @@ public class AppController {
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
   public static String loginCallback = "login_callback";
+
+  public static final String STARTING_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
+  public static final String ENDDING_TAGS = "</\\w+>";
+  public static final String SELFCLOSINGS_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/>";
+  public static final String HTML_ENTITIES = "&[a-zA-Z][a-zA-Z0-9]+;";
+  public static final Pattern html_Pattern = Pattern
+          .compile("(" + STARTING_TAGS + ".*" + ENDDING_TAGS + ")|(" + SELFCLOSINGS_TAGS + ")|(" + HTML_ENTITIES + ")", Pattern.DOTALL);
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
     if (sharedPreferenceHelper == null) {
@@ -923,5 +932,19 @@ public class AppController {
 
   public static String getSourceKey(Resource resource) {
     return resource.getAvailability().getSourceKey();
+  }
+
+  public static String verifyHtmlInput(String input) {
+    String formattedText;
+    if (html_Pattern.matcher(input).find()) {
+      formattedText = input;
+    } else {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append("<p>");
+      stringBuilder.append(input);
+      stringBuilder.append("</p>");
+      formattedText =  stringBuilder.toString();
+    }
+    return formattedText;
   }
 }

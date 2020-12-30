@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import org.researchstack.backbone.answerformat.BooleanAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.step.InstructionStep;
@@ -623,10 +625,10 @@ public class StepsBuilder {
           steps.add(formstep);
         } else if (activityQuestionStep.get(i).getType().equalsIgnoreCase("instruction")) {
           InstructionStepCustom instructionStep =
-                  new InstructionStepCustom(
-                          activityQuestionStep.get(i).getKey(),
-                          activityQuestionStep.get(i).getTitle(),
-                          activityQuestionStep.get(i).getText());
+              new InstructionStepCustom(
+                  activityQuestionStep.get(i).getKey(),
+                  activityQuestionStep.get(i).getTitle(),
+                  AppController.verifyHtmlInput(activityQuestionStep.get(i).getText()));
           instructionStep.setOptional(activityQuestionStep.get(i).isSkippable());
           if (branching) {
             instructionStep.setStepTitle(R.string.notxt);
@@ -1036,4 +1038,6 @@ public class StepsBuilder {
     }
     return formquesteps;
   }
+
+
 }
