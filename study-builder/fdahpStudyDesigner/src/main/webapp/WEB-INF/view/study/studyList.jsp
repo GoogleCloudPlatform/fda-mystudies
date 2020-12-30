@@ -18,16 +18,10 @@
         <th id="">Study ID
           <span class="sort"></span>
         </th>
+        <th id="">APP ID
+          <span class="sort"></span>
+        </th>
         <th id="">Study name
-          <span class="sort"></span>
-        </th>
-        <th id="">Category
-          <span class="sort"></span>
-        </th>
-        <th id="">Project lead
-          <span class="sort"></span>
-        </th>
-        <th id="">Research Sponsor
           <span class="sort"></span>
         </th>
         <th id="">Status
@@ -42,14 +36,10 @@
           <td style="display: none;">${study.createdOn}</td>
           <td style="display: none;">${study.liveStudyId}</td>
           <td>${study.customStudyId}</td>
+           <td>${study.appId}</td>
           <td>
             <div class="studylist-txtoverflow" title="${fn:escapeXml(study.name)}">${study.name}</div>
           </td>
-          <td>${study.category}</td>
-          <td>
-            <div class="createdFirstname">${study.projectLeadName}</div>
-          </td>
-          <td>${study.researchSponsor}</td>
           <td>${study.status}</td>
           <td>
             <span class="sprites_icon preview-g mr-lg viewStudyClass" isLive=""
@@ -144,27 +134,18 @@
     });
 
     $('#studies_list').DataTable({
-      "paging": true,
-      "abColumns": [
-        {"bSortable": true},
-        {"bSortable": true},
-        {"bSortable": true},
-        {"bSortable": true},
-        {"bSortable": true},
-        {"bSortable": false}
-      ],
-      "columnDefs": [{orderable: false, targets: [8]}],
-      "order": [[0, "desc"]],
-      "info": false,
-
-      "lengthChange": false,
-      language: {
-        "zeroRecords": "You haven't created any content yet.",
-      },
-      "searching": false,
-      "pageLength": 10
-
-    });
+        "paging": true,
+        "order": [],
+        "columnDefs": [{orderable: false, orderable: false, targets: [0]}],
+        "info": false,
+        "lengthChange": false,
+        language: {
+          "zeroRecords": "You haven't created any content yet.",
+        },
+        "searching": false,
+        "pageLength": 10,
+      });
+      
 
   });
   $('.copyStudyClass').on('click', function () {
