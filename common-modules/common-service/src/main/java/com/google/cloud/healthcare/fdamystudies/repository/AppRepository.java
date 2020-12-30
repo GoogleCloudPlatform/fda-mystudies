@@ -134,7 +134,7 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
   @Query(
       value =
           "SELECT ud.id AS userDetailsId, ud.email AS email,ud.status AS registrationStatus, ud.verification_time AS registrationDate, "
-              + "st.name AS studyName, st.id AS studyId, st.custom_id AS customStudyId, st.type AS studyType "
+              + "st.name AS studyName, st.id AS studyId, st.custom_id AS customStudyId, st.type AS studyType, peh.created_time "
               + "FROM user_details ud "
               + "LEFT JOIN participant_enrollment_history peh ON ud.id = peh.user_details_id "
               + "LEFT JOIN study_info st ON st.id=peh.study_info_id "
@@ -144,7 +144,8 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "         CASE :orderByCondition WHEN 'registrationStatus_asc' THEN ud.status END ASC, "
               + "         CASE :orderByCondition WHEN 'email_desc' THEN ud.email END DESC, "
               + "         CASE :orderByCondition WHEN 'registrationDate_desc' THEN ud.verification_time END DESC, "
-              + "         CASE :orderByCondition WHEN 'registrationStatus_desc' THEN ud.status END DESC ",
+              + "         CASE :orderByCondition WHEN 'registrationStatus_desc' THEN ud.status END DESC, "
+              + "peh.created_time DESC ",
       nativeQuery = true)
   public List<AppParticipantsInfo> findUserDetailsByAppId(
       String appId, List<String> userDetailIds, String orderByCondition);

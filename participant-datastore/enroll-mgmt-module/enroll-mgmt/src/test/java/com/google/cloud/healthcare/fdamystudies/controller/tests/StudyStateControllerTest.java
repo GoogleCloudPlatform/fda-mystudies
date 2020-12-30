@@ -141,8 +141,8 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     assertTrue(study.isPresent());
     assertTrue(study.get().getBookmarked());
-    assertEquals(Constants.COMPLETION, study.get().getCompletion());
-    assertEquals(Constants.ADHERENCE, study.get().getAdherence());
+    assertEquals(45, study.get().getCompletion());
+    assertEquals(20, study.get().getAdherence());
   }
 
   @Test
