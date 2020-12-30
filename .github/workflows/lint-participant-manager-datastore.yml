@@ -1,4 +1,4 @@
-name: lint-response-datastore
+name: lint-participant-manager-datastore
 
 on:
   pull_request:
