@@ -73,7 +73,7 @@ echo "INSERT INTO user_permission_mapping (user_id, permission_id) VALUES
 " >> ${TMPFILE}
 
 # Upload TMPFILE to GCS.
-GCS_FILE=gs://${SQL_IMPORT_BUCKET}/study_builder_supreadmin.sql
+GCS_FILE=gs://${SQL_IMPORT_BUCKET}/study_builder_superadmin.sql
 echo "Copying the sql file to ${GCS_FILE}"
 gsutil mv ${TMPFILE} ${GCS_FILE}
 
