@@ -699,7 +699,13 @@ public class SurveyActivitiesListAdapter
                 .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
           holder.container.setBackgroundColor(context.getResources().getColor(R.color.rsb_warm_gray_20));
           holder.container.setClickable(false);
+        } else {
+          holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+          holder.container.setClickable(true);
         }
+      } else {
+        holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+        holder.container.setClickable(false);
       }
     }
   }
