@@ -182,8 +182,7 @@ public class StudyStateController {
             studyStateService.withdrawFromStudy(
                 withdrawFromStudyBean.getParticipantId(),
                 withdrawFromStudyBean.getStudyId(),
-                withdrawFromStudyBean.isDelete(),
-                auditRequest);
+                withdrawFromStudyBean.isDelete());
         if (respBean != null) {
           logger.info("StudyStateController withdrawFromStudy() - Ends ");
           respBean.setCode(ErrorCode.EC_200.code());

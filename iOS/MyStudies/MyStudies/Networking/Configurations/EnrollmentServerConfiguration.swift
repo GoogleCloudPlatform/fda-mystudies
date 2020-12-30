@@ -61,9 +61,12 @@ class EnrollmentServerConfiguration: NetworkConfiguration {
   }
 
   override func getDefaultHeaders() -> [String: String] {
-    var headers = SessionService.Audit.headers
-    headers[kAuthorization] = User.currentUser.authToken ?? ""
-    return headers
+
+    let header = [
+      "appId": AppConfiguration.appID,
+      kAuthorization: User.currentUser.authToken ?? "",
+    ]
+    return header
   }
 
   override func getDefaultRequestParameters() -> [String: Any] {

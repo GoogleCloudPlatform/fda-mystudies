@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
@@ -95,15 +94,14 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
   @Override
   @Transactional()
-  public String updateStatus(
-      UserDetailsEntity participantDetails, AuditLogEventRequest auditRequest) {
+  public String updateStatus(UserDetailsEntity participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
 
     UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
     updateEmailStatusRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());
     UpdateEmailStatusResponse updateStatusResponse =
         userManagementUtil.updateUserInfoInAuthServer(
-            updateEmailStatusRequest, participantDetails.getUserId(), auditRequest);
+            updateEmailStatusRequest, participantDetails.getUserId());
 
     UserDetailsEntity userDetails = SerializationUtils.clone(participantDetails);
     userDetails.setId(participantDetails.getId());

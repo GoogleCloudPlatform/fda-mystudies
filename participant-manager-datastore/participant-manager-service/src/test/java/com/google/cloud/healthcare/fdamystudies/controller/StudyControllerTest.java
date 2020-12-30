@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ENROLLMENT_TARGET_UPDATED;
@@ -132,7 +131,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].logoImageUrl").value(studyEntity.getLogoImageUrl()))
         .andExpect(jsonPath("$.studies[0].invited").value(1))
         .andExpect(jsonPath("$.studies[0].enrolled").value(1))
-        .andExpect(jsonPath("$.studies[0].studyStatus").value(STATUS_ACTIVE))
         .andExpect(jsonPath("$.studies[0].enrollmentPercentage").value(100));
 
     verifyTokenIntrospectRequest(1);
@@ -178,7 +176,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].logoImageUrl").value(studyEntity.getLogoImageUrl()))
         .andExpect(jsonPath("$.studies[0].invited").value(1))
         .andExpect(jsonPath("$.studies[0].enrolled").value(1))
-        .andExpect(jsonPath("$.studies[0].studyStatus").value(STATUS_ACTIVE))
         .andExpect(jsonPath("$.studies[0].enrollmentPercentage").value(100));
 
     verifyTokenIntrospectRequest();
@@ -473,7 +470,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
-        .andExpect(jsonPath("$.participantRegistryDetail.studyStatus").value(STATUS_ACTIVE))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(1)))
         .andExpect(

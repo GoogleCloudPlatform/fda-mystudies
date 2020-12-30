@@ -69,8 +69,9 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
                 ` emails failed to import.</br>` +
                 `Reason for import failure for these could be one of the following:<br/>
                 1.Email not in proper format <br/>
-                2.Email already exists in the site <br/>
-                3.Invitation enabled for the same email in another site within the same study <br/>
+2.Participant enabled in another site within the same study <br/>
+3.Email already exists in the site<br/>
+4. The email already exists in enabled state for another site in the same study.<br/>
                 `,
             );
           } else if (getMessage(successResponse.code)) {

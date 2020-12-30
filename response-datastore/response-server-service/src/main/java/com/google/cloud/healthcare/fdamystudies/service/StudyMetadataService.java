@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
@@ -22,8 +21,6 @@ public interface StudyMetadataService {
           IllegalArgumentException, InvocationTargetException;
 
   QuestionnaireActivityStructureBean getStudyActivityMetadata(
-      String applicationId,
-      StudyActivityMetadataRequestBean studyActivityMetadataRequestBean,
-      AuditLogEventRequest auditRequest)
+      String applicationId, StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
       throws ProcessResponseException;
 }

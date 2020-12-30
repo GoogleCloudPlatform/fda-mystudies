@@ -956,11 +956,11 @@
     }
     var valid = true;
     if (y && x) {
-      if (parseInt(x) >= parseInt(y)) {
+      if (parseInt(x) > parseInt(y)) {
         if (clickDone && isFromValid($('#ydays').parents('form')))
           $('#ydays').focus();
         $('#ydays').parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y days should be greater than X days."));
         valid = false;
       } else {
         $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").empty();

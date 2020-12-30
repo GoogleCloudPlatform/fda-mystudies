@@ -203,8 +203,10 @@ class AnchorDateHandler {
       return
     }
 
-    var headers = SessionService.Audit.headers
-    headers[kAuthorization] = User.currentUser.authToken ?? ""
+    let headers: [String: String] = [
+      kAuthorization: User.currentUser.authToken ?? "",
+      "userId": User.currentUser.userId ?? "",
+    ]
 
     var request = URLRequest(
       url: requestUrl,

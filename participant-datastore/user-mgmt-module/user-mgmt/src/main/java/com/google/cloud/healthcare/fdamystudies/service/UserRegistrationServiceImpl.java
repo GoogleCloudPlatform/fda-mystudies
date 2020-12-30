@@ -27,7 +27,6 @@ import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
-import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
@@ -137,7 +136,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     // Call POST /users API to create a user account in oauth-scim-server
-    UserResponse authUserResponse = registerUserInAuthServer(user, auditRequest);
+    UserResponse authUserResponse = registerUserInAuthServer(user);
 
     // save authUserId
     userDetails.setUserId(authUserResponse.getUserId());
@@ -201,11 +200,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     return userDetails;
   }
 
-  private UserResponse registerUserInAuthServer(
-      UserRegistrationForm user, AuditLogEventRequest auditRequest) {
+  private UserResponse registerUserInAuthServer(UserRegistrationForm user) {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
-    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     UserRequest userRequest = new UserRequest();
     userRequest.setEmail(user.getEmailId());
