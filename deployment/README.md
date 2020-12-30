@@ -130,12 +130,13 @@ The deployment process takes the following approach:
     - Install [Terraform Engine](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
          ```shell
          VERSION=v0.4.0 && \
+           sudo apt install wget -y && \
            sudo wget -O /usr/local/bin/tfengine https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64 && \
            sudo chmod +x /usr/local/bin/tfengine
          ```
     - Install [Git](https://github.com/git-guides/install-git), for example:
          ```shell
-         sudo apt-get install git-all
+         sudo apt-get install git
          ```
 1. [Duplicate](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/duplicating-a-repository) the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies), then clone it locally
 1. Update [`/deployment/deployment.hcl`](/deployment/deployment.hcl) with the values for your deployment
@@ -304,7 +305,7 @@ The deployment process takes the following approach:
          gcloud config set project $PREFIX-$ENV-secrets
          export auth_server_client_id=$( \
            gcloud secrets versions access latest --secret="auto-auth-server-client-id")
-         sed -e 's/<BASE_URL>/participants.'$PREFIX'-’$ENV’.'$DOMAIN'/g' \
+         sed -e 's/<BASE_URL>/participants.'$PREFIX'-'$ENV'.'$DOMAIN'/g' \
            -e 's/<AUTH_SERVER_CLIENT_ID>/'$auth_server_client_id'/g' -i.backup \
            $GIT_ROOT/participant-manager/src/environments/environment.prod.ts
          ```
@@ -327,8 +328,8 @@ The deployment process takes the following approach:
     `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (for example, `no-reply@example.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
     `manual-mystudies-from-email-domain` | The domain of the above email address (just the value after “@”) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-domain" --data-file=-`
     `manual-mystudies-smtp-hostname` | The hostname for your email account’s SMTP server (for example, `smtp.gmail.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-hostname" --data-file=-`
-    `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘false’; if ‘true’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-use-ip-allowlist" --data-file=-`
-    `manual-log-path` | The path to a directory within each application’s container where your logs will be written (for example `/logs`) | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-log-path" --data-file=-`
+    `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘false’; if ‘true’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value to `true` or `false` now (you can update it later) | `echo -n "false" \| gcloud secrets versions add "manual-mystudies-smtp-use-ip-allowlist" --data-file=-`
+    `manual-log-path` | The path to a directory within each application’s container where your logs will be written (for example `/logs`) | Set this value now | `echo -n "/logs" \| gcloud secrets versions add "manual-log-path" --data-file=-`
     `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the <manual-org-name> support team’ | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-org-name" --data-file=-`
     `manual-terms-url` | URL for a terms and conditions page that the applications will link to (for example, `https://example.com/terms`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
     `manual-privacy-url` | URL for a privacy policy page that the applications will link to (for example, `https://example.com/privacy`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
@@ -404,7 +405,7 @@ The deployment process takes the following approach:
     - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [`register_clients_in_hydra.sh`](/deployment/scripts/register_clients_in_hydra.sh), for example:
          ```bash
          $GIT_ROOT/deployment/scripts/register_clients_in_hydra.sh \
-           $PREFIX $ENV https://participants.$DOMAIN
+           $PREFIX $ENV $DOMAIN
          ```
     - Create your first admin user account for the [`Participant manager`](/participant-manager/) application by running the [`create_participant_manager_superadmin.sh`](/deployment/scripts/create_participant_manager_superadmin.sh) script to generate and import a SQL dump file for the [`Participant datastore`](/participant-datastore/) database, for example:
          ```bash
@@ -413,13 +414,14 @@ The deployment process takes the following approach:
          ```
     - Create your first admin user account for the [`Study builder`](/study-builder/) application by running the [`create_study_builder_superadmin.sh`](/deployment/scripts/create_study_builder_superadmin.sh) script to generate and import a SQL dump file for the [`Study datastore`](/study-datastore/) database, for example:
          ```bash
+         sudo apt-get install apache2-utils
          $GIT_ROOT/deployment/scripts/create_study_builder_superadmin.sh \
            $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
          ```
 
 ### Configure your first study
 
-1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/study-builder` and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
+1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/studybuilder/` and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
 1. Change your password, then create any additional administrative accounts that you might need
 1. Create a new study with the `App ID` that you set in the `manual-mobile-app-appid` secret, or choose a new `App ID` that you will update `manual-mobile-app-appid` with
 1. Publish your study to propagate your study values to the other platform components
