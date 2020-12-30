@@ -689,23 +689,30 @@ public class SurveyActivitiesListAdapter
         }
       });
 
-      if (!items.get(holder.getAdapterPosition()).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
-        if (currentRunStatusForActivities
-                .get(holder.getAdapterPosition())
-                .getStatus()
-                .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
-                .get(holder.getAdapterPosition())
-                .getStatus()
-                .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
-          holder.container.setBackgroundColor(context.getResources().getColor(R.color.rsb_warm_gray_20));
-          holder.container.setClickable(false);
+      if (status
+              .get(holder.getAdapterPosition())
+              .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)) {
+        if (!items.get(holder.getAdapterPosition()).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
+          if (currentRunStatusForActivities
+                  .get(holder.getAdapterPosition())
+                  .getStatus()
+                  .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
+                  .get(holder.getAdapterPosition())
+                  .getStatus()
+                  .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
+            holder.container.setBackgroundColor(context.getResources().getColor(R.color.rsb_warm_gray_20));
+            holder.container.setClickable(false);
+          } else {
+            holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.container.setClickable(true);
+          }
         } else {
           holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
           holder.container.setClickable(true);
         }
       } else {
         holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
-        holder.container.setClickable(false);
+        holder.container.setClickable(true);
       }
     }
   }
