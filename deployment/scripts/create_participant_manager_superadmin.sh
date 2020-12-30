@@ -28,6 +28,7 @@ SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
 
 TMPFILE=$(mktemp)
 
+#Update first database
 echo "USE \`oauth_server_hydra\`;" >> ${TMPFILE}
 
 SALT=`printf "%s" uuidgen | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
@@ -59,6 +60,12 @@ GCS_FILE=gs://${SQL_IMPORT_BUCKET}/participant_manager_superadmin.sql
 echo "Copying the sql file to ${GCS_FILE}"
 gsutil mv ${TMPFILE} ${GCS_FILE}
 
+# Import the GCS file to CloudSQL.
+echo "Importing ${GCS_FILE} to CloudSQL."
+gcloud sql import sql --project=${DATA_PROJECT} mystudies ${GCS_FILE}
+gsutil rm ${GCS_FILE}
+
+#Update second database
 echo "USE \`mystudies_participant_datastore\`;" >> ${TMPFILE}
 
 echo "Insert default location"
