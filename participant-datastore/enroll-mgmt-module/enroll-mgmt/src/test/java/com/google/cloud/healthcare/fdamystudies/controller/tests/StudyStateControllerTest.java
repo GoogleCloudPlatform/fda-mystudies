@@ -90,7 +90,11 @@ public class StudyStateControllerTest extends BaseMockIT {
   public void updateStudyStateSuccess() throws Exception {
     StudiesBean studiesBean =
         new StudiesBean(
-            "StudyofHealthClose", Constants.BOOKMARKED, Constants.COMPLETION, Constants.ADHERENCE,Constants.SITE_ID);
+            "StudyofHealthClose",
+            Constants.BOOKMARKED,
+            Constants.COMPLETION,
+            Constants.ADHERENCE,
+            Constants.SITE_ID);
 
     List<StudiesBean> listStudies = new ArrayList<StudiesBean>();
     listStudies.add(studiesBean);
