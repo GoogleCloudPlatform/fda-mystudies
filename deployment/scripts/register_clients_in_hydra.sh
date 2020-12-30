@@ -18,14 +18,14 @@ fi
 
 PREFIX=${1}
 ENV=${2}
-AUTH_SERVER_BASE_URL=${3}
+DOMAIN=${3}
 shift 3
 
 set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 # used by client side applications
-SCIM_AUTH_EXTERNAL_URL="${PREFIX}-${ENV}.${AUTH_SERVER_BASE_URL}/auth-server"
+SCIM_AUTH_EXTERNAL_URL="participants.${PREFIX}-${ENV}.${DOMAIN}/auth-server"
 # used in server to server calls
 SCIM_AUTH_URL="http://auth-server-np:50000/auth-server"
 HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
