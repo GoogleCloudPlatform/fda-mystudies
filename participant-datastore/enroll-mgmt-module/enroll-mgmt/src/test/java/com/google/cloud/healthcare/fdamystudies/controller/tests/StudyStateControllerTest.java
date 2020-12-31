@@ -38,6 +38,9 @@ import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.controller.StudyStateController;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
@@ -62,6 +65,12 @@ public class StudyStateControllerTest extends BaseMockIT {
 
   @Autowired protected MockMvc mockMvc;
 
+  @Autowired private StudyRepository studyRepository;
+
+  @Autowired private SiteRepository siteRepository;
+
+  @Autowired private UserDetailsRepository userDetailsRepository;
+
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
@@ -79,13 +88,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
   @Test
   public void updateStudyStateSuccess() throws Exception {
-
     StudiesBean studiesBean =
         new StudiesBean(
-            Constants.STUDYOF_HEALTH,
-            Constants.BOOKMARKED,
-            Constants.COMPLETION,
-            Constants.ADHERENCE);
+            "StudyofHealthClose", Constants.BOOKMARKED, Constants.COMPLETION, Constants.ADHERENCE);
 
     List<StudiesBean> listStudies = new ArrayList<StudiesBean>();
     listStudies.add(studiesBean);
@@ -106,7 +111,7 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyId("StudyofHealthClose");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT.getEventCode(), auditRequest);
@@ -136,13 +141,13 @@ public class StudyStateControllerTest extends BaseMockIT {
         response
             .getStudies()
             .stream()
-            .filter(s -> s.getStudyId().equals(Constants.STUDYOF_HEALTH))
+            .filter(s -> s.getStudyId().equals("StudyofHealthClose"))
             .findFirst();
 
     assertTrue(study.isPresent());
     assertTrue(study.get().getBookmarked());
-    assertEquals(Constants.COMPLETION, study.get().getCompletion());
-    assertEquals(Constants.ADHERENCE, study.get().getAdherence());
+    assertEquals(35, study.get().getCompletion());
+    assertEquals(55, study.get().getAdherence());
   }
 
   @Test
