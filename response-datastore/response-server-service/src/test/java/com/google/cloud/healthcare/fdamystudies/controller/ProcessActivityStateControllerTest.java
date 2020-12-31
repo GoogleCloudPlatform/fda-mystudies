@@ -42,6 +42,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 
@@ -50,7 +51,6 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
   @Autowired ParticipantActivityStateResponseService participantActivitiesResponseService;
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   void shouldGetActivityStateValidParams() throws Exception {
     // Step 1: Save the activity first
     String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
