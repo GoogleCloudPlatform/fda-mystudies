@@ -495,25 +495,11 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     StudyDashboard.instance.dashboardResponse = []
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     appDelegate.updateKeyAndInitializationVector()
-
-    if !Utilities.isStandaloneApp() {
-      self.changeViewController(.studyList)
-      self.createLeftmenuItems()
-    } else {
-      UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
-      self.navigationController?.popToRootViewController(animated: true)
-    }
-    if let studiesVC = self.studyListViewController {
-      LeftMenuViewController.showLogoutToast(on: studiesVC)
-    }
-
+    
+    UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
+    self.navigationController?.popToRootViewController(animated: true)
   }
-
-  final class func showLogoutToast(on viewController: UIViewController) {
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-      viewController.view.makeToast(kOnLogoutMessage)
-    }
-  }
+  
 }
 
 // MARK: - UITableView Delegate
