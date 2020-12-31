@@ -13,7 +13,7 @@ RUN npm set progress=false
 RUN npm install
 RUN npm install -g @angular/cli
 # RUN ng build --aot --prod --base-href=$basehref
-RUN ng build --aot --prod -c dev --base-href=$basehref
+RUN ng build --aot --prod -c dev
 # Stage2
 # copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
 FROM nginx
