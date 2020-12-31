@@ -59,7 +59,7 @@ class StudyHomeViewController: UIViewController {
   @IBOutlet var viewSeperater: UIView?
   @IBOutlet var viewBottombarTopBg: UIView?
   @IBOutlet var bottomStackView: UIStackView?
-  
+
   // MARK: - Properties
 
   private lazy var isGettingJoiningDate = false
@@ -202,8 +202,8 @@ class StudyHomeViewController: UIViewController {
       viewSeperater?.isHidden = true
       let websiteLink = Study.currentStudy?.overview.websiteLink ?? ""
       if websiteLink.isEmpty {
-         viewBottombarBg?.isHidden = true
-         viewBottombarTopBg?.isHidden = true
+        viewBottombarBg?.isHidden = true
+        viewBottombarTopBg?.isHidden = true
       }
       if loadViewFrom == .home,
         let currentUser = User.currentUser.userType,

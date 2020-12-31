@@ -495,11 +495,11 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     StudyDashboard.instance.dashboardResponse = []
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     appDelegate.updateKeyAndInitializationVector()
-    
+
     UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
     self.navigationController?.popToRootViewController(animated: true)
   }
-  
+
 }
 
 // MARK: - UITableView Delegate
