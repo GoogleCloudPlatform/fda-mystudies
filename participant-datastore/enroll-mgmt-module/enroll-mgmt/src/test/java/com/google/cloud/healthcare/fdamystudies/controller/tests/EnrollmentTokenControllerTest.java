@@ -29,7 +29,9 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.controller.EnrollmentTokenController;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
@@ -44,9 +46,7 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.annotation.DirtiesContext;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Autowired private EnrollmentTokenController controller;
@@ -55,6 +55,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   @Autowired private ObjectMapper objectMapper;
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
+
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   protected ObjectMapper getObjectMapper() {
     return objectMapper;
@@ -70,11 +72,12 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   @Test
   public void validateEnrollmentTokenSuccess() throws Exception {
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
-        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN);
+        participantRegistrySiteRepository.findById("30");
     ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentToken(Constants.TOKEN);
+    participantRegistrySite.setEnrollmentTokenUsed(false);
     participantRegistrySite.setEnrollmentTokenExpiry(
         new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
-
     participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
 
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYOF_HEALTH);
@@ -214,10 +217,12 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Test
   public void validateEnrollmentForExpiredToken() throws Exception {
-
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
-        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN);
+        participantRegistrySiteRepository.findById("30");
+
     ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentToken(Constants.TOKEN);
+    participantRegistrySite.setEnrollmentTokenUsed(false);
     participantRegistrySite.setEnrollmentTokenExpiry(
         new Timestamp(Instant.now().minus(1, ChronoUnit.DAYS).toEpochMilli()));
 
@@ -244,10 +249,12 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Test
   public void enrollParticipantForExpiredToken() throws Exception {
-
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
-        participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN_NEW);
+        participantRegistrySiteRepository.findById("30");
+
     ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentToken(Constants.TOKEN);
+    participantRegistrySite.setEnrollmentTokenUsed(false);
     participantRegistrySite.setEnrollmentTokenExpiry(
         new Timestamp(Instant.now().minus(1, ChronoUnit.DAYS).toEpochMilli()));
 
@@ -274,10 +281,11 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Test
   public void enrollParticipantSuccessStudyTypeClose() throws Exception {
-
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
         participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN_NEW);
     ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
+    participantRegistrySite.setEnrollmentTokenUsed(false);
     participantRegistrySite.setEnrollmentTokenExpiry(
         new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
 
@@ -319,6 +327,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     ParticipantRegistrySiteEntity participantRegistrySite = participantRegistrySiteList.get(0);
     // Set onboarding status to Disabled (D)
     participantRegistrySite.setOnboardingStatus("D");
+    participantRegistrySite.setEnrollmentTokenUsed(false);
+
     participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
 
     // study type close
@@ -371,6 +381,12 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Test
   public void enrollParticipantSuccessForCaseInsensitiveToken() throws Exception {
+    Optional<ParticipantStudyEntity> optParticipantStudy =
+        participantStudyRepository.findByParticipantId("i4ts7dsf50c6me154sfsdfdv");
+
+    ParticipantStudyEntity participantStudy = optParticipantStudy.get();
+    participantStudy.setParticipantId("1");
+    participantStudyRepository.saveAndFlush(participantStudy);
 
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
         participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN_NEW);
@@ -413,6 +429,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
         participantRegistrySiteRepository.findByEnrollmentToken(Constants.TOKEN_NEW);
     ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+    participantRegistrySite.setEnrollmentTokenUsed(true);
     participantRegistrySite.setEnrollmentTokenExpiry(
         new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
 
@@ -430,31 +447,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
                 .content(requestJson)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isOk());
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
-    auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(PARTICIPANT_ID_RECEIVED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, PARTICIPANT_ID_RECEIVED);
-
-    verifyTokenIntrospectRequest();
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.ENROLL_PATH.getPath())
-                .headers(headers)
-                .content(requestJson)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isForbidden())
-        .andExpect(jsonPath("$.message", is("Token already in use")));
-
-    verifyTokenIntrospectRequest(2);
+        .andExpect(status().isForbidden());
   }
 
   @Test
