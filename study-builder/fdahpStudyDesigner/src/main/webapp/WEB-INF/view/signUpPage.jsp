@@ -117,8 +117,7 @@
               <c:if test="${isValidToken}">
                 <p class="col-xs-12  text-center boxcenter mb-xlg white__text">To
                   begin using the services on ${orgName} and complete your account setup
-                  process, kindly use the access code provided on your email and
-                  set up your account password.</p>
+                  process, kindly set up your account password.</p>
                 <div class=" col-md-6 boxcenter">
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
@@ -157,16 +156,6 @@
                            id="" name="phoneNumber" placeholder="Phone Number"
                            value="${userBO.phoneNumber}" data-minlength="12"
                            maxlength="12" required autocomplete="off"/>
-                    <div class="help-block with-errors red-txt"></div>
-                  </div>
-                </div>
-                <div class="col-xs-12">
-                  <div class="mb-lg form-group">
-                    <input autofocus="autofocus" type="text"
-                           class="input-field wow_input" id="" name="accessCode"
-                           maxlength="6" placeholder="Access Code"
-                           data-error="Access Code is invalid" required
-                           autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
