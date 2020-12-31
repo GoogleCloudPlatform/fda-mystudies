@@ -3,14 +3,12 @@ export const environment = {
   production: true,
   // remove http/https to appear relative. xsrf-token skips absolute paths.
   participantManagerDatastoreUrl:
-    '//fda-mystudies.domain.com/participant-manager-datastore',
+    'http://35.222.67.4:8081/participant-manager-datastore',
   baseHref: '/participant-manager/',
-  hydraLoginUrl: 'https://fda-mystudies.domain.com/oauth2/auth',
-  authServerUrl: 'https://fda-mystudies.domain.com/auth-server',
-  authServerRedirectUrl:
-    'https://fda-mystudies.domain.com/auth-server/callback',
+  hydraLoginUrl: 'https://35.222.67.4:9000/oauth2/auth',
+  authServerUrl: 'http://35.222.67.4:8084/auth-server',
+  authServerRedirectUrl: 'https://34.69.210.52/dev/auth-server/callback',
   hydraClientId: 'MYSTUDIES_OAUTH_CLIENT',
-
   appVersion: 'v0.1',
   termsPageTitle: 'terms title goes here',
   termsPageDescription: 'terms description goes here',
