@@ -83,7 +83,7 @@ public enum MessageCode {
 
   GET_ADMIN_DETAILS_SUCCESS(HttpStatus.OK, "MSG_0027", "Admin details fetched successfully"),
 
-  DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0028", "User deactivated successfully"),
+  DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0028", "Admin user deactivated successfully"),
 
   REACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0029", "Admin user reactivated"),
 
@@ -99,7 +99,7 @@ public enum MessageCode {
   PROFILE_UPDATE_SUCCESS(
       HttpStatus.OK, "MSG_0034", "Your account and profile details have been updated"),
 
-  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "MSG_0035", "Your password has been changed successfully"),
+  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "MSG_0035", "Your password has been updated"),
 
   GET_USERS_SUCCESS(HttpStatus.OK, "MSG_0036", "Admin user details fetched successfully"),
 
@@ -115,7 +115,7 @@ public enum MessageCode {
       HttpStatus.OK, "MSG_0044", "Password help has been sent to your registered email"),
 
   INVITATION_DELETED_SUCCESSFULLY(
-      HttpStatus.OK, "MSG_0045", "The invitation for this user has been deleted");
+      HttpStatus.OK, "MSG_0045", "The invitation for this admin has been deleted");
 
   private final HttpStatus httpStatus;
   private final String code;
