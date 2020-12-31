@@ -50,7 +50,7 @@ public class StudyMetadataBean implements Serializable {
   @Size(max = MEDIUM_LENGTH)
   private String studyTagline;
 
-  @Size(max = XS_LENGTH)
+  @Size(max = MEDIUM_LENGTH)
   private String studySponsor;
 
   @Size(max = TINY_LENGTH)
