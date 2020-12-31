@@ -59,9 +59,9 @@ public final class Constants {
 
   public static final boolean BOOKMARKED = true;
 
-  public static final int COMPLETION = 0;
+  public static final int COMPLETION = 35;
 
-  public static final int ADHERENCE = 0;
+  public static final int ADHERENCE = 55;
 
   public static final boolean DELETE = true;
 }
