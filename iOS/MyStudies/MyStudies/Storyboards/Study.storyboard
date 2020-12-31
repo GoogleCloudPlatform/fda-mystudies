@@ -61,20 +61,6 @@
                                     <action selector="backButtonAction:" destination="N5Y-rW-mwD" eventType="touchUpInside" id="EJn-l3-oPw"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9vo-zr-UJ0">
-                                <rect key="frame" x="319" y="35" width="50" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="Vzb-sX-AoQ"/>
-                                    <constraint firstAttribute="width" constant="50" id="dDY-OL-YS1"/>
-                                </constraints>
-                                <state key="normal" image="starGreyBig">
-                                    <color key="titleColor" red="0.84705882349999995" green="0.89019607840000003" blue="0.90196078430000004" alpha="0.5" colorSpace="calibratedRGB"/>
-                                </state>
-                                <state key="selected" image="starYellow"/>
-                                <connections>
-                                    <action selector="starButtonAction:" destination="N5Y-rW-mwD" eventType="touchUpInside" id="m7b-8W-DXh"/>
-                                </connections>
-                            </button>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="spx-SF-bV8">
                                 <rect key="frame" x="152.66666666666666" y="484" width="70" height="37"/>
                                 <constraints>
@@ -154,9 +140,7 @@
                             <constraint firstAttribute="bottom" secondItem="XyM-as-imD" secondAttribute="bottom" id="eWd-HI-Vn0"/>
                             <constraint firstItem="MKo-wh-p4O" firstAttribute="centerX" secondItem="Xt5-8I-XkV" secondAttribute="centerX" id="gU1-1S-pnn"/>
                             <constraint firstItem="spx-SF-bV8" firstAttribute="centerX" secondItem="Xt5-8I-XkV" secondAttribute="centerX" id="gby-Fp-War"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="9vo-zr-UJ0" secondAttribute="trailing" constant="-10" id="h0c-fu-IdX"/>
                             <constraint firstItem="MKo-wh-p4O" firstAttribute="centerY" secondItem="EmZ-HA-ZIB" secondAttribute="centerY" multiplier="1.65817" id="hqY-1G-tB7"/>
-                            <constraint firstItem="9vo-zr-UJ0" firstAttribute="top" secondItem="Xt5-8I-XkV" secondAttribute="top" constant="-9" id="jwt-tU-50R"/>
                             <constraint firstItem="y7Z-cw-zy2" firstAttribute="leading" secondItem="eJ6-PH-Hb3" secondAttribute="leading" id="ldL-cu-4bt"/>
                             <constraint firstItem="Xt5-8I-XkV" firstAttribute="bottom" secondItem="eJ6-PH-Hb3" secondAttribute="bottom" id="mY5-SF-NO1"/>
                             <constraint firstItem="MKo-wh-p4O" firstAttribute="width" secondItem="EmZ-HA-ZIB" secondAttribute="width" multiplier="152/375" id="sqb-d1-YCM"/>
@@ -170,7 +154,6 @@
                     <connections>
                         <outlet property="buttonBack" destination="p2D-fQ-5xZ" id="VUN-DG-vWo"/>
                         <outlet property="buttonJoinStudy" destination="MKo-wh-p4O" id="XPO-g0-9ko"/>
-                        <outlet property="buttonStar" destination="9vo-zr-UJ0" id="FpR-f5-7Jg"/>
                         <outlet property="buttonViewConsent" destination="gz3-j6-s6W" id="fO2-9w-Fbp"/>
                         <outlet property="buttonVisitWebsite" destination="bc7-W1-fmy" id="dup-O5-ydO"/>
                         <outlet property="container" destination="XyM-as-imD" id="zg6-NZ-qCM"/>
@@ -1962,8 +1945,6 @@
         <image name="rightIconBlue" width="8" height="13.666666984558105"/>
         <image name="rightIconGrey" width="8" height="14.333333015441895"/>
         <image name="shareIcon" width="15.333333015441895" height="22.666666030883789"/>
-        <image name="starGreyBig" width="21.666666030883789" height="19"/>
-        <image name="starYellow" width="21.666666030883789" height="19"/>
         <image name="staticIcon1" width="24" height="24"/>
         <image name="surveyIcon" width="21.333333969116211" height="21.333333969116211"/>
         <image name="watchVideo" width="119.66666412353516" height="27"/>
