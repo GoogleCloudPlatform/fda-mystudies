@@ -34,6 +34,7 @@ import com.hphc.mystudies.bean.GatewayInfoResponse;
 import com.hphc.mystudies.bean.NotificationsResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.bean.ResourcesResponse;
+import com.hphc.mystudies.bean.StudyBean;
 import com.hphc.mystudies.bean.StudyDashboardResponse;
 import com.hphc.mystudies.bean.StudyInfoResponse;
 import com.hphc.mystudies.bean.StudyResponse;
@@ -48,6 +49,7 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import java.util.HashMap;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -130,6 +132,17 @@ public class StudyMetaDataService {
           return Response.status(Response.Status.NOT_FOUND)
               .entity(StudyMetaDataConstants.NO_RECORD)
               .build();
+        } else {
+          List<StudyBean> studyBeanInfo = studyResponse.getStudies();
+
+          if (!studyBeanInfo.isEmpty()) {
+            for (StudyBean studyBeanObject : studyBeanInfo) {
+              String logo = studyBeanObject.getLogo();
+              if (logo == null || logo.isEmpty()) {
+                studyBeanObject.setLogo(StudyMetaDataConstants.STUDY_IMAGE_URL);
+              }
+            }
+          }
         }
       } else {
         return Response.status(Response.Status.BAD_REQUEST)
