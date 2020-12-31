@@ -94,9 +94,9 @@ import org.springframework.web.client.support.RestGatewaySupport;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class StudyControllerTest extends BaseMockIT {
 
-  private static final String STUDY_ID_VALUE = "678574";
+  private static final String STUDY_ID_VALUE = "678575";
 
-  private static final String CUSTOM_STUDY_ID_VALUE = "678590";
+  private static final String CUSTOM_STUDY_ID_VALUE = "CustomStudy01";
 
   private static final String USER_ID_VALUE = "4878641";
 
@@ -1037,11 +1037,11 @@ public class StudyControllerTest extends BaseMockIT {
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678590");
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(STUDY_ID_INT_VALUE);
-    consentBo.setType("complete");
+    consentBo.setStudyId(678574);
+    consentBo.setType("save");
     consentBo.setConsentDocContent("doc");
 
     mockMvc

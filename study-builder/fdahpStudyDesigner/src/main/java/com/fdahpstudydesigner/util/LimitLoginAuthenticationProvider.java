@@ -118,7 +118,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
 
       if (userBO != null) {
-        auditRequest.setUserId(userBO.getUserEmail());
+        auditRequest.setUserId(userBO.getUserId().toString());
         auditRequest.setUserAccessLevel(userBO.getAccessLevel());
       }
       auditRequest.setSource(SIGNIN_SUCCEEDED.getSource().getValue());

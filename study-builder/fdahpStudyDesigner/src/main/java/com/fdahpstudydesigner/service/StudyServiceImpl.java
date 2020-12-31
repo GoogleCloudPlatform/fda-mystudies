@@ -1469,4 +1469,9 @@ public class StudyServiceImpl implements StudyService {
     logger.info("StudyServiceImpl - getStudyByLatestVersion - Ends");
     return studyDetails;
   }
+
+  @Override
+  public StudyBo getStudyInfo(String studyId) {
+    return studyDAO.getStudy(Integer.valueOf(studyId));
+  }
 }
