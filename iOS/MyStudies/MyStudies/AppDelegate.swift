@@ -989,9 +989,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           var message = ""
           switch studyStatus {
 
-          case .upcoming:
-            message = NSLocalizedString(kMessageForStudyUpcomingState, comment: "")
-
           case .paused:
             message = NSLocalizedString(kMessageForStudyPausedState, comment: "")
 

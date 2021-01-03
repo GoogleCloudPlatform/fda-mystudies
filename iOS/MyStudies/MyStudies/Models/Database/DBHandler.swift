@@ -166,7 +166,6 @@ class DBHandler: NSObject {
             dbStudy?.joiningDate = studyStatus.joiningDate
             dbStudy?.completion = studyStatus.completion
             dbStudy?.adherence = studyStatus.adherence
-            dbStudy?.bookmarked = studyStatus.bookmarked
           }
           if dbStudy?.participatedStatus
             == UserStudyStatus.StudyStatus.enrolled
@@ -218,7 +217,6 @@ class DBHandler: NSObject {
       dbStudy.joiningDate = userStudyStatus.joiningDate
       dbStudy.completion = userStudyStatus.completion
       dbStudy.adherence = userStudyStatus.adherence
-      dbStudy.bookmarked = userStudyStatus.bookmarked
     }
     dbStudy.withdrawalConfigrationMessage = study.withdrawalConfigration?.message
     dbStudy.withdrawalConfigrationType = study.withdrawalConfigration?.type?.rawValue
@@ -266,7 +264,6 @@ class DBHandler: NSObject {
       participatedStatus.status = UserStudyStatus.StudyStatus(
         rawValue: dbStudy.participatedStatus
       )!
-      participatedStatus.bookmarked = dbStudy.bookmarked
       participatedStatus.studyId = dbStudy.studyId
       participatedStatus.participantId = dbStudy.participatedId
       participatedStatus.siteID = dbStudy.siteID ?? ""

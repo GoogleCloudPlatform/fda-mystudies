@@ -20,10 +20,6 @@
 import SDWebImage
 import UIKit
 
-protocol StudyListDelegates: class {
-  func studyBookmarked(_ cell: StudyListCell, bookmarked: Bool, forStudy study: Study)
-}
-
 class StudyListCell: UITableViewCell {
 
   @IBOutlet var labelStudyUserStatus: UILabel?
@@ -33,7 +29,6 @@ class StudyListCell: UITableViewCell {
   @IBOutlet var labelCompletionValue: UILabel?
   @IBOutlet var labelAdherenceValue: UILabel?
   @IBOutlet var labelStudyStatus: UILabel?
-  @IBOutlet var buttonBookmark: UIButton?
   @IBOutlet var progressBarCompletion: UIProgressView?
   @IBOutlet var progressBarAdherence: UIProgressView?
   @IBOutlet var studyLogoImage: UIImageView?
@@ -41,7 +36,6 @@ class StudyListCell: UITableViewCell {
   @IBOutlet var studyStatusIndicator: UIView?
 
   var selectedStudy: Study!
-  weak var delegate: StudyListDelegates?
 
   private var placeholderImage: UIImage? {
     return UIImage(named: "placeholder")
@@ -118,8 +112,6 @@ class StudyListCell: UITableViewCell {
     switch study.status {
     case .active:
       studyStatusIndicator?.backgroundColor = Utilities.getUIColorFromHex(0x4caf50)  //green
-    case .upcoming:
-      studyStatusIndicator?.backgroundColor = Utilities.getUIColorFromHex(0x007cba)  //app color
     case .closed:
       studyStatusIndicator?.backgroundColor = Utilities.getUIColorFromHex(0xFF0000)  //red color
     case .paused:
@@ -144,8 +136,6 @@ class StudyListCell: UITableViewCell {
         labelStudyUserStatus?.text = userStudyStatus.status.description
       case .closed:
         labelStudyUserStatus?.text = userStudyStatus.status.closedStudyDescription
-      case .upcoming:
-        labelStudyUserStatus?.text = userStudyStatus.status.upcomingStudyDescription
       default:
         labelStudyUserStatus?.text = userStudyStatus.status.description
       }
@@ -169,14 +159,10 @@ class StudyListCell: UITableViewCell {
         studyUserStatusIcon?.image = #imageLiteral(resourceName: "completed_icn")
 
       }
-
-      // bookMarkStatus
-      buttonBookmark?.isSelected = userStudyStatus.bookmarked
     } else {
       study.userParticipateState = UserStudyStatus()
       labelStudyUserStatus?.text = UserStudyStatus.StudyStatus.yetToEnroll.description
       studyUserStatusIcon?.image = #imageLiteral(resourceName: "yet_to_join_icn")
-      buttonBookmark?.isSelected = false
     }
   }
 
@@ -198,18 +184,5 @@ class StudyListCell: UITableViewCell {
         }
       )
     }
-  }
-
-  // MARK: - Button Actions
-
-  /// Button bookmark clicked and delegate it back to Study home and
-  /// Study list View controller.
-  @IBAction func buttonBookmardAction(_ sender: UIButton) {
-    if sender.isSelected {
-      sender.isSelected = false
-    } else {
-      sender.isSelected = true
-    }
-    delegate?.studyBookmarked(self, bookmarked: sender.isSelected, forStudy: self.selectedStudy)
   }
 }
