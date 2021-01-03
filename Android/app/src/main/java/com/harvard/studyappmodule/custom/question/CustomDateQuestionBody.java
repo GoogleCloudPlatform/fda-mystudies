@@ -69,7 +69,11 @@ public class CustomDateQuestionBody implements StepBody {
     String savedTime = this.result.getResult();
     if (savedTime != null) {
       try {
-        calendar.setTime(AppController.getDateFormatForApi().parse(savedTime));
+        if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.TimeOfDay) {
+          calendar.setTime(AppController.getHourMinuteSecondFormat().parse(savedTime));
+        } else {
+          calendar.setTime(AppController.getDateFormatForApi().parse(savedTime));
+        }
       } catch (ParseException e) {
         Logger.log(e);
       }
@@ -145,7 +149,11 @@ public class CustomDateQuestionBody implements StepBody {
       result.setResult(null);
     } else {
       if (hasChosenDate) {
-        result.setResult(AppController.getDateFormatForApi().format(calendar.getTime()));
+        if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.TimeOfDay) {
+          result.setResult(AppController.getHourMinuteSecondFormat().format(calendar.getTime()));
+        } else {
+          result.setResult(AppController.getDateFormatForApi().format(calendar.getTime()));
+        }
       } else {
         result.setResult(null);
       }
