@@ -22,7 +22,7 @@ MODULES=(
   btc-terradeploy-secrets
   btc-terradeploy-networks
   btc-terradeploy-apps
-  btc-terradeploy-firebase
+  btc-terradep-firebase
   btc-terradep-data
 )
 

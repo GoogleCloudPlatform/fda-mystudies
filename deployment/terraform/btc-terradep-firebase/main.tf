@@ -20,7 +20,7 @@ terraform {
   }
   backend "gcs" {
     bucket = "btc-terradeploy-terraform-state"
-    prefix = "btc-terradeploy-firebase"
+    prefix = "btc-terradep-firebase"
   }
 }
 
@@ -54,7 +54,7 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "btc-terradeploy-firebase"
+  name                    = "btc-terradep-firebase"
   org_id                  = ""
   folder_id               = "341654584863"
   billing_account         = "010BB2-E7A763-738CAE"

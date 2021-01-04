@@ -134,7 +134,7 @@ resource "kubernetes_secret" "shared_secrets" {
     institution_resources_bucket_name = "btc-terradeploy-mystudies-institution-resources"
     base_url                          = "https://participants.btc-terradeploy.boston-technology.com"
     studies_base_url                  = "https://studies.btc-terradeploy.boston-technology.com"
-    firestore_project_id              = "btc-terradeploy-firebase"
+    firestore_project_id              = "btc-terradep-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
