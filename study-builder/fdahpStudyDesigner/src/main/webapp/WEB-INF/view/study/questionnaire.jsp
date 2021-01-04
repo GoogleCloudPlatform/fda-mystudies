@@ -187,10 +187,10 @@
             </span>
             <span
                 class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                title="A human readable step identifier and must be unique across all activities of the study.Note that this field cannot be edited once the study is Launched."></span>
+                title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."></span>
           </div>
           <div class="form-group col-md-5 p-none">
-            <input autofocus="autofocus" type="text" custAttType="cust"
+            <input autofocus="autofocus" type="text" autocomplete="off" custAttType="customValidate"
                    class="form-control" name="shortTitle" id="shortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
                 <c:if

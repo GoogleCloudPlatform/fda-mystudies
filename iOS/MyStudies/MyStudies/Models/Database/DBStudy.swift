@@ -37,7 +37,6 @@ class DBStudy: Object {
   @objc dynamic var brandingConfiguration: String?
   @objc dynamic var logoURL: String?
   @objc dynamic var websiteLink: String?
-  @objc dynamic var bookmarked: Bool = false
   @objc dynamic var updateResources: Bool = false
   @objc dynamic var updateActivities: Bool = false
   @objc dynamic var updateConsent: Bool = false

@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,37 +54,26 @@ public class ParticipantInformationController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     Map<String, String> placeHolders = new HashMap<>();
 
-    if (StringUtils.hasText(participantId) && StringUtils.hasText(studyId)) {
+    auditRequest.setStudyId(studyId);
+    auditRequest.setParticipantId(participantId);
+    participantInfoResp = participantInfoService.getParticipantInfoDetails(participantId, studyId);
+    if (participantInfoResp != null) {
+      participantInfoResp.setMessage(
+          MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+      participantInfoResp.setCode(HttpStatus.OK.value());
 
-      auditRequest.setStudyId(studyId);
-      auditRequest.setParticipantId(participantId);
-      participantInfoResp =
-          participantInfoService.getParticipantInfoDetails(participantId, studyId);
-      if (participantInfoResp != null) {
-        participantInfoResp.setMessage(
-            MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-        participantInfoResp.setCode(HttpStatus.OK.value());
-
-        placeHolders.put("enrollment_status", participantInfoResp.getEnrollment());
-        enrollAuditEventHelper.logEvent(
-            READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS, auditRequest, placeHolders);
-      } else {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
-            response);
-
-        enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS, auditRequest);
-
-        return null;
-      }
+      placeHolders.put("enrollment_status", participantInfoResp.getEnrollment());
+      enrollAuditEventHelper.logEvent(
+          READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS, auditRequest, placeHolders);
     } else {
       MyStudiesUserRegUtil.getFailureResponse(
           MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
           response);
+
+      enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS, auditRequest);
+
       return null;
     }
 

@@ -19,10 +19,13 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.ParticipantInformationController;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,8 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
 
   @Autowired private ParticipantInformationService participantInfoService;
 
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
+
   @Test
   public void contextLoads() {
     assertNotNull(controller);
@@ -45,6 +50,15 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
 
   @Test
   public void getParticipantDetailsSuccess() throws Exception {
+    Optional<ParticipantStudyEntity> optParticipantStudy =
+        participantStudyRepository.findByParticipantId("i4ts7dsf50c6me154sfsdfdv");
+
+    if (optParticipantStudy.isPresent()) {
+      ParticipantStudyEntity participantStudy = optParticipantStudy.get();
+      participantStudy.setParticipantId(PARTICIPANT_ID);
+      participantStudyRepository.saveAndFlush(participantStudy);
+    }
+
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
@@ -75,32 +89,6 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    // participant id null
-    mockMvc
-        .perform(
-            get(ApiEndpoint.PARTICIPANT_INFO.getPath())
-                .headers(headers)
-                .param("participantId", "")
-                .param("studyId", Constants.STUDY_ID_OF_PARTICIPANT)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
-
-    verifyTokenIntrospectRequest();
-
-    // study id null
-    mockMvc
-        .perform(
-            get(ApiEndpoint.PARTICIPANT_INFO.getPath())
-                .headers(headers)
-                .param("participantId", Constants.PARTICIPANT_ID)
-                .param("studyId", "")
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
-
-    verifyTokenIntrospectRequest(2);
-
     // participant id not exists
     mockMvc
         .perform(
@@ -120,6 +108,32 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
     auditEventMap.put(READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS);
+
+    verifyTokenIntrospectRequest();
+
+    // study id null
+    mockMvc
+        .perform(
+            get(ApiEndpoint.PARTICIPANT_INFO.getPath())
+                .headers(headers)
+                .param("participantId", Constants.PARTICIPANT_ID)
+                .param("studyId", "")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(2);
+
+    // participant id null
+    mockMvc
+        .perform(
+            get(ApiEndpoint.PARTICIPANT_INFO.getPath())
+                .headers(headers)
+                .param("participantId", "")
+                .param("studyId", Constants.STUDY_ID_OF_PARTICIPANT)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest(3);
   }
