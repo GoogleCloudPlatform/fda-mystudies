@@ -105,7 +105,7 @@ The deployment process takes the following approach:
 
 ### Set up your environment
 
-1. You can work in an existing environment, or you can configure a new environment by [creating](https://cloud.google.com/compute/docs/instances/create-start-instance) a VM instance in the Google Cloud project of your choice
+1. You can work in an existing environment, or you can configure a new environment by [creating](https://cloud.google.com/compute/docs/instances/create-start-instance) a VM instance in the Google Cloud project of your choice (for example, an `e2-medium` GCE VM with Debian GNU/Linux 10 and default settings)
 1. Confirm you have the following dependencies installed and added to your `$PATH`:
     - [Install](https://cloud.google.com/sdk/docs/install) the Google Cloud command line tool `gcloud` (already installed if using a Google Compute Engine VM), for example:
          ```bash
@@ -245,12 +245,14 @@ The deployment process takes the following approach:
            ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
            ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
            ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
+           ${GIT_ROOT}/auth-server/sqlscript/mystudies_oauth_server_hydra_db_script.sql \
            ${GIT_ROOT}/hydra/sqlscript/create_hydra_db_script.sql \
            gs://${PREFIX}-${ENV}-mystudies-sql-import
          ```
     - Import the SQL scripts from cloud storage to your Cloud SQL instance, for example:
          ```bash
          gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/create_hydra_db_script.sql -q
+         gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/mystudies_oauth_server_hydra_db_script.sql -q
          gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/HPHC_My_Studies_DB_Create_Script.sql -q
          gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/procedures.sql -q
          gcloud sql import sql --project=${PREFIX}-${ENV}-data mystudies gs://${PREFIX}-${ENV}-mystudies-sql-import/version_info_script.sql -q
@@ -330,7 +332,7 @@ The deployment process takes the following approach:
     `manual-mystudies-smtp-hostname` | The hostname for your email account’s SMTP server (for example, `smtp.gmail.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-hostname" --data-file=-`
     `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘false’; if ‘true’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value to `true` or `false` now (you can update it later) | `echo -n "false" \| gcloud secrets versions add "manual-mystudies-smtp-use-ip-allowlist" --data-file=-`
     `manual-log-path` | The path to a directory within each application’s container where your logs will be written (for example `/logs`) | Set this value now | `echo -n "/logs" \| gcloud secrets versions add "manual-log-path" --data-file=-`
-    `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the <manual-org-name> support team’ | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-org-name" --data-file=-`
+    `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the `manual-org-name` support team’ | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-org-name" --data-file=-`
     `manual-terms-url` | URL for a terms and conditions page that the applications will link to (for example, `https://example.com/terms`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
     `manual-privacy-url` | URL for a privacy policy page that the applications will link to (for example, `https://example.com/privacy`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
     `manual-mobile-app-appid` | The value of the `App ID` that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mobile-app-appid" --data-file=-`
@@ -342,7 +344,17 @@ The deployment process takes the following approach:
     `manual-ios-certificate` | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate" --data-file=-`
     `manual-ios-certificate-password` | The value of the password for the `.p12` certificate (necessary if your certificate is encrypted - otherwise leave empty) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate-password" --data-file=-`
     `manual-ios-deeplink-url` | The URL to redirect to after iOS login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
-
+1. When updating secrets, you must refresh your Kubernetes cluster and restart the relevant pods to ensure updated values are propagated to your applications, for example:
+     ```bash
+     cd $GIT_ROOT/deployment/terraform/kubernetes
+     terraform init && terraform apply
+     ```
+     ```bash
+     APP_PATH=<path_to_component_to_restart> # for example, $GIT_ROOT/auth-server
+     kubectl scale --replicas=0 -f $APP_PATH/tf-deployment.yaml && \ 
+     kubectl scale --replicas=1 -f $APP_PATH/tf-deployment.yaml
+     ```
+     - If you rotate an application’s ‘client_id’ or ‘client_secret’, such as `auto-response-datastore-client-id` or `auto-response-datastore-secret-key`, you must register the new values in Hydra by re-running the `register_clients_in_hydra.sh` script or executing the appropriate REST requests directly (see [`/hydra/README.md`](/hydra/README.md) for more information about working with Hydra manually)
 1. Finish Kubernetes cluster configuration and deployment
     - Configure the remaining resources with Terraform, for example: 
          ```bash
