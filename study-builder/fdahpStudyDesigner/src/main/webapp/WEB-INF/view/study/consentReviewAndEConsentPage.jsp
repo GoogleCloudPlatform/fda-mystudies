@@ -625,7 +625,6 @@
       var learn_more_text = $('#learnMoreTextId').summernote('code');
       learn_more_text = replaceSpecialCharacters(learn_more_text);
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-      var aggrement_of_theconsent = $("#aggrementOfTheConsentId").val();
 
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
