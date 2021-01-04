@@ -21,6 +21,11 @@
     display: flex;
     align-items: center;
   }
+  
+  .btn{
+  font-size:13px !important
+  }
+  
 </style>
 <script type="text/javascript">
   function isNumber(evt) {
@@ -2056,7 +2061,7 @@
                              var="questionResponseSubType" varStatus="subtype">
                     <!-- Section Start -->
                     <div class="mt-xlg text-choice" id="${subtype.index}">
-                      <div class="col-md-3 pl-none">
+                      <div class="col-md-4 pl-none">
                         <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
                           <span
                               class="requiredStar">*
@@ -2093,7 +2098,7 @@
                               class="requiredStar">*
                           </span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-none dropdown-font">
                           <select name="questionResponseSubTypeList[${subtype.index}].exclusive"
                                   id="exclusiveId${subtype.index}" index="${subtype.index}"
                                   title="select" data-error="Please choose one option"
@@ -2113,6 +2118,7 @@
                           <div class="help-block with-errors red-txt"></div>
                         </div>
                       </div>
+                      <br></br>
                       <c:if test="${questionnaireBo.branching}">
                         <div class="col-md-2 pl-none">
                           <div class="gray-xs-f mb-xs">Destination Step</div>
@@ -2142,7 +2148,7 @@
                       </c:if>
                       <div class="col-md-12 p-none display__flex__">
                         <div class="col-md-10 pl-none">
-                          <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                          <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                           <div class="form-group">
                             <textarea class="form-control"
                                       name="questionResponseSubTypeList[${subtype.index}].description"
@@ -2204,11 +2210,11 @@
                             class="requiredStar">*
                         </span>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-none">
                         <select name="questionResponseSubTypeList[0].exclusive"
                                 id="exclusiveId0" index="0" title="select"
                                 data-error="Please choose one option"
-                                class="selectpicker textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if>"
+                                class="selectpicker dropdown-font textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if>"
                                 <c:if
                                     test="${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}">disabled</c:if>
                                 onchange="setExclusiveData(this);">
@@ -2227,7 +2233,7 @@
                     <c:if test="${questionnaireBo.branching}">
                       <div class="col-md-2 pl-none">
                         <div class="gray-xs-f mb-xs">Destination Step</div>
-                        <div class="form-group">
+                        <div class="form-group mb-none">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextChoiceStepId0"
                                   class="selectpicker destionationYes"
@@ -2251,7 +2257,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[0].description"
@@ -2309,7 +2315,7 @@
                             class="requiredStar">*
                         </span>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-none">
                         <select name="questionResponseSubTypeList[1].exclusive"
                                 id="exclusiveId1" index="1" title="select"
                                 data-error="Please choose one option"
@@ -2356,7 +2362,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[1].description"
@@ -2469,7 +2475,7 @@
                   </c:if>
                   <div class="col-md-12 p-none display__flex__center">
                     <div class="col-md-10 pl-none">
-                      <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                      <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                       <div class="form-group">
                         <textarea class="form-control"
                                   name="questionReponseTypeBo.otherDescription"
@@ -4348,6 +4354,7 @@
       $("#responseTypeId").on("change", function () {
         var value = $(this).val();
         getResponseType(value);
+        $('.textChoiceExclusive').parent().parent().hide();
       });
       $('.DateStyleRequired').on("change", function () {
         var value = $(this).val();
@@ -5489,10 +5496,12 @@
         $('.destionationYes').attr("disabled", false);
         $('.selectpicker').selectpicker('refresh');
         $(".textChoiceExclusive").validator('validate');
+        $('.textChoiceExclusive').parent().parent().hide();
       } else {
         $('.textChoiceExclusive').attr("disabled", false);
         $('.textChoiceExclusive').attr("required", true);
         $('.selectpicker').selectpicker('refresh');
+        $('.textChoiceExclusive').parent().parent().show();
       }
     }
 
@@ -5670,7 +5679,7 @@
       choiceCount = parseInt(choiceCount) + 1;
       var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
       var newTextChoice = "<div class='mt-xlg text-choice' id='" + choiceCount + "'>" +
-          "<div class='col-md-3 pl-none'>" +
+          "<div class='col-md-4 pl-none'>" +
           "   <div class='gray-xs-f mb-xs'>Display Text (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
           +
           "   <div class='form-group mb-none'>" +
@@ -5694,7 +5703,7 @@
           "<div class='col-md-2 pl-none'>" +
           "   <div class='gray-xs-f mb-xs'>Mark as exclusive ? <span class='requiredStar'>*</span> </div>"
           +
-          "   <div class='form-group'>";
+          "   <div class='form-group mb-none'>";
       if (selectionStyle == 'Single') {
         newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
             + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
@@ -5728,7 +5737,7 @@
       </c:if>
       newTextChoice += "<div class='col-md-12 p-none display__flex__'><div class='col-md-10 pl-none'>"
           +
-          "<div class='gray-xs-f mb-xs'>Description(1 to 150 characters) </div>" +
+          "<div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) </div>" +
           "<div class='form-group'>" +
           "   <textarea type='text' class='form-control' name='questionResponseSubTypeList["
           + choiceCount + "].description' id='displayTextChoiceDescription" + choiceCount
@@ -5754,6 +5763,11 @@
         $(".remBtnDis").addClass("hide");
       }
       $('#' + choiceCount).find('input:first').focus();
+      if (selectionStyle == 'Single') {
+        	$('.textChoiceExclusive').parent().parent().hide();
+        }else{
+      	  $('.textChoiceExclusive').parent().parent().show();
+        }
     }
 
     function removeTextChoice(param) {
