@@ -16,6 +16,7 @@
 package com.harvard.studyappmodule;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
@@ -25,6 +26,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,7 +93,10 @@ public class SurveyActivitiesListAdapter
   class Holder extends RecyclerView.ViewHolder {
     final RelativeLayout stateLayout;
     final AppCompatTextView state;
+    final LinearLayout itemlayout;
     final RelativeLayout container;
+    final RelativeLayout box1;
+    final RelativeLayout box2;
     final AppCompatImageView surveyIcon;
     final AppCompatTextView whenWasSurvey;
     final AppCompatTextView surveyTitle;
@@ -110,6 +115,9 @@ public class SurveyActivitiesListAdapter
       state = (AppCompatTextView) itemView.findViewById(R.id.state);
       run = (AppCompatTextView) itemView.findViewById(R.id.run);
       container = (RelativeLayout) itemView.findViewById(R.id.container);
+      itemlayout = (LinearLayout) itemView.findViewById(R.id.itemlayout);
+      box1 = (RelativeLayout) itemView.findViewById(R.id.box1);
+      box2 = (RelativeLayout) itemView.findViewById(R.id.box2);
       surveyIcon = (AppCompatImageView) itemView.findViewById(R.id.surveyIcon);
       whenWasSurvey = (AppCompatTextView) itemView.findViewById(R.id.whenWasSurvey);
       surveyTitle = (AppCompatTextView) itemView.findViewById(R.id.surveyTitle);
@@ -699,19 +707,34 @@ public class SurveyActivitiesListAdapter
                   .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
                   .get(holder.getAdapterPosition())
                   .getStatus()
-                  .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
-            holder.container.setBackgroundColor(context.getResources().getColor(R.color.rsb_warm_gray_20));
+                  .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE) || currentRunStatusForActivities
+                  .get(holder.getAdapterPosition())
+                  .getStatus()
+                  .equalsIgnoreCase("")) {
+            holder.container.setBackgroundColor(Color.parseColor("#c6ccd0"));
+            holder.itemlayout.setBackgroundColor(Color.parseColor("#c6ccd0"));
+            holder.box1.setAlpha(.5f);
+            holder.box2.setAlpha(.5f);
             holder.container.setClickable(false);
           } else {
             holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.box1.setAlpha(1f);
+            holder.box2.setAlpha(1f);
             holder.container.setClickable(true);
           }
         } else {
           holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+          holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+          holder.box1.setAlpha(1f);
+          holder.box2.setAlpha(1f);
           holder.container.setClickable(true);
         }
       } else {
         holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+        holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+        holder.box1.setAlpha(1f);
+        holder.box2.setAlpha(1f);
         holder.container.setClickable(true);
       }
     }
