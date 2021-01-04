@@ -20,7 +20,7 @@ terraform {
   }
   backend "gcs" {
     bucket = "btc-terradeploy-terraform-state"
-    prefix = "btc-terradeploy-data1"
+    prefix = "btc-terradep-data"
   }
 }
 
@@ -31,7 +31,7 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
   version = "~> 9.1.0"
 
-  name                    = "btc-terradeploy-data1"
+  name                    = "btc-terradep-data"
   org_id                  = ""
   folder_id               = "341654584863"
   billing_account         = "010BB2-E7A763-738CAE"
