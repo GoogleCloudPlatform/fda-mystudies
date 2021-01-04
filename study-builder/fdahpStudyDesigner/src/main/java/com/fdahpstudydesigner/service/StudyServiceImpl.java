@@ -40,7 +40,6 @@ import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
-import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -202,32 +201,6 @@ public class StudyServiceImpl implements StudyService {
     }
     logger.info("StudyServiceImpl - deleteStudyByCustomStudyId() - Ends");
     return flag;
-  }
-
-  @Override
-  public List<UserBO> getActiveNonAddedUserList(Integer studyId, Integer userId) {
-    logger.info("StudyServiceImpl - getActiveNonAddedUserList() - Starts");
-    List<UserBO> userList = null;
-    try {
-      userList = studyDAO.getActiveNonAddedUserList(studyId, userId);
-    } catch (Exception e) {
-      logger.error("StudyServiceImpl - getActiveNonAddedUserList() - ERROR", e);
-    }
-    logger.info("StudyServiceImpl - getActiveNonAddedUserList() - Ends");
-    return userList;
-  }
-
-  @Override
-  public List<StudyPermissionBO> getAddedUserListToStudy(Integer studyId, Integer userId) {
-    logger.info("StudyServiceImpl - getAddedUserListToStudy() - Starts");
-    List<StudyPermissionBO> studyPermissionList = null;
-    try {
-      studyPermissionList = studyDAO.getAddedUserListToStudy(studyId, userId);
-    } catch (Exception e) {
-      logger.error("StudyServiceImpl - getAddedUserListToStudy() - ERROR", e);
-    }
-    logger.info("StudyServiceImpl - getAddedUserListToStudy() - Ends");
-    return studyPermissionList;
   }
 
   @Override
@@ -1277,17 +1250,11 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public String saveOrUpdateStudySettings(
-      StudyBo studyBo,
-      SessionObject sesObj,
-      String userIds,
-      String permissions,
-      String projectLead) {
+  public String saveOrUpdateStudySettings(StudyBo studyBo, SessionObject sesObj) {
     logger.info("StudyServiceImpl - saveOrUpdateStudySettings() - Starts");
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
-      result =
-          studyDAO.saveOrUpdateStudySettings(studyBo, sesObj, userIds, permissions, projectLead);
+      result = studyDAO.saveOrUpdateStudySettings(studyBo, sesObj);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrUpdateStudySettings() - ERROR ", e);
     }
