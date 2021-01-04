@@ -23,7 +23,7 @@ MODULES=(
   btc-terradeploy-networks
   btc-terradeploy-apps
   btc-terradeploy-firebase
-  btc-terradep-data
+  btc-terradeploy-data
 )
 
 ACTIONS=()
