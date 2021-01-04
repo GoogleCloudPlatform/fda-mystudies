@@ -446,6 +446,9 @@ public class FdahpStudyDesignerConstants {
   public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
   public static final String FDA_SMD_STUDY_PAGE_PATH = "fda.smd.study.pagePath";
 
+  public static final String CONSENT_AGREEMENT =
+      "By tapping on Agree, you confirm that you have reviewed the consent document and agree to participate in the study.";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
