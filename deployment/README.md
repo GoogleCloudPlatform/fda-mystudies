@@ -18,7 +18,7 @@ solution guide.
 
 ### Deployment overview
 
-Following this guide will result in your own unique instance of the FDA MyStudies platform. The resulting deployment will have the structure illustrated in [**Figure 1**](#figure-1-overall-architecture-of-the-semi-automated-deployment). Each functionally distinct aspect of the platform is deployed into its own cloud project to facilitate compartmentalization and robust access management. Each project and resource is named for its purpose, and has a `{PREFIX}-{ENV}` label, where `{PREFIX}` is a consistent name of your choice and `{ENV}` delineates your environment (for example, `dev` or `prod`). The list of projects you will create for your deployment is as follows:
+Following this guide will result in your own unique instance of the FDA MyStudies platform. The resulting deployment will have the structure illustrated in [**Figure 1**](#figure-1-overall-architecture-of-the-semi-automated-deployment). Each functionally distinct aspect of the platform is deployed into its own cloud project to facilitate compartmentalization and robust access management. Each project and resource is named for its purpose, and has a `{PREFIX}-{ENV}` label, where `{PREFIX}` is a consistent name of your choice and `{ENV}` describes your environment (for example, `dev` or `prod`). The list of projects you will create for your deployment is as follows:
 
 Project | Name | Purpose
 ---------|------------|---------------
@@ -74,7 +74,7 @@ The deployment process takes the following approach:
     -  `{PREFIX}` is a name you choose for your deployment that will be prepended to various directories, cloud resources and URLs (for example this could be ‘mystudies’)
     -  `{ENV}` is a label you choose that will be appended to `{PREFIX}` in your directories and cloud resources (for example this could be ‘dev’, ‘test’ or ‘prod’)
     - `{DOMAIN}` is the domain you will be using for your URLs (for example, ‘your_company_name.com’ or ‘your_medical_center.edu’)
-    - [`deployment/deployment.hcl`](/deployment/deployment.hcl) is the file where you will specify top-level parameters for your deployment (for example, the values of `{PREFIX}`, `{ENV}` and `{DOMAIN}`)
+    - [`/deployment/deployment.hcl`](/deployment/deployment.hcl) is the file where you will specify top-level parameters for your deployment (for example, the values of `{PREFIX}`, `{ENV}` and `{DOMAIN}`)
     - [`/deployment/mystudies.hcl`](/deployment/mystudies.hcl) is the file that represents the overall recipe for the deployment (you will uncomment various aspects of this recipe as your deployment progresses)
     - The directories created in [`/deployment/terraform/`](/deployment/terraform/) by the `tfengine` command represent distinct cloud projects that the CICD pipeline monitors to create, update or destroy resources based on the changes you make to those directories
     -  The other directories in the FDA MyStudies repository map to the various components of the platform and contain Terraform and Kubernetes configuration files, such as `tf-deployment.yaml` and `tf-service.yaml`, that support each component’s deployment
