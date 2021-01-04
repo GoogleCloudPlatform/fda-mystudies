@@ -6021,7 +6021,7 @@ public class StudyDAOImpl implements StudyDAO {
           for (DynamicBean obj : dynamicList) {
             if ((obj.getDateTime() != null)
                 && !FdahpStudyDesignerUtil.compareDateWithCurrentDateTime(
-                    obj.getDateTime() + " " + obj.getTime(), "yyyy-MM-dd HH:mm")) {
+                    obj.getDateTime() + " " + obj.getTime(), "yyyy-MM-dd HH:mm:ss")) {
               activitiesFalg = false;
               break;
             }
@@ -6050,7 +6050,7 @@ public class StudyDAOImpl implements StudyDAO {
           for (DynamicBean obj : dynamicList) {
             if ((obj.getDateTime() != null)
                 && !FdahpStudyDesignerUtil.compareDateWithCurrentDateTime(
-                    obj.getDateTime() + " " + obj.getTime(), "yyyy-MM-dd HH:mm")) {
+                    obj.getDateTime() + " " + obj.getTime(), "yyyy-MM-dd HH:mm:ss")) {
               activitiesFalg = false;
               break;
             }
