@@ -48,7 +48,7 @@ export class AuthInterceptor implements HttpInterceptor {
     void this.spinner.show();
 
     if (!this.authService.hasCredentials()) {
-      return next.handle(req).pipe(
+      return next.handle(this.setHeaders(req)).pipe(
         this.handleError(),
         finalize(() => {
           void this.spinner.hide();
