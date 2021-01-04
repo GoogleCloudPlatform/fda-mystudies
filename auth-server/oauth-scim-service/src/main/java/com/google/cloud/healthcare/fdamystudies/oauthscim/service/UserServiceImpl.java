@@ -234,22 +234,14 @@ public class UserServiceImpl implements UserService {
       userInfo.put(LOGIN_ATTEMPTS, 0);
       userEntity.setUserInfo(userInfo);
       repository.saveAndFlush(userEntity);
-      if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
-        auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
-      } else {
-        auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
-      }
+      auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
 
       logger.exit(MessageCode.FORGOT_PASSWORD);
       return new ResetPasswordResponse(MessageCode.FORGOT_PASSWORD);
     }
 
     auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
-    if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
-      auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
-    } else {
-      auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
-    }
+    auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
 
     logger.exit(
         String.format(
@@ -482,7 +474,12 @@ public class UserServiceImpl implements UserService {
       String tempPassword = PasswordGenerator.generate(12);
       setPasswordAndPasswordHistoryFields(
           tempPassword, userInfo, UserAccountStatus.ACCOUNT_LOCKED.getStatus());
-      sendAccountLockedEmail(userEntity, tempPassword, auditRequest);
+      EmailResponse emailResponse = sendAccountLockedEmail(userEntity, tempPassword, auditRequest);
+      if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
+        auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
+      } else {
+        auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
+      }
       userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
       userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, systemTime);
 
