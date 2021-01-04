@@ -60,7 +60,6 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
   @Override
   public Authentication authenticate(Authentication authentication) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    UserBO userBO = null;
     final Integer MAX_ATTEMPTS = Integer.valueOf(propMap.get("max.login.attempts"));
     final Integer USER_LOCK_DURATION =
         Integer.valueOf(propMap.get("user.lock.duration.in.minutes"));
@@ -72,13 +71,14 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
     String username = (String) authentication.getPrincipal();
 
     try {
-      if (StringUtils.isNotEmpty(username)) {
-        userBO = loginDAO.getValidUserByEmail(username.toLowerCase());
-        if (userBO == null) {
-          auditRequest.setSource(SIGNIN_FAILED_UNREGISTERED_USER.getSource().getValue());
-          auditRequest.setDestination(SIGNIN_FAILED_UNREGISTERED_USER.getDestination().getValue());
-          auditLogEventHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
-        }
+      UserBO userBO =
+          StringUtils.isNotEmpty(username)
+              ? loginDAO.getValidUserByEmail(username.toLowerCase())
+              : null;
+      if (userBO == null) {
+        auditRequest.setSource(SIGNIN_FAILED_UNREGISTERED_USER.getSource().getValue());
+        auditRequest.setDestination(SIGNIN_FAILED_UNREGISTERED_USER.getDestination().getValue());
+        auditLogEventHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
       }
 
       UserAttemptsBo userAttempts =
@@ -118,6 +118,8 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
 
       if (userBO != null) {
+        userBO.setUserLastLoginDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+        loginDAO.updateUser(userBO);
         auditRequest.setUserId(userBO.getUserEmail());
         auditRequest.setUserAccessLevel(userBO.getAccessLevel());
       }
