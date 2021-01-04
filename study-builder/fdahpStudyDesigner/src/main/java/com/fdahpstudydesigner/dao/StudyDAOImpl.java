@@ -38,7 +38,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
-
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.DynamicBean;
 import com.fdahpstudydesigner.bean.DynamicFrequencyBean;
@@ -2176,7 +2175,7 @@ public class StudyDAOImpl implements StudyDAO {
       if ((userId != null) && (userId != 0)) {
         query =
             session.createQuery(
-                "select new com.fdahpstudydesigner.bean.StudyListBean(s.id,s.customStudyId,s.name,s.category,s.researchSponsor,user.firstName, user.lastName,p.viewPermission,s.status,s.createdOn)"
+                "select new com.fdahpstudydesigner.bean.StudyListBean(s.id,s.customStudyId,s.name,s.category,s.researchSponsor,user.firstName, user.lastName,p.viewPermission,s.status,s.createdOn,s.appId)"
                     + " from StudyBo s,StudyPermissionBO p, UserBO user"
                     + " where s.id=p.studyId"
                     + " and user.userId = s.createdBy"
