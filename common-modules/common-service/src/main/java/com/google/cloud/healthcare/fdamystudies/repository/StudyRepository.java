@@ -91,7 +91,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, "
+          "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, si.status AS studyStatus, "
               + "ai.id AS appId,ai.app_name AS appName,ai.custom_app_id AS customAppId, "
               + "st.target_enrollment AS targetEnrollment, stp.edit AS edit "
               + "FROM app_info ai, study_info si, sites st,sites_permissions stp "
@@ -101,7 +101,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, "
+          "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, si.status AS studyStatus, "
               + "ai.id AS appId,ai.app_name AS appName,ai.custom_app_id AS customAppId, "
               + "st.target_enrollment AS targetEnrollment "
               + "FROM app_info ai, study_info si, sites st "
@@ -111,47 +111,54 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_time AS enrolledDate, psi.status AS enrolledStatus "
+          "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_timestamp AS enrolledDate, psi.status AS enrolledStatus "
               + ",prs.site_id AS siteId, prs.onboarding_status AS onboardingStatus, "
               + "loc.name AS locationName, loc.custom_id AS locationCustomId, "
-              + "prs.invitation_time AS invitedDate, prs.id AS participantId "
+              + "prs.invitation_time AS invitedDate, prs.id AS participantId, stu.type AS studyType "
               + "FROM participant_registry_site prs "
-              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id AND psi.status NOT IN (:excludeParticipantStudyStatus) "
+              + "LEFT JOIN study_info stu ON psi.study_info_id = stu.id  "
               + "LEFT JOIN sites si ON si.id=prs.site_id "
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
-              + "WHERE prs.study_info_id=:studyId  AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) "
+              + "WHERE prs.study_info_id=:studyId AND stu.type='OPEN' "
+              + "AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) "
               + "ORDER BY CASE :orderByCondition WHEN 'email_asc' THEN prs.email END ASC, "
               + "         CASE :orderByCondition WHEN 'locationName_asc' THEN loc.name END ASC, "
               + "         CASE :orderByCondition WHEN 'onboardingStatus_asc' THEN prs.onboarding_status END ASC, "
               + "         CASE :orderByCondition WHEN 'enrollmentStatus_asc' THEN psi.status END ASC, "
-              + "         CASE :orderByCondition WHEN 'enrollmentDate_asc' THEN psi.enrolled_time END ASC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_asc' THEN psi.enrolled_timestamp END ASC, "
               + "         CASE :orderByCondition WHEN 'email_desc' THEN prs.email END DESC, "
               + "         CASE :orderByCondition WHEN 'locationName_desc' THEN loc.name END DESC, "
               + "         CASE :orderByCondition WHEN 'onboardingStatus_desc' THEN prs.onboarding_status END DESC, "
               + "         CASE :orderByCondition WHEN 'enrollmentStatus_desc' THEN psi.status END DESC, "
-              + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_time END DESC "
-              + "LIMIT :limit OFFSET :offset ",
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_timestamp END DESC "
+              + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
-  public List<StudyParticipantDetails> getStudyParticipantDetails(
-      String studyId, Integer limit, Integer offset, String orderByCondition, String searchTerm);
+  public List<StudyParticipantDetails> getStudyParticipantDetailsForOpenStudy(
+      String studyId,
+      String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm);
 
   @Query(
       value =
-          "SELECT created_time AS createdTimestamp, study_id AS studyId, custom_id AS customId, name AS studyName, type AS type,"
+          "SELECT created_time AS createdTimestamp, study_id AS studyId, custom_id AS customId, name AS studyName, type , status, "
               + " logo_image_url AS logoImageUrl, edit AS edit, study_permission AS studyPermission "
               + "FROM( "
-              + "SELECT si.created_time, sp.study_id, si.custom_id, si.name, si.type, si.logo_image_url, sp.edit, TRUE as study_permission "
+              + "SELECT si.created_time, sp.study_id, si.custom_id, si.name, si.type, si.status, si.logo_image_url, sp.edit, TRUE as study_permission "
               + "FROM study_permissions sp, study_info si "
               + "WHERE si.id=sp.study_id AND sp.ur_admin_user_id =:userId AND sp.study_id IN (SELECT sp.study_id FROM sites_permissions sp WHERE  sp.ur_admin_user_id =:userId) "
               + "UNION ALL "
-              + "SELECT DISTINCT si.created_time, sp.study_id, si.custom_id, si.name, si.type, si.logo_image_url, null,FALSE as study_permission "
+              + "SELECT DISTINCT si.created_time, sp.study_id, si.custom_id, si.name, si.type, si.status, si.logo_image_url, null,FALSE as study_permission "
               + "FROM sites_permissions sp, study_info si, sites s "
               + "WHERE si.id=sp.study_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id =:userId AND sp.study_id NOT IN ( "
               + "SELECT st.study_id "
               + "FROM study_permissions st "
               + "WHERE st.ur_admin_user_id =:userId)) rstAlias "
               + "WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% "
-              + "GROUP BY created_time,study_id,custom_id,name,type,logo_image_url,edit,study_permission "
+              + "GROUP BY created_time,study_id,custom_id,name,type,status,logo_image_url,edit,study_permission "
               + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyInfo> getStudyDetails(
@@ -230,6 +237,34 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
+          "SELECT prs.created_time AS createdTime, prs.email AS email, psi.enrolled_timestamp AS enrolledDate, psi.status AS enrolledStatus "
+              + ",prs.site_id AS siteId, prs.onboarding_status AS onboardingStatus, "
+              + "loc.name AS locationName, loc.custom_id AS locationCustomId, "
+              + "prs.invitation_time AS invitedDate, prs.id AS participantId, stu.type AS studyType "
+              + "FROM participant_registry_site prs "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id  "
+              + "LEFT JOIN study_info stu ON psi.study_info_id = stu.id  "
+              + "LEFT JOIN sites si ON si.id=prs.site_id "
+              + "LEFT JOIN locations loc ON loc.id=si.location_id "
+              + "WHERE prs.study_info_id=:studyId AND stu.type='CLOSE' "
+              + "AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) "
+              + "ORDER BY CASE :orderByCondition WHEN 'email_asc' THEN prs.email END ASC, "
+              + "         CASE :orderByCondition WHEN 'locationName_asc' THEN loc.name END ASC, "
+              + "         CASE :orderByCondition WHEN 'onboardingStatus_asc' THEN prs.onboarding_status END ASC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentStatus_asc' THEN psi.status END ASC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_asc' THEN psi.enrolled_timestamp END ASC, "
+              + "         CASE :orderByCondition WHEN 'email_desc' THEN prs.email END DESC, "
+              + "         CASE :orderByCondition WHEN 'locationName_desc' THEN loc.name END DESC, "
+              + "         CASE :orderByCondition WHEN 'onboardingStatus_desc' THEN prs.onboarding_status END DESC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentStatus_desc' THEN psi.status END DESC, "
+              + "         CASE :orderByCondition WHEN 'enrollmentDate_desc' THEN psi.enrolled_timestamp END DESC "
+              + "LIMIT :limit OFFSET :offset",
+      nativeQuery = true)
+  public List<StudyParticipantDetails> getStudyParticipantDetailsForClosedStudy(
+      String studyId, Integer limit, Integer offset, String orderByCondition, String searchTerm);
+
+  @Query(
+      value =
           "SELECT  COUNT(prs.id) "
               + "FROM participant_registry_site prs "
               + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id "
@@ -241,7 +276,9 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT * FROM study_info WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+          "SELECT * FROM study_info stu WHERE stu.id IN( "
+              + "SELECT study_id FROM sites WHERE study_id=stu.id) "
+              + "AND (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% ) ORDER BY stu.created_time DESC  LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
 }

@@ -76,7 +76,7 @@ let kComprehensionCompletionText =
 let kComprehensionCompletionStepIdentifier = "ComprehensionCompletionStep"
 
 /// Consent Completion
-let kConsentCompletionMainTitle = "Thanks for providing consent for this Study"
+let kConsentCompletionMainTitle = "Consent confirmed"
 let kConsentCompletionSubTitle = "You can now start participating in the Study"
 let kSignaturePageContentText = "I agree to participate in this research study."
 
@@ -220,7 +220,7 @@ class ConsentBuilder {
 
       let investigatorSignature = ORKConsentSignature(
         forPersonWithTitle: kConsentSignaturePageTitle,
-        dateFormatString: "MM/dd/YYYY",
+        dateFormatString: "MM/dd/yyyy",
         identifier: "Signature"
       )
 

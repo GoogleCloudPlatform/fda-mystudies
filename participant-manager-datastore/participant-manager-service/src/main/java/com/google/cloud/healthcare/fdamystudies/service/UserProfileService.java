@@ -28,7 +28,8 @@ public interface UserProfileService {
   public SetUpAccountResponse saveUser(
       SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest);
 
-  public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest);
+  public PatchUserResponse updateUserAccountStatus(
+      PatchUserRequest statusRequest, AuditLogEventRequest auditRequest);
 
   public void deleteInvitation(String signedInUserId, String userId);
 }

@@ -2,9 +2,11 @@ name: Android-Lint
 
 on:
   pull_request:
+    branches:
+      - develop
     paths:
-    - 'Android/**'
-    - '.github/workflows/lint-android.yml'
+      - 'Android/**'
+      - '.github/workflows/lint-android.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest

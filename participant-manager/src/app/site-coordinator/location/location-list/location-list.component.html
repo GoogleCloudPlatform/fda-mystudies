@@ -57,16 +57,17 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="custom__tbody">
+            <tbody class="custom__tbody table_row_hover_shadow">
               <tr
                 class="location_row border__bottom__red border-top__c4d1e6 progress__bar"
                 *ngFor="let location of mf.data"
+                (click)="locationDetails(location.locationId)"
               >
                 <td>
                   <span class="tbl__td__label">Location ID:</span>
                   <span
                     (click)="locationDetails(location.locationId)"
-                    class="no_st_en"
+                    class="outline__none"
                   >
                     {{ location.customId }}
                   </span>
@@ -75,7 +76,7 @@
                   <span class="tbl__td__label">Location Name:</span>
                   <span
                     (click)="locationDetails(location.locationId)"
-                    class="no_st_en"
+                    class="outline__none"
                   >
                     {{ location.name }}
                   </span>
@@ -96,7 +97,7 @@
                 </td>
               </tr>
               <tr *ngIf="manageLocations.locations.length === 0">
-                <td colspan="3" class="text-center">No records found</td>
+                <td colspan="4" class="text-center">No records found</td>
               </tr>
             </tbody>
 

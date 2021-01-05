@@ -37,7 +37,7 @@ import org.hibernate.annotations.GenericGenerator;
     name = "participant_study_info",
     uniqueConstraints = {
       @UniqueConstraint(
-          columnNames = {"user_details_id", "study_info_id"},
+          columnNames = {"user_details_id", "study_info_id", "site_id"},
           name = "participant_study_info_user_details_id_study_info_id__uidx")
     },
     indexes = {
@@ -87,7 +87,7 @@ public class ParticipantStudyEntity implements Serializable {
 
   private Boolean eligibility;
 
-  @Column(name = "enrolled_time")
+  @Column(name = "enrolled_timestamp")
   private Timestamp enrolledDate;
 
   @Column(name = "data_sharing_status", length = SMALL_LENGTH)
@@ -97,11 +97,16 @@ public class ParticipantStudyEntity implements Serializable {
 
   private Integer adherence;
 
-  @Column(name = "withdrawal_time")
+  @Column(name = "withdrawal_timestamp")
   private Timestamp withdrawalDate;
 
   @Transient
   public String getUserDetailsId() {
     return userDetails != null ? userDetails.getId() : StringUtils.EMPTY;
+  }
+
+  @Transient
+  public String getStudyId() {
+    return study != null ? study.getCustomId() : StringUtils.EMPTY;
   }
 }

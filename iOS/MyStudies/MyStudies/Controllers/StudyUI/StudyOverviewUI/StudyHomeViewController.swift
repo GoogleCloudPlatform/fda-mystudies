@@ -52,7 +52,6 @@ class StudyHomeViewController: UIViewController {
 
   @IBOutlet var pageControlView: UIPageControl?
   @IBOutlet var buttonBack: UIButton!
-  @IBOutlet var buttonStar: UIButton!
   @IBOutlet var buttonJoinStudy: UIButton?
   @IBOutlet var visitWebsiteButtonLeadingConstraint: NSLayoutConstraint?
   @IBOutlet var visitWebsiteButtonTrailingConstraint: NSLayoutConstraint?
@@ -62,8 +61,6 @@ class StudyHomeViewController: UIViewController {
   @IBOutlet var viewSeperater: UIView?
 
   // MARK: - Properties
-
-  private lazy var isStudyBookMarked = false
 
   private lazy var isGettingJoiningDate = false
   weak var delegate: StudyHomeViewDontrollerDelegate?
@@ -97,14 +94,6 @@ class StudyHomeViewController: UIViewController {
     )
 
     navigationController?.setNavigationBarHidden(true, animated: true)
-
-    if User.currentUser.userType == UserType.anonymousUser {
-      buttonStar.isHidden = true
-    } else {
-      if User.currentUser.isStudyBookmarked(studyId: (Study.currentStudy?.studyId)!) {
-        buttonStar.isSelected = true
-      }
-    }
 
     // ConsentToken will be used in case of ineligibility
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
@@ -211,7 +200,6 @@ class StudyHomeViewController: UIViewController {
   fileprivate func configureStandaloneUI() {
     // Standalone App Settings
     if Utilities.isStandaloneApp() {
-      buttonStar.isHidden = true
       buttonBack.isHidden = true
       if loadViewFrom == .home,
         let currentUser = User.currentUser.userType,
@@ -234,7 +222,6 @@ class StudyHomeViewController: UIViewController {
       self.pageControlView?.isHidden = true
     }
     if Utilities.isStandaloneApp() {
-      self.buttonStar.isHidden = true
       if let currentUser = User.currentUser.userType,
         currentUser == .anonymousUser
       {
@@ -280,7 +267,7 @@ class StudyHomeViewController: UIViewController {
       object: nil
     )
   }
-  
+
   /// Creates eligibility Consent Task.
   func createEligibilityConsentTask() {
     var eligibilitySteps = EligibilityBuilder.currentEligibility?.getEligibilitySteps()
@@ -572,7 +559,7 @@ class StudyHomeViewController: UIViewController {
       switch currentStudy.status {
       case .active:
 
-        if participatedStatus == .yetToJoin || participatedStatus == .notEligible {
+        if participatedStatus == .yetToEnroll || participatedStatus == .notEligible {
           // check if enrolling is allowed
           if currentStudy.studySettings.enrollingAllowed {
             WCPServices().getEligibilityConsentMetadata(
@@ -604,12 +591,6 @@ class StudyHomeViewController: UIViewController {
             )
           }
         }
-      case .upcoming:
-        UIUtilities.showAlertWithTitleAndMessage(
-          title: "",
-          message: NSLocalizedString(kMessageForStudyUpcomingState, comment: "")
-            as NSString
-        )
       case .paused:
         UIUtilities.showAlertWithTitleAndMessage(
           title: "",
@@ -631,24 +612,6 @@ class StudyHomeViewController: UIViewController {
     } else {
       _ = navigationController?.popViewController(animated: true)
     }
-  }
-
-  @IBAction func starButtonAction(_ sender: Any) {
-    let button = (sender as? UIButton)!
-    var userStudyStatus: UserStudyStatus!
-    let study = Study.currentStudy
-    let user = User.currentUser
-    if button.isSelected {
-      button.isSelected = false
-      userStudyStatus = user.removeBookbarkStudy(studyId: (study?.studyId)!)
-
-    } else {
-      button.isSelected = true
-      userStudyStatus = user.bookmarkStudy(studyId: (study?.studyId)!)
-    }
-
-    isStudyBookMarked = true
-    EnrollServices().updateStudyBookmarkStatus(studyStatus: userStudyStatus, delegate: self)
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
@@ -695,11 +658,11 @@ class StudyHomeViewController: UIViewController {
       Study.currentStudy?.userParticipateState = studyStatus
 
       if study.status == .active {
-        if studyStatus.status == .inProgress {
+        if studyStatus.status == .enrolled {
           // go to study dashboard
           removeProgressIndicator()
           pushToStudyDashboard()
-        } else if studyStatus.status == .yetToJoin
+        } else if studyStatus.status == .yetToEnroll
           || studyStatus.status == .notEligible
         {
           // check if enrolling is allowed
@@ -725,7 +688,6 @@ class StudyHomeViewController: UIViewController {
         unHideSubViews()
         if Utilities.isStandaloneApp() {
           buttonBack.isHidden = true
-          buttonStar.isHidden = true
         }
       }
 
@@ -756,7 +718,7 @@ class StudyHomeViewController: UIViewController {
       // update token
       let currentUserStudyStatus = User.currentUser.updateStudyStatus(
         studyId: (Study.currentStudy?.studyId)!,
-        status: .inProgress
+        status: .enrolled
       )
       currentUserStudyStatus.tokenIdentifier = tokenIdentifier
       currentUserStudyStatus.participantId = apptoken
@@ -866,7 +828,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
     }
 
     if requestName as String == EnrollmentMethods.updateStudyState.method.methodName {
-      if isStudyBookMarked || isUpdatingIneligibility {
+      if isUpdatingIneligibility {
         removeProgressIndicator()
 
         if isUpdatingIneligibility {
@@ -909,7 +871,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
 
       if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
         == UserStudyStatus
-        .StudyStatus.inProgress
+        .StudyStatus.enrolled
       {
         isGettingJoiningDate = true
         EnrollServices().getStudyStates(self)
@@ -1074,7 +1036,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           if results! {
             let currentUserStudyStatus = User.currentUser.updateStudyStatus(
               studyId: (Study.currentStudy?.studyId)!,
-              status: .yetToJoin
+              status: .yetToEnroll
             )
 
             Study.currentStudy?.userParticipateState = currentUserStudyStatus
@@ -1258,7 +1220,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
 
           //start enrollment process
           let currentStatus = Study.currentStudy?.userParticipateState.status
-          if currentStatus == .yetToJoin
+          if currentStatus == .yetToEnroll
             || currentStatus == .notEligible
             || (currentStatus == .withdrawn
               && Study.currentStudy?.studySettings

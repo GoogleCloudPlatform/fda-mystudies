@@ -2,9 +2,11 @@ name: lint-participant-user-datastore
 
 on:
   pull_request:
+    branches:
+      - develop
     paths:
-    - 'participant-datastore/user-mgmt-module/**'
-    - '.github/workflows/lint-participant-user-datastore.yml'
+      - 'participant-datastore/user-mgmt-module/**'
+      - '.github/workflows/lint-participant-user-datastore.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest

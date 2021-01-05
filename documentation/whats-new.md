@@ -5,6 +5,7 @@
  https://opensource.org/licenses/MIT.
 -->
 
+# Release 2.0.0
 ## What’s changed?
 The overall goals, compliance principles and functionality of this FDA MyStudies release are similar to previous releases. Notable changes from version [`2019.10`](https://github.com/PopMedNet-Team/FDA-My-Studies-Mobile-Application-System/tree/2019.10) of FDA MyStudies include:
 
@@ -58,7 +59,6 @@ The overall goals, compliance principles and functionality of this FDA MyStudies
 
 ## Usability
 *   Made interactions more intuitive for participants using the [`Android`](/Android/) and [`iOS`](/iOS/) mobile applications
-*   Reduced complexity of the [`Study builder`](/study-builder/) user interface
 *   Updated text for clarity in user interfaces and messages throughout the platform
 *   Moved hard-coded values to centralized configuration files to streamline platform customization 
 *   Improved code readability to simplify usability and extensibility for developers

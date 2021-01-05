@@ -166,10 +166,9 @@ class DBHandler: NSObject {
             dbStudy?.joiningDate = studyStatus.joiningDate
             dbStudy?.completion = studyStatus.completion
             dbStudy?.adherence = studyStatus.adherence
-            dbStudy?.bookmarked = studyStatus.bookmarked
           }
           if dbStudy?.participatedStatus
-            == UserStudyStatus.StudyStatus.inProgress
+            == UserStudyStatus.StudyStatus.enrolled
             .rawValue
           {
             dbStudy?.updatedVersion = study.version
@@ -218,7 +217,6 @@ class DBHandler: NSObject {
       dbStudy.joiningDate = userStudyStatus.joiningDate
       dbStudy.completion = userStudyStatus.completion
       dbStudy.adherence = userStudyStatus.adherence
-      dbStudy.bookmarked = userStudyStatus.bookmarked
     }
     dbStudy.withdrawalConfigrationMessage = study.withdrawalConfigration?.message
     dbStudy.withdrawalConfigrationType = study.withdrawalConfigration?.type?.rawValue
@@ -266,7 +264,6 @@ class DBHandler: NSObject {
       participatedStatus.status = UserStudyStatus.StudyStatus(
         rawValue: dbStudy.participatedStatus
       )!
-      participatedStatus.bookmarked = dbStudy.bookmarked
       participatedStatus.studyId = dbStudy.studyId
       participatedStatus.participantId = dbStudy.participatedId
       participatedStatus.siteID = dbStudy.siteID ?? ""
@@ -634,7 +631,8 @@ class DBHandler: NSObject {
     dbActivity.completedRuns = activity.userParticipationStatus.compeltedRuns
     dbActivity.id = activity.studyId! + activity.actvityId!
     dbActivity.taskSubType = activity.taskSubType
-
+    dbActivity.isLaunchWithStudy = activity.isLaunchWithStudy
+    dbActivity.isStudyLifeTime = activity.isStudyLifeTime
     let activityFrequencyDict = ["data": activity.frequencyRuns]
     let frequencyRunsData = try? JSONSerialization.data(
       withJSONObject: activityFrequencyDict,
@@ -1034,6 +1032,8 @@ class DBHandler: NSObject {
     activity.branching = dbActivity.branching
     activity.state = dbActivity.state
     activity.taskSubType = dbActivity.taskSubType
+    activity.isStudyLifeTime = dbActivity.isStudyLifeTime
+    activity.isLaunchWithStudy = dbActivity.isLaunchWithStudy
 
     let frequencyRuns =
       try? JSONSerialization.jsonObject(
