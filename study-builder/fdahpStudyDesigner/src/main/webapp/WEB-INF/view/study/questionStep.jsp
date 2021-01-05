@@ -16,10 +16,15 @@
   .tooltip {
     width: 175px;
   }
-
+  
   .display__flex__ {
     display: flex;
     align-items: center;
+    margin-top: 10px;
+  }
+  
+  .display__flex__center{
+    margin-top: 10px !important;
   }
 </style>
 <script type="text/javascript">
