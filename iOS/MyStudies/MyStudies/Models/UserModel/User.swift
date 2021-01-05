@@ -508,7 +508,7 @@ class UserStudyStatus {
         kStudyId: self.studyId,
         kStudyStatus: self.status.paramValue,
         kStudyParticipantId: id,
-        "siteId": siteID ?? ""
+        "siteId": siteID ?? "",
       ] as [String: Any]
     return studyDetail
   }
