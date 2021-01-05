@@ -1955,20 +1955,14 @@ public class SurveyActivitiesFragment extends Fragment
             if (!activitiesArrayList.get(i).getState().equalsIgnoreCase("deleted")) {
               if (starttime != null) {
                 if (AppController.isWithinRange(starttime, endtime)) {
-                  if (!activitiesArrayList.get(i).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
+                  if (activityStatus.getCurrentRunId() == activityStatus.getTotalRun() && activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
+                    completedactivityList.add(activitiesArrayList.get(i));
+                    completedActivityStatus.add(activityStatus);
+                    completedStatus.add(STATUS_COMPLETED);
+                  } else {
                     currentactivityList.add(activitiesArrayList.get(i));
                     currentActivityStatus.add(activityStatus);
                     currentStatus.add(STATUS_CURRENT);
-                  } else {
-                    if (activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
-                      completedactivityList.add(activitiesArrayList.get(i));
-                      completedActivityStatus.add(activityStatus);
-                      completedStatus.add(STATUS_COMPLETED);
-                    } else {
-                      currentactivityList.add(activitiesArrayList.get(i));
-                      currentActivityStatus.add(activityStatus);
-                      currentStatus.add(STATUS_CURRENT);
-                    }
                   }
                 } else if (AppController.checkafter(starttime)) {
                   upcomingactivityList.add(activitiesArrayList.get(i));
