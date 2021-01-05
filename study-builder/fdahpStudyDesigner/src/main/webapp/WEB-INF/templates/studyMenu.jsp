@@ -38,7 +38,7 @@
         </c:if>
       </li>
       <li class="second commonCls">
-        Settings and Admins
+        Study Settings
         <c:if test="${studyBo.studySequenceBo.settingAdmins}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
