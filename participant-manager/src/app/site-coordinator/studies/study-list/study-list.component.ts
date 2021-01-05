@@ -55,14 +55,6 @@ export class StudyListComponent implements OnInit {
     ).pipe(
       map(([manageStudies]) => {
         this.manageStudiesBackup = {...manageStudies};
-        if (
-          !manageStudies.superAdmin &&
-          manageStudies.sitePermissionCount < 2
-        ) {
-          this.toastr.error(
-            'This view displays study-wise enrollment if you manage multiple sites.',
-          );
-        }
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
