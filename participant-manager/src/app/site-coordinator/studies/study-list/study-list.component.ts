@@ -7,7 +7,7 @@ import {of} from 'rxjs';
 import {Study, StudyResponse} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
-import {StudyType} from 'src/app/shared/enums';
+import {Status, StudyType} from 'src/app/shared/enums';
 import {Permission} from 'src/app/shared/permission-enums';
 import {SearchParameterService} from 'src/app/service/search-parameter.service';
 const limit = 10;
@@ -28,6 +28,8 @@ export class StudyListComponent implements OnInit {
   };
   loadMoreEnabled = true;
   searchValue = '';
+  studyStatus = Status;
+
   constructor(
     private readonly studiesService: StudiesService,
     private readonly router: Router,
@@ -53,14 +55,6 @@ export class StudyListComponent implements OnInit {
     ).pipe(
       map(([manageStudies]) => {
         this.manageStudiesBackup = {...manageStudies};
-        if (
-          !manageStudies.superAdmin &&
-          manageStudies.sitePermissionCount < 2
-        ) {
-          this.toastr.error(
-            'This view displays study-wise enrollment if you manage multiple sites.',
-          );
-        }
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true

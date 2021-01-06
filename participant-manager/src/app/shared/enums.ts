@@ -3,6 +3,7 @@ export enum Status {
   Inactive = 'Inactive',
   Invited = 'Invited',
   Deactivated = 'Deactivated',
+  Paused = 'Paused',
 }
 export enum OnboardingStatus {
   Invited = 'Invited',
