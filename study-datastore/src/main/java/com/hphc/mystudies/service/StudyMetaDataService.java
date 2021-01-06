@@ -140,6 +140,11 @@ public class StudyMetaDataService {
               String logo = studyBeanObject.getLogo();
               if (logo == null || logo.isEmpty()) {
                 studyBeanObject.setLogo(StudyMetaDataConstants.STUDY_IMAGE_URL);
+                studyBeanObject.setLogo(
+                    propMap.get("fda.imgDisplaydPath")
+                        + propMap.get("cloud.bucket.name")
+                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                        + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE));
               }
             }
           }

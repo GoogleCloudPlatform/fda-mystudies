@@ -120,8 +120,8 @@
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
-                        <img src="https://storage.cloud.google.com/study-resources/studylogo/STUDY_DEFAULTIMAGE.jpg"
-                            onerror="this.src='/studybuilder/images/dummy-img.jpg';"
+                        <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                                onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                     </div>                
                   <div style="display: inline-block;">    
@@ -250,13 +250,13 @@
                        <c:choose>
                        <c:when test="${spbSt.count==1}">
                         <img
-                           src="https://storage.cloud.google.com/study-resources/studylogo/STUDY_DEFAULTIMAGE.jpg"
+                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                             </c:when>
                             <c:otherwise>
                              <img
-                           src="https://storage.cloud.google.com/study-resources/studylogo/STUDY_DEFAULTIMAGE2.jpg"
+                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/>"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                             </c:otherwise>
@@ -473,7 +473,7 @@
           "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24>.</span></span>  The &#39;Default&#39; image shown below is used in the mobile app unless you over-ride it by uploading an &#39;Alternate&#39; image. Please note that the image you upload must be of type .JPG or .PNG, and have a size of 750x570 pixels.'></span> </div>"
           +
           "<div>" +
-          "<div class=thumb style='display: inline-block;width:77px !important'><img src=https://storage.cloud.google.com/study-resources/studylogo/STUDY_DEFAULTIMAGE2.jpg class=wid100></div>" +
+          "<div class=thumb style='display: inline-block;width:77px !important'><img src=<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/> class=wid100></div>" +
           "<div style='display: inline-block'>" +
           "<div class=thumb style='width:77px !important'><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
           "<div class=dis-inline>" +
