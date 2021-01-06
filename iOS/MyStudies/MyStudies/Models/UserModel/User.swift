@@ -610,7 +610,7 @@ class UserActivityStatus {
       case .completed:
         return "  Completed  "
       case .abandoned:
-        return "  Incomplete  "
+        return "  Missed  "
       case .expired:
         return "  Expired  "
 
