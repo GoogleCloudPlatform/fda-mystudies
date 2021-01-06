@@ -54,12 +54,6 @@ export class AppListComponent implements OnInit {
     ).pipe(
       map(([manageApps]) => {
         this.manageAppsBackup = {...manageApps};
-
-        if (!manageApps.superAdmin && manageApps.studyPermissionCount < 2) {
-          this.toastr.error(
-            'This view displays app-wise enrollment if you manage multiple studies.',
-          );
-        }
         this.loadMoreEnabled =
           (this.manageAppsBackup.apps.length % limit === 0 ? true : false) &&
           manageApps.apps.length > 0;

@@ -89,19 +89,19 @@ class StudyListViewController: UIViewController {
     setNavigationBarItem()
 
     if User.currentUser.userType == .loggedInUser {  // For LoggedIn User
-      tableView?.estimatedRowHeight = 145
+      tableView?.estimatedRowHeight = 152
       tableView?.rowHeight = UITableView.automaticDimension
 
       if !(fdaSlideMenuController()?.isLeftOpen())! {
         sendRequestToGetUserPreference()
       }
     } else {  // For ananomous User
-      tableView?.estimatedRowHeight = 140
+      tableView?.estimatedRowHeight = 152
       tableView?.rowHeight = UITableView.automaticDimension
       // Fetch StudyList
       sendRequestToGetStudyList()
     }
-
+    tableView?.tableFooterView = UIView()
     setNeedsStatusBarAppearanceUpdate()
     self.navigationController?.view.layoutSubviews()
 
