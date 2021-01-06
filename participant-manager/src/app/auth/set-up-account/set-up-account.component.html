@@ -5,7 +5,7 @@
         <a href="#" class="navbar-brand">
           <img
             class="mr-sm width__auto"
-            src="assets/images/landing-logo.png"
+            src="assets/images/branding/landing-logo.png"
             alt="main logo"
           />
         </a>
@@ -60,7 +60,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.firstName.errors?.required"
                   >
-                    Enter a first name.
+                    Enter a first name
                   </span>
                 </div>
               </div>
@@ -86,7 +86,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.lastName.errors?.required"
                   >
-                    Enter a last name.
+                    Enter a last name
                   </span>
                 </div>
               </div>
@@ -118,14 +118,14 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.password.errors?.validPassword"
                 >
-                  Your password must be 8 to 64 characters long with lower
-                  case,upper case,number and special character.
+                  Your password must be at least 8 characters long and contain
+                  lower case, upper case, numeric and special characters
                 </span>
                 <span
                   class="help-block with-errors error__msg"
                   *ngIf="f.password.errors?.required"
                 >
-                  Enter a password.
+                  Enter a password
                 </span>
               </div>
             </div>
@@ -151,13 +151,13 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.confirmPassword.errors?.required"
                 >
-                  Please confirm password.
+                  Please confirm password
                 </span>
                 <span
                   class="help-block with-errors error__msg"
                   *ngIf="f.confirmPassword.errors?.mustMatch"
                 >
-                  Passwords do not match.
+                  Passwords do not match
                 </span>
               </div>
             </div>

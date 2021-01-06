@@ -10,6 +10,7 @@ enum DateHelper {
 
   static private let runDateFormat = "yyyy-MM-dd HH:mm:ss Z"
   static private let fullDayHourFormat = "HH:mm:ss"  // 15:25:25
+  static private let shortMonthYearFormat = "MMM yyyy"  // Jul 2020
 
   static var iso8601DateFormatter: DateFormatter {
     let dateFormatter = DateFormatter()
@@ -28,8 +29,18 @@ enum DateHelper {
     return dateFormatter.date(from: date)
   }
 
+  static func stringFromDate(date: Date, format: String) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = format
+    return dateFormatter.string(from: date)
+  }
+
   static func formattedRunDateFromString(date: String) -> Date? {
     return dateFromString(date: date, format: runDateFormat)
+  }
+
+  static func formattedShortMonthYear(from date: Date) -> String {
+    return stringFromDate(date: date, format: shortMonthYearFormat)
   }
 
   /// Adjusts the `Date` instance time.

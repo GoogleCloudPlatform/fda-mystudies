@@ -369,7 +369,7 @@ class LocalNotification: NSObject {
 
   private static let oneTimeFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd YYYY"
+    formatter.dateFormat = "hh:mma, MMM dd yyyy"
     return formatter
   }()
 

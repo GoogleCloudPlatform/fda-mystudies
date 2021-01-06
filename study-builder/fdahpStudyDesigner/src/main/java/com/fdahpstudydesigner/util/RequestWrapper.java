@@ -43,12 +43,12 @@ public class RequestWrapper extends HttpServletRequestWrapper {
       return null;
     }
     String filteredValue =
-      value
-        .replaceAll("eval\\((.*)\\)", "")
-        .replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"")
-        .replaceAll("(?i)<script.*?>.*?<script.*?>", "")
-        .replaceAll("(?i)<script.*?>.*?</script.*?>", "")
-        .replaceAll("(?i)<.*?javascript:.*?>.*?</.*?>", "");
+        value
+            .replaceAll("eval\\((.*)\\)", "")
+            .replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"")
+            .replaceAll("(?i)<script.*?>.*?<script.*?>", "")
+            .replaceAll("(?i)<script.*?>.*?</script.*?>", "")
+            .replaceAll("(?i)<.*?javascript:.*?>.*?</.*?>", "");
     /* to skip the coverted html content from truncating */
     logger.info("cleanXSS ends");
     return filteredValue;

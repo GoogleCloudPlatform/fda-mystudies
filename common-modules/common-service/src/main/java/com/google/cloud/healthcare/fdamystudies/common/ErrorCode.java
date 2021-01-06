@@ -82,7 +82,7 @@ public enum ErrorCode {
       "Your new password should not match any of your previous 10 passwords"),
 
   USER_NOT_ACTIVE(
-      400, "EC_0012", Constants.BAD_REQUEST, "This user does not have an active account"),
+      400, "EC_0012", Constants.BAD_REQUEST, "This admin does not have an active account"),
 
   APP_NOT_FOUND(404, "EC_0013", HttpStatus.NOT_FOUND.toString(), "App not found"),
 
@@ -162,7 +162,7 @@ public enum ErrorCode {
       400,
       "EC_0032",
       Constants.BAD_REQUEST,
-      "User should have at least one permission in the system to access this resource."),
+      "The admin should have atleast one permission in the system to access this resource"),
 
   SECURITY_CODE_EXPIRED(
       410,
@@ -246,12 +246,12 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "The decommission action cannot be taken with this site as it belongs to an open study"),
 
-  INVALID_USER_STATUS(400, "EC-0052", Constants.BAD_REQUEST, "Invalid user status"),
+  INVALID_USER_STATUS(400, "EC-0052", Constants.BAD_REQUEST, "Invalid admin user status"),
 
   CANNOT_ADD_SITE_FOR_OPEN_STUDY(
       403, "EC_0053", HttpStatus.FORBIDDEN.toString(), "Cannot add site to an open study"),
 
-  USER_ID_REQUIRED(400, "EC_0054", Constants.BAD_REQUEST, "User Id is required"),
+  USER_ID_REQUIRED(400, "EC_0054", Constants.BAD_REQUEST, "User ID is required"),
 
   LOCATION_ID_UNIQUE(
       400,
@@ -308,7 +308,7 @@ public enum ErrorCode {
       403,
       "EC_0065",
       HttpStatus.FORBIDDEN.toString(),
-      "The user’s account is already active. Please try deactivating the user instead."),
+      "This admin's account is already active. Please try deactivating instead if you wish to revoke access to the Participant Manager."),
 
   TOKEN_EXPIRED(
       410,
@@ -335,9 +335,6 @@ public enum ErrorCode {
 
   USER_EMAIL_EXIST(400, "EC_0064", Constants.BAD_REQUEST, "The email already exists"),
 
-  UNSUPPORTED_SORT_DIRECTION_VALUE(
-      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
-
   REGISTRATION_EMAIL_SEND_FAILED(
       500,
       "EC_0075",
@@ -346,6 +343,9 @@ public enum ErrorCode {
 
   UNSUPPORTED_SORTBY_VALUE(
       400, "EC_0076", HttpStatus.BAD_REQUEST.toString(), "Invalid sortBy value"),
+
+  UNSUPPORTED_SORT_DIRECTION_VALUE(
+      400, "EC_0077", HttpStatus.BAD_REQUEST.toString(), "Invalid sorting direction"),
 
   FEEDBACK_ERROR_MESSAGE(
       500,

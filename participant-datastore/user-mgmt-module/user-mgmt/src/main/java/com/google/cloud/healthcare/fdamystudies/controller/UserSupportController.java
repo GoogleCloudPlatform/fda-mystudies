@@ -31,6 +31,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,6 +47,7 @@ public class UserSupportController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> feedbackDetails(
       @Valid @RequestBody FeedbackReqBean reqBean,
+      @RequestHeader String appName,
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
@@ -54,8 +56,9 @@ public class UserSupportController {
 
     ResponseBean responseBean = new ResponseBean();
 
-    EmailResponse emailResponse =
-        supportService.feedback(reqBean.getSubject(), reqBean.getBody(), auditRequest);
+    reqBean.setAppName(appName);
+    EmailResponse emailResponse = supportService.feedback(reqBean, auditRequest);
+
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
     } else {
@@ -71,7 +74,8 @@ public class UserSupportController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> contactUsDetails(
-      @RequestBody ContactUsReqBean reqBean,
+      @Valid @RequestBody ContactUsReqBean reqBean,
+      @RequestHeader String appName,
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
@@ -79,15 +83,9 @@ public class UserSupportController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ResponseBean responseBean = new ResponseBean();
-    EmailResponse emailResponse =
-        supportService.contactUsDetails(
-            // TODO(#2115): remove once the bug is fixed.
-            "PlaceHolder App Name",
-            reqBean.getSubject(),
-            reqBean.getBody(),
-            reqBean.getFirstName(),
-            reqBean.getEmail(),
-            auditRequest);
+    reqBean.setAppName(appName);
+    EmailResponse emailResponse = supportService.contactUsDetails(reqBean, auditRequest);
+
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
     } else {

@@ -62,6 +62,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -221,7 +222,8 @@ public class UserServiceImpl implements UserService {
 
     Integer accountStatusBeforePasswordReset = userEntity.getStatus();
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
-    EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
+    EmailResponse emailResponse =
+        sendPasswordResetEmail(resetPasswordRequest, tempPassword, auditRequest);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
       setPasswordAndPasswordHistoryFields(
@@ -232,22 +234,14 @@ public class UserServiceImpl implements UserService {
       userInfo.put(LOGIN_ATTEMPTS, 0);
       userEntity.setUserInfo(userInfo);
       repository.saveAndFlush(userEntity);
-      if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
-        auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
-      } else {
-        auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
-      }
+      auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
 
       logger.exit(MessageCode.FORGOT_PASSWORD);
       return new ResetPasswordResponse(MessageCode.FORGOT_PASSWORD);
     }
 
     auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
-    if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
-      auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
-    } else {
-      auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
-    }
+    auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
 
     logger.exit(
         String.format(
@@ -256,7 +250,27 @@ public class UserServiceImpl implements UserService {
   }
 
   private EmailResponse sendPasswordResetEmail(
-      ResetPasswordRequest resetPasswordRequest, String tempPassword) {
+      ResetPasswordRequest resetPasswordRequest,
+      String tempPassword,
+      AuditLogEventRequest auditRequest) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
+    if (platformComponent == null) {
+      logger.warn(
+          String.format(
+              "'%s' is invalid source value. Allowed values: MOBILE APPS or PARTICIPANT MANAGER",
+              auditRequest.getSource()));
+    }
+
+    String emailSubject =
+        PlatformComponent.MOBILE_APPS.equals(platformComponent)
+            ? appConfig.getMailResetPasswordSubjectForMobileApp()
+            : appConfig.getMailResetPasswordSubject();
+
+    String emailBody =
+        PlatformComponent.MOBILE_APPS.equals(platformComponent)
+            ? appConfig.getMailResetPasswordBodyForMobileApp()
+            : appConfig.getMailResetPasswordBody();
+
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appId", resetPasswordRequest.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
@@ -267,8 +281,8 @@ public class UserServiceImpl implements UserService {
             new String[] {resetPasswordRequest.getEmail()},
             null,
             null,
-            appConfig.getMailResetPasswordSubject(),
-            appConfig.getMailResetPasswordBody(),
+            emailSubject,
+            emailBody,
             templateArgs);
     return emailService.sendMimeMail(emailRequest);
   }
@@ -404,8 +418,26 @@ public class UserServiceImpl implements UserService {
     return updateInvalidLoginAttempts(userEntity, userInfo, auditRequest);
   }
 
-  private EmailResponse sendAccountLockedEmail(UserEntity user, String tempPassword) {
+  private EmailResponse sendAccountLockedEmail(
+      UserEntity user, String tempPassword, AuditLogEventRequest auditRequest) {
     logger.entry("sendAccountLockedEmail()");
+    PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
+    if (platformComponent == null) {
+      logger.warn(
+          String.format(
+              "'%s' is invalid source value. Allowed values: MOBILE APPS or PARTICIPANT MANAGER",
+              auditRequest.getSource()));
+    }
+
+    String emailSubject =
+        PlatformComponent.MOBILE_APPS.equals(platformComponent)
+            ? appConfig.getMailAccountLockedSubjectForMobileApp()
+            : appConfig.getMailAccountLockedSubject();
+    String emailBody =
+        PlatformComponent.MOBILE_APPS.equals(platformComponent)
+            ? appConfig.getMailAccountLockedBodyForMobileApp()
+            : appConfig.getMailAccountLockedBody();
+
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appId", user.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
@@ -416,8 +448,8 @@ public class UserServiceImpl implements UserService {
             new String[] {user.getEmail()},
             null,
             null,
-            appConfig.getMailAccountLockedSubject(),
-            appConfig.getMailAccountLockedBody(),
+            emailSubject,
+            emailBody,
             templateArgs);
     EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
     logger.exit(
@@ -442,7 +474,12 @@ public class UserServiceImpl implements UserService {
       String tempPassword = PasswordGenerator.generate(12);
       setPasswordAndPasswordHistoryFields(
           tempPassword, userInfo, UserAccountStatus.ACCOUNT_LOCKED.getStatus());
-      sendAccountLockedEmail(userEntity, tempPassword);
+      EmailResponse emailResponse = sendAccountLockedEmail(userEntity, tempPassword, auditRequest);
+      if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
+        auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
+      } else {
+        auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
+      }
       userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
       userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, systemTime);
 

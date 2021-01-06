@@ -8,8 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 @Getter
 @AllArgsConstructor
@@ -66,7 +71,16 @@ public enum PlatformComponent {
 
   private String description;
 
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(PlatformComponent.class.getName());
+
   public static PlatformComponent fromValue(String value) {
+    try {
+      value = StringUtils.isNotBlank(value) ? URLDecoder.decode(value, "UTF-8") : value;
+    } catch (UnsupportedEncodingException e) {
+      logger.error(String.format("Unable to decode '%s' using URLDecoder", value), e);
+      return null;
+    }
     for (PlatformComponent type : PlatformComponent.values()) {
       if (type.getValue().equals(value)) {
         return type;

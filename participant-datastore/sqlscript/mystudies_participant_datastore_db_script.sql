@@ -179,18 +179,18 @@ CREATE TABLE IF NOT EXISTS `participant_study_info` (
   `completion` int(11) DEFAULT NULL,
   `consent_status` bit(1) DEFAULT NULL,
   `eligibility` bit(1) DEFAULT NULL,
-  `enrolled_time` datetime DEFAULT NULL,
+  `enrolled_timestamp` datetime DEFAULT NULL,
   `participant_id` varchar(64) DEFAULT NULL,
   `data_sharing_status` varchar(64) DEFAULT NULL,
   `status` varchar(64) DEFAULT NULL,
-  `withdrawal_time` datetime DEFAULT NULL,
+  `withdrawal_timestamp` datetime DEFAULT NULL,
   `participant_registry_site_id` varchar(255) DEFAULT NULL,
   `site_id` varchar(255) DEFAULT NULL,
   `study_info_id` varchar(255) DEFAULT NULL,
   `user_details_id` varchar(255) DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `participant_study_info_user_details_id_study_info_id__uidx` (`user_details_id`,`study_info_id`),
+  UNIQUE KEY `participant_study_info_user_details_id_study_info_id__uidx` (`user_details_id`,`study_info_id`,`site_id`),
   UNIQUE KEY `UK_wic7o2oog14p35skw71ix3q0` (`participant_id`),
   KEY `FKb9362vga03lqkb0k46wsmi53x` (`participant_registry_site_id`),
   KEY `FKeppgsoyc8ldsx8mciwjo49j9u` (`site_id`),
@@ -264,6 +264,8 @@ CREATE TABLE IF NOT EXISTS `study_consent` (
   `participant_study_id` varchar(255) DEFAULT NULL,
   `study_info_id` varchar(255) DEFAULT NULL,
   `user_details_id` varchar(255) DEFAULT NULL,
+  `consent_date` datetime DEFAULT NULL,
+  `data_sharing_status` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK585y9moi8wkwmurn0w54ebl36` (`participant_study_id`),
   KEY `FKck8ax0pv7ehm0tsyv4lrch3x0` (`study_info_id`),
@@ -288,12 +290,13 @@ CREATE TABLE IF NOT EXISTS `study_info` (
   `updated_time` datetime DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
   `name` varchar(64) DEFAULT NULL,
-  `sponsor` varchar(32) DEFAULT NULL,
+  `sponsor` varchar(128) DEFAULT NULL,
   `status` varchar(32) DEFAULT NULL,
-  `tagline` varchar(64) DEFAULT NULL,
+  `tagline` varchar(128) DEFAULT NULL,
   `type` varchar(32) DEFAULT NULL,
   `version` float DEFAULT NULL,
   `app_info_id` varchar(255) DEFAULT NULL,
+  `logo_image_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `study_info_custom_id_app_info_id_uidx` (`custom_id`,`app_info_id`),
   KEY `FK7q83jdpn6sguh4ly7fi8ahb7o` (`app_info_id`),
@@ -431,9 +434,35 @@ CREATE TABLE IF NOT EXISTS `invite_participants` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `participant_enrollment_history`;
+CREATE TABLE IF NOT EXISTS `participant_enrollment_history` (
+  `id` varchar(255) NOT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `enrolled_timestamp` datetime DEFAULT NULL,
+  `status` varchar(64) DEFAULT NULL,
+  `withdrawal_timestamp` datetime DEFAULT NULL,
+  `app_info_id` varchar(255) DEFAULT NULL,
+  `participant_registry_site_id` varchar(255) DEFAULT NULL,
+  `site_id` varchar(255) DEFAULT NULL,
+  `study_info_id` varchar(255) DEFAULT NULL,
+  `user_details_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `withdrawal_timestamp_user_details_id_study_info_id_idx` (`withdrawal_timestamp`,`user_details_id`,`study_info_id`),
+  KEY `withdrawal_timestamp_user_details_id_idx` (`withdrawal_timestamp`,`user_details_id`),
+  KEY `FKf67cshsfhjae6if1vgskre3jo` (`app_info_id`),
+  KEY `FKahlmyi1rkt3odfyvt7wax433w` (`participant_registry_site_id`),
+  KEY `FKt54o4s9tiiv74ni6urb8k4fq2` (`site_id`),
+  KEY `FK1bmomoc73pe9g97g4ih69mh3u` (`study_info_id`),
+  KEY `FKbvetsdb2isivd8q95sly7md99` (`user_details_id`),
+  CONSTRAINT `FK1bmomoc73pe9g97g4ih69mh3u` FOREIGN KEY (`study_info_id`) REFERENCES `study_info` (`id`),
+  CONSTRAINT `FKahlmyi1rkt3odfyvt7wax433w` FOREIGN KEY (`participant_registry_site_id`) REFERENCES `participant_registry_site` (`id`),
+  CONSTRAINT `FKbvetsdb2isivd8q95sly7md99` FOREIGN KEY (`user_details_id`) REFERENCES `user_details` (`id`),
+  CONSTRAINT `FKf67cshsfhjae6if1vgskre3jo` FOREIGN KEY (`app_info_id`) REFERENCES `app_info` (`id`),
+  CONSTRAINT `FKt54o4s9tiiv74ni6urb8k4fq2` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-

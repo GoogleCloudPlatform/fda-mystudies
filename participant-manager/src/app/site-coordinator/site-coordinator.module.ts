@@ -8,8 +8,10 @@ import {MobileMenuComponent} from './mobile-menu/mobile-menu.component';
 import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.component';
 import {ParticipantDetailsComponent} from './participant-details/participant-details.component';
 import {SharedModule} from '../shared/shared.module';
+import {RoleGuard} from '../../app/service/roles.guard';
+import {LocationsGuard} from '../service/locations.guard';
 import {LoadmoreSpinnerComponent} from './loadmore-spinner/loadmore-spinner.component';
-
+import {BnNgIdleService} from 'bn-ng-idle';
 @NgModule({
   declarations: [
     SiteCoordinatorComponent,
@@ -25,6 +27,7 @@ import {LoadmoreSpinnerComponent} from './loadmore-spinner/loadmore-spinner.comp
     NgxDataTableModule,
     SharedModule,
   ],
+  providers: [RoleGuard, LocationsGuard, BnNgIdleService],
   exports: [LoadmoreSpinnerComponent],
 })
 export class SiteCoordinatorModule {}

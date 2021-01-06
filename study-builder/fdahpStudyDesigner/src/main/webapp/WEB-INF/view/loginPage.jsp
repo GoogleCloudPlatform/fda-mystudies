@@ -137,6 +137,7 @@
                        maxlength="100"
                        placeholder="Email address"
                        data-pattern-error="Email address is invalid" required maxlength="100"
+                       data-error="Please complete this field"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -153,21 +154,9 @@
         <div class="clearfix"></div>
       </div>
       <div class="clearfix"></div>
-      <div class="footer">
-        <div>
-          <span>Copyright</span>
-          <span>
-            <a href="/studybuilder/terms.do" class=""
-               target="_blank">Terms
-            </a>
-          </span>
-          <span>
-            <a
-                href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy
-            </a>
-          </span>
-        </div>
-      </div>
+      <jsp:include page="../templates/copyright.jsp">
+       <jsp:param name="footerClass" value="footer" />
+      </jsp:include>
       <!-- new login -->
     </div>
 

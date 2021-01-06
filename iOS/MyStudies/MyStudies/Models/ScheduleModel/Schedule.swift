@@ -88,7 +88,7 @@ class Schedule {
   /// - Parameter handler: returns completion handler with array of ActivityRun
   func getRunsForActivity(activity: Activity, handler: @escaping ([ActivityRun]) -> Void) {
     guard activity.state == "active" else {
-      handler([])  // Return empty runs array 
+      handler([])  // Return empty runs array
       return
     }
     // get joiningDate
@@ -397,7 +397,7 @@ class Schedule {
         return f
       } else {
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-mm-dd"
+        formatter.dateFormat = "yyyy-mm-dd"
         formatter.dateStyle = .short
         formatter.timeZone = TimeZone.init(abbreviation: "UTC")
         utcFormatter = formatter
@@ -419,7 +419,7 @@ class Schedule {
         return f
       } else {
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-mm-dd"
+        formatter.dateFormat = "yyyy-mm-dd"
         formatter.dateStyle = .short
         formatter.timeZone = TimeZone.current  // TimeZone.init(abbreviation:"IST")
         currentZoneFormatter = formatter

@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ENROLLMENT_TARGET_UPDATED;
@@ -131,6 +132,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].logoImageUrl").value(studyEntity.getLogoImageUrl()))
         .andExpect(jsonPath("$.studies[0].invited").value(1))
         .andExpect(jsonPath("$.studies[0].enrolled").value(1))
+        .andExpect(jsonPath("$.studies[0].studyStatus").value(STATUS_ACTIVE))
         .andExpect(jsonPath("$.studies[0].enrollmentPercentage").value(100));
 
     verifyTokenIntrospectRequest(1);
@@ -176,6 +178,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].logoImageUrl").value(studyEntity.getLogoImageUrl()))
         .andExpect(jsonPath("$.studies[0].invited").value(1))
         .andExpect(jsonPath("$.studies[0].enrolled").value(1))
+        .andExpect(jsonPath("$.studies[0].studyStatus").value(STATUS_ACTIVE))
         .andExpect(jsonPath("$.studies[0].enrollmentPercentage").value(100));
 
     verifyTokenIntrospectRequest();
@@ -368,6 +371,44 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnInvalidSortByValue() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), IdGenerator.id())
+                .headers(headers)
+                .param("sortBy", "abc")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.UNSUPPORTED_SORTBY_VALUE.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnInvalidSortDirectionValue() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), IdGenerator.id())
+                .headers(headers)
+                .param("sortDirection", "asce")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.UNSUPPORTED_SORT_DIRECTION_VALUE.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnStudyParticipantsForDisabled() throws Exception {
 
     locationEntity = testDataHelper.createLocation();
@@ -392,6 +433,8 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .queryParam(
+                    "excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -425,10 +468,12 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .param("excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
+        .andExpect(jsonPath("$.participantRegistryDetail.studyStatus").value(STATUS_ACTIVE))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(1)))
         .andExpect(
@@ -479,6 +524,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .param("excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -533,6 +579,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .param("excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -573,6 +620,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
                 .headers(headers)
+                .param("excludeParticipantStudyStatus", EnrollmentStatus.NOT_ELIGIBLE.getStatus())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -617,9 +665,9 @@ public class StudyControllerTest extends BaseMockIT {
     siteEntity.setLocation(locationEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
-    // Step 1: 1 Participants for study already added in @BeforeEach, add 20 new Participants for
+    // Step 1: 1 Participants for study already added in @BeforeEach, add 9 new Participants for
     // study
-    for (int i = 1; i <= 20; i++) {
+    for (int i = 1; i <= 9; i++) {
       locationEntity = testDataHelper.newLocationEntity();
       locationEntity.setCustomId(CUSTOM_ID_VALUE + String.valueOf(i));
       locationEntity.setName(LOCATION_NAME_VALUE + String.valueOf(i));
@@ -632,9 +680,36 @@ public class StudyControllerTest extends BaseMockIT {
       participantStudyEntity =
           testDataHelper.createParticipantStudyEntity(
               siteEntity, studyEntity, participantRegistrySiteEntity);
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(5);
     }
 
-    // get study participant if page and limit values are null
+    // Step 2: Call API and expect GET_PARTICIPANT_REGISTRY_SUCCESS message and fetch  10 data
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .param("limit", "10")
+                .param("offset", "0")
+                .param("sortBy", "locationName")
+                .param("sortDirection", "desc")
+                .param("searchTerm", "Marlb")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(9)))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
+                .value(LOCATION_NAME_VALUE + String.valueOf(9)));
+
+    verifyTokenIntrospectRequest(1);
+
+    // get  study participants for the default values
     mockMvc
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
@@ -645,10 +720,9 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)))
-        .andExpect(jsonPath("$.totalParticipantCount", is(21)));
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(10)));
 
-    verifyTokenIntrospectRequest(1);
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test

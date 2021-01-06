@@ -1,6 +1,6 @@
 <div class="max__w__1280">
   <div class="tab-content">
-    <ng-container *ngIf="study$ | async as studies">
+    <ng-container *ngIf="study$ | async as studies; else sites_error">
       <div>
         <div
           *ngFor="let study of studies.studies"
@@ -16,6 +16,16 @@
               <div class="row">
                 <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                   {{ study.name }}
+                  <div
+                    [ngClass]="{
+                      active_bg: study.studyStatus === studyStatus.Active,
+                      paused_bg: study.studyStatus === studyStatus.Paused,
+                      deactivated_bg:
+                        study.studyStatus === studyStatus.Deactivated
+                    }"
+                  >
+                    {{ study.studyStatus }}
+                  </div>
                 </div>
                 <div
                   class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
@@ -124,10 +134,18 @@
         <div *ngIf="loadMoreEnabled" (mouseover)="loadMoreSites()">
           <app-loadmore-spinner></app-loadmore-spinner>
         </div>
-
-        <div *ngIf="studies.studies.length === 0">No records found</div>
+        <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+          <div class="text-center p-2" *ngIf="studies.studies.length === 0">
+            No records found
+          </div>
+        </div>
       </div>
     </ng-container>
+    <ng-template #sites_error>
+      <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+        <div class="text-center p-2">No records found</div>
+      </div>
+    </ng-template>
   </div>
 </div>
 <ng-template #template>

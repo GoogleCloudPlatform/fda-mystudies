@@ -80,7 +80,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
       options: [
         NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString
           .DocumentType
-          .html,
+          .html
       ],
       documentAttributes: nil
     ) {
@@ -93,7 +93,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
           NSAttributedString.Key.font: UIFont(
             name: "HelveticaNeue",
             size: CGFloat(fontSize)
-          )!,
+          )!
         ],
         range: (attrStr.string as NSString).range(of: attrStr.string)
       )
