@@ -67,6 +67,7 @@ class ConsentServices: NSObject {
       [
         kStudyId: Study.currentStudy?.studyId ?? "",
         kEligibility: eligibilityStatus,
+        "siteId": Study.currentStudy?.userParticipateState.siteID ?? "",
         kConsent: consent,
         kConsentSharing: userDataSharing,
       ] as [String: Any]
