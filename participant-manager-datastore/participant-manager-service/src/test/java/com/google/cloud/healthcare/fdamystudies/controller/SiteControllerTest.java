@@ -2526,8 +2526,8 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.error_description", is(ErrorCode.NO_SITES_FOUND.getDescription())));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isEmpty());
 
     verifyTokenIntrospectRequest();
   }
@@ -2543,8 +2543,8 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.error_description", is(ErrorCode.NO_SITES_FOUND.getDescription())));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isEmpty());
 
     verifyTokenIntrospectRequest();
   }
