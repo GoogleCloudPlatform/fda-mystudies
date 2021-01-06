@@ -120,7 +120,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       if (userBO != null) {
         userBO.setUserLastLoginDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
         loginDAO.updateUser(userBO);
-        auditRequest.setUserId(userBO.getUserEmail());
+        auditRequest.setUserId(userBO.getUserId().toString());
         auditRequest.setUserAccessLevel(userBO.getAccessLevel());
       }
       auditRequest.setSource(SIGNIN_SUCCEEDED.getSource().getValue());
