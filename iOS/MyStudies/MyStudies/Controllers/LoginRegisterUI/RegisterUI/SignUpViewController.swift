@@ -447,8 +447,14 @@ extension SignUpViewController: UITextFieldDelegate {
       self.user.emailId = textField.text!
 
     case .password:
-      self.user.password = textField.text!
-
+      if let password = textField.text {
+        if !password.isEmpty,
+          !Utilities.isPasswordValid(text: password)
+        {
+          self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+        }
+        self.user.password = password
+      }
     case .confirmPassword:
       confirmPassword = textField.text!
     }

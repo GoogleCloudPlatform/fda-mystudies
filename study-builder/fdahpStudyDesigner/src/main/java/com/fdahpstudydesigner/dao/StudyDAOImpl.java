@@ -4381,11 +4381,10 @@ public class StudyDAOImpl implements StudyDAO {
             updateAnchordateForEnrollmentDate(study, studyBo, session, transaction);
             // validation of anchor date
             study.setPlatform(studyBo.getPlatform());
-            study.setAllowRejoin(studyBo.getAllowRejoin());
             study.setEnrollingParticipants(studyBo.getEnrollingParticipants());
             study.setRetainParticipant(studyBo.getRetainParticipant());
             study.setAllowRejoin(studyBo.getAllowRejoin());
-            study.setAllowRejoinText(studyBo.getAllowRejoinText());
+            study.setAllowRejoinText(FdahpStudyDesignerConstants.ALLOW_REJOIN_TEXT);
             study.setModifiedBy(studyBo.getUserId());
             study.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
             // Phase2a code Start(adding enrollment date as anchor date(yes/no))

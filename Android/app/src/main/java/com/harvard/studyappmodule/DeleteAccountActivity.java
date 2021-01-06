@@ -327,7 +327,7 @@ public class DeleteAccountActivity extends AppCompatActivity
     } catch (Resources.NotFoundException e) {
       Logger.log(e);
     }
-    hrLine.setVisibility(View.VISIBLE);
+    hrLine.setVisibility(View.GONE);
   }
 
   @Override
