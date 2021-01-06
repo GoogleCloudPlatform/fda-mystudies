@@ -28,8 +28,6 @@ public class Activities extends RealmObject {
 
   private String activityRunId;
 
-  private String bookmarked;
-
   private ActivityRunPreference activityRun;
 
   public ActivityRunPreference getActivityRun() {
@@ -78,13 +76,5 @@ public class Activities extends RealmObject {
 
   public void setActivityRunId(String activityRunId) {
     this.activityRunId = activityRunId;
-  }
-
-  public String getBookmarked() {
-    return bookmarked;
-  }
-
-  public void setBookmarked(String bookmarked) {
-    this.bookmarked = bookmarked;
   }
 }

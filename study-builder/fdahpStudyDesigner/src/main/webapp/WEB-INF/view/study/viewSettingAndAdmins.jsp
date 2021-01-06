@@ -24,6 +24,10 @@
     <input type="hidden" id="userIds" name="userIds">
     <input type="hidden" id="permissions" name="permissions">
     <input type="hidden" id="projectLead" name="projectLead">
+    <input type="hidden" id="inlineRadio3" value="Yes"
+			name="retainParticipant">
+		<input type="hidden" class="rejoin_radio" id="inlineRadio6"
+			value="Yes" name="allowRejoin">
     <!-- Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
@@ -88,34 +92,28 @@
       </div>
       <!-- End Section-->
 
-      <!-- Start Section-->
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-sm">
-          Allow participants to enroll?
-          <span class="requiredStar"> *</span>
-        </div>
-
-        <div class="form-group">
-          <span class="radio radio-info radio-inline p-45"><input
-              type="radio" id="inlineRadio1" value="Yes"
-              name="enrollingParticipants"
-              <c:if test="${studyBo.enrollingParticipants eq 'Yes'}">checked</c:if>
-              required> <label for="inlineRadio1">Yes</label>
-          </span>
-          <span class="radio radio-inline"><input type="radio"
-                                                  id="inlineRadio2" value="No"
-                                                  name="enrollingParticipants"
-                                                  <c:if
-                                                      test="${studyBo.enrollingParticipants eq null}">checked</c:if>
-                                                  <c:if
-                                                      test="${studyBo.enrollingParticipants eq 'No'}">checked</c:if>
-                                                  required> <label
-              for="inlineRadio2">No</label>
-          </span>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-      </div>
-      <!-- End Section-->
+     <!-- Start Section-->
+			<div class="col-md-12 p-none">
+				<div class="gray-xs-f mb-sm">
+					Allow participants to enroll? <span>
+            </span><span class="requiredStar"> *</span> <span
+                  data-toggle="tooltip" data-placement="top"
+                  title="This field can be updated after the study is launched if you wish to stop enrollment at any point during the course of the study."
+                  class="filled-tooltip"></span>
+				</div>
+				<div class="form-group">
+					<span class="radio radio-info radio-inline p-45"><input
+						type="radio" id="inlineRadio1" value="Yes" checked
+						name="enrollingParticipants" required> <label
+						for="inlineRadio1">Yes</label> </span> <span class="radio radio-inline"><input
+						type="radio" id="inlineRadio2" value="No"
+						name="enrollingParticipants"
+						${studyBo.status eq 'Pre-launch' ?'disabled':''} required>
+						<label for="inlineRadio2">No</label> </span>
+					<div class="help-block with-errors red-txt"></div>
+				</div>
+			</div>
+			<!-- End Section-->
 
       <!-- Start Section-->
       <div class="col-md-12 p-none">
@@ -152,109 +150,7 @@
         </div>
       </div>
       <!-- End Section-->
-
-      <!-- Start Section-->
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-sm">
-          Retain participant data when they leave a study?
-          <span
-              class="requiredStar">*
-          </span>
-        </div>
-
-        <div class="form-group">
-          <span class="radio radio-info radio-inline p-45"><input
-              type="radio" id="inlineRadio3" value="Yes"
-              name="retainParticipant"
-              <c:if test="${studyBo.retainParticipant eq 'Yes'}">checked</c:if>
-              required> <label for="inlineRadio3">Yes</label>
-          </span>
-          <span class="radio radio-inline p-45"><input type="radio"
-                                                       id="inlineRadio4" value="No"
-                                                       name="retainParticipant"
-                                                       <c:if
-                                                           test="${studyBo.retainParticipant eq 'No'}">checked</c:if>
-                                                       required> <label for="inlineRadio4">No</label>
-          </span>
-          <span class="radio radio-inline"><input type="radio"
-                                                  id="inlineRadio5" value="All"
-                                                  name="retainParticipant"
-                                                  <c:if
-                                                      test="${studyBo.retainParticipant eq 'All'}">checked</c:if>
-                                                  required> <label for="inlineRadio5">Allow
-            participant to choose to have their data retained or deleted</label>
-          </span>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-      </div>
-      <!-- End Section-->
-
-      <!-- Start Section-->
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-sm">
-          Allow app user to rejoin a study after withdrawing from it?
-          <span
-              class="requiredStar">*
-          </span>
-        </div>
-
-        <div class="form-group">
-          <span class="radio radio-info radio-inline p-45"><input
-              type="radio" class="rejoin_radio" id="inlineRadio6" value="Yes"
-              name="allowRejoin"
-              <c:if test="${studyBo.allowRejoin eq null}">checked</c:if>
-              <c:if test="${studyBo.allowRejoin eq 'Yes'}">checked</c:if>
-              required> <label for="inlineRadio6">Yes</label>
-          </span>
-          <span class="radio radio-inline"><input type="radio"
-                                                  class="rejoin_radio" id="inlineRadio7"
-                                                  value="No"
-                                                  name="allowRejoin"
-                                                  <c:if
-                                                      test="${studyBo.allowRejoin eq 'No'}">checked</c:if>
-                                                  required> <label
-              for="inlineRadio7">No</label>
-          </span>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-
-        <div class="gray-xs-f ">
-          Alert text for participants attempting to leave a study
-          <span>
-            <span
-                data-toggle="tooltip" data-placement="top"
-                title="Enter a message that should be shown to participants when they attempt to leave the study indicating whether or not they have the option to re-join the study."
-                class="filled-tooltip"></span>
-          </span>
-        </div>
-
-        <div class="col-md-7 p-none mt-sm rejointextclassYes"
-             style="display: none;">
-          <div class="form-group m-none elaborateClass">
-            <textarea class="form-control" maxlength="250" rows="5"
-                      id="rejoin_comment_yes"
-                      data-error="Please enter plain text of up to 250 characters max."
-                      placeholder="Please enter text that the user should see when they leave a study to let them know whether they can or cannot Rejoin the study">${fn:escapeXml(studyBo.allowRejoinText)}</textarea>
-            <div>
-              <small>(250 characters max)</small>
-            </div>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-        <div class="col-md-7 p-none mt-sm rejointextclassNo"
-             style="display: none;">
-          <div class="form-group m-none elaborateClass">
-            <textarea class="form-control" maxlength="250" rows="5"
-                      id="rejoin_comment_no"
-                      data-error="Please enter plain text of up to 250 characters max."
-                      placeholder="Please enter text that the user should see when they leave a study to let them know whether they can or cannot Rejoin the study">${fn:escapeXml(studyBo.allowRejoinText)}</textarea>
-            <div>
-              <small>(250 characters max)</small>
-            </div>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-      </div>
+      
 
     </div>
     <!-- End body tab section -->

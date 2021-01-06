@@ -29,6 +29,8 @@ public class ConsentStatusBean {
 
   @NotBlank private String studyId;
 
+  @NotBlank private String siteId;
+
   private Boolean eligibility;
 
   @Valid @NotNull private ConsentReqBean consent;
