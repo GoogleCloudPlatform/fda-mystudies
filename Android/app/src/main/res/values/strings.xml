@@ -204,7 +204,6 @@
     <string name="leave_study">Leave Study</string>
 
     <string name="active">active</string>
-    <string name="upcoming">upcoming</string>
     <string name="paused">paused</string>
     <string name="closed">closed</string>
     <string name="notxt">\u0020</string>
@@ -242,7 +241,6 @@
     <string name="anonymous_feedback">Leave Anonymous Feedback</string>
     <string name="need_help">Need Help? Contact Us</string>
     <string name="press_back_to_exit">Press back again to exit.</string>
-    <string name="upcoming_study">This Study is an upcoming study</string>
     <string name="study_not_available">Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join.</string>
     <string name="cannot_rejoin_study">Sorry, this study currently does not allow previously enrolled participants to rejoin the study after they have withdrawn from the study. Please check back later or explore other studies.</string>
     <string name="study_paused">This study has been temporarily paused. Please check back later.</string>
@@ -315,7 +313,6 @@
     <string name="force_upgrade_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sed ipsum id odio mollis mollis in ac nulla. Maecenas ac imperdiet mi, eu tristique mi. Duis accumsan vestibulum augue. Aliquam ac nulla tempus, malesuada felis nec, suscipit urna. </string>
     <string name="android">android</string>
     <string name="title">title</string>
-    <string name="bookmark">bookmark</string>
     <string name="status">status</string>
     <string name="studyStatus">studyStatus</string>
     <string name="position">position</string>
@@ -390,7 +387,6 @@
     <string name="active_caps">Active</string>
     <string name="closed_caps">Closed</string>
     <string name="participation_status_small">Participation Status</string>
-    <string name="bookmarked">Show bookmarked studies only</string>
     <string name="categories">Categories</string>
     <string name="pregnancy">Pregnancy</string>
     <string name="fitness">Fitness</string>
@@ -400,9 +396,7 @@
     <!--filter screen keys are:-->
     <string name="active_filter_key">active</string>
     <string name="closed_filter_key">closed</string>
-    <string name="upcoming_filter_key">upcoming</string>
     <string name="inprogress_filter_key">inprogress</string>
-    <string name="bookmarked_filter_key">bookmarked</string>
     <string name="completed_filter_key">completed</string>
     <string name="withdrawn_filter_key">withdrawn</string>
     <string name="noteligible_filter_key">noteligible</string>
@@ -562,7 +556,7 @@
     <string name="privacyurl">https://www.google.com/</string>
     <string name="view_consent">View Consent</string>
     <string name="visit_website">Visit Website</string>
-    <string name="join_study">Join Study</string>
+    <string name="join_study">Participate</string>
     <string name="clientToken">clientToken</string>
     <string name="server_connect_error">Couldn\'t connect to server. Please try again later.</string>
     <string name="loginflow">loginflow</string>

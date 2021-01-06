@@ -113,7 +113,7 @@ public class StudyEntity implements Serializable {
   @Column(length = MEDIUM_LENGTH)
   private String tagline;
 
-  @Column(length = XS_LENGTH)
+  @Column(length = MEDIUM_LENGTH)
   private String sponsor;
 
   @Column(length = TINY_LENGTH)
