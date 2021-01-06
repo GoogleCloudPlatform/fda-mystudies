@@ -508,6 +508,7 @@ class UserStudyStatus {
         kStudyId: self.studyId,
         kStudyStatus: self.status.paramValue,
         kStudyParticipantId: id,
+        "siteId": siteID ?? "",
       ] as [String: Any]
     return studyDetail
   }
@@ -518,6 +519,7 @@ class UserStudyStatus {
     let studyDetail =
       [
         kStudyId: self.studyId,
+        "siteId": siteID ?? "",
         "completion": completion,
         "adherence": adherence,
       ] as [String: Any]
@@ -610,7 +612,7 @@ class UserActivityStatus {
       case .completed:
         return "  Completed  "
       case .abandoned:
-        return "  Incomplete  "
+        return "  Missed  "
       case .expired:
         return "  Expired  "
 
