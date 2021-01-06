@@ -6,3 +6,44 @@
   color: var(--light-gray);
   font-size: 100%;
 }
+
+.line_height_normal {
+  line-height: normal;
+}
+
+.custom_scroll {
+  height: 400px;
+  overflow-y: scroll;
+}
+
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c4d1e6 transparent;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--periwinkle-gray);
+  border-radius: 20px;
+  border: 3px solid transparent;
+}
+
+.custm_close_modal {
+  position: relative;
+  z-index: 99;
+  padding-right: 25px;
+  padding-top: 15px;
+  margin-left: -9px;
+  background-color: #fff;
+  opacity: 1;
+  border-top-right-radius: 10px;
+}
