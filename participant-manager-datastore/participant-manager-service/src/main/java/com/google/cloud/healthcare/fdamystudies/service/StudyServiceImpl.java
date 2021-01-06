@@ -311,6 +311,7 @@ public class StudyServiceImpl implements StudyService {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
     List<StudyParticipantDetails> studyParticipantDetails = new ArrayList<>();
+    Long participantCount = 0L;
     if (studyAppDetails.getStudyType().equalsIgnoreCase(OPEN_STUDY)) {
       studyParticipantDetails =
           studyRepository.getStudyParticipantDetailsForOpenStudy(
@@ -319,6 +320,11 @@ public class StudyServiceImpl implements StudyService {
               limit,
               offset,
               orderByCondition,
+              StringUtils.defaultString(searchTerm));
+      participantCount =
+          studyRepository.countParticipantsByStudyIdAndSearchTermForOpenStudy(
+              studyAppDetails.getStudyId(),
+              excludeParticipantStudyStatus,
               StringUtils.defaultString(searchTerm));
 
     } else if (studyAppDetails.getStudyType().equalsIgnoreCase(CommonConstants.CLOSE_STUDY)) {
@@ -329,6 +335,9 @@ public class StudyServiceImpl implements StudyService {
               offset,
               orderByCondition,
               StringUtils.defaultString(searchTerm));
+      participantCount =
+          studyRepository.countParticipantsByStudyIdAndSearchTerm(
+              studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
     }
 
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
@@ -338,15 +347,12 @@ public class StudyServiceImpl implements StudyService {
     }
 
     participantRegistryDetail.setRegistryParticipants(registryParticipants);
-    Long participantCount =
-        studyRepository.countParticipantsByStudyIdAndSearchTerm(
-            studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
 
-    participantRegistryResponse.setTotalParticipantCount((long) registryParticipants.size());
+    participantRegistryResponse.setTotalParticipantCount(participantCount);
 
     auditRequest.setUserId(userId);
     auditRequest.setStudyId(studyAppDetails.getStudyId());
