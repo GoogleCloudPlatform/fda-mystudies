@@ -24,11 +24,15 @@
     <input type="hidden" id="userIds" name="userIds">
     <input type="hidden" id="permissions" name="permissions">
     <input type="hidden" id="projectLead" name="projectLead">
+    <input type="hidden" id="inlineRadio3" value="Yes"
+			name="retainParticipant">
+		<input type="hidden" class="rejoin_radio" id="inlineRadio6"
+			value="Yes" name="allowRejoin">
     <!-- Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
         <div class="black-md-f text-uppercase dis-line pull-left line34">
-          SETTINGS AND ADMINS
+          STUDY SETTINGS
           <c:set var="isLive">${_S}isLive</c:set>
             ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
 
@@ -88,34 +92,28 @@
       </div>
       <!-- End Section-->
 
-      <!-- Start Section-->
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-sm">
-          Allow participants to enroll?
-          <span class="requiredStar"> *</span>
-        </div>
-
-        <div class="form-group">
-          <span class="radio radio-info radio-inline p-45"><input
-              type="radio" id="inlineRadio1" value="Yes"
-              name="enrollingParticipants"
-              <c:if test="${studyBo.enrollingParticipants eq 'Yes'}">checked</c:if>
-              required> <label for="inlineRadio1">Yes</label>
-          </span>
-          <span class="radio radio-inline"><input type="radio"
-                                                  id="inlineRadio2" value="No"
-                                                  name="enrollingParticipants"
-                                                  <c:if
-                                                      test="${studyBo.enrollingParticipants eq null}">checked</c:if>
-                                                  <c:if
-                                                      test="${studyBo.enrollingParticipants eq 'No'}">checked</c:if>
-                                                  required> <label
-              for="inlineRadio2">No</label>
-          </span>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-      </div>
-      <!-- End Section-->
+     <!-- Start Section-->
+			<div class="col-md-12 p-none">
+				<div class="gray-xs-f mb-sm">
+					Allow participants to enroll? <span>
+            </span><span class="requiredStar"> *</span> <span
+                  data-toggle="tooltip" data-placement="top"
+                  title="This field can be updated after the study is launched if you wish to stop enrollment at any point during the course of the study."
+                  class="filled-tooltip"></span>
+				</div>
+				<div class="form-group">
+					<span class="radio radio-info radio-inline p-45"><input
+						type="radio" id="inlineRadio1" value="Yes" checked
+						name="enrollingParticipants" required> <label
+						for="inlineRadio1">Yes</label> </span> <span class="radio radio-inline"><input
+						type="radio" id="inlineRadio2" value="No"
+						name="enrollingParticipants"
+						${studyBo.status eq 'Pre-launch' ?'disabled':''} required>
+						<label for="inlineRadio2">No</label> </span>
+					<div class="help-block with-errors red-txt"></div>
+				</div>
+			</div>
+			<!-- End Section-->
 
       <!-- Start Section-->
       <div class="col-md-12 p-none">
@@ -152,267 +150,17 @@
         </div>
       </div>
       <!-- End Section-->
-
-      <!-- Start Section-->
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-sm">
-          Retain participant data when they leave a study?
-          <span
-              class="requiredStar">*
-          </span>
-        </div>
-
-        <div class="form-group">
-          <span class="radio radio-info radio-inline p-45"><input
-              type="radio" id="inlineRadio3" value="Yes"
-              name="retainParticipant"
-              <c:if test="${studyBo.retainParticipant eq 'Yes'}">checked</c:if>
-              required> <label for="inlineRadio3">Yes</label>
-          </span>
-          <span class="radio radio-inline p-45"><input type="radio"
-                                                       id="inlineRadio4" value="No"
-                                                       name="retainParticipant"
-                                                       <c:if
-                                                           test="${studyBo.retainParticipant eq 'No'}">checked</c:if>
-                                                       required> <label for="inlineRadio4">No</label>
-          </span>
-          <span class="radio radio-inline"><input type="radio"
-                                                  id="inlineRadio5" value="All"
-                                                  name="retainParticipant"
-                                                  <c:if
-                                                      test="${studyBo.retainParticipant eq 'All'}">checked</c:if>
-                                                  required> <label for="inlineRadio5">Allow
-            participant to choose to have their data retained or deleted</label>
-          </span>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-      </div>
-      <!-- End Section-->
-
-      <!-- Start Section-->
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-sm">
-          Allow app user to rejoin a study after withdrawing from it?
-          <span
-              class="requiredStar">*
-          </span>
-        </div>
-
-        <div class="form-group">
-          <span class="radio radio-info radio-inline p-45"><input
-              type="radio" class="rejoin_radio" id="inlineRadio6" value="Yes"
-              name="allowRejoin"
-              <c:if test="${studyBo.allowRejoin eq null}">checked</c:if>
-              <c:if test="${studyBo.allowRejoin eq 'Yes'}">checked</c:if>
-              required> <label for="inlineRadio6">Yes</label>
-          </span>
-          <span class="radio radio-inline"><input type="radio"
-                                                  class="rejoin_radio" id="inlineRadio7"
-                                                  value="No"
-                                                  name="allowRejoin"
-                                                  <c:if
-                                                      test="${studyBo.allowRejoin eq 'No'}">checked</c:if>
-                                                  required> <label
-              for="inlineRadio7">No</label>
-          </span>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-
-        <div class="gray-xs-f ">
-          Alert text for participants attempting to leave a study
-          <span>
-            <span
-                data-toggle="tooltip" data-placement="top"
-                title="Enter a message that should be shown to participants when they attempt to leave the study indicating whether or not they have the option to re-join the study."
-                class="filled-tooltip"></span>
-          </span>
-        </div>
-
-        <div class="col-md-7 p-none mt-sm rejointextclassYes"
-             style="display: none;">
-          <div class="form-group m-none elaborateClass">
-            <textarea class="form-control" maxlength="250" rows="5"
-                      id="rejoin_comment_yes"
-                      data-error="Please enter plain text of up to 250 characters max."
-                      placeholder="Please enter text that the user should see when they leave a study to let them know whether they can or cannot Rejoin the study">${fn:escapeXml(studyBo.allowRejoinText)}</textarea>
-            <div>
-              <small>(250 characters max)</small>
-            </div>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-        <div class="col-md-7 p-none mt-sm rejointextclassNo"
-             style="display: none;">
-          <div class="form-group m-none elaborateClass">
-            <textarea class="form-control" maxlength="250" rows="5"
-                      id="rejoin_comment_no"
-                      data-error="Please enter plain text of up to 250 characters max."
-                      placeholder="Please enter text that the user should see when they leave a study to let them know whether they can or cannot Rejoin the study">${fn:escapeXml(studyBo.allowRejoinText)}</textarea>
-            <div>
-              <small>(250 characters max)</small>
-            </div>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-      </div>
-      <!-- End Section-->
-
-      <!-- Start Section-->
-      <c:if test="${fn:contains(permissions,7)}">
-        <div>
-          <div class="black-md-f text-uppercase line34">MANAGE LIST OF
-            ADMINS ASSIGNED TO THE STUDY
-          </div>
-          <c:if test="${empty permission && fn:contains(permissions,5)}">
-            <div class="dis-line form-group mb-none">
-              <button type="button"
-                      class="btn btn-primary blue-btn mb-sm mt-xs"
-                      onclick="addAdmin();">+ Add Admin
-              </button>
-            </div>
-          </c:if>
-
-          <table id="studyAdminsTable" class="display bor-none"
-                 cellspacing="0" width="80%">
-            <thead>
-              <tr>
-                <th id="">&nbsp;&nbsp;&nbsp;Admins</th>
-                <th id="">View</th>
-                <th id="">View & Edit</th>
-                <th id="">Project Lead</th>
-                <th id=""></th>
-
-              </tr>
-            </thead>
-            <tbody id="studyAdminId">
-              <c:forEach items="${studyPermissionList}" var="perm">
-                <tr id="studyAdminRowId${perm.userId}" class="studyAdminRowCls"
-                    studyUserId="${perm.userId}">
-                  <td>
-                    <span class="dis-ellipsis"
-                          title="${fn:escapeXml(perm.userFullName)}">${perm.userFullName}</span>
-                  </td>
-                  <td>
-                    <span class="radio radio-info radio-inline p-45">
-                      <input type="radio" id="inlineRadio1${perm.userId}"
-                             class="radcls" value="0" name="view${perm.userId}"
-                             <c:if test="${not perm.viewPermission}">checked</c:if>>
-                      <label for="inlineRadio1${perm.userId}"></label>
-                    </span>
-                  </td>
-                  <td align="center">
-                    <span
-                        class="radio radio-info radio-inline p-45"><input
-                        type="radio" id="inlineRadio2${perm.userId}" class="radcls"
-                        value="1" name="view${perm.userId}"
-                        <c:if test="${perm.viewPermission}">checked</c:if>> <label
-                        for="inlineRadio2${perm.userId}"></label>
-                    </span>
-                  </td>
-                  <td align="center">
-                    <span
-                        class="radio radio-info radio-inline p-45"><input
-                        type="radio" id="inlineRadio3${perm.userId}"
-                        class="radcls leadCls" value="" name="projectLead"
-                        <c:if test="${perm.projectLead eq 1}">checked</c:if>>
-                      <label for="inlineRadio3${perm.userId}"></label>
-                    </span>
-                  </td>
-                  <td align="center">
-                    <span
-                        class="sprites_icon copy delete <c:if test="${not empty permission || !fn:contains(permissions,5)}"> cursor-none </c:if>"
-                        onclick="removeUser(${perm.userId})" data-toggle="tooltip"
-                        data-placement="top" title="Delete"></span>
-                  </td>
-                </tr>
-              </c:forEach>
-            </tbody>
-          </table>
-        </div>
-      </c:if>
-      <!-- End Section-->
-
+      
 
     </div>
     <!-- End body tab section -->
 
   </form:form>
 
-
 </div>
 <!-- End right Content here -->
 
-<c:if test="${empty permission && fn:contains(permissions,5)}">
-  <div class="col-sm-10 col-rc white-bg p-none" id="adminsId">
-    <div class="right-content-head">
-      <div class="text-right">
-        <div class="black-md-f dis-line pull-left line34">
-          <span class="pr-sm">
-            <a href="javascript:void(0)"
-               onclick="cancelAddAdmin();"><img
-                src="/studybuilder/images/icons/back-b.png" alt=""/></a>
-          </span>
-          Add
-          Admins
-        </div>
 
-        <div class="dis-line form-group mb-none mr-sm">
-          <button type="button" class="btn btn-default gray-btn"
-                  onclick="cancelAddAdmin();">Cancel
-          </button>
-        </div>
-        <div class="dis-line form-group mb-none mr-sm">
-          <button type="button" class="btn btn-primary blue-btn"
-                  id="addAdminsToStudyId" onclick="addAdminsToStudy()">Add
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="right-content-body col-xs-12">
-      <div>
-        <table id="userListTable" class="display bor-none tbl_rightalign"
-               cellspacing="0" width="100%">
-          <thead>
-            <tr>
-              <th id=""></th>
-              <th id="">USERS
-                <span class="sort"></span>
-              </th>
-              <th id="">E-MAIL ADDRESS</th>
-              <th style="width: 100px !important" id="">ROLE</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <c:forEach items="${userList}" var="user">
-              <tr id="user${user.userId}" class="checkCount">
-                <td style="position: inherit;">
-                  <span
-                      class="checkbox checkbox-inline" style="padding-top: 5px;">
-                    <input type="checkbox" class="addAdminCheckbox"
-                           id="inlineCheckboxNew${user.userId}" name="case"
-                           value="${fn:escapeXml(user.userFullName)}"
-                           userId="${user.userId}"> <label
-                      for="inlineCheckboxNew${user.userId}"></label>
-                  </span>
-                </td>
-                <td>
-                  <span class="dis-ellipsis"
-                        title="${fn:escapeXml(user.userFullName)}">${user.userFullName}</span>
-                </td>
-                <td>
-                  <span class="dis-ellipsis"
-                        title="${fn:escapeXml(user.userEmail)}">${user.userEmail}</span>
-                </td>
-                <td>${user.roleName}</td>
-              </tr>
-            </c:forEach>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</c:if>
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">
   <div class="modal-dialog modal-lg">
@@ -460,54 +208,23 @@
 </div>
 <script>
   $(document).ready(function () {
-
     <c:if test="${empty permission && fn:contains(permissions,5)}">
-
-    <c:if test="${user eq 'logout_login_user'}">
-    bootbox.alert({
-      closeButton: false,
-      message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
-      callback: function (result) {
-        var a = document.createElement('a');
-        a.href = "/studybuilder/sessionOut.do";
-        document.body.appendChild(a).click();
-      }
-    });
-    </c:if>
-
+   
     $('[data-toggle="tooltip"]').tooltip();
-
     $('#adminsId').hide();
-
     $('.studyAdminRowCls').each(function () {
       var userId = $(this).attr('studyUserId');
       $('#user' + userId).removeClass('checkCount').hide();
     });
-
-    $('#userListTable').DataTable({
-      "columnDefs": [
-        {"width": "100px", "targets": 3}
-      ],
-      "paging": false,
-      "emptyTable": "No data available",
-      "info": false,
-      "lengthChange": true,
-      "searching": false,
-    });
-
+   
     $('.addAdminCheckbox').on('click', function () {
       var count = 0;
       $('[name=case]:checked').each(function () {
         count++;
       });
-      if (count > 0) {
-        $('#addAdminsToStudyId').prop('disabled', false);
-      } else {
-        $('#addAdminsToStudyId').prop('disabled', true);
-      }
+      
     });
     </c:if>
-
     table = $('#studyAdminsTable').DataTable({
       "paging": false,
       "aoColumns": [
@@ -521,7 +238,6 @@
       "lengthChange": true,
       "searching": false,
     });
-
     $(".menuNav li.active").removeClass('active');
     $(".menuNav li.second").addClass('active');
     checkRadioRequired();
@@ -532,11 +248,9 @@
     $('#settingfoFormId input,textarea,select').prop('disabled', true);
     $('#settingfoFormId').find('.elaborateClass').addClass('linkDis');
     </c:if>
-
     <c:if test="${!fn:contains(permissions,5)}">
     $('.radcls').prop('disabled', true);
     </c:if>
-
     $("#completedId").on('click', function (e) {
       var rowCount = 0;
       if (isFromValid("#settingfoFormId")) {
@@ -557,11 +271,9 @@
         }
       }
     });
-
     $("#saveId").click(function () {
       platformTypeValidation('save');
     });
-
     var allowRejoin = '${studyBo.allowRejoin}';
     if (allowRejoin != "") {
       if (allowRejoin == 'Yes') {
@@ -579,7 +291,6 @@
       $('#myModal').modal('show');
     });
   });
-
   function checkRadioRequired() {
     var rejoinRadioVal = $('input[name=allowRejoin]:checked').val();
     if (rejoinRadioVal == 'Yes') {
@@ -594,7 +305,6 @@
       $('.rejointextclassYes').hide();
     }
   }
-
   function setAllowRejoinText() {
     var allowRejoin = $('input[name=allowRejoin]:checked').val();
     if (allowRejoin) {
@@ -607,7 +317,6 @@
       }
     }
   }
-
   function platformTypeValidation(buttonText) {
     var platformNames = '';
     $("input:checkbox[name=platform]:checked").each(function () {
@@ -632,8 +341,9 @@
           "${_csrf.parameterName}": "${_csrf.token}",
         },
         success: function platformValid(data, status) {
-          var message = data.message;
-          var errorMessage = data.errorMessage;
+        	 var message = data.message;
+             var errorMessage = data.errorMessage;
+            
           $("body").removeClass("loading");
           if (message == "SUCCESS") {
             $('#completedId').removeAttr('disabled');
@@ -654,7 +364,6 @@
       submitButton(buttonText);
     }
   }
-
   function submitButton(buttonText) {
     setAllowRejoinText();
     admins() //Pradyumn
@@ -701,7 +410,6 @@
       }
     }
   }
-
   function admins() {
     var userIds = "";
     var permissions = "";
@@ -727,100 +435,11 @@
     $('#permissions').val(permissions);
     $('#projectLead').val(projectLead);
   }
-
   <c:if test="${empty permission && fn:contains(permissions,5)}">
-
-  function addAdmin() {
-    var userListTableRowCount = $('.checkCount').length;
-    if (userListTableRowCount == 0) {
-      bootbox.alert({
-        closeButton: false,
-        message: 'There are currently no other admin users available to add to this study.',
-      });
-    } else {
-      $('#settingId').hide();
-      $('#adminsId').show();
-      $('#addAdminsToStudyId').prop('disabled', true);
-    }
-  }
-
-  function cancelAddAdmin() {
-    bootbox.confirm({
-      closeButton: false,
-      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
-      buttons: {
-        'cancel': {
-          label: 'Cancel',
-        },
-        'confirm': {
-          label: 'OK',
-        },
-      },
-      callback: function (result) {
-        if (result) {
-          $('#settingId').show();
-          $('#adminsId').hide();
-          $('[name=case]:checked').each(function () {
-            $(this).prop('checked', false);
-          });
-        }
-      }
-    });
-  }
-
-  function addAdminsToStudy() {
-    $('#addAdminsToStudyId').attr('disabled', true);
-    $('[name=case]:checked').each(function () {
-      var name = escapeXml($(this).val());
-      var userId = parseInt($(this).attr('userId'));
-      $('#user' + userId).removeClass('checkCount').hide();
-      $('#settingId').show();
-      $(this).prop('checked', false);
-      $('#adminsId').hide();
-      var domStr = '';
-      domStr = domStr + '<tr id="studyAdminRowId' + userId
-          + '" role="row" class="studyAdminRowCls" studyUserId="' + userId + '">';
-      domStr = domStr + '<td><span class="dis-ellipsis" title="' + DOMPurify.sanitize(name) + '">' + DOMPurify.sanitize(name)
-          + '</span></td>';
-      domStr = domStr + '<td><span class="radio radio-info radio-inline p-45">' +
-          '<input type="radio" id="inlineRadio1' + userId + '" value="0" name="view' + userId
-          + '" checked>' +
-          '<label for="inlineRadio1' + userId + '"></label>' +
-          '</span></td>';
-      domStr = domStr + '<td align="center"><span class="radio radio-info radio-inline p-45">' +
-          '<input type="radio" id="inlineRadio2' + userId + '" value="1" name="view' + userId + '">'
-          +
-          '<label for="inlineRadio2' + userId + '"></label>' +
-          '</span></td>';
-      domStr = domStr + '<td align="center"><span class="radio radio-info radio-inline p-45">' +
-          '<input type="radio" id="inlineRadio3' + userId + '" class="leadCls" name="projectLead">'
-          +
-          '<label for="inlineRadio3' + userId + '"></label>' +
-          '</span></td>';
-      domStr = domStr
-          + '<td align="center"><span class="sprites_icon copy delete" onclick="removeUser('
-          + userId + ')" data-toggle="tooltip" data-placement="top" title="Delete"></span></td>';
-      domStr = domStr + '</tr>';
-      $('#studyAdminId').append(domStr);
-      $('[data-toggle="tooltip"]').tooltip();
-      $('.dataTables_empty').remove();
-    });
-    $('#addAdminsToStudyId').attr('disabled', false);
-  }
-
-  function removeUser(userId) {
-    var userId = userId;
-    var count = 0;
-    $('.studyAdminRowCls').each(function () {
-      count++;
-    });
-    if (count == 1) {
-      table.clear().draw();
-    }
-    $('#studyAdminRowId' + userId).remove();
-    $('#user' + userId).addClass('checkCount').show();
-  }
-
+  
+  
+  
+ 
   function escapeXml(unsafe) {
     return unsafe.replace(/[<>&'"]/g, function (c) {
       switch (c) {
@@ -837,9 +456,7 @@
       }
     });
   }
-
   </c:if>
-
   function showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate) {
     if (isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate == 'No') {
       var text = "You have chosen not to use enrollment date as an anchor date. You will need to revise the schedules of 'target' activities or resources, if any, that were set up based on the enrollment date.";

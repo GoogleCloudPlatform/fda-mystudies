@@ -37,6 +37,7 @@ class ActivitiesTableViewCell: UITableViewCell {
   @IBOutlet var labelRunStatus: UILabel?
   @IBOutlet var buttonMoreSchedules: UIButton?
   @IBOutlet var buttonMoreSchedulesBottomLine: UIView?
+  @IBOutlet var disabledView: UIView!
 
   weak var delegate: ActivitiesCellDelegate?
   var currentActivity: Activity! = nil
@@ -59,7 +60,7 @@ class ActivitiesTableViewCell: UITableViewCell {
       labelStatus?.backgroundColor = color
     }
   }
-  
+
   /// Update cell UI
   /// - Parameters:
   ///   - activity:  Access the value from Activity class.
@@ -210,9 +211,11 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     switch frequency {
     case .oneTime:
-      setActivityTimingsForOneTime(startDate: startDate,
-                                   endDate: endDate,
-                                   activity: activity)
+      setActivityTimingsForOneTime(
+        startDate: startDate,
+        endDate: endDate,
+        activity: activity
+      )
 
     case .daily:
       var runStartTimingsList: [String] = []
@@ -282,10 +285,12 @@ class ActivitiesTableViewCell: UITableViewCell {
       }
     }
   }
-  
-  private func setActivityTimingsForOneTime(startDate: Date?,
-                                            endDate: Date?,
-                                            activity: Activity) {
+
+  private func setActivityTimingsForOneTime(
+    startDate: Date?,
+    endDate: Date?,
+    activity: Activity
+  ) {
     var startDateString = ""
     if let startDate = startDate {
       startDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: startDate)

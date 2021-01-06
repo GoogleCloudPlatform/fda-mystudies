@@ -17,7 +17,6 @@ package com.harvard.usermodule.model;
 
 public class UserStudyStatus {
   private String studyStatus;
-  private boolean bookmarked;
   private String studyId;
 
   public String getStudyStatus() {
@@ -26,14 +25,6 @@ public class UserStudyStatus {
 
   public void setStudyStatus(String studyStatus) {
     this.studyStatus = studyStatus;
-  }
-
-  public boolean isBookmarked() {
-    return bookmarked;
-  }
-
-  public void setBookmarked(boolean bookmarked) {
-    this.bookmarked = bookmarked;
   }
 
   public String getStudyId() {
