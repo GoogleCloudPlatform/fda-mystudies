@@ -19,7 +19,6 @@ import io.realm.RealmObject;
 public class Filter extends RealmObject {
   private StudyStatus studyStatus;
   private ParticipationStatus participationStatus;
-  private boolean bookmarked;
   private Categories categories;
 
   public StudyStatus getStudyStatus() {
@@ -44,13 +43,5 @@ public class Filter extends RealmObject {
 
   public void setCategories(Categories categories) {
     this.categories = categories;
-  }
-
-  public boolean isBookmarked() {
-    return bookmarked;
-  }
-
-  public void setBookmarked(boolean bookmarked) {
-    this.bookmarked = bookmarked;
   }
 }

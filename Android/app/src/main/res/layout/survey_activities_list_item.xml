@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -110,20 +111,20 @@
                 android:text=""
                 android:textColor="@android:color/white" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/more"
-                style="@style/TextType5"
-                android:layout_below="@id/date"
-                android:layout_marginTop="3dp"
-                android:paddingBottom="2dp"
-                android:paddingRight="10dp"
-                android:paddingTop="2dp"
-                android:text=""
-                android:textColor="@color/colorSecondary"
-                android:visibility="gone" />
-
-
         </RelativeLayout>
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/more"
+            style="@style/TextType5"
+            android:layout_below="@id/box2"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@id/box1"
+            android:layout_marginTop="3dp"
+            android:paddingBottom="2dp"
+            android:paddingRight="10dp"
+            android:paddingTop="2dp"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:visibility="visible" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -332,7 +332,11 @@ class ActivitiesViewController: UIViewController {
       todayDate = todayDate.addingTimeInterval(TimeInterval(difference!))
     }
 
-    if activity.startDate != nil && activity.endDate != nil {
+    if activity.activityRuns.count == activity.currentRunId,
+      activity.currentRun.isCompleted
+    {
+      return .past
+    } else if activity.startDate != nil && activity.endDate != nil {
 
       let startDateResult = (activity.startDate?.compare(todayDate))! as ComparisonResult
       let endDateResult = (activity.endDate?.compare(todayDate))! as ComparisonResult
@@ -842,12 +846,6 @@ extension ActivitiesViewController: UITableViewDataSource {
       // Cell Data Setup
       cell.backgroundColor = UIColor.clear
       let availabilityStatus = ActivityAvailabilityStatus(rawValue: indexPath.section)
-      // Disable selection for past and upcoming activities.
-      if availabilityStatus == .past || availabilityStatus == .upcoming {
-        cell.isUserInteractionEnabled = false
-      } else {
-        cell.isUserInteractionEnabled = true
-      }
       let activity = activities[indexPath.row]
 
       // check for scheduled frequency
@@ -861,6 +859,24 @@ extension ActivitiesViewController: UITableViewDataSource {
           as? ActivitiesTableViewCell)!
         cell.delegate = self
       }
+
+      // Disable selection for past and upcoming activities.
+      if availabilityStatus == .past || availabilityStatus == .upcoming {
+        cell.isUserInteractionEnabled = false
+      } else if let currentRun = activity.currentRun,
+        currentRun.isCompleted
+      {
+        if cell.reuseIdentifier == kActivitiesTableViewScheduledCell {
+          cell.selectionStyle = .none
+        } else {
+          cell.isUserInteractionEnabled = false
+        }
+        cell.disabledView.isHidden = false
+      } else {
+        cell.isUserInteractionEnabled = true
+        cell.disabledView.isHidden = true
+      }
+
       // Set Cell data
       cell.populateCellDataWithActivity(
         activity: activity,
