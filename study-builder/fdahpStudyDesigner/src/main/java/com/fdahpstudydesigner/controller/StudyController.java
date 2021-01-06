@@ -4282,8 +4282,7 @@ public class StudyController {
           // validation and success/error message should send to
           // actionListPAge
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
-              || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)
-              || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_PUBLISH)) {
+              || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
             message = studyService.validateStudyAction(studyId, buttonText);
           } else {
             message = FdahpStudyDesignerConstants.SUCCESS;

@@ -67,7 +67,7 @@ public class FdahpStudyDesignerConstants {
       "The study must have at least one questionnaire or active task added before attempting this action.";
 
   public static final String ACTIVETASK_DATE_ERROR_MSG =
-      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again";
+      "One or more of the study’s activities or resources has a schedule that needs an anchor date. Please add an anchor date and try again.";
   public static final String ACTIVETASK_LIST = "activeTaskList";
   public static final String ACTIVITY_MESSAGE = "activityMsg";
   public static final String ACTIVITY_STUDY_ID = "activityStudyId";
@@ -302,7 +302,7 @@ public class FdahpStudyDesignerConstants {
       "This section has been marked as complete";
   public static final String QUESTIONNARIE_STUDY_ID = "questionnarieStudyId";
   public static final String QUESTIONNARIES_ERROR_MSG =
-      "One or more of the study’s activities or resources has a schedule that needs an anchor date. Please add an anchor date and try again.";
+      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again.";
   public static final String QUESTIONSTEP_ACTIVITY = "Question step";
   public static final String QUESTIONSTEP_DELETED = "Question step deleted";
   public static final String QUESTIONSTEP_DONE = "Question step marked complete";

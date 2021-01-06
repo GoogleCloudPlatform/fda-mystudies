@@ -6249,9 +6249,6 @@ public class StudyDAOImpl implements StudyDAO {
     logger.info("StudyDAOImpl - validateStudyAction() - Ends");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     Session session = null;
-    boolean enrollementFlag = false;
-    boolean studyActivityFlag = false;
-    StudySequenceBo studySequenceBo = null;
     StudyBo studyBo = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -6263,41 +6260,12 @@ public class StudyDAOImpl implements StudyDAO {
                     .getNamedQuery(FdahpStudyDesignerConstants.STUDY_LIST_BY_ID)
                     .setInteger("id", Integer.parseInt(studyId))
                     .uniqueResult();
-        studySequenceBo =
-            (StudySequenceBo)
-                session
-                    .getNamedQuery(FdahpStudyDesignerConstants.STUDY_SEQUENCE_BY_ID)
-                    .setInteger(FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId())
-                    .uniqueResult();
 
         if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
             || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
-
-          // 1-all validation mark as completed
-          if (studySequenceBo != null) {
-            String studyActivity = "";
-            studyActivity = getErrorBasedonAction(studySequenceBo);
-            if (StringUtils.isNotEmpty(studyActivity)
-                && (FdahpStudyDesignerConstants.SUCCESS).equalsIgnoreCase(studyActivity)) {
-              studyActivityFlag = true;
-            }
-          }
-
-          // 2-enrollment validation
-          if (studyActivityFlag
-              && StringUtils.isNotEmpty(studyBo.getEnrollingParticipants())
-              && studyBo
-                  .getEnrollingParticipants()
-                  .equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-            enrollementFlag = true;
-          }
-          // 3-The study must have at least one 'activity' added. This
-          // could be a questionnaire or active task.
-          if (enrollementFlag) {
-            // 4-Date validation
-            message = validateDateForStudyAction(studyBo, buttonText);
-            return message;
-          }
+          // Date validation
+          message = validateDateForStudyAction(studyBo, buttonText);
+          return message;
         }
       } else {
         message = "Action is missing";
@@ -6936,7 +6904,8 @@ public class StudyDAOImpl implements StudyDAO {
           && studySequenceBo.isConsentEduInfo()
           && studySequenceBo.isComprehensionTest()
           && studySequenceBo.iseConsent()
-          && (studySequenceBo.isStudyExcQuestionnaries() || studySequenceBo.isStudyExcActiveTask())
+          && studySequenceBo.isStudyExcQuestionnaries()
+          && studySequenceBo.isStudyExcActiveTask()
           && studySequenceBo.isMiscellaneousResources()) {
         completed = true;
         return completed;
