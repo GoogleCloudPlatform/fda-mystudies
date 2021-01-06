@@ -84,6 +84,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   private RegistrationData registrationData;
   private String userAuth;
   private String userID;
+  String passwordPattern =
+          "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -277,11 +279,20 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
                 getResources().getString(R.string.why_register));
           }
         });
+
+    password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!password.getText().toString().matches(passwordPattern)) {
+            password.setError(getResources().getString(R.string.password_validation));
+          }
+        }
+      }
+    });
   }
 
   private void callRegisterUserWebService() {
-    String passwordPattern =
-        "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
     if (password.getText().toString().isEmpty()
         && email.getText().toString().isEmpty()
         && confirmPassword.getText().toString().isEmpty()) {
@@ -298,12 +309,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (!password.getText().toString().matches(passwordPattern)) {
-      SetDialogHelper.setNeutralDialog(
-          SignupActivity.this,
-          getResources().getString(R.string.password_validation),
-          false,
-          getResources().getString(R.string.ok),
-          getResources().getString(R.string.app_name));
+      password.setError(getResources().getString(R.string.password_validation));
     } else if (checkPasswordContainsEmailID(
         email.getText().toString(), password.getText().toString())) {
       Toast.makeText(

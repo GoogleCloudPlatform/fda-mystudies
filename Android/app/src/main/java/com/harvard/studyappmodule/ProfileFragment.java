@@ -486,7 +486,7 @@ public class ProfileFragment extends Fragment
         AppController.deleteKey("passcode_" + pass);
         Toast.makeText(context, R.string.signed_out, Toast.LENGTH_SHORT).show();
         if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-          ((StudyActivity) context).loadstudylist();
+          AppController.signout(context);
         } else {
           ((SurveyActivity) context).signout();
         }
@@ -507,7 +507,7 @@ public class ProfileFragment extends Fragment
           AppController.deleteKey("passcode_" + pass);
         }
         if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-          ((StudyActivity) context).loadstudylist();
+          AppController.signout(context);
         } else {
           ((SurveyActivity) context).signout();
         }
@@ -696,7 +696,7 @@ public class ProfileFragment extends Fragment
     if (requestCode == DELETE_ACCOUNT) {
       if (resultCode == ((Activity) context).RESULT_OK) {
         if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-          ((StudyActivity) context).loadstudylist();
+          AppController.signout(context);
         } else {
           ((SurveyActivity) context).signout();
         }

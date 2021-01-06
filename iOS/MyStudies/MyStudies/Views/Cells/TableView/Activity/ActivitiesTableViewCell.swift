@@ -37,6 +37,7 @@ class ActivitiesTableViewCell: UITableViewCell {
   @IBOutlet var labelRunStatus: UILabel?
   @IBOutlet var buttonMoreSchedules: UIButton?
   @IBOutlet var buttonMoreSchedulesBottomLine: UIView?
+  @IBOutlet var disabledView: UIView!
 
   weak var delegate: ActivitiesCellDelegate?
   var currentActivity: Activity! = nil
