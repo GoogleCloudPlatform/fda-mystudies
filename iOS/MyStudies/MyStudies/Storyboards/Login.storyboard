@@ -41,7 +41,7 @@
                                 </connections>
                             </button>
                             <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" translatesAutoresizingMaskIntoConstraints="NO" id="4Nk-cF-eK0">
-                                <rect key="frame" x="167.5" y="488" width="40" height="37"/>
+                                <rect key="frame" x="136" y="488" width="103.5" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="37" id="zxd-bn-cUg"/>
                                 </constraints>
@@ -87,7 +87,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WsS-eE-w8m">
                                         <rect key="frame" x="193" y="1" width="178" height="55"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
-                                        <state key="normal" title="Sign in">
+                                        <state key="normal" title="Sign In">
                                             <color key="titleColor" red="0.84705882349999995" green="0.89019607840000003" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
@@ -132,7 +132,7 @@
                             <constraint firstItem="G1v-Yc-O0B" firstAttribute="centerY" secondItem="KB9-1S-d5W" secondAttribute="centerY" multiplier="1.68216" priority="900" id="JzS-I4-u8b"/>
                             <constraint firstItem="Mxf-5y-rgv" firstAttribute="trailing" secondItem="vwF-hX-3DE" secondAttribute="trailing" id="KlN-a2-RF9"/>
                             <constraint firstItem="N9U-6s-J6H" firstAttribute="leading" secondItem="vwF-hX-3DE" secondAttribute="leading" id="L5Q-am-Jpn"/>
-                            <constraint firstItem="4Nk-cF-eK0" firstAttribute="width" secondItem="KB9-1S-d5W" secondAttribute="width" multiplier="40/375" id="Q48-ka-av0"/>
+                            <constraint firstItem="4Nk-cF-eK0" firstAttribute="width" relation="greaterThanOrEqual" secondItem="KB9-1S-d5W" secondAttribute="width" multiplier="50/375" id="Q48-ka-av0"/>
                             <constraint firstItem="G1v-Yc-O0B" firstAttribute="centerX" secondItem="Mxf-5y-rgv" secondAttribute="centerX" id="UBQ-hZ-jAn"/>
                             <constraint firstItem="4Nk-cF-eK0" firstAttribute="centerX" secondItem="Mxf-5y-rgv" secondAttribute="centerX" id="bhp-yy-DWw"/>
                             <constraint firstItem="vwF-hX-3DE" firstAttribute="leading" secondItem="Mxf-5y-rgv" secondAttribute="leading" id="dRJ-yz-dxe"/>
@@ -399,7 +399,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="overviewLogo" translatesAutoresizingMaskIntoConstraints="NO" id="bww-YG-caD">
-                                <rect key="frame" x="134.5" y="141" width="145" height="69"/>
+                                <rect key="frame" x="134.5" y="146.5" width="145" height="58"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Ciy-R8-Rn9">
                                 <rect key="frame" x="150" y="279" width="114" height="36"/>
@@ -1069,13 +1069,13 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="EeA-Hk-jBe"/>
-        <segue reference="7a5-4e-lTo"/>
+        <segue reference="Xbj-IV-jBd"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="backIcon" width="23" height="18"/>
         <image name="checked" width="18" height="18"/>
         <image name="notChecked" width="18" height="18"/>
-        <image name="overviewLogo" width="73.5" height="69"/>
+        <image name="overviewLogo" width="73.5" height="58"/>
         <image name="successBlueBig" width="122.5" height="120"/>
         <image name="watchVideo" width="119.5" height="27"/>
         <image name="welcomeBg" width="375" height="667"/>
