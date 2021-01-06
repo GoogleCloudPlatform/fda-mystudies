@@ -30,6 +30,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
@@ -82,6 +83,8 @@ public class UserConsentManagementController {
 
   @Autowired StudyRepository studyRepository;
 
+  @Autowired ParticipantStudyRepository participantStudyRepository;
+
   private static final Logger logger =
       LoggerFactory.getLogger(UserConsentManagementController.class);
 
@@ -108,9 +111,12 @@ public class UserConsentManagementController {
     studyInfoBean = userConsentManagementService.getStudyInfoId(consentStatusBean.getStudyId());
     Optional<StudyEntity> optStudy = studyRepository.findById(studyInfoBean.getStudyInfoId());
 
-    ParticipantStudyEntity participantStudies =
-        userConsentManagementService.getParticipantStudies(studyInfoBean.getStudyInfoId(), userId);
-    if (participantStudies != null) {
+    Optional<ParticipantStudyEntity> optParticipantStudies =
+        participantStudyRepository.findByStudyIdAndSiteId(
+            studyInfoBean.getStudyInfoId(), userId, consentStatusBean.getSiteId());
+
+    if (optParticipantStudies.isPresent()) {
+      ParticipantStudyEntity participantStudies = optParticipantStudies.get();
       if (consentStatusBean.getEligibility() != null) {
         participantStudies.setEligibility(consentStatusBean.getEligibility());
       }
