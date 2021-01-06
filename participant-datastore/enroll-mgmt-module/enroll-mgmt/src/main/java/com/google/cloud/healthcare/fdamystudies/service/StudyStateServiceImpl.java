@@ -80,16 +80,14 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Override
   @Transactional(readOnly = true)
   public List<ParticipantStudyEntity> getParticipantStudiesList(
-      UserDetailsEntity user, List<String> siteIds) {
+      UserDetailsEntity user, List<String> studyIds) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
     List<ParticipantStudyEntity> participantStudies = null;
-    if (CollectionUtils.isNotEmpty(siteIds)) {
-      List<String> participantStudyIds =
-          participantStudyRepository.findByEmailAndSiteIds(user.getEmail(), siteIds);
+    List<String> participantStudyIds =
+        participantStudyRepository.findByEmailAndStudyIds(user.getEmail(), studyIds);
 
-      if (CollectionUtils.isNotEmpty(participantStudyIds)) {
-        participantStudies = participantStudyRepository.findAllById(participantStudyIds);
-      }
+    if (CollectionUtils.isNotEmpty(participantStudyIds)) {
+      participantStudies = participantStudyRepository.findAllById(participantStudyIds);
     }
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Ends ");
     return (List<ParticipantStudyEntity>) CollectionUtils.emptyIfNull(participantStudies);
