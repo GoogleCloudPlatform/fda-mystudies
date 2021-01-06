@@ -82,7 +82,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   public List<ParticipantStudyEntity> getParticipantStudiesList(
       UserDetailsEntity user, List<String> studyIds) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
-    List<ParticipantStudyEntity> participantStudies = null;
+    List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
     List<String> participantStudyIds =
         participantStudyRepository.findByEmailAndStudyIds(user.getEmail(), studyIds);
 
@@ -90,7 +90,7 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantStudies = participantStudyRepository.findAllById(participantStudyIds);
     }
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Ends ");
-    return (List<ParticipantStudyEntity>) CollectionUtils.emptyIfNull(participantStudies);
+    return participantStudies;
   }
 
   @Override
