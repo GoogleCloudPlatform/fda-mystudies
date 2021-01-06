@@ -34,7 +34,7 @@ const successMessages = {
   MSG_0032: 'Location fetched successfully',
   MSG_0033: 'Locations for site fetched successfully',
   MSG_0034: 'Your account and profile details have been updated',
-  MSG_0035: 'Your password has been changed successfully',
+  MSG_0035: 'Your password has been updated',
   MSG_0036: 'User details fetched successfully',
   MSG_0037: `The email list was imported with the following issues:
 <Number> emails failed to import.
@@ -52,8 +52,8 @@ Reason for import failure for these could be one of the following:
   MSG_0042: 'Email added to site registry',
   MSG_0043: 'Account setup invitation resent',
   MSG_0044: 'Password help has been sent to your registered email',
-  MSG_0045: 'The invitation for this user has been deleted',
-  /* eslint-enable @typescript-eslint/naming-convention */
+  MSG_0045:
+    'The invitation for this admin user has been deleted' /* eslint-enable @typescript-eslint/naming-convention */,
 };
 
 export type SuccessCode = keyof typeof successMessages;

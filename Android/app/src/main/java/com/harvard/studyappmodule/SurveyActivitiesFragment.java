@@ -2903,7 +2903,6 @@ public class SurveyActivitiesFragment extends Fragment
       activityStatus.put("activityState", IN_PROGRESS);
       activityStatus.put("activityId", activityId);
       activityStatus.put("activityRunId", "" + activityRunId);
-      activityStatus.put("bookmarked", "false");
       activityStatus.put("activityVersion", activityVersion);
 
       activityRun.put("total", activityStatusData.getTotalRun());

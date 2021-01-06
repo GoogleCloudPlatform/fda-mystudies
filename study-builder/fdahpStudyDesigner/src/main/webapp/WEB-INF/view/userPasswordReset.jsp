@@ -79,15 +79,7 @@
             <c:if test="${not isInactiveUser && isValidToken}">
               <div>
               <p class="white__text">Please set up your new password using
-                this form. You would be required to enter the access code
-                provided to you over email for the same.</p>
-              <div class="mb-lg form-group">
-                <input autofocus="autofocus" type="text"
-                       class="input-field wow_input" id="" tabindex="1"
-                       name="accessCode" maxlength="6" placeholder="Access Code"
-                       data-error="Access Code is invalid" required autocomplete="off"/>
-                <div class="help-block with-errors red-txt"></div>
-              </div>
+                this form.</p>
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input"
                        id="password" tabindex="2" maxlength="64" data-minlength="8"
@@ -122,7 +114,8 @@
             <c:if test="${not isInactiveUser && not isValidToken}">
               <p class="passwordExp">
                 <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-               This link is no longer valid to be used. Please sign in or request password help again.
+               This link is no longer valid to be used. 
+                Please contact the system admin for assistance with your account or sign in if already registered.
               </p>
             </c:if>
             <div>
