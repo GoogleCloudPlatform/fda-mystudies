@@ -28,7 +28,6 @@ public class StudyList extends RealmObject {
   private String studyStatus = StudyFragment.YET_TO_JOIN;
   private String logo;
   @PrimaryKey private String studyId;
-  private boolean bookmarked = false;
   private String pdfPath = "";
 
   public String getStudyVersion() {
@@ -79,14 +78,6 @@ public class StudyList extends RealmObject {
 
   public void setTagline(String tagline) {
     this.tagline = tagline;
-  }
-
-  public boolean isBookmarked() {
-    return bookmarked;
-  }
-
-  public void setBookmarked(boolean bookmarked) {
-    this.bookmarked = bookmarked;
   }
 
   public String getTitle() {

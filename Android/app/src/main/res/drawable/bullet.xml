@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <size
-        android:width="7dp"
-        android:height="7dp" />
+        android:width="10dp"
+        android:height="10dp" />
     <solid android:color="@color/bullet_green_color" />
 </shape>

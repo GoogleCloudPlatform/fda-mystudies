@@ -153,13 +153,6 @@ public class SurveyActivity extends AppCompatActivity
       title =
           AppController.getHelperSharedPreference()
               .readPreference(SurveyActivity.this, getResources().getString(R.string.title), "");
-      if (AppController.getHelperSharedPreference()
-          .readPreference(SurveyActivity.this, getResources().getString(R.string.bookmark), "")
-          .equalsIgnoreCase("true")) {
-        bookmark = true;
-      } else {
-        bookmark = false;
-      }
       status =
           AppController.getHelperSharedPreference()
               .readPreference(SurveyActivity.this, getResources().getString(R.string.status), "");
