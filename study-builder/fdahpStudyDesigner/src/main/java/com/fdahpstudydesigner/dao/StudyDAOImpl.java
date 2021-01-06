@@ -103,6 +103,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -3834,7 +3835,9 @@ public class StudyDAOImpl implements StudyDAO {
             query.setMaxResults(1);
             studyVersionBo = (StudyVersionBo) query.uniqueResult();
             if (studyVersionBo != null) {
-              values.put("datasharing_consent_setting", consentBo.getConsentDocContent());
+              values.put(
+                  "datasharing_consent_setting",
+                  Jsoup.parse(consentBo.getConsentDocContent()).text());
               values.put(
                   "consent_document_version", String.valueOf(studyVersionBo.getConsentVersion()));
               auditLogEventHelper.logEvent(
