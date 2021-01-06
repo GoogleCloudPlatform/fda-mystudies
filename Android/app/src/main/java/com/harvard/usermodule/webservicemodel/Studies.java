@@ -27,8 +27,6 @@ public class Studies extends RealmObject {
 
   private String enrolledDate;
 
-  private boolean bookmarked;
-
   private String participantId;
 
   private int completion;
@@ -111,11 +109,4 @@ public class Studies extends RealmObject {
     this.enrolledDate = enrolledDate;
   }
 
-  public boolean isBookmarked() {
-    return bookmarked;
-  }
-
-  public void setBookmarked(boolean bookmarked) {
-    this.bookmarked = bookmarked;
-  }
 }

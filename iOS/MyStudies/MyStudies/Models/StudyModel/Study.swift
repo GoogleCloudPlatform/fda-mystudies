@@ -25,7 +25,6 @@ let kConsentDocumentContent = "content"
 
 enum StudyStatus: String {
   case active = "Active"
-  case upcoming = "Upcoming"
   case closed = "Closed"
   case paused = "Paused"
 
@@ -33,12 +32,10 @@ enum StudyStatus: String {
     switch self {
     case .active:
       return 0
-    case .upcoming:
-      return 1
     case .paused:
-      return 2
+      return 1
     case .closed:
-      return 3
+      return 2
 
     }
   }

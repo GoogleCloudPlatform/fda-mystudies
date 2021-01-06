@@ -24,7 +24,6 @@ package com.fdahpstudydesigner.service;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
@@ -79,11 +78,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   public String authAndAddPassword(
-      String securityToken,
-      String accessCode,
-      String password,
-      UserBO userBO2,
-      SessionObject sesObj) {
+      String securityToken, String password, UserBO userBO2, SessionObject sesObj) {
     UserBO userBO = null;
     logger.info("LoginServiceImpl - checkSecurityToken() - Starts");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -92,7 +87,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     Map<String, String> keyValueForSubject = null;
     String dynamicContent = "";
     String result = FdahpStudyDesignerConstants.FAILURE;
-    String invalidAccessCodeError = propMap.get("invalid.access.code.error.msg");
     String oldPasswordError = propMap.get("old.password.error.msg");
     String passwordCount = propMap.get("password.history.count");
     List<UserPasswordHistory> passwordHistories = null;
@@ -106,86 +100,79 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
         if (StringUtils.isBlank(userBO.getUserPassword())) {
           isIntialPasswordSetUp = true;
         }
-        if (userBO.getAccessCode().equals(accessCode)) {
-          if ((password != null)
-              && (password.contains(
-                      FdahpStudyDesignerUtil.isNotEmpty(userBO2.getFirstName())
-                          ? userBO2.getFirstName()
-                          : userBO.getFirstName())
-                  || password.contains(
-                      FdahpStudyDesignerUtil.isNotEmpty(userBO2.getLastName())
-                          ? userBO2.getLastName()
-                          : userBO.getLastName()))) {
-            isValidPassword = false;
+        if ((password != null)
+            && (password.contains(
+                    FdahpStudyDesignerUtil.isNotEmpty(userBO2.getFirstName())
+                        ? userBO2.getFirstName()
+                        : userBO.getFirstName())
+                || password.contains(
+                    FdahpStudyDesignerUtil.isNotEmpty(userBO2.getLastName())
+                        ? userBO2.getLastName()
+                        : userBO.getLastName()))) {
+          isValidPassword = false;
+        }
+        if (isValidPassword) {
+          passwordHistories = loginDAO.getPasswordHistory(userBO.getUserId());
+          if ((passwordHistories != null) && !passwordHistories.isEmpty()) {
+            for (UserPasswordHistory userPasswordHistory : passwordHistories) {
+              if (FdahpStudyDesignerUtil.compareEncryptedPassword(
+                  userPasswordHistory.getUserPassword(), password)) {
+                isValidPassword = false;
+                break;
+              }
+            }
           }
           if (isValidPassword) {
-            passwordHistories = loginDAO.getPasswordHistory(userBO.getUserId());
-            if ((passwordHistories != null) && !passwordHistories.isEmpty()) {
-              for (UserPasswordHistory userPasswordHistory : passwordHistories) {
-                if (FdahpStudyDesignerUtil.compareEncryptedPassword(
-                    userPasswordHistory.getUserPassword(), password)) {
-                  isValidPassword = false;
-                  break;
-                }
-              }
-            }
-            if (isValidPassword) {
-              userBO.setFirstName(
-                  null != userBO2.getFirstName()
-                      ? userBO2.getFirstName().trim()
-                      : userBO.getFirstName());
-              userBO.setLastName(
-                  null != userBO2.getLastName()
-                      ? userBO2.getLastName().trim()
-                      : userBO.getLastName());
-              userBO.setPhoneNumber(
-                  null != userBO2.getPhoneNumber()
-                      ? userBO2.getPhoneNumber().trim()
-                      : userBO.getPhoneNumber());
-              userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
-              userBO.setTokenUsed(true);
-              userBO.setEnabled(true);
-              userBO.setAccountNonExpired(true);
-              userBO.setAccountNonLocked(true);
-              userBO.setCredentialsNonExpired(true);
-              userBO.setPasswordExpiryDateTime(
-                  new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
-                      .format(new Date()));
-              result = loginDAO.updateUser(userBO);
-              if (result.equals(FdahpStudyDesignerConstants.SUCCESS)) {
-                loginDAO.updatePasswordHistory(userBO.getUserId(), userBO.getUserPassword());
-                isValid = true;
-                SessionObject sessionObject = new SessionObject();
-                sessionObject.setUserId(userBO.getUserId());
+            userBO.setFirstName(
+                null != userBO2.getFirstName()
+                    ? userBO2.getFirstName().trim()
+                    : userBO.getFirstName());
+            userBO.setLastName(
+                null != userBO2.getLastName()
+                    ? userBO2.getLastName().trim()
+                    : userBO.getLastName());
+            userBO.setPhoneNumber(
+                null != userBO2.getPhoneNumber()
+                    ? userBO2.getPhoneNumber().trim()
+                    : userBO.getPhoneNumber());
+            userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
+            userBO.setTokenUsed(true);
+            userBO.setEnabled(true);
+            userBO.setAccountNonExpired(true);
+            userBO.setAccountNonLocked(true);
+            userBO.setCredentialsNonExpired(true);
+            userBO.setPasswordExpiryDateTime(
+                new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
+                    .format(new Date()));
+            result = loginDAO.updateUser(userBO);
+            if (result.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+              loginDAO.updatePasswordHistory(userBO.getUserId(), userBO.getUserPassword());
+              isValid = true;
+              SessionObject sessionObject = new SessionObject();
+              sessionObject.setUserId(userBO.getUserId());
 
-                auditRequest.setUserId(String.valueOf(userBO.getUserId()));
+              auditRequest.setUserId(String.valueOf(userBO.getUserId()));
 
-                auditLogEventHelper.logEvent(NEW_USER_ACCOUNT_ACTIVATED, auditRequest);
-                auditLogEventHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
-              } else {
-                if (userBO2 != null) {
-                  values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
-                  values.put(
-                      StudyBuilderConstants.ACCESS_LEVEL,
-                      UserAccessLevel.STUDY_BUILDER_ADMIN.getValue());
-                  auditLogEventHelper.logEvent(
-                      NEW_USER_ACCOUNT_ACTIVATION_FAILED, auditRequest, values);
-                  auditLogEventHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
-                } else {
-                  auditLogEventHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
-                }
-              }
+              auditLogEventHelper.logEvent(NEW_USER_ACCOUNT_ACTIVATED, auditRequest);
+              auditLogEventHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
             } else {
-              result = oldPasswordError.replace("$countPass", passwordCount);
+              if (userBO2 != null) {
+                values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
+                values.put(
+                    StudyBuilderConstants.ACCESS_LEVEL,
+                    UserAccessLevel.STUDY_BUILDER_ADMIN.getValue());
+                auditLogEventHelper.logEvent(
+                    NEW_USER_ACCOUNT_ACTIVATION_FAILED, auditRequest, values);
+                auditLogEventHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
+              } else {
+                auditLogEventHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
+              }
             }
           } else {
-            result = propMap.get("password.name.contains.error.msg");
+            result = oldPasswordError.replace("$countPass", passwordCount);
           }
         } else {
-          result = invalidAccessCodeError;
-          values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
-          auditLogEventHelper.logEvent(
-              NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE, auditRequest, values);
+          result = propMap.get("password.name.contains.error.msg");
         }
         if (isIntialPasswordSetUp && isValid) {
           List<String> cc = new ArrayList<>();
@@ -398,7 +385,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     String message = propMap.get("user.forgot.error.msg");
     boolean flag = false;
     UserBO userdetails = null;
-    String accessCode = "";
     Map<String, String> keyValueForSubject = null;
     Map<String, String> keyValueForSubject2 = null;
     String dynamicContent = "";
@@ -414,7 +400,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     final String lockMsg = propMap.get("user.lock.msg");
     try {
       passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
-      accessCode = RandomStringUtils.randomAlphanumeric(6);
       if (!StringUtils.isEmpty(passwordResetToken)) {
         userdetails = loginDAO.getValidUserByEmail(email);
         if ("".equals(type) && userdetails != null && userdetails.isEnabled()) {
@@ -450,7 +435,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           flag = false;
           if (null != userdetails) {
             userdetails.setSecurityToken(passwordResetToken);
-            userdetails.setAccessCode(accessCode);
             userdetails.setTokenUsed(false);
             userdetails.setTokenExpiryDate(
                 FdahpStudyDesignerUtil.addHours(
@@ -472,7 +456,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               keyValueForSubject.put("$firstName", userdetails.getFirstName());
               keyValueForSubject2.put("$firstName", userdetails.getFirstName());
               keyValueForSubject.put("$lastName", userdetails.getLastName());
-              keyValueForSubject.put("$accessCode", accessCode);
               keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
               customerCareMail = propMap.get("email.address.customer.service");
               keyValueForSubject.put("$customerCareMail", customerCareMail);
@@ -574,22 +557,16 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     this.loginDAO = loginDAO;
   }
 
-  public String validateAccessCode(String securityToken, String accessCode) {
+  public String validateEmailChangeVerification(String securityToken) {
     UserBO userBO = null;
     logger.info("LoginServiceImpl - checkSecurityToken() - Starts");
-    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String result = FdahpStudyDesignerConstants.FAILURE;
-    String invalidAccessCodeError = propMap.get("invalid.access.code.error.msg");
     try {
       userBO = loginDAO.getUserBySecurityToken(securityToken);
       if (null != userBO) {
-        if (userBO.getAccessCode().equals(accessCode)) {
-          userBO.setEmailChanged(false);
-          userBO.setTokenUsed(true);
-          result = loginDAO.updateUser(userBO);
-        } else {
-          result = invalidAccessCodeError;
-        }
+        userBO.setEmailChanged(false);
+        userBO.setTokenUsed(true);
+        result = loginDAO.updateUser(userBO);
       }
     } catch (Exception e) {
       logger.error("LoginServiceImpl - checkSecurityToken() - ERROR ", e);
@@ -609,11 +586,9 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       int passwordResetLinkExpirationInHour =
           Integer.parseInt(propMap.get("accountlocked.resetLink.expiration.in.hour"));
       String passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
-      String accessCode = RandomStringUtils.randomAlphanumeric(6);
       UserBO userdetails = loginDAO.getValidUserByEmail(email);
       if (null != userdetails && !userdetails.getEmailChanged()) {
         userdetails.setSecurityToken(passwordResetToken);
-        userdetails.setAccessCode(accessCode);
         userdetails.setTokenUsed(false);
         userdetails.setTokenExpiryDate(
             FdahpStudyDesignerUtil.addHours(
@@ -624,7 +599,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           Map<String, String> keyValueForSubject = new HashMap<String, String>();
           keyValueForSubject.put("$firstName", userdetails.getFirstName());
-          keyValueForSubject.put("$accessCode", accessCode);
           keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
           String customerCareMail = propMap.get("email.address.customer.service");
           keyValueForSubject.put("$customerCareMail", customerCareMail);

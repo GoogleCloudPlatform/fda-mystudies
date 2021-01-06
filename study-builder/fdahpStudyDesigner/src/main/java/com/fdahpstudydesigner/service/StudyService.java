@@ -40,7 +40,6 @@ import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
-import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 import java.util.Map;
@@ -73,10 +72,6 @@ public interface StudyService {
       Integer resourceInfoId, SessionObject sesObj, String customStudyId, int studyId);
 
   public boolean deleteStudyByCustomStudyId(String customStudyId);
-
-  public List<UserBO> getActiveNonAddedUserList(Integer studyId, Integer userId);
-
-  public List<StudyPermissionBO> getAddedUserListToStudy(Integer studyId, Integer userId);
 
   public List<StudyBo> getAllStudyList();
 
@@ -174,12 +169,7 @@ public interface StudyService {
   public String saveOrUpdateStudyEligibilty(
       EligibilityBo eligibilityBo, SessionObject sesObj, String customStudyId);
 
-  public String saveOrUpdateStudySettings(
-      StudyBo studyBo,
-      SessionObject sesObj,
-      String userIds,
-      String permissions,
-      String projectLead);
+  public String saveOrUpdateStudySettings(StudyBo studyBo, SessionObject sesObj);
 
   public String updateStudyActionOnAction(String studyId, String buttonText, SessionObject sesObj);
 
