@@ -3248,7 +3248,7 @@
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current and previous rows."));
           $(".addbtn").addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -3359,7 +3359,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-             $("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row."));
+             $("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current and previous rows."));
           $(".addbtn").addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
