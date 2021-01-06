@@ -24,6 +24,9 @@ public class AppControllerTest {
   private static final boolean TEST_TRUE = true;
   private static final boolean TEST_FALSE = false;
   private static final String INVALID_DATE_FORMAT = "Invalid date format";
+  private static final String SIMPLETEXT = "input";
+  private static final String HTMLTEXT = "<p>input</p>";
+
 
   @Test
   public void isDateWithinRangeTest() {
@@ -53,5 +56,13 @@ public class AppControllerTest {
     }
     boolean checkAfter = AppController.checkafter(startDate);
     assertThat(checkAfter, equalTo(TEST_FALSE));
+  }
+
+  @Test
+  public void verifyHtmlInputTest() {
+    String checkSimpleText = AppController.verifyHtmlInput(SIMPLETEXT);
+    String checkHtmlText = AppController.verifyHtmlInput(HTMLTEXT);
+    assertThat(checkSimpleText, equalTo(HTMLTEXT));
+    assertThat(checkHtmlText, equalTo(HTMLTEXT));
   }
 }
