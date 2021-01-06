@@ -26,6 +26,11 @@
   .display__flex__center{
     margin-top: 10px !important;
   }
+  
+  .btn{
+  font-size:13px !important
+  }
+  
 </style>
 <script type="text/javascript">
   function isNumber(evt) {
@@ -2098,7 +2103,7 @@
                               class="requiredStar">*
                           </span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-none dropdown-font">
                           <select name="questionResponseSubTypeList[${subtype.index}].exclusive"
                                   id="exclusiveId${subtype.index}" index="${subtype.index}"
                                   title="select" data-error="Please choose one option"
@@ -2118,6 +2123,7 @@
                           <div class="help-block with-errors red-txt"></div>
                         </div>
                       </div>
+                      <br></br>
                       <c:if test="${questionnaireBo.branching}">
                         <div class="col-md-2 pl-none">
                           <div class="gray-xs-f mb-xs">Destination Step</div>
@@ -2147,7 +2153,7 @@
                       </c:if>
                       <div class="col-md-12 p-none display__flex__">
                         <div class="col-md-10 pl-none">
-                          <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                          <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                           <div class="form-group">
                             <textarea class="form-control"
                                       name="questionResponseSubTypeList[${subtype.index}].description"
@@ -2209,11 +2215,11 @@
                             class="requiredStar">*
                         </span>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-none">
                         <select name="questionResponseSubTypeList[0].exclusive"
                                 id="exclusiveId0" index="0" title="select"
                                 data-error="Please choose one option"
-                                class="selectpicker textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if>"
+                                class="selectpicker dropdown-font textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if>"
                                 <c:if
                                     test="${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}">disabled</c:if>
                                 onchange="setExclusiveData(this);">
@@ -2232,7 +2238,7 @@
                     <c:if test="${questionnaireBo.branching}">
                       <div class="col-md-2 pl-none">
                         <div class="gray-xs-f mb-xs">Destination Step</div>
-                        <div class="form-group">
+                        <div class="form-group mb-none">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextChoiceStepId0"
                                   class="selectpicker destionationYes"
@@ -2256,7 +2262,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[0].description"
@@ -2314,7 +2320,7 @@
                             class="requiredStar">*
                         </span>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-none">
                         <select name="questionResponseSubTypeList[1].exclusive"
                                 id="exclusiveId1" index="1" title="select"
                                 data-error="Please choose one option"
@@ -2361,7 +2367,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[1].description"
@@ -2388,7 +2394,7 @@
               <div class="clearfix"></div>
               <div class="checkbox checkbox-inline">
                 <input type="checkbox" name="questionReponseTypeBo.otherType"
-                       id="textchoiceOtherId" ${not empty questionnairesStepsBo.questionReponseTypeBo.otherType ? 'checked':''}>
+                       id="textchoiceOtherId" ${not empty questionnairesStepsBo.questionReponseTypeBo.otherType && questionnairesStepsBo.questionReponseTypeBo.otherType eq 'on'? 'checked':''}>
                 <label for="textchoiceOtherId"> Include 'Other' as an option ? </label>
               </div>
               <div class="textchoiceOtherCls" style="display: none;">
@@ -2474,7 +2480,7 @@
                   </c:if>
                   <div class="col-md-12 p-none display__flex__center">
                     <div class="col-md-10 pl-none">
-                      <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                      <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                       <div class="form-group">
                         <textarea class="form-control"
                                   name="questionReponseTypeBo.otherDescription"
@@ -3441,27 +3447,75 @@
         });
       });
 
-      $('#textchoiceOtherId').click(function () {
-        var displayText = $("#displayTextChoiceText0").val().trim();
-        var displayValue = $("#displayTextChoiceValue0").val().trim();
-        var exclusive = $("#exclusiveId0").val().trim();
-        var choiceDescription = $("#displayTextChoiceDescription0").val().trim();
-        if ($(this).is(':checked')) {
-          if (displayText.length <= 0 && displayValue.length <= 0 && exclusive.length <= 0
-              && choiceDescription.length <= 0) {
-            $('.otherOptionChecked').hide();
-            $('.otherOptionChecked').find('input:text,select').removeAttr('required');
+      getSelectionStyle($(".TextChoiceRequired"));
+
+      if(${actionTypeForQuestionPage == 'edit'} || ${actionTypeForQuestionPage == 'view'}){
+	      $('.text-choice').each(function () {
+	         var id = $(this).attr("id");
+	         var display_text = $("#displayTextChoiceText" + id).val();
+	         var display_value = $("#displayTextChoiceValue" + id).val();
+	
+	         if(display_text=="" || display_value==""){
+	          $(this).remove();
+	         }  
+	      });
+     }  
+
+     if ($('.text-choice').length <= 2){
+       $(".remBtnDis").css("pointer-events", "none");
+     }
+
+     if ($('#textchoiceOtherId').is(':checked')) {
+         $('.textchoiceOtherCls').show();
+         $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+         $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+       } else {
+         $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
+         $('.textchoiceOtherCls').hide();
+         $("input[name='questionReponseTypeBo.otherText']").val('');
+         $("input[name='questionReponseTypeBo.otherValue']").val('');
+         $("textarea[name='questionReponseTypeBo.otherDescription']").val('');
+       }
+      
+     $('#textchoiceOtherId').click(function () {
+         if ($(this).is(':checked')) {
+            $('.text-choice').each(function () {
+               var questionSubResponseType = new Object();
+               var id = $(this).attr("id");
+               var displayText = $("#displayTextChoiceText" + id).val();
+               var displayValue = $("#displayTextChoiceValue" + id).val();
+               
+               if ($('.text-choice').length == 2 && typeof displayText!=='undefined' &&
+                   typeof displayValue!=='undefined' && displayText.trim().length <= 0 && displayValue.trim().length <= 0) {
+            	   $(this).remove();
+            	 }
+           });
+
+            if ($('.text-choice').length > 1){
+                $(".remBtnDis").css("pointer-events", "auto");
+            }else{
+                $(".remBtnDis").css("pointer-events", "none");
+            }
+            $('.textchoiceOtherCls').show();
+            $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+            $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+         } else{
+        	  if ($('.text-choice').length == 1){
+        		  addTextChoice();
+        		}
+            if ($('.text-choice').length > 2){
+              $(".remBtnDis").css("pointer-events", "auto");
+            }else{
+              $(".remBtnDis").css("pointer-events", "none");
+            }
+            
+            $('.textchoiceOtherCls').hide();
+            $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
+            $("input[name='questionReponseTypeBo.otherText']").val('');
+            $("input[name='questionReponseTypeBo.otherValue']").val('');
+            $("textarea[name='questionReponseTypeBo.otherDescription']").val('');
           }
-          $('.textchoiceOtherCls').show();
-          $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
-          $('.OtherOptionCls').find('input:text,select').removeAttr('required');
-        } else {
-          $('.otherOptionChecked').show();
-          $('.otherOptionChecked').find('input:text,select').attr('required', true);
-          $('.textchoiceOtherCls').hide();
-          $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
-        }
-      });
+      }); 
 
       $('.otherIncludeTextCls').click(function () {
         var otherText = $('.otherIncludeTextCls:checked').val();
@@ -4353,6 +4407,7 @@
       $("#responseTypeId").on("change", function () {
         var value = $(this).val();
         getResponseType(value);
+        $('.textChoiceExclusive').parent().parent().hide();
       });
       $('.DateStyleRequired').on("change", function () {
         var value = $(this).val();
@@ -5270,6 +5325,21 @@
           questionSubResponseArray.push(questionSubResponseType);
 
         });
+        var otherText=$("input[name='questionReponseTypeBo.otherText']").val();
+        var otherValue=$("input[name='questionReponseTypeBo.otherValue']").val();
+        var otherDescription=$("textarea[name='questionReponseTypeBo.otherDescription']").val();
+        var otherType;
+
+        if ($('#textchoiceOtherId').is(':checked')) {
+          otherType="on";
+        }else{
+          otherType="off"
+         }
+        
+        questionReponseTypeBo.otherText=otherText
+        questionReponseTypeBo.otherValue=otherValue
+        questionReponseTypeBo.otherDescription=otherDescription
+        questionReponseTypeBo.otherType=otherType
         questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
       } else if (resType == "Image Choice") {
         var questionSubResponseArray = new Array();
@@ -5494,10 +5564,12 @@
         $('.destionationYes').attr("disabled", false);
         $('.selectpicker').selectpicker('refresh');
         $(".textChoiceExclusive").validator('validate');
+        $('.textChoiceExclusive').parent().parent().hide();
       } else {
         $('.textChoiceExclusive').attr("disabled", false);
         $('.textChoiceExclusive').attr("required", true);
         $('.selectpicker').selectpicker('refresh');
+        $('.textChoiceExclusive').parent().parent().show();
       }
     }
 
@@ -5699,7 +5771,7 @@
           "<div class='col-md-2 pl-none'>" +
           "   <div class='gray-xs-f mb-xs'>Mark as exclusive ? <span class='requiredStar'>*</span> </div>"
           +
-          "   <div class='form-group'>";
+          "   <div class='form-group mb-none'>";
       if (selectionStyle == 'Single') {
         newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
             + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
@@ -5733,7 +5805,7 @@
       </c:if>
       newTextChoice += "<div class='col-md-12 p-none display__flex__'><div class='col-md-10 pl-none'>"
           +
-          "<div class='gray-xs-f mb-xs'>Description(1 to 150 characters) </div>" +
+          "<div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) </div>" +
           "<div class='form-group'>" +
           "   <textarea type='text' class='form-control' name='questionResponseSubTypeList["
           + choiceCount + "].description' id='displayTextChoiceDescription" + choiceCount
@@ -5753,26 +5825,51 @@
       $(".text-choice").parent().find(".help-block").empty();
       $(".text-choice").parents("form").validator("destroy");
       $(".text-choice").parents("form").validator();
-      if ($('.text-choice').length > 2) {
+      if ($('.text-choice').length >= 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
       }
       $('#' + choiceCount).find('input:first').focus();
+      if (selectionStyle == 'Single') {
+        	$('.textChoiceExclusive').parent().parent().hide();
+        }else{
+      	  $('.textChoiceExclusive').parent().parent().show();
+        }
     }
 
     function removeTextChoice(param) {
-      if ($('.text-choice').length > 2) {
-        $(param).parents(".text-choice").remove();
-        $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
-        $(".text-choice").parent().find(".help-block").empty();
-        $(".text-choice").parents("form").validator("destroy");
-        $(".text-choice").parents("form").validator();
-        if ($('.text-choice').length > 2) {
-          $(".remBtnDis").removeClass("hide");
-        } else {
-          $(".remBtnDis").addClass("hide");
-        }
+    	if($("#textchoiceOtherId").is(':checked')){
+         if ($('.text-choice').length > 1){
+             $(param).parents(".text-choice").remove();
+             $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
+             $(".text-choice").parent().find(".help-block").empty();
+             $(".text-choice").parents("form").validator("destroy");
+             $(".text-choice").parents("form").validator();
+          if($('.text-choice').length > 1){
+             $(".remBtnDis").removeClass("hide");
+             $(".remBtnDis").css("pointer-events", "auto");
+           }else{
+             $(".remBtnDis").addClass("hide");
+             $(".remBtnDis").css("pointer-events", "none");
+           }
+         }
+      }else{
+         if($('.text-choice').length > 2){
+           $(param).parents(".text-choice").remove();
+           $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
+           $(".text-choice").parent().find(".help-block").empty();
+           $(".text-choice").parents("form").validator("destroy");
+           $(".text-choice").parents("form").validator();
+           if($('.text-choice').length > 2){
+             $(".remBtnDis").removeClass("hide");
+             $(".remBtnDis").css("pointer-events", "auto");
+           }else{
+             $(".remBtnDis").addClass("hide");
+             $(".remBtnDis").css("pointer-events", "none");
+           }
+         }
       }
     }
 
