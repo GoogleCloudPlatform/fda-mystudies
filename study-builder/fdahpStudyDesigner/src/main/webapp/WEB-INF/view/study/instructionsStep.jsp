@@ -92,7 +92,7 @@
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
-        <textarea class="form-control" rows="5" id="instructionText" name="instructionText"
+        <textarea class="form-control" rows="5" id="summernote" name="instructionText"
                   required
                   maxlength="500">${instructionsBo.instructionText}</textarea>
         <div class="help-block with-errors red-txt"></div>
@@ -142,13 +142,45 @@
       validateShortTitle('', function (val) {
       });
     });
+    $("#summernote").blur(function () {
+    	validatesummernote();
+      });
+  //summernote editor initialization
+    $('#summernote')
+        .summernote(
+            {
+              placeholder: '',
+              tabsize: 2,
+              height: 200,
+              toolbar: [
+                [
+                  'font',
+                  ['bold', 'italic']],
+                [
+                  'para',
+                  ['paragraph',
+                    'ul', 'ol']],
+                ['font', ['underline']],
+                ['insert', ['link']],
+                ['hr'],
+                ['clear'],
+                ['cut'],
+                ['undo'],
+                ['redo'],
+                ['fontname',
+                  ['fontname']],
+                ['fontsize',
+                  ['fontsize']],]
+
+            });
     $('[data-toggle="tooltip"]').tooltip();
     $("#doneId").click(function () {
-      $("#doneId").attr("disabled", true);
-      validateShortTitle('', function (val) {
+      //$("#doneId").attr("disabled", true);
+      validatesummernote();
+           validateShortTitle('', function (val) {
         if (val) {
           $('#shortTitleId').prop('disabled', false);
-          if (isFromValid("#basicInfoFormId")) {
+          if (isFromValid("#basicInfoFormId") && validatesummernote()) {
             document.basicInfoFormId.submit();
           } else {
             $("#doneId").attr("disabled", false);
@@ -157,6 +189,7 @@
         } else {
           $("#doneId").attr("disabled", false);
         }
+        
       });
     });
   });
@@ -164,16 +197,45 @@
   function saveIns() {
     $("body").addClass("loading");
     $("#saveId").attr("disabled", true);
+    validatesummernote();
     validateShortTitle('', function (val) {
-      if (val) {
+      if (val && validatesummernote()) {
         saveInstruction();
       } else {
         $("#saveId").attr("disabled", false);
         $("body").removeClass("loading");
       }
+      
     });
   }
-
+  function validatesummernote(){
+		 if ($('#summernote').summernote(
+	     'code') === '<br>' || $('#summernote').summernote(
+	     'code') === '' || $('#summernote').summernote('code') === '<p><br></p>') {
+	   $('#summernote').attr(
+	       'required', true);
+	   $('#summernote')
+	       .parent()
+	       .addClass(
+	           'has-error has-danger')
+	       .find(".help-block")
+	       .empty()
+	       .append(
+	           '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+	   return false;
+	 } else {
+	   $('#summernote').attr(
+	       'required', false);
+	   $('#summernote').parent()
+	       .removeClass(
+	           "has-danger")
+	       .removeClass(
+	           "has-error");
+	   $('#summernote').parent().find(
+	       ".help-block").html("");
+	   return true;
+	 }
+	}
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var questionnaireId = $("#questionnaireId").val();
