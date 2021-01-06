@@ -26,6 +26,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.Collections;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
+@Api(tags = "Get Token", description = "Get token from ORY Hydra")
 public class OAuthController {
 
   private static final String STATUS_400_AND_ERRORS_LOG = "status=400 and errors=%s";
@@ -60,6 +63,11 @@ public class OAuthController {
 
   @Autowired private AuthScimAuditHelper auditHelper;
 
+  @ApiOperation(
+      notes =
+          "Refer [The OAuth 2.0 Token Endpoint](https://www.ory.sh/hydra/docs/reference/api/#the-oauth-20-token-endpoint) for request and response details ",
+      value =
+          "Get access token and refresh token based on grant type. Refer ORY Hydra REST API documentation for request and response details")
   @PostMapping(
       value = "/oauth2/token",
       produces = MediaType.APPLICATION_JSON_VALUE,
