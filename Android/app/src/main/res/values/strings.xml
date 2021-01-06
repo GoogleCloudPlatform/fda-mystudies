@@ -264,6 +264,7 @@
     <string name="completed2">Completed</string>
     <string name="expired">Expired</string>
     <string name="incompleted2">Incomplete</string>
+    <string name="missedrun">Missed</string>
     <string name="run">Run</string>
     <string name="upcoming_event">This is an upcoming event</string>
     <string name="incomple_event">You missed the previous run of this activity. Please wait till the next run becomes available. Run timings are given on the Activities list screen.</string>
