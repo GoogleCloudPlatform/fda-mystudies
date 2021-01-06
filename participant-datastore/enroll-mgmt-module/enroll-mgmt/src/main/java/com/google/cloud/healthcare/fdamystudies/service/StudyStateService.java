@@ -19,7 +19,8 @@ import java.util.List;
 
 public interface StudyStateService {
 
-  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user);
+  public List<ParticipantStudyEntity> getParticipantStudiesList(
+      UserDetailsEntity user, List<String> siteIds);
 
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,

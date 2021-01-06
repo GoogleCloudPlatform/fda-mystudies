@@ -301,6 +301,7 @@ public class StudyServiceImpl implements StudyService {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
     List<StudyParticipantDetails> studyParticipantDetails = new ArrayList<>();
+    Long participantCount = 0L;
     if (studyAppDetails.getStudyType().equalsIgnoreCase(OPEN_STUDY)) {
       studyParticipantDetails =
           studyRepository.getStudyParticipantDetailsForOpenStudy(
@@ -311,6 +312,12 @@ public class StudyServiceImpl implements StudyService {
               orderByCondition,
               StringUtils.defaultString(searchTerm));
 
+      participantCount =
+          studyRepository.countOpenStudyParticipants(
+              studyAppDetails.getStudyId(),
+              excludeParticipantStudyStatus,
+              StringUtils.defaultString(searchTerm));
+
     } else if (studyAppDetails.getStudyType().equalsIgnoreCase(CommonConstants.CLOSE_STUDY)) {
       studyParticipantDetails =
           studyRepository.getStudyParticipantDetailsForClosedStudy(
@@ -319,6 +326,10 @@ public class StudyServiceImpl implements StudyService {
               offset,
               orderByCondition,
               StringUtils.defaultString(searchTerm));
+
+      participantCount =
+          studyRepository.countParticipants(
+              studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
     }
 
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
@@ -328,9 +339,6 @@ public class StudyServiceImpl implements StudyService {
     }
 
     participantRegistryDetail.setRegistryParticipants(registryParticipants);
-    Long participantCount =
-        studyRepository.countParticipantsByStudyIdAndSearchTerm(
-            studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
