@@ -272,7 +272,21 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
               + "WHERE prs.study_info_id=:studyId  AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) ",
       nativeQuery = true)
-  public Long countParticipantsByStudyIdAndSearchTerm(String studyId, String searchTerm);
+  public Long countParticipants(String studyId, String searchTerm);
+
+  @Query(
+      value =
+          "SELECT COUNT(prs.id) "
+              + "FROM participant_registry_site prs "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id AND psi.status NOT IN (:excludeParticipantStudyStatus) "
+              + "LEFT JOIN study_info stu ON psi.study_info_id = stu.id  "
+              + "LEFT JOIN sites si ON si.id=prs.site_id "
+              + "LEFT JOIN locations loc ON loc.id=si.location_id "
+              + "WHERE prs.study_info_id=:studyId AND stu.type='OPEN' "
+              + "AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) ",
+      nativeQuery = true)
+  public Long countOpenStudyParticipants(
+      String studyId, String[] excludeParticipantStudyStatus, String searchTerm);
 
   @Query(
       value =
