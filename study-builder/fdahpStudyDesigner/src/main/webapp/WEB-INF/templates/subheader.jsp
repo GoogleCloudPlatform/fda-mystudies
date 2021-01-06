@@ -73,12 +73,7 @@
 
     var actionSucMsg = '${actionSucMsg}';
     if (actionSucMsg) {
-      bootbox.alert({
-        message: actionSucMsg,
-        className: 'green-txt',
-        closeButton: false
-
-      });
+    	showSucMsg(actionSucMsg);
     }
   });
 

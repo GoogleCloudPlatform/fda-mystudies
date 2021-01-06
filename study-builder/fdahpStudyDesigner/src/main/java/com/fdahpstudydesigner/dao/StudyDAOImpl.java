@@ -6278,9 +6278,7 @@ public class StudyDAOImpl implements StudyDAO {
             String studyActivity = "";
             studyActivity = getErrorBasedonAction(studySequenceBo);
             if (StringUtils.isNotEmpty(studyActivity)
-                && !(FdahpStudyDesignerConstants.SUCCESS).equalsIgnoreCase(studyActivity)) {
-              return studyActivity;
-            } else {
+                && (FdahpStudyDesignerConstants.SUCCESS).equalsIgnoreCase(studyActivity)) {
               studyActivityFlag = true;
             }
           }
@@ -6295,42 +6293,10 @@ public class StudyDAOImpl implements StudyDAO {
           }
           // 3-The study must have at least one 'activity' added. This
           // could be a questionnaire or active task.
-          if (!enrollementFlag) {
-            if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)) {
-              message = FdahpStudyDesignerConstants.LUNCH_ENROLLMENT_ERROR_MSG;
-            } else {
-              message = FdahpStudyDesignerConstants.PUBLISH_ENROLLMENT_ERROR_MSG;
-            }
-            return message;
-          } else {
+          if (enrollementFlag) {
             // 4-Date validation
             message = validateDateForStudyAction(studyBo, buttonText);
             return message;
-          }
-        } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_PUBLISH)) {
-          if (studySequenceBo != null) {
-            if (!studySequenceBo.isBasicInfo()) {
-              message = FdahpStudyDesignerConstants.BASICINFO_ERROR_MSG;
-              return message;
-            } else if (!studySequenceBo.isSettingAdmins()) {
-              message = FdahpStudyDesignerConstants.SETTING_ERROR_MSG;
-              return message;
-            } else if (!studySequenceBo.isOverView()) {
-              message = FdahpStudyDesignerConstants.OVERVIEW_ERROR_MSG;
-              return message;
-            } else if (!studySequenceBo.isConsentEduInfo()) {
-              message = FdahpStudyDesignerConstants.CONSENTEDUINFO_ERROR_MSG;
-              return message;
-            } else if (!studySequenceBo.iseConsent()) {
-              message = FdahpStudyDesignerConstants.ECONSENT_ERROR_MSG;
-              return message;
-            } else if (StringUtils.isNotEmpty(studyBo.getEnrollingParticipants())
-                && studyBo
-                    .getEnrollingParticipants()
-                    .equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-              message = FdahpStudyDesignerConstants.PRE_PUBLISH_ENROLLMENT_ERROR_MSG;
-              return message;
-            }
           }
         }
       } else {
@@ -6908,5 +6874,74 @@ public class StudyDAOImpl implements StudyDAO {
       }
     }
     return outputList;
+  }
+
+  @Override
+  public boolean validateStudyActions(String studyId) {
+    logger.info("StudyDAOImpl - validateStudyAction() - Ends");
+    String message = FdahpStudyDesignerConstants.SUCCESS;
+    Session session = null;
+    StudySequenceBo studySequenceBo = null;
+    StudyBo studyBo = null;
+    boolean markedAsCompleted = false;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(studyId)) {
+        studyBo =
+            (StudyBo)
+                session
+                    .getNamedQuery(FdahpStudyDesignerConstants.STUDY_LIST_BY_ID)
+                    .setInteger("id", Integer.parseInt(studyId))
+                    .uniqueResult();
+        studySequenceBo =
+            (StudySequenceBo)
+                session
+                    .getNamedQuery(FdahpStudyDesignerConstants.STUDY_SEQUENCE_BY_ID)
+                    .setInteger(FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId())
+                    .uniqueResult();
+
+        // 1-all validation mark as completed
+        if (studySequenceBo != null) {
+
+          markedAsCompleted = getErrorForAction(studySequenceBo);
+          if (markedAsCompleted) {
+            return markedAsCompleted;
+          } else {
+            markedAsCompleted = false;
+          }
+        }
+
+      } else {
+        message = "Action is missing";
+      }
+
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - validateStudyAction() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("StudyDAOImpl - validateStudyAction() - Ends");
+    return markedAsCompleted;
+  }
+
+  public boolean getErrorForAction(StudySequenceBo studySequenceBo) {
+    boolean completed = false;
+    if (studySequenceBo != null) {
+      if (studySequenceBo.isBasicInfo()
+          && studySequenceBo.isSettingAdmins()
+          && studySequenceBo.isOverView()
+          && studySequenceBo.isEligibility()
+          && studySequenceBo.isConsentEduInfo()
+          && studySequenceBo.isComprehensionTest()
+          && studySequenceBo.iseConsent()
+          && (studySequenceBo.isStudyExcQuestionnaries() || studySequenceBo.isStudyExcActiveTask())
+          && studySequenceBo.isMiscellaneousResources()) {
+        completed = true;
+        return completed;
+      }
+    }
+    return completed;
   }
 }

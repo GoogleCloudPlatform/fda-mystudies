@@ -195,4 +195,6 @@ public interface StudyService {
   public StudyPermissionBO findStudyPermissionBO(int studyId, int userId);
 
   public StudyDetailsBean getStudyByLatestVersion(String customStudyId);
+
+  public boolean validateStudyActions(String studyId);
 }

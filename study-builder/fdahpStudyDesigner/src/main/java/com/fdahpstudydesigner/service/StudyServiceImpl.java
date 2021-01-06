@@ -1436,4 +1436,17 @@ public class StudyServiceImpl implements StudyService {
     logger.info("StudyServiceImpl - getStudyByLatestVersion - Ends");
     return studyDetails;
   }
+
+  @Override
+  public boolean validateStudyActions(String studyId) {
+    logger.info("StudyServiceImpl - validateStudyAction() - Starts");
+    boolean markAsCompleted = false;
+    try {
+      markAsCompleted = studyDAO.validateStudyActions(studyId);
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - validateStudyAction() - ERROR ", e);
+    }
+    logger.info("StudyServiceImpl - validateStudyAction() - Ends");
+    return markAsCompleted;
+  }
 }
