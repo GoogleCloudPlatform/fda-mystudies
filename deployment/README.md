@@ -26,7 +26,7 @@ Devops | `{PREFIX}-{ENV}-devops` | This project executes the Terraform CICD pipe
 Apps | `{PREFIX}-{ENV}-apps` | This project stores the container images for each of your FDA MyStudies applications, updates those images with CICD pipelines that monitor changes you make to the application directories of your GitHub repository, and administers the Kubernetes cluster that operates those images ([**Figure 2**](#figure-2-application-architecture) diagrams each the applications and how they related to their data sources)
 Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications, and the blob storage buckets that hold study resources and consent documents
 Firebase | `{PREFIX}-{ENV}-firebase` | This project contains the NoSQL database that stores the study response data
-Networks | `{PREFIX}-{ENV}-networks` | This project administers the DNS and manages network ingress 
+Networks | `{PREFIX}-{ENV}-networks` | This project manages the network policies and firewalls 
 Secrets | `{PREFIX}-{ENV}-secrets` | This project manages the deployment’s secrets, such as client ids and client secrets
 Audit | `{PREFIX}-{ENV}-audit` | This project stores the audit logs for the FDA MyStudies platform and applications
 
@@ -142,11 +142,11 @@ The deployment process takes the following approach:
 1. Update [`/deployment/deployment.hcl`](/deployment/deployment.hcl) with the values for your deployment
 1. Update [`/deployment/scripts/set_env_var.sh`](/deployment/scripts/set_env_var.sh) for your deployment, then use the script to set your environment variables, for example:
     ```
-    source set_env_var.sh         # executed from your /deployment/scripts directory
+    source set_env_var.sh    # executed from your /deployment/scripts directory
     ```
 1. Authenticate as a user with the permissions described above (this deployment assumes gcloud and Terraform commands are made as a user, rather than a service account)
     - Login and update your [application default credentials](https://cloud.google.com/docs/authentication/production), for example you could run `gcloud auth login --update-adc` (when using a Google Compute Engine VM you must update the application default credentials, otherwise requests will continue to be made with its default service account)
-    - Remember to run `gcloud auth revoke` to log your user account out once your deployment is complete
+    - Remember to log your user account out once your deployment is complete
 
 ### Create your devops project and configure CICD pipelines
 
@@ -198,11 +198,18 @@ The deployment process takes the following approach:
     > Note: If your pre-submit checks or post-submit `terraform apply` fail with an error related to billing accounts, you may not have the [quota](https://support.google.com/cloud/answer/6330231?hl=en) necessary to attach all of your projects to the specified billing account. You may need to [request additional quota](https://support.google.com/code/contact/billing_quota_increase).
 1. [Grant](https://cloud.google.com/iam/docs/granting-changing-revoking-access) the [`roles/owner`](https://cloud.google.com/resource-manager/docs/access-control-proj#using_basic_roles) permission to the `{PREFIX}-{ENV}-project-owners@{DOMAIN}` group for each of your newly created projects
 
-### Update your domain’s DNS records
+### Configure your domain for the deployment
 
-1. [View created DNS zones](https://console.cloud.google.com/net-services/dns/zones) in your `{PREFIX}-{ENV}-apps` project
-1. Click on the zone named `{PREFIX}-{ENV}` and then click `Registrar Setup` in the upper right for details
-1. Enter this information into your domain registrar’s DNS settings to add nameserver records for the subdomain listed here. You may need an administrator for your domain to do this step. You will be creating an `NS` record for the name `{PREFIX)-{ENV}.{DOMAIN}` that has the data values listed such as `ns-cloud-a1.googledomains.com.` Note that it may take up to 48 hours for these changes to propagate.
+1. [Determine the name servers](https://cloud.google.com/dns/docs/update-name-servers#look-up-cloud-dns-name-servers) that Cloud DNS has allocated to your `{PREFIX}-{ENV}` subdomain
+    - Navigate to [DNS zones](https://console.cloud.google.com/net-services/dns/zones) in your `{PREFIX}-{ENV}-apps` project
+    - Click on the zone named `{PREFIX}-{ENV}`, then click `Registrar Setup` in the upper right to view the name servers allocated to your subdomain
+1. Update your domain’s DNS settings with your domain registrar to create a [delegated subzone](https://cloud.google.com/dns/docs/dns-overview#delegated_subzone) with the name servers allocated by Cloud DNS (this process differs across domain registrars - consult your domain registrar’s documentation to determine how to make these changes, or ask your domain’s IT administrator for help)
+    - If your domain registrar is Google Domains, you can create the delegated subzone as follows:
+         1. Log into [Google Domains](https://domains.google.com/) using the account that administers your domain
+         1. Navigate to the DNS page for your domain and scroll down to the ‘custom resource records’ section (you do not need to make changes in the other sections)
+         1. Create an NS [resource record](https://support.google.com/domains/answer/3290350) for your {PREFIX}-{ENV} subdomain that matches the name servers specified in Cloud DNS, for example:
+![Domain configuration](/documentation/images/delegated-subzone.png "Domain configuration") 
+1. [Verify](https://cloud.google.com/dns/docs/tutorials/create-domain-tutorial#step-6:-verify-your-setup) your setup (it may take up to 48 hours for DNS changes to propagate across the internet)
 
 ### Configure your deployment’s databases
 
@@ -335,32 +342,32 @@ The deployment process takes the following approach:
     `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the `manual-org-name` support team’ | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-org-name" --data-file=-`
     `manual-terms-url` | URL for a terms and conditions page that the applications will link to (for example, `https://example.com/terms`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
     `manual-privacy-url` | URL for a privacy policy page that the applications will link to (for example, `https://example.com/privacy`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
-    `manual-mobile-app-appid` | The value of the `App ID` that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mobile-app-appid" --data-file=-`
+    `manual-mobile-app-appid` | The value of the `App ID` (15 characters max) that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mobile-app-appid" --data-file=-`
     `manual-android-bundle-id` | The value of `applicationId` that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-bundle-id" --data-file=-`
-    `manual-fcm-api-url` | URL of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fcm-api-url" --data-file=-`
-    `manual-android-server-key` | The Firebase Cloud Messaging server key that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-server-key" --data-file=-`
+    `manual-fcm-api-url` | [URL](https://firebase.google.com/docs/reference/fcm/rest) of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fcm-api-url" --data-file=-`
+    `manual-android-server-key` | The Firebase Cloud Messaging [server key](https://firebase.google.com/docs/cloud-messaging/auth-server#authorize-legacy-protocol-send-requests) that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-server-key" --data-file=-`
     `manual-android-deeplink-url` | The URL to redirect to after Android login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
     `manual-ios-bundle-id` | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) - for a production application, the bundle ID needs to be verified with Apple and is usually a reverse domain name that you own; it is a unique app identifier and application capabilities are mapped to this value ([details](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-bundle-id" --data-file=-`
     `manual-ios-certificate` | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate" --data-file=-`
     `manual-ios-certificate-password` | The value of the password for the `.p12` certificate (necessary if your certificate is encrypted - otherwise leave empty) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate-password" --data-file=-`
     `manual-ios-deeplink-url` | The URL to redirect to after iOS login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
-1. When updating secrets, you must refresh your Kubernetes cluster and restart the relevant pods to ensure updated values are propagated to your applications, for example:
+     > Note: When updating secrets after this initial deployment, you must refresh your Kubernetes cluster and restart the relevant pods to ensure the updated secrets are propagated to your applications (you do not need to do this now - only when making updates later), for example you can update your Kubernetes state with:
      ```bash
      cd $GIT_ROOT/deployment/terraform/kubernetes
      terraform init && terraform apply
      ```
+    > then, restart the pods by deleting them in the Kubernetes dashboard or running:
      ```bash
      APP_PATH=<path_to_component_to_restart> # for example, $GIT_ROOT/auth-server
-     kubectl scale --replicas=0 -f $APP_PATH/tf-deployment.yaml && \ 
+     kubectl scale --replicas=0 -f $APP_PATH/tf-deployment.yaml && \
      kubectl scale --replicas=1 -f $APP_PATH/tf-deployment.yaml
      ```
-     - If you rotate an application’s ‘client_id’ or ‘client_secret’, such as `auto-response-datastore-client-id` or `auto-response-datastore-secret-key`, you must register the new values in Hydra by re-running the `register_clients_in_hydra.sh` script or executing the appropriate REST requests directly (see [`/hydra/README.md`](/hydra/README.md) for more information about working with Hydra manually)
+     > If you rotate an application’s ‘client_id’ or ‘client_secret’, such as `auto-response-datastore-client-id` or `auto-response-datastore-secret-key`, you must register the new values in Hydra by re-running the `register_clients_in_hydra.sh` script or executing the appropriate REST requests directly (see [`/hydra/README.md`](/hydra/README.md) for more information about working with Hydra manually)
 1. Finish Kubernetes cluster configuration and deployment
     - Configure the remaining resources with Terraform, for example: 
          ```bash
          cd $GIT_ROOT/deployment/terraform/kubernetes/
-         terraform init && terraform plan
-         terraform apply
+         terraform init && terraform apply
          ```
     - Set your `kubectl` credentials, for example:
          ```bash
@@ -412,44 +419,47 @@ The deployment process takes the following approach:
         - Look at the suggested commands under "Events", in the form of "Firewall
         change required by network admin"
         - Run each of the suggested commands
-1. Check the [Kubernetes dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your deployment (confirm all applications and ingress are ‘healthy’ before proceeding)
+1. Verify the status of your Kubernetes cluster
+     - Check the [Kubernetes ingress dashboard](https://console.cloud.google.com/kubernetes/ingresses) in your `{PREFIX}-{ENV}-apps` project to view the status of your cluster ingress (if status is not green, repeat the firewall step above)
+    - Check the [Kubernetes workloads dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your applications (confirm all applications are green before proceeding - it can take up to 15 minutes for all containers to become operational)
+    - [Check the status](https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#certificate-resource-status) of your Kubernetes cluster SSL certificates on the certificates page of your `{PREFIX}-{ENV}-apps` project’s [load balancing](https://console.cloud.google.com/net-services/loadbalancing/) ‘advanced menu’ (both the `participants.{PREFIX}-{ENV}.{DOMAIN}` and `studies.{PREFIX}-{ENV}.{DOMAIN}` certificates must be green for your deployment to use `https`) 
 1. Configure your initial application credentials
     - Create the [`Hydra`](/hydra/) credentials for server-to-server requests by running [`register_clients_in_hydra.sh`](/deployment/scripts/register_clients_in_hydra.sh), for example:
          ```bash
          $GIT_ROOT/deployment/scripts/register_clients_in_hydra.sh \
            $PREFIX $ENV $DOMAIN
          ```
-    - Create your first admin user account for the [`Participant manager`](/participant-manager/) application by running the [`create_participant_manager_superadmin.sh`](/deployment/scripts/create_participant_manager_superadmin.sh) script to generate and import a SQL dump file for the [`Participant datastore`](/participant-datastore/) database, for example:
+    - Create your first admin user account for the [`Participant manager`](/participant-manager/) application by running the [`create_participant_manager_superadmin.sh`](/deployment/scripts/create_participant_manager_superadmin.sh) script to generate and import a SQL dump file for the [`Participant datastore`](/participant-datastore/) database (the password you specify must be at least 8 characters long and contain lower case, upper case, numeric and special characters), for example:
          ```bash
          $GIT_ROOT/deployment/scripts/create_participant_manager_superadmin.sh \
            $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
          ```
     - Create your first admin user account for the [`Study builder`](/study-builder/) application by running the [`create_study_builder_superadmin.sh`](/deployment/scripts/create_study_builder_superadmin.sh) script to generate and import a SQL dump file for the [`Study datastore`](/study-datastore/) database, for example:
          ```bash
-         sudo apt-get install apache2-utils
+         sudo apt-get install apache2-utils -y
          $GIT_ROOT/deployment/scripts/create_study_builder_superadmin.sh \
            $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
          ```
 
 ### Configure your first study
 
-1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/studybuilder/` and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
+1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/studybuilder/` (the trailing slash is necessary) and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
 1. Change your password, then create any additional administrative accounts that you might need
 1. Create a new study with the `App ID` that you set in the `manual-mobile-app-appid` secret, or choose a new `App ID` that you will update `manual-mobile-app-appid` with
 1. Publish your study to propagate your study values to the other platform components
-1. Navigate your browser to `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-manager` and use the account credentials that you created with the `create_participant_manager_superadmin.sh` script to log into the [`Participant manager`](/participant-manager/) user interface
-1. Change your password, then create any additional administrative accounts that you might need
+1. Navigate your browser to `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-manager/` (the trailing slash is necessary), then use the account credentials that you created with the `create_participant_manager_superadmin.sh` script to log into the [`Participant manager`](/participant-manager/) user interface (if the `Participant Manager` application fails to load, confirm you are using `https` - this deployment requires `https` to be fully operational)
+1. You will be asked to change your password; afterwards you can create any additional administrative accounts that you might need
 1. Confirm your new study is visible in the `Participant manager` interface
 
 ### Prepare your mobile applications
 
 1. Follow the instructions in either or both [`Android`](/Android/) and [`iOS`](/iOS/) deployment guides (if you haven’t created a study yet, you can configure the mobile applications with the `APP_ID` you plan on using when you create your first study in the [`Study builder`](/study-builder/))
-1. Open Secret Manager in your `{PREFIX}-{ENV}-secrets` project and update the secrets you previously configured with placeholder values (you can skip this step if you already configured your secrets with the appropriate values)
-    - `manual-mobile-app-appid` is the value of the `App ID` that you configured, or will configure, on the Settings page of the [`Study builder`](/study-builder/)
+1. Open Secret Manager in your `{PREFIX}-{ENV}-secrets` project and update the secrets you previously configured with placeholder values (you can skip this step if you already configured your secrets with the appropriate values - if you do update secret values, make sure to refresh your Kubernetes cluster and applications as described above)
+    - `manual-mobile-app-appid` is the value of the `App ID` (15 characters max) that you configured, or will configure, on the Settings page of the [`Study builder`](/study-builder/)
     - `manual-android-bundle-id` is the value of `applicationId` that you configured in [`Android/app/build.gradle`](/Android/app/build.gradle)
-    - `manual-fcm-api-url` is the URL of your Firebase Cloud Messaging API
-    - `manual-android-server-key` is your Firebase Cloud Messaging server key
-    - `manual-android-deeplink-url` is the URL to redirect to after Android login
+    - `manual-fcm-api-url` is the URL of your [Firebase Cloud Messaging API](https://firebase.google.com/docs/reference/fcm/rest)
+    - `manual-android-server-key` is your Firebase Cloud Messaging [server key](https://firebase.google.com/docs/cloud-messaging/auth-server#authorize-legacy-protocol-send-requests)
+    - `manual-android-deeplink-url` is the URL to redirect to after Android login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`)
     - `manual-ios-bundle-id` is the value you obtained from Xcode (in production use-cases, this  bundle ID needs to be [verified with Apple](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids))
     - `manual-ios-certificate` is the value of the Base64 converted `.p12` file
     - `manual-ios-certificate-password` is the value of the password for the `.p12` certificate 
