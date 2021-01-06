@@ -30,11 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface LoginService {
 
   public String authAndAddPassword(
-      String securityToken,
-      String accessCode,
-      String password,
-      UserBO userBO,
-      SessionObject sesObj);
+      String securityToken, String password, UserBO userBO, SessionObject sesObj);
 
   public String changePassword(
       Integer userId, String newPassword, String oldPassword, SessionObject sesObj);
