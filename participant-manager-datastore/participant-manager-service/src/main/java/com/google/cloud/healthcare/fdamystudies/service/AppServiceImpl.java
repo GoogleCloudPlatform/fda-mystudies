@@ -141,8 +141,6 @@ public class AppServiceImpl implements AppService {
             .stream()
             .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
 
-    Long totalAppsCount = appRepository.countByApps(userId);
-
     return prepareAppResponse(
         appStudyInfoList,
         appPermissionsByAppInfoId,
@@ -150,8 +148,7 @@ public class AppServiceImpl implements AppService {
         appInvitedCountMap,
         appEnrolledCountMap,
         appEnrolledWithoutTargetMap,
-        optUserRegAdminEntity.get(),
-        totalAppsCount);
+        optUserRegAdminEntity.get());
   }
 
   private AppResponse getAppsForSuperAdmin(
@@ -216,12 +213,8 @@ public class AppServiceImpl implements AppService {
       }
       appDetailsList.add(appDetails);
     }
-    Long totalAppsCount = appRepository.count();
-    AppResponse appResponse =
-        new AppResponse(
-            MessageCode.GET_APPS_SUCCESS, appDetailsList, userRegAdminEntity.isSuperAdmin());
-    appResponse.setTotalAppsCount(totalAppsCount);
-    return appResponse;
+    return new AppResponse(
+        MessageCode.GET_APPS_SUCCESS, appDetailsList, userRegAdminEntity.isSuperAdmin());
   }
 
   private Long getCount(Map<String, AppCount> map, String appId) {
@@ -238,8 +231,7 @@ public class AppServiceImpl implements AppService {
       Map<String, AppCount> siteWithInvitedParticipantCountMap,
       Map<String, AppCount> siteWithEnrolledParticipantCountMap,
       Map<String, AppCount> appEnrolledWithoutTargetMap,
-      UserRegAdminEntity userRegAdminEntity,
-      Long totalAppsCount) {
+      UserRegAdminEntity userRegAdminEntity) {
     List<AppDetails> apps = new ArrayList<>();
     for (AppStudyInfo appStudyInfo : appStudyInfoList) {
       AppDetails appDetails = new AppDetails();
@@ -275,7 +267,6 @@ public class AppServiceImpl implements AppService {
             apps,
             studyPermissioinCount.getSum(),
             userRegAdminEntity.isSuperAdmin());
-    appResponse.setTotalAppsCount(totalAppsCount);
     logger.exit(String.format("total apps=%d", appResponse.getApps().size()));
     return appResponse;
   }

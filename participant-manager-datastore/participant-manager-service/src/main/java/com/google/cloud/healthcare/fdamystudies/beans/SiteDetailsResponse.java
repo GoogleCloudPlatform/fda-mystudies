@@ -22,12 +22,8 @@ public class SiteDetailsResponse extends BaseResponse {
 
   List<StudyDetails> studies = new ArrayList<>();
 
-  long totalStudiesCount;
-
-  public SiteDetailsResponse(
-      List<StudyDetails> studies, MessageCode messageCode, long totalStudiesCount) {
+  public SiteDetailsResponse(List<StudyDetails> studies, MessageCode messageCode) {
     super(messageCode);
     this.studies.addAll(studies);
-    this.totalStudiesCount = totalStudiesCount;
   }
 }

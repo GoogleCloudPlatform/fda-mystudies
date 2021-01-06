@@ -29,8 +29,6 @@ public class AppResponse extends BaseResponse {
 
   private boolean superAdmin;
 
-  private long totalAppsCount;
-
   public AppResponse(
       MessageCode messageCode,
       List<AppDetails> apps,

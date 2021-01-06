@@ -295,38 +295,4 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "AND (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% ) ORDER BY stu.created_time DESC  LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
-
-  @Query(
-      value =
-          "SELECT COUNT(id) from study_info stu WHERE stu.id IN( "
-              + "SELECT study_id FROM sites WHERE study_id=stu.id)",
-      nativeQuery = true)
-  public Long countByStudies();
-
-  @Query(
-      value =
-          "SELECT COUNT(id) AS studyCount "
-              + "FROM( "
-              + "SELECT si.id "
-              + "FROM study_permissions sp, study_info si "
-              + "WHERE si.id=sp.study_id AND sp.ur_admin_user_id =:userId AND sp.study_id IN ( "
-              + "SELECT sp.study_id "
-              + "FROM sites_permissions sp "
-              + "WHERE sp.ur_admin_user_id =:userId) UNION ALL "
-              + "SELECT DISTINCT si.id "
-              + "FROM sites_permissions sp, study_info si, sites s "
-              + "WHERE si.id=sp.study_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id =:userId AND sp.study_id NOT IN ( "
-              + "SELECT st.study_id "
-              + "FROM study_permissions st "
-              + "WHERE st.ur_admin_user_id =:userId)) rstAlias",
-      nativeQuery = true)
-  public Long countByStudies(String userId);
-
-  @Query(
-      value =
-          "SELECT COUNT(id) AS studyId  FROM study_info where id IN "
-              + "(SELECT study_id from study_permissions where ur_admin_user_id=:userId UNION ALL "
-              + "SELECT study_id from sites_permissions  where ur_admin_user_id=:userId)",
-      nativeQuery = true)
-  public Long countStudyForSites(String userId);
 }

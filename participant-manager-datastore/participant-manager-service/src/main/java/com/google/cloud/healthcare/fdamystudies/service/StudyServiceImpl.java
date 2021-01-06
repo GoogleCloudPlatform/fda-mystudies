@@ -111,14 +111,8 @@ public class StudyServiceImpl implements StudyService {
     Map<String, StudyCount> sitesCountMap =
         siteCounts.stream().collect(Collectors.toMap(StudyCount::getStudyId, Function.identity()));
 
-    Long totalStudiesCount = studyRepository.countByStudies(userId);
-
     return prepareStudyResponse(
-        studyDetails,
-        sitesCountMap,
-        enrolledInvitedCountMap,
-        optUserRegAdminEntity.get(),
-        totalStudiesCount);
+        studyDetails, sitesCountMap, enrolledInvitedCountMap, optUserRegAdminEntity.get());
   }
 
   private StudyResponse getStudiesForSuperAdmin(
@@ -170,13 +164,8 @@ public class StudyServiceImpl implements StudyService {
       }
       studyDetailsList.add(studyDetail);
     }
-    Long totalStudiesCount = studyRepository.countByStudies();
-
-    StudyResponse studyReponse =
-        new StudyResponse(
-            MessageCode.GET_STUDIES_SUCCESS, studyDetailsList, userRegAdminEntity.isSuperAdmin());
-    studyReponse.setTotalStudiesCount(totalStudiesCount);
-    return studyReponse;
+    return new StudyResponse(
+        MessageCode.GET_STUDIES_SUCCESS, studyDetailsList, userRegAdminEntity.isSuperAdmin());
   }
 
   private Long getCount(Map<String, StudyCount> map, String studyId) {
@@ -190,8 +179,7 @@ public class StudyServiceImpl implements StudyService {
       List<StudyInfo> studyList,
       Map<String, StudyCount> sitesCountMap,
       Map<String, EnrolledInvitedCountForStudy> enrolledInvitedCountMap,
-      UserRegAdminEntity userRegAdminEntity,
-      Long totalStudiesCount) {
+      UserRegAdminEntity userRegAdminEntity) {
     List<StudyDetails> studies = new ArrayList<>();
     for (StudyInfo study : studyList) {
       StudyDetails studyDetail = new StudyDetails();
@@ -220,7 +208,6 @@ public class StudyServiceImpl implements StudyService {
             studies,
             totalSitePermission.getSum(),
             userRegAdminEntity.isSuperAdmin());
-    studyResponse.setTotalStudiesCount(totalStudiesCount);
     logger.exit(String.format("total studies=%d", studyResponse.getStudies().size()));
     return studyResponse;
   }

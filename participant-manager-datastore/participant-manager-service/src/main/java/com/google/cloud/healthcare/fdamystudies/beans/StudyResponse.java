@@ -25,8 +25,6 @@ public class StudyResponse extends BaseResponse {
 
   private boolean superAdmin;
 
-  private long totalStudiesCount;
-
   public StudyResponse(
       MessageCode messageCode,
       List<StudyDetails> studies,
