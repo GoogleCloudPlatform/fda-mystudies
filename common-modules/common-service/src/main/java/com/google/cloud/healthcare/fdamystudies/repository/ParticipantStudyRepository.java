@@ -98,8 +98,6 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
       nativeQuery = true)
   public List<String> findByEmailAndSiteIds(String email, List<String> siteIds);
 
-  public List<String> findByEmail(String email);
-
   @Query(
       "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId AND ps.userDetails.userId = :userId AND ps.site.id = :siteId")
   public Optional<ParticipantStudyEntity> findByStudyIdAndSiteId(
