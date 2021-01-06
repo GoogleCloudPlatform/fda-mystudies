@@ -612,7 +612,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
       activityStatus.put("activityId", activityId[1]);
       activityStatus.put(
           "activityRunId", "" + getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0));
-      activityStatus.put("bookmarked", "false");
       activityStatus.put(
           "activityVersion",
           "" + getIntent().getStringExtra(CustomSurveyViewTaskActivity.ACTIVITY_VERSION));
