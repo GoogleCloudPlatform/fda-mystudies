@@ -1368,7 +1368,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `modified_by` int(11) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `status` tinyint(1) DEFAULT NULL,
-  `access_code` varchar(255) DEFAULT NULL,
   `accountNonExpired` tinyint(4) DEFAULT NULL,
   `accountNonLocked` tinyint(4) DEFAULT NULL,
   `created_date_time` varchar(255) DEFAULT NULL,
