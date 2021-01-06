@@ -84,6 +84,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
   private String userAuth;
   private String userID;
   private RegistrationData registrationData;
+  String passwordPattern =
+          "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
 
   @Override
   public void onAttach(Context context) {
@@ -239,11 +241,20 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
             }
           }
         });
+
+    password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!password.getText().toString().matches(passwordPattern)) {
+            password.setError(getResources().getString(R.string.password_validation));
+          }
+        }
+      }
+    });
   }
 
   private void callRegisterUserWebService() {
-    String passwordPattern =
-        "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
     if (password.getText().toString().isEmpty()
         && email.getText().toString().isEmpty()
         && confirmPassword.getText().toString().isEmpty()) {
@@ -261,12 +272,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       Toast.makeText(context, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (!password.getText().toString().matches(passwordPattern)) {
-      SetDialogHelper.setNeutralDialog(
-          context,
-          getResources().getString(R.string.password_validation),
-          false,
-          context.getResources().getString(R.string.ok),
-          context.getResources().getString(R.string.app_name));
+      password.setError(getResources().getString(R.string.password_validation));
     } else if (checkPasswordContainsEmailID(
         email.getText().toString(), password.getText().toString())) {
       Toast.makeText(

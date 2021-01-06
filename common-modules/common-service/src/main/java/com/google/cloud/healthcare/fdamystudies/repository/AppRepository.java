@@ -253,4 +253,21 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "AND si.id NOT IN (SELECT study.id FROM sites site, study_info study WHERE study.id = site.study_id)",
       nativeQuery = true)
   public List<AppStudySiteInfo> findAppsStudiesSites();
+
+  @Query(
+      value =
+          "SELECT COUNT(id) As appCountId "
+              + "FROM( "
+              + "SELECT DISTINCT ai.id "
+              + "FROM study_permissions sp, app_info ai "
+              + "WHERE ai.id=sp.app_info_id AND sp.ur_admin_user_id = :userId AND sp.study_id IN (SELECT sp.study_id FROM sites_permissions sp WHERE sp.ur_admin_user_id = :userId) "
+              + "UNION ALL "
+              + "SELECT DISTINCT ai.id "
+              + "FROM sites_permissions sp, app_info ai, sites s "
+              + "WHERE ai.id=sp.app_info_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id = :userId AND sp.study_id NOT IN ( "
+              + "SELECT st.study_id "
+              + "FROM study_permissions st "
+              + "WHERE st.ur_admin_user_id = :userId)) rstAlias",
+      nativeQuery = true)
+  public Long countByApps(String userId);
 }

@@ -122,8 +122,8 @@ let kMessageProfileValidatePasswords = "New password and confirm password fields
 let kMessageValidatePasswordCharacters = "Password should have minimum of 8 characters."
 let kMessageValidatePasswordComplexity =
   """
-  Your password must contain: 8 to 64 characters, lower case letter, upper case letter, numeric, \
-  special characters \\!  # $ % & ' () * + , - . : ; < > = ? @ [] ^ _  { } | ~
+  Your password must be at least 8 characters long and contain lower case, \
+  upper case, numeric and special characters.
   """
 let kMessageAgreeToTermsAndConditions = "Please agree to terms and conditions."
 
