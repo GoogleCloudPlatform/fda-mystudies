@@ -3374,7 +3374,8 @@ public class StudyController {
                 ? ""
                 : request.getParameter("resourceTypeParm");
         if (resourceBO != null) {
-          auditRequest.setStudyId(studyId);
+          StudyBo studyBo = studyService.getStudyInfo(studyId);
+          auditRequest.setStudyId(studyBo.getCustomStudyId());
           if (!("").equals(buttonText)) {
             if (("save").equalsIgnoreCase(buttonText)) {
               resourceBO.setAction(false);

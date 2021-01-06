@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -12,58 +13,81 @@
         android:paddingTop="24dp"
         android:paddingBottom="24dp">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/studyImg"
-            android:layout_width="81dp"
-            android:layout_height="81dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="3dp"
-            android:background="@color/colorSecondaryBg"
-            android:scaleType="centerCrop" />
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/mImgTitle"
-            style="@style/TextType5wMatchParent"
-            android:layout_alignLeft="@id/studyImg"
-            android:layout_alignRight="@id/studyImg"
-            android:layout_alignBottom="@id/studyImg"
-            android:background="#96000000"
-            android:ellipsize="end"
-            android:padding="4dp"
-            android:singleLine="true"
-            android:text=""
-            android:textColor="@color/white"
-            android:visibility="invisible" />
-
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/studyImglayout"
+            app:cardCornerRadius="20dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/studyImg"
-            android:layout_marginTop="7dp">
+            android:layout_height="wrap_content">
 
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/stateIcon"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@drawable/bullet" />
+                android:layout_height="wrap_content">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/state"
-                style="@style/TextType5"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/stateIcon"
-                android:text="@string/active1"
-                android:textColor="@color/colorSecondary" />
-        </RelativeLayout>
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/studyImg"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:background="@color/colorSecondaryBg"
+                    android:scaleType="centerCrop" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/defaultthumbnail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:src="@drawable/default_studylist"
+                    android:layout_centerInParent="true"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/mImgTitle"
+                    style="@style/TextType5wMatchParent"
+                    android:layout_alignLeft="@id/studyImg"
+                    android:layout_alignRight="@id/studyImg"
+                    android:layout_alignBottom="@id/studyImg"
+                    android:background="#96000000"
+                    android:ellipsize="end"
+                    android:padding="4dp"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/studyImg"
+                    android:layout_alignRight="@id/studyImg"
+                    android:layout_alignBottom="@id/studyImg"
+                    android:background="#96000000"
+                    android:ellipsize="end"
+                    android:padding="6dp">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/stateIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/bullet" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/state"
+                        style="@style/TextType4"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/stateIcon"
+                        android:text="@string/active1"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
         <RelativeLayout
             android:id="@+id/second_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/studyImg">
+            android:layout_marginLeft="22dp"
+            android:layout_toRightOf="@id/studyImglayout">
 
             <RelativeLayout
                 android:id="@+id/prg_rel"
@@ -79,7 +103,7 @@
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/status"
-                    style="@style/TextType4"
+                    style="@style/TextType3"
                     android:layout_alignBaseline="@id/statusImg"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
@@ -91,29 +115,11 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="8dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="1dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="7dp">
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/statusImgRight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/star_grey"
-                    android:visibility="invisible" />
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/right_padding_set_rel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/prg_rel"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="12dp"
                 android:paddingRight="18dp">
 
                 <RelativeLayout
@@ -129,10 +135,11 @@
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/study_title_latin"
-                        style="@style/TextType3"
+                        style="@style/TextType2"
                         android:layout_below="@id/study_title"
                         android:text=""
-                        android:textColor="@color/colorPrimaryBlack" />
+                        android:textColor="@color/colorPrimaryBlack"
+                        android:visibility="gone" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/sponser"
@@ -140,8 +147,8 @@
                         android:layout_below="@id/study_title_latin"
                         android:layout_marginTop="7dp"
                         android:text=""
-                        android:visibility="gone"
-                        android:textColor="@color/colorSecondary" />
+                        android:textColor="@color/colorSecondary"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -149,33 +156,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/inside_secd_box_rel"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="10dp">
 
                     <RelativeLayout
+                        android:id="@+id/progresslayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
-
-                        <android.support.v7.widget.AppCompatTextView
-                            android:id="@+id/completion"
-                            style="@style/TextType4"
-                            android:text="@string/completion"
-                            android:textColor="@color/colorPrimaryBlack" />
 
                         <android.support.v7.widget.AppCompatTextView
                             android:id="@+id/completion_val"
                             style="@style/TextType4"
                             android:layout_marginLeft="1dp"
-                            android:layout_toRightOf="@id/completion"
                             android:text="0%"
-                            android:textColor="@color/colorPrimary" />
+                            android:textColor="@color/percent" />
 
                         <ProgressBar
                             android:id="@+id/progressBar1"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="4dp"
-                            android:layout_alignBottom="@+id/completion"
-                            android:layout_marginLeft="10dp"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="5dp"
                             android:layout_marginBottom="3dp"
                             android:layout_toRightOf="@+id/completion_val"
                             android:paddingRight="0dp"
@@ -251,7 +252,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
-        android:background="@color/colorSecondaryBg" />
+        android:background="@color/studylist_divider" />
 
 </LinearLayout>
 
