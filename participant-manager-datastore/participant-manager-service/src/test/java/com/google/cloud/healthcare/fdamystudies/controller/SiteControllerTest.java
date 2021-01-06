@@ -2406,7 +2406,12 @@ public class SiteControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, admin.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+            get(ApiEndpoint.GET_SITES.getPath())
+                .headers(headers)
+                .queryParam("limit", "10")
+                .queryParam("offset", "0")
+                .param("searchTerm", "")
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
@@ -2458,7 +2463,12 @@ public class SiteControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, admin.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+            get(ApiEndpoint.GET_SITES.getPath())
+                .headers(headers)
+                .queryParam("limit", "10")
+                .queryParam("offset", "0")
+                .param("searchTerm", "")
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
@@ -2495,7 +2505,12 @@ public class SiteControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, nonSuperAdmin.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+            get(ApiEndpoint.GET_SITES.getPath())
+                .headers(headers)
+                .queryParam("limit", "10")
+                .queryParam("offset", "0")
+                .param("searchTerm", "")
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
