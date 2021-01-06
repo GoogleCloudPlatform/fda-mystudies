@@ -267,7 +267,7 @@
           datarow.push(' ');
         } else {
           datarow.push(
-              '<div class="dis-ellipsis pr-100" title="obj.title">' + DOMPurify.sanitize(obj.title) + '</div>');
+              '<div class="dis-ellipsis pr-100" title='+DOMPurify.sanitize(obj.title)+'>' + DOMPurify.sanitize(obj.title) + '</div>');
         }
         if (typeof obj.frequency === "undefined" && typeof obj.frequency === "undefined") {
           datarow.push(' ');
