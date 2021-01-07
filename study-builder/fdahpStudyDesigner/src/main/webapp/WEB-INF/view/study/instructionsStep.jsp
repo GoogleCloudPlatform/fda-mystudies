@@ -209,6 +209,12 @@
     });
   }
   function validatesummernote(){
+	  var richTextVal = $('#summernote').val();
+	  if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+  	  var richText=$('#summernote').summernote('code');
+  	  var escaped = $('#summernote').text(richText).html();
+    	  $('#summernote').val(escaped);
+     }
 		 if ($('#summernote').summernote(
 	     'code') === '<br>' || $('#summernote').summernote(
 	     'code') === '' || $('#summernote').summernote('code') === '<p><br></p>') {
@@ -291,7 +297,7 @@
     var instruction_id = $("#id").val();
     var questionnaire_id = $("#questionnaireId").val();
     var instruction_title = $("#instructionTitle").val();
-    var instruction_text = $("#instructionText").val();
+    var instruction_text = $("#summernote").val();
 
     var shortTitle = $("#shortTitleId").val();
     var destinationStep = $("#destinationStepId").val();
