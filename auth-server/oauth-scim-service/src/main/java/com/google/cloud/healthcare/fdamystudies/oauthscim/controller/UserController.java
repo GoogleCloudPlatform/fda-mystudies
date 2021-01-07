@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -69,6 +70,7 @@ public class UserController {
       value = "/users",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.CREATED)
   public ResponseEntity<UserResponse> createUser(
       @Valid @RequestBody UserRequest userRequest, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));

@@ -46,7 +46,6 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
             .code(ErrorCode.UNAUTHORIZED.getStatus())
             .message(ErrorCode.UNAUTHORIZED.getDescription())
             .build());
-    responses.add(new ResponseMessageBuilder().code(403).message("Forbidden!").build());
 
     docket
         .useDefaultResponseMessages(false)
