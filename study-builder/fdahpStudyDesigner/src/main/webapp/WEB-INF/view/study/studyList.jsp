@@ -42,16 +42,7 @@
           <td>
             <div class="studylist-txtoverflow" title="${fn:escapeXml(study.name)}">${study.name}</div>
           </td>
-          <td>${study.status}</td>
-            <td>
-            <div class="studylist-txtoverflow" title="${fn:escapeXml(study.name)}">${study.name}</div>
-          </td>
-          <td>${study.category}</td>
-          <td>
-            <div class="createdFirstname">${study.projectLeadName}</div>
-          </td>
-          <td>${study.researchSponsor}</td>
-          <td class ="studyStatus${study.customStudyId}">${study.status}</td>
+         <td class ="studyStatus${study.customStudyId}">${study.status}</td>
           <td>
             <span class="sprites_icon preview-g mr-lg viewStudyClass" isLive=""
                   studyId="${study.id}"
@@ -150,10 +141,9 @@
           {"bSortable": true},
           {"bSortable": true},
           {"bSortable": true},
-          {"bSortable": true},
           {"bSortable": false}
         ],
-        "columnDefs": [{orderable: false, targets: [8]}],
+        "columnDefs": [{orderable: false, targets: [6]}],
         "order": [[0, "desc"]],
         "info": false,
 
@@ -209,7 +199,7 @@
       if ($('#deactivatedBtn').is(":checked")) {
           console.log("This is checked");
           oTable
-          .columns([7]) //The index of column to search
+          .columns([5]) //The index of column to search
              .search('') //The RegExp search all string that not cointains USA
           .draw();
 
@@ -217,7 +207,7 @@
           console.log("This is Unchecked");
          
           oTable
-          .columns([7]) //The index of column to search
+          .columns([5]) //The index of column to search
              .search('^(?:(?!Deactivated).)*$\r?\n?', true, false) //The RegExp search all string that not cointains USA
           .draw();
       }
