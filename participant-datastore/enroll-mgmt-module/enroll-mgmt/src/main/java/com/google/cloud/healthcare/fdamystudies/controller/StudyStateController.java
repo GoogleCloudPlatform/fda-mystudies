@@ -33,8 +33,6 @@ import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -78,19 +76,12 @@ public class StudyStateController {
     List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
     UserDetailsEntity user = commonService.getUserInfoDetails(userId);
 
-    List<String> studyIds =
-        studiesBeenList
-            .stream()
-            .map(StudiesBean::getStudyId)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-
     if (user != null) {
       List<ParticipantStudyEntity> existParticipantStudies =
-          studyStateService.getParticipantStudiesList(user, studyIds);
+          studyStateService.getParticipantStudiesList(user, studiesBeenList);
       studyStateRespBean =
           studyStateService.saveParticipantStudies(
-              studiesBeenList, existParticipantStudies, userId, auditRequest);
+              studiesBeenList, existParticipantStudies, auditRequest, user);
       if (studyStateRespBean != null
           && studyStateRespBean
               .getMessage()
