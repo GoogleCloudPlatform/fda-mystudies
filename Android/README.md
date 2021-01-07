@@ -20,11 +20,11 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 
 > Note: Be cautious about making changes to `build.gradle` or other files in the `/Android/` directory unless those changes are specifically mentioned in the steps below. It is recommended that file editing is done outside of Android Studio, as Android Studio can introduce conflicting configuration files (for example, avoid updating Grade plugin if prompted).
 
-1. Set the `applicationId` in [`Android/app/build.gradle`](app/build.gradle) to your [Application ID](https://developer.android.com/studio/build/application-id)
+1. Set the `applicationId` in [`Android/app/build.gradle`](app/build.gradle) to your [Application ID](https://developer.android.com/studio/build/application-id) (this will match the value of your `manual-android-bundle-id` secret when following the semi-automated [deployment guide](/deployment/README.md))
 1. Modify [`Android/api.properties`](api.properties) to match the configuration of your backend services
 1. Update the following in the [`Android/app/src/fda/res/values/strings.xml`](app/src/fda/res/values/strings.xml) file:
     -    Set `deeplink_host` to define the [deep link URL](https://developer.android.com/training/app-links/deep-linking) that will be used for redirects (for example, if you set `deeplink_host` to `<subdomain>.<domain>` your deeplink would be `app://<subdomain>.<domain>/mystudies`) 
-    -    Set `google_maps_key` to the API key obtained following the instructions located [here](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
+    -    Set `google_maps_key` to the API key obtained following the instructions located [here](https://developers.google.com/maps/documentation/android-sdk/get-api-key) (you do not need to follow steps from the API key documentation about updating project or application files)
     -    Set `package_name` to the value of [`applicationId`](https://developer.android.com/studio/build/application-id) in [`Android/app/build.gradle`](app/build.gradle)
     -    Set `app_name` to the application name that will be shown to users 
     -    Customize user-facing text strings as necessary
