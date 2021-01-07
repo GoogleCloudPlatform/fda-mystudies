@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -80,11 +81,32 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Override
   @Transactional(readOnly = true)
   public List<ParticipantStudyEntity> getParticipantStudiesList(
-      UserDetailsEntity user, List<String> studyIds) {
+      UserDetailsEntity user, List<StudiesBean> studiesBeenList) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
     List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
-    List<String> participantStudyIds =
-        participantStudyRepository.findByEmailAndStudyIds(user.getEmail(), studyIds);
+    List<String> participantStudyIds = null;
+
+    List<String> customStudyIds =
+        studiesBeenList
+            .stream()
+            .map(StudiesBean::getStudyId)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+
+    List<String> siteIds =
+        studiesBeenList
+            .stream()
+            .map(StudiesBean::getSiteId)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+
+    if (CollectionUtils.isEmpty(siteIds)) {
+      participantStudyIds =
+          participantStudyRepository.findByEmailAndStudyCustomIds(user.getEmail(), customStudyIds);
+    } else {
+      participantStudyIds =
+          participantStudyRepository.findByEmailAndSiteIds(user.getEmail(), siteIds);
+    }
 
     if (CollectionUtils.isNotEmpty(participantStudyIds)) {
       participantStudies = participantStudyRepository.findAllById(participantStudyIds);
@@ -98,14 +120,14 @@ public class StudyStateServiceImpl implements StudyStateService {
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
       List<ParticipantStudyEntity> existParticipantStudies,
-      String userId,
-      AuditLogEventRequest auditRequest) {
+      AuditLogEventRequest auditRequest,
+      UserDetailsEntity user) {
     logger.info("StudyStateServiceImpl saveParticipantStudies() - Starts ");
     StudyStateRespBean studyStateRespBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     List<ParticipantStudyEntity> participantStudies = new ArrayList<ParticipantStudyEntity>();
     Map<String, String> placeHolder = new HashMap<>();
-    auditRequest.setUserId(userId);
+    auditRequest.setUserId(user.getUserId());
     Map<String, ParticipantStudyEntity> studyParticipantbyIdMap =
         existParticipantStudies
             .stream()
@@ -139,6 +161,7 @@ public class StudyStateServiceImpl implements StudyStateService {
         participantStudyEntity.setBookmark(studyBean.getBookmarked());
         participantStudyEntity.setCompletion(studyBean.getCompletion());
         participantStudyEntity.setAdherence(studyBean.getAdherence());
+        participantStudyEntity.setUserDetails(user);
 
         placeHolder.put("study_state_value", participantStudyEntity.getStatus());
         participantStudies.add(participantStudyEntity);
