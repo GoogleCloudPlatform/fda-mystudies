@@ -430,7 +430,7 @@ public class LoginDAOImpl implements LoginDAO {
           Map<String, String> values = new HashMap<>();
           values.put(LOCK_TIME, String.valueOf(USER_LOCK_DURATION));
           values.put(FAILED_ATTEMPT, String.valueOf(MAX_ATTEMPTS));
-          auditRequest.setUserId(userEmailId);
+          auditRequest.setUserId(userBO.getUserId().toString());
           auditRequest.setUserAccessLevel(userBO.getAccessLevel());
           auditRequest.setSource(ACCOUNT_LOCKED.getSource().getValue());
           auditRequest.setDestination(ACCOUNT_LOCKED.getDestination().getValue());
