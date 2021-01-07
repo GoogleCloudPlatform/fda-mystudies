@@ -17,4 +17,5 @@ RUN ng build --aot --prod --base-href=${BASE_HREF}/
 # Stage2
 # copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
 FROM nginx
+ARG BASE_HREF=/participant-manager
 COPY --from=compile-image /app/dist/userRegistrationWeb /usr/share/nginx/html${BASE_HREF}
