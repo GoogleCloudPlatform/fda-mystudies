@@ -403,6 +403,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       if (!StringUtils.isEmpty(passwordResetToken)) {
         userdetails = loginDAO.getValidUserByEmail(email);
         if ("".equals(type) && userdetails != null && userdetails.isEnabled()) {
+          auditRequest.setUserAccessLevel(
+              StringUtils.defaultIfBlank(userdetails.getAccessLevel(), ""));
           auditRequest.setUserId(String.valueOf(userdetails.getUserId()));
           auditLogEventHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
         }

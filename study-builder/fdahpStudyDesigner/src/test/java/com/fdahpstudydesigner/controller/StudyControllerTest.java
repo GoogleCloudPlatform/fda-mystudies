@@ -235,7 +235,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
-        .andExpect(view().name("redirect:viewStudyNotificationList.do"));
+        .andExpect(view().name("redirect:actionList.do"));
 
     verifyAuditEventCall(STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE);
   }
@@ -1039,12 +1039,13 @@ public class StudyControllerTest extends BaseMockIT {
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678590");
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(STUDY_ID_INT_VALUE);
+    consentBo.setStudyId(678574);
     consentBo.setType("complete");
-    consentBo.setConsentDocContent("doc");
+    consentBo.setConsentDocContent(
+        "<span style=&#34;font-size:20px;&#34;><strong>Data gathering</strong></span><br/><span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>Auto0016</span><br/>");
 
     mockMvc
         .perform(
@@ -1100,7 +1101,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(STUDY_ID_INT_VALUE);
+    consentBo.setStudyId(678576);
     consentBo.setComprehensionTest("complete");
     consentBo.setConsentDocContent("doc");
 

@@ -314,6 +314,12 @@ public class StudyServiceImpl implements StudyService {
               excludeParticipantStudyStatus,
               StringUtils.defaultString(searchTerm));
 
+      participantCount =
+          studyRepository.countOpenStudyParticipants(
+              studyAppDetails.getStudyId(),
+              excludeParticipantStudyStatus,
+              StringUtils.defaultString(searchTerm));
+
     } else if (studyAppDetails.getStudyType().equalsIgnoreCase(CommonConstants.CLOSE_STUDY)) {
       studyParticipantDetails =
           studyRepository.getStudyParticipantDetailsForClosedStudy(
@@ -322,8 +328,9 @@ public class StudyServiceImpl implements StudyService {
               offset,
               orderByCondition,
               StringUtils.defaultString(searchTerm));
+
       participantCount =
-          studyRepository.countParticipantsByStudyIdAndSearchTerm(
+          studyRepository.countParticipants(
               studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
     }
 
