@@ -207,7 +207,7 @@
           
           <div class="thumb" style="display:inline-block; width:77px !important;">
                         <img
-                           src="https://storage.cloud.google.com/study-resources/studylogo/STUDY_BI_GATEWAY.jpg"
+                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.basicInformation.defaultImage')"/>"
                             class="wid100" alt=""/>
 
             </div>
