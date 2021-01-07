@@ -176,6 +176,7 @@ public class UsersControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     UserBO userBo = new UserBO();
     userBo.setUserEmail("superunittest@grr.la");
+    userBo.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())
