@@ -272,7 +272,7 @@
         if (typeof obj.frequency === "undefined" && typeof obj.frequency === "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push(obj.frequency);
+          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom Schedule' : obj.frequency);
         }
         var actionDiv = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewQuestionnaires("
             + parseInt(obj.id) + ");'></span>";

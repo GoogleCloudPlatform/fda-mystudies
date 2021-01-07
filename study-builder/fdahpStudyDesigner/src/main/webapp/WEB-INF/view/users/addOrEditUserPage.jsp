@@ -5,6 +5,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<style>
+.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+</style>
+
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
 
   <!-- widgets section-->
@@ -59,12 +66,22 @@
                   Account Activation Pending
                 </span>
               </span>
-              <span class="black-sm-f resend pl-md">
-                <a
-                    href="javascript:void(0)" id="resendLinkId">Re-send
-                  Activation Link
-                </a>
-              </span>
+		   <c:choose>
+			         <c:when test="${actionPage eq 'VIEW_PAGE'}">
+			              <span class="black-sm-f resend pl-md">
+			                <a  href="javascript:void(0)"  id="resendLinkId" class="disabled">Re-send
+			                  Activation Link
+			                </a>
+			              </span>
+			         </c:when>
+			         <c:otherwise>
+			           		<span class="black-sm-f resend pl-md">
+			                <a  href="javascript:void(0)" id="resendLinkId" >Re-send
+			                  Activation Link
+			                </a>
+			              </span>
+			         </c:otherwise>
+	      	 </c:choose> 
             </div>
           </c:if>
           <c:if test="${userBO.emailChanged}">

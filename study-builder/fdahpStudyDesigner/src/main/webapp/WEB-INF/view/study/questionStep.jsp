@@ -2267,8 +2267,8 @@
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[0].description"
                                     id="displayTextChoiceDescription0"
-                                    value="${fn:escapeXml(questionResponseSubType.questionResponseSubTypeList[0].description)}"
-                                    maxlength="150">${fn:escapeXml(questionResponseSubType.questionResponseSubTypeList[0].description)}</textarea>
+                                    value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].description)}"
+                                    maxlength="150">${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].description)}</textarea>
                         </div>
                       </div>
                       <div class="col-md-2 pl-none">
@@ -3447,7 +3447,23 @@
         });
       });
 
-      getSelectionStyle($(".TextChoiceRequired"));
+      if (${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || 
+          questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}) {
+          $('.textChoiceExclusive').attr("disabled", true);
+          $('.textChoiceExclusive').attr("required", false);
+          $('.textChoiceExclusive').val('');
+          $('.destionationYes').val('');
+          $('.destionationYes').attr("disabled", false);
+          $('.selectpicker').selectpicker('refresh');
+          $(".textChoiceExclusive").validator('validate');
+          $('.textChoiceExclusive').parent().parent().hide();
+        } else if(${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}){
+          $('.textChoiceExclusive').attr("disabled", false);
+          $('.textChoiceExclusive').attr("required", true);
+          $('.selectpicker').selectpicker('refresh');
+          $('.textChoiceExclusive').parent().parent().show();
+        }
+      
 
       if(${actionTypeForQuestionPage == 'edit'} || ${actionTypeForQuestionPage == 'view'}){
 	      $('.text-choice').each(function () {
@@ -3461,20 +3477,32 @@
 	      });
      }  
 
-     if ($('.text-choice').length <= 2){
-       $(".remBtnDis").css("pointer-events", "none");
-     }
-
      if ($('#textchoiceOtherId').is(':checked')) {
          $('.textchoiceOtherCls').show();
          $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
          $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+
+         if ($('.text-choice').length > 1){
+             $(".remBtnDis").css("pointer-events", "auto");
+         }else{
+           $(".remBtnDis").css("pointer-events", "none");
+             }
+         
        } else {
          $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
          $('.textchoiceOtherCls').hide();
          $("input[name='questionReponseTypeBo.otherText']").val('');
          $("input[name='questionReponseTypeBo.otherValue']").val('');
          $("textarea[name='questionReponseTypeBo.otherDescription']").val('');
+         $("select[name='questionReponseTypeBo.otherExclusive']").val('');
+         $('.selectpicker').selectpicker('refresh');
+
+         if ($('.text-choice').length > 2){
+             $(".remBtnDis").css("pointer-events", "auto");
+         }else{
+          $(".remBtnDis").css("pointer-events", "none");
+         }
+         
        }
       
      $('#textchoiceOtherId').click(function () {
@@ -3514,6 +3542,8 @@
             $("input[name='questionReponseTypeBo.otherText']").val('');
             $("input[name='questionReponseTypeBo.otherValue']").val('');
             $("textarea[name='questionReponseTypeBo.otherDescription']").val('');
+            $("select[name='questionReponseTypeBo.otherExclusive']").val('');
+            $('.selectpicker').selectpicker('refresh');
           }
       }); 
 
@@ -5328,6 +5358,7 @@
         var otherText=$("input[name='questionReponseTypeBo.otherText']").val();
         var otherValue=$("input[name='questionReponseTypeBo.otherValue']").val();
         var otherDescription=$("textarea[name='questionReponseTypeBo.otherDescription']").val();
+        var otherExclusive=$("select[name='questionReponseTypeBo.otherExclusive']").val();
         var otherType;
 
         if ($('#textchoiceOtherId').is(':checked')) {
@@ -5340,6 +5371,8 @@
         questionReponseTypeBo.otherValue=otherValue
         questionReponseTypeBo.otherDescription=otherDescription
         questionReponseTypeBo.otherType=otherType
+        questionReponseTypeBo.otherExclusive=otherExclusive;
+        
         questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
       } else if (resType == "Image Choice") {
         var questionSubResponseArray = new Array();

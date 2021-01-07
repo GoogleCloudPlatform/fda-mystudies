@@ -24,12 +24,14 @@ import lombok.ToString;
 @AllArgsConstructor
 public class StudiesBean {
 
-  public StudiesBean(String studyId, Boolean bookmarked, Integer completion, Integer adherence) {
+  public StudiesBean(
+      String studyId, Boolean bookmarked, Integer completion, Integer adherence, String siteId) {
     super();
     this.studyId = studyId;
     this.bookmarked = bookmarked;
     this.completion = completion;
     this.adherence = adherence;
+    this.siteId = siteId;
   }
 
   private String studyId;
@@ -42,4 +44,5 @@ public class StudiesBean {
   private Integer completion;
   private Integer adherence;
   private String participantId;
+  private String siteId;
 }

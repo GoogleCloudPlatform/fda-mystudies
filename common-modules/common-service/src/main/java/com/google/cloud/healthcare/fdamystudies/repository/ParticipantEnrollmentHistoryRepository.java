@@ -32,7 +32,7 @@ public interface ParticipantEnrollmentHistoryRepository
               + "FROM participant_enrollment_history peh, locations loc, sites s "
               + "WHERE peh.site_id=s.id AND s.location_id=loc.id AND peh.status IN ('enrolled','withdrawn') AND "
               + "peh.user_details_id IN (:userIds) AND peh.app_info_id=:appId "
-              + "ORDER BY loc.name DESC",
+              + "ORDER BY peh.created_time DESC",
       nativeQuery = true)
   public List<ParticipantEnrollmentHistory> findParticipantEnrollmentHistoryByAppId(
       String appId, List<String> userIds);

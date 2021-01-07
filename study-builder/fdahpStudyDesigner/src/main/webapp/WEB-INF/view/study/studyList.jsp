@@ -18,18 +18,13 @@
         <th id="">Study ID
           <span class="sort"></span>
         </th>
+        <th id="">APP ID
+          <span class="sort"></span>
+        </th>
         <th id="">Study name
           <span class="sort"></span>
         </th>
-        <th id="">Category
-          <span class="sort"></span>
-        </th>
-        <th id="">Project lead
-          <span class="sort"></span>
-        </th>
-        <th id="">Research Sponsor
-          <span class="sort"></span>
-        </th>
+        
         <th id="">Status
           <span class="sort"></span>
         </th>
@@ -42,6 +37,12 @@
           <td style="display: none;">${study.createdOn}</td>
           <td style="display: none;">${study.liveStudyId}</td>
           <td>${study.customStudyId}</td>
+
+          <td>${study.appId}</td>
+          <td>
+            <div class="studylist-txtoverflow" title="${fn:escapeXml(study.name)}">${study.name}</div>
+          </td>
+          <td>${study.status}</td>
             <td>
             <div class="studylist-txtoverflow" title="${fn:escapeXml(study.name)}">${study.name}</div>
           </td>

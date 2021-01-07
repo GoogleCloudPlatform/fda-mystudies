@@ -91,7 +91,7 @@ public class UsersServiceImpl implements UsersService {
         StudyBuilderAuditEvent auditLogEvent =
             userStatus == 1 ? USER_RECORD_DEACTIVATED : USER_ACCOUNT_RE_ACTIVATED;
         Map<String, String> values = new HashMap<>();
-        values.put(EDITED_USER_ID, String.valueOf(userSession.getUserId()));
+        values.put(EDITED_USER_ID, String.valueOf(userId));
         auditLogHelper.logEvent(auditLogEvent, auditRequest, values);
         keyValueForSubject = new HashMap<String, String>();
         if ((superAdminEmailList != null) && !superAdminEmailList.isEmpty()) {
@@ -221,11 +221,11 @@ public class UsersServiceImpl implements UsersService {
           userBO2.setForceLogout(true);
         }
       }
-      msg =
+      String result =
           usersDAO.addOrUpdateUserDetails(userBO2, permissions, selectedStudies, permissionValues);
-      if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+      if (!result.equals(FdahpStudyDesignerConstants.FAILURE)) {
         if (addFlag) {
-          values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
+          values.put(StudyBuilderConstants.USER_ID, result);
           values.put(StudyBuilderConstants.ACCESS_LEVEL, userBO.getAccessLevel());
           msg =
               loginService.sendPasswordResetLinkToMail(
@@ -238,8 +238,8 @@ public class UsersServiceImpl implements UsersService {
           }
         }
         if (!addFlag) {
-          values.put(StudyBuilderConstants.EDITED_USER_ID, String.valueOf(userSession.getUserId()));
-          values.put(StudyBuilderConstants.EDITED_USER_ACCESS_LEVEL, userSession.getAccessLevel());
+          values.put(StudyBuilderConstants.EDITED_USER_ID, String.valueOf(result));
+          values.put(StudyBuilderConstants.EDITED_USER_ACCESS_LEVEL, userBO.getAccessLevel());
           auditLogEvents.add(USER_RECORD_UPDATED);
 
           if (emailIdChange) {
