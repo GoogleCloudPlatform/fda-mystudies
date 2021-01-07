@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Update `app_name` with a user-facing name for your application, for example, "Demo App"-->
+<!-- Update `package_name` with the `ApplicationID` that you specified in `Android/app/build.gradle` -->
 <!DOCTYPE resources [
-    <!ENTITY app_name "FDA MyStudies">
-    <!ENTITY package_name "com.google.FDAMyStudies" >
+    <!ENTITY app_name "YOUR_APP_NAME">
+    <!ENTITY package_name "YOUR_PACKAGE_NAME">
     ]>
 
 <resources>
+    <!--The following strings must be updated-->
+    <!-- Update `google_maps_key` with your Google Maps API key (see https://developers.google.com/maps/documentation/android-sdk/get-api-key) -->
+    <string name="google_maps_Key">YOUR_MAPS_KEY</string>
+    
+    <!-- Update `deeplink_host` with a value that defines your deeplink URL (do not include app:// or context-path) -->
+    <!-- For example, a `deeplink_host` value of "subdomain.domain" would establish "app://subdomain.domain/mystudies" as the deeplink URL -->
+    <string name="deeplink_host">YOUR_DEEPLINK_HOST</string>
+    
+     <!--The following strings may be customized as desired-->
     <string name="app_name">&app_name;</string>
     <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>
     <string name="website"></string>
@@ -23,8 +35,4 @@
     <string name="account_type">&package_name;.offlineModule.auth.syncadapterexample</string>
     <string name="sync_provider">&package_name;.offlineModule.auth.syncadapterexample.provider</string>
     <string name="FileProvider_authorities">&package_name;.myfileprovider</string>
-
-    <!--must change strings-->
-    <string name="google_maps_Key">MAPS_KEY</string> <!-- replace this with google map key -->
-    <string name="deeplink_host">gcp</string> <!-- replace this with the deeplink host -->
 </resources>
