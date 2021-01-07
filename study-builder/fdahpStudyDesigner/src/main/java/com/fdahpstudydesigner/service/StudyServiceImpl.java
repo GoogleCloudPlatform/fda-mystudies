@@ -1446,5 +1446,9 @@ public class StudyServiceImpl implements StudyService {
     }
     logger.info("StudyServiceImpl - validateStudyAction() - Ends");
     return markAsCompleted;
+}
+  public StudyBo getStudyInfo(String studyId) {
+    return studyDAO.getStudy(Integer.valueOf(studyId));
+
   }
 }
