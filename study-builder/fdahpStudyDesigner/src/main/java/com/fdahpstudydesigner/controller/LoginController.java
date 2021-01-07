@@ -77,10 +77,6 @@ public class LoginController {
       HttpSession session = request.getSession(false);
       SessionObject sesObj =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-      String accessCode =
-          FdahpStudyDesignerUtil.isNotEmpty(request.getParameter("accessCode"))
-              ? request.getParameter("accessCode")
-              : "";
       String password =
           FdahpStudyDesignerUtil.isNotEmpty(request.getParameter("password"))
               ? request.getParameter("password").replaceAll(request.getParameter("_csrf"), "")
@@ -94,8 +90,7 @@ public class LoginController {
       boolean isIntialPasswordSetUp = loginService.isIntialPasswordSetUp(securityToken);
       String errorMsg = "";
       if (!isInactiveUser || isIntialPasswordSetUp) {
-        errorMsg =
-            loginService.authAndAddPassword(securityToken, accessCode, password, userBO, sesObj);
+        errorMsg = loginService.authAndAddPassword(securityToken, password, userBO, sesObj);
       } else {
         errorMsg = propMap.get("user.inactive.msg");
       }
@@ -380,29 +375,17 @@ public class LoginController {
     return new ModelAndView("unauthorized");
   }
 
-  @RequestMapping("/validateAccessCode.do")
-  public ModelAndView validateAccessCode(HttpServletRequest request) {
+  @RequestMapping("/validateEmailChangeVerification.do")
+  public ModelAndView validateEmailChangeVerification(HttpServletRequest request) {
     logger.info("LoginController - addPassword() - Starts");
     String securityToken = null;
-    String accessCode = null;
-    String errorMsg = FdahpStudyDesignerConstants.FAILURE;
     ModelAndView mv = new ModelAndView("redirect:login.do");
-    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
-      accessCode =
-          FdahpStudyDesignerUtil.isNotEmpty(request.getParameter("accessCode"))
-              ? request.getParameter("accessCode")
-              : "";
       securityToken =
           FdahpStudyDesignerUtil.isNotEmpty(request.getParameter("securityToken"))
               ? request.getParameter("securityToken")
               : "";
-      errorMsg = loginService.validateAccessCode(securityToken, accessCode);
-      if (!errorMsg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
-        request.getSession(false).setAttribute("errMsg", errorMsg);
-      } else {
-        request.getSession(false).setAttribute("sucMsg", propMap.get("user.access.code.success"));
-      }
+      loginService.validateEmailChangeVerification(securityToken);
     } catch (Exception e) {
       logger.error("LoginController - addPassword() - ERROR ", e);
     }

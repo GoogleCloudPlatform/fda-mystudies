@@ -200,8 +200,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     studyStatus.setText(status);
     if (status.equalsIgnoreCase("active")) {
       studyStatus.setTextColor(context.getResources().getColor(R.color.bullet_green_color));
-    } else if (status.equalsIgnoreCase("upcoming")) {
-      studyStatus.setTextColor(context.getResources().getColor(R.color.colorPrimary));
     } else if (status.equalsIgnoreCase("closed")) {
       studyStatus.setTextColor(context.getResources().getColor(R.color.red));
     } else if (status.equalsIgnoreCase("paused")) {

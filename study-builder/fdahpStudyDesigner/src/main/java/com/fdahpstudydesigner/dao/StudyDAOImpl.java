@@ -38,7 +38,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
-
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.DynamicBean;
 import com.fdahpstudydesigner.bean.DynamicFrequencyBean;
@@ -99,6 +98,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -2084,7 +2084,7 @@ public class StudyDAOImpl implements StudyDAO {
       if ((userId != null) && (userId != 0)) {
         query =
             session.createQuery(
-                "select new com.fdahpstudydesigner.bean.StudyListBean(s.id,s.customStudyId,s.name,s.category,s.researchSponsor,user.firstName, user.lastName,p.viewPermission,s.status,s.createdOn)"
+                "select new com.fdahpstudydesigner.bean.StudyListBean(s.id,s.customStudyId,s.name,s.category,s.researchSponsor,user.firstName, user.lastName,p.viewPermission,s.status,s.createdOn,s.appId)"
                     + " from StudyBo s,StudyPermissionBO p, UserBO user"
                     + " where s.id=p.studyId"
                     + " and user.userId = s.createdBy"
@@ -3742,7 +3742,9 @@ public class StudyDAOImpl implements StudyDAO {
             query.setMaxResults(1);
             studyVersionBo = (StudyVersionBo) query.uniqueResult();
             if (studyVersionBo != null) {
-              values.put("datasharing_consent_setting", consentBo.getConsentDocContent());
+              values.put(
+                  "datasharing_consent_setting",
+                  Jsoup.parse(consentBo.getConsentDocContent()).text());
               values.put(
                   "consent_document_version", String.valueOf(studyVersionBo.getConsentVersion()));
               auditLogEventHelper.logEvent(
@@ -4382,11 +4384,10 @@ public class StudyDAOImpl implements StudyDAO {
             updateAnchordateForEnrollmentDate(study, studyBo, session, transaction);
             // validation of anchor date
             study.setPlatform(studyBo.getPlatform());
-            study.setAllowRejoin(studyBo.getAllowRejoin());
             study.setEnrollingParticipants(studyBo.getEnrollingParticipants());
             study.setRetainParticipant(studyBo.getRetainParticipant());
             study.setAllowRejoin(studyBo.getAllowRejoin());
-            study.setAllowRejoinText(studyBo.getAllowRejoinText());
+            study.setAllowRejoinText(FdahpStudyDesignerConstants.ALLOW_REJOIN_TEXT);
             study.setModifiedBy(studyBo.getUserId());
             study.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
             // Phase2a code Start(adding enrollment date as anchor date(yes/no))

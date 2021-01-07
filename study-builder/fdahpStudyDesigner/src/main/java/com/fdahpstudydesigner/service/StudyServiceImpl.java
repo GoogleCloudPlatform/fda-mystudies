@@ -801,9 +801,7 @@ public class StudyServiceImpl implements StudyService {
         updateConsentBo.setComprehensionTestMinimumScore(
             consentBo.getComprehensionTestMinimumScore());
       }
-      if (consentBo.getAggrementOfTheConsent() != null) {
-        updateConsentBo.setAggrementOfTheConsent(consentBo.getAggrementOfTheConsent());
-      }
+      updateConsentBo.setAggrementOfTheConsent(FdahpStudyDesignerConstants.CONSENT_AGREEMENT);
       updateConsentBo =
           studyDAO.saveOrCompleteConsentReviewDetails(updateConsentBo, sesObj, customStudyId);
     } catch (Exception e) {
@@ -1435,5 +1433,10 @@ public class StudyServiceImpl implements StudyService {
     }
     logger.info("StudyServiceImpl - getStudyByLatestVersion - Ends");
     return studyDetails;
+  }
+
+  @Override
+  public StudyBo getStudyInfo(String studyId) {
+    return studyDAO.getStudy(Integer.valueOf(studyId));
   }
 }
