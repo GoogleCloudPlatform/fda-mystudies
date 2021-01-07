@@ -406,7 +406,7 @@ resource "random_password" "passwords" {
     formatlist("%s_secret_key", local.apps))
   )
   length  = 16
-  special = true
+  special = false
 }
 
 resource "random_password" "tokens" {
