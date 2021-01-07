@@ -28,6 +28,7 @@ class ResourcesTableViewCell: UITableViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     self.subtextLbl.isHidden = true
+    self.subtextLbl.text = ""
     self.labelTitle?.text = ""
   }
 

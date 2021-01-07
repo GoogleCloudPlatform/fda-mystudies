@@ -381,7 +381,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optUserEntity.get();
-    JsonNode userInfo = userEntity.getUserInfo();
+    ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
 
     JsonNode passwordNode = userInfo.get(PASSWORD);
     if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
@@ -392,6 +392,7 @@ public class UserServiceImpl implements UserService {
       } else {
         // unlock the user account
         userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+        userInfo.put(LOGIN_ATTEMPTS, 0);
       }
     }
     String hash = getTextValue(passwordNode, HASH);
@@ -458,12 +459,11 @@ public class UserServiceImpl implements UserService {
   }
 
   private AuthenticationResponse updateInvalidLoginAttempts(
-      UserEntity userEntity, JsonNode userInfoJsonNode, AuditLogEventRequest auditRequest) {
+      UserEntity userEntity, ObjectNode userInfo, AuditLogEventRequest auditRequest) {
     if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_LOCKED);
     }
 
-    ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
     int loginAttempts =
         userInfo.hasNonNull(LOGIN_ATTEMPTS) ? userInfo.get(LOGIN_ATTEMPTS).intValue() : 0;
     loginAttempts += 1;
@@ -501,8 +501,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(
-      UserEntity userEntity, JsonNode userInfoJsonNode, AuditLogEventRequest auditRequest) {
-    ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
+      UserEntity userEntity, ObjectNode userInfo, AuditLogEventRequest auditRequest) {
     userInfo.put(LOGIN_TIMESTAMP, Instant.now().toEpochMilli());
 
     UserAccountStatus status = UserAccountStatus.valueOf(userEntity.getStatus());
@@ -535,7 +534,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private void validatePasswordExpiryAndAccountStatus(
-      UserEntity userEntity, JsonNode userInfo, AuditLogEventRequest auditRequest) {
+      UserEntity userEntity, ObjectNode userInfo, AuditLogEventRequest auditRequest) {
     JsonNode passwordNode =
         userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
             ? userInfo.get(ACCOUNT_LOCKED_PASSWORD)
