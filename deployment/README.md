@@ -477,9 +477,13 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
 1. Remove your user account from the groups you no longer need access to
 1. Revoke user access in your environment, for example:
     ```bash
-    gcloud auth revoke --all -q && \
+    gcloud auth revoke <user>@<domain> -q && \
       gcloud auth application-default revoke -q
     ```
+1. Optionally, confirm no other users are logged in, for example:
+    ```bash
+    gcloud auth list
+    ``` 
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
