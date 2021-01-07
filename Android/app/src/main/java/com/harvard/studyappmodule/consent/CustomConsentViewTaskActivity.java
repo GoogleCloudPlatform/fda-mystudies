@@ -928,6 +928,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       JSONObject body = new JSONObject();
       try {
         body.put("studyId", getIntent().getStringExtra(STUDYID));
+        body.put("siteId", siteId);
         body.put("eligibility", true);
 
         JSONObject consentbody = new JSONObject();

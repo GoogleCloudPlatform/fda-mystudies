@@ -18,18 +18,13 @@
         <th id="">Study ID
           <span class="sort"></span>
         </th>
+        <th id="">APP ID
+          <span class="sort"></span>
+        </th>
         <th id="">Study name
           <span class="sort"></span>
         </th>
-        <th id="">Category
-          <span class="sort"></span>
-        </th>
-        <th id="">Project lead
-          <span class="sort"></span>
-        </th>
-        <th id="">Research Sponsor
-          <span class="sort"></span>
-        </th>
+        
         <th id="">Status
           <span class="sort"></span>
         </th>
@@ -38,11 +33,17 @@
     </thead>
     <tbody>
       <c:forEach items="${studyBos}" var="study">
-        <tr>
+         <tr class="${study.status}" >
           <td style="display: none;">${study.createdOn}</td>
           <td style="display: none;">${study.liveStudyId}</td>
           <td>${study.customStudyId}</td>
+
+          <td>${study.appId}</td>
           <td>
+            <div class="studylist-txtoverflow" title="${fn:escapeXml(study.name)}">${study.name}</div>
+          </td>
+          <td>${study.status}</td>
+            <td>
             <div class="studylist-txtoverflow" title="${fn:escapeXml(study.name)}">${study.name}</div>
           </td>
           <td>${study.category}</td>
@@ -50,7 +51,7 @@
             <div class="createdFirstname">${study.projectLeadName}</div>
           </td>
           <td>${study.researchSponsor}</td>
-          <td>${study.status}</td>
+          <td class ="studyStatus${study.customStudyId}">${study.status}</td>
           <td>
             <span class="sprites_icon preview-g mr-lg viewStudyClass" isLive=""
                   studyId="${study.id}"
@@ -142,31 +143,34 @@
       document.body.appendChild(form);
       form.submit();
     });
+    $("#studies_list").DataTable({
+        "paging": true,
+        "abColumns": [
+          {"bSortable": true},
+          {"bSortable": true},
+          {"bSortable": true},
+          {"bSortable": true},
+          {"bSortable": true},
+          {"bSortable": false}
+        ],
+        "columnDefs": [{orderable: false, targets: [8]}],
+        "order": [[0, "desc"]],
+        "info": false,
 
-    $('#studies_list').DataTable({
-      "paging": true,
-      "abColumns": [
-        {"bSortable": true},
-        {"bSortable": true},
-        {"bSortable": true},
-        {"bSortable": true},
-        {"bSortable": true},
-        {"bSortable": false}
-      ],
-      "columnDefs": [{orderable: false, targets: [8]}],
-      "order": [[0, "desc"]],
-      "info": false,
+        "lengthChange": false,
+        language: {
+          "zeroRecords": "You haven't created any content yet.",
+        },
+        "searching": true,
+        "pageLength": 10,
+        "sDom": "rtip"
+         })
+         var oTable = $("#studies_list").DataTable() ;
+    showActivatedStudies()
 
-      "lengthChange": false,
-      language: {
-        "zeroRecords": "You haven't created any content yet.",
-      },
-      "searching": false,
-      "pageLength": 10
+    oTable.draw();
+ });
 
-    });
-
-  });
   $('.copyStudyClass').on('click', function () {
     var form = document.createElement('form');
     form.method = 'post';
@@ -199,4 +203,25 @@
       $(this).children().addClass('sort');
     }
   });
+  
+  function showActivatedStudies(status) {
+	  var oTable = $("#studies_list").DataTable() ;
+      if ($('#deactivatedBtn').is(":checked")) {
+          console.log("This is checked");
+          oTable
+          .columns([7]) //The index of column to search
+             .search('') //The RegExp search all string that not cointains USA
+          .draw();
+
+      } else {
+          console.log("This is Unchecked");
+         
+          oTable
+          .columns([7]) //The index of column to search
+             .search('^(?:(?!Deactivated).)*$\r?\n?', true, false) //The RegExp search all string that not cointains USA
+          .draw();
+      }
+     
+  }
+
 </script>
