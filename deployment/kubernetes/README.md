@@ -14,13 +14,13 @@ This directory contains some Kubernetes resources common to all applications. Al
     * A Kubernetes Ingress for routing HTTP calls to services in the
             cluster
   * pod_security_policy.yaml
-    * A restrictive Pod Security Policy that applies to the cluster apps.
+    * A restrictive Pod Security Policy that applies to the cluster apps
   * pod_security_policy-istio.yaml
     * A looser Pod Security Policy that only applies to Istio containers
-            in the cluster.
+            in the cluster
   * kubeapply.sh
     * A helper script that applies all resources to the cluster. Not
-            required, the manual steps will be described below.
+            required, the manual steps will be described below
 * auth-server/
   * tf-deployment.yaml
     * A Kubernetes Deployment, deploying the app along with its secrets.
