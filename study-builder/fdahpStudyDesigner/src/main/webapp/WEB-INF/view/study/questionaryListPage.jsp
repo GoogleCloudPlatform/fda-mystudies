@@ -267,12 +267,12 @@
           datarow.push(' ');
         } else {
           datarow.push(
-              '<div class="dis-ellipsis pr-100" title="obj.title">' + DOMPurify.sanitize(obj.title) + '</div>');
+              '<div class="dis-ellipsis pr-100" title='+DOMPurify.sanitize(obj.title)+'>' + DOMPurify.sanitize(obj.title) + '</div>');
         }
         if (typeof obj.frequency === "undefined" && typeof obj.frequency === "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push(obj.frequency);
+          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom Schedule' : obj.frequency);
         }
         var actionDiv = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewQuestionnaires("
             + parseInt(obj.id) + ");'></span>";

@@ -103,12 +103,16 @@
 				</div>
 				<div class="form-group">
 					<span class="radio radio-info radio-inline p-45"><input
-						type="radio" id="inlineRadio1" value="Yes" checked
-						name="enrollingParticipants" required> <label
+						type="radio" id="inlineRadio1" value="Yes" 
+						name="enrollingParticipants"
+						<c:if test="${studyBo.enrollingParticipants eq 'Yes' || studyBo.status eq 'Pre-launch'}">checked</c:if>
+						 required> <label
 						for="inlineRadio1">Yes</label> </span> <span class="radio radio-inline"><input
 						type="radio" id="inlineRadio2" value="No"
 						name="enrollingParticipants"
-						${studyBo.status eq 'Pre-launch' ?'disabled':''} required>
+						${studyBo.status eq 'Pre-launch' ?'disabled':''}
+						<c:if test="${ studyBo.enrollingParticipants eq 'No' }">checked</c:if>
+						 required>
 						<label for="inlineRadio2">No</label> </span>
 					<div class="help-block with-errors red-txt"></div>
 				</div>
