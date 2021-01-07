@@ -33,6 +33,7 @@ import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -75,9 +76,11 @@ public class StudyStateController {
 
     List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
     UserDetailsEntity user = commonService.getUserInfoDetails(userId);
+    List<String> siteIds =
+        studiesBeenList.stream().map(StudiesBean::getSiteId).collect(Collectors.toList());
     if (user != null) {
       List<ParticipantStudyEntity> existParticipantStudies =
-          studyStateService.getParticipantStudiesList(user);
+          studyStateService.getParticipantStudiesList(user, siteIds);
       studyStateRespBean =
           studyStateService.saveParticipantStudies(
               studiesBeenList, existParticipantStudies, userId, auditRequest);

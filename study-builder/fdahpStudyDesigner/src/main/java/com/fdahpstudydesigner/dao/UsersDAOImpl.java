@@ -215,7 +215,9 @@ public class UsersDAOImpl implements UsersDAO {
       }
     }
     logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Ends");
-    return msg;
+    if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+      return String.valueOf(userId);
+    } else return msg;
   }
 
   @Override

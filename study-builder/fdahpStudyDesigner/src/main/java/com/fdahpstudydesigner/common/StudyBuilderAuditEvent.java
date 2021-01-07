@@ -452,7 +452,7 @@ public enum StudyBuilderAuditEvent {
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
-      "User account locked for ${lock_time} due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
+      "User account locked for ${lock_time} minutes due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
       "ACCOUNT_LOCKED"),
 
   PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT(
