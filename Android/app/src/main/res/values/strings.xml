@@ -192,7 +192,7 @@
     <string name="enrollvalidated">Your eligibility to participate in this study has been successfully verified. You may proceed to the next steps.</string>
 
     <string name="search_location">search location</string>
-    <string name="survey_message">This survey is not available right now please try after some time.</string>
+    <string name="survey_message">It is not yet time to take the next run of this activity.</string>
     <string name="feedbacktitle">Feedback</string>
 
 
@@ -267,8 +267,8 @@
     <string name="missedrun">Missed</string>
     <string name="run">Run</string>
     <string name="upcoming_event">This is an upcoming event</string>
-    <string name="incomple_event">You missed the previous run of this activity. Please wait till the next run becomes available. Run timings are given on the Activities list screen.</string>
-    <string name="completed_event">This is a completed event</string>
+    <string name="incomple_event">It is not yet time to take the next run of this activity.</string>
+    <string name="completed_event">It is not yet time to take the next run of this activity.</string>
     <string name="current_activities">Current Activities</string>
     <string name="completed3">COMPLETED</string>
     <string name="pending">PENDING</string>

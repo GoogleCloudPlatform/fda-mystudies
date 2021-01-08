@@ -118,19 +118,19 @@
                                                     <color key="textColor" red="0.0" green="0.48627450980392156" blue="0.72941176470588232" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A study for pregnant women" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LLs-YR-ZfM" userLabel="Study Title">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="755" text="A study for pregnant women" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LLs-YR-ZfM" userLabel="Study Title">
                                                     <rect key="frame" x="142" y="65.5" width="228.5" height="21"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="10%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zic-wt-Oqv">
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="10%" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zic-wt-Oqv">
                                                     <rect key="frame" x="142" y="110" width="30" height="17"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
                                                     <color key="textColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="mpM-9q-5EE">
+                                                <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="mpM-9q-5EE">
                                                     <rect key="frame" x="178" y="115.5" width="218" height="7"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="6" id="2oE-Ba-ElE"/>
@@ -155,7 +155,7 @@
                                                 <constraint firstItem="CjI-3r-2Rg" firstAttribute="top" secondItem="kX2-At-u3e" secondAttribute="top" id="dEo-F9-1Wj"/>
                                                 <constraint firstItem="Otz-hB-kow" firstAttribute="leading" secondItem="CjI-3r-2Rg" secondAttribute="trailing" constant="9" id="jDJ-gL-oN7"/>
                                                 <constraint firstItem="mpM-9q-5EE" firstAttribute="centerY" secondItem="Zic-wt-Oqv" secondAttribute="centerY" id="jrx-W5-6Ou"/>
-                                                <constraint firstItem="Zic-wt-Oqv" firstAttribute="bottom" secondItem="uTo-Sz-Qy8" secondAttribute="bottom" priority="999" id="wNz-iM-Y7g"/>
+                                                <constraint firstItem="Zic-wt-Oqv" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="uTo-Sz-Qy8" secondAttribute="bottom" priority="999" id="wNz-iM-Y7g"/>
                                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Zic-wt-Oqv" secondAttribute="bottom" constant="25" id="zMj-Lt-4R8"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -255,6 +255,7 @@
                                                 <constraint firstItem="SlF-Pa-Dav" firstAttribute="leading" secondItem="BLa-xa-t4A" secondAttribute="trailing" constant="20" id="ROx-a0-ZAi"/>
                                                 <constraint firstItem="BLa-xa-t4A" firstAttribute="top" secondItem="n0P-tL-gDE" secondAttribute="top" constant="25" id="Thx-NB-ZkW"/>
                                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="BLa-xa-t4A" secondAttribute="bottom" constant="25" id="a15-C0-g1N"/>
+                                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="SlF-Pa-Dav" secondAttribute="bottom" constant="25" id="mWK-tN-FFG"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -266,8 +267,8 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
-                                    <outlet property="dataSource" destination="8qc-EF-dit" id="Lfd-vU-GBt"/>
-                                    <outlet property="delegate" destination="8qc-EF-dit" id="NHE-CI-zvK"/>
+                                    <outlet property="dataSource" destination="8qc-EF-dit" id="NoG-IO-7TI"/>
+                                    <outlet property="delegate" destination="8qc-EF-dit" id="vQP-OC-bXe"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -1203,252 +1204,102 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="18.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="4PH-Wi-e2b">
-                                <rect key="frame" x="0.0" y="900" width="375" height="666"/>
+                            <view contentMode="scaleToFill" id="jOk-hM-9Oa">
+                                <rect key="frame" x="0.0" y="600" width="414" height="155"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="73" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="jkc-0v-3Yb">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <view key="tableHeaderView" contentMode="scaleToFill" id="L25-As-XPh">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="178"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="Xbh-R9-X5r">
-                                            <rect key="frame" x="22" y="5" width="370" height="150"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <string key="text">You have chosen to delete your FDA app account. This will result in automatic withdrawl from all Studies.
-Below is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw.Please review and confirm.</string>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dFo-V9-p4s">
-                                            <rect key="frame" x="18" y="177" width="375" height="1"/>
-                                            <color key="backgroundColor" white="0.66666666666666663" alpha="0.50826733732876717" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="1" id="mn0-1g-pXy"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <constraints>
-                                        <constraint firstItem="dFo-V9-p4s" firstAttribute="leading" secondItem="L25-As-XPh" secondAttribute="leading" constant="18" id="9vg-Jh-a35"/>
-                                        <constraint firstAttribute="bottom" secondItem="dFo-V9-p4s" secondAttribute="bottom" id="Mgt-9U-Aqr"/>
-                                        <constraint firstItem="Xbh-R9-X5r" firstAttribute="centerX" secondItem="L25-As-XPh" secondAttribute="centerX" id="NNJ-Ln-9JM"/>
-                                        <constraint firstAttribute="trailing" secondItem="dFo-V9-p4s" secondAttribute="trailing" constant="21" id="RG9-tM-xMM"/>
-                                        <constraint firstItem="Xbh-R9-X5r" firstAttribute="centerY" secondItem="L25-As-XPh" secondAttribute="centerY" multiplier="0.898876" id="XHb-3o-xRm"/>
-                                        <constraint firstItem="Xbh-R9-X5r" firstAttribute="height" secondItem="L25-As-XPh" secondAttribute="height" multiplier="150/178" id="ccN-cq-vFb"/>
-                                        <constraint firstItem="Xbh-R9-X5r" firstAttribute="width" secondItem="L25-As-XPh" secondAttribute="width" multiplier="335/375" id="gJm-CT-3gG"/>
-                                    </constraints>
-                                </view>
-                                <view key="tableFooterView" contentMode="scaleToFill" id="oVn-su-3K1">
-                                    <rect key="frame" x="0.0" y="388" width="414" height="155"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AqF-5D-BJY">
-                                            <rect key="frame" x="21.5" y="30" width="371" height="43"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                            <state key="normal" title="I agree, proceed to deleting my account">
-                                                <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            </state>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="4"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                                    <integer key="value" value="1"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="deleteAccountAction:" destination="cV9-St-ahQ" eventType="touchUpInside" id="a8D-wm-jR0"/>
-                                            </connections>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lQD-pA-Zjm">
-                                            <rect key="frame" x="21.5" y="88" width="371" height="43"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                            <state key="normal" title="I do not wish to delete my account">
-                                                <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            </state>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="4"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                                    <integer key="value" value="1"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="doNotDeleteAccountAction:" destination="cV9-St-ahQ" eventType="touchUpInside" id="CxA-Ks-mIx"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <constraints>
-                                        <constraint firstItem="AqF-5D-BJY" firstAttribute="centerX" secondItem="oVn-su-3K1" secondAttribute="centerX" id="6Ko-Jd-HP7"/>
-                                        <constraint firstItem="AqF-5D-BJY" firstAttribute="height" secondItem="oVn-su-3K1" secondAttribute="height" multiplier="43/155" id="Hc7-k9-DST"/>
-                                        <constraint firstItem="lQD-pA-Zjm" firstAttribute="centerX" secondItem="oVn-su-3K1" secondAttribute="centerX" id="JKh-eC-LNj"/>
-                                        <constraint firstItem="lQD-pA-Zjm" firstAttribute="centerY" secondItem="oVn-su-3K1" secondAttribute="centerY" multiplier="1.4129" id="KXh-Rj-ZuJ"/>
-                                        <constraint firstItem="lQD-pA-Zjm" firstAttribute="leading" secondItem="AqF-5D-BJY" secondAttribute="leading" id="MQH-3O-TWs"/>
-                                        <constraint firstItem="lQD-pA-Zjm" firstAttribute="width" secondItem="AqF-5D-BJY" secondAttribute="width" id="O7z-ws-4hR"/>
-                                        <constraint firstItem="AqF-5D-BJY" firstAttribute="centerY" secondItem="oVn-su-3K1" secondAttribute="centerY" multiplier="0.664516" id="SBD-3p-get"/>
-                                        <constraint firstItem="lQD-pA-Zjm" firstAttribute="trailing" secondItem="AqF-5D-BJY" secondAttribute="trailing" id="jxx-23-rsa"/>
-                                        <constraint firstItem="AqF-5D-BJY" firstAttribute="width" secondItem="oVn-su-3K1" secondAttribute="width" multiplier="336/375" id="krb-6c-cbR"/>
-                                        <constraint firstItem="lQD-pA-Zjm" firstAttribute="height" secondItem="AqF-5D-BJY" secondAttribute="height" id="qj6-Da-UFF"/>
-                                    </constraints>
-                                </view>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ConfirmationCell" rowHeight="76" id="EXv-T3-DWR" customClass="ConfirmationTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="206" width="414" height="76"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EXv-T3-DWR" id="swK-l1-aRn">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="76"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Medication survey" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="Dr7-7K-rH5">
-                                                    <rect key="frame" x="22" y="20.5" width="370" height="22"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Response data will be retained" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="lMv-L4-SqQ">
-                                                    <rect key="frame" x="22" y="45.5" width="370" height="21"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="21" id="vzB-kl-8eb"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                                    <color key="textColor" red="0.54901960780000003" green="0.58431372550000005" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstItem="lMv-L4-SqQ" firstAttribute="width" secondItem="Dr7-7K-rH5" secondAttribute="width" id="5BX-Bh-tRB"/>
-                                                <constraint firstItem="Dr7-7K-rH5" firstAttribute="centerX" secondItem="swK-l1-aRn" secondAttribute="centerX" id="9j1-1H-5ii"/>
-                                                <constraint firstItem="lMv-L4-SqQ" firstAttribute="leading" secondItem="Dr7-7K-rH5" secondAttribute="leading" id="CLV-wh-lzh"/>
-                                                <constraint firstItem="Dr7-7K-rH5" firstAttribute="width" secondItem="swK-l1-aRn" secondAttribute="width" multiplier="335/375" id="D49-dq-VAR"/>
-                                                <constraint firstItem="lMv-L4-SqQ" firstAttribute="top" secondItem="Dr7-7K-rH5" secondAttribute="bottom" constant="3" id="Pgd-bK-xh5"/>
-                                                <constraint firstItem="lMv-L4-SqQ" firstAttribute="trailing" secondItem="Dr7-7K-rH5" secondAttribute="trailing" id="RZJ-CP-MjJ"/>
-                                                <constraint firstItem="Dr7-7K-rH5" firstAttribute="centerY" secondItem="swK-l1-aRn" secondAttribute="centerY" multiplier="0.82666" id="ag9-cJ-TXq"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fK6-h0-PuL">
+                                        <rect key="frame" x="21.5" y="30" width="371" height="43"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                        <state key="normal" title="I agree, proceed to deleting my account">
+                                            <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <outlet property="labelTitle" destination="Dr7-7K-rH5" id="hot-5g-pzN"/>
-                                            <outlet property="labelTitleDescription" destination="lMv-L4-SqQ" id="5dl-Cc-rRN"/>
+                                            <action selector="deleteAccountAction:" destination="cV9-St-ahQ" eventType="touchUpInside" id="aFG-60-gos"/>
                                         </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ConfirmationOptionalCell" rowHeight="78" id="OPN-7C-Ufb" customClass="ConfirmationOptionalTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="282" width="414" height="78"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OPN-7C-Ufb" id="2S6-Uy-1FW">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="78"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mental health survey" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="e60-ar-C8w">
-                                                    <rect key="frame" x="20" y="12" width="376.5" height="22"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="notChecked" translatesAutoresizingMaskIntoConstraints="NO" id="jJh-F0-cga">
-                                                    <rect key="frame" x="23" y="44.5" width="18" height="18"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="jJh-F0-cga" secondAttribute="height" multiplier="1:1" id="b7c-gM-5Vr"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <button opaque="NO" tag="11220" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b2d-cc-iAX">
-                                                    <rect key="frame" x="20" y="38" width="130" height="29"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="130" id="YAK-bd-EdX"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                                    <inset key="titleEdgeInsets" minX="33" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                    <state key="normal" title="Delete My Data">
-                                                        <color key="titleColor" red="0.54901960780000003" green="0.58431372550000005" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="deleteOrRetainDataButtonAction:" destination="OPN-7C-Ufb" eventType="touchUpInside" id="aRq-82-eg4"/>
-                                                    </connections>
-                                                </button>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="notChecked" translatesAutoresizingMaskIntoConstraints="NO" id="Xgb-dI-JRf">
-                                                    <rect key="frame" x="167" y="43.5" width="18" height="18"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="Xgb-dI-JRf" secondAttribute="height" multiplier="1:1" id="sF1-rr-bFP"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <button opaque="NO" tag="11221" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OL5-qf-Lfd">
-                                                    <rect key="frame" x="163" y="38" width="134" height="29"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="134" id="OSm-rl-Hpj"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                                    <inset key="titleEdgeInsets" minX="33" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                    <state key="normal" title="Retain My Data">
-                                                        <color key="titleColor" red="0.54901960780000003" green="0.58431372550000005" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="deleteOrRetainDataButtonAction:" destination="OPN-7C-Ufb" eventType="touchUpInside" id="TPV-V0-0ce"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="jJh-F0-cga" firstAttribute="centerY" secondItem="2S6-Uy-1FW" secondAttribute="centerY" multiplier="1.33333" constant="1.6699999999999999" id="EL7-Ic-3sX"/>
-                                                <constraint firstItem="OL5-qf-Lfd" firstAttribute="leading" secondItem="b2d-cc-iAX" secondAttribute="trailing" constant="13" id="HNf-ib-ZlM"/>
-                                                <constraint firstItem="jJh-F0-cga" firstAttribute="centerX" secondItem="2S6-Uy-1FW" secondAttribute="centerX" multiplier="0.154667" id="QHj-g7-ywl"/>
-                                                <constraint firstItem="Xgb-dI-JRf" firstAttribute="centerY" secondItem="2S6-Uy-1FW" secondAttribute="centerY" multiplier="1.35065" id="Sev-ac-g6e"/>
-                                                <constraint firstItem="OL5-qf-Lfd" firstAttribute="centerY" secondItem="2S6-Uy-1FW" secondAttribute="centerY" multiplier="1.3506" id="cx7-1M-Dvx"/>
-                                                <constraint firstItem="OL5-qf-Lfd" firstAttribute="leading" secondItem="Xgb-dI-JRf" secondAttribute="trailing" constant="-22" id="iei-PB-WOr"/>
-                                                <constraint firstItem="e60-ar-C8w" firstAttribute="leading" secondItem="2S6-Uy-1FW" secondAttribute="leading" constant="20" id="jeV-GD-idD"/>
-                                                <constraint firstItem="e60-ar-C8w" firstAttribute="width" secondItem="2S6-Uy-1FW" secondAttribute="width" multiplier="341/375" id="kec-bn-knJ"/>
-                                                <constraint firstItem="b2d-cc-iAX" firstAttribute="leading" secondItem="jJh-F0-cga" secondAttribute="trailing" constant="-21" id="lWn-e8-gdB"/>
-                                                <constraint firstItem="b2d-cc-iAX" firstAttribute="centerY" secondItem="2S6-Uy-1FW" secondAttribute="centerY" multiplier="1.35064" id="p8F-Ji-90T"/>
-                                                <constraint firstItem="e60-ar-C8w" firstAttribute="top" secondItem="2S6-Uy-1FW" secondAttribute="top" constant="12" id="xMu-yM-iha"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SU0-O1-TlB">
+                                        <rect key="frame" x="21.5" y="88" width="371" height="43"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                        <state key="normal" title="I do not wish to delete my account">
+                                            <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <outlet property="buttonDeleteData" destination="b2d-cc-iAX" id="eCw-5I-yKI"/>
-                                            <outlet property="buttonRetainData" destination="OL5-qf-Lfd" id="Uha-EL-jZS"/>
-                                            <outlet property="imageViewDeleteCheckBox" destination="jJh-F0-cga" id="ZP0-FV-iz3"/>
-                                            <outlet property="imageViewRetainCheckBox" destination="Xgb-dI-JRf" id="KFh-z5-aYb"/>
-                                            <outlet property="labelTitle" destination="e60-ar-C8w" id="vQN-4q-3hy"/>
+                                            <action selector="doNotDeleteAccountAction:" destination="cV9-St-ahQ" eventType="touchUpInside" id="X6W-Ay-ETw"/>
                                         </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="cV9-St-ahQ" id="6v3-Z8-vod"/>
-                                    <outlet property="delegate" destination="cV9-St-ahQ" id="OUR-U7-VSA"/>
-                                </connections>
-                            </tableView>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="centerX" secondItem="jOk-hM-9Oa" secondAttribute="centerX" id="2jU-nz-HvY"/>
+                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="width" secondItem="fK6-h0-PuL" secondAttribute="width" id="3Fw-GH-a4a"/>
+                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="trailing" secondItem="fK6-h0-PuL" secondAttribute="trailing" id="AWZ-Mq-HTl"/>
+                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="height" secondItem="fK6-h0-PuL" secondAttribute="height" id="BcA-xk-k5K"/>
+                                    <constraint firstItem="fK6-h0-PuL" firstAttribute="height" secondItem="jOk-hM-9Oa" secondAttribute="height" multiplier="43/155" id="QGv-kG-15y"/>
+                                    <constraint firstItem="fK6-h0-PuL" firstAttribute="width" secondItem="jOk-hM-9Oa" secondAttribute="width" multiplier="336/375" id="S4t-FH-rU5"/>
+                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="leading" secondItem="fK6-h0-PuL" secondAttribute="leading" id="XGb-9K-Kfd"/>
+                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="centerY" secondItem="jOk-hM-9Oa" secondAttribute="centerY" multiplier="1.4129" id="mbY-hZ-4FW"/>
+                                    <constraint firstItem="fK6-h0-PuL" firstAttribute="centerY" secondItem="jOk-hM-9Oa" secondAttribute="centerY" multiplier="0.664516" id="qoA-lP-GW0"/>
+                                    <constraint firstItem="fK6-h0-PuL" firstAttribute="centerX" secondItem="jOk-hM-9Oa" secondAttribute="centerX" id="yAX-sQ-Sbu"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have chosen to delete your FDA app account. This will result in automatic withdrawl from all Studies." lineBreakMode="tailTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="pJo-F3-pDh">
+                                <rect key="frame" x="20" y="25" width="374" height="56"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xge-QA-lNq">
+                                <rect key="frame" x="20" y="111" width="374" height="1"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="0.50826733729999996" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="AFx-aB-YAO"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="jkc-0v-3Yb" firstAttribute="leading" secondItem="olx-YB-iUs" secondAttribute="leading" id="VZL-KX-kIe"/>
-                            <constraint firstAttribute="bottom" secondItem="jkc-0v-3Yb" secondAttribute="bottom" id="aer-LQ-Alm"/>
-                            <constraint firstItem="jkc-0v-3Yb" firstAttribute="top" secondItem="lKO-kh-Nb3" secondAttribute="bottom" id="c05-7J-0wd"/>
-                            <constraint firstAttribute="trailing" secondItem="jkc-0v-3Yb" secondAttribute="trailing" id="gvQ-6C-zOh"/>
+                            <constraint firstItem="pJo-F3-pDh" firstAttribute="top" secondItem="lKO-kh-Nb3" secondAttribute="bottom" constant="25" id="CLT-I4-4su"/>
+                            <constraint firstItem="Xge-QA-lNq" firstAttribute="leading" secondItem="pJo-F3-pDh" secondAttribute="leading" id="EC5-1N-38g"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="pJo-F3-pDh" secondAttribute="trailing" id="K1d-3A-S0M"/>
+                            <constraint firstItem="pJo-F3-pDh" firstAttribute="leading" secondItem="olx-YB-iUs" secondAttribute="leadingMargin" id="YLy-jH-kHd"/>
+                            <constraint firstItem="Xge-QA-lNq" firstAttribute="trailing" secondItem="pJo-F3-pDh" secondAttribute="trailing" id="bi2-ra-tbt"/>
+                            <constraint firstItem="Xge-QA-lNq" firstAttribute="top" secondItem="pJo-F3-pDh" secondAttribute="bottom" constant="30" id="q0b-NY-JOS"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="BGP-ID-Ow1"/>
                     <connections>
-                        <outlet property="buttonDeleteAccount" destination="AqF-5D-BJY" id="Cnp-ws-oax"/>
-                        <outlet property="buttonDoNotDeleteAccount" destination="lQD-pA-Zjm" id="yXK-Yg-fDR"/>
-                        <outlet property="headerDescriptionLbl" destination="Xbh-R9-X5r" id="i7O-gK-KXg"/>
-                        <outlet property="tableViewConfirmation" destination="jkc-0v-3Yb" id="CiU-9K-bXe"/>
-                        <outlet property="tableViewFooterViewConfirmation" destination="oVn-su-3K1" id="nXS-7v-6Wt"/>
-                        <outlet property="tableViewHeaderViewConfirmation" destination="L25-As-XPh" id="caD-hG-jDx"/>
+                        <outlet property="buttonDeleteAccount" destination="SU0-O1-TlB" id="uNk-M4-5Qa"/>
+                        <outlet property="buttonDoNotDeleteAccount" destination="fK6-h0-PuL" id="que-de-NaG"/>
+                        <outlet property="headerDescriptionLbl" destination="pJo-F3-pDh" id="jSh-cu-6Tl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23d-hT-rMo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1788" y="1446.9265367316343"/>
+            <point key="canvasLocation" x="1786.9565217391305" y="1446.4285714285713"/>
         </scene>
         <!--Change Password View Controller-->
         <scene sceneID="nLa-qL-V7F">
@@ -2023,8 +1874,6 @@ Below is a list of studies that you are a part of and information on how your re
     </scenes>
     <resources>
         <image name="14.png" width="750" height="1334"/>
-        <image name="18.jpg" width="750" height="1440"/>
-        <image name="notChecked" width="18" height="18"/>
         <image name="notification_white" width="26" height="26"/>
         <image name="placeholder" width="102" height="103"/>
         <image name="profile_white" width="26" height="26"/>
