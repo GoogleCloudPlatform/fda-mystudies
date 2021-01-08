@@ -6,7 +6,8 @@
 -->
 
 # Release 2.0.1
-* Simplified deployment and created a new [deployment guide](/deployment/README.md)
+* Simplified semi-automated deployment
+* Published an updated [deployment guide](/deployment/README.md)
 * Fixed an issue that was causing flaky build tests in some environments
 * Fixed an issue that was preventing a database setup script from running during deployment 
 
