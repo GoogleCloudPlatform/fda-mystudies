@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-@Api(tags = "Get Token", description = "Get token from ORY Hydra")
+@Api(tags = "Get Token", description = "Get access token and refresh token based on grant type")
 public class OAuthController {
 
   private static final String STATUS_400_AND_ERRORS_LOG = "status=400 and errors=%s";

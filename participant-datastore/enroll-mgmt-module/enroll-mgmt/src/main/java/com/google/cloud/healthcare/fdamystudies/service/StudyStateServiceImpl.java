@@ -100,12 +100,17 @@ public class StudyStateServiceImpl implements StudyStateService {
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
 
+    logger.info("StudyStateServiceImpl siteIds ::" + siteIds.size());
     if (CollectionUtils.isEmpty(siteIds)) {
+      logger.info("StudyStateServiceImpl without siteIds ");
       participantStudyIds =
           participantStudyRepository.findByEmailAndStudyCustomIds(user.getEmail(), customStudyIds);
+      logger.info("StudyStateServiceImpl participantStudyIds 1 :: " + participantStudyIds.size());
     } else {
+      logger.info("StudyStateServiceImpl with siteIds " + siteIds.toString());
       participantStudyIds =
           participantStudyRepository.findByEmailAndSiteIds(user.getEmail(), siteIds);
+      logger.info("StudyStateServiceImpl participantStudyIds 2 :: " + participantStudyIds.size());
     }
 
     if (CollectionUtils.isNotEmpty(participantStudyIds)) {
