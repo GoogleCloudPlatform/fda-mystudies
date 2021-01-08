@@ -57,10 +57,6 @@ enum Branding {
     return brandConfig[JSONKey.leaveStudy] as? String ?? ""
   }
 
-  static var leaveStudyConfirmationText: String {
-    return brandConfig[JSONKey.leaveStudyConfirmationText] as? String ?? ""
-  }
-
   static var websiteLink: String {
     return brandConfig[JSONKey.websiteLink] as? String ?? ""
   }

@@ -18,45 +18,9 @@
   <!--  Start body tab section -->
   <div class="right-content-body">
     <div>
-      <c:if test="${studyBo.studyPreActiveFlag eq false}">
-        <div class="form-group mr-sm" style="white-space: normal;">
-          <button type="button" class="btn btn-primary blue-btn-action"
-                  id="publishId" onclick="validateStudyStatus(this);"
-              <c:choose>
-                <c:when test="${not empty permission}">
-                  disabled
-                </c:when>
-                <c:when
-                    test="${not empty studyBo.status && (studyBo.status eq 'Paused' || studyBo.status eq 'Pre-launch(Published)' || studyBo.status eq 'Active' || studyBo.status eq 'Deactivated')}">
-                  disabled
-                </c:when>
-              </c:choose>
-                  <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Publish as
-            Upcoming
-            Study
-          </button>
-        </div>
-      </c:if>
-      <c:if test="${studyBo.studyPreActiveFlag eq true}">
-        <div class="form-group mr-sm" style="white-space: normal;">
-          <button type="button" class="btn btn-primary blue-btn-action"
-                  id="unpublishId" onclick="validateStudyStatus(this);"
-              <c:choose>
-                <c:when test="${not empty permission}">
-                  disabled
-                </c:when>
-                <c:when
-                    test="${not empty studyBo.status && (studyBo.status eq 'Paused' || studyBo.status eq 'Active' || studyBo.status eq 'Deactivated')}">
-                  disabled
-                </c:when>
-              </c:choose>
-                  <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Unpublish
-          </button>
-        </div>
-      </c:if>
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default gray-btn-action "
-                id="lunchId" onclick="validateStudyStatus(this);"
+                id="lunchId" onclick="validateStudyStatus(this);" "style="margin-top:25px;"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
@@ -65,10 +29,17 @@
                   test="${not empty studyBo.status && (studyBo.status eq 'Active' || studyBo.status eq 'Paused' || studyBo.status eq 'Deactivated')}">
                 disabled
               </c:when>
+              <c:when test="${markAsCompleted eq false}">
+                disabled
+               </c:when>
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Launch
           Study
         </button>
+        <div class="form-group mr-sm" style="white-space: normal; margin-top:4px;">
+       This action publishes the study to the mobile app making it live and open to enrollment.  
+        Launching a study requires that all study sections be marked 'completed' indicating that all mandatory and intended content has been entered.
+      </div>
       </div>
 
       <div class="form-group mr-sm" style="white-space: normal;">
@@ -90,6 +61,9 @@
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Publish
           Updates
         </button>
+        <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
+        This action publishes updates to a study that is live. All sections need to be marked complete in order to publish updates to the study.
+      </div>
       </div>
 
       <div class="form-group mr-sm" style="white-space: normal;">
@@ -110,6 +84,10 @@
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Pause
         </button>
+         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
+        This action temporarily pauses the live study. Mobile app users can no longer participate in study activities until the study is resumed again.
+        However, they will still be able to view the dashboard and resources for the study.
+      </div>
       </div>
 
       <div class="form-group mr-sm" style="white-space: normal;">
@@ -130,6 +108,9 @@
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Resume
         </button>
+         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
+       This action resumes a paused study and brings it back to an 'active' state. Active studies can have updates published to them and can also be deactivated.
+      </div>
       </div>
 
       <div class="form-group mr-sm" style="white-space: normal;">
@@ -146,6 +127,10 @@
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Deactivate
         </button>
+         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
+       This action closes out a live study and deactivates it in the mobile app. 
+       Once deactivated, mobile app users will no longer be able to participate in the study. Deactivated studies cannot be reactivated.
+      </div>
       </div>
     </div>
   </div>
@@ -172,14 +157,12 @@
     var buttonText = obj.id;
     var messageText = "";
     if (buttonText) {
-      if (buttonText == 'unpublishId' || buttonText == 'pauseId'
+      if (buttonText == 'pauseId'
           || buttonText == 'deactivateId') {
-        if (buttonText == 'unpublishId') {
-          messageText = "You are attempting to Unpublish the study. Are you sure you wish to proceed?";
-        } else if (buttonText == 'pauseId') {
-          messageText = "You are attempting to Pause the study. Mobile app users can no longer participate in study activities until you resume the study again. However, they will still be able to view the study dashboard and study resources. Are you sure you wish to proceed?";
+         if (buttonText == 'pauseId') {
+        	 messageText = "You are attempting to pause the study. Are you sure you wish to proceed?";
         } else if (buttonText == 'deactivateId') {
-          messageText = "You are attempting to Deactivate a live study. Once deactivated, mobile app users will no longer be able to participate in the study. Also, deactivated studies can never be reactivated. Are you sure you wish to proceed?";
+            messageText = "You are attempting to deactivate the study. Are you sure you wish to proceed?";
         }
         bootbox.confirm({
           closeButton: false,
@@ -216,17 +199,7 @@
                 	showBootBoxMessage(buttonText,
                             messageText);
                 } else {
-                  if (buttonText == 'publishId') {
-                    messageText = "The Basic Information, Settings, Overview and Consent sections must be marked complete before publishing a study as upcoming. Please complete these sections and try again.";
-                  } else if (buttonText == 'lunchId') {
-                    messageText = "All Study Builder sections must be marked complete to publish the study. Please complete these sections to proceed.";
-                  } else if (buttonText == 'updatesId') {
-                    messageText = "All Study Builder sections must be marked complete to publish updates to the study. Please complete these sections to proceed.";
-                  }
-                  bootbox.confirm(message, function (result) {
-                    bootbox.alert(messageText);
-                  })
-
+                	  bootbox.alert(message) ;
                 }
               },
               error: function status(data, status) {
@@ -249,13 +222,11 @@
 
   function showBootBoxMessage(buttonText, messageText) {
     if (buttonText == 'resumeId') {
-      messageText = "Resuming the study will allow mobile app users to resume participation. Would you like to proceed?";
-    } else if (buttonText == 'publishId') {
-      messageText = "Publishing the study as \"upcoming\" will enable mobile app users to see the study overview and consent form, but will not allow enrollment. Would you like to proceed?";
+    	 messageText = "You are attempting to resume the study. Are you sure you wish to proceed?";
     } else if (buttonText == 'lunchId') {
-      messageText = "Launching the study will allow mobile application users to see the study and start participating. Would you like to proceed?";
+    	 messageText = "You are attempting to launch the study. Are you sure you wish to proceed?";
     } else if (buttonText == 'updatesId') {
-      messageText = "Publishing study updates will allow mobile application users to see the changes to the study. Would you like to proceed?";
+    	 messageText = "You are attempting to publish updates to a live study. Are you sure you wish to proceed?";
     }
     bootbox.confirm({
       closeButton: false,

@@ -1041,7 +1041,7 @@ font-size: 12px;
 .deactivate_switch-input:checked ~ .deactivate_switch-label {
   background: #fff;
   box-shadow: none;
-  border: 2px solid #8b8989;
+  border: 2px solid #95a3a6;
 }
 .deactivate_switch-label {
   position: relative;
@@ -1084,13 +1084,13 @@ font-size: 12px;
   margin: -6px 0 0 -6px;
   width: 12px;
   height: 12px;
-  background: #8b8989;
+  background: #95a3a6;
   border-radius: 6px;
   box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
   background-image: -webkit-linear-gradient(top, #ce0037, #ce0037);
   background-image: -moz-linear-gradient(top, #ce0037, #ce0037);
   background-image: -o-linear-gradient(top, #ce0037, #ce0037);
-  background-image: linear-gradient(to bottom, #8b8989, #8b8989);
+  background-image: linear-gradient(to bottom, #95a3a6, #95a3a6);
 }
 .deactivate_switch-input:checked ~ .deactivate_switch-handle {
   left: 33px;
@@ -1104,7 +1104,7 @@ font-size: 12px;
   background-image: -webkit-linear-gradient(top, #5ec456, #5ec456);
   background-image: -moz-linear-gradient(top, #5ec456, #5ec456);
   background-image: -o-linear-gradient(top, #5ec456, #5ec456);
-  background-image: linear-gradient(to bottom, #8b8989, #8b8989);
+  background-image: linear-gradient(to bottom, #95a3a6, #95a3a6);
 }
 
 .switch-green > .deactivate_switch-input:checked ~ .deactivate_switch-label {
