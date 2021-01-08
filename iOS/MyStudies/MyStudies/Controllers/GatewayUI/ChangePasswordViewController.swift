@@ -278,7 +278,14 @@ extension ChangePasswordViewController: UITextFieldDelegate {
     case .oldPassword:
       self.oldPassword = textField.text!
     case .newPassword:
-      self.newPassword = textField.text!
+      if let password = textField.text {
+        if !password.isEmpty,
+          !Utilities.isPasswordValid(text: password)
+        {
+          self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+        }
+        self.newPassword = password
+      }
     case .confirmPassword:
       self.confirmPassword = textField.text!
     }

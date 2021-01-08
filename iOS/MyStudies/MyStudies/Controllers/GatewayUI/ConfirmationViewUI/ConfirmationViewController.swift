@@ -21,16 +21,14 @@ import UIKit
 let kConfirmationSegueIdentifier = "confirmationSegue"
 let kHeaderDescription =
   """
-  You have chosen to delete your #APPNAME# Account. This will result in automatic withdrawal from all studies.
-  Below is a list of studies that you are a part of and information on how your response data will be handled \
-  with each after you withdraw. Please review and confirm.
+  You have chosen to delete your #APPNAME# account. \
+  This will result in automatic withdrawal from the studies you were enrolled in.
   """
 
 let kHeaderDescriptionStandalone =
   """
-  You have chosen to delete your #APPNAME# Account. This will result in automatic withdrawal from study.
-  Below is the study that you are a part of and information on how your response data will be handled after you withdraw. \
-  Please review and confirm.
+  You have chosen to delete your #APPNAME# account. \
+  This will result in automatic withdrawal from the studies you were enrolled in.
   """
 
 let kConfirmWithdrawlSelectOptionsAlert =
@@ -70,17 +68,12 @@ class StudyToDelete {
 class ConfirmationViewController: UIViewController {
 
   // MARK: - Outlets
-  @IBOutlet var tableViewConfirmation: UITableView?
 
-  @IBOutlet var tableViewHeaderViewConfirmation: UIView?
-  @IBOutlet var tableViewFooterViewConfirmation: UIView?
   @IBOutlet var buttonDeleteAccount: UIButton?
   @IBOutlet var buttonDoNotDeleteAccount: UIButton?
   @IBOutlet var headerDescriptionLbl: UILabel?
 
   // MARK: - Properties
-  var tableViewRowDetails: NSMutableArray?
-
   lazy var studiesToDisplay: [Study] = []
   lazy var joinedStudies: [Study]! = []
   var studyWithoutWCData: Study?
@@ -90,14 +83,6 @@ class ConfirmationViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    // Load plist info
-    let plistPath = Bundle.main.path(
-      forResource: kConfirmationPlist,
-      ofType: kPlistFileType,
-      inDirectory: nil
-    )
-    tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
 
     let navTitle = Branding.productTitle
     var descriptionText =
@@ -140,32 +125,7 @@ class ConfirmationViewController: UIViewController {
       }
     } else {
       self.removeProgressIndicator()
-      self.createListOfStudiesToDelete()
     }
-  }
-
-  private func createListOfStudiesToDelete() {
-
-    for study in studiesToDisplay {
-      let studyId = study.studyId ?? ""
-      let participantId = study.userParticipateState.participantId ?? ""
-      let studyName = study.name ?? ""
-      let withdrawalConfigration = study.withdrawalConfigration ?? StudyWithdrawalConfigration()
-      let withdrawnStudy = StudyToDelete(
-        studyId: studyId,
-        participantId: participantId,
-        studyName: studyName,
-        withdrawalConfigration: withdrawalConfigration
-      )
-
-      if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.deleteData {
-        withdrawnStudy.shouldDelete = true
-      } else if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.noAction {
-        withdrawnStudy.shouldDelete = false
-      }
-      studiesToWithdraw.append(withdrawnStudy)
-    }
-    self.tableViewConfirmation?.reloadData()
   }
 
   // MARK: - Webservice Response Handlers
@@ -187,26 +147,15 @@ class ConfirmationViewController: UIViewController {
       buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
       viewControllerUsed: self
     ) { [weak self] in
-
-      if Utilities.isStandaloneApp() {
-        UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
-        Study.currentStudy = nil
-        self?.slideMenuController()?.leftViewController?.navigationController?
-          .popToRootViewController(
-            animated: true
-          )
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-          UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
-        }
-      } else {
-
-        let leftController =
-          self?.slideMenuController()?.leftViewController
-          as! LeftMenuViewController
-        leftController.changeViewController(.studyList)
-        leftController.createLeftmenuItems()
+      UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
+      Study.currentStudy = nil
+      self?.slideMenuController()?.leftViewController?.navigationController?
+        .popToRootViewController(
+          animated: true
+        )
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
       }
-
     }
   }
 
@@ -245,59 +194,6 @@ class ConfirmationViewController: UIViewController {
   /// Don't Delete button action.
   @IBAction func doNotDeleteAccountAction(_ sender: UIButton) {
     _ = self.navigationController?.popViewController(animated: true)
-  }
-}
-
-// MARK: - TableView Data source
-extension ConfirmationViewController: UITableViewDataSource {
-
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return studiesToWithdraw.count
-  }
-
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-    let study = studiesToWithdraw[indexPath.row]
-    if study.withdrawalConfigration.type == StudyWithdrawalConfigrationType.askUser {
-      let cell =
-        tableView.dequeueReusableCell(
-          withIdentifier: kConfrimationOptionalCellIdentifier,
-          for: indexPath
-        )
-        as! ConfirmationOptionalTableViewCell
-      cell.configureCell(with: study)
-      return cell
-    } else {
-      // for ConfirmationTableViewCell data
-      let cell =
-        tableView.dequeueReusableCell(
-          withIdentifier: kConfrimationCellIdentifier,
-          for: indexPath
-        )
-        as! ConfirmationTableViewCell
-      cell.labelTitle?.text = study.name
-
-      if study.withdrawalConfigration.type == StudyWithdrawalConfigrationType.deleteData {
-        cell.labelTitleDescription?.text = NSLocalizedString(
-          kResponseDataDeletedText,
-          comment: ""
-        )
-      } else {
-        cell.labelTitleDescription?.text = NSLocalizedString(
-          kResponseDataRetainedText,
-          comment: ""
-        )
-      }
-      return cell
-    }
-  }
-}
-
-// MARK: - TableView Delegates
-extension ConfirmationViewController: UITableViewDelegate {
-
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
   }
 }
 

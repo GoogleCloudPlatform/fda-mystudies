@@ -38,8 +38,10 @@ class StudyListCell: UITableViewCell {
   }
   /// Cell cleanup.
   override func prepareForReuse() {
-    super.prepareForReuse()
     studyLogoImage?.image = placeholderImage
+    progressBarCompletion?.isHidden = true
+    labelCompletionValue?.isHidden = true
+    super.prepareForReuse()
   }
 
   /// Used to change the cell background color.
@@ -119,10 +121,13 @@ class StudyListCell: UITableViewCell {
       default:
         labelStudyUserStatus?.text = userStudyStatus.status.description
       }
-
-      // update completion %
-      self.labelCompletionValue?.text = String(userStudyStatus.completion) + "%"
-      self.progressBarCompletion?.progress = Float(userStudyStatus.completion) / 100
+      if userStudyStatus.status == .enrolled {
+        // update completion %
+        self.labelCompletionValue?.text = String(userStudyStatus.completion) + "%"
+        self.progressBarCompletion?.progress = Float(userStudyStatus.completion) / 100
+        self.labelCompletionValue?.isHidden = false
+        self.progressBarCompletion?.isHidden = false
+      }
 
       switch userStudyStatus.status {
       case .enrolled:

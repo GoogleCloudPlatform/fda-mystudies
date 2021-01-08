@@ -33,6 +33,7 @@ struct HydraAPI {
       "correlationId": SessionService.correlationID,
       "redirect_uri": AuthRouter.redirectURL,
       "state": String.randomString(length: 21),
+      "appName": Utilities.appName(),
     ]
     return
       try? AuthRouter
