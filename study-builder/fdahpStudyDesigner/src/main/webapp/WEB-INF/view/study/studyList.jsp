@@ -42,7 +42,7 @@
           <td>
             <div class="studylist-txtoverflow" title="${fn:escapeXml(study.name)}">${study.name}</div>
           </td>
-         <td class ="studyStatus${study.customStudyId}">${study.status}</td>
+          <td class ="studyStatus${study.customStudyId}">${study.status}</td>
           <td>
             <span class="sprites_icon preview-g mr-lg viewStudyClass" isLive=""
                   studyId="${study.id}"
