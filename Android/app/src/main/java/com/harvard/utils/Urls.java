@@ -17,6 +17,7 @@ package com.harvard.utils;
 
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
+import com.harvard.R;
 
 public class Urls {
   public static String BASE_URL_STUDY_DATASTORE = BuildConfig.BASE_URL_STUDY_DATASTORE;
@@ -43,6 +44,7 @@ public class Urls {
           + "&scope=offline_access"
           + "&response_type=code"
           + "&appId=" + BuildConfig.APP_ID
+          + "&appName=" + FdaApplication.getInstance().getString(R.string.app_name)
           + "&appVersion=" + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE
           + "&mobilePlatform=ANDROID"
           + "&source=MOBILE APPS"
