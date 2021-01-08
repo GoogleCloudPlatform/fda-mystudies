@@ -79,7 +79,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="TTa-2m-kUo">
                                         <rect key="frame" x="6" y="10" width="363" height="30"/>
                                         <subviews>
-                                            <button opaque="NO" tag="1188" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bc7-W1-fmy">
+                                            <button opaque="NO" tag="1188" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bc7-W1-fmy">
                                                 <rect key="frame" x="0.0" y="0.0" width="174.66666666666666" height="30"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
                                                 <state key="normal" title="Visit Website">
@@ -110,7 +110,7 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="gz3-j6-s6W" firstAttribute="width" secondItem="TTa-2m-kUo" secondAttribute="width" multiplier="181/375" id="xLm-it-X1P"/>
+                                            <constraint firstItem="gz3-j6-s6W" firstAttribute="width" relation="greaterThanOrEqual" secondItem="TTa-2m-kUo" secondAttribute="width" multiplier="181/375" id="xLm-it-X1P"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
@@ -1474,8 +1474,8 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ydf-ns-sGy">
-                                                    <rect key="frame" x="0.0" y="-9" width="375" height="126"/>
+                                                <view hidden="YES" alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ydf-ns-sGy">
+                                                    <rect key="frame" x="0.0" y="-9" width="390" height="126"/>
                                                     <color key="backgroundColor" red="0.85882352939999995" green="0.87450980389999999" blue="0.88235294119999996" alpha="0.75" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                 </view>
                                             </subviews>
@@ -1581,8 +1581,8 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PoZ-jL-h8z">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="126"/>
+                                                <view hidden="YES" alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PoZ-jL-h8z">
+                                                    <rect key="frame" x="0.0" y="0.0" width="390" height="126"/>
                                                     <color key="backgroundColor" red="0.85882352941176465" green="0.87450980392156863" blue="0.88235294117647056" alpha="0.75" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kZn-fp-xPx">
@@ -1608,7 +1608,7 @@
                                                             <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                         </view>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="45" id="LN5-hI-w7k"/>
                                                         <constraint firstAttribute="height" constant="16" id="mfg-2d-eCs"/>
