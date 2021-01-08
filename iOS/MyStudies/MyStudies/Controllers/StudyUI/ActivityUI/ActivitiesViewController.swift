@@ -27,8 +27,7 @@ let kActivities = "activities"
 let kActivityUnwindToStudyListIdentifier = "unwindeToStudyListIdentier"
 let kActivityAbondonedAlertMessage =
   """
-  You missed the previous run of this activity. Please wait till the next run becomes available. \
-  Run timings are given on the Activities list screen.
+  It is not yet time to take the next run of this activity.
   """
 
 enum ActivityAvailabilityStatus: Int {
@@ -332,8 +331,9 @@ class ActivitiesViewController: UIViewController {
       todayDate = todayDate.addingTimeInterval(TimeInterval(difference!))
     }
 
-    if activity.activityRuns.count == activity.currentRunId,
-      activity.currentRun.isCompleted
+    if let status = activity.userParticipationStatus,
+      status.status == .completed,
+      activity.activityRuns.count == activity.currentRunId
     {
       return .past
     } else if activity.startDate != nil && activity.endDate != nil {
@@ -860,23 +860,6 @@ extension ActivitiesViewController: UITableViewDataSource {
         cell.delegate = self
       }
 
-      // Disable selection for past and upcoming activities.
-      if availabilityStatus == .past || availabilityStatus == .upcoming {
-        cell.isUserInteractionEnabled = false
-      } else if let currentRun = activity.currentRun,
-        currentRun.isCompleted
-      {
-        if cell.reuseIdentifier == kActivitiesTableViewScheduledCell {
-          cell.selectionStyle = .none
-        } else {
-          cell.isUserInteractionEnabled = false
-        }
-        cell.disabledView.isHidden = false
-      } else {
-        cell.isUserInteractionEnabled = true
-        cell.disabledView.isHidden = true
-      }
-
       // Set Cell data
       cell.populateCellDataWithActivity(
         activity: activity,
@@ -932,12 +915,17 @@ extension ActivitiesViewController: UITableViewDelegate {
             )
             self.updateActivityStatusToInProgress()
             self.selectedIndexPath = indexPath
+          } else if activity.currentRunId <= activity.totalRuns {
+            // Run not yet available.
+            self.view.makeToast(
+              NSLocalizedString(kActivityAbondonedAlertMessage, comment: "")
+            )
           }
         }
       } else if activity.userParticipationStatus?.status == .abandoned {
         // Run not available.
-        UIUtilities.showAlertWithMessage(
-          alertMessage: NSLocalizedString(kActivityAbondonedAlertMessage, comment: "")
+        self.view.makeToast(
+          NSLocalizedString(kActivityAbondonedAlertMessage, comment: "")
         )
       }
 

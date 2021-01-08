@@ -1173,7 +1173,10 @@ public class SiteServiceImpl implements SiteService {
       }
 
       StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
-      studyDetail.setStudyPermission(studySiteInfo.getEditPermission());
+      if (studySiteInfo.getStudyPermission() == 1 && studySiteInfo.getEditPermission() == 1) {
+        studyDetail.setStudyPermission(studySiteInfo.getEditPermission());
+      }
+
       if (StringUtils.isNotEmpty(studySiteInfo.getSiteId())) {
         prepareSiteDetails(enrolledInvitedCountMap, studyDetail, studySiteInfo);
       }
