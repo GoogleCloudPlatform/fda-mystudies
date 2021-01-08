@@ -72,13 +72,17 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="sub fifthConsentReview commonCls"> Review and E-consent Steps
+      <li class="sub fifthConsentReview commonCls"> E-consent Steps
         <c:if test="${studyBo.studySequenceBo.eConsent}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
       <li class="sixth commonCls">
         Study Activities
+        <c:if
+            test="${studyBo.studySequenceBo.studyExcQuestionnaries && studyBo.studySequenceBo.studyExcActiveTask}">
+          <span class="sprites-icons-2 tick pull-right mt-xs"></span>
+        </c:if>
       </li>
       <li class="sub sixthQuestionnaires commonCls"> Questionnaires
         <c:if test="${studyBo.studySequenceBo.studyExcQuestionnaries}">

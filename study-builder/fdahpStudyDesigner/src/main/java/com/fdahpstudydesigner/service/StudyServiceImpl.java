@@ -801,9 +801,7 @@ public class StudyServiceImpl implements StudyService {
         updateConsentBo.setComprehensionTestMinimumScore(
             consentBo.getComprehensionTestMinimumScore());
       }
-      if (consentBo.getAggrementOfTheConsent() != null) {
-        updateConsentBo.setAggrementOfTheConsent(consentBo.getAggrementOfTheConsent());
-      }
+      updateConsentBo.setAggrementOfTheConsent(FdahpStudyDesignerConstants.CONSENT_AGREEMENT);
       updateConsentBo =
           studyDAO.saveOrCompleteConsentReviewDetails(updateConsentBo, sesObj, customStudyId);
     } catch (Exception e) {
@@ -1435,5 +1433,22 @@ public class StudyServiceImpl implements StudyService {
     }
     logger.info("StudyServiceImpl - getStudyByLatestVersion - Ends");
     return studyDetails;
+  }
+
+  @Override
+  public boolean validateStudyActions(String studyId) {
+    logger.info("StudyServiceImpl - validateStudyAction() - Starts");
+    boolean markAsCompleted = false;
+    try {
+      markAsCompleted = studyDAO.validateStudyActions(studyId);
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - validateStudyAction() - ERROR ", e);
+    }
+    logger.info("StudyServiceImpl - validateStudyAction() - Ends");
+    return markAsCompleted;
+}
+  public StudyBo getStudyInfo(String studyId) {
+    return studyDAO.getStudy(Integer.valueOf(studyId));
+
   }
 }

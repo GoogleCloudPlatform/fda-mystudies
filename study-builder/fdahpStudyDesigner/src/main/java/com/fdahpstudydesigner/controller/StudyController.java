@@ -142,6 +142,7 @@ public class StudyController {
     StudyBo liveStudyBo = null;
     String actionSucMsg = "";
     StudyPermissionBO studyPermissionBO = null;
+    boolean markAsCompleted = false;
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -200,11 +201,13 @@ public class StudyController {
           liveStudyBo = studyService.getStudyLiveStatusByCustomId(studyBo.getCustomStudyId());
           studyPermissionBO =
               studyService.findStudyPermissionBO(studyBo.getId(), sesObj.getUserId());
+          markAsCompleted = studyService.validateStudyActions(studyId);
           map.addAttribute("_S", sessionStudyCount);
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
           map.addAttribute("liveStudyBo", liveStudyBo);
           map.addAttribute("studyPermissionBO", studyPermissionBO);
+          map.addAttribute("markAsCompleted", markAsCompleted);
           mav = new ModelAndView("actionList", map);
         } else {
           return new ModelAndView("redirect:/adminStudies/studyList.do");
@@ -2049,7 +2052,7 @@ public class StudyController {
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           StudyBuilderAuditEvent auditLogEvent = STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE;
           auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
-          mav = new ModelAndView("redirect:viewStudyNotificationList.do", map);
+          mav = new ModelAndView("redirect:actionList.do", map);
         } else {
           request
               .getSession()
@@ -3374,7 +3377,8 @@ public class StudyController {
                 ? ""
                 : request.getParameter("resourceTypeParm");
         if (resourceBO != null) {
-          auditRequest.setStudyId(studyId);
+          StudyBo studyBo = studyService.getStudyInfo(studyId);
+          auditRequest.setStudyId(studyBo.getCustomStudyId());
           if (!("").equals(buttonText)) {
             if (("save").equalsIgnoreCase(buttonText)) {
               resourceBO.setAction(false);
@@ -4247,9 +4251,6 @@ public class StudyController {
     JSONObject jsonobject = new JSONObject();
     PrintWriter out;
     String message = FdahpStudyDesignerConstants.FAILURE;
-    Checklist checklist = null;
-    String checkListMessage = "No";
-    String checkFailureMessage = "";
     try {
       HttpSession session = request.getSession();
       SessionObject userSession =
@@ -4282,52 +4283,10 @@ public class StudyController {
           // validation and success/error message should send to
           // actionListPAge
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
-              || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)
-              || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_PUBLISH)) {
+              || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
             message = studyService.validateStudyAction(studyId, buttonText);
           } else {
             message = FdahpStudyDesignerConstants.SUCCESS;
-          }
-          checklist = studyService.getchecklistInfo(Integer.valueOf(studyId));
-          if (checklist != null) {
-            if ((checklist.isCheckbox1() && checklist.isCheckbox2())
-                && (checklist.isCheckbox3() && checklist.isCheckbox4())) {
-              checkListMessage = "Yes";
-            } else {
-              checkListMessage = "No";
-            }
-            if (checkListMessage.equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-              if ((checklist.isCheckbox3() && checklist.isCheckbox4())
-                  && (checklist.isCheckbox5() && checklist.isCheckbox6())) {
-                checkListMessage = "Yes";
-              } else {
-                checkListMessage = "No";
-              }
-            }
-            if (checkListMessage.equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-              if ((checklist.isCheckbox5() && checklist.isCheckbox6())
-                  && (checklist.isCheckbox7() && checklist.isCheckbox8())) {
-                checkListMessage = "Yes";
-              } else {
-                checkListMessage = "No";
-              }
-            }
-            if (checkListMessage.equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-              if (checklist.isCheckbox9() && checklist.isCheckbox10()) {
-                checkListMessage = "Yes";
-              } else {
-                checkListMessage = "No";
-              }
-            }
-          }
-          if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)) {
-            checkFailureMessage = FdahpStudyDesignerConstants.LUNCH_CHECKLIST_ERROR_MSG;
-          } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
-            checkFailureMessage = FdahpStudyDesignerConstants.PUBLISH_UPDATE_CHECKLIST_ERROR_MSG;
-          } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_RESUME)) {
-            checkFailureMessage = FdahpStudyDesignerConstants.RESUME_CHECKLIST_ERROR_MSG;
-          } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_PUBLISH)) {
-            checkListMessage = "Yes";
           }
         }
       }
@@ -4336,8 +4295,6 @@ public class StudyController {
     }
     logger.info("StudyActiveTasksController - validateStudyAction() - Ends ");
     jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
-    jsonobject.put("checkListMessage", checkListMessage);
-    jsonobject.put("checkFailureMessage", checkFailureMessage);
     response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
     out = response.getWriter();
     out.print(jsonobject);

@@ -24,13 +24,9 @@ class StudyListCell: UITableViewCell {
 
   @IBOutlet var labelStudyUserStatus: UILabel?
   @IBOutlet var labelStudyTitle: UILabel?
-  @IBOutlet var labelStudyShortDescription: UILabel?
-  @IBOutlet var labelStudySponserName: UILabel?
   @IBOutlet var labelCompletionValue: UILabel?
-  @IBOutlet var labelAdherenceValue: UILabel?
   @IBOutlet var labelStudyStatus: UILabel?
   @IBOutlet var progressBarCompletion: UIProgressView?
-  @IBOutlet var progressBarAdherence: UIProgressView?
   @IBOutlet var studyLogoImage: UIImageView?
   @IBOutlet var studyUserStatusIcon: UIImageView?
   @IBOutlet var studyStatusIndicator: UIView?
@@ -42,8 +38,10 @@ class StudyListCell: UITableViewCell {
   }
   /// Cell cleanup.
   override func prepareForReuse() {
-    super.prepareForReuse()
     studyLogoImage?.image = placeholderImage
+    progressBarCompletion?.isHidden = true
+    labelCompletionValue?.isHidden = true
+    super.prepareForReuse()
   }
 
   /// Used to change the cell background color.
@@ -73,24 +71,8 @@ class StudyListCell: UITableViewCell {
     labelStudyTitle?.text = study.name
     updateStudyImage(study)
 
-    labelStudyShortDescription?.text = study.description
-    if study.sponserName != nil {
-      labelStudySponserName?.text = study.sponserName!
-    }
-
     progressBarCompletion?.layer.cornerRadius = 2
     progressBarCompletion?.layer.masksToBounds = true
-
-    let attributedString =
-      labelStudySponserName?.attributedText?.mutableCopy()
-      as! NSMutableAttributedString
-
-    let foundRange = attributedString.mutableString.range(of: study.category!)
-    attributedString.addAttributes(
-      [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Bold", size: 12)!],
-      range: foundRange
-    )
-    labelStudySponserName?.attributedText = attributedString
 
     // study status
     self.setStudyStatus(study: study)
@@ -107,7 +89,7 @@ class StudyListCell: UITableViewCell {
   /// - Parameter study: Access the data from Study Class.
   func setStudyStatus(study: Study) {
 
-    labelStudyStatus?.text = study.status.rawValue.uppercased()
+    labelStudyStatus?.text = study.status.rawValue
 
     switch study.status {
     case .active:
@@ -139,12 +121,13 @@ class StudyListCell: UITableViewCell {
       default:
         labelStudyUserStatus?.text = userStudyStatus.status.description
       }
-
-      // update completion %
-      self.labelCompletionValue?.text = String(userStudyStatus.completion) + "%"
-      self.labelAdherenceValue?.text = String(userStudyStatus.adherence) + "%"
-      self.progressBarCompletion?.progress = Float(userStudyStatus.completion) / 100
-      self.progressBarAdherence?.progress = Float(userStudyStatus.adherence) / 100
+      if userStudyStatus.status == .enrolled {
+        // update completion %
+        self.labelCompletionValue?.text = String(userStudyStatus.completion) + "%"
+        self.progressBarCompletion?.progress = Float(userStudyStatus.completion) / 100
+        self.labelCompletionValue?.isHidden = false
+        self.progressBarCompletion?.isHidden = false
+      }
 
       switch userStudyStatus.status {
       case .enrolled:

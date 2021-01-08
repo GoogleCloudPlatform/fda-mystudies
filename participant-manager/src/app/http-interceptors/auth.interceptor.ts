@@ -48,7 +48,7 @@ export class AuthInterceptor implements HttpInterceptor {
     void this.spinner.show();
 
     if (!this.authService.hasCredentials()) {
-      return next.handle(req).pipe(
+      return next.handle(this.setHeaders(req)).pipe(
         this.handleError(),
         finalize(() => {
           void this.spinner.hide();
@@ -167,7 +167,13 @@ export class AuthInterceptor implements HttpInterceptor {
           } else {
             const customError = err.error as ApiResponse;
             if (getMessage(customError.error_code)) {
-              this.toasterService.error(getMessage(customError.error_code));
+              if (
+                customError.error_code !== 'EC_0070' &&
+                customError.error_code !== 'EC_0071' &&
+                customError.error_code !== 'EC_0072'
+              ) {
+                this.toasterService.error(getMessage(customError.error_code));
+              }
             } else if (
               getGenericMessage(customError.error_code as GenericErrorCode)
             ) {
