@@ -2292,7 +2292,7 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITES.getPath())
                 .param("limit", "20")
-                .param("offset", "10")
+                .param("offset", "0")
                 .param("searchTerm", "10")
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -2346,7 +2346,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
-        .andExpect(jsonPath("$.studies", hasSize(21)))
+        .andExpect(jsonPath("$.studies", hasSize(5)))
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].customId").value("StudyCustomId20"))
         .andExpect(jsonPath("$.studies[4].customId").value("StudyCustomId16"));
