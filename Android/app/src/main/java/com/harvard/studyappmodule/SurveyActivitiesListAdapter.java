@@ -708,34 +708,28 @@ public class SurveyActivitiesListAdapter
                   .get(holder.getAdapterPosition())
                   .getStatus()
                   .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE) || currentRunStatusForActivities
-                  .get(holder.getAdapterPosition())
-                  .getStatus()
-                  .equalsIgnoreCase("")) {
+                  .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
             holder.container.setBackgroundColor(Color.parseColor("#c6ccd0"));
             holder.itemlayout.setBackgroundColor(Color.parseColor("#c6ccd0"));
             holder.box1.setAlpha(.5f);
             holder.box2.setAlpha(.5f);
-            holder.container.setClickable(false);
           } else {
             holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
             holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
             holder.box1.setAlpha(1f);
             holder.box2.setAlpha(1f);
-            holder.container.setClickable(true);
           }
         } else {
           holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
           holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
           holder.box1.setAlpha(1f);
           holder.box2.setAlpha(1f);
-          holder.container.setClickable(true);
         }
       } else {
         holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
         holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
         holder.box1.setAlpha(1f);
         holder.box2.setAlpha(1f);
-        holder.container.setClickable(true);
       }
     }
   }
