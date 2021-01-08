@@ -72,7 +72,7 @@ public class StudyStateController {
     logger.info("StudyStateController updateStudyState() - Starts ");
     StudyStateRespBean studyStateRespBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-
+    logger.info("StudyStateController updateStudyState()  " + studyStateReqBean.toString());
     List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
     UserDetailsEntity user = commonService.getUserInfoDetails(userId);
 
