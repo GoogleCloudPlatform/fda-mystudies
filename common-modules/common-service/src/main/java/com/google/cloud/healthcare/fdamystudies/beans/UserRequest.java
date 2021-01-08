@@ -42,4 +42,6 @@ public class UserRequest {
 
   /** Refer UserAccountStatus enum for values. */
   @NotNull private Integer status;
+
+  private String appName;
 }
