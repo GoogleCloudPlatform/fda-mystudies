@@ -441,6 +441,7 @@
     });
 
     $('#saveResourceId').click(function () {
+    	var richTextVal = $('#richText').val();
       if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
         var richText=$('#richText').summernote('code');
         var escaped = $('#richText').text(richText).html();
