@@ -103,6 +103,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1270,6 +1271,14 @@ public class SiteServiceImpl implements SiteService {
       site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
     }
     studyDetail.getSites().add(site);
+    List<SiteDetails> sortedSites =
+        studyDetail
+            .getSites()
+            .stream()
+            .sorted(Comparator.comparing(SiteDetails::getName, String.CASE_INSENSITIVE_ORDER))
+            .collect(Collectors.toList());
+    studyDetail.getSites().clear();
+    studyDetail.getSites().addAll(sortedSites);
   }
 
   private void prepareSiteDetails(
@@ -1310,6 +1319,14 @@ public class SiteServiceImpl implements SiteService {
     }
 
     studyDetail.getSites().add(siteDetails);
+    List<SiteDetails> sortedSites =
+        studyDetail
+            .getSites()
+            .stream()
+            .sorted(Comparator.comparing(SiteDetails::getName, String.CASE_INSENSITIVE_ORDER))
+            .collect(Collectors.toList());
+    studyDetail.getSites().clear();
+    studyDetail.getSites().addAll(sortedSites);
   }
 
   @Override

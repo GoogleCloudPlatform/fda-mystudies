@@ -210,4 +210,6 @@ public interface StudyDAO {
   public String getStudyCategory(Integer id);
 
   public Integer getEligibilityType(Integer studyId);
+
+  public boolean validateStudyActions(String studyId);
 }
