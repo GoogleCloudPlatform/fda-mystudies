@@ -50,6 +50,24 @@
                     {{
                       siteParticipants.participantRegistryDetail.customStudyId
                     }}
+                    -
+                    <span
+                      [ngClass]="{
+                        active_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Active,
+                        paused_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Paused,
+                        deactivated_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Deactivated
+                      }"
+                    >
+                      {{
+                        siteParticipants.participantRegistryDetail.studyStatus
+                      }}
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ siteParticipants.participantRegistryDetail.studyName }}
@@ -463,7 +481,14 @@
                   Sort By:
                 </span>
                 <th>
-                  <span *ngIf="activeTab !== onBoardingStatus.All">
+                  <span
+                    *ngIf="
+                      activeTab == onBoardingStatus.New ||
+                      activeTab == onBoardingStatus.Disabled ||
+                      (invitedYetToEnrollCount > 0 &&
+                        activeTab == onBoardingStatus.Invited)
+                    "
+                  >
                     <input
                       type="checkbox"
                       id="css"
@@ -577,7 +602,12 @@
                   <div>
                     <div class="form-group mb-none">
                       <div
-                        *ngIf="participant.enrollmentStatus == 'Yet to Enroll'"
+                        *ngIf="
+                          participant.enrollmentStatus ===
+                            enrollmentStatus.YetToEnroll ||
+                          participant.enrollmentStatus ===
+                            enrollmentStatus.NotEligile
+                        "
                       >
                         <input
                           type="checkbox"
@@ -606,9 +636,15 @@
                         </span>
                       </div>
                       <div
-                        *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
+                        *ngIf="
+                          participant.enrollmentStatus !==
+                            enrollmentStatus.YetToEnroll &&
+                          participant.enrollmentStatus !==
+                            enrollmentStatus.NotEligile
+                        "
                       >
                         <span
+                          [ngClass]="{'ml-4 pl-3': invitedYetToEnrollCount > 0}"
                           class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
@@ -662,9 +698,12 @@
                 <td *ngIf="activeTab != onBoardingStatus.New">
                   <div
                     [ngClass]="{
-                      'txt__green': participant.enrollmentStatus == 'Enrolled',
+                      'txt__green':
+                        participant.enrollmentStatus ==
+                        enrollmentStatus.Enrolled,
                       'txt__light-gray':
-                        participant.enrollmentStatus == 'Withdrawn'
+                        participant.enrollmentStatus ==
+                        enrollmentStatus.Withdrawn
                     }"
                   >
                     {{ participant.enrollmentStatus }}
@@ -682,7 +721,7 @@
                     .registryParticipants.length === 0
                 "
               >
-                <td colspan="3" class="text-center">No records found</td>
+                <td colspan="4" class="text-center">No records found</td>
               </tr>
             </tbody>
 

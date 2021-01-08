@@ -233,11 +233,6 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/hrLine1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorSecondaryBg" />
 
     <FrameLayout
         android:id="@+id/frameLayoutContainer"

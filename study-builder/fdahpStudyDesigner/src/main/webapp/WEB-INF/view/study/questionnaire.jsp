@@ -187,10 +187,10 @@
             </span>
             <span
                 class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                title="A human readable step identifier and must be unique across all activities of the study.Note that this field cannot be edited once the study is Launched."></span>
+                title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."></span>
           </div>
           <div class="form-group col-md-5 p-none">
-            <input autofocus="autofocus" type="text" custAttType="cust"
+            <input autofocus="autofocus" type="text" autocomplete="off" custAttType="customValidate"
                    class="form-control" name="shortTitle" id="shortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
                 <c:if
@@ -474,10 +474,11 @@
               Date/Time of launch (pick one)
               <span class="requiredStar">*</span>
               <span
-                  class="ml-xs sprites_v3 filled-tooltip"
+              <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
+                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                   data-toggle="tooltip"
                   data-placement="bottom"
-                  title="All date/time selections are based on server timezone.">
+                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
               </span>
             </div>
             <div class="mt-sm">
@@ -721,7 +722,7 @@
                   </span>
                   <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-placement="bottom" id="helpNote"
-                        title="All date/time selections are based on server timezone.">
+                        title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                   </span>
                   <br/> <input id="startDate"
                                type="text"
@@ -744,10 +745,6 @@
                             class="requiredStar">*
                         </span>
                       </span>
-                      <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                            data-placement="bottom" id="helpNote"
-                            title="All date/time selections are based on server timezone."></span>
-
                       <br/>
                       <span class="pr-md">Anchor
                         Date
@@ -812,10 +809,10 @@
 
             <div class="mt-md">
               <div class="gray-xs-f mb-xs">End Date
-                <span class="ml-xs sprites_v3 filled-tooltip"
+                <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                       data-toggle="tooltip"
                       data-placement="bottom" id="helpNote"
-                      title="All date/time selections are based on server timezone.">
+                      title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                 </span>
               </div>
               <div class="black-xs-f"
@@ -832,9 +829,9 @@
                 <span
                     class="requiredStar">*
                 </span>
-                <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+                <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip" data-toggle="tooltip"
                       data-placement="bottom" id="helpNote"
-                      title="All date/time selections are based on server timezone.">
+                      title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                 </span>
               </div>
               <div class="dailyContainer">
@@ -929,7 +926,7 @@
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
+                    title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                 </span>
                 <br/>
                 <span
@@ -986,7 +983,7 @@
                         class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
                         data-placement="bottom"
-                        title="All date/time selections are based on server timezone.">
+                        title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                     </span>
                   </span>
                   <br/> <input
@@ -1009,12 +1006,6 @@
                       <span class="gray-xs-f">Start date
                         <span
                             class="requiredStar">*
-                        </span>
-                        <span
-                            class="ml-xs sprites_v3 filled-tooltip"
-                            data-toggle="tooltip"
-                            data-placement="bottom"
-                            title="All date/time selections are based on server timezone.">
                         </span>
                       </span>
                       <br/>
@@ -1056,12 +1047,6 @@
                 <div class="dis_inlinetop p-none">
                   <span class="gray-xs-f">Time
                     <span class="requiredStar">*</span>
-                    <span
-                        class="ml-xs sprites_v3 filled-tooltip"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title="All date/time selections are based on server timezone.">
-                    </span>
                     <br/></span>
                   <span
                       class="form-group m-none dis-inline vertical-align-middle pr-md">
@@ -1118,10 +1103,10 @@
             <div class="mt-md">
               <div class="gray-xs-f mb-xs">End Date
                 <span
-                    class="ml-xs sprites_v3 filled-tooltip"
+                    class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
+                    title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                 </span>
               </div>
               <div class="black-xs-f"
@@ -1169,7 +1154,7 @@
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
+                    title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                 </span>
               </span>
               <br/>
@@ -1208,7 +1193,7 @@
                         class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
                         data-placement="bottom"
-                        title="All date/time selections are based on server timezone.">
+                        title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                     </span>
                   </span>
                   <br/> <input id="pickStartDate"
@@ -1250,12 +1235,6 @@
                       <span class="gray-xs-f">Start date
                         <span
                             class="requiredStar">*
-                        </span>
-                        <span
-                            class="ml-xs sprites_v3 filled-tooltip"
-                            data-toggle="tooltip"
-                            data-placement="bottom"
-                            title="All date/time selections are based on server timezone.">
                         </span>
                       </span>
                       <br/>
@@ -1300,12 +1279,6 @@
               <div class="dis_inlinetop p-none">
                 <span class="gray-xs-f">Time
                   <span class="requiredStar">*</span>
-                  <span
-                      class="ml-xs sprites_v3 filled-tooltip"
-                      data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="All date/time selections are based on server timezone.">
-                  </span>
                 </span>
                 <br/>
                 <span
@@ -1341,10 +1314,10 @@
             <div class="mt-md col-md-12 p-none">
               <div class="gray-xs-f mb-xs">End Date
                 <span
-                    class="ml-xs sprites_v3 filled-tooltip"
+                    class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
+                    title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                 </span>
               </div>
               <div class="black-xs-f"
@@ -1384,10 +1357,10 @@
               Select time period
               <span class="requiredStar">*</span>
               <span
-                  class="ml-xs sprites_v3 filled-tooltip"
+                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                   data-toggle="tooltip"
                   data-placement="bottom"
-                  title="All date/time selections are based on server timezone.">
+                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
               </span>
             </div>
             <div class="manuallyContainer">
@@ -1924,6 +1897,7 @@
         $('.monthlyStartCls').find('input:text').removeAttr('required');
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
+        $(".Selectedtooltip").hide();
       } else {
 
         localStorage.setItem("IsAnchorDateSelected", "false");
@@ -1968,6 +1942,7 @@
         $('.anchortypeclass').hide();
         $('.anchortypeclass').removeAttr('required');
         $("#anchorDateId").val("");
+        $(".Selectedtooltip").show();
       }
 
       if (schedule_opts == 'One time') {
@@ -3680,6 +3655,7 @@
       $('.manuallyContainer').find('.manually-option').each(function () {
         if ($(this).find('.cusTime').parent().find('.help-block').children().length > 0) {
           a++;
+          $(this).find('.cusTime').val('');
         }
       });
       isValidManuallySchedule = !(a > 0);
@@ -4233,12 +4209,12 @@
     }
     var valid = true;
     if (y && x) {
-      if (parseInt(x) > parseInt(y)) {
+      if (parseInt(x) >= parseInt(y)) {
         if (clickDone && isFromValid($('#onetimeydaysId').parents('form')))
           $('#onetimeydaysId').focus();
         $('#onetimeydaysId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y days should be greater than X days."));
+            "Y should be greater than X."));
         valid = false;
       } else {
         $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4403,12 +4379,12 @@
       if (parent_id === "0") {
 
         if (ydayValue !== "") {
-          if (xdayValue > ydayValue) {
+          if (xdayValue >= ydayValue) {
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Y days should be greater than X days."));
+                "Y should be greater than X."));
             $("#addbtn" + parent_id).addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
@@ -4426,12 +4402,12 @@
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue < pydayValue) {
+        if (xdayValue <= pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Child X days should be greater than parent Y days."));
+              "X should be less than Y of the current row and greater than Y of the previous row."));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -4439,12 +4415,12 @@
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
           $("#addbtn" + parent_id).addClass("not-allowed");
           if (ydayValue !== "") {
-            if (xdayValue > ydayValue) {
+            if (xdayValue >= ydayValue) {
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Y days should be greater than X days."));
+                  "Y should be greater than X."));
               $("#addbtn" + parent_id).addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -4478,12 +4454,12 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue < xdayValue) {
+      if (ydayValue <= xdayValue) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y days should be greater than X days."));
+            "Y should be greater than X."));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -4517,12 +4493,12 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue < xdayValue) {
+      if (ydayValue <= xdayValue) {
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y days should be greater than X days."));
+            "Y should be greater than X."));
         $("#addbtn" + parent_id).addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");
@@ -4538,12 +4514,12 @@
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue < pydayValue) {
+        if (xdayValue <= pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Child X days should be greater than parent Y days."));
+              "X should be less than Y of the current row and greater than Y of the previous row."));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");

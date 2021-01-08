@@ -32,7 +32,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_SENT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -494,7 +493,7 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Your password has been changed successfully"));
+        .andExpect(jsonPath("$.message").value("Your password has been reset"));
 
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
@@ -659,7 +658,6 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnDeactivatedForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
-    // headers.add("Authorization", VALID_BEARER_TOKEN);
 
     userEntity.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
     userRepository.saveAndFlush(userEntity);
@@ -735,14 +733,9 @@ public class UserControllerTest extends BaseMockIT {
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
-    auditEventMap.put(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT.getEventCode(), auditRequest);
     auditEventMap.put(PASSWORD_RESET_SUCCEEDED.getEventCode(), auditRequest);
 
-    verifyAuditEventCall(
-        auditEventMap,
-        PASSWORD_HELP_REQUESTED,
-        PASSWORD_RESET_SUCCEEDED,
-        PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
+    verifyAuditEventCall(auditEventMap, PASSWORD_HELP_REQUESTED, PASSWORD_RESET_SUCCEEDED);
   }
 
   @Test

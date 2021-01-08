@@ -9,7 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +19,6 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 public class StudyStateReqBean {
 
@@ -27,7 +27,5 @@ public class StudyStateReqBean {
     this.studies = studies;
   }
 
-  private List<StudiesBean> studies;
-  private List<ActivitiesBean> activity;
-  private String studyId;
+  @Valid @NotEmpty private List<StudiesBean> studies;
 }

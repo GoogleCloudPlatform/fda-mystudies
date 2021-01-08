@@ -1,9 +1,43 @@
 @import "./colors.scss";
+
+/* vietnamese */
+@font-face {
+  font-family: "Muli";
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/muli/v22/7Aulp_0qiz-aVz7u3PJLcUMYOFnOkEk40eiNxw.woff2)
+    format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1,
+    U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Muli";
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/muli/v22/7Aulp_0qiz-aVz7u3PJLcUMYOFnOkEk50eiNxw.woff2)
+    format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Muli";
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/muli/v22/7Aulp_0qiz-aVz7u3PJLcUMYOFnOkEk30eg.woff2)
+    format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
 body#body-container {
   background: var(--aqua-gray);
   color: var(--space-gray);
   font-size: 100%;
-  font-family: "Muli", sans-serif;
+  // font-family: "Muli", sans-serif;
+  font-family: "Muli" !important;
   font-weight: 600;
 }
 
@@ -681,6 +715,7 @@ footer ul li:last-child a {
 
 .close {
   cursor: pointer;
+  font-weight: 500 !important;
 }
 
 .sred {
@@ -785,7 +820,7 @@ footer ul li:last-child a {
 
 .banner__text {
   color: var(--light-gray);
-  font-size: 75%;
+  font-size: 75% !important;
 }
 
 .box__shadow-cmn {
@@ -1149,11 +1184,18 @@ select {
   margin-top: -3px;
 }
 
-/* Responsive code - tab mobile start here */
-
 .search_svg {
   background: #f1f3f4;
 }
+
+.custom_not-allowed {
+  cursor: not-allowed !important;
+}
+.custom_not-allowed:before {
+  cursor: not-allowed !important;
+}
+
+/* Responsive code - tab mobile start here */
 
 @media only screen and (max-width: 360px) and (min-width: 320px) {
   .search_svg {
@@ -1326,6 +1368,16 @@ select {
   background-color: #f44336;
 }
 
+.not-allowed {
+  cursor: not-allowed !important;
+}
+.custom_not-allowed {
+  cursor: not-allowed !important;
+}
+.custom_not-allowed:before {
+  cursor: not-allowed !important;
+}
+
 @-webkit-keyframes rotation {
   from {
     -webkit-transform: rotate(0deg);
@@ -1472,4 +1524,83 @@ select {
   .content .column {
     width: calc(100% - 30px);
   }
+}
+
+.table_row_hover_shadow tr:hover {
+  box-shadow: 1px 1px 6px 1px #ccd7e2;
+  cursor: pointer;
+  -webkit-transition: all 200ms ease-in;
+  -webkit-transform: scale(1);
+  -ms-transition: all 200ms ease-in;
+  -ms-transform: scale(1);
+  -moz-transition: all 200ms ease-in;
+  -moz-transform: scale(1);
+  transition: all 200ms ease-in;
+  transform: scale(1);
+}
+
+.text_decoration_underline {
+  text-decoration: underline;
+  text-underline-position: under;
+}
+
+.text_decoration_underline:hover {
+  text-decoration-color: var (--dark-blue);
+}
+
+.active_bg {
+  background-color: var(--light-green);
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--white);
+  display: inline-block;
+  border-radius: 58px;
+  line-height: 100%;
+}
+.active_text {
+  color: var(--light-green);
+}
+
+.paused_bg {
+  background-color: var(--orange-red);
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--white);
+  display: inline-block;
+  border-radius: 58px;
+  line-height: 100%;
+}
+.paused_text {
+  color: var(--orange-red);
+}
+
+.deactivated_bg {
+  background-color: var(--light-red);
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--white);
+  display: inline-block;
+  border-radius: 58px;
+  line-height: 100%;
+}
+.deactivated_text {
+  color: var(--light-red);
+}
+
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c4d1e6 transparent;
+}
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--periwinkle-gray);
+  border-radius: 20px;
+  border: 3px solid transparent;
 }

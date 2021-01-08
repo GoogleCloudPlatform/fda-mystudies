@@ -92,7 +92,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/studies-w.png" alt="">
                     </a>
-                    <div class='studyList'>Studies<br>
+                    <div class='studyList'>Configure<br> Studies<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -104,7 +104,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/notifications-w.png" alt="">
                     </a>
-                    <div class='studyList'>Notifications<br>
+                    <div class='studyList'>Send<br> Notifications<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -112,7 +112,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/user-w.png" alt="">
                     </a>
-                    <div>Users<br>
+                    <div>Manage<br> Users<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -120,7 +120,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/account-w.png" alt="">
                     </a>
-                    <div>My Account<br>
+                    <div>My<br> Account<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -130,15 +130,9 @@
             <div class="clearfix"></div>
           </div>
         </div>
-        <div class="footer">
-          <span>Copyright</span>
-          <span>
-            <a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
-          </span>
-          <span>
-            <a href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a>
-          </span>
-        </div>
+        <jsp:include page="../templates/copyright.jsp">
+          <jsp:param name="footerClass" value="footer" />
+        </jsp:include>
         <!--container-->
       </div>
 

@@ -8,7 +8,7 @@
         >
           <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
         </a>
-        <span>User Details</span>
+        <span>Admin Details</span>
       </div>
       <div>
         <button
@@ -17,7 +17,7 @@
         >
           <img class="mr-xs" src="assets/svgs/edit.svg" alt="Edit" />
           <span class="text__deco font12__light-grey">
-            Edit user details and permissions
+            Edit admin details and permissions
           </span>
         </button>
       </div>
@@ -54,8 +54,8 @@
                 <span
                   *ngIf="user.superAdmin"
                   class="tool"
-                  data-tip="A superadmin user has application-wide permissions.
-Superadmins can manage users of this Particpant Manager and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only. "
+                  data-tip="A superadmin has application-wide permissions.
+Superadmins can manage users of the Participant Manager and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only. "
                   tabindex="1"
                 >
                   <i
@@ -231,14 +231,24 @@ Superadmins can manage users of this Particpant Manager and in addition, can man
                                 </div>
                               </div>
                               <div
-                                class="fa__plus__minus"
-                                type="button"
-                                data-toggle="collapse"
-                                [attr.data-target]="
-                                  '#collapseTwo' + study.studyId
-                                "
-                                aria-expanded="false"
-                              ></div>
+                                class="app__id_num flex__justify__space-between"
+                              >
+                                <div class="orange__text__sm font-12 pr-2">
+                                  {{
+                                    study.selectedSitesCount
+                                      | i18nPlural: sitesMessageMapping
+                                  }}
+                                </div>
+                                <div
+                                  class="fa__plus__minus"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  [attr.data-target]="
+                                    '#collapseTwo' + study.studyId
+                                  "
+                                  aria-expanded="false"
+                                ></div>
+                              </div>
                             </div>
                           </div>
                         </div>

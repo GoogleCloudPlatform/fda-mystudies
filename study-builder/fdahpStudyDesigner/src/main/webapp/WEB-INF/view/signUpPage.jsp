@@ -116,9 +116,8 @@
               <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
               <c:if test="${isValidToken}">
                 <p class="col-xs-12  text-center boxcenter mb-xlg white__text">To
-                  begin using the services on &lt;Org Name&gt and complete your account setup
-                  process, kindly use the access code provided on your email and
-                  set up your account password.</p>
+                  begin using the services on ${orgName} and complete your account setup
+                  process, kindly set up your account password.</p>
                 <div class=" col-md-6 boxcenter">
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
@@ -156,17 +155,7 @@
                     <input type="text" class="input-field wow_input phoneMask"
                            id="" name="phoneNumber" placeholder="Phone Number"
                            value="${userBO.phoneNumber}" data-minlength="12"
-                           maxlength="12" required autocomplete="off"/>
-                    <div class="help-block with-errors red-txt"></div>
-                  </div>
-                </div>
-                <div class="col-xs-12">
-                  <div class="mb-lg form-group">
-                    <input autofocus="autofocus" type="text"
-                           class="input-field wow_input" id="" name="accessCode"
-                           maxlength="6" placeholder="Access Code"
-                           data-error="Access Code is invalid" required
-                           autocomplete="off"/>
+                           maxlength="12" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -234,21 +223,9 @@
             </form:form>
           </div>
           <!--container-->
-          <div class="footer">
-            <span>Copyright</span>
-            <span>
-              <a
-                  href="/studybuilder/terms.do"
-                  id="" target="_blank">Terms
-              </a>
-            </span>
-            <span>
-              <a
-                  href="/studybuilder/privacyPolicy.do"
-                  id="" target="_blank">Privacy Policy
-              </a>
-            </span>
-          </div>
+          <jsp:include page="../templates/copyright.jsp">
+           <jsp:param name="footerClass" value="footer" />
+          </jsp:include>
         </div>
       </div>
 

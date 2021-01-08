@@ -32,7 +32,7 @@
       <div class="right-content-head" style="z-index: 999;">
         <div class="text-right">
           <div class="black-md-f text-uppercase dis-line pull-left line34">
-            Review and E-Consent Steps
+            E-Consent Steps
             <c:set var="isLive">${_S}isLive</c:set>
               ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
           <div class="dis-line form-group mb-none mr-sm">
@@ -56,17 +56,12 @@
         <ul class="nav nav-tabs review-tabs">
           <li class="shareData active">
             <a data-toggle="tab"
-               href="#menu1">Data-sharing Permission
+               href="#menu1">Data-sharing permission
             </a>
           </li>
           <li class="consentReview">
             <a data-toggle="tab" href="#menu2">Consent
               Document for Review
-            </a>
-          </li>
-          <li class="econsentForm">
-            <a data-toggle="tab" href="#menu3">E-Consent
-              Form
             </a>
           </li>
         </ul>
@@ -268,38 +263,6 @@
               <div class="sign">Time</div>
             </div>
           </div>
-          <div id="menu3" class="tab-pane fade">
-            <div class="mt-xlg text-weight-semibold">The mobile app
-              captures the following from the user as part of the e-Consent
-              process for the study in the app:
-            </div>
-            <div class="mt-lg">
-              <ul class="list-style-image">
-                <li>Explicit confirmation of consent document review and
-                  agreement
-                  <small>(250 characters max)</small>
-                  <span
-                      class="requiredStar">*
-                  </span>
-                  <span
-                      class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      title="Text message shown to the prospect participant on the app, to confirm Review of and Agreement to the Consent Document."></span>
-                  <div class="form-group mt-sm mb-none">
-                    <input type="text" class="form-control" placeholder=""
-                           required name="aggrementOfTheConsent"
-                           id="aggrementOfTheConsentId"
-                           value="${consentBo.aggrementOfTheConsent}" maxlength="250"/>
-                    <div class="help-block with-errors red-txt"></div>
-                  </div>
-                </li>
-
-                <li>First Name</li>
-                <li>Last Name</li>
-                <li>E-signature</li>
-                <li>Date and Time of providing Consent</li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -483,87 +446,47 @@
           saveConsentReviewAndEConsentInfo("saveId");
         } else if (id == "doneId") {
           var isvalid = true;
-          var retainTxt = '${studyBo.retainParticipant}';
           if ($('#shareDataPermissionsYes').is(":checked")) {
             isvalid = maxLenLearnMoreEditor();
           }
           isFromValid("#consentReviewFormId");
-          if ($('.custom-form').find('.has-error.has-danger').length < 1 && $('#menu3').find(
-              '.has-error.has-danger').length < 1 && isvalid) {
-            var message = "";
-            var alertType = "";
-            if (retainTxt != null && retainTxt != '' && typeof retainTxt != 'undefined') {
-              if (retainTxt == 'Yes') {
-                alertType = "retained";
-              } else if (retainTxt == 'No') {
-                alertType = "deleted";
+          if ($('.custom-form').find('.has-error.has-danger').length < 1 && isvalid) {
+        	  var consentDocumentType = $('input[name="consentDocType"]:checked').val();
+              if (consentDocumentType == "Auto") {
+                saveConsentReviewAndEConsentInfo("doneId");
               } else {
-                alertType = "retained or deleted as per participant choice";
-              }
-              message = "You have a setting that needs study data to be " + alertType
-                  + " if the participant withdraws from the study. Please ensure you have worded Consent Terms in accordance with this. Click OK to proceed with completing this section or Cancel if you wish to make changes.";
-            }
-            bootbox.confirm({
-              closeButton: false,
-              message: message,
-              buttons: {
-                'cancel': {
-                  label: 'Cancel',
-                },
-                'confirm': {
-                  label: 'OK',
-                },
-              },
-              callback: function (result) {
-                if (result) {
-                  var consentDocumentType = $('input[name="consentDocType"]:checked').val();
-                  if (consentDocumentType == "Auto") {
-                    saveConsentReviewAndEConsentInfo("doneId");
-                  } else {
-                    var content = $('#newDocumentDivId').summernote('code');
-                    if (content != null && content != '' && typeof content != 'undefined' && content
-                        != '<p><br></p>') {
-                      saveConsentReviewAndEConsentInfo("doneId");
-                    } else {
-                      $("#newDocumentDivId").parent().find(".help-block").empty();
-                      $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
-                          ".help-block").empty().append(
-                          $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
-                    }
-                  }
-
+                var content = $('#newDocumentDivId').summernote('code');
+                if (content != null && content != '' && typeof content != 'undefined' && content
+                    != '<p><br></p>') {
+                  saveConsentReviewAndEConsentInfo("doneId");
                 } else {
-                  $("#doneId").prop('disabled', false);
+                  $("#newDocumentDivId").parent().find(".help-block").empty();
+                  $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
+                      ".help-block").append(
+                      '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
                 }
               }
-            });
           } else {
             var slaCount = $('.custom-form').find('.has-error.has-danger').length;
             var qlaCount = $('#menu2').find('.has-error.has-danger').length;
-            var rlaCount = $('#menu3').find('.has-error.has-danger').length;
             if (parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").text()
                 != '') {
               $('.shareData a').tab('show');
             } else if (parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(
                 ".help-block").text() != '') {
               $('.consentReview a').tab('show');
-            } else if (parseInt(rlaCount) >= 1) {
-              $('.econsentForm a').tab('show');
             }
           }
         }
       } else {
         var slaCount = $('.custom-form').find('.has-error.has-danger').length;
         var qlaCount = $('#menu2').find('.has-error.has-danger').length;
-        var rlaCount = $('#menu3').find('.has-error.has-danger').length;
         if (parseInt(slaCount) >= 1) {
           $('.shareData a').tab('show');
         } else if (parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(
             ".help-block").text() != '') {
           $('.consentReview a').tab('show');
-        } else if (parseInt(rlaCount) >= 1) {
-          $('.econsentForm a').tab('show');
-        }
+        } 
       }
     });
 
@@ -702,7 +625,6 @@
       var learn_more_text = $('#learnMoreTextId').summernote('code');
       learn_more_text = replaceSpecialCharacters(learn_more_text);
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-      var aggrement_of_theconsent = $("#aggrementOfTheConsentId").val();
 
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
@@ -762,9 +684,6 @@
       }
       if (null != allow_Permission) {
         consentInfo.allowWithoutPermission = allow_Permission;
-      }
-      if (null != aggrement_of_theconsent) {
-        consentInfo.aggrementOfTheConsent = aggrement_of_theconsent;
       }
       var data = JSON.stringify(consentInfo);
       $.ajax({

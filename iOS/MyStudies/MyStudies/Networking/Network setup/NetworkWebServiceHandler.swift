@@ -402,7 +402,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           code: kNoNetworkErrorCode,
           userInfo: [
             NSLocalizedDescriptionKey:
-              "You seem to be offline. Please connect to a network to proceed with this action.",
+              "You seem to be offline. Please connect to a network to proceed with this action."
           ]
         )
         delegate?.failedRequest(networkManager!, requestName: requestName!, error: error1)

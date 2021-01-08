@@ -169,7 +169,7 @@ class UserServices: NSObject {
     }
     let headerParams =
       [
-        kUserId: user.userId ?? "",
+        kUserId: user.userId ?? ""
       ]
 
     let params = [kDeactivateAccountDeleteData: studiesDict]
@@ -263,7 +263,10 @@ class UserServices: NSObject {
       kFeedbackBody: FeedbackDetail.feedback,
       kFeedbackSubject: FeedbackDetail.subject,
     ]
-    self.sendRequestWith(method: method, params: params, headers: nil)
+    let headers = [
+      "appName": Utilities.appName()
+    ]
+    self.sendRequestWith(method: method, params: params, headers: headers)
 
   }
 
@@ -278,7 +281,10 @@ class UserServices: NSObject {
       kContactusEmail: ContactUsFields.email,
       kContactusFirstname: ContactUsFields.firstName,
     ]
-    self.sendRequestWith(method: method, params: params, headers: nil)
+    let headers = [
+      "appName": Utilities.appName()
+    ]
+    self.sendRequestWith(method: method, params: params, headers: headers)
   }
 
   func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {

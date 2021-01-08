@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -42,7 +43,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -66,7 +66,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   @Transactional(readOnly = true)
-  public StudyResponse getStudies(String userId) {
+  public StudyResponse getStudies(String userId, Integer limit, Integer offset, String searchTerm) {
     logger.entry("getStudies(String userId)");
 
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
@@ -75,13 +75,16 @@ public class StudyServiceImpl implements StudyService {
     }
 
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
-      StudyResponse studyResponse = getStudiesForSuperAdmin(optUserRegAdminEntity.get());
+      StudyResponse studyResponse =
+          getStudiesForSuperAdmin(optUserRegAdminEntity.get(), limit, offset, searchTerm);
       logger.exit(
           String.format("total studies for superadmin=%d", studyResponse.getStudies().size()));
       return studyResponse;
     }
 
-    List<StudyInfo> studyDetails = studyRepository.getStudyDetails(userId);
+    List<StudyInfo> studyDetails =
+        studyRepository.getStudyDetails(
+            userId, limit, offset, StringUtils.defaultString(searchTerm));
 
     if (CollectionUtils.isEmpty(studyDetails)) {
       throw new ErrorCodeException(ErrorCode.NO_STUDIES_FOUND);
@@ -112,7 +115,8 @@ public class StudyServiceImpl implements StudyService {
         studyDetails, sitesCountMap, enrolledInvitedCountMap, optUserRegAdminEntity.get());
   }
 
-  private StudyResponse getStudiesForSuperAdmin(UserRegAdminEntity userRegAdminEntity) {
+  private StudyResponse getStudiesForSuperAdmin(
+      UserRegAdminEntity userRegAdminEntity, Integer limit, Integer offset, String searchTerm) {
 
     List<StudyCount> studyInvitedCountList = studyRepository.findInvitedCountByStudyId();
     Map<String, StudyCount> studyInvitedCountMap =
@@ -130,35 +134,35 @@ public class StudyServiceImpl implements StudyService {
     Map<String, SiteCount> sitesPerStudyMap =
         sitesList.stream().collect(Collectors.toMap(SiteCount::getStudyId, Function.identity()));
 
-    List<StudyEntity> studies = studyRepository.findAll();
+    List<StudyEntity> studies =
+        studyRepository.findAll(limit, offset, StringUtils.defaultString(searchTerm));
     List<StudyDetails> studyDetailsList = new ArrayList<>();
     for (StudyEntity study : studies) {
-      if (sitesPerStudyMap.containsKey(study.getId())) {
-        StudyDetails studyDetail = new StudyDetails();
-        studyDetail.setId(study.getId());
-        studyDetail.setCustomId(study.getCustomId());
-        studyDetail.setName(study.getName());
-        studyDetail.setType(study.getType());
-        studyDetail.setLogoImageUrl(study.getLogoImageUrl());
-        SiteCount siteCount = sitesPerStudyMap.get(study.getId());
-        if (siteCount != null && siteCount.getCount() != null) {
-          studyDetail.setSitesCount(siteCount.getCount());
-        }
-        studyDetail.setStudyPermission(Permission.EDIT.value());
-        Long enrolledCount = getCount(studyEnrolledCountMap, study.getId());
-        Long invitedCount = getCount(studyInvitedCountMap, study.getId());
-        studyDetail.setEnrolled(enrolledCount);
-        studyDetail.setInvited(invitedCount);
-        if (studyDetail.getInvited() != 0
-            && (studyDetail.getType().equals(OPEN_STUDY)
-                || studyDetail.getInvited() >= studyDetail.getEnrolled())) {
-          Double percentage =
-              (Double.valueOf(studyDetail.getEnrolled()) * 100)
-                  / Double.valueOf(studyDetail.getInvited());
-          studyDetail.setEnrollmentPercentage(percentage);
-        }
-        studyDetailsList.add(studyDetail);
+      StudyDetails studyDetail = new StudyDetails();
+      studyDetail.setId(study.getId());
+      studyDetail.setCustomId(study.getCustomId());
+      studyDetail.setName(study.getName());
+      studyDetail.setType(study.getType());
+      studyDetail.setStudyStatus(study.getStatus());
+      studyDetail.setLogoImageUrl(study.getLogoImageUrl());
+      SiteCount siteCount = sitesPerStudyMap.get(study.getId());
+      if (siteCount != null && siteCount.getCount() != null) {
+        studyDetail.setSitesCount(siteCount.getCount());
       }
+      studyDetail.setStudyPermission(Permission.EDIT.value());
+      Long enrolledCount = getCount(studyEnrolledCountMap, study.getId());
+      Long invitedCount = getCount(studyInvitedCountMap, study.getId());
+      studyDetail.setEnrolled(enrolledCount);
+      studyDetail.setInvited(invitedCount);
+      if (studyDetail.getInvited() != 0
+          && (studyDetail.getType().equals(OPEN_STUDY)
+              || studyDetail.getInvited() >= studyDetail.getEnrolled())) {
+        Double percentage =
+            (Double.valueOf(studyDetail.getEnrolled()) * 100)
+                / Double.valueOf(studyDetail.getInvited());
+        studyDetail.setEnrollmentPercentage(percentage);
+      }
+      studyDetailsList.add(studyDetail);
     }
     return new StudyResponse(
         MessageCode.GET_STUDIES_SUCCESS, studyDetailsList, userRegAdminEntity.isSuperAdmin());
@@ -183,6 +187,7 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setCustomId(study.getCustomId());
       studyDetail.setName(study.getStudyName());
       studyDetail.setType(study.getType());
+      studyDetail.setStudyStatus(study.getStatus());
       studyDetail.setLogoImageUrl(study.getLogoImageUrl());
       studyDetail.setStudyPermission(study.getEdit());
       studyDetail.setSitesCount(
@@ -240,8 +245,10 @@ public class StudyServiceImpl implements StudyService {
       String studyId,
       String[] excludeParticipantStudyStatus,
       AuditLogEventRequest auditRequest,
-      Integer page,
-      Integer limit) {
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
 
@@ -267,39 +274,77 @@ public class StudyServiceImpl implements StudyService {
         ParticipantMapper.fromStudyAppDetails(studyAppDetails, user);
 
     return prepareRegistryParticipantResponse(
-        participantRegistryDetail, userId, studyId, excludeParticipantStudyStatus, auditRequest);
+        participantRegistryDetail,
+        userId,
+        studyAppDetails,
+        excludeParticipantStudyStatus,
+        limit,
+        offset,
+        orderByCondition,
+        searchTerm,
+        auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
       ParticipantRegistryDetail participantRegistryDetail,
       String userId,
-      String studyId,
+      StudyAppDetails studyAppDetails,
       String[] excludeParticipantStudyStatus,
+      Integer limit,
+      Integer offset,
+      String orderByCondition,
+      String searchTerm,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
+    List<StudyParticipantDetails> studyParticipantDetails = new ArrayList<>();
+    Long participantCount = 0L;
+    if (studyAppDetails.getStudyType().equalsIgnoreCase(OPEN_STUDY)) {
+      studyParticipantDetails =
+          studyRepository.getStudyParticipantDetailsForOpenStudy(
+              studyAppDetails.getStudyId(),
+              excludeParticipantStudyStatus,
+              limit,
+              offset,
+              orderByCondition,
+              StringUtils.defaultString(searchTerm));
 
-    List<StudyParticipantDetails> studyParticipantDetails =
-        studyRepository.getStudyParticipantDetails(studyId);
+      participantCount =
+          studyRepository.countOpenStudyParticipants(
+              studyAppDetails.getStudyId(),
+              excludeParticipantStudyStatus,
+              StringUtils.defaultString(searchTerm));
+
+    } else if (studyAppDetails.getStudyType().equalsIgnoreCase(CommonConstants.CLOSE_STUDY)) {
+      studyParticipantDetails =
+          studyRepository.getStudyParticipantDetailsForClosedStudy(
+              studyAppDetails.getStudyId(),
+              limit,
+              offset,
+              orderByCondition,
+              StringUtils.defaultString(searchTerm));
+
+      participantCount =
+          studyRepository.countParticipants(
+              studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
+    }
+
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
-      if (ArrayUtils.contains(
-          excludeParticipantStudyStatus, participantDetails.getEnrolledStatus())) {
-        continue;
-      }
       ParticipantDetail participantDetail =
           ParticipantMapper.fromParticipantStudy(participantDetails);
       registryParticipants.add(participantDetail);
     }
+
     participantRegistryDetail.setRegistryParticipants(registryParticipants);
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
-    Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(studyId);
-    participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
+
+    participantRegistryResponse.setTotalParticipantCount(participantCount);
 
     auditRequest.setUserId(userId);
-    auditRequest.setStudyId(studyId);
+    auditRequest.setStudyId(studyAppDetails.getStudyId());
     auditRequest.setAppId(participantRegistryDetail.getAppId());
     participantManagerHelper.logEvent(STUDY_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
 

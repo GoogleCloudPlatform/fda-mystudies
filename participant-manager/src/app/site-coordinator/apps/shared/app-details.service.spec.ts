@@ -41,7 +41,7 @@ describe('AppDetailsService', () => {
     appDetailsService = new AppDetailsService(httpServiceSpyObj);
 
     appDetailsService
-      .get(expectedAppId.appId)
+      .get(expectedAppId.appId, 0, 10, '', '', '')
       .subscribe(
         (appDetail) =>
           expect(appDetail).toEqual(
@@ -63,7 +63,7 @@ describe('AppDetailsService', () => {
     appDetailsService = new AppDetailsService(httpServiceSpyObj);
 
     tick(40);
-    appDetailsService.get(expectedAppId.appId).subscribe(
+    appDetailsService.get(expectedAppId.appId, 0, 10, '', '', '').subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');

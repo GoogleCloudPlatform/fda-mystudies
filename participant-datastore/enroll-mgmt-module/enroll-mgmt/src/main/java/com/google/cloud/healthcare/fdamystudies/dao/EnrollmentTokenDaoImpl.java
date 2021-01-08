@@ -13,11 +13,14 @@ import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantStatusHistoryMapper;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistoryEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.sql.Timestamp;
@@ -46,8 +49,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
+  @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
+
   @Override
-  public boolean studyExists(@NotNull String studyId) {
+  public boolean studyExists(String studyId) {
     logger.info("EnrollmentTokenDaoImpl studyExists() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
@@ -76,8 +81,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   }
 
   @Override
-  public boolean isValidStudyToken(
-      @NotNull String token, @NotNull String studyId, @NotNull String email) {
+  public boolean isValidStudyToken(@NotNull String token, String studyId, @NotNull String email) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
     ParticipantRegistrySiteEntity participantRegistrySite = null;
     Session session = this.sessionFactory.getCurrentSession();
@@ -113,7 +117,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue) {
+  public boolean hasParticipant(String studyId, @NotNull String tokenValue) {
     logger.info("EnrollmentTokenDaoImpl hasParticipant() - Started ");
     List<Object[]> participantList = null;
     Session session = this.sessionFactory.getCurrentSession();
@@ -135,7 +139,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   }
 
   @Override
-  public boolean enrollmentTokenRequired(@NotNull String studyId) {
+  public boolean enrollmentTokenRequired(String studyId) {
     logger.info("EnrollmentTokenDaoImpl enrollmentTokenRequired() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyEntityCriteria = null;
@@ -166,7 +170,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   @SuppressWarnings("unchecked")
   @Override
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String studyId,
+      String studyId,
       String tokenValue,
       UserDetailsEntity userDetail,
       boolean isTokenRequired,
@@ -183,7 +187,6 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     Root<ParticipantRegistrySiteEntity> participantRegistryRoot = null;
     Predicate[] participantRegistryPredicates = new Predicate[1];
     List<ParticipantRegistrySiteEntity> participantRegistryList = null;
-    ParticipantRegistrySiteEntity participantRegistry = null;
 
     List<SiteEntity> sitesList = null;
     SiteEntity siteEntity = null;
@@ -229,18 +232,19 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
             .where(participantRegistryPredicates);
         participantRegistryList = session.createQuery(participantRegistryCriteria).getResultList();
         if (!participantRegistryList.isEmpty()) {
-          participantRegistry = participantRegistryList.get(0);
+          participantregistrySite = participantRegistryList.get(0);
 
           siteList =
               session
                   .createQuery("from SiteEntity where id =:Id")
-                  .setParameter("Id", participantRegistry.getSite().getId())
+                  .setParameter("Id", participantregistrySite.getSite().getId())
                   .getResultList();
           if (!siteList.isEmpty()) {
             siteEntity = siteList.get(0);
             criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
             root = criteriaQuery.from(ParticipantStudyEntity.class);
-            participantPredicates[0] = criteriaBuilder.equal(root.get("userDetails"), userDetail);
+            participantPredicates[0] =
+                criteriaBuilder.equal(root.get("participantRegistrySite"), participantregistrySite);
             participantPredicates[1] = criteriaBuilder.equal(root.get("study"), studyEntity);
             criteriaQuery.select(root).where(participantPredicates);
             participantStudiesList = session.createQuery(criteriaQuery).getResultList();
@@ -250,7 +254,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setStudy(studyEntity);
               participants.setParticipantId(participantid);
               participants.setUserDetails(userDetail);
-              participants.setParticipantRegistrySite(participantRegistry);
+              participants.setParticipantRegistrySite(participantregistrySite);
               participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
               participants.setEnrolledDate(Timestamp.from(Instant.now()));
               participants.setWithdrawalDate(null);
@@ -262,15 +266,15 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setStudy(studyEntity);
               participants.setParticipantId(participantid);
               participants.setUserDetails(userDetail);
-              participants.setParticipantRegistrySite(participantRegistry);
+              participants.setParticipantRegistrySite(participantregistrySite);
               participants.setStatus(EnrollmentStatus.ENROLLED.getStatus());
               participants.setEnrolledDate(Timestamp.from(Instant.now()));
               countAddParticipant = (String) session.save(participants);
             }
             if (StringUtils.isNotEmpty(countAddParticipant)) {
               isUpdated = true;
-              participantRegistry.setEnrollmentTokenUsed(true);
-              participantRegistrySiteRepository.saveAndFlush(participantRegistry);
+              participantregistrySite.setEnrollmentTokenUsed(true);
+              participantRegistrySiteRepository.saveAndFlush(participantregistrySite);
             }
           }
         }
@@ -345,6 +349,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       }
     }
 
+    ParticipantEnrollmentHistoryEntity participantStatusHistoryEntity =
+        ParticipantStatusHistoryMapper.toParticipantStatusHistoryEntity(
+            participantregistrySite, EnrollmentStatus.ENROLLED, userDetail);
+    participantEnrollmentHistoryRepository.save(participantStatusHistoryEntity);
     logger.info("EnrollmentTokenDaoImpl enrollParticipant() - Ends ");
     return participantBeans;
   }

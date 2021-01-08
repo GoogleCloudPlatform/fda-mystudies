@@ -77,14 +77,6 @@ class SignUpViewController: UIViewController {
     )
     tableViewRowDetails = NSMutableArray.init(contentsOfFile: plistPath!)
 
-    // info button
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(
-      image: UIImage.init(named: "info"),
-      style: .done,
-      target: self,
-      action: #selector(self.buttonInfoAction(_:))
-    )
-
     // Used for background tap dismiss keyboard
     let tapGestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer.init(
       target: self,
@@ -238,14 +230,6 @@ class SignUpViewController: UIViewController {
       agreedToTerms = true
       (sender as? UIButton)!.isSelected = !(sender as? UIButton)!.isSelected
     }
-  }
-
-  /// Displays alert regarding why the user has to register.
-  @IBAction func buttonInfoAction(_ sender: Any) {
-    UIUtilities.showAlertWithTitleAndMessage(
-      title: "Why Register?",
-      message: kRegistrationInfoMessage as NSString
-    )
   }
 
   // MARK: - Segue Method
@@ -463,8 +447,14 @@ extension SignUpViewController: UITextFieldDelegate {
       self.user.emailId = textField.text!
 
     case .password:
-      self.user.password = textField.text!
-
+      if let password = textField.text {
+        if !password.isEmpty,
+          !Utilities.isPasswordValid(text: password)
+        {
+          self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+        }
+        self.user.password = password
+      }
     case .confirmPassword:
       confirmPassword = textField.text!
     }

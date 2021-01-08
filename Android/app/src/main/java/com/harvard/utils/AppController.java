@@ -72,6 +72,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Random;
+import java.util.regex.Pattern;
+
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -93,6 +95,13 @@ public class AppController {
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
   public static String loginCallback = "login_callback";
+
+  public static final String STARTING_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
+  public static final String ENDDING_TAGS = "</\\w+>";
+  public static final String SELFCLOSINGS_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/>";
+  public static final String HTML_ENTITIES = "&[a-zA-Z][a-zA-Z0-9]+;";
+  public static final Pattern html_Pattern = Pattern
+          .compile("(" + STARTING_TAGS + ".*" + ENDDING_TAGS + ")|(" + SELFCLOSINGS_TAGS + ")|(" + HTML_ENTITIES + ")", Pattern.DOTALL);
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
     if (sharedPreferenceHelper == null) {
@@ -159,7 +168,7 @@ public class AppController {
     notificationManager.cancelAll();
 
     if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
-      Intent intent = new Intent(context, StudyActivity.class);
+      Intent intent = new Intent(context, GatewayActivity.class);
       ComponentName cn = intent.getComponent();
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
       context.startActivity(mainIntent);
@@ -226,6 +235,16 @@ public class AppController {
     return retTypeface;
   }
 
+  public static Typeface getHelveticaTypeface(Context context) {
+    Typeface retTypeface = null;
+    try {
+      retTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/HLM.ttf");
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    return retTypeface;
+  }
+
   public static Realm getRealmobj(Context context) {
     if (config == null) {
       RealmEncryptionHelper realmEncryptionHelper =
@@ -268,6 +287,10 @@ public class AppController {
     return new SimpleDateFormat("MMM dd, yyyy");
   }
 
+  public static SimpleDateFormat getDateFormatForActivityListMonthly() {
+    return new SimpleDateFormat("MMM yyyy");
+  }
+
   public static SimpleDateFormat getDateFormatForDailyRun() {
     return new SimpleDateFormat("yyyy-MM-dd");
   }
@@ -279,6 +302,10 @@ public class AppController {
 
   public static SimpleDateFormat getDateFormatForOtherFreq() {
     return new SimpleDateFormat("hh:mma, MMM dd, yyyy");
+  }
+
+  public static SimpleDateFormat getDateFormatForOneTime() {
+    return new SimpleDateFormat("hh:mma 'on' MMM dd, yyyy");
   }
 
   public static SimpleDateFormat getDateFormatForResourceAvailability() {
@@ -888,6 +915,49 @@ public class AppController {
     }
   }
 
+  public static void signout(Context context) {
+    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
+    settings.edit().clear().apply();
+    // delete passcode from keystore
+    String pass = AppController.refreshKeys("passcode");
+    if (pass != null) {
+      AppController.deleteKey("passcode_" + pass);
+    }
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = getRealmobj(context);
+    dbServiceSubscriber.deleteDb(context);
+    try {
+      NotificationModuleSubscriber notificationModuleSubscriber =
+              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+      notificationModuleSubscriber.cancleActivityLocalNotification(context);
+      notificationModuleSubscriber.cancleResourcesLocalNotification(context);
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    NotificationModuleSubscriber notificationModuleSubscriber =
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+    notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
+    dbServiceSubscriber.closeRealmObj(realm);
+
+    // clear notifications from notification tray
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+    notificationManager.cancelAll();
+
+    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
+      Intent intent = new Intent(context, GatewayActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    } else {
+      Intent intent = new Intent(context, StandaloneActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    }
+  }
+
   public static String getHashedValue(String valueToHash) {
     String generatedHash = null;
     try {
@@ -923,5 +993,19 @@ public class AppController {
 
   public static String getSourceKey(Resource resource) {
     return resource.getAvailability().getSourceKey();
+  }
+
+  public static String verifyHtmlInput(String input) {
+    String formattedText;
+    if (html_Pattern.matcher(input).find()) {
+      formattedText = input;
+    } else {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append("<p>");
+      stringBuilder.append(input);
+      stringBuilder.append("</p>");
+      formattedText =  stringBuilder.toString();
+    }
+    return formattedText;
   }
 }

@@ -16,6 +16,7 @@
 package com.harvard.studyappmodule;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
@@ -25,6 +26,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,8 +43,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class SurveyActivitiesListAdapter
-    extends RecyclerView.Adapter<SurveyActivitiesListAdapter.Holder>
-    implements CustomActivitiesDailyDialogClass.DialogClick {
+        extends RecyclerView.Adapter<SurveyActivitiesListAdapter.Holder>
+        implements CustomActivitiesDailyDialogClass.DialogClick {
   private final Context context;
   public ArrayList<ActivitiesWS> items;
   private SurveyActivitiesFragment surveyActivitiesFragment;
@@ -56,13 +58,13 @@ public class SurveyActivitiesListAdapter
   private ArrayList<Integer> timePos = new ArrayList<>();
 
   SurveyActivitiesListAdapter(
-      Context context,
-      ArrayList<ActivitiesWS> items,
-      ArrayList<String> status,
-      ArrayList<ActivityStatus> currentRunStatusForActivities,
-      SurveyActivitiesFragment surveyActivitiesFragment,
-      boolean paused,
-      Date joiningDate) {
+          Context context,
+          ArrayList<ActivitiesWS> items,
+          ArrayList<String> status,
+          ArrayList<ActivityStatus> currentRunStatusForActivities,
+          SurveyActivitiesFragment surveyActivitiesFragment,
+          boolean paused,
+          Date joiningDate) {
     this.context = context;
     this.items = items;
     this.status = status;
@@ -75,8 +77,8 @@ public class SurveyActivitiesListAdapter
   @Override
   public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
     View v =
-        LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.survey_activities_list_item, parent, false);
+            LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.survey_activities_list_item, parent, false);
     return new Holder(v);
   }
 
@@ -91,7 +93,10 @@ public class SurveyActivitiesListAdapter
   class Holder extends RecyclerView.ViewHolder {
     final RelativeLayout stateLayout;
     final AppCompatTextView state;
+    final LinearLayout itemlayout;
     final RelativeLayout container;
+    final RelativeLayout box1;
+    final RelativeLayout box2;
     final AppCompatImageView surveyIcon;
     final AppCompatTextView whenWasSurvey;
     final AppCompatTextView surveyTitle;
@@ -110,6 +115,9 @@ public class SurveyActivitiesListAdapter
       state = (AppCompatTextView) itemView.findViewById(R.id.state);
       run = (AppCompatTextView) itemView.findViewById(R.id.run);
       container = (RelativeLayout) itemView.findViewById(R.id.container);
+      itemlayout = (LinearLayout) itemView.findViewById(R.id.itemlayout);
+      box1 = (RelativeLayout) itemView.findViewById(R.id.box1);
+      box2 = (RelativeLayout) itemView.findViewById(R.id.box2);
       surveyIcon = (AppCompatImageView) itemView.findViewById(R.id.surveyIcon);
       whenWasSurvey = (AppCompatTextView) itemView.findViewById(R.id.whenWasSurvey);
       surveyTitle = (AppCompatTextView) itemView.findViewById(R.id.surveyTitle);
@@ -144,18 +152,18 @@ public class SurveyActivitiesListAdapter
     timePos.add(-1);
     GradientDrawable bgShape = (GradientDrawable) holder.process.getBackground();
     if (status
-        .get(holder.getAdapterPosition())
-        .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)) {
+            .get(holder.getAdapterPosition())
+            .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)) {
       holder.state.setText(R.string.current1);
     } else if (status
-        .get(holder.getAdapterPosition())
-        .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
+            .get(holder.getAdapterPosition())
+            .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
       holder.state.setText(R.string.upcoming1);
     } else {
       holder.state.setText(R.string.past);
     }
     if (holder.getAdapterPosition() == 0
-        || !status
+            || !status
             .get(holder.getAdapterPosition())
             .equalsIgnoreCase(status.get(holder.getAdapterPosition() - 1))) {
       holder.stateLayout.setVisibility(View.VISIBLE);
@@ -166,7 +174,7 @@ public class SurveyActivitiesListAdapter
     }
 
     if (items.get(holder.getAdapterPosition()).getActivityId().equalsIgnoreCase("")
-        || (items.get(holder.getAdapterPosition()).getActivityId().equalsIgnoreCase(null))) {
+            || (items.get(holder.getAdapterPosition()).getActivityId().equalsIgnoreCase(null))) {
       holder.container2.setVisibility(View.VISIBLE);
       holder.container.setVisibility(View.GONE);
       holder.hrLine1.setVisibility(View.GONE);
@@ -176,37 +184,37 @@ public class SurveyActivitiesListAdapter
       if (status
               .get(holder.getAdapterPosition())
               .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)
-          || status
+              || status
               .get(holder.getAdapterPosition())
               .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
         holder.process.setVisibility(View.GONE);
       } else if (currentRunStatusForActivities
-          .get(holder.getAdapterPosition())
-          .getStatus()
-          .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START)) {
+              .get(holder.getAdapterPosition())
+              .getStatus()
+              .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START)) {
         holder.process.setVisibility(View.VISIBLE);
         holder.process.setText(R.string.start);
         bgShape.setColor(context.getResources().getColor(R.color.colorPrimary));
       } else if (currentRunStatusForActivities
-          .get(holder.getAdapterPosition())
-          .getStatus()
-          .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)) {
+              .get(holder.getAdapterPosition())
+              .getStatus()
+              .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)) {
         holder.process.setVisibility(View.VISIBLE);
         holder.process.setText(R.string.resume);
         bgShape.setColor(context.getResources().getColor(R.color.rectangle_yellow));
       } else if (currentRunStatusForActivities
-          .get(holder.getAdapterPosition())
-          .getStatus()
-          .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED)) {
+              .get(holder.getAdapterPosition())
+              .getStatus()
+              .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED)) {
         holder.process.setVisibility(View.VISIBLE);
         holder.process.setText(R.string.completed2);
         bgShape.setColor(context.getResources().getColor(R.color.bullet_green_color));
       } else if (currentRunStatusForActivities
-          .get(holder.getAdapterPosition())
-          .getStatus()
-          .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
+              .get(holder.getAdapterPosition())
+              .getStatus()
+              .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
         holder.process.setVisibility(View.VISIBLE);
-        holder.process.setText(R.string.incompleted2);
+        holder.process.setText(R.string.missedrun);
         bgShape.setColor(context.getResources().getColor(R.color.red));
       } else {
         holder.process.setVisibility(View.VISIBLE);
@@ -221,8 +229,8 @@ public class SurveyActivitiesListAdapter
       }
 
       if (status
-          .get(holder.getAdapterPosition())
-          .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
+              .get(holder.getAdapterPosition())
+              .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
         holder.run.setVisibility(View.GONE);
       } else {
         if (currentRunStatusForActivities.get(position).getCurrentRunId() == 0) {
@@ -230,24 +238,24 @@ public class SurveyActivitiesListAdapter
         }
         holder.run.setVisibility(View.VISIBLE);
         holder.run.setText(
-            context.getResources().getString(R.string.run)
-                + ": "
-                + currentRunStatusForActivities.get(position).getCurrentRunId()
-                + "/"
-                + currentRunStatusForActivities.get(position).getTotalRun()
-                + ", "
-                + currentRunStatusForActivities.get(position).getCompletedRun()
-                + " "
-                + context.getResources().getString(R.string.done2)
-                + ", "
-                + currentRunStatusForActivities.get(position).getMissedRun()
-                + " "
-                + context.getResources().getString(R.string.missed));
+                context.getResources().getString(R.string.run)
+                        + ": "
+                        + currentRunStatusForActivities.get(position).getCurrentRunId()
+                        + "/"
+                        + currentRunStatusForActivities.get(position).getTotalRun()
+                        + ", "
+                        + currentRunStatusForActivities.get(position).getCompletedRun()
+                        + " "
+                        + context.getResources().getString(R.string.done2)
+                        + ", "
+                        + currentRunStatusForActivities.get(position).getMissedRun()
+                        + " "
+                        + context.getResources().getString(R.string.missed));
       }
       // completed status incomplete/complete settings
       if (status
-          .get(holder.getAdapterPosition())
-          .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
+              .get(holder.getAdapterPosition())
+              .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
         int missedRunVal = currentRunStatusForActivities.get(position).getMissedRun();
         int currentRunVal = currentRunStatusForActivities.get(position).getCurrentRunId();
         int totalRunVal = currentRunStatusForActivities.get(position).getTotalRun();
@@ -258,7 +266,7 @@ public class SurveyActivitiesListAdapter
           bgShape.setColor(context.getResources().getColor(R.color.black_shade));
         } else if (missedRunVal > 0) {
           holder.process.setVisibility(View.VISIBLE);
-          holder.process.setText(R.string.incompleted2);
+          holder.process.setText(R.string.missedrun);
           bgShape.setColor(context.getResources().getColor(R.color.red));
         } else {
           // completed
@@ -280,7 +288,9 @@ public class SurveyActivitiesListAdapter
       Date endDate = null;
       SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
       SimpleDateFormat simpleDateFormatForActivityList =
-          AppController.getDateFormatForActivityList();
+              AppController.getDateFormatForActivityList();
+      SimpleDateFormat simpleDateFormatForActivityListMonthly =
+              AppController.getDateFormatForActivityListMonthly();
       SimpleDateFormat simpleDateFormatForOtherFreq = AppController.getDateFormatForOtherFreq();
       SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUtcNoZone();
       try {
@@ -295,10 +305,10 @@ public class SurveyActivitiesListAdapter
         Logger.log(e);
       }
       if (items
-          .get(position)
-          .getFrequency()
-          .getType()
-          .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_DAILY)) {
+              .get(position)
+              .getFrequency()
+              .getType()
+              .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_DAILY)) {
         try {
           String abc = "";
           if (!items.get(position).getFrequency().getRuns().isEmpty()) {
@@ -307,7 +317,7 @@ public class SurveyActivitiesListAdapter
 
               try {
                 String dateString =
-                    items.get(position).getFrequency().getRuns().get(i).getStartTime().toString();
+                        items.get(position).getFrequency().getRuns().get(i).getStartTime().toString();
                 SimpleDateFormat sdf = AppController.getHourMinuteSecondFormat();
                 Date date = sdf.parse(dateString);
                 SimpleDateFormat dateFormat = AppController.getHourAmPmFormat1();
@@ -327,20 +337,20 @@ public class SurveyActivitiesListAdapter
             holder.time.setVisibility(View.VISIBLE);
           }
           holder.date.setText(
-              simpleDateFormatForActivityList.format(startDate)
-                  + " "
-                  + context.getResources().getString(R.string.to)
-                  + " "
-                  + simpleDateFormatForActivityList.format(endDate));
+                  simpleDateFormatForActivityList.format(startDate)
+                          + " "
+                          + context.getResources().getString(R.string.to)
+                          + " "
+                          + simpleDateFormatForActivityList.format(endDate));
         } catch (Exception e) {
           Logger.log(e);
         }
         holder.more.setVisibility(View.GONE);
       } else if (items
-          .get(position)
-          .getFrequency()
-          .getType()
-          .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MONTHLY)) {
+              .get(position)
+              .getFrequency()
+              .getType()
+              .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MONTHLY)) {
         try {
           String dateString = items.get(position).getStartTime().toString();
           Date date = simpleDateFormat5.parse(dateString.split("\\.")[0]);
@@ -349,31 +359,31 @@ public class SurveyActivitiesListAdapter
           SimpleDateFormat dateFormat2 = AppController.getDdFormat();
           String formattedDate2 = dateFormat2.format(date).toString();
           String text =
-              formattedDate1
-                  + " "
-                  + context.getResources().getString(R.string.on)
-                  + " day"
-                  + " "
-                  + formattedDate2
-                  + TEXT_EVERY_MONTH;
+                  formattedDate1
+                          + " "
+                          + context.getResources().getString(R.string.on)
+                          + " day"
+                          + " "
+                          + formattedDate2
+                          + TEXT_EVERY_MONTH;
           holder.time.setText(text);
           holder.time.setVisibility(View.VISIBLE);
 
           holder.date.setText(
-              simpleDateFormatForActivityList.format(startDate)
-                  + " "
-                  + context.getResources().getString(R.string.to)
-                  + " "
-                  + simpleDateFormatForActivityList.format(endDate));
+                  simpleDateFormatForActivityListMonthly.format(startDate)
+                          + " "
+                          + context.getResources().getString(R.string.to)
+                          + " "
+                          + simpleDateFormatForActivityListMonthly.format(endDate));
         } catch (Exception e) {
           Logger.log(e);
         }
         holder.more.setVisibility(View.GONE);
       } else if (items
-          .get(position)
-          .getFrequency()
-          .getType()
-          .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY)) {
+              .get(position)
+              .getFrequency()
+              .getType()
+              .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY)) {
         try {
           String dateString = items.get(position).getStartTime().toString();
           Date date = simpleDateFormat5.parse(dateString.split("\\.")[0]);
@@ -386,32 +396,32 @@ public class SurveyActivitiesListAdapter
           holder.time.setVisibility(View.VISIBLE);
 
           holder.date.setText(
-              simpleDateFormatForActivityList.format(startDate)
-                  + " "
-                  + context.getResources().getString(R.string.to)
-                  + " "
-                  + simpleDateFormatForActivityList.format(endDate));
+                  simpleDateFormatForActivityList.format(startDate)
+                          + " "
+                          + context.getResources().getString(R.string.to)
+                          + " "
+                          + simpleDateFormatForActivityList.format(endDate));
         } catch (Exception e) {
           Logger.log(e);
         }
         holder.more.setVisibility(View.GONE);
       } else if (items
-          .get(position)
-          .getFrequency()
-          .getType()
-          .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
+              .get(position)
+              .getFrequency()
+              .getType()
+              .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
         try {
-          holder.date.setText(getDateRange(items, endDate, position, startDate, joiningDate, context));
+          holder.date.setText(getDateRange(items, endDate, position, startDate, joiningDate, context, status));
         } catch (Exception e) {
           Logger.log(e);
         }
         holder.time.setVisibility(View.GONE);
         holder.more.setVisibility(View.GONE);
       } else if (items
-          .get(position)
-          .getFrequency()
-          .getType()
-          .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
+              .get(position)
+              .getFrequency()
+              .getType()
+              .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
         try {
 
           /// Scheduled
@@ -424,90 +434,90 @@ public class SurveyActivitiesListAdapter
             int pos = -1;
             for (int i = 0; i < size; i++) {
               if (!items
-                  .get(position)
-                  .getFrequency()
-                  .getRuns()
-                  .get(i)
-                  .getStartTime()
-                  .toString()
-                  .isEmpty()) {
+                      .get(position)
+                      .getFrequency()
+                      .getRuns()
+                      .get(i)
+                      .getStartTime()
+                      .toString()
+                      .isEmpty()) {
                 startTime =
-                    getDateFormatedString(
-                        items
-                            .get(position)
-                            .getFrequency()
-                            .getRuns()
-                            .get(i)
-                            .getStartTime()
-                            .toString()
-                            .split("\\.")[0]);
+                        getDateFormatedString(
+                                items
+                                        .get(position)
+                                        .getFrequency()
+                                        .getRuns()
+                                        .get(i)
+                                        .getStartTime()
+                                        .toString()
+                                        .split("\\.")[0]);
               }
               if (!items
-                  .get(position)
-                  .getFrequency()
-                  .getRuns()
-                  .get(i)
-                  .getEndTime()
-                  .toString()
-                  .isEmpty()) {
+                      .get(position)
+                      .getFrequency()
+                      .getRuns()
+                      .get(i)
+                      .getEndTime()
+                      .toString()
+                      .isEmpty()) {
                 endTime =
-                    getDateFormatedString(
-                        items
-                            .get(position)
-                            .getFrequency()
-                            .getRuns()
-                            .get(i)
-                            .getEndTime()
-                            .toString()
-                            .split("\\.")[0]);
+                        getDateFormatedString(
+                                items
+                                        .get(position)
+                                        .getFrequency()
+                                        .getRuns()
+                                        .get(i)
+                                        .getEndTime()
+                                        .toString()
+                                        .split("\\.")[0]);
               }
               pos =
-                  checkCurrentTimeInBetweenDates(
-                      items
-                          .get(position)
-                          .getFrequency()
-                          .getRuns()
-                          .get(i)
-                          .getStartTime()
-                          .split("\\.")[0],
-                      items
-                          .get(position)
-                          .getFrequency()
-                          .getRuns()
-                          .get(i)
-                          .getEndTime()
-                          .split("\\.")[0],
-                      i);
-              finalTime = startTime + " to " + endTime;
-              mScheduledTime.add(finalTime);
-
-              if (status
-                  .get(holder.getAdapterPosition())
-                  .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
-                try {
-                  finalpos = size - 1;
-                  holder.date.setText(
-                      simpleDateFormatForOtherFreq.format(
-                              simpleDateFormat5.parse(
-                                  items
+                      checkCurrentTimeInBetweenDates(
+                              items
                                       .get(position)
                                       .getFrequency()
                                       .getRuns()
                                       .get(i)
                                       .getStartTime()
-                                      .toString()
-                                      .split("\\.")[0]))
-                          + " to "
-                          + simpleDateFormatForOtherFreq.format(
-                              simpleDateFormat5.parse(
-                                  items
+                                      .split("\\.")[0],
+                              items
                                       .get(position)
                                       .getFrequency()
                                       .getRuns()
                                       .get(i)
                                       .getEndTime()
-                                      .toString()
-                                      .split("\\.")[0])));
+                                      .split("\\.")[0],
+                              i);
+              finalTime = startTime + " to " + endTime;
+              mScheduledTime.add(finalTime);
+
+              if (status
+                      .get(holder.getAdapterPosition())
+                      .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
+                try {
+                  finalpos = size - 1;
+                  holder.date.setText(
+                          simpleDateFormatForOtherFreq.format(
+                                  simpleDateFormat5.parse(
+                                          items
+                                                  .get(position)
+                                                  .getFrequency()
+                                                  .getRuns()
+                                                  .get(i)
+                                                  .getStartTime()
+                                                  .toString()
+                                                  .split("\\.")[0]))
+                                  + " to "
+                                  + simpleDateFormatForOtherFreq.format(
+                                  simpleDateFormat5.parse(
+                                          items
+                                                  .get(position)
+                                                  .getFrequency()
+                                                  .getRuns()
+                                                  .get(i)
+                                                  .getEndTime()
+                                                  .toString()
+                                                  .split("\\.")[0])));
                 } catch (ParseException e) {
                   Logger.log(e);
                 }
@@ -515,56 +525,56 @@ public class SurveyActivitiesListAdapter
                 if (i == 0) {
                   // if only 0 then show
                   holder.date.setText(
-                      simpleDateFormatForOtherFreq.format(
-                              simpleDateFormat5.parse(
-                                  items
-                                      .get(position)
-                                      .getFrequency()
-                                      .getRuns()
-                                      .get(i)
-                                      .getStartTime()
-                                      .toString()
-                                      .split("\\.")[0]))
-                          + " to "
-                          + simpleDateFormatForOtherFreq.format(
-                              simpleDateFormat5.parse(
-                                  items
-                                      .get(position)
-                                      .getFrequency()
-                                      .getRuns()
-                                      .get(i)
-                                      .getEndTime()
-                                      .toString()
-                                      .split("\\.")[0])));
+                          simpleDateFormatForOtherFreq.format(
+                                  simpleDateFormat5.parse(
+                                          items
+                                                  .get(position)
+                                                  .getFrequency()
+                                                  .getRuns()
+                                                  .get(i)
+                                                  .getStartTime()
+                                                  .toString()
+                                                  .split("\\.")[0]))
+                                  + " to "
+                                  + simpleDateFormatForOtherFreq.format(
+                                  simpleDateFormat5.parse(
+                                          items
+                                                  .get(position)
+                                                  .getFrequency()
+                                                  .getRuns()
+                                                  .get(i)
+                                                  .getEndTime()
+                                                  .toString()
+                                                  .split("\\.")[0])));
                 }
 
                 if (pos > 0) {
                   finalpos = pos;
                   try {
                     final Date d1 =
-                        simpleDateFormat5.parse(
-                            items
-                                .get(position)
-                                .getFrequency()
-                                .getRuns()
-                                .get(i)
-                                .getStartTime()
-                                .toString()
-                                .split("\\.")[0]);
+                            simpleDateFormat5.parse(
+                                    items
+                                            .get(position)
+                                            .getFrequency()
+                                            .getRuns()
+                                            .get(i)
+                                            .getStartTime()
+                                            .toString()
+                                            .split("\\.")[0]);
                     final Date d2 =
-                        simpleDateFormat5.parse(
-                            items
-                                .get(position)
-                                .getFrequency()
-                                .getRuns()
-                                .get(i)
-                                .getEndTime()
-                                .toString()
-                                .split("\\.")[0]);
+                            simpleDateFormat5.parse(
+                                    items
+                                            .get(position)
+                                            .getFrequency()
+                                            .getRuns()
+                                            .get(i)
+                                            .getEndTime()
+                                            .toString()
+                                            .split("\\.")[0]);
                     holder.date.setText(
-                        simpleDateFormatForOtherFreq.format(d1)
-                            + " to "
-                            + simpleDateFormatForOtherFreq.format(d2));
+                            simpleDateFormatForOtherFreq.format(d1)
+                                    + " to "
+                                    + simpleDateFormatForOtherFreq.format(d2));
                   } catch (Exception e) {
                     Logger.log(e);
                   }
@@ -577,12 +587,12 @@ public class SurveyActivitiesListAdapter
               if (mScheduledTime.size() > 1) {
                 int pickerSize = mScheduledTime.size() - 1;
                 String val =
-                    "<u>"
-                        + "+"
-                        + pickerSize
-                        + " "
-                        + context.getResources().getString(R.string.more)
-                        + "</u>";
+                        "<u>"
+                                + "+"
+                                + pickerSize
+                                + " "
+                                + context.getResources().getString(R.string.more)
+                                + "</u>";
                 holder.more.setText(Html.fromHtml(val));
                 holder.more.setVisibility(View.VISIBLE);
               } else {
@@ -599,95 +609,128 @@ public class SurveyActivitiesListAdapter
         }
       }
 
-      holder.container.setOnClickListener(
-          new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              int currentRunVal = currentRunStatusForActivities.get(position).getCurrentRunId();
-              int totalRunVal = currentRunStatusForActivities.get(position).getTotalRun();
-              if (click) {
-                click = false;
-                new Handler()
+      holder.container.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          int currentRunVal = currentRunStatusForActivities.get(position).getCurrentRunId();
+          int totalRunVal = currentRunStatusForActivities.get(position).getTotalRun();
+          if (click) {
+            click = false;
+            new Handler()
                     .postDelayed(
-                        new Runnable() {
-                          @Override
-                          public void run() {
-                            click = true;
-                          }
-                        },
-                        1500);
-                if (paused) {
-                  Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
-                } else {
-                  if (status
-                          .get(holder.getAdapterPosition())
-                          .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
+                         new Runnable() {
+                            @Override
+                              public void run() {
+                              click = true;
+                            }
+                          },
+                            1500);
+            if (paused) {
+              Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
+            } else {
+              if (status
+                      .get(holder.getAdapterPosition())
+                      .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
                       && (currentRunStatusForActivities
-                              .get(holder.getAdapterPosition())
-                              .getStatus()
-                              .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)
-                          || currentRunStatusForActivities
-                              .get(holder.getAdapterPosition())
-                              .getStatus()
-                              .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START))) {
-                    if (currentRunStatusForActivities
+                      .get(holder.getAdapterPosition())
+                      .getStatus()
+                      .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)
+                      || currentRunStatusForActivities
+                      .get(holder.getAdapterPosition())
+                      .getStatus()
+                      .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START))) {
+                if (currentRunStatusForActivities
                         .get(holder.getAdapterPosition())
                         .isRunIdAvailable()) {
-                      surveyActivitiesFragment.getActivityInfo(
+                  surveyActivitiesFragment.getActivityInfo(
                           items.get(holder.getAdapterPosition()).getActivityId(),
                           currentRunStatusForActivities
-                              .get(holder.getAdapterPosition())
-                              .getCurrentRunId(),
+                                  .get(holder.getAdapterPosition())
+                                  .getCurrentRunId(),
                           currentRunStatusForActivities
-                              .get(holder.getAdapterPosition())
-                              .getStatus(),
+                                  .get(holder.getAdapterPosition())
+                                  .getStatus(),
                           items.get(holder.getAdapterPosition()).getBranching(),
                           items.get(holder.getAdapterPosition()).getActivityVersion(),
                           currentRunStatusForActivities.get(holder.getAdapterPosition()),
                           items.get(holder.getAdapterPosition()));
-                    } else {
-                      Toast.makeText(
-                              context,
-                              context.getResources().getString(R.string.survey_message),
-                              Toast.LENGTH_SHORT)
+                } else {
+                  Toast.makeText(
+                          context,
+                          context.getResources().getString(R.string.survey_message),
+                          Toast.LENGTH_SHORT)
                           .show();
-                    }
-                  } else if (status
+                }
+              } else if (status
                       .get(holder.getAdapterPosition())
                       .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
-                    Toast.makeText(context, R.string.upcoming_event, Toast.LENGTH_SHORT).show();
-                  } else if (currentRunStatusForActivities
+                Toast.makeText(context, R.string.upcoming_event, Toast.LENGTH_SHORT).show();
+              } else if (currentRunStatusForActivities
                       .get(holder.getAdapterPosition())
                       .getStatus()
                       .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
-                    if (currentRunVal != totalRunVal) {
-                      Toast.makeText(context, R.string.incomple_event, Toast.LENGTH_SHORT).show();
-                    }
-                  } else {
-                    if (currentRunVal != totalRunVal) {
-                      Toast.makeText(context, R.string.completed_event, Toast.LENGTH_SHORT).show();
-                    }
-                  }
+                if (currentRunVal != totalRunVal) {
+                  Toast.makeText(context, R.string.incomple_event, Toast.LENGTH_SHORT).show();
+                }
+              } else {
+                if (currentRunVal != totalRunVal) {
+                  Toast.makeText(context, R.string.completed_event, Toast.LENGTH_SHORT).show();
                 }
               }
             }
-          });
-      holder.more.setOnClickListener(
-          new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              int p = 0;
-              try {
-                p = timePos.get(position);
-              } catch (Exception e) {
-                Logger.log(e);
-              }
-              CustomActivitiesDailyDialogClass c =
+          }
+        }
+      });
+      holder.more.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          int p = 0;
+          try {
+            p = timePos.get(position);
+          } catch (Exception e) {
+            Logger.log(e);
+          }
+          CustomActivitiesDailyDialogClass c =
                   new CustomActivitiesDailyDialogClass(
-                      context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this);
-              c.show();
-            }
-          });
+                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this);
+          c.show();
+        }
+      });
+
+      if (status
+              .get(holder.getAdapterPosition())
+              .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)) {
+        if (!items.get(holder.getAdapterPosition()).getFrequency().getType().equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
+          if (currentRunStatusForActivities
+                  .get(holder.getAdapterPosition())
+                  .getStatus()
+                  .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
+                  .get(holder.getAdapterPosition())
+                  .getStatus()
+                  .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE) || currentRunStatusForActivities
+                  .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
+            holder.container.setBackgroundColor(Color.parseColor("#c6ccd0"));
+            holder.itemlayout.setBackgroundColor(Color.parseColor("#c6ccd0"));
+            holder.box1.setAlpha(.5f);
+            holder.box2.setAlpha(.5f);
+          } else {
+            holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.box1.setAlpha(1f);
+            holder.box2.setAlpha(1f);
+          }
+        } else {
+          holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+          holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+          holder.box1.setAlpha(1f);
+          holder.box2.setAlpha(1f);
+        }
+      } else {
+        holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
+        holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
+        holder.box1.setAlpha(1f);
+        holder.box2.setAlpha(1f);
+      }
     }
   }
 
@@ -729,46 +772,78 @@ public class SurveyActivitiesListAdapter
   }
 
   public String getDateRange(
-      ArrayList<ActivitiesWS> items,
-      Date endDate,
-      int position,
-      Date startDate,
-      Date joiningDate,
-      Context context) {
-    SimpleDateFormat simpleDateFormatForOtherFreq = AppController.getDateFormatForOtherFreq();
+          ArrayList<ActivitiesWS> items,
+          Date endDate,
+          int position,
+          Date startDate,
+          Date joiningDate,
+          Context context,
+          ArrayList<String> status) {
+    SimpleDateFormat simpleDateFormatForOtherFreq = AppController.getDateFormatForOneTime();
     String date = "";
     if (endDate != null) {
-      if (items.get(position).getSchedulingType().equalsIgnoreCase("AnchorDate")
-          && items.get(position).getAnchorDate() != null
-          && items.get(position).getAnchorDate().getSourceType() != null
-          && items.get(position).getAnchorDate().getSourceType().equalsIgnoreCase("EnrollmentDate")
-          && items.get(position).getAnchorDate().getStart() == null
-          && items.get(position).getAnchorDate().getEnd() != null
-          && joiningDate.after(startDate)) {
-        Calendar joiningCalendar = Calendar.getInstance();
-        joiningCalendar.setTime(joiningDate);
-        Calendar startCalendar = Calendar.getInstance();
-        startCalendar.setTime(startDate);
-        startCalendar.set(Calendar.DAY_OF_MONTH, joiningCalendar.get(Calendar.DAY_OF_MONTH));
-        startCalendar.set(Calendar.MONTH, joiningCalendar.get(Calendar.MONTH));
-        startCalendar.set(Calendar.YEAR, joiningCalendar.get(Calendar.YEAR));
+      if (items.get(position).isStudyLifeTime() && items.get(position).isLaunchStudy()) {
+        date = "";
+      } else if (!items.get(position).isStudyLifeTime()) {
+        if (!items.get(position).isLaunchStudy()) {
+          if (items.get(position).getSchedulingType().equalsIgnoreCase("AnchorDate")
+                  && items.get(position).getAnchorDate() != null
+                  && items.get(position).getAnchorDate().getSourceType() != null
+                  && items.get(position).getAnchorDate().getSourceType().equalsIgnoreCase("EnrollmentDate")
+                  && items.get(position).getAnchorDate().getStart() == null
+                  && items.get(position).getAnchorDate().getEnd() != null
+                  && joiningDate.after(startDate)) {
+            Calendar joiningCalendar = Calendar.getInstance();
+            joiningCalendar.setTime(joiningDate);
+            Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTime(startDate);
+            startCalendar.set(Calendar.DAY_OF_MONTH, joiningCalendar.get(Calendar.DAY_OF_MONTH));
+            startCalendar.set(Calendar.MONTH, joiningCalendar.get(Calendar.MONTH));
+            startCalendar.set(Calendar.YEAR, joiningCalendar.get(Calendar.YEAR));
 
-        date =
-            simpleDateFormatForOtherFreq.format(startCalendar.getTime())
-                + " to "
-                + simpleDateFormatForOtherFreq.format(endDate);
+            date =
+                    simpleDateFormatForOtherFreq.format(startCalendar.getTime())
+                            + " - "
+                            + simpleDateFormatForOtherFreq.format(endDate);
+          } else {
+
+            date =
+                    simpleDateFormatForOtherFreq.format(startDate)
+                            + " - "
+                            + simpleDateFormatForOtherFreq.format(endDate);
+          }
+        } else {
+          if (status.get(position).equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)) {
+            date =
+                    context.getResources().getString(R.string.ends)
+                            + " : "
+                            + simpleDateFormatForOtherFreq.format(endDate);
+          } else {
+            date =
+                    context.getResources().getString(R.string.ended)
+                            + " : "
+                            + simpleDateFormatForOtherFreq.format(endDate);
+          }
+        }
       } else {
-
-        date =
-            simpleDateFormatForOtherFreq.format(startDate)
-                + " to "
-                + simpleDateFormatForOtherFreq.format(endDate);
+        if (status.get(position).equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
+          date =
+                  context.getResources().getString(R.string.starts)
+                          + " : "
+                          + simpleDateFormatForOtherFreq.format(startDate);
+        } else {
+          date = "";
+        }
       }
     } else {
-      date =
-          context.getResources().getString(R.string.from)
-              + " : "
-              + simpleDateFormatForOtherFreq.format(startDate);
+      if (status.get(position).equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
+        date =
+                context.getResources().getString(R.string.starts)
+                        + " : "
+                        + simpleDateFormatForOtherFreq.format(startDate);
+      } else {
+        date = "";
+      }
     }
     return date;
   }

@@ -17,7 +17,6 @@ package com.harvard.usermodule.model;
 
 public class UserActivityStatus {
   private String activityStatus;
-  private boolean bookmarked;
   private String activityId;
   private String studyId;
   private String activityVersion;
@@ -28,14 +27,6 @@ public class UserActivityStatus {
 
   public void setActivityStatus(String activityStatus) {
     this.activityStatus = activityStatus;
-  }
-
-  public boolean isBookmarked() {
-    return bookmarked;
-  }
-
-  public void setBookmarked(boolean bookmarked) {
-    this.bookmarked = bookmarked;
   }
 
   public String getActivityId() {

@@ -78,9 +78,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -231,7 +228,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     UserRegAdminEntity adminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireInHours()));
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
@@ -411,7 +408,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("saveSuperAdminDetails()");
     UserRegAdminEntity superAdminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireInHours()));
 
     superAdminDetails = userAdminRepository.saveAndFlush(superAdminDetails);
 
@@ -733,7 +730,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   private void validateSignedInUser(String adminUserId) {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(adminUserId);
     UserRegAdminEntity user =
-        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     if (!user.isSuperAdmin()) {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
@@ -742,28 +739,29 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Override
   public GetUsersResponse getUsers(
-      String superAdminUserId, Integer page, Integer limit, AuditLogEventRequest auditRequest) {
+      String superAdminUserId,
+      Integer limit,
+      Integer offset,
+      AuditLogEventRequest auditRequest,
+      String orderByCondition,
+      String searchTerm) {
     logger.entry("getUsers()");
     validateSignedInUser(superAdminUserId);
 
     List<User> users = new ArrayList<>();
-    List<UserRegAdminEntity> adminList = null;
-    if (page != null && limit != null) {
-      Page<UserRegAdminEntity> adminPage =
-          userAdminRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
-      adminList = (List<UserRegAdminEntity>) CollectionUtils.emptyIfNull(adminPage.getContent());
-    } else {
-      adminList = userAdminRepository.findAll();
-    }
+    List<UserRegAdminEntity> adminList =
+        userAdminRepository.findByLimitAndOffset(
+            limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
 
     adminList
         .stream()
         .map(admin -> users.add(UserMapper.prepareUserInfo(admin)))
         .collect(Collectors.toList());
 
+    Long usersCount = userAdminRepository.countBySearchTerm(StringUtils.defaultString(searchTerm));
     participantManagerHelper.logEvent(USER_REGISTRY_VIEWED, auditRequest);
     logger.exit(String.format("total users=%d", adminList.size()));
-    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, userAdminRepository.count());
+    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, usersCount);
   }
 
   @Override
@@ -780,7 +778,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     user.setSecurityCodeExpireDate(
         new Timestamp(
             Instant.now()
-                .plus(Long.valueOf(appConfig.getSecurityCodeExpireDate()), ChronoUnit.MINUTES)
+                .plus(Long.valueOf(appConfig.getSecurityCodeExpireInHours()), ChronoUnit.HOURS)
                 .toEpochMilli()));
     user = userAdminRepository.saveAndFlush(user);
 
@@ -796,7 +794,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
 
     UserRegAdminEntity loggedInUserDetails =
-        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     if (!loggedInUserDetails.isSuperAdmin()) {
       logger.error("Signed in user is not having super admin privileges");

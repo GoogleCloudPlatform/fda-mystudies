@@ -42,6 +42,8 @@ export class SiteDetailsComponent
   newlyImportedParticipants: Participant[] = [];
   selectedAll = false;
   studyStatus = Status;
+  enrollmentStatus = EnrollmentStatus;
+  invitedYetToEnrollCount = 0;
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -98,6 +100,15 @@ export class SiteDetailsComponent
             return participant;
           },
         );
+
+        this.invitedYetToEnrollCount = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
+          function (participant) {
+            return (
+              participant.enrollmentStatus === EnrollmentStatus.YetToEnroll
+            );
+          },
+        ).length;
+
         this.newlyImportedParticipants = [];
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
@@ -233,7 +244,10 @@ export class SiteDetailsComponent
       for (const participants of this.siteDetailsBackup
         .participantRegistryDetail.registryParticipants) {
         if (this.activeTab === OnboardingStatus.Invited) {
-          if (participants.enrollmentStatus === EnrollmentStatus.YetToEnroll) {
+          if (
+            participants.enrollmentStatus === EnrollmentStatus.YetToEnroll ||
+            participants.enrollmentStatus === EnrollmentStatus.NotEligile
+          ) {
             participants.newlyCreatedUser = this.selectedAll;
             this.userIds.push(participants.id);
           }

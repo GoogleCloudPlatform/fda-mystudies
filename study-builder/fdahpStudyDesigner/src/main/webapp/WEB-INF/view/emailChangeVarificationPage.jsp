@@ -67,53 +67,40 @@
           <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
                  csrfToken="${_csrf.token}"/>
           <form:form id="accessCodeForm" data-toggle="validator" role="form"
-                     action="validateAccessCode.do"
+                     action="validateEmailChangeVerification.do"
                      method="post" autocomplete="off">
 
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${isValidToken}">
-              <p class="white__text">To complete your email verification process, kindly use the access
-                code
-                provided on your email.</p>
-              <div class="mb-lg form-group">
-                <input autofocus="autofocus" type="text" class="input-field wow_input" id=""
-                       tabindex="1"
-                       name="accessCode" maxlength="6" placeholder="Access Code"
-                       data-error="Access Code is invalid" required autocomplete="off"/>
-                <div class="help-block with-errors red-txt"></div>
-              </div>
-              <div class="mb-lg form-group">
-                <button type="submit" class="btn lg-btn">Submit</button>
-              </div>
-            </c:if>
-            <c:if test="${not isValidToken}">
-              <p class="passwordExp">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                The Activation Link is either
-                expired or invalid.
-              </p>
-            </c:if>
-            <div>
+              <p class="white__text">Thank you. Your email verification process is completed. 
+              Please use the new email address to sign in.</p>
+              <div>
               <a id="login" class="gray-link backToLogin white__text" href="javascript:void(0)">Back to
                 Sign in
               </a>
             </div>
+            </c:if>
+            <c:if test="${not isValidToken}">
+              <p class="passwordExp">
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                This link is no longer valid to be used. 
+                Please contact the system admin for assistance 
+                with your account or sign in if already registered.
+              </p>
+              <div>
+              <a id="login" class="gray-link backToLogin1 white__text" href="javascript:void(0)">Back to
+                Sign in
+              </a>
+            </div>
+            </c:if>
             <input type="hidden" name="securityToken" value="${securityToken}"/>
           </form:form>
         </div>
       </div>
-      <div class="footer">
-        <div>
-          <span>Copyright</span>
-          <span>
-            <a href="/studybuilder/terms.do" class="" target="_blank">Terms</a>
-          </span>
-          <span>
-            <a href="/studybuilder/privacyPolicy.do" class="" target="_blank">Privacy Policy</a>
-          </span>
-        </div>
-      </div>
+      <jsp:include page="../templates/copyright.jsp">
+        <jsp:param name="footerClass" value="footer" />
+      </jsp:include>
 
     </div>
     <!-- End Login Right Section-->
@@ -155,9 +142,13 @@
 
         addPasswordPopup();
         $('.backToLogin').on('click', function () {
-          $('#backToLoginForm').submit();
+          $('#accessCodeForm').submit();
         });
 
+        $('.backToLogin1').on('click', function () {
+          $('#backToLoginForm').submit();
+        });
+        
         var errMsg = '${errMsg}';
         var isValidToken = '${isValidToken}';
         if (isValidToken) {

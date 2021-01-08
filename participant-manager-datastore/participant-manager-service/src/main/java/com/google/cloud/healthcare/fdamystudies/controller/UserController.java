@@ -13,10 +13,13 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,16 +101,35 @@ public class UserController {
   @GetMapping(value = {"/users"})
   public ResponseEntity<GetUsersResponse> getUsers(
       @RequestHeader("userId") String superAdminUserId,
-      @RequestParam(required = false) Integer page,
-      @RequestParam(required = false) Integer limit,
+      @RequestParam(defaultValue = "10") Integer limit,
+      @RequestParam(defaultValue = "0") Integer offset,
+      @RequestParam(defaultValue = "firstName") String sortBy,
+      @RequestParam(defaultValue = "asc") String sortDirection,
+      @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    String[] allowedSortByValues = {"firstName", "lastName", "email", "status"};
+
+    if (!ArrayUtils.contains(allowedSortByValues, sortBy)) {
+      throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORTBY_VALUE);
+    }
+
+    String[] allowedSortDirection = {"asc", "desc"};
+    if (!ArrayUtils.contains(allowedSortDirection, sortDirection)) {
+      throw new ErrorCodeException(ErrorCode.UNSUPPORTED_SORT_DIRECTION_VALUE);
+    }
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(superAdminUserId);
 
     GetUsersResponse userResponse =
-        manageUserService.getUsers(superAdminUserId, page, limit, auditRequest);
+        manageUserService.getUsers(
+            superAdminUserId,
+            limit,
+            offset,
+            auditRequest,
+            sortBy + "_" + sortDirection,
+            searchTerm);
 
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);

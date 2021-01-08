@@ -1,8 +1,11 @@
 <div class="max__w__1280">
   <div class="tab-content">
-    <ng-container *ngIf="manageApp$ | async as manageApps">
+    <ng-container *ngIf="manageApp$ | async as manageApps; else apps_error">
       <div
-        *ngIf="manageApps.superAdmin || manageApps.studyPermissionCount >= 2"
+        *ngIf="
+          manageApps.superAdmin || manageApps.studyPermissionCount >= 2;
+          else apps_Permission_error
+        "
       >
         <div
           *ngFor="let app of manageApps.apps"
@@ -87,8 +90,29 @@
             </div>
           </div>
         </div>
-        <div *ngIf="manageApps.apps.length === 0">No records found</div>
+        <div *ngIf="loadMoreEnabled" (mouseover)="loadMoreSites()">
+          <app-loadmore-spinner></app-loadmore-spinner>
+        </div>
+
+        <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+          <div class="text-center p-2" *ngIf="manageApps.apps.length === 0">
+            No records found
+          </div>
+        </div>
       </div>
+      <ng-template #apps_Permission_error>
+        <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+          <div class="text-center p-2">
+            This view displays app-wise enrollment if you manage multiple
+            studies
+          </div>
+        </div>
+      </ng-template>
     </ng-container>
+    <ng-template #apps_error>
+      <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+        <div class="text-center p-2">No records found</div>
+      </div>
+    </ng-template>
   </div>
 </div>

@@ -60,7 +60,7 @@ enum DayValue: String {
 
 enum AccountStatus: Int {
 
-  /// User account verified  
+  /// User account verified
   case verified = 0
 
   /// User account not verified
@@ -181,53 +181,6 @@ class User {
     }
   }
 
-  // MARK: Study Bookmark
-
-  /// Checks `Study` bookmarked status based on StudyId
-  /// - Parameter studyId: StudyId to filter `UserActivityStatus`
-  /// - Returns: Boolean state of  `Study` bookmarked
-  func isStudyBookmarked(studyId: String) -> Bool {
-
-    let studies = self.participatedStudies
-    if let study = studies?.filter({ $0.studyId == studyId }).first {
-      return study.bookmarked
-    }
-    return false
-
-  }
-
-  /// Set bookmarked status to a `Study`
-  /// - Parameter studyId: StudyId to filter `UserActivityStatus`
-  /// - Returns: An object of `UserStudyStatus`
-  func bookmarkStudy(studyId: String) -> UserStudyStatus {
-
-    let studies = self.participatedStudies
-    if let study = studies?.filter({ $0.studyId == studyId }).first {
-      study.bookmarked = true
-      return study
-    } else {
-      let studyStatus = UserStudyStatus()
-      studyStatus.bookmarked = true
-      studyStatus.studyId = studyId
-      self.participatedStudies.append(studyStatus)
-      return studyStatus
-    }
-
-  }
-
-  /// Changes bookmarked status to false based on StudyID
-  /// - Parameter studyId: StudyId to filter `UserActivityStatus`
-  /// - Returns: An object of `UserStudyStatus`
-  func removeBookbarkStudy(studyId: String) -> UserStudyStatus? {
-
-    let studies = self.participatedStudies
-    if let study = studies?.filter({ $0.studyId == studyId }).first {
-      study.bookmarked = false
-      return study
-    }
-    return nil
-  }
-
   // MARK: Study Status
 
   /// Updates `Study` status
@@ -259,7 +212,7 @@ class User {
     if let study = studies?.filter({ $0.studyId == studyId }).first {
       return study.status
     }
-    return .yetToJoin
+    return .yetToEnroll
   }
 
   // MARK: Activity Status
@@ -403,17 +356,17 @@ class UserStudyStatus {
 
   enum StudyStatus: Int {
 
-    case yetToJoin
+    case yetToEnroll
     case notEligible
-    case inProgress
+    case enrolled
     case completed
     case withdrawn
 
     var sortIndex: Int {
       switch self {
-      case .inProgress:
+      case .enrolled:
         return 0
-      case .yetToJoin:
+      case .yetToEnroll:
         return 1
       case .completed:
         return 2
@@ -426,10 +379,10 @@ class UserStudyStatus {
 
     var description: String {
       switch self {
-      case .yetToJoin:
-        return "Yet To Join"
-      case .inProgress:
-        return "In Progress"
+      case .yetToEnroll:
+        return "Yet To Enroll"
+      case .enrolled:
+        return "Enrolled"
       case .completed:
         return "Completed"
       case .notEligible:
@@ -442,9 +395,9 @@ class UserStudyStatus {
 
     var closedStudyDescription: String {
       switch self {
-      case .yetToJoin:
+      case .yetToEnroll:
         return "No participation"
-      case .inProgress:
+      case .enrolled:
         return "Partial Participation"
       case .completed:
         return "Completed"
@@ -462,25 +415,24 @@ class UserStudyStatus {
 
     var paramValue: String {
       switch self {
-      case .yetToJoin:
-        return "yetToJoin"
-      case .inProgress:
-        return "inProgress"
+      case .yetToEnroll:
+        return "yetToEnroll"
+      case .enrolled:
+        return "enrolled"
       case .completed:
         return "completed"
       case .notEligible:
         return "notEligible"
       case .withdrawn:
-        return "Withdrawn"
+        return "withdrawn"
 
       }
     }
 
   }
 
-  lazy var bookmarked: Bool = false
   lazy var studyId: String = ""
-  lazy var status: StudyStatus = .yetToJoin
+  lazy var status: StudyStatus = .yetToEnroll
   lazy var consent: String = ""
 
   /// User joined Date for study
@@ -504,9 +456,6 @@ class UserStudyStatus {
       if Utilities.isValidValue(someObject: detail[kStudyId] as AnyObject) {
         self.studyId = (detail[kStudyId] as? String)!
       }
-      if Utilities.isValidValue(someObject: detail[kBookmarked] as AnyObject) {
-        self.bookmarked = (detail[kBookmarked] as? Bool)!
-      }
       if Utilities.isValidValue(someObject: detail[kCompletion] as AnyObject) {
         self.completion = (detail[kCompletion] as? Int)!
       }
@@ -527,8 +476,8 @@ class UserStudyStatus {
 
         let statusValue = (detail[kStatus] as? String)!
 
-        if StudyStatus.inProgress.paramValue == statusValue {
-          self.status = .inProgress
+        if StudyStatus.enrolled.paramValue == statusValue {
+          self.status = .enrolled
 
         } else if StudyStatus.notEligible.paramValue == statusValue {
           self.status = .notEligible
@@ -540,25 +489,13 @@ class UserStudyStatus {
           self.status = .withdrawn
         }
       }
-      if self.status == .yetToJoin || self.status == .withdrawn || self.status == .notEligible {
+      if self.status == .yetToEnroll || self.status == .withdrawn || self.status == .notEligible {
         self.participantId = nil
         self.tokenIdentifier = ""
         self.siteID = ""
         self.joiningDate = nil
       }
     }
-  }
-
-  /// `JSONDictionary` contains StudyID and Bookmarked status
-  /// - Returns: `JSONDictionary` object
-  func getBookmarkUserStudyStatus() -> [String: Any] {
-
-    let studyDetail =
-      [
-        kStudyId: self.studyId,
-        kBookmarked: self.bookmarked,
-      ] as [String: Any]
-    return studyDetail
   }
 
   /// JSONDictionary` contains StudyID, StudyStatus and ParticipantID
@@ -571,6 +508,7 @@ class UserStudyStatus {
         kStudyId: self.studyId,
         kStudyStatus: self.status.paramValue,
         kStudyParticipantId: id,
+        "siteId": siteID ?? "",
       ] as [String: Any]
     return studyDetail
   }
@@ -581,6 +519,7 @@ class UserStudyStatus {
     let studyDetail =
       [
         kStudyId: self.studyId,
+        "siteId": siteID ?? "",
         "completion": completion,
         "adherence": adherence,
       ] as [String: Any]
@@ -673,7 +612,7 @@ class UserActivityStatus {
       case .completed:
         return "  Completed  "
       case .abandoned:
-        return "  Incomplete  "
+        return "  Missed  "
       case .expired:
         return "  Expired  "
 

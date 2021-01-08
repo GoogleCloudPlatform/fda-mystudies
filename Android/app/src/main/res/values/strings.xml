@@ -24,7 +24,7 @@
     <string name="last_name">Last Name</string>
     <string name="email_id">Email</string>
     <string name="username">Username</string>
-    <string name="enter_email">enter email</string>
+    <string name="enter_email">Enter email</string>
     <string name="enter_new_password">enter new password</string>
     <string name="enter_old_password">enter current password</string>
     <string name="enter_temp_password">enter temporary password</string>
@@ -80,7 +80,7 @@
     <string name="recv_stdy_actrem">Receive Study Activity Reminders?</string>
     <string name="reminder">Set up lead time for study activity reminders</string>
     <string name="sign_out">Sign Out</string>
-    <string name="delete_my_account">Delete My Account</string>
+    <string name="delete_my_account">Delete app account</string>
     <string name="update">Update</string>
     <string name="get_started">Get Started</string>
     <string name="gateway_welcome">Welcome!</string>
@@ -135,7 +135,7 @@
     <string name="enter_enrollmentid">Enter enrollment ID</string>
     <string name="enrollmentdesc">This study allows only pre-screened participants to join the study. If you are one, please enter the enrollment ID provided to you for this study.</string>
     <string name="reviewconformmsg">By Agreeing you confirm that you read the consent and that you wish to take part in this research study.</string>
-    <string name="reviewmsg">Review the form below, and tap Agree if you\'re ready to continue</string>
+    <string name="reviewmsg">Review the form below, and tap agree if you are ready to continue</string>
     <string name="review">Review</string>
 
     <string name="verification_email_content1">An email has been sent to</string>
@@ -155,8 +155,7 @@
     <string name="validation_code_error">Please enter verification code.</string>
     <string name="terms_and_condition_validation">Please agree to terms and conditions.</string>
     <string name="account_verification">your account is verified.</string>
-    <string name="password_validation">Your password must contain :
-                                       8 to 64 characters,lower case letter,upper case letter,numeric,special characters !  # $ % &amp; \' () * + , - . : ; &lt; &gt; = ? @ [] ^ _  { } | ~</string>
+    <string name="password_validation">Your password must be at least 8 characters long and contain lower case, upper case, numeric and special characters.</string>
     <string name="signout_message">Are you sure you want to signout ?</string>
     <string name="password_same_error">Old password and New password should not be same.</string>
     <string name="password_mismatch_error">The Password and Confirm password fields don\'t match.</string>
@@ -170,7 +169,7 @@
     <string name="resend_success">An email verification code has been sent to your registered email.</string>
 
 
-    <string name="consentthanksmsg">Thanks for providing consent for this Study</string>
+    <string name="consentthanksmsg">Consent confirmed</string>
     <string name="studystartmsg">You can now start using the app to participate in the study.</string>
     <string name="viewpdf">View/Email eConsent PDF</string>
 
@@ -193,7 +192,7 @@
     <string name="enrollvalidated">Your eligibility to participate in this study has been successfully verified. You may proceed to the next steps.</string>
 
     <string name="search_location">search location</string>
-    <string name="survey_message">This survey is not available right now please try after some time.</string>
+    <string name="survey_message">It is not yet time to take the next run of this activity.</string>
     <string name="feedbacktitle">Feedback</string>
 
 
@@ -205,7 +204,6 @@
     <string name="leave_study">Leave Study</string>
 
     <string name="active">active</string>
-    <string name="upcoming">upcoming</string>
     <string name="paused">paused</string>
     <string name="closed">closed</string>
     <string name="notxt">\u0020</string>
@@ -235,7 +233,7 @@
     <string name="setected_location">selected location</string>
     <string name="enter_a_time">Enter a Time</string>
     <string name="setelct_time">Select Time</string>
-    <string name="activities_not_found">Activities Not Found</string>
+    <string name="activities_not_found">None</string>
     <string name="unable_to_parse">Oops! something went wrong</string>
     <string name="enter_enrollment_id">Please Enter a Enrollment ID</string>
     <string name="not_able_create_pdf">Not able to create PDF</string>
@@ -243,7 +241,6 @@
     <string name="anonymous_feedback">Leave Anonymous Feedback</string>
     <string name="need_help">Need Help? Contact Us</string>
     <string name="press_back_to_exit">Press back again to exit.</string>
-    <string name="upcoming_study">This Study is an upcoming study</string>
     <string name="study_not_available">Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join.</string>
     <string name="cannot_rejoin_study">Sorry, this study currently does not allow previously enrolled participants to rejoin the study after they have withdrawn from the study. Please check back later or explore other studies.</string>
     <string name="study_paused">This study has been temporarily paused. Please check back later.</string>
@@ -252,10 +249,10 @@
     <string name="study_resume">This Study is closed</string>
     <string name="completed">Completed</string>
     <string name="not_eligible">Not Eligible</string>
-    <string name="in_progress">In Progress</string>
-    <string name="yet_to_join_filter">Yet To Join</string>
+    <string name="in_progress">Enrolled</string>
+    <string name="yet_to_join_filter">Yet To Enroll</string>
     <string name="partial_participation">Partial Participation</string>
-    <string name="yet_to_join">Yet To Join</string>
+    <string name="yet_to_join">Yet To Enroll</string>
     <string name="no_participation">No Participation</string>
     <string name="withdrawn">Withdrawn</string>
     <string name="current1">Current</string>
@@ -267,10 +264,11 @@
     <string name="completed2">Completed</string>
     <string name="expired">Expired</string>
     <string name="incompleted2">Incomplete</string>
+    <string name="missedrun">Missed</string>
     <string name="run">Run</string>
     <string name="upcoming_event">This is an upcoming event</string>
-    <string name="incomple_event">You missed the previous run of this activity. Please wait till the next run becomes available. Run timings are given on the Activities list screen.</string>
-    <string name="completed_event">This is a completed event</string>
+    <string name="incomple_event">It is not yet time to take the next run of this activity.</string>
+    <string name="completed_event">It is not yet time to take the next run of this activity.</string>
     <string name="current_activities">Current Activities</string>
     <string name="completed3">COMPLETED</string>
     <string name="pending">PENDING</string>
@@ -316,7 +314,6 @@
     <string name="force_upgrade_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sed ipsum id odio mollis mollis in ac nulla. Maecenas ac imperdiet mi, eu tristique mi. Duis accumsan vestibulum augue. Aliquam ac nulla tempus, malesuada felis nec, suscipit urna. </string>
     <string name="android">android</string>
     <string name="title">title</string>
-    <string name="bookmark">bookmark</string>
     <string name="status">status</string>
     <string name="studyStatus">studyStatus</string>
     <string name="position">position</string>
@@ -382,7 +379,7 @@
     <string name="runchartmaxindex">runchartmaxindex</string>
     <string name="passcode_confirm_reenter">Re-enter the 4-digit passcode</string>
     <string name="enter_your_passcode">Enter your passcode</string>
-    <string name="thank_you_for_your_time">Thank you for your time!</string>
+    <string name="thank_you_for_your_time">Thank you for your time</string>
     <string name="permission_enable_message_screenshot">Please enable the permission from settings to share the Screen Shot</string>
     <string name="search">Search</string>
     <string name="apply">Apply</string>
@@ -391,7 +388,6 @@
     <string name="active_caps">Active</string>
     <string name="closed_caps">Closed</string>
     <string name="participation_status_small">Participation Status</string>
-    <string name="bookmarked">Show bookmarked studies only</string>
     <string name="categories">Categories</string>
     <string name="pregnancy">Pregnancy</string>
     <string name="fitness">Fitness</string>
@@ -401,9 +397,7 @@
     <!--filter screen keys are:-->
     <string name="active_filter_key">active</string>
     <string name="closed_filter_key">closed</string>
-    <string name="upcoming_filter_key">upcoming</string>
     <string name="inprogress_filter_key">inprogress</string>
-    <string name="bookmarked_filter_key">bookmarked</string>
     <string name="completed_filter_key">completed</string>
     <string name="withdrawn_filter_key">withdrawn</string>
     <string name="noteligible_filter_key">noteligible</string>
@@ -491,11 +485,14 @@
     <string name="participants_signature">Participant\'s Signature</string>
     <string name="date">Date</string>
     <string name="done2">done</string>
-    <string name="as_scheduled">As Scheduled</string>
+    <string name="as_scheduled">Aperiodic</string>
     <string name="onetime">One-time</string>
     <string name="on">on</string>
     <string name="to">to</string>
     <string name="from">From</string>
+    <string name="starts">Starts</string>
+    <string name="ends">Ends</string>
+    <string name="ended">Ended</string>
     <string name="more">more</string>
     <string name="missed">missed</string>
     <string name="no_charts_display">No charts to display</string>
@@ -553,14 +550,14 @@
     <string name="websitetxt">App Website</string>
     <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
     <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
-    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
+    <string name="delete_account_content">You have chosen to delete your app account. This will result in automatic withdrawal from the studies you were enrolled in.</string>
     <string name="delete_message">Are you sure you wish to permanently delete your FDA MyStudies Gateway app account?  You will need to register again if you wish to join a study.</string>
     <string name="studie_your_enrolled">It\'s been a while since you visited the FDA MyStudies app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
     <string name="termsurl">https://www.google.com/</string>
     <string name="privacyurl">https://www.google.com/</string>
     <string name="view_consent">View Consent</string>
     <string name="visit_website">Visit Website</string>
-    <string name="join_study">Join Study</string>
+    <string name="join_study">Participate</string>
     <string name="clientToken">clientToken</string>
     <string name="server_connect_error">Couldn\'t connect to server. Please try again later.</string>
     <string name="loginflow">loginflow</string>

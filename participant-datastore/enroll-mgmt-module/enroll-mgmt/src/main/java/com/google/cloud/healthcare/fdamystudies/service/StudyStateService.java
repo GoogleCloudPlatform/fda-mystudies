@@ -19,7 +19,8 @@ import java.util.List;
 
 public interface StudyStateService {
 
-  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user);
+  public List<ParticipantStudyEntity> getParticipantStudiesList(
+      UserDetailsEntity user, List<String> siteIds);
 
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
@@ -31,5 +32,5 @@ public interface StudyStateService {
       throws javax.transaction.SystemException;
 
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete);
+      String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest);
 }

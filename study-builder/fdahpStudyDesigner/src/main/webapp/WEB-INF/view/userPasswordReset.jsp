@@ -79,15 +79,7 @@
             <c:if test="${not isInactiveUser && isValidToken}">
               <div>
               <p class="white__text">Please set up your new password using
-                this form. You would be required to enter the access code
-                provided to you over email for the same.</p>
-              <div class="mb-lg form-group">
-                <input autofocus="autofocus" type="text"
-                       class="input-field wow_input" id="" tabindex="1"
-                       name="accessCode" maxlength="6" placeholder="Access Code"
-                       data-error="Access Code is invalid" required autocomplete="off"/>
-                <div class="help-block with-errors red-txt"></div>
-              </div>
+                this form.</p>
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input"
                        id="password" tabindex="2" maxlength="64" data-minlength="8"
@@ -104,7 +96,7 @@
                        id="cfnPassword" tabindex="3" name="" maxlength="64"
                        data-match="#password"
                        data-match-error="Whoops, these don't match"
-                       placeholder="Confirm password" required autocomplete="off"/>
+                       placeholder="Confirm new password" required autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
@@ -122,13 +114,13 @@
             <c:if test="${not isInactiveUser && not isValidToken}">
               <p class="passwordExp">
                 <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                The
-                Password Reset Link is either expired or invalid.
+               This link is no longer valid to be used. 
+                Please contact the system admin for assistance with your account or sign in if already registered.
               </p>
             </c:if>
             <div>
               <a id="login" class="gray-link backToLogin white__text"
-                 href="javascript:void(0)">Back to Sign in
+                 href="javascript:void(0)">Back to sign in
               </a>
             </div>
             </div>
@@ -141,15 +133,9 @@
 
         <div class="clearfix"></div>
 
-        <div class="footer">
-          <span>Copyright</span>
-          <span>
-            <a href="/studybuilder/terms.do" id="" target="_blank">Terms</a>
-          </span>
-          <span>
-            <a href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a>
-          </span>
-        </div>
+        <jsp:include page="../templates/copyright.jsp">
+          <jsp:param name="footerClass" value="footer" />
+        </jsp:include>
 
       </div>
       <!-- End Login Right Section-->

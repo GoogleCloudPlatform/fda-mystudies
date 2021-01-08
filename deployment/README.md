@@ -22,7 +22,7 @@ solution guide.
 ## Prerequisites
 
 Follow
-[Prerequisites](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#prerequisites)
+[Prerequisites](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/templates-v0.4.0/docs/tfengine#prerequisites)
 and prepare to deploy FDA MyStudies platform infrastructure in a folder.
 
 In addition, [Create](https://support.google.com/a/answer/33343?hl=en) the
@@ -155,7 +155,7 @@ regenerating the Terraform configs several times.
     Terraform state bucket.
 
     ```bash
-    cd $GIT_ROOT/terraform/devops
+    cd $GIT_ROOT/deployment/terraform/devops
     terraform init
     terraform apply
     ```
@@ -166,7 +166,7 @@ regenerating the Terraform configs several times.
     the Teraform configs.
 
     ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     ```
 
 1. Backup the state of the `devops` project to the newly created state bucket
@@ -189,7 +189,7 @@ regenerating the Terraform configs several times.
 1. Deploy the `cicd/` folder to set up CICD pipelines.
 
     ```bash
-    cd $GIT_ROOT/terraform/cicd
+    cd $GIT_ROOT/deployment/terraform/cicd
     terraform init
     terraform apply
     ```
@@ -260,7 +260,7 @@ regenerating the Terraform configs several times.
     regenerate the Terraform configs:
 
     ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     ```
 
 1. Commit your current local git working dir and send a Pull Request to merge
@@ -273,7 +273,7 @@ regenerating the Terraform configs several times.
     and regenerate the Terraform configs:
 
     ```bash
-    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
     ```
 
 1. Commit your current local git working dir and send a Pull Request to merge
@@ -335,28 +335,28 @@ an initial superadmin account for Study Builder.
 ### Step 11: Mobile app setups
 
 1. Build and distribute iOS and Android apps following their individual
-    instructions. See [iOS](../iOS/README.md) and [Android](../Android/README.md) 
+    instructions. See [iOS](../iOS/README.md) and [Android](../Android/README.md)
     configuration instructions.
-   
-   
+
+
 ### Step 12: Mobile app setup in participant manager
 
-An app record is a representation of your mobile apps associated with an 
-FDA MyStudies deployment. App is identified by APP_ID, which is the value you 
+An app record is a representation of your mobile apps associated with an
+FDA MyStudies deployment. App is identified by APP_ID, which is the value you
 set in secret manager for `manual-mobile-app-appid`.
 
-After a study is created (in study builder) that uses this App ID, a corresponding 
+After a study is created (in study builder) that uses this App ID, a corresponding
 app record will be created in the Participant Manager.
 
-**Note** Current deployment only supports a single App 
+**Note** Current deployment only supports a single App
 (using `manual-mobile-app-appid`); and it requires the following
 manual step to pass mobile info from Secret Manager to CloudSQL.
 
 1. Once the app is available in Participant Manager, Run
     [copy_app_info_to_sql.sh](scripts/copy_app_info_to_sql.sh)
     passing your deployment PREFIX and ENV.
-    
-    The secrets accessed by this script are: 
+
+    The secrets accessed by this script are:
     ```bash
     # bundleID used for the Android App.
     manual-android-bundle-id
@@ -372,7 +372,7 @@ manual step to pass mobile info from Secret Manager to CloudSQL.
     manual-ios-deeplink-url
     manual-android-deeplink-url
     ```
- 
+
 ### Step 13: Clean up
 
 1. Revoke your super admin access by running `gcloud auth revoke` and

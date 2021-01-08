@@ -5,6 +5,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<style>
+.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+</style>
+
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
 
   <!-- widgets section-->
@@ -59,12 +66,22 @@
                   Account Activation Pending
                 </span>
               </span>
-              <span class="black-sm-f resend pl-md">
-                <a
-                    href="javascript:void(0)" id="resendLinkId">Re-send
-                  Activation Link
-                </a>
-              </span>
+		   <c:choose>
+			         <c:when test="${actionPage eq 'VIEW_PAGE'}">
+			              <span class="black-sm-f resend pl-md">
+			                <a  href="javascript:void(0)"  id="resendLinkId" class="disabled">Re-send
+			                  Activation Link
+			                </a>
+			              </span>
+			         </c:when>
+			         <c:otherwise>
+			           		<span class="black-sm-f resend pl-md">
+			                <a  href="javascript:void(0)" id="resendLinkId" >Re-send
+			                  Activation Link
+			                </a>
+			              </span>
+			         </c:otherwise>
+	      	 </c:choose> 
             </div>
           </c:if>
           <c:if test="${userBO.emailChanged}">
@@ -109,15 +126,12 @@
       <div class="ed-user-layout row">
         <!-- Edit User Layout-->
 
-        <div class="blue-md-f text-uppercase mb-md">Basic Information</div>
+        <div class="blue-md-f text-uppercase mb-md">Study Information</div>
         <div class="col-md-12 p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
               First Name
-              <c:if test="${actionPage ne 'VIEW_PAGE'}">&nbsp;<small>(50
-                characters max)</small>
-              </c:if>
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -132,9 +146,6 @@
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
               Last Name
-              <c:if test="${actionPage ne 'VIEW_PAGE'}">&nbsp;<small>(50
-                characters max)</small>
-              </c:if>
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -164,7 +175,6 @@
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                      data-pattern-error="Email address is invalid" maxlength="100"
                      required
-                <%-- <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || not empty userBO}">disabled</c:if>/> --%>
                      <c:if
                          test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -174,12 +184,11 @@
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
               Phone (XXX - XXX - XXXX)
-              <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
               <input type="text" class="form-control phoneMask"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     data-minlength="12" maxlength="12" required
+                     data-minlength="12" maxlength="12" 
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>

@@ -40,6 +40,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
@@ -674,6 +675,7 @@ public class LoginControllerTest extends BaseMockIT {
 
       if (loginAttempts == MAX_LOGIN_ATTEMPTS) {
         verifyAuditEventCall(ACCOUNT_LOCKED);
+        verifyAuditEventCall(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
       }
       // Reset Audit Event calls
       clearAuditRequests();
@@ -688,10 +690,9 @@ public class LoginControllerTest extends BaseMockIT {
     String subject = getMailAccountLockedSubject();
     String body =
         String.join(
-            "<br/>",
-            "This is to inform you that, as a security measure, your user account for MyStudies app",
-            "has been temporarily locked for a period of 15 minutes, due to multiple consecutive failed sign-in",
-            "attempts with incorrect password.");
+            "This is to inform you that, as a security measure, your admin user "
+                + "account for the MyStudies Participant Manager portal "
+                + "has been temporarily locked");
 
     MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
