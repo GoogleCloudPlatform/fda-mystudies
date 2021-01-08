@@ -304,36 +304,12 @@ class ResourcesViewController: UIViewController {
           )
 
         case .deleteData:
-
-          UIUtilities.showAlertMessageWithTwoActionsAndHandler(
-            NSLocalizedString("Are you sure? Tap Ok to confirm.", comment: ""),
-            errorMessage: NSLocalizedString("", comment: ""),
-            errorAlertActionTitle: NSLocalizedString("Cancel", comment: ""),
-            errorAlertActionTitle2: NSLocalizedString("Ok", comment: ""),
-            viewControllerUsed: self,
-            action1: {},
-            action2: {
-              self.shouldDeleteData = true
-              self.withdrawalFromStudy(deleteResponse: true)
-            }
-          )
+          self.shouldDeleteData = true
+          self.withdrawalFromStudy(deleteResponse: true)
 
         case .noAction:
-
-          UIUtilities.showAlertMessageWithTwoActionsAndHandler(
-            NSLocalizedString("Are you sure? Tap Ok to confirm.", comment: ""),
-            errorMessage: NSLocalizedString("", comment: ""),
-            errorAlertActionTitle: NSLocalizedString("Ok", comment: ""),
-            errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
-            viewControllerUsed: self,
-            action1: {
-              self.shouldDeleteData = false
-              self.withdrawalFromStudy(deleteResponse: false)
-            },
-            action2: {
-
-            }
-          )
+          self.shouldDeleteData = false
+          self.withdrawalFromStudy(deleteResponse: false)
 
         default: break
         }

@@ -43,6 +43,12 @@ class ActivitiesTableViewCell: UITableViewCell {
   var currentActivity: Activity! = nil
   var availabilityStatus: ActivityAvailabilityStatus = .current
 
+  override func prepareForReuse() {
+    self.disabledView.isHidden = true
+    selectionStyle = .default
+    super.prepareForReuse()
+  }
+
   /// Change the cell background color.
   override func setSelected(_ selected: Bool, animated: Bool) {
     let color = labelStatus?.backgroundColor
@@ -58,6 +64,24 @@ class ActivitiesTableViewCell: UITableViewCell {
     super.setHighlighted(highlighted, animated: animated)
     if highlighted {
       labelStatus?.backgroundColor = color
+    }
+  }
+
+  /// Updates the cell selection state.
+  private func updateSelfSelectionState() {
+    // Disable selection for past and upcoming activities.
+    if availabilityStatus == .past
+      || availabilityStatus == .upcoming
+    {
+      selectionStyle = .none
+    } else if let status = currentActivity.userParticipationStatus,
+      status.status == .abandoned || status.status == .completed
+    {
+      selectionStyle = .none
+      disabledView.isHidden = false
+    } else {
+      selectionStyle = .default
+      disabledView.isHidden = true
     }
   }
 
@@ -96,6 +120,8 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     // update activity run details as compelted and missed
     self.updateUserRunStatus(activity: activity)
+
+    updateSelfSelectionState()
 
     if availablityStatus == .past {
 

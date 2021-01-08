@@ -28,7 +28,7 @@ public interface StudySiteInfo {
 
   Timestamp getSiteCreatedTimeStamp();
 
-  boolean getStudyPermission();
+  Integer getStudyPermission();
 
   Integer getEditPermission();
 
