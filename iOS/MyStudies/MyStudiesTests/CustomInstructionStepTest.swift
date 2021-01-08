@@ -18,7 +18,7 @@ class CustomInstructionStepTest: XCTestCase {
     Test&lt;/i&gt;&lt;/span&gt;&lt;/p&gt;
     """
     let regex = "<[^>]+>"
-    XCTAssertNotNil(richText.range(of: regex, options: .regularExpression))
+    XCTAssertNotNil(richText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression))
   }
   
   func testAttributedText() {
