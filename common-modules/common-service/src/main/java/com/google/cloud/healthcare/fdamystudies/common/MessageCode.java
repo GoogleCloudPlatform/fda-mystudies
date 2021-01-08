@@ -83,7 +83,7 @@ public enum MessageCode {
 
   GET_ADMIN_DETAILS_SUCCESS(HttpStatus.OK, "MSG_0027", "Admin details fetched successfully"),
 
-  DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0028", "User deactivated successfully"),
+  DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0028", "Admin user deactivated successfully"),
 
   REACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0029", "Admin user reactivated"),
 
@@ -99,7 +99,7 @@ public enum MessageCode {
   PROFILE_UPDATE_SUCCESS(
       HttpStatus.OK, "MSG_0034", "Your account and profile details have been updated"),
 
-  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "MSG_0035", "Your password has been changed successfully"),
+  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "MSG_0035", "Your password has been updated"),
 
   GET_USERS_SUCCESS(HttpStatus.OK, "MSG_0036", "Admin user details fetched successfully"),
 
