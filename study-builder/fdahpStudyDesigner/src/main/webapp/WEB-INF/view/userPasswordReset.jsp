@@ -112,11 +112,7 @@
               </p>
             </c:if>
             <c:if test="${not isInactiveUser && not isValidToken}">
-              <p class="passwordExp">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-               This link is no longer valid to be used. 
-                Please contact the system admin for assistance with your account or sign in if already registered.
-              </p>
+              <jsp:forward page="errorPage.jsp" />
             </c:if>
             <div>
               <a id="login" class="gray-link backToLogin white__text"
