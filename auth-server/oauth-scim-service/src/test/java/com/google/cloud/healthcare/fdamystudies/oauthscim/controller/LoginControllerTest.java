@@ -19,6 +19,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCKED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_NAME_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
@@ -650,6 +651,7 @@ public class LoginControllerTest extends BaseMockIT {
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     Cookie sourceCookie =
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
+    Cookie appNameCookie = new Cookie(APP_NAME_COOKIE, "App Name_BTCDEV001");
 
     HttpHeaders headers = getCommonHeaders();
     headers.add("userId", userEntity.getUserId());
@@ -662,7 +664,12 @@ public class LoginControllerTest extends BaseMockIT {
                   .contextPath(getContextPath())
                   .params(requestParams)
                   .headers(headers)
-                  .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
+                  .cookie(
+                      appIdCookie,
+                      loginChallenge,
+                      mobilePlatformCookie,
+                      sourceCookie,
+                      appNameCookie))
           .andDo(print())
           .andExpect(view().name(LOGIN_VIEW_NAME));
 
