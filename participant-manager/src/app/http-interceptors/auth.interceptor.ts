@@ -161,10 +161,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
           if (err.url === `${environment.authServerUrl}/oauth2/token`) {
             sessionStorage.clear();
-            void this.router.navigate(['/']);
-            this.toasterService.error(
-              'Your session has expired. Please sign in again.',
-            );
+            void this.router.navigate(['/error/', 'EC_0080']);
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
           } else {
