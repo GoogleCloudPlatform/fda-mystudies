@@ -39,12 +39,6 @@ enum AuthRouter: URLRequestConvertible {
 
   }
 
-  private struct JSONKey {
-    static let correlationID = "correlationId"
-    static let appID = "appId"
-    static let platform = "mobilePlatform"
-  }
-
   case changePassword(params: JSONDictionary, userID: String)
   case logout(userID: String)
   case forgotPassword(params: JSONDictionary)
@@ -113,14 +107,10 @@ enum AuthRouter: URLRequestConvertible {
 
   private var defaultHeaders: StringDictionary {
     switch self {
-    case .logout, .forgotPassword, .codeGrant, .changePassword:
-      return [
-        JSONKey.correlationID: SessionService.correlationID,
-        JSONKey.appID: AppConfiguration.appID,
-        JSONKey.platform: Utilities.currentDevicePlatform(),
-      ]
-    default:
+    case .auth:
       return [:]
+    default:
+      return SessionService.Audit.headers
     }
   }
 

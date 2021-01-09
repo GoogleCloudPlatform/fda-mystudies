@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public ResetPasswordResponse resetPassword(
-      ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest)
+      ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest, String appName)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
 
@@ -223,7 +223,7 @@ public class UserServiceImpl implements UserService {
     Integer accountStatusBeforePasswordReset = userEntity.getStatus();
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse =
-        sendPasswordResetEmail(resetPasswordRequest, tempPassword, auditRequest);
+        sendPasswordResetEmail(resetPasswordRequest, tempPassword, auditRequest, appName);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
       setPasswordAndPasswordHistoryFields(
@@ -234,22 +234,14 @@ public class UserServiceImpl implements UserService {
       userInfo.put(LOGIN_ATTEMPTS, 0);
       userEntity.setUserInfo(userInfo);
       repository.saveAndFlush(userEntity);
-      if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
-        auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
-      } else {
-        auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
-      }
+      auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
 
       logger.exit(MessageCode.FORGOT_PASSWORD);
       return new ResetPasswordResponse(MessageCode.FORGOT_PASSWORD);
     }
 
     auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
-    if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
-      auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
-    } else {
-      auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
-    }
+    auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
 
     logger.exit(
         String.format(
@@ -260,7 +252,8 @@ public class UserServiceImpl implements UserService {
   private EmailResponse sendPasswordResetEmail(
       ResetPasswordRequest resetPasswordRequest,
       String tempPassword,
-      AuditLogEventRequest auditRequest) {
+      AuditLogEventRequest auditRequest,
+      String appName) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
     if (platformComponent == null) {
       logger.warn(
@@ -280,7 +273,7 @@ public class UserServiceImpl implements UserService {
             : appConfig.getMailResetPasswordBody();
 
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("appId", resetPasswordRequest.getAppId());
+    templateArgs.put("appName", appName);
     templateArgs.put("contactEmail", appConfig.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
@@ -335,8 +328,8 @@ public class UserServiceImpl implements UserService {
     userEntity.setUserInfo(userInfo);
     repository.saveAndFlush(userEntity);
     auditHelper.logEvent(PASSWORD_CHANGE_SUCCEEDED, auditRequest);
-    logger.exit("Your password has been changed successfully!");
-    return new ChangePasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
+    logger.exit("Your password has been updated successfully!");
+    return new ChangePasswordResponse(MessageCode.CHANGE_PASSWORD_SUCCESS);
   }
 
   private ErrorCode validateChangePasswordRequest(
@@ -389,7 +382,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optUserEntity.get();
-    JsonNode userInfo = userEntity.getUserInfo();
+    ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
 
     JsonNode passwordNode = userInfo.get(PASSWORD);
     if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
@@ -400,6 +393,7 @@ public class UserServiceImpl implements UserService {
       } else {
         // unlock the user account
         userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+        userInfo.put(LOGIN_ATTEMPTS, 0);
       }
     }
     String hash = getTextValue(passwordNode, HASH);
@@ -423,11 +417,11 @@ public class UserServiceImpl implements UserService {
     }
 
     // increment login attempts
-    return updateInvalidLoginAttempts(userEntity, userInfo, auditRequest);
+    return updateInvalidLoginAttempts(userEntity, userInfo, auditRequest, user.getAppName());
   }
 
   private EmailResponse sendAccountLockedEmail(
-      UserEntity user, String tempPassword, AuditLogEventRequest auditRequest) {
+      UserEntity user, String tempPassword, AuditLogEventRequest auditRequest, String appName) {
     logger.entry("sendAccountLockedEmail()");
     PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
     if (platformComponent == null) {
@@ -447,7 +441,7 @@ public class UserServiceImpl implements UserService {
             : appConfig.getMailAccountLockedBody();
 
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("appId", user.getAppId());
+    templateArgs.put("appName", appName);
     templateArgs.put("contactEmail", appConfig.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
@@ -466,12 +460,14 @@ public class UserServiceImpl implements UserService {
   }
 
   private AuthenticationResponse updateInvalidLoginAttempts(
-      UserEntity userEntity, JsonNode userInfoJsonNode, AuditLogEventRequest auditRequest) {
+      UserEntity userEntity,
+      ObjectNode userInfo,
+      AuditLogEventRequest auditRequest,
+      String appName) {
     if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_LOCKED);
     }
 
-    ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
     int loginAttempts =
         userInfo.hasNonNull(LOGIN_ATTEMPTS) ? userInfo.get(LOGIN_ATTEMPTS).intValue() : 0;
     loginAttempts += 1;
@@ -482,7 +478,13 @@ public class UserServiceImpl implements UserService {
       String tempPassword = PasswordGenerator.generate(12);
       setPasswordAndPasswordHistoryFields(
           tempPassword, userInfo, UserAccountStatus.ACCOUNT_LOCKED.getStatus());
-      sendAccountLockedEmail(userEntity, tempPassword, auditRequest);
+      EmailResponse emailResponse =
+          sendAccountLockedEmail(userEntity, tempPassword, auditRequest, appName);
+      if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
+        auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
+      } else {
+        auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
+      }
       userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
       userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, systemTime);
 
@@ -504,8 +506,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(
-      UserEntity userEntity, JsonNode userInfoJsonNode, AuditLogEventRequest auditRequest) {
-    ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
+      UserEntity userEntity, ObjectNode userInfo, AuditLogEventRequest auditRequest) {
     userInfo.put(LOGIN_TIMESTAMP, Instant.now().toEpochMilli());
 
     UserAccountStatus status = UserAccountStatus.valueOf(userEntity.getStatus());
@@ -538,7 +539,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private void validatePasswordExpiryAndAccountStatus(
-      UserEntity userEntity, JsonNode userInfo, AuditLogEventRequest auditRequest) {
+      UserEntity userEntity, ObjectNode userInfo, AuditLogEventRequest auditRequest) {
     JsonNode passwordNode =
         userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
             ? userInfo.get(ACCOUNT_LOCKED_PASSWORD)

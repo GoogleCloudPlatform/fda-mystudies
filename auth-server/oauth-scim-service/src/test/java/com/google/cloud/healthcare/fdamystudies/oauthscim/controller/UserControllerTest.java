@@ -32,7 +32,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_SENT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -100,6 +99,8 @@ import org.springframework.test.web.servlet.MvcResult;
 public class UserControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "MyStudies";
+
+  private static final String APP_NAME_VALUE = "App Name_BTCDEV001";
 
   protected static final String VALID_CORRELATION_ID = "8a56d20c-d755-4487-b80d-22d5fa383046";
 
@@ -494,7 +495,7 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Your password has been reset"));
+        .andExpect(jsonPath("$.message").value("Your password has been updated"));
 
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
@@ -659,7 +660,6 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnDeactivatedForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
-    // headers.add("Authorization", VALID_BEARER_TOKEN);
 
     userEntity.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
     userRepository.saveAndFlush(userEntity);
@@ -735,14 +735,9 @@ public class UserControllerTest extends BaseMockIT {
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
-    auditEventMap.put(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT.getEventCode(), auditRequest);
     auditEventMap.put(PASSWORD_RESET_SUCCEEDED.getEventCode(), auditRequest);
 
-    verifyAuditEventCall(
-        auditEventMap,
-        PASSWORD_HELP_REQUESTED,
-        PASSWORD_RESET_SUCCEEDED,
-        PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
+    verifyAuditEventCall(auditEventMap, PASSWORD_HELP_REQUESTED, PASSWORD_RESET_SUCCEEDED);
   }
 
   @Test
@@ -988,6 +983,7 @@ public class UserControllerTest extends BaseMockIT {
     headers.add("userId", userEntity.getUserId());
     headers.add("studyId", "MyStudies");
     headers.add("source", "SCIM AUTH SERVER");
+    headers.add("appName", "App Name_BTCDEV001");
     return headers;
   }
 
@@ -997,6 +993,7 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setPassword(CURRENT_PASSWORD_VALUE);
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userRequest.setAppName(APP_NAME_VALUE);
     return userRequest;
   }
 

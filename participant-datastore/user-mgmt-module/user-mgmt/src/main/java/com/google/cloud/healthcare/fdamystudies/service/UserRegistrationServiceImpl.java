@@ -27,6 +27,7 @@ import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
@@ -136,7 +137,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     // Call POST /users API to create a user account in oauth-scim-server
-    UserResponse authUserResponse = registerUserInAuthServer(user);
+    UserResponse authUserResponse = registerUserInAuthServer(user, auditRequest);
 
     // save authUserId
     userDetails.setUserId(authUserResponse.getUserId());
@@ -181,7 +182,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     EmailResponse emailResponse = sendConfirmationEmail(userDetails, verificationCode);
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       userDetails.setEmailCode(verificationCode);
-      userDetails.setCodeExpireDate(Timestamp.valueOf(LocalDateTime.now().plusMinutes(expireTime)));
+      userDetails.setCodeExpireDate(Timestamp.valueOf(LocalDateTime.now().plusHours(expireTime)));
       userDetailsRepository.saveAndFlush(userDetails);
     }
     return emailResponse;
@@ -200,9 +201,11 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     return userDetails;
   }
 
-  private UserResponse registerUserInAuthServer(UserRegistrationForm user) {
+  private UserResponse registerUserInAuthServer(
+      UserRegistrationForm user, AuditLogEventRequest auditRequest) {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     UserRequest userRequest = new UserRequest();
     userRequest.setEmail(user.getEmailId());

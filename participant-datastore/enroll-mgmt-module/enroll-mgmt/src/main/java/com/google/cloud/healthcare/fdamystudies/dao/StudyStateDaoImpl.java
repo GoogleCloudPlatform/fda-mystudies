@@ -12,7 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -23,6 +22,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -38,42 +38,18 @@ public class StudyStateDaoImpl implements StudyStateDao {
   @Autowired private SessionFactory sessionFactory;
 
   @Override
-  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user) {
-    logger.info("StudyStateDaoImpl getParticipantStudiesList() - Starts ");
-    CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<ParticipantStudyEntity> criteriaQuery = null;
-    Root<ParticipantStudyEntity> root = null;
-    Predicate[] predicates = new Predicate[1];
-    List<ParticipantStudyEntity> participantStudiesList = null;
-    Session session = this.sessionFactory.getCurrentSession();
-    criteriaBuilder = session.getCriteriaBuilder();
-    criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
-    root = criteriaQuery.from(ParticipantStudyEntity.class);
-    predicates[0] = criteriaBuilder.equal(root.get("userDetails"), user);
-    criteriaQuery.select(root).where(predicates);
-    participantStudiesList = session.createQuery(criteriaQuery).getResultList();
-
-    logger.info("StudyStateDaoImpl getParticipantStudiesList() - Ends ");
-    return participantStudiesList;
-  }
-
-  @Override
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
     logger.info("StudyStateDaoImpl saveParticipantStudies() - Starts ");
-    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    boolean isUpdated = false;
     Session session = this.sessionFactory.getCurrentSession();
-    for (ParticipantStudyEntity participantStudies : participantStudiesList) {
-      session.saveOrUpdate(participantStudies);
-      isUpdated = true;
+    for (ParticipantStudyEntity participantStudy : participantStudiesList) {
+      if (StringUtils.isEmpty(participantStudy.getId())) {
+        session.save(participantStudy);
+      } else {
+        session.update(participantStudy);
+      }
     }
-
-    if (isUpdated && !participantStudiesList.isEmpty()) {
-      message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-    }
-
     logger.info("StudyStateDaoImpl saveParticipantStudies() - Ends ");
-    return message;
+    return MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
   }
 
   @Override

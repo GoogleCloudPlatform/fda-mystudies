@@ -12,8 +12,10 @@ import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityMetaDa
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.ResponsesDao;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
@@ -89,7 +91,9 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
 
   @Override
   public QuestionnaireActivityStructureBean getStudyActivityMetadata(
-      String applicationId, StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
+      String applicationId,
+      StudyActivityMetadataRequestBean studyActivityMetadataRequestBean,
+      AuditLogEventRequest auditRequest)
       throws ProcessResponseException {
     logger.debug("getStudyActivityMetadata() - starts ");
     HttpHeaders headers = null;
@@ -99,6 +103,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
     headers.set(AppConstants.AUTHORIZATION_HEADER, this.getWcpAuthorizationHeader());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     UriComponentsBuilder studyMetadataUriBuilder =
         UriComponentsBuilder.fromHttpUrl(appConfig.getWcpStudyActivityMetadataUrl())

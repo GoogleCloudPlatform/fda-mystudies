@@ -91,7 +91,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, "
+          "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, si.status AS studyStatus, "
               + "ai.id AS appId,ai.app_name AS appName,ai.custom_app_id AS customAppId, "
               + "st.target_enrollment AS targetEnrollment, stp.edit AS edit "
               + "FROM app_info ai, study_info si, sites st,sites_permissions stp "
@@ -101,7 +101,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, "
+          "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, si.status AS studyStatus, "
               + "ai.id AS appId,ai.app_name AS appName,ai.custom_app_id AS customAppId, "
               + "st.target_enrollment AS targetEnrollment "
               + "FROM app_info ai, study_info si, sites st "
@@ -144,21 +144,21 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT created_time AS createdTimestamp, study_id AS studyId, custom_id AS customId, name AS studyName, type AS type,"
+          "SELECT created_time AS createdTimestamp, study_id AS studyId, custom_id AS customId, name AS studyName, type , status, "
               + " logo_image_url AS logoImageUrl, edit AS edit, study_permission AS studyPermission "
               + "FROM( "
-              + "SELECT si.created_time, sp.study_id, si.custom_id, si.name, si.type, si.logo_image_url, sp.edit, TRUE as study_permission "
+              + "SELECT si.created_time, sp.study_id, si.custom_id, si.name, si.type, si.status, si.logo_image_url, sp.edit, TRUE as study_permission "
               + "FROM study_permissions sp, study_info si "
               + "WHERE si.id=sp.study_id AND sp.ur_admin_user_id =:userId AND sp.study_id IN (SELECT sp.study_id FROM sites_permissions sp WHERE  sp.ur_admin_user_id =:userId) "
               + "UNION ALL "
-              + "SELECT DISTINCT si.created_time, sp.study_id, si.custom_id, si.name, si.type, si.logo_image_url, null,FALSE as study_permission "
+              + "SELECT DISTINCT si.created_time, sp.study_id, si.custom_id, si.name, si.type, si.status, si.logo_image_url, null,FALSE as study_permission "
               + "FROM sites_permissions sp, study_info si, sites s "
               + "WHERE si.id=sp.study_id AND s.id=sp.site_id AND s.status=1 AND sp.ur_admin_user_id =:userId AND sp.study_id NOT IN ( "
               + "SELECT st.study_id "
               + "FROM study_permissions st "
               + "WHERE st.ur_admin_user_id =:userId)) rstAlias "
               + "WHERE name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% "
-              + "GROUP BY created_time,study_id,custom_id,name,type,logo_image_url,edit,study_permission "
+              + "GROUP BY created_time,study_id,custom_id,name,type,status,logo_image_url,edit,study_permission "
               + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyInfo> getStudyDetails(
@@ -272,7 +272,21 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
               + "WHERE prs.study_info_id=:studyId  AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) ",
       nativeQuery = true)
-  public Long countParticipantsByStudyIdAndSearchTerm(String studyId, String searchTerm);
+  public Long countParticipants(String studyId, String searchTerm);
+
+  @Query(
+      value =
+          "SELECT COUNT(prs.id) "
+              + "FROM participant_registry_site prs "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id AND psi.status NOT IN (:excludeParticipantStudyStatus) "
+              + "LEFT JOIN study_info stu ON psi.study_info_id = stu.id  "
+              + "LEFT JOIN sites si ON si.id=prs.site_id "
+              + "LEFT JOIN locations loc ON loc.id=si.location_id "
+              + "WHERE prs.study_info_id=:studyId AND stu.type='OPEN' "
+              + "AND  (prs.email LIKE %:searchTerm% OR loc.name LIKE %:searchTerm% ) ",
+      nativeQuery = true)
+  public Long countOpenStudyParticipants(
+      String studyId, String[] excludeParticipantStudyStatus, String searchTerm);
 
   @Query(
       value =

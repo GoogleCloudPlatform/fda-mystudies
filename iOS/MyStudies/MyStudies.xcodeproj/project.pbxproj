@@ -52,7 +52,6 @@
 		6EA889BC1E6FD16B00F160A1 /* ConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA889BB1E6FD16B00F160A1 /* ConfirmationViewController.swift */; };
 		6EA889BE1E6FD20000F160A1 /* ConfirmationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA889BD1E6FD20000F160A1 /* ConfirmationTableViewCell.swift */; };
 		6EA889C01E6FD22800F160A1 /* ConfirmationOptionalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA889BF1E6FD22800F160A1 /* ConfirmationOptionalTableViewCell.swift */; };
-		6EA889C51E701E8200F160A1 /* Confirmation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EA889C41E701E8200F160A1 /* Confirmation.plist */; };
 		6EAB39A91E4B0B4A003442B8 /* Resources.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6EAB39A81E4B0B4A003442B8 /* Resources.plist */; };
 		6EB740181E9CD38100A4C773 /* FetalKickTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 6EB740171E9CD38100A4C773 /* FetalKickTest.json */; };
 		6EB740261E9D028000A4C773 /* FetalKickIntroStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB740251E9D028000A4C773 /* FetalKickIntroStepViewController.swift */; };
@@ -344,7 +343,6 @@
 		6EA889BB1E6FD16B00F160A1 /* ConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationViewController.swift; sourceTree = "<group>"; };
 		6EA889BD1E6FD20000F160A1 /* ConfirmationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationTableViewCell.swift; sourceTree = "<group>"; };
 		6EA889BF1E6FD22800F160A1 /* ConfirmationOptionalTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationOptionalTableViewCell.swift; sourceTree = "<group>"; };
-		6EA889C41E701E8200F160A1 /* Confirmation.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Confirmation.plist; sourceTree = "<group>"; };
 		6EAB39A81E4B0B4A003442B8 /* Resources.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Resources.plist; sourceTree = "<group>"; };
 		6EB740171E9CD38100A4C773 /* FetalKickTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FetalKickTest.json; sourceTree = "<group>"; };
 		6EB740251E9D028000A4C773 /* FetalKickIntroStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetalKickIntroStepViewController.swift; sourceTree = "<group>"; };
@@ -1217,7 +1215,6 @@
 				484ACBFB1F28A82B00BCC819 /* FilterData.plist */,
 				94B3DD1B1E6ED8E500327AE5 /* Profile.plist */,
 				4884E35B1E827F8F002DA0B9 /* ContactUs.plist */,
-				6EA889C41E701E8200F160A1 /* Confirmation.plist */,
 				486304D51E6FE77C003CD406 /* GatewayOverview.plist */,
 				6EE93DBB1E93C8850027A5DC /* ResourcesUI.plist */,
 				94B3DD301E6ED8E500327AE5 /* SignInPlist.plist */,
@@ -1984,7 +1981,6 @@
 				6F4E1B2D24223C210051D3E2 /* README.md in Resources */,
 				94B3DD511E6ED8E500327AE5 /* Login.storyboard in Resources */,
 				942591C41EA8A2650010D892 /* ActivitySchedules.xib in Resources */,
-				6EA889C51E701E8200F160A1 /* Confirmation.plist in Resources */,
 				6E14F2031F0224AD00EA8D1E /* Notification.json in Resources */,
 				6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */,
 				89893F0522B1115300A846CE /* Main.storyboard in Resources */,

@@ -103,6 +103,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1136,10 +1137,15 @@ public class SiteServiceImpl implements SiteService {
 
     List<String> studyIds = studyRepository.findStudyIds(limit, offset, userId);
 
-    List<StudySiteInfo> studySiteDetails =
-        siteRepository.getStudySiteDetails(userId, studyIds, StringUtils.defaultString(searchTerm));
+    List<StudySiteInfo> studySiteDetails = null;
+    if (CollectionUtils.isNotEmpty(studyIds)) {
+      studySiteDetails =
+          siteRepository.getStudySiteDetails(
+              userId, studyIds, StringUtils.defaultString(searchTerm));
+    }
+
     if (CollectionUtils.isEmpty(studySiteDetails)) {
-      throw new ErrorCodeException(ErrorCode.NO_SITES_FOUND);
+      return new SiteDetailsResponse(new ArrayList<>(), MessageCode.GET_SITES_SUCCESS);
     }
 
     List<EnrolledInvitedCount> enrolledInvitedCountList =
@@ -1167,7 +1173,10 @@ public class SiteServiceImpl implements SiteService {
       }
 
       StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
-      studyDetail.setStudyPermission(studySiteInfo.getEditPermission());
+      if (studySiteInfo.getStudyPermission() == 1 && studySiteInfo.getEditPermission() == 1) {
+        studyDetail.setStudyPermission(studySiteInfo.getEditPermission());
+      }
+
       if (StringUtils.isNotEmpty(studySiteInfo.getSiteId())) {
         prepareSiteDetails(enrolledInvitedCountMap, studyDetail, studySiteInfo);
       }
@@ -1262,6 +1271,14 @@ public class SiteServiceImpl implements SiteService {
       site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
     }
     studyDetail.getSites().add(site);
+    List<SiteDetails> sortedSites =
+        studyDetail
+            .getSites()
+            .stream()
+            .sorted(Comparator.comparing(SiteDetails::getName, String.CASE_INSENSITIVE_ORDER))
+            .collect(Collectors.toList());
+    studyDetail.getSites().clear();
+    studyDetail.getSites().addAll(sortedSites);
   }
 
   private void prepareSiteDetails(
@@ -1302,6 +1319,14 @@ public class SiteServiceImpl implements SiteService {
     }
 
     studyDetail.getSites().add(siteDetails);
+    List<SiteDetails> sortedSites =
+        studyDetail
+            .getSites()
+            .stream()
+            .sorted(Comparator.comparing(SiteDetails::getName, String.CASE_INSENSITIVE_ORDER))
+            .collect(Collectors.toList());
+    studyDetail.getSites().clear();
+    studyDetail.getSites().addAll(sortedSites);
   }
 
   @Override
@@ -1416,7 +1441,7 @@ public class SiteServiceImpl implements SiteService {
 
       Map<String, String> templateArgs = new HashMap<>();
       templateArgs.put("study name", optStudy.get().getName());
-      templateArgs.put("org name", appPropertyConfig.getOrgName());
+      templateArgs.put("App Name", optStudy.get().getApp().getAppName());
       templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
       templateArgs.put("contact email address", appPropertyConfig.getContactEmail());
       EmailRequest emailRequest =

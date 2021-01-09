@@ -134,11 +134,18 @@
 
 <ng-template #appEnrollList>
   <div #appsListData class="modal-body modal__body">
-    <button type="button" class="close pad__15__20" (click)="modalRef.hide()">
+    <button
+      type="button"
+      class="close custm_close_modal"
+      (click)="modalRef.hide()"
+    >
       &times;
     </button>
 
-    <ul class="app__level__pop__list mt-3">
+    <ul
+      class="app__level__pop__list mt-3 mb-3 pr-4"
+      [ngClass]="{custom_scroll: enrolledStudies.length > 2}"
+    >
       <li *ngFor="let applists of enrolledStudies">
         <div class="blue__text__md text-uppercase">
           {{ applists.customStudyId }}

@@ -54,8 +54,7 @@ public final class UserMapper {
     admin.setSuperAdmin(userRequest.isSuperAdmin());
     admin.setSecurityCode(IdGenerator.id());
     admin.setSecurityCodeExpireDate(
-        new Timestamp(
-            Instant.now().plus(securityCodeExpireTime, ChronoUnit.MINUTES).toEpochMilli()));
+        new Timestamp(Instant.now().plus(securityCodeExpireTime, ChronoUnit.HOURS).toEpochMilli()));
     Integer manageLocation =
         userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
     admin.setLocationPermission(manageLocation);

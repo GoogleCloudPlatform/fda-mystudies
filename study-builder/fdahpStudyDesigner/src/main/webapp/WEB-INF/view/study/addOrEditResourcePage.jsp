@@ -380,9 +380,6 @@
               if (valid) {
                 console.log(1);
                 $('#buttonText').val('done');
-                var editorText = $('#richText').summernote('code');
-                var escaped = $('#richText').text(editorText).html();
-                $('#richText').val(escaped);
                 $('#resourceForm').submit();
               } else {
                 console.log(2);
@@ -392,9 +389,6 @@
           });
         } else {
           $('#buttonText').val('done');
-          var editorText = $('#richText').summernote('code');
-          var escaped = $('#richText').text(editorText).html();
-          $('#richText').val(escaped);
           $('#resourceForm').submit();
         }
       } else {
@@ -463,12 +457,6 @@
         $('#resourceForm').validator('destroy');
         $("#actionOn").val(actionOn);
         $("#buttonText").val('save');
-        var editorTextVal = $('#richText').val();
-        if (null != editorTextVal && editorTextVal != '' && typeof editorTextVal != 'undefined' && editorTextVal != '<p><br></p>'){
-        	var editorText = $('#richText').summernote('code');
-      	    var escaped = $('#richText').text(editorText).html();
-      	    $('#richText').val(escaped);
-        }
         $('#resourceForm').submit();
       }
       $('#saveResourceId').prop('disabled', false);
@@ -956,11 +944,11 @@
     }
     var valid = true;
     if (y && x) {
-      if (parseInt(x) > parseInt(y)) {
+      if (parseInt(x) >= parseInt(y)) {
         if (clickDone && isFromValid($('#ydays').parents('form')))
           $('#ydays').focus();
         $('#ydays').parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y days should be greater than X days."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
         valid = false;
       } else {
         $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").empty();

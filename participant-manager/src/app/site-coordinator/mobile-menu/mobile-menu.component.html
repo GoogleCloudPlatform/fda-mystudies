@@ -13,7 +13,7 @@
       >
         <img
           class="mr-sm width__auto"
-          src="assets/images/landing-logo.png"
+          src="assets/images/branding/landing-logo.png"
           alt="main logo"
         />
       </a>
@@ -63,7 +63,7 @@
         <a routerLink="/coordinator/studies">
           <img
             class="mr-sm width__auto"
-            src="assets/images/landing-logo.png"
+            src="assets/images/branding/landing-logo.png"
             alt="main logo"
           />
         </a>
@@ -75,7 +75,11 @@
             class="nav-item nav-link"
             routerLink="/coordinator/studies/sites"
             [ngClass]="{
-              active: apps.isActive || sites.isActive || studies.isActive
+              active:
+                apps.isActive ||
+                sites.isActive ||
+                studies.isActive ||
+                participantDetails.isActive
             }"
           >
             Dashboard
@@ -86,7 +90,6 @@
             routerLinkActive
             #studies="routerLinkActive"
             style="display: none"
-            [routerLinkActiveOptions]="{exact: true}"
           >
             sites
           </a>
@@ -96,7 +99,6 @@
             routerLinkActive
             #apps="routerLinkActive"
             style="display: none"
-            [routerLinkActiveOptions]="{exact: true}"
           >
             apps
           </a>
@@ -106,9 +108,17 @@
             routerLinkActive
             #sites="routerLinkActive"
             style="display: none"
-            [routerLinkActiveOptions]="{exact: true}"
           >
             studies
+          </a>
+          <a
+            class="nav-item nav-link"
+            routerLink="/coordinator/participant/"
+            routerLinkActive
+            #participantDetails="routerLinkActive"
+            style="display: none"
+          >
+            Participant details
           </a>
         </li>
         <li>

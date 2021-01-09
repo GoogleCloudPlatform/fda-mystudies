@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -152,6 +153,8 @@ public class EnrollmentManagementUtil {
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("applicationId", applicationId);
       headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
+      AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
+
       bodyProvider = new EnrollmentBodyProvider();
       bodyProvider.setTokenIdentifier(hashedTokenValue);
       bodyProvider.setCustomStudyId(studyId);
@@ -175,7 +178,8 @@ public class EnrollmentManagementUtil {
     return participantId;
   }
 
-  public String withDrawParticipantFromStudy(String participantId, String studyId, boolean delete) {
+  public String withDrawParticipantFromStudy(
+      String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
@@ -185,6 +189,7 @@ public class EnrollmentManagementUtil {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set(AppConstants.APPLICATION_ID, null);
     headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     request = new HttpEntity<>(null, headers);
 

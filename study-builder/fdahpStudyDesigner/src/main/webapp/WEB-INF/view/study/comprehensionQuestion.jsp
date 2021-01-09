@@ -272,8 +272,10 @@
     });
     if ($('.ans-opts').length > 2) {
       $(".remBtnDis").removeClass("hide");
+      $(".remBtnDis").css("pointer-events", "auto");
     } else {
       $(".remBtnDis").addClass("hide");
+      $(".remBtnDis").css("pointer-events", "none");
     }
   });
   var ansCount = $(".ans-opts").length;
@@ -320,18 +322,26 @@
     }
     $('.selectpicker').selectpicker('refresh');
     $('#' + ansCount).find('input:first').focus();
+    if ($('.ans-opts').length > 2) {
+        $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
+    } else {
+        $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
+    }
   }
 
   function removeAns(param) {
     $(param).parents(".ans-opts").remove();
     $(".ans-opts").parents("form").validator("destroy");
     $(".ans-opts").parents("form").validator();
+    
     if ($('.ans-opts').length > 2) {
-      $(".remBtnDis").removeClass("hide");
-
+        $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
     } else {
-      $(".remBtnDis").addClass("hide");
-
+        $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
     }
   }
 

@@ -74,7 +74,7 @@ public class UserSupportController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> contactUsDetails(
-      @RequestBody ContactUsReqBean reqBean,
+      @Valid @RequestBody ContactUsReqBean reqBean,
       @RequestHeader String appName,
       @Context HttpServletResponse response,
       HttpServletRequest request)

@@ -18,7 +18,7 @@ const errorMessages = {
   EC_0010: 'The current password entered is incorrect',
   EC_0011:
     'Your new password should not match any of your previous 10 passwords',
-  EC_0012: 'This user does not have an active account',
+  EC_0012: 'This admin does not have an active account',
   EC_0013: 'App not found',
   EC_0014: 'Study not found',
   EC_0015: 'Location not found',
@@ -42,7 +42,7 @@ const errorMessages = {
   EC_0030: 'You do not have permission to update the location',
   EC_0031: 'Participant(s) cannot be added to the registry of an open study',
   EC_0032:
-    'User should have atleast one permission in the system to access this resource.',
+    'The admin should have atleast one permission in the system to access this resource',
   EC_0033: 'Invalid security code',
   EC_0035: 'Error in getting participants details',
   EC_0036: 'The uploaded file is not in the prescribed format',
@@ -65,9 +65,9 @@ const errorMessages = {
   EC_0050: 'Allowed values are: N, D, I and E',
   EC_0051:
     'The decommission action cannot be taken with this site as it belongs to an open study',
-  EC_0052: 'Invalid user status',
+  EC_0052: 'Invalid admin user status',
   EC_0053: 'Cannot add site to an open study',
-  EC_0054: 'User Id is required',
+  EC_0054: 'User ID is required',
   EC_0055:
     'There should be at least 4 unique characters that are different from your previous password',
   EC_0056: 'Your account has been temporary locked. Please try after sometime.',
@@ -88,8 +88,7 @@ const errorMessages = {
     'This study is deactivated. Sites cannot be added to deactivated studies.',
   EC_0125:
     '1 or more participant record(s) could not be enabled. This could happen if the emails exist in enabled state in another site of the same study.',
-  EC_0065:
-    'The user’s account is already active. Please try deactivating the user instead.',
+  EC_0065: `This admin's account is already active. Please try deactivating instead if you wish to revoke access to the Participant Manager.`,
   EC_0066:
     'The token entered is no longer valid. Please contact the site coordinator for assistance.',
   EC_0067: 'Account created successfully',
