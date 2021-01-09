@@ -15,6 +15,8 @@ export class ForgotPasswordService {
     return this.http.post<ApiResponse>(
       `${environment.authServerUrl}/user/reset_password`,
       resetData,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      {headers: {'Content-Type': 'application/json'}},
     );
   }
 }
