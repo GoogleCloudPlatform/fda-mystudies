@@ -109,7 +109,10 @@ public class AppServiceImpl implements AppService {
         appRepository.findAppsByUserId(
             userId, limit, offset, StringUtils.defaultString(searchTerm));
     if (CollectionUtils.isEmpty(appStudyInfoList)) {
-      throw new ErrorCodeException(ErrorCode.NO_APPS_FOUND);
+      return new AppResponse(
+          MessageCode.GET_APPS_SUCCESS,
+          new ArrayList<>(),
+          optUserRegAdminEntity.get().isSuperAdmin());
     }
 
     List<String> appIds =
