@@ -100,6 +100,8 @@ public class UserControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "MyStudies";
 
+  private static final String APP_NAME_VALUE = "App Name_BTCDEV001";
+
   protected static final String VALID_CORRELATION_ID = "8a56d20c-d755-4487-b80d-22d5fa383046";
 
   private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
@@ -493,7 +495,7 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Your password has been reset"));
+        .andExpect(jsonPath("$.message").value("Your password has been updated"));
 
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
@@ -981,6 +983,7 @@ public class UserControllerTest extends BaseMockIT {
     headers.add("userId", userEntity.getUserId());
     headers.add("studyId", "MyStudies");
     headers.add("source", "SCIM AUTH SERVER");
+    headers.add("appName", "App Name_BTCDEV001");
     return headers;
   }
 
@@ -990,6 +993,7 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setPassword(CURRENT_PASSWORD_VALUE);
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userRequest.setAppName(APP_NAME_VALUE);
     return userRequest;
   }
 
