@@ -337,8 +337,8 @@ public class AppControllerTest extends BaseMockIT {
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.error_description").value(ErrorCode.NO_APPS_FOUND.getDescription()));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isEmpty());
 
     verifyTokenIntrospectRequest();
   }

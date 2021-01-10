@@ -1146,7 +1146,7 @@ public class SiteServiceImpl implements SiteService {
     }
 
     if (CollectionUtils.isEmpty(studySiteDetails)) {
-      throw new ErrorCodeException(ErrorCode.NO_SITES_FOUND);
+      return new SiteDetailsResponse(new ArrayList<>(), MessageCode.GET_SITES_SUCCESS);
     }
 
     List<EnrolledInvitedCount> enrolledInvitedCountList =
