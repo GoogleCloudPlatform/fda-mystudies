@@ -102,7 +102,8 @@ export class AppListComponent implements OnInit {
           );
         }
         this.loadMoreEnabled =
-          this.manageAppsBackup.apps.length % limit === 0 ? true : false;
+          (this.manageAppsBackup.apps.length % limit === 0 ? true : false) &&
+          manageApps.apps.length > 0;
         return this.manageAppsBackup;
       }),
     );
