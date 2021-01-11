@@ -2014,9 +2014,6 @@
                   <div class="col-md-12 p-none display__flex__center">
                     <div class="col-md-10 pl-none">
                       <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)
-                        <span
-                            class="requiredStar">*
-                        </span>
                       </div>
                       <div class="form-group">
                         <textarea class="form-control"
@@ -2096,9 +2093,6 @@
                   <div class="col-md-12 p-none display__flex__center">
                     <div class="col-md-10 pl-none">
                       <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)
-                        <span
-                            class="requiredStar">*
-                        </span>
                       </div>
                       <div class="form-group">
                         <textarea class="form-control"
@@ -4408,7 +4402,7 @@ if(document.getElementById("singleSelect").checked==true){
         "</div> ";
     newTextChoice +=
         "<div class='col-md-12 p-none display__flex__center'><div class='col-md-10 pl-none'>" +
-        "   <div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) <span class='requiredStar'>*</span> </div>"
+        "   <div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) </div>"
         +
         "   <div class='form-group'>					     " +
         "      <textarea class='form-control' name='questionResponseSubTypeList[" + choiceCount

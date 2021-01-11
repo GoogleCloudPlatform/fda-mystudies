@@ -30,19 +30,18 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
 
     <!-- Vendor CSS -->
-
     <link rel="stylesheet" href="/studybuilder/vendor/boostrap/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
-
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+ 
+ 
     <!-- Theme Responsive CSS -->
     <link rel="stylesheet" href="/studybuilder/css/layout.css">
 
     <!-- Theme CSS -->
     <link rel="stylesheet" href="/studybuilder/css/theme.css">
     <link rel="stylesheet" href="/studybuilder/css/style.css">
-
+  
     <!-- Vendor -->
-
     <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
     <script src="/studybuilder/vendor/summernote/popper.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
@@ -104,6 +103,10 @@
   min-height: 100%;
 }
 
+.invalidLink {
+    padding: 50px 50px;
+}
+
 html, body {
   height: 100%;
 }
@@ -133,7 +136,9 @@ html, body {
         <span class="display-1 d-block">
           <img src="/studybuilder/images/icons/ErrorIcon.svg" alt="Page not found here" />
         </span>
-        <div class="custom__font_error">404</div>
+        <div class="invalidLink">This link is no longer valid to be used. 
+                Please contact the system admin for assistance with your account or sign in if already registered.
+        </div>
       </div>
 </div>
  
