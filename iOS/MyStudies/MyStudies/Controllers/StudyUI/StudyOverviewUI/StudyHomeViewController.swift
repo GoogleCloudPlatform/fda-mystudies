@@ -975,7 +975,29 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   func taskViewControllerSupportsSaveAndRestore(_: ORKTaskViewController) -> Bool {
     return true
   }
-
+  
+  /// This method updates the study status to DB and Server.
+  /// - Parameter status: `UserStudyStatus.StudyStatus` to be updated.
+  fileprivate func updateStudyStatus(status: UserStudyStatus.StudyStatus) {
+    
+    guard let currentStudy = Study.currentStudy,
+          let studyID = currentStudy.studyId else { return }
+    
+    let currentUserStudyStatus = User.currentUser.updateStudyStatus(
+      studyId: studyID,
+      status: status
+    )
+    
+    Study.currentStudy?.userParticipateState = currentUserStudyStatus
+    
+    DBHandler.updateStudyParticipationStatus(study: currentStudy)
+    
+    EnrollServices().updateUserParticipatedStatus(
+      studyStauts: currentUserStudyStatus,
+      delegate: self
+    )
+  }
+  
   public func taskViewController(
     _ taskViewController: ORKTaskViewController,
     didFinishWith reason: ORKTaskViewControllerFinishReason,
@@ -1038,21 +1060,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
             })
 
           if results! {
-            let currentUserStudyStatus = User.currentUser.updateStudyStatus(
-              studyId: (Study.currentStudy?.studyId)!,
-              status: .yetToEnroll
-            )
-
-            Study.currentStudy?.userParticipateState = currentUserStudyStatus
-
-            DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
-
             isUpdatingIneligibility = true
-
-            EnrollServices().updateUserParticipatedStatus(
-              studyStauts: currentUserStudyStatus,
-              delegate: self
-            )
+            updateStudyStatus(status: .yetToEnroll)
           }
         }
       }
@@ -1100,8 +1109,17 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       || stepIndentifer == kComprehensionInstructionStepIdentifier
     {
 
+      if stepIndentifer == kInEligibilityStep {
+        self.isUpdatingIneligibility = true
+        self.updateStudyStatus(status: .notEligible)
+      }
+      
       if stepIndentifer == kEligibilityVerifiedScreen {
         stepViewController.continueButtonTitle = kContinueButtonTitle
+        isUpdatingIneligibility = true
+        // Update study state to yetToEnroll in case it's
+        // notEligible or any other status.
+        updateStudyStatus(status: .yetToEnroll)
       }
 
       if stepIndentifer == kVisualStepId {
@@ -1285,25 +1303,13 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
         .identifier
 
       if lastStepResultIdentifier == kInEligibilityStep {
-        let currentUserStudyStatus = User.currentUser.updateStudyStatus(
-          studyId: (Study.currentStudy?.studyId)!,
-          status: .notEligible
-        )
-
-        Study.currentStudy?.userParticipateState = currentUserStudyStatus
-
-        DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
 
         unHideSubViews()
         dismiss(
           animated: true,
-          completion: {
+          completion: { [unowned self] in
             self.isUpdatingIneligibility = true
-
-            EnrollServices().updateUserParticipatedStatus(
-              studyStauts: currentUserStudyStatus,
-              delegate: self
-            )
+            self.updateStudyStatus(status: .notEligible)
           }
         )
         return nil

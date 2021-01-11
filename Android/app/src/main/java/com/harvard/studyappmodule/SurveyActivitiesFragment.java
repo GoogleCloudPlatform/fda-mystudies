@@ -2495,8 +2495,11 @@ public class SurveyActivitiesFragment extends Fragment
 
     JSONArray studieslist = new JSONArray();
     JSONObject studiestatus = new JSONObject();
+
+    Studies studies = dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
     try {
       studiestatus.put("studyId", ((SurveyActivity) context).getStudyId());
+      studiestatus.put("siteId", studies.getSiteId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
 
