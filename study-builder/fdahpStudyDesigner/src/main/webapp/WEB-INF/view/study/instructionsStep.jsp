@@ -88,7 +88,7 @@
       </div>
       <div class="clearfix"></div>
 
-      <div class="gray-xs-f mb-xs">Instruction Text (1 to 500 characters)
+      <div class="gray-xs-f mb-xs">Instruction Text
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">

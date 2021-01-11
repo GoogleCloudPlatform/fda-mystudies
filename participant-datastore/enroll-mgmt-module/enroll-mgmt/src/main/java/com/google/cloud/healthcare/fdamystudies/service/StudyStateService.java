@@ -20,13 +20,13 @@ import java.util.List;
 public interface StudyStateService {
 
   public List<ParticipantStudyEntity> getParticipantStudiesList(
-      UserDetailsEntity user, List<String> siteIds);
+      UserDetailsEntity user, List<StudiesBean> studiesBeenList);
 
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
       List<ParticipantStudyEntity> existParticipantStudies,
-      String userId,
-      AuditLogEventRequest auditRequest);
+      AuditLogEventRequest auditRequest,
+      UserDetailsEntity user);
 
   public List<StudyStateBean> getStudiesState(String userId)
       throws javax.transaction.SystemException;

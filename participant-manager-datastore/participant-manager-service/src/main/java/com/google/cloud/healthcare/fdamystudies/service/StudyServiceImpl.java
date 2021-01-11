@@ -87,7 +87,10 @@ public class StudyServiceImpl implements StudyService {
             userId, limit, offset, StringUtils.defaultString(searchTerm));
 
     if (CollectionUtils.isEmpty(studyDetails)) {
-      throw new ErrorCodeException(ErrorCode.NO_STUDIES_FOUND);
+      return new StudyResponse(
+          MessageCode.GET_STUDIES_SUCCESS,
+          new ArrayList<>(),
+          optUserRegAdminEntity.get().isSuperAdmin());
     }
 
     List<EnrolledInvitedCountForStudy> enrolledInvitedCountList =
