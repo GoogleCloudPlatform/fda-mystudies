@@ -83,8 +83,9 @@ public class StudyStateServiceImpl implements StudyStateService {
   public List<ParticipantStudyEntity> getParticipantStudiesList(
       UserDetailsEntity user, List<StudiesBean> studiesBeenList) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
+
     List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
-    List<String> participantStudyIds = null;
+    List<String> participantStudyIds = new ArrayList<>();
 
     List<String> customStudyIds =
         studiesBeenList

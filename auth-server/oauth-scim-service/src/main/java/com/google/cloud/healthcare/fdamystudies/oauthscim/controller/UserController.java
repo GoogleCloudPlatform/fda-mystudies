@@ -86,13 +86,15 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resetPassword(
-      @Valid @RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request)
+      @RequestHeader String appName,
+      @Valid @RequestBody ResetPasswordRequest resetPasswordRequest,
+      HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
     ResetPasswordResponse resetPasswordResponse =
-        userService.resetPassword(resetPasswordRequest, auditRequest);
+        userService.resetPassword(resetPasswordRequest, auditRequest, appName);
 
     if (resetPasswordResponse.getHttpStatusCode() == HttpStatus.OK.value()) {
       auditHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);

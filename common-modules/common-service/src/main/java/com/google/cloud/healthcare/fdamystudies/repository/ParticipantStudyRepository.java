@@ -92,16 +92,17 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
 
   @Query(
       value =
+          "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId AND ps.userDetails.userId = :userId AND ps.site.id = :siteId")
+  public Optional<ParticipantStudyEntity> findByStudyIdAndSiteId(
+      String studyId, String userId, String siteId);
+
+  @Query(
+      value =
           "SELECT ps.id "
               + "FROM participant_registry_site prs, participant_study_info ps, study_info stu "
               + "WHERE prs.id=ps.participant_registry_site_id AND stu.id=ps.study_info_id AND prs.email=:email AND stu.custom_id IN (:studyCustomIds) AND ps.status IN ('yetToEnroll','notEligible','withdrawn') ",
       nativeQuery = true)
   public List<String> findByEmailAndStudyCustomIds(String email, List<String> studyCustomIds);
-
-  @Query(
-      "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId AND ps.userDetails.userId = :userId AND ps.site.id = :siteId")
-  public Optional<ParticipantStudyEntity> findByStudyIdAndSiteId(
-      String studyId, String userId, String siteId);
 
   @Query(
       value =

@@ -447,7 +447,7 @@
            var escaped = $('#richText').text(richText).html();
            $('#richText').val(escaped);
           }
-         
+
       $('#saveResourceId').prop('disabled', true);
       $("#resourceTitle").parent().find(".help-block").empty();
       $('#resourceForm').validator('destroy').validator();
