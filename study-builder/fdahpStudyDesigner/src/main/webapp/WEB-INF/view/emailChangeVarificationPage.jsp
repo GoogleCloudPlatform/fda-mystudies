@@ -87,17 +87,7 @@
             </div>
             </c:if>
             <c:if test="${not isValidToken}">
-              <p class="passwordExp">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                This link is no longer valid to be used. 
-                Please contact the system admin for assistance 
-                with your account or sign in if already registered.
-              </p>
-              <div>
-              <a id="login" class="gray-link backToLogin1 white__text hover_text_white" href="javascript:void(0)">Back to
-                Sign in
-              </a>
-            </div>
+              <jsp:forward page="errorPage.jsp" />
             </c:if>
             <input type="hidden" name="securityToken" value="${securityToken}"/>
           </form:form>
