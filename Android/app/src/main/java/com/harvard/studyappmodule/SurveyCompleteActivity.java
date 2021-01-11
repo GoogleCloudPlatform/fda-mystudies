@@ -1194,8 +1194,11 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
     JSONArray studieslist = new JSONArray();
     JSONObject studiestatus = new JSONObject();
+    Studies studies = dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), realm);
+
     try {
       studiestatus.put("studyId", getIntent().getStringExtra(STUDYID));
+      studiestatus.put("siteId", studies.getSiteId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
 

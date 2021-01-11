@@ -330,9 +330,8 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_STUDIES.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(
-            jsonPath("$.error_description").value(ErrorCode.NO_STUDIES_FOUND.getDescription()));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isEmpty());
 
     verifyTokenIntrospectRequest();
   }
