@@ -33,12 +33,26 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       "User account deactivated (user ID - ${edited_user_id}).",
       "USER_DEACTIVATED"),
 
-  USER_ACTIVATED(
+  USER_REACTIVATED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "User account activated (user ID - ${edited_user_id}).",
-      "USER_ACTIVATED"),
+      "User account re-activated (user ID - ${edited_user_id}).",
+      "USER_REACTIVATED"),
+
+  USER_DELETED(
+      PARTICIPANT_MANAGER,
+      PARTICIPANT_USER_DATASTORE,
+      null,
+      "User record deleted  (user ID - ${new_user_id}).",
+      "USER_DELETED"),
+
+  RESEND_INVITATION(
+      PARTICIPANT_MANAGER,
+      PARTICIPANT_USER_DATASTORE,
+      null,
+      "Invitation resent to the user (user ID - ${new_user_id}).",
+      "RESEND_INVITATION"),
 
   USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION(
       PARTICIPANT_MANAGER,
@@ -180,7 +194,7 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       "Location activated (location ID- ${location_id}).",
       "LOCATION_ACTIVATED"),
 
-  NEW_USER_CREATED(
+  NEW_USER_ADDED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,

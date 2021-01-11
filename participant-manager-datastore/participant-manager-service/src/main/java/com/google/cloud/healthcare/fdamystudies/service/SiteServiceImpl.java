@@ -27,6 +27,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_DISABLED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_ENABLED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_ACTIVATED_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_ADDED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_DECOMMISSIONED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_PARTICIPANT_REGISTRY_VIEWED;
 
@@ -175,7 +176,7 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   @Transactional
-  public SiteResponse addSite(SiteRequest siteRequest) {
+  public SiteResponse addSite(SiteRequest siteRequest, AuditLogEventRequest auditRequest) {
     logger.entry("begin addSite()");
 
     Optional<UserRegAdminEntity> optUser = userRegAdminRepository.findById(siteRequest.getUserId());
@@ -216,6 +217,14 @@ public class SiteServiceImpl implements SiteService {
 
     SiteResponse siteResponse =
         saveSiteWithSitePermissions(siteRequest.getUserId(), location, study);
+
+    auditRequest.setAppId(study.getAppId());
+    auditRequest.setStudyId(siteRequest.getStudyId());
+    auditRequest.setUserId(siteRequest.getUserId());
+    auditRequest.setSiteId(siteResponse.getSiteId());
+
+    Map<String, String> map = Collections.singletonMap("site_id", siteResponse.getSiteId());
+    participantManagerHelper.logEvent(SITE_ADDED_FOR_STUDY, auditRequest, map);
     logger.exit(
         String.format(
             "Site %s added to locationId=%s and studyId=%s",
@@ -1461,6 +1470,7 @@ public class SiteServiceImpl implements SiteService {
           SiteMapper.prepareAuditlogRequest(invitedParticipantsEmailEntity);
       auditRequest.setSiteId(participantRegistrySiteEntity.getSite().getId());
       auditRequest.setStudyId(participantRegistrySiteEntity.getSite().getStudyId());
+      auditRequest.setParticipantId(participantRegistrySiteEntity.getId());
 
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
           .getMessage()

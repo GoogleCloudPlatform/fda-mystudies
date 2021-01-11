@@ -10,7 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_CREATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_ADDED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.RESEND_INVITATION;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_RECORD_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMAIL_VALUE;
@@ -242,8 +243,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -282,8 +283,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     verifyTokenIntrospectRequest();
   }
@@ -343,8 +344,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -387,8 +388,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -429,14 +430,14 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
 
+    String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
-
-    String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     // Step 3: verify saved values
     assertAdminUser(userId, false);
@@ -1111,6 +1112,13 @@ public class UserControllerTest extends BaseMockIT {
     assertTrue(
         new Timestamp(Instant.now().toEpochMilli()).before(userReg.getSecurityCodeExpireDate()));
     assertNotNull(userReg.getSecurityCode());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userReg.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(RESEND_INVITATION.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, RESEND_INVITATION);
   }
 
   @Test
