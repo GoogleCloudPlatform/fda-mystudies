@@ -54,7 +54,12 @@
 
     <!-- Head Libs -->
     <script src="vendor/modernizr/modernizr.js"></script>
-
+    
+    <style>
+		.hover_text_white { color:#fff !important;}
+		.hover_text_white:hover { color:#fff !important;}
+		.hover_text_white:focus { color:#fff !important;}
+	</style>
 
   </head>
   <body class="loading background__img">
@@ -115,7 +120,7 @@
               <jsp:forward page="errorPage.jsp" />
             </c:if>
             <div>
-              <a id="login" class="gray-link backToLogin white__text"
+              <a id="login" class="gray-link backToLogin white__text hover_text_white"
                  href="javascript:void(0)">Back to sign in
               </a>
             </div>

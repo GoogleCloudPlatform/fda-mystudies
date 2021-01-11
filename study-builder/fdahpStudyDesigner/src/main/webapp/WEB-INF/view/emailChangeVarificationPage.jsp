@@ -50,7 +50,12 @@
 
     <!-- Head Libs -->
     <script src="vendor/modernizr/modernizr.js"></script>
-
+    
+    <style>
+		.hover_text_white { color:#fff !important;}
+		.hover_text_white:hover { color:#fff !important;}
+		.hover_text_white:focus { color:#fff !important;}
+	</style>
 
   </head>
   <body class="loading background__img">
@@ -76,7 +81,7 @@
               <p class="white__text">Thank you. Your email verification process is completed. 
               Please use the new email address to sign in.</p>
               <div>
-              <a id="login" class="gray-link backToLogin white__text" href="javascript:void(0)">Back to
+              <a id="login" class="gray-link backToLogin white__text hover_text_white" href="javascript:void(0)">Back to
                 Sign in
               </a>
             </div>

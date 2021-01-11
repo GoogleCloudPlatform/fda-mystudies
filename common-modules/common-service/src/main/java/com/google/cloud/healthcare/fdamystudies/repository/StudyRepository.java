@@ -214,26 +214,36 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "site.siteName AS siteName,study.customId AS customId,study.studyName AS studyName, study.studyType AS studyType, study.customAppId AS customAppId, study.appId AS appId, study.appName AS appName, "
               + "study.logoImageUrl AS logoImageUrl,study.studyStatus AS studyStatus "
               + "FROM ( "
-              + "SELECT stu.id AS studyId, stu.created_time AS studyCreatedTimeStamp, stu.custom_id AS customId, stu.name AS studyName, stu.type AS studyType, "
+              + "SELECT DISTINCT stu.id AS studyId, stu.created_time AS studyCreatedTimeStamp, stu.custom_id AS customId, stu.name AS studyName, stu.type AS studyType, "
               + "stu.logo_image_url AS logoImageUrl,stu.status AS studyStatus, ai.custom_app_id AS customAppId, ai.id AS appId, ai.app_name AS appName "
-              + "FROM study_info stu, app_info ai "
-              + "WHERE stu.app_info_id = ai.id ORDER BY stu.created_time DESC  LIMIT :limit OFFSET :offset) AS study "
+              + "FROM study_info stu "
+              + "LEFT JOIN sites si ON si.study_id=stu.id "
+              + "LEFT JOIN locations loc ON loc.id=si.location_id "
+              + "LEFT JOIN app_info ai ON stu.app_info_id = ai.id "
+              + "WHERE (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% OR loc.name LIKE %:searchTerm%) "
+              + "ORDER BY stu.created_time DESC "
+              + "LIMIT :limit OFFSET :offset) AS study "
               + "LEFT JOIN ( "
               + "SELECT si.created_time AS siteCreatedTimeStamp, si.id AS siteId, si.study_id AS studyId, si.target_enrollment AS targetEnrollment, loc.name AS siteName "
               + "FROM sites si, locations loc, study_info stu "
-              + "WHERE stu.id=si.study_id AND loc.id=si.location_id) AS site ON study.studyId= site.studyId "
-              + "WHERE study.studyName LIKE %:searchTerm% OR study.customId LIKE %:searchTerm% OR site.siteName LIKE %:searchTerm% ",
+              + "WHERE stu.id=si.study_id AND loc.id=si.location_id AND "
+              + "(stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% OR loc.name LIKE %:searchTerm%) "
+              + ") AS site ON study.studyId= site.studyId ",
       nativeQuery = true)
   public List<StudySiteInfo> getStudySiteDetails(Integer limit, Integer offset, String searchTerm);
 
   @Query(
       value =
-          "SELECT id AS studyId  FROM study_info where id IN "
-              + "(SELECT study_id from study_permissions where ur_admin_user_id=:userId UNION ALL "
-              + "SELECT study_id from sites_permissions  where ur_admin_user_id=:userId) "
-              + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset ",
+          "SELECT stu.id AS studyId "
+              + "FROM study_info stu "
+              + "LEFT JOIN sites si ON si.study_id=stu.id "
+              + "LEFT JOIN locations loc ON loc.id=si.location_id "
+              + "WHERE (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% OR loc.name LIKE %:searchTerm%) AND stu.id IN( "
+              + "SELECT study_id FROM study_permissions WHERE ur_admin_user_id=:userId UNION ALL "
+              + "SELECT study_id FROM sites_permissions WHERE ur_admin_user_id=:userId) "
+              + "GROUP BY stu.id ORDER BY stu.created_time DESC LIMIT :limit OFFSET :offset",
       nativeQuery = true)
-  public List<String> findStudyIds(Integer limit, Integer offset, String userId);
+  public List<String> findStudyIds(Integer limit, Integer offset, String userId, String searchTerm);
 
   @Query(
       value =

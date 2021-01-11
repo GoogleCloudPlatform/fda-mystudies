@@ -97,7 +97,7 @@ class ActivityBuilder {
 
                 let instructionStep: ActivityInstructionStep? = ActivityInstructionStep()
                 instructionStep?.initWithDict(stepDict: stepDict)
-                orkStepArray?.append((instructionStep?.getInstructionStep())!)
+                orkStepArray?.append((instructionStep?.getCustomInstructionStep())!)
                 activityStepArray?.append(instructionStep!)
 
               case .question:
@@ -236,7 +236,7 @@ class ActivityBuilder {
                     questionStep = (step as? ORKFormStep)!
 
                   } else {
-                    questionStep = (step as? ORKInstructionStep)!
+                    questionStep = step as? CustomInstructionStep ?? step as? ORKInstructionStep
                   }
 
                   // Choicearray and destination array will hold predicates & their respective destination

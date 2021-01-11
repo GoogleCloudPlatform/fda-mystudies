@@ -14,8 +14,10 @@
 
 package com.harvard.studyappmodule.consent.consentsharingstepcustom;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -29,8 +31,13 @@ public class LoadMoreActivity extends AppCompatActivity {
     setContentView(R.layout.activity_load_more);
 
     WebView textView = (WebView) findViewById(R.id.content);
-    textView.loadData(getIntent().getStringExtra("htmlcontent"), "text/html", "UTF-8");
-
+    String data = getIntent().getStringExtra("htmlcontent");
+    if (Build.VERSION.SDK_INT >= 24) {
+      textView.loadData(
+              Html.fromHtml((data), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+    } else {
+      textView.loadData(Html.fromHtml((data)).toString(), "text/html", "UTF-8");
+    }
     ImageView backBtn = (ImageView) findViewById(R.id.backBtn);
     backBtn.setOnClickListener(
         new View.OnClickListener() {
