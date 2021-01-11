@@ -203,6 +203,11 @@
           <div class="col-md-6 pr-none thumbImageDIv" style="margin-left:-13px">
           <div class="gray-xs-f mb-sm">
             Study Thumbnail Image
+            <span class="filled-tooltip"
+                    data-toggle="tooltip" data-placement="top"
+                    data-html="true"
+                    title="<span class='font24 text-weight-light pull-left'></span> The 'Default' image shown below is used in the mobile app unless you over-ride it by uploading an 'Alternate' image. Please note that the image you upload must be of type .JPG or .PNG, and have a size of 225x225 pixels."/>
+            </span>
       </div>
           
           <div class="thumb" style="display:inline-block; width:77px !important;">
@@ -589,11 +594,14 @@
                       && typeof type != 'undefined'
                       && type == 'GT') {
                     var file = $('#uploadImg').val();
+                    var image=$('.thumb.alternate img').attr("src");
                     var thumbnailImageId = $(
                         '#thumbnailImageId').val();
                     if (file || thumbnailImageId) {
+                        if(!image.includes("dummy")){
                       $('#removeUrl').css("visibility",
                           "visible");
+                        }
                       $("#uploadImg").parent().find(
                           ".help-block").empty();
                     }
@@ -771,8 +779,15 @@
       var reader = new FileReader();
 
       reader.onload = function (e) {
-        $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
-            66);
+    	  var image = new Image();
+    	    image.src = e.target.result;
+    	    image.onload = function() {
+    	        // access image size here 
+    	        if(this.width ==225 && this.height==225 ){
+    	        	 $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
+         	                66);
+        	       }
+    	    };
       };
 
       reader.readAsDataURL(input.files[0]);
@@ -803,7 +818,7 @@
                       .empty()
                       .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                           "Please upload image as per provided guidelines."));
-                  $(".thumb img")
+                  $(".thumb.alternate img")
                       .attr("src",
                           "/studybuilder/images/dummy-img.jpg");
                   $('#uploadImg, #thumbnailImageId').val('');
@@ -830,7 +845,7 @@
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         "Please upload image as per provided guidelines."));
                 $('#removeUrl').css("visibility", "hidden");
-                $(".thumb img").attr("src",
+                $(".thumb.alternate img").attr("src",
                     "/studybuilder/images/dummy-img.jpg");
                 $('#uploadImg, #thumbnailImageId').val('');
                 var file = $('#uploadImg').val();
