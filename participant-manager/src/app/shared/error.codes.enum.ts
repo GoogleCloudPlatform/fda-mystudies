@@ -119,7 +119,6 @@ const errorMessages = {
   EC_0078: 'Temporary password is incorrect',
   EC_0079:
     'This site belongs to an active study that has one or more actively enrolled participants, and cannot be decommissioned.',
-  EC_0080: 'Your session has expired. Please sign in again.',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;

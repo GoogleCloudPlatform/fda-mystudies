@@ -106,7 +106,7 @@ class ResourceDetailViewController: UIViewController {
         self.webView.load(URLRequest(url: url))
       } else if let resourceHtmlString = self.resource?.file?.link {
         webView.allowsBackForwardNavigationGestures = false
-        webView.loadHTMLString(WebViewController.headerString + resourceHtmlString, baseURL: nil)
+        webView.loadHTMLString(WebViewController.headerString + resourceHtmlString.stringByDecodingHTMLEntities, baseURL: nil)
       }
     }
   }
