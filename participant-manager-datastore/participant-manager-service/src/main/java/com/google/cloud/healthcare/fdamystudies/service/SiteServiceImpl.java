@@ -517,6 +517,7 @@ public class SiteServiceImpl implements SiteService {
     auditRequest.setUserId(userId);
     auditRequest.setSiteId(siteId);
     auditRequest.setStudyId(optSiteEntity.get().getStudyId());
+    auditRequest.setAppId(optSiteEntity.get().getStudy().getId());
 
     Map<String, String> map = Collections.singletonMap("site_id", siteId);
 
@@ -1382,6 +1383,7 @@ public class SiteServiceImpl implements SiteService {
     auditRequest.setUserId(enrollmentRequest.getUserId());
     auditRequest.setStudyId(enrollmentRequest.getStudyId());
     auditRequest.setSiteId(site.getId());
+    auditRequest.setAppId(study.getAppId());
 
     Map<String, String> map = Collections.singletonMap("site_id", site.getId());
     participantManagerHelper.logEvent(ENROLLMENT_TARGET_UPDATED, auditRequest, map);
