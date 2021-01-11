@@ -46,14 +46,18 @@
                 style="@style/TextType2"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/backBtn"
+                android:layout_toLeftOf="@id/mShareBtn"
                 android:gravity="center_horizontal"
                 android:padding="5dp"
+                android:maxLines="2"
                 android:text=""
                 android:textColor="@android:color/white" />
 
             <RelativeLayout
                 android:id="@+id/mShareBtn"
                 android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true">
 
