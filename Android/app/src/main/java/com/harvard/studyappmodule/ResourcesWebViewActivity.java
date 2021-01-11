@@ -217,7 +217,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     webView.getSettings().setDefaultTextEncodingName("utf-8");
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     String webData = intentContent;
-    webView.loadData(webData, "text/html; charset=utf-8", "UTF-8");
+    if (Build.VERSION.SDK_INT >= 24) {
+      webView.loadData(
+              Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+    } else {
+      webView.loadData(Html.fromHtml((webData)).toString(), "text/html", "UTF-8");
+    }
   }
 
   private void setFont() {
