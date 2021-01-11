@@ -90,7 +90,9 @@ export class StudyListComponent implements OnInit {
         studies.push(...manageStudies.studies);
         this.manageStudiesBackup.studies = studies;
         this.loadMoreEnabled =
-          this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
+          (this.manageStudiesBackup.studies.length % limit === 0
+            ? true
+            : false) && manageStudies.studies.length > 0;
         return this.manageStudiesBackup;
       }),
     );
