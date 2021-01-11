@@ -63,6 +63,12 @@
     <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
+    
+    <style>
+		.hover_text_white { color:#fff !important;}
+		.hover_text_white:hover { color:#fff !important;}
+		.hover_text_white:focus { color:#fff !important;}
+	</style>
 
   </head>
   <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
@@ -116,7 +122,7 @@
               </div>
               <div class="pb-md pt-xs">
                 <a id="forgot_pwd"
-                   class="gray-link white__text"
+                   class="gray-link white__text hover_text_white"
                    href="javascript:void(0)">Forgot password?
                 </a>
               </div>
@@ -145,7 +151,7 @@
                 <button type="submit" class="btn lg-btn" id="log-btn">SUBMIT</button>
               </div>
               <div class="pt-xs">
-                <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to sign in
+                <a id="login" class="gray-link white__text hover_text_white" href="javascript:void(0)">Back to sign in
                 </a>
               </div>
             </div>
