@@ -430,14 +430,14 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
 
-    String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
     verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
+
+    String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
     // Step 3: verify saved values
     assertAdminUser(userId, false);
