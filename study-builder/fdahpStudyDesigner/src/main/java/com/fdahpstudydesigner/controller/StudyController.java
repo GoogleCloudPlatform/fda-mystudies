@@ -4137,11 +4137,7 @@ public class StudyController {
         if (StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(buttonText)) {
           message = studyService.updateStudyActionOnAction(studyId, buttonText, sesObj);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-            if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_PUBLISH)) {
-              successMessage = FdahpStudyDesignerConstants.ACTION_PUBLISH_SUCCESS_MSG;
-            } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UNPUBLISH)) {
-              successMessage = FdahpStudyDesignerConstants.ACTION_UNPUBLISH_SUCCESS_MSG;
-            } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)) {
+            if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)) {
               successMessage = FdahpStudyDesignerConstants.ACTION_LUNCH_SUCCESS_MSG;
               submitResponseToUserRegistrationServer(customStudyId, request);
               submitResponseToResponseServer(customStudyId, request);
