@@ -15,6 +15,9 @@ enum LocalizableString: String {
   case offlineError = "Offline error"
   case checkInternet = "Check your internet connection and try again."
 
+  case next = "Next"
+  case done = "Done"
+
   // MARK: Resources
   case resourceNotAvailable = "This resource is currently unavailable."
   case aboutStudy = "About the Study"

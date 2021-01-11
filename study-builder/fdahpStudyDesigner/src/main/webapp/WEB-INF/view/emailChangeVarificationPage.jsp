@@ -50,7 +50,12 @@
 
     <!-- Head Libs -->
     <script src="vendor/modernizr/modernizr.js"></script>
-
+    
+    <style>
+		.hover_text_white { color:#fff !important;}
+		.hover_text_white:hover { color:#fff !important;}
+		.hover_text_white:focus { color:#fff !important;}
+	</style>
 
   </head>
   <body class="loading background__img">
@@ -76,23 +81,13 @@
               <p class="white__text">Thank you. Your email verification process is completed. 
               Please use the new email address to sign in.</p>
               <div>
-              <a id="login" class="gray-link backToLogin white__text" href="javascript:void(0)">Back to
+              <a id="login" class="gray-link backToLogin white__text hover_text_white" href="javascript:void(0)">Back to
                 Sign in
               </a>
             </div>
             </c:if>
             <c:if test="${not isValidToken}">
-              <p class="passwordExp">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                This link is no longer valid to be used. 
-                Please contact the system admin for assistance 
-                with your account or sign in if already registered.
-              </p>
-              <div>
-              <a id="login" class="gray-link backToLogin1 white__text" href="javascript:void(0)">Back to
-                Sign in
-              </a>
-            </div>
+              <jsp:forward page="errorPage.jsp" />
             </c:if>
             <input type="hidden" name="securityToken" value="${securityToken}"/>
           </form:form>

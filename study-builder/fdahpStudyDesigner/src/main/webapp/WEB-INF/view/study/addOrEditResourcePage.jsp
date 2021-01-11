@@ -362,6 +362,12 @@
       if ($('#inlineRadio1').is(':checked')) {
         isValid = isEmptyEditor();
       }
+      var richTextVal = $('#richText').val();
+      if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+        var richText=$('#richText').summernote('code');
+        var escaped = $('#richText').text(richText).html();
+          $('#richText').val(escaped);
+       }
       if (chkDaysValid(true) && isFromValid('#resourceForm') && isValid) {
         if ($('#inlineRadio5').is(':checked')) {
           var text = "You have chosen to use a period of visibility based on an anchor date. Please ensure that the Source Questionnaire providing the anchor date response is scheduled appropriately.";
@@ -435,6 +441,12 @@
     });
 
     $('#saveResourceId').click(function () {
+    	var richTextVal = $('#richText').val();
+      if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+        var richText=$('#richText').summernote('code');
+        var escaped = $('#richText').text(richText).html();
+        $('#richText').val(escaped);
+      }
       $('#saveResourceId').prop('disabled', true);
       $("#resourceTitle").parent().find(".help-block").empty();
       $('#resourceForm').validator('destroy').validator();
