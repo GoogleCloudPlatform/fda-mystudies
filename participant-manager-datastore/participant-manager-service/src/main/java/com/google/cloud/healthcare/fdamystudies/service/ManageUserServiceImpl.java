@@ -130,6 +130,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       Map<String, String> map = new HashMap<>();
       map.put(CommonConstants.NEW_USER_ID, userResponse.getUserId());
       map.put("new_user_access_level", accessLevel);
+      logger.info("userId" + userResponse.getUserId());
       participantManagerHelper.logEvent(NEW_USER_ADDED, auditRequest, map);
     }
 

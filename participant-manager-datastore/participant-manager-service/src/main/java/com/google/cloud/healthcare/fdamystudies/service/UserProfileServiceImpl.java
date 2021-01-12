@@ -148,7 +148,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     adminUser.setLastName(userProfileRequest.getLastName());
     userRegAdminRepository.saveAndFlush(adminUser);
 
-    auditRequest.setUserId(adminUser.getId());
+    auditRequest.setUserId(userProfileRequest.getUserId());
+    logger.info("UserId" + userProfileRequest.getUserId());
     participantManagerHelper.logEvent(ACCOUNT_UPDATE_BY_USER, auditRequest);
 
     logger.exit(MessageCode.PROFILE_UPDATE_SUCCESS);
