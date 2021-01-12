@@ -106,6 +106,7 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
     auditRequest.setStudyId(siteEntity.getStudyId());
     auditRequest.setAppId(siteEntity.getStudy().getAppId());
     auditRequest.setCorrelationId(IdGenerator.id());
+    auditRequest.setParticipantId(participantRegistrySiteEntity.getId());
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
 
