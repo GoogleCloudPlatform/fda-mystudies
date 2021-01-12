@@ -10,9 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_SENT;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_CREATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_ADDED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.RESEND_INVITATION;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_RECORD_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
 
@@ -65,6 +66,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -128,7 +130,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       Map<String, String> map = new HashMap<>();
       map.put(CommonConstants.NEW_USER_ID, userResponse.getUserId());
       map.put("new_user_access_level", accessLevel);
-      participantManagerHelper.logEvent(NEW_USER_CREATED, auditRequest, map);
+      participantManagerHelper.logEvent(NEW_USER_ADDED, auditRequest, map);
     }
 
     logger.exit(String.format(CommonConstants.STATUS_LOG, userResponse.getHttpStatusCode()));
@@ -766,7 +768,8 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Override
   @Transactional
-  public AdminUserResponse sendInvitation(String userId, String superAdminUserId) {
+  public AdminUserResponse sendInvitation(
+      String userId, String superAdminUserId, AuditLogEventRequest auditRequest) {
     logger.entry("sendInvitation()");
     validateInviteRequest(superAdminUserId);
 
@@ -786,6 +789,12 @@ public class ManageUserServiceImpl implements ManageUserService {
         UserMapper.toUserAccountEmailSchedulerTaskEntity(
             null, user, EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE);
     userAccountEmailSchedulerTaskRepository.saveAndFlush(emailTaskEntity);
+
+    auditRequest.setUserId(user.getId());
+
+    Map<String, String> map = Collections.singletonMap(CommonConstants.NEW_USER_ID, user.getId());
+    participantManagerHelper.logEvent(RESEND_INVITATION, auditRequest, map);
+
     logger.exit("Invitation to user resent successfully");
     return new AdminUserResponse(MessageCode.INVITATION_SENT_SUCCESSFULLY, user.getId());
   }

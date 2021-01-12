@@ -31,6 +31,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_DISABLED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_ENABLED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_ACTIVATED_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_ADDED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_DECOMMISSIONED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_PARTICIPANT_REGISTRY_VIEWED;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CONSENT_VERSION;
@@ -399,6 +400,16 @@ public class SiteControllerTest extends BaseMockIT {
     assertEquals(locationEntity.getId(), siteEntity.getLocation().getId());
     assertEquals(siteEntity.getId(), siteId);
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setSiteId(siteEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SITE_ADDED_FOR_STUDY.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, SITE_ADDED_FOR_STUDY);
     verifyTokenIntrospectRequest();
   }
 

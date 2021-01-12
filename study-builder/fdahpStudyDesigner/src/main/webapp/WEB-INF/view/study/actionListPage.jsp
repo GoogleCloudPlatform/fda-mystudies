@@ -57,6 +57,9 @@
 					             studyBo.status eq 'Paused' || studyBo.status eq 'Deactivated' || liveStudyBo.status eq 'Paused')}">
                 disabled
               </c:when>
+               <c:when test="${markAsCompleted eq false}">
+                disabled
+               </c:when>
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Publish
           Updates

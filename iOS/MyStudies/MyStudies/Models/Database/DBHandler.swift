@@ -147,10 +147,7 @@ class DBHandler: NSObject {
       } else {
 
         try? realm.write({
-          dbStudy?.category = study.category
           dbStudy?.name = study.name
-          dbStudy?.sponserName = study.sponserName
-          dbStudy?.tagLine = study.description
           dbStudy?.logoURL = study.logoURL
           dbStudy?.startDate = study.startDate
           dbStudy?.endEnd = study.endEnd
@@ -196,10 +193,7 @@ class DBHandler: NSObject {
 
     let dbStudy = DBStudy()
     dbStudy.studyId = study.studyId
-    dbStudy.category = study.category
     dbStudy.name = study.name
-    dbStudy.sponserName = study.sponserName
-    dbStudy.tagLine = study.description
     dbStudy.version = study.version
     dbStudy.updatedVersion = study.version
     dbStudy.logoURL = study.logoURL
@@ -238,10 +232,7 @@ class DBHandler: NSObject {
 
       let study = Study()
       study.studyId = dbStudy.studyId
-      study.category = dbStudy.category
       study.name = dbStudy.name
-      study.sponserName = dbStudy.sponserName
-      study.description = dbStudy.tagLine
       study.version = dbStudy.version
       study.newVersion = dbStudy.updatedVersion
       study.logoURL = dbStudy.logoURL
