@@ -726,8 +726,6 @@ extension StudyListViewController: StudyFilterDelegates {
     if !searchText.isEmpty {
       searchTextFilteredStudies = allStudyList.filter {
         ($0.name?.containsIgnoringCase(searchText))!
-          || ($0.category?.containsIgnoringCase(searchText))! || ($0.description?.containsIgnoringCase(searchText))!
-          || ($0.sponserName?.containsIgnoringCase(searchText))!
       }
     }
 
@@ -900,10 +898,9 @@ extension StudyListViewController: searchBarDelegate {
     // filter by searched Text
     var searchTextFilteredStudies: [Study]! = []
     if text.count > 0 {
+      let searchText = text.lowercased()
       searchTextFilteredStudies = studiesList.filter {
-        $0.name!.containsIgnoringCase(text) || $0.category!.containsIgnoringCase(text)
-          || $0.description!.containsIgnoringCase(text)
-          || $0.sponserName!.containsIgnoringCase(text)
+        $0.name!.lowercased().containsIgnoringCase(searchText)
       }
 
       StudyFilterHandler.instance.searchText = text
