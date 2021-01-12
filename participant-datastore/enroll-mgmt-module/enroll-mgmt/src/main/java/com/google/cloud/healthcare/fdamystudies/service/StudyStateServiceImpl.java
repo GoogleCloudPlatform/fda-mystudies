@@ -136,7 +136,8 @@ public class StudyStateServiceImpl implements StudyStateService {
                 Collectors.toMap(
                     ParticipantStudyEntity::getStudyId,
                     Function.identity(),
-                    (existing, replacement) -> existing));
+                    (existing, replacement) -> replacement));
+
     try {
       for (StudiesBean studyBean : studiesBeenList) {
         auditRequest.setStudyId(studyBean.getStudyId());
