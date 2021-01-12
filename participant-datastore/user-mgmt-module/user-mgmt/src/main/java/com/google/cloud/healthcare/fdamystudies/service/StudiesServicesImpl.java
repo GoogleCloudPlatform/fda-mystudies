@@ -169,6 +169,7 @@ public class StudiesServicesImpl implements StudiesServices {
 
             if (fcmNotificationResponse.getStatus() == HttpStatus.OK.value()) {
               userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_SENT, auditRequest);
+              logger.info("PUSH_NOTIFICATION_SENT");
             } else {
               userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
             }

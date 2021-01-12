@@ -134,8 +134,10 @@ public class UserManagementUtil {
 
     ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 
+    logger.info("Withdrawal status code" + response.getStatusCode());
     if (response.getStatusCode() == HttpStatus.OK) {
       userMgmntAuditHelper.logEvent(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE, auditRequest);
+      logger.info("WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE");
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
     }
 
