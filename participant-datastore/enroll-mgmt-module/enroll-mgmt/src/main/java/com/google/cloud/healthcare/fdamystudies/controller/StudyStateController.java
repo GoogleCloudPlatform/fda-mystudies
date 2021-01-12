@@ -14,6 +14,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.W
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.USER_ID;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,9 +77,25 @@ public class StudyStateController {
     List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
     UserDetailsEntity user = commonService.getUserInfoDetails(userId);
 
+    logger.info(
+        "userId="
+            + userId
+            + "study Request="
+            + ReflectionToStringBuilder.toString(studyStateReqBean));
+
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      // Converting the Object to JSONString
+      String jsonString = mapper.writeValueAsString(studyStateReqBean);
+      logger.info("userId=" + userId + "study Request=" + jsonString);
+    } catch (Exception e) {
+
+    }
+
     if (user != null) {
       List<ParticipantStudyEntity> existParticipantStudies =
           studyStateService.getParticipantStudiesList(user, studiesBeenList);
+
       studyStateRespBean =
           studyStateService.saveParticipantStudies(
               studiesBeenList, existParticipantStudies, auditRequest, user);
