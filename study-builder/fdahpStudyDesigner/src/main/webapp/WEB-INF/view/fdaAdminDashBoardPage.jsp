@@ -48,6 +48,37 @@
 
     <!-- Head Libs -->
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
+     <style>
+   
+.arrow {
+  width: 13px;
+  height: 13px;
+  display: inline-block;
+  position: relative;
+  bottom: -5px;
+  left: 0px;
+  transition: 0.4s ease;
+  margin-top: 8px;
+  text-align: left;
+  transform: rotate(45deg);
+  float: right;
+}
+.arrow:before, .arrow:after {
+  position: absolute;
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 2px;
+  background-color: #fff;
+  transition: 0.4s ease;
+}
+.arrow:after {
+  position: absolute;
+  transform: rotate(90deg);
+  top: -5px;
+  left: 5px;
+}
+   </style>
   </head>
   <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
         onunload="">
@@ -64,10 +95,26 @@
 
       <div class="logout">
         <div class="dis-line pull-right ml-md line34">
-          <a href="/studybuilder/sessionOut.do"
-             class="blue-link text-weight-normal text-uppercase">
-            <span class="white__text">sign Out</span>
-          </a>
+          <div  class="dropdown ml-lg userLi">
+              <a class="dropdown-toggle blue-link text-uppercase" data-toggle="dropdown" style="color:#fff;"
+                 href="javascript:void(0)"> <span>${sessionObject.firstName}  ${sessionObject.lastName}</span>
+                &nbsp;<span class="arrow"></span>
+              </a>
+              <ul class="dropdown-menu pb-none pt-none profileBox">
+                <li class="linkProf">
+                  <a href="javascript:void(0)" class="blue-link text-weight-normal text-uppercase myAccountId"
+                     id="">My Account
+                  </a>
+                  <hr align="left" width="100%">
+                  <a href="/studybuilder/sessionOut.do"
+                     class="blue-link text-weight-normal text-uppercase">
+                    <span>sign Out</span>
+                    <span
+                        class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span>
+                   </a>
+                  </li>
+                </ul>
+         </div>
         </div>
       </div>
       <div class="logo__space">
@@ -113,14 +160,6 @@
                       <img class="mt-xlg" src="../images/icons/user-w.png" alt="">
                     </a>
                     <div>Manage<br> Users<br>
-                      <span>&nbsp;</span>
-                    </div>
-                  </li>
-                  <li class="myAccountId">
-                    <a class='' href='javascript:void(0)'>
-                      <img class="mt-xlg" src="../images/icons/account-w.png" alt="">
-                    </a>
-                    <div>My<br> Account<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>

@@ -20,7 +20,7 @@
     <div>
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default gray-btn-action "
-                id="lunchId" onclick="validateStudyStatus(this);" "style="margin-top:25px;"
+                id="lunchId" onclick="validateStudyStatus(this);" style="margin-top:25px;"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
@@ -57,6 +57,9 @@
 					             studyBo.status eq 'Paused' || studyBo.status eq 'Deactivated' || liveStudyBo.status eq 'Paused')}">
                 disabled
               </c:when>
+               <c:when test="${markAsCompleted eq false}">
+                disabled
+               </c:when>
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Publish
           Updates

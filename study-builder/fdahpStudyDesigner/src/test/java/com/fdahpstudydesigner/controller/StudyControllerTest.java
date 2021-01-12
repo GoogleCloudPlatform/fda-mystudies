@@ -34,7 +34,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFIC
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PAUSED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PUBLISHED_AS_UPCOMING_STUDY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRES_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESOURCE_MARKED_COMPLETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESOURCE_SAVED_OR_UPDATED;
@@ -453,32 +452,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(status().isOk());
 
     verifyAuditEventCall(STUDY_LAUNCHED);
-  }
-
-  @Test
-  public void shouldUpdateStudyAction() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
-    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
-    session.setSessionId(UUID.randomUUID().toString());
-    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
-
-    HashMap<String, Object> sessionAttributes = getSessionAttributes();
-    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
-
-    mockMvc
-        .perform(
-            post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
-                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
-                .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "publishId")
-                .headers(headers)
-                .sessionAttrs(sessionAttributes))
-        .andDo(print())
-        .andExpect(status().isOk());
-
-    verifyAuditEventCall(STUDY_PUBLISHED_AS_UPCOMING_STUDY);
   }
 
   @Test
