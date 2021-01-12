@@ -3288,8 +3288,11 @@ public class StudyController {
                   request.getSession().getAttribute(FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
           addConsentInfoBo =
               studyService.saveOrUpdateConsentInfo(consentInfoBo, sesObj, customStudyId);
+          StudyBo studyBo =
+              studyService.getStudyById(
+                  String.valueOf(consentInfoBo.getStudyId()), sesObj.getUserId());
           if (addConsentInfoBo != null) {
-            auditRequest.setStudyId(customStudyId);
+            auditRequest.setStudyId(studyBo.getCustomStudyId());
             auditLogEventHelper.logEvent(STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED, auditRequest);
             if (consentInfoBo.getId() != null) {
               request
