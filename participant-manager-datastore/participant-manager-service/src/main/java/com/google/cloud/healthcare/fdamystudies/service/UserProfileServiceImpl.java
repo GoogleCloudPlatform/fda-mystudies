@@ -148,7 +148,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     adminUser.setLastName(userProfileRequest.getLastName());
     userRegAdminRepository.saveAndFlush(adminUser);
 
-    auditRequest.setUserId(adminUser.getId());
+    auditRequest.setUserId(userProfileRequest.getUserId());
+    logger.info("UserId" + userProfileRequest.getUserId());
     participantManagerHelper.logEvent(ACCOUNT_UPDATE_BY_USER, auditRequest);
 
     logger.exit(MessageCode.PROFILE_UPDATE_SUCCESS);
@@ -258,7 +259,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             ? MessageCode.REACTIVATE_USER_SUCCESS
             : MessageCode.DEACTIVATE_USER_SUCCESS);
 
-    auditRequest.setUserId(user.getId());
+    auditRequest.setUserId(user.getUrAdminAuthId());
 
     Map<String, String> map = Collections.singletonMap("edited_user_id", user.getId());
     ParticipantManagerEvent participantManagerEvent =
