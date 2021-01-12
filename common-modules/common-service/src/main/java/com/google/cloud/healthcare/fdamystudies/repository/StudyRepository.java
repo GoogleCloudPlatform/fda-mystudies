@@ -295,4 +295,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "AND (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% ) ORDER BY stu.created_time DESC  LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
+
+  @Query("SELECT study from StudyEntity study where study.customId=:customStudyId")
+  public Optional<StudyEntity> findByCustomStudyId(String customStudyId);
 }
