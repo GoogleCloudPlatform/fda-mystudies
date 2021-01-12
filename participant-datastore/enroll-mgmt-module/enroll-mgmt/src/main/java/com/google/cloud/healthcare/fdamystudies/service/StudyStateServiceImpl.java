@@ -136,7 +136,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                 Collectors.toMap(
                     ParticipantStudyEntity::getStudyId,
                     Function.identity(),
-                    (existing, replacement) -> replacement));
+                    (existing, replacement) -> existing));
 
     try {
       for (StudiesBean studyBean : studiesBeenList) {
@@ -211,10 +211,11 @@ public class StudyStateServiceImpl implements StudyStateService {
           studyStateBean.setHashedToken(
               EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
         }
+
         if (participantStudy.getStudy() != null) {
           studyStateBean.setStudyId(participantStudy.getStudy().getCustomId());
         }
-        studyStateBean.setStatus(participantStudy.getStatus());
+
         if (participantStudy.getParticipantId() != null) {
           studyStateBean.setParticipantId(participantStudy.getParticipantId());
         }
@@ -228,6 +229,20 @@ public class StudyStateServiceImpl implements StudyStateService {
         if (participantStudy.getSite() != null) {
           studyStateBean.setSiteId(participantStudy.getSite().getId().toString());
         }
+        String enrollmentHistoryStatus = null;
+        if (StringUtils.isNotEmpty(studyStateBean.getSiteId())
+            && StringUtils.isNotEmpty(participantStudy.getParticipantRegistrySite().getId())) {
+          enrollmentHistoryStatus =
+              participantEnrollmentHistoryRepository.findBySiteIdAndParticipantRegistryId(
+                  studyStateBean.getSiteId(),
+                  participantStudy.getParticipantRegistrySite().getId());
+        }
+        String enrollmentStatus =
+            StringUtils.isNotEmpty(enrollmentHistoryStatus)
+                    && EnrollmentStatus.WITHDRAWN.getStatus().equals(enrollmentHistoryStatus)
+                ? EnrollmentStatus.WITHDRAWN.getStatus()
+                : participantStudy.getStatus();
+        studyStateBean.setStatus(enrollmentStatus);
         serviceResponseList.add(studyStateBean);
       }
     }
