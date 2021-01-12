@@ -3286,10 +3286,10 @@ public class StudyController {
           customStudyId =
               (String)
                   request.getSession().getAttribute(FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
-          auditRequest.setStudyId(customStudyId);
           addConsentInfoBo =
               studyService.saveOrUpdateConsentInfo(consentInfoBo, sesObj, customStudyId);
           if (addConsentInfoBo != null) {
+            auditRequest.setStudyId(customStudyId);
             auditLogEventHelper.logEvent(STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED, auditRequest);
             if (consentInfoBo.getId() != null) {
               request
@@ -4646,6 +4646,8 @@ public class StudyController {
                   ? request.getSession().getAttribute("sessionStudyCount")
                   : 0);
       if (sesObj != null) {
+        StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+        auditRequest.setStudyId(studyBo.getCustomStudyId());
         if ((sesObj.getStudySessionBeans() != null) && !sesObj.getStudySessionBeans().isEmpty()) {
           for (StudySessionBean sessionBean : sesObj.getStudySessionBeans()) {
             if ((sessionBean != null)
