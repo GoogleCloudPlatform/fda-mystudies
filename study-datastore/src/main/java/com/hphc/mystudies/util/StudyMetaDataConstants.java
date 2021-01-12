@@ -290,6 +290,9 @@ public interface StudyMetaDataConstants {
   public static final String FDA_SMD_MAIL_TITLE = "fda.smd.email.title";
   public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
   public static final String STUDY_DEFAULT_IMAGE = "study.defaultImage";
+  public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
+      "study.basicInformation.defaultImage";
+
   public static final String FDA_SMD_RESOURCE_PDF_PATH = "fda.smd.resource.pdfPath";
   public static final String FDA_SMD_QUESTIONNAIRE_IMAGE = "fda.smd.questionnaire.image";
   public static final String FDA_SMD_STUDY_PAGE_PATH = "fda.smd.study.pagePath";
@@ -306,6 +309,4 @@ public interface StudyMetaDataConstants {
       "Answer these questions to determine your eligibility for the study";
   public static final String COMPREHENSION_TEXT =
       "Take this comprehension test to assess your understanding of the study:";
-  public static final String STUDY_IMAGE_URL =
-      "https://storage.cloud.google.com/study-resources/studylogo/STUDY_DEFAULTIMAGE.jpg";
 }

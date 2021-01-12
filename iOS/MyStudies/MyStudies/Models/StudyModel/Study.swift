@@ -102,16 +102,12 @@ class Study: Hashable {
 
   var identifer: String?
 
-  var category: String?
   var startDate: String?
   var endEnd: String?
 
   /// Current Study Status
   var status: StudyStatus = .active
 
-  var sponserName: String?
-
-  var description: String?
   var brandingConfiguration: String?
   var logoURL: String?
   var overview: Overview!
@@ -165,15 +161,6 @@ class Study: Hashable {
         self.version = studyDetail[kStudyVersion] as? String
       }
 
-      if Utilities.isValidValue(someObject: studyDetail[kStudyCategory] as AnyObject) {
-        self.category = studyDetail[kStudyCategory] as? String
-      }
-      if Utilities.isValidValue(someObject: studyDetail[kStudySponserName] as AnyObject) {
-        self.sponserName = studyDetail[kStudySponserName] as? String
-      }
-      if Utilities.isValidValue(someObject: studyDetail[kStudyTagLine] as AnyObject) {
-        self.description = studyDetail[kStudyTagLine] as? String
-      }
       if Utilities.isValidValue(someObject: studyDetail[kStudyLogoURL] as AnyObject) {
         self.logoURL = studyDetail[kStudyLogoURL] as? String
       }
