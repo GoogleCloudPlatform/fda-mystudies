@@ -92,7 +92,6 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
         if (studyConsent.getPdfStorage() == 1) {
           String path = studyConsent.getPdfPath();
 
-          auditRequest.setStudyId(studyId);
           if (participantStudiesEntity.getParticipantId() != null) {
             auditRequest.setParticipantId(participantStudiesEntity.getParticipantId());
           }

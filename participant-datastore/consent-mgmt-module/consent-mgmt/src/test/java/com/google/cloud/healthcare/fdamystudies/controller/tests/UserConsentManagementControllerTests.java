@@ -182,6 +182,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
@@ -284,6 +287,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
@@ -388,6 +394,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
@@ -721,7 +730,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
     auditRequest.setStudyVersion("3.1");
-    auditRequest.setParticipantId("1");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(
