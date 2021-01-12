@@ -67,8 +67,8 @@
   position: absolute;
   content: "";
   display: inline-block;
-  width: 12px;
-  height: 3px;
+  width: 10px;
+  height: 2px;
   background-color: #fff;
   transition: 0.4s ease;
 }
@@ -160,14 +160,6 @@
                       <img class="mt-xlg" src="../images/icons/user-w.png" alt="">
                     </a>
                     <div>Manage<br> Users<br>
-                      <span>&nbsp;</span>
-                    </div>
-                  </li>
-                  <li class="myAccountId">
-                    <a class='' href='javascript:void(0)'>
-                      <img class="mt-xlg" src="../images/icons/account-w.png" alt="">
-                    </a>
-                    <div>My<br> Account<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
