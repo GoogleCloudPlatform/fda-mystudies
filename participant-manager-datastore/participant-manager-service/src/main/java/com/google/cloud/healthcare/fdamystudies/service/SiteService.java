@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface SiteService {
 
-  public SiteResponse addSite(SiteRequest siteRequest);
+  public SiteResponse addSite(SiteRequest siteRequest, AuditLogEventRequest auditRequest);
 
   public ParticipantRegistryResponse getParticipants(
       String userId,
