@@ -31,6 +31,7 @@ import com.hphc.mystudies.bean.EligibilityConsentResponse;
 import com.hphc.mystudies.bean.EnrollmentTokenResponse;
 import com.hphc.mystudies.bean.ErrorResponse;
 import com.hphc.mystudies.bean.GatewayInfoResponse;
+import com.hphc.mystudies.bean.InfoBean;
 import com.hphc.mystudies.bean.NotificationsResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.bean.ResourcesResponse;
@@ -139,12 +140,11 @@ public class StudyMetaDataService {
             for (StudyBean studyBeanObject : studyBeanInfo) {
               String logo = studyBeanObject.getLogo();
               if (logo == null || logo.isEmpty()) {
-                studyBeanObject.setLogo(StudyMetaDataConstants.STUDY_IMAGE_URL);
                 studyBeanObject.setLogo(
                     propMap.get("fda.imgDisplaydPath")
                         + propMap.get("cloud.bucket.name")
                         + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE));
+                        + propMap.get(StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE));
               }
             }
           }
@@ -379,6 +379,19 @@ public class StudyMetaDataService {
             .entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)
             .build();
       }
+
+      List<InfoBean> infoBeans = studyInfoResponse.getInfo();
+
+      for (InfoBean infoBean : infoBeans) {
+        if (infoBean.getImage() == null || infoBean.getImage().equals("")) {
+          infoBean.setImage(
+              propMap.get("fda.imgDisplaydPath")
+                  + propMap.get("cloud.bucket.name")
+                  + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                  + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE));
+        }
+      }
+
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataService - studyInfo() :: ERROR", e);
       StudyMetaDataUtil.getFailureResponse(
