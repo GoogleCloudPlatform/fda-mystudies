@@ -31,7 +31,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LAUNCHED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PAUSED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PUBLISHED_AS_UPCOMING_STUDY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESUMED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_AND_E_CONSENT_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_AND_E_CONSENT_SAVED_OR_UPDATED;
@@ -5581,43 +5580,7 @@ public class StudyDAOImpl implements StudyDAO {
                     .setInteger("id", Integer.parseInt(studyId))
                     .uniqueResult();
         if (studyBo != null) {
-          if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_PUBLISH)) {
-            studyBo.setStatus(FdahpStudyDesignerConstants.STUDY_PRE_PUBLISH);
-            studyBo.setStudyPreActiveFlag(true);
-            session.update(studyBo);
-            message = FdahpStudyDesignerConstants.SUCCESS;
-            auditLogEvent = STUDY_PUBLISHED_AS_UPCOMING_STUDY;
-            // notification sent to gateway
-            notificationBO = new NotificationBO();
-            notificationBO.setStudyId(studyBo.getId());
-            notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
-            if (StringUtils.isNotEmpty(studyBo.getAppId())) {
-              notificationBO.setAppId(studyBo.getAppId());
-            }
-            notificationBO.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_GT);
-            notificationBO.setNotificationSubType(FdahpStudyDesignerConstants.STUDY_EVENT);
-            notificationBO.setNotificationScheduleType(
-                FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE);
-            notificationBO.setNotificationStatus(false);
-            notificationBO.setCreatedBy(sesObj.getUserId());
-            notificationBO.setNotificationText(
-                FdahpStudyDesignerConstants.NOTIFICATION_UPCOMING_OR_ACTIVE_TEXT);
-            notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
-            notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
-            notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-            notificationBO.setNotificationDone(true);
-            session.save(notificationBO);
-          } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UNPUBLISH)) {
-            studyBo.setStatus(FdahpStudyDesignerConstants.STUDY_PRE_LAUNCH);
-            studyBo.setStudyPreActiveFlag(false);
-            session.update(studyBo);
-            message = FdahpStudyDesignerConstants.SUCCESS;
-            activity = "Study Unpublished.";
-            activitydetails =
-                "Study Unpublished as Upcoming Study.(Study ID = "
-                    + studyBo.getCustomStudyId()
-                    + ", Status = Unpublished)";
-          } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
+          if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
               || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
             studyBo.setStudyPreActiveFlag(false);
             studyBo.setStatus(FdahpStudyDesignerConstants.STUDY_ACTIVE);

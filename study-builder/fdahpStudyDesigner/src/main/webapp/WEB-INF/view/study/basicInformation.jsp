@@ -868,6 +868,7 @@
     var file = $('#uploadImg').val();
     var thumbnailImageId = $('#thumbnailImageId').val();
     if (file || thumbnailImageId) {
+    	$('#thumbnailImageId').val("");
       $("#uploadImg").removeAttr('required');
       resetValidation($("#uploadImg").parents('form'));
     } else {
