@@ -214,8 +214,7 @@ public class ProcessActivityResponseController {
         // Get ParticipantStudyInfo from Registration Server
         ParticipantStudyInformation partStudyInfo =
             partStudyInfoService.getParticipantStudyInfo(studyId, participantId, auditRequest);
-        logger.debug(
-            "ParticipantActivityStateResponseService processActivityResponseForParticipant() after successful rest call to enroll datastore");
+        logger.debug("processActivityResponseForParticipant() after successful rest call");
         if (partStudyInfo == null) {
           logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
           responseServerAuditLogHelper.logEvent(
@@ -366,7 +365,7 @@ public class ProcessActivityResponseController {
                 + "\n Activity Version: "
                 + activityVersion);
         responseServerAuditLogHelper.logEvent(PARTICIPANT_ID_INVALID, auditRequest);
-        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       } else {
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
