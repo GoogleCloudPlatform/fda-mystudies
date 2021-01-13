@@ -4716,7 +4716,7 @@ public class StudyDAOImpl implements StudyDAO {
               for (QuestionnaireBo questionnaireBo : questionnaires) {
                 if ((questionnaireBo.getIsChange() != null)
                     && questionnaireBo.getIsChange().equals(1)) {
-                  questionnarieShorttitleList.add("'" + questionnaireBo.getShortTitle() + "'");
+                  questionnarieShorttitleList.add(questionnaireBo.getShortTitle());
                 }
               }
               if ((questionnarieShorttitleList != null) && !questionnarieShorttitleList.isEmpty()) {
@@ -6872,7 +6872,8 @@ public class StudyDAOImpl implements StudyDAO {
           && studySequenceBo.iseConsent()
           && studySequenceBo.isStudyExcQuestionnaries()
           && studySequenceBo.isStudyExcActiveTask()
-          && studySequenceBo.isMiscellaneousResources()) {
+          && studySequenceBo.isMiscellaneousResources()
+          && studySequenceBo.isMiscellaneousNotification()) {
         completed = true;
         return completed;
       }

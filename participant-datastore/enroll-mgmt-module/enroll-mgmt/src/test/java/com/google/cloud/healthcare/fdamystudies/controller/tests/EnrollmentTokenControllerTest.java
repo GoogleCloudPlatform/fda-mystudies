@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.controller.tests;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.TOKEN_EXPIRED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -525,15 +524,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
-    auditRequest.setStudyVersion("3.3");
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_FOUND_INELIGIBLE_FOR_STUDY.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, USER_FOUND_INELIGIBLE_FOR_STUDY);
-
     verifyTokenIntrospectRequest();
 
     // without token
@@ -552,10 +542,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // without study id
     requestJson = getEnrollmentJson(Constants.TOKEN, null);
-
-    // Reset Audit Event calls
-    clearAuditRequests();
-    auditEventMap.clear();
 
     mockMvc
         .perform(
