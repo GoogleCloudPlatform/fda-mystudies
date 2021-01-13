@@ -118,6 +118,7 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         )
+        .set('appName', '')
         .set('correlationId', sessionStorage.getItem('correlationId') || '')
         .set('appId', this.appId)
         .set('mobilePlatform', this.mobilePlatform)
