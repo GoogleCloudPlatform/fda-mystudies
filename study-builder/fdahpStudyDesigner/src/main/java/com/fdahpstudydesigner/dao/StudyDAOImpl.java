@@ -6872,7 +6872,8 @@ public class StudyDAOImpl implements StudyDAO {
           && studySequenceBo.iseConsent()
           && studySequenceBo.isStudyExcQuestionnaries()
           && studySequenceBo.isStudyExcActiveTask()
-          && studySequenceBo.isMiscellaneousResources()) {
+          && studySequenceBo.isMiscellaneousResources()
+          && studySequenceBo.isMiscellaneousNotification()) {
         completed = true;
         return completed;
       }
