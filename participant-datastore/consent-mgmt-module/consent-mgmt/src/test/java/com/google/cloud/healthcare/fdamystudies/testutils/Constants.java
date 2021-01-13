@@ -50,7 +50,7 @@ public class Constants {
   public static final String UPDATE_CONSENT_SUCCESS_MSG =
       "Eligibility consent has been updated successfully";
   public static final String STUDYOF_HEALTH = "StudyofHealth";
-  public static final String STATUS_COMPLETE = "complete";
+  public static final String STATUS_COMPLETE = "completed";
   public static final String SHARING_VALUE = "Provided";
   public static final String INVALID_USER_ID = "invalid userId";
   public static final String INVALID_STUDY_ID = "invalid studyId";
