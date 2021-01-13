@@ -2564,7 +2564,7 @@
         $("#startDateMonthly").parent().parent().removeClass("has-error has-danger");
         $("#startDateMonthly").next().children().remove();
         $(".monthlyRegular").hide();
-        $(".weeklyRegular").find('*').removeAttr('required');
+        $(".monthlyRegular").find('*').removeAttr('required');
       } else {
         $("#weekDaysId").show();
         $("#startDateWeekly").attr('required');
