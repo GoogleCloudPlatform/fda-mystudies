@@ -215,7 +215,6 @@ public class StudyStateServiceImpl implements StudyStateService {
         if (participantStudy.getStudy() != null) {
           studyStateBean.setStudyId(participantStudy.getStudy().getCustomId());
         }
-
         if (participantStudy.getParticipantId() != null) {
           studyStateBean.setParticipantId(participantStudy.getParticipantId());
         }
