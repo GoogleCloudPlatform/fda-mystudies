@@ -500,6 +500,7 @@ public class StudyActiveTasksController {
             request
                 .getSession()
                 .setAttribute(sessionStudyCount + "activeTaskInfoId", activeTaskInfoId.toString());
+            auditRequest.setStudyId(customStudyId);
             values.put("activetask_id", activeTaskBo.getTaskTypeId().toString());
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {

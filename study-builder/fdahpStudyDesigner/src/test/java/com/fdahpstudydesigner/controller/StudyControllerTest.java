@@ -388,6 +388,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             post(PathMappingUri.VIEW_STUDY_DETAILS.getPath())
                 .param(FdahpStudyDesignerConstants.PERMISSION, "View")
+                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
@@ -422,6 +423,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             post(PathMappingUri.VIEW_STUDY_DETAILS.getPath())
                 .headers(headers)
+                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())

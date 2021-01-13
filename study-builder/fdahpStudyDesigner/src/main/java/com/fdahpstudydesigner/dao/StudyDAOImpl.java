@@ -3727,6 +3727,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.saveOrUpdate(studySequence);
       }
       session.saveOrUpdate(consentBo);
+      auditRequest.setStudyId(customStudyId);
       if ((customStudyId != null) && !customStudyId.isEmpty()) {
         if (consentBo.getType() != null) {
           if (consentBo.getType().equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
@@ -4244,6 +4245,7 @@ public class StudyDAOImpl implements StudyDAO {
                   .getNamedQuery(FdahpStudyDesignerConstants.STUDY_SEQUENCE_BY_ID)
                   .setInteger(FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId())
                   .uniqueResult();
+      auditRequest.setStudyId(studyBo.getCustomStudyId());
       if (studySequenceBo != null) {
         if (StringUtils.isNotEmpty(studyBo.getButtonText())
             && studyBo
@@ -4446,6 +4448,7 @@ public class StudyDAOImpl implements StudyDAO {
                 studyBo.getId());
 
         if (study != null) {
+          auditRequest.setStudyId(studyBo.getCustomStudyId());
           if (studyBo
               .getButtonText()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
@@ -5427,6 +5430,7 @@ public class StudyDAOImpl implements StudyDAO {
             query.executeUpdate();
 
             Map<String, String> values = new HashMap<>();
+            auditRequest.setStudyId(studyBo.getCustomStudyId());
 
             // If Consent updated flag -1 then update
             if (consentBo != null) {
@@ -5580,6 +5584,7 @@ public class StudyDAOImpl implements StudyDAO {
                     .setInteger("id", Integer.parseInt(studyId))
                     .uniqueResult();
         if (studyBo != null) {
+          auditRequest.setStudyId(studyBo.getCustomStudyId());
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
               || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
             studyBo.setStudyPreActiveFlag(false);
