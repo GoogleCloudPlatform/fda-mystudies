@@ -12,7 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.E
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_ENROLLMENT_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
@@ -171,7 +170,6 @@ public class EnrollmentTokenController {
                   errorBean.setCode(HttpStatus.BAD_REQUEST.value());
                   errorBean.setMessage(ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue());
 
-                  enrollAuditEventHelper.logEvent(USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
                   return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                 }
               } else {
