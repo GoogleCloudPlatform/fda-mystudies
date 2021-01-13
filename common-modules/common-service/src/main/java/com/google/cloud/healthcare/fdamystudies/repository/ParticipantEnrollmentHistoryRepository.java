@@ -65,4 +65,14 @@ public interface ParticipantEnrollmentHistoryRepository
               + "withdrawal_timestamp IS NULL AND user_details_id =:userDetailsId",
       nativeQuery = true)
   public void updateWithdrawalDateAndStatusForDeactivatedUser(String userDetailsId, String status);
+  
+  
+  @Query(
+      value =
+          "SELECT peh.status "
+              + "FROM participant_enrollment_history peh "
+              + "WHERE peh.site_id=:siteId AND peh.participant_registry_site_id=:participantRegistryId "
+              + "ORDER BY peh.created_time DESC LIMIT 1",
+      nativeQuery = true)
+  public String findBySiteIdAndParticipantRegistryId(String siteId, String participantRegistryId);
 }

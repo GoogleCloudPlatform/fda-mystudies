@@ -881,7 +881,7 @@
   function previewLearnMore() {
     $('#cancelButtonId').hide();
     $('#doneButtonId').show();
-    var learn_more_desc = $('learnMoreTextId').summernote('code');
+    var learn_more_desc = $('#learnMoreTextId').summernote('code');
 
     $("#titleModalId").text("Learn more");
     if (learn_more_desc != ' ' && learn_more_desc != '' && learn_more_desc != null
