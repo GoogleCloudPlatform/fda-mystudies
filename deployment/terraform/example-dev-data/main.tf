@@ -56,6 +56,20 @@ module "example_dev_mystudies_firestore_data" {
   location   = "us-east1"
 }
 
+module "mystudies" {
+  source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
+  version = "~> 4.1.0"
+
+  name              = "mystudies"
+  project_id        = module.project.project_id
+  region            = "us-central1"
+  zone              = "a"
+  availability_type = "REGIONAL"
+  database_version  = "MYSQL_5_7"
+  vpc_network       = "projects/example-dev-networks/global/networks/example-dev-network"
+  user_password     = data.google_secret_manager_secret_version.db_secrets["auto-mystudies-sql-default-user-password"].secret_data
+}
+
 module "project_iam_members" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 6.3.0"
@@ -64,6 +78,12 @@ module "project_iam_members" {
   mode     = "additive"
 
   bindings = {
+    "roles/bigquery.dataEditor" = [
+      "serviceAccount:example-dev-firebase@appspot.gserviceaccount.com",
+    ],
+    "roles/bigquery.jobUser" = [
+      "serviceAccount:example-dev-firebase@appspot.gserviceaccount.com",
+    ],
     "roles/cloudsql.client" = [
       "serviceAccount:bastion@example-dev-networks.iam.gserviceaccount.com",
       "serviceAccount:auth-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
