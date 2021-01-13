@@ -4650,7 +4650,6 @@ public class StudyController {
                   : 0);
       if (sesObj != null) {
         StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-        auditRequest.setStudyId(studyBo.getCustomStudyId());
         if ((sesObj.getStudySessionBeans() != null) && !sesObj.getStudySessionBeans().isEmpty()) {
           for (StudySessionBean sessionBean : sesObj.getStudySessionBeans()) {
             if ((sessionBean != null)
@@ -4663,6 +4662,7 @@ public class StudyController {
         }
         if (studySessionBean != null) {
           sessionStudyCount = studySessionBean.getSessionStudyCount();
+          auditRequest.setStudyId(studyBo.getCustomStudyId());
           eventEnum = NEW_STUDY_CREATION_INITIATED;
         } else {
           ++sessionStudyCount;
@@ -4683,12 +4683,16 @@ public class StudyController {
           studySessionBeans.add(studySessionBean);
           sesObj.setStudySessionBeans(studySessionBeans);
           if (permission.equalsIgnoreCase("View")) {
+            auditRequest.setStudyId(studyBo.getCustomStudyId());
             if (!isLive.isEmpty() && !studyId.isEmpty()) {
               eventEnum = LAST_PUBLISHED_VERSION_OF_STUDY_VIEWED;
             } else {
               eventEnum = STUDY_VIEWED;
             }
           } else {
+            if (studyBo != null) {
+              auditRequest.setStudyId(studyBo.getCustomStudyId());
+            }
             eventEnum = STUDY_ACCESSED_IN_EDIT_MODE;
           }
         }
