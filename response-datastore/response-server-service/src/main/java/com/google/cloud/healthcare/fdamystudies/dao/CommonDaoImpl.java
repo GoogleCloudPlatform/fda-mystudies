@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
@@ -54,5 +55,31 @@ public class CommonDaoImpl implements CommonDao {
     }
     logger.info("CommonDaoImpl getParticipantInfoDetails() - Ends ");
     return participantBO;
+  }
+
+  @Override
+  public StudyEntity getStudyDetails(String customStudyId) {
+    logger.info("CommonDaoImpl getStudyDetails() - Starts ");
+    CriteriaBuilder criteriaBuilder = null;
+    CriteriaQuery<StudyEntity> criteriaQuery = null;
+    Root<StudyEntity> root = null;
+    Predicate[] predicates = new Predicate[1];
+    List<StudyEntity> studyList = null;
+    StudyEntity studyInfo = null;
+    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+      criteriaBuilder = session.getCriteriaBuilder();
+      criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
+      root = criteriaQuery.from(StudyEntity.class);
+      predicates[0] = criteriaBuilder.equal(root.get("customId"), customStudyId);
+      criteriaQuery.select(root).where(predicates);
+      studyList = session.createQuery(criteriaQuery).getResultList();
+      if (!studyList.isEmpty()) {
+        studyInfo = studyList.get(0);
+      }
+    } catch (Exception e) {
+      logger.error("CommonDaoImpl getStudyDetails() - error ", e);
+    }
+
+    return studyInfo;
   }
 }
