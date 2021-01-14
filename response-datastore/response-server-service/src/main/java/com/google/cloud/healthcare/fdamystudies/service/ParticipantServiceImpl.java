@@ -21,7 +21,6 @@ public class ParticipantServiceImpl implements ParticipantService {
   @Override
   public String saveParticipant(ParticipantInfoEntity participantBo)
       throws ProcessResponseException {
-    System.out.println("ParticipantServiceImpl saveParticipant starts");
     return participantDao.saveParticipant(participantBo);
   }
 

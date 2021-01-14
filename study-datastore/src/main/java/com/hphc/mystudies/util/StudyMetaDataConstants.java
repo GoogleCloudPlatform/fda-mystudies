@@ -289,7 +289,9 @@ public interface StudyMetaDataConstants {
   public static final String FDA_SMD_NOTIFICATION_TITLE = "fda.smd.notification.title";
   public static final String FDA_SMD_MAIL_TITLE = "fda.smd.email.title";
   public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
+  public static final String STUDY_PAGE2_DEFAULT_IMAGE = "study.page2.defaultImage";
   public static final String STUDY_DEFAULT_IMAGE = "study.defaultImage";
+
   public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
       "study.basicInformation.defaultImage";
 
