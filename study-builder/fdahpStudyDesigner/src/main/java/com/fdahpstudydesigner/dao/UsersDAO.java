@@ -23,6 +23,7 @@
 
 package com.fdahpstudydesigner.dao;
 
+import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -33,7 +34,7 @@ public interface UsersDAO {
   public String activateOrDeactivateUser(
       int userId, int userStatus, int loginUser, SessionObject userSession);
 
-  public String addOrUpdateUserDetails(
+  public UserIdAccessLevelInfo addOrUpdateUserDetails(
       UserBO userBO, String permissions, String selectedStudies, String permissionValues);
 
   public String enforcePasswordChange(Integer userId, String email);

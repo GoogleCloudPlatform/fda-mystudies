@@ -23,6 +23,7 @@
 
 package com.fdahpstudydesigner.dao;
 
+import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -113,7 +114,7 @@ public class UsersDAOImpl implements UsersDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public String addOrUpdateUserDetails(
+  public UserIdAccessLevelInfo addOrUpdateUserDetails(
       UserBO userBO, String permissions, String selectedStudies, String permissionValues) {
     logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Starts");
     Session session = null;
@@ -126,15 +127,19 @@ public class UsersDAOImpl implements UsersDAO {
     String[] selectedStudy = null;
     String[] permissionValue = null;
     boolean updateFlag = false;
+    UserIdAccessLevelInfo userIdAccessLevelInfo = null;
 
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+      userIdAccessLevelInfo = new UserIdAccessLevelInfo();
       if (null == userBO.getUserId()) {
         userId = (Integer) session.save(userBO);
+        userIdAccessLevelInfo.setUserId(userId);
       } else {
         session.update(userBO);
         userId = userBO.getUserId();
+        userIdAccessLevelInfo.setUserId(userId);
         updateFlag = true;
       }
 
@@ -155,6 +160,7 @@ public class UsersDAOImpl implements UsersDAO {
         userBO2.setPermissionList(permissionSet);
         userBO2.setAccessLevel(FdahpStudyDesignerUtil.getUserAccessLevel(permissionSet));
         session.update(userBO2);
+        userIdAccessLevelInfo.setAccessLevel(userBO2.getAccessLevel());
       } else {
         userBO2.setPermissionList(null);
         session.update(userBO2);
@@ -216,8 +222,8 @@ public class UsersDAOImpl implements UsersDAO {
     }
     logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Ends");
     if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
-      return String.valueOf(userId);
-    } else return msg;
+      return userIdAccessLevelInfo;
+    } else return null;
   }
 
   @Override
