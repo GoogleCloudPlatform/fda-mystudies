@@ -151,7 +151,6 @@ public class EnrollmentManagementUtil {
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("applicationId", applicationId);
       headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
       AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
@@ -187,7 +186,6 @@ public class EnrollmentManagementUtil {
 
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.APPLICATION_ID, null);
     headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
     AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
