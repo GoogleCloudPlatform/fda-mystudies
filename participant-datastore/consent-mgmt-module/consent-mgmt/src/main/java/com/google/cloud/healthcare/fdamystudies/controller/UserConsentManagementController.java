@@ -158,7 +158,8 @@ public class UserConsentManagementController {
       String addConsentMessage = userConsentManagementService.saveStudyConsent(studyConsent);
       if ((addConsentMessage.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
           && message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
-        if (AppConstants.STATUS_COMPLETED.equals(consentStatusBean.getConsent().getStatus())) {
+        if (AppConstants.STATUS_COMPLETED.equalsIgnoreCase(
+            consentStatusBean.getConsent().getStatus())) {
           Map<String, String> map = new HashedMap<>();
           map.put("consent_version", consentStatusBean.getConsent().getVersion());
           map.put("data_sharing_consent", consentStatusBean.getSharing());
