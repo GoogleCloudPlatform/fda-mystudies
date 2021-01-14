@@ -5,6 +5,8 @@
  https://opensource.org/licenses/MIT.
 -->
 
+Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements related to the repository
+
 # Release 2.0.1
 * Simplified semi-automated deployment
 * Published an updated [deployment guide](/deployment/README.md)
