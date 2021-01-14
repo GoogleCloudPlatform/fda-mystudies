@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_ENROLLMENT_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_ENROLLED_INTO_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -20,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
@@ -67,9 +69,9 @@ public class EnrollmentTokenController {
     logger.info("ValidateEnrollmentTokenController validateEnrollmentToken() - Starts ");
     ErrorBean errorBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    StudyEntity studyDetails = enrollmentTokenfService.getStudyDetails(enrollmentBean.getStudyId());
     auditRequest.setUserId(userId);
-
-    if (!enrollmentTokenfService.studyExists(enrollmentBean.getStudyId())) {
+    if (studyDetails == null) {
       ErrorResponseUtil.getFailureResponse(
           ErrorResponseUtil.ErrorCodes.STATUS_103.getValue(),
           ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -77,6 +79,8 @@ public class EnrollmentTokenController {
           response);
       return null;
     } else if (!StringUtils.isEmpty(enrollmentBean.getToken())) {
+      auditRequest.setStudyId(studyDetails.getCustomId());
+      auditRequest.setStudyVersion(String.valueOf(studyDetails.getVersion()));
       if (enrollmentTokenfService.hasParticipant(
           enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
         ErrorResponseUtil.getFailureResponse(
@@ -139,9 +143,11 @@ public class EnrollmentTokenController {
     auditRequest.setUserId(userId);
 
     try {
-      auditRequest.setStudyId(enrollmentBean.getStudyId());
-
-      if (enrollmentTokenfService.studyExists(enrollmentBean.getStudyId())) {
+      StudyEntity studyDetails =
+          enrollmentTokenfService.getStudyDetails(enrollmentBean.getStudyId());
+      if (studyDetails != null) {
+        auditRequest.setStudyId(studyDetails.getCustomId());
+        auditRequest.setStudyVersion(String.valueOf(studyDetails.getVersion()));
         if (enrollmentTokenfService.enrollmentTokenRequired(enrollmentBean.getStudyId())) {
           if (!StringUtils.isEmpty(enrollmentBean.getToken())) {
             if (!enrollmentTokenfService.hasParticipant(
@@ -149,6 +155,7 @@ public class EnrollmentTokenController {
               if (enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())) {
                 if (enrollmentTokenfService.isValidStudyToken(
                     enrollmentBean.getToken(), enrollmentBean.getStudyId(), userId)) {
+                  enrollAuditEventHelper.logEvent(USER_FOUND_ELIGIBLE_FOR_STUDY, auditRequest);
                   respBean =
                       enrollmentTokenfService.enrollParticipant(
                           enrollmentBean.getStudyId(),
@@ -159,6 +166,8 @@ public class EnrollmentTokenController {
                     respBean.setCode(ErrorCode.EC_200.code());
                     respBean.setMessage(
                         MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+                    auditRequest.setParticipantId(respBean.getParticipantId());
+                    enrollAuditEventHelper.logEvent(USER_ENROLLED_INTO_STUDY, auditRequest);
                   }
                 } else {
                   ErrorResponseUtil.getFailureResponse(

@@ -122,7 +122,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "AND sp.study_id NOT IN ( "
               + "SELECT study_id FROM study_permissions WHERE ur_admin_user_id =:userId)  "
               + ")rstAlias "
-              + "WHERE study_id IN (:studyIds) AND (study_name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% OR site_name LIKE %:searchTerm%)  "
+              + "WHERE study_id IN (:studyIds) AND (study_name LIKE %:searchTerm% OR custom_id LIKE %:searchTerm% OR (site_name LIKE %:searchTerm% AND TYPE='CLOSE'))  "
               + "ORDER BY study_created DESC",
       nativeQuery = true)
   public List<StudySiteInfo> getStudySiteDetails(
