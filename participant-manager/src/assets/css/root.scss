@@ -1571,3 +1571,15 @@ select {
   border-radius: 20px;
   border: 3px solid transparent;
 }
+
+/* toast message font style */
+@media screen and (max-width: 1920px) {
+  #toast-container > div {
+    font-size: 14px !important;
+  }
+}
+@media screen and (max-width: 1440px) {
+  #toast-container > div {
+    font-size: 11px !important;
+  }
+}
