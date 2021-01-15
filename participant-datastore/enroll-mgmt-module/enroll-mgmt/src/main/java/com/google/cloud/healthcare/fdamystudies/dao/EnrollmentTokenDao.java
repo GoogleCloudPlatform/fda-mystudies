@@ -9,13 +9,14 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import javax.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
 
 public interface EnrollmentTokenDao {
 
-  public boolean studyExists(String shortName);
+  public StudyEntity getStudyDetails(String shortName);
 
   public boolean hasParticipant(String shortName, @NotNull String tokenValue);
 

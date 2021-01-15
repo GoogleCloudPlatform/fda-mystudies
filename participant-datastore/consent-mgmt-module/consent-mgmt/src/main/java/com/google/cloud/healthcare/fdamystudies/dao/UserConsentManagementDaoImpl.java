@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
@@ -263,19 +262,17 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
   }
 
   @Override
-  public StudyInfoBean getStudyInfoId(String customStudyId) {
+  public StudyEntity getStudyInfo(String customStudyId) {
     logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Starts ");
 
     Session session = this.sessionFactory.getCurrentSession();
 
-    StudyInfoBean studyInfoBean = new StudyInfoBean();
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
     Root<StudyEntity> studyInfoBoRoot = null;
     Predicate[] studyInfoPredicates = new Predicate[1];
     List<StudyEntity> studyInfoList = null;
     StudyEntity studyEntity = null;
-    String studyInfoId = String.valueOf(0);
     criteriaBuilder = session.getCriteriaBuilder();
     if (!StringUtils.isEmpty(customStudyId)) {
       studyInfoBoCriteria = criteriaBuilder.createQuery(StudyEntity.class);
@@ -286,14 +283,10 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       studyInfoList = session.createQuery(studyInfoBoCriteria).getResultList();
       if (!studyInfoList.isEmpty()) {
         studyEntity = studyInfoList.get(0);
-        studyInfoId = studyEntity.getId();
-      }
-      if (!StringUtils.isEmpty(studyInfoId)) {
-        studyInfoBean.setStudyInfoId(studyInfoId);
       }
     }
     logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
-    return studyInfoBean;
+    return studyEntity;
   }
 
   @Override
