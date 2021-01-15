@@ -102,7 +102,6 @@ public class CallbackController {
               "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
     }
 
-    auditRequest.setAppVersion(appVersion);
     if (UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus)) {
       auditHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
     } else {
