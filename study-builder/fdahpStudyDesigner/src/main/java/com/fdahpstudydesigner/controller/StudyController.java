@@ -4686,8 +4686,6 @@ public class StudyController {
         }
         if (studySessionBean != null) {
           sessionStudyCount = studySessionBean.getSessionStudyCount();
-          auditRequest.setStudyId(studyBo.getCustomStudyId());
-          auditRequest.setAppId(studyBo.getAppId());
           eventEnum = NEW_STUDY_CREATION_INITIATED;
         } else {
           ++sessionStudyCount;
