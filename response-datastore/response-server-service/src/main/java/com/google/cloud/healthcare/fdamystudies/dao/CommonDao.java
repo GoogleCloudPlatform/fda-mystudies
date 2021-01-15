@@ -8,8 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
 
 public interface CommonDao {
   public ParticipantInfoEntity getParticipantInfoDetails(String participantId);
+
+  public StudyEntity getStudyDetails(String customStudyId);
 }

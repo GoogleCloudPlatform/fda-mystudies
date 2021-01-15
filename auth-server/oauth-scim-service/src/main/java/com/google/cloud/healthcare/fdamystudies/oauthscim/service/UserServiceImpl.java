@@ -220,12 +220,11 @@ public class UserServiceImpl implements UserService {
       }
     }
 
-    Integer accountStatusBeforePasswordReset = userEntity.getStatus();
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse =
         sendPasswordResetEmail(resetPasswordRequest, tempPassword, auditRequest, appName);
 
-    if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
+    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getCode().equals(emailResponse.getCode())) {
       setPasswordAndPasswordHistoryFields(
           tempPassword, userInfo, UserAccountStatus.PASSWORD_RESET.getStatus());
       userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
@@ -238,10 +237,10 @@ public class UserServiceImpl implements UserService {
 
       logger.exit(MessageCode.FORGOT_PASSWORD);
       return new ResetPasswordResponse(MessageCode.FORGOT_PASSWORD);
+    } else {
+      auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
+      auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
     }
-
-    auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
-    auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
 
     logger.exit(
         String.format(
@@ -480,10 +479,11 @@ public class UserServiceImpl implements UserService {
           tempPassword, userInfo, UserAccountStatus.ACCOUNT_LOCKED.getStatus());
       EmailResponse emailResponse =
           sendAccountLockedEmail(userEntity, tempPassword, auditRequest, appName);
-      if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
+      if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getCode().equals(emailResponse.getCode())) {
         auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
       } else {
         auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
+        throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
       }
       userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
       userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, systemTime);

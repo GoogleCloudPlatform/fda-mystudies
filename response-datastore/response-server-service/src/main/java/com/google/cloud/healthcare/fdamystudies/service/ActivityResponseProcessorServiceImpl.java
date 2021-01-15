@@ -68,6 +68,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       ActivityResponseBean questionnaireActivityResponseBean,
       AuditLogEventRequest auditRequest)
       throws Exception {
+    logger.debug(
+        "ActivityResponseProcessorServiceImpl saveActivityResponseDataForParticipant() - starts ");
     if (activityMetadataBeanFromWcp == null) {
       throw new ProcessResponseException("QuestionnaireActivityStructureBean is null.");
     }
@@ -129,6 +131,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       throw new ProcessResponseException(
           "The activity ID in the response does not match activity ID in the metadata provided.");
     }
+    logger.debug(
+        "ActivityResponseProcessorServiceImpl saveActivityResponseDataForParticipant() - ends ");
   }
 
   @Override
@@ -357,7 +361,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   private void saveActivityResponseData(
       ActivityResponseBean questionnaireActivityResponseBean, String rawResponseData)
       throws Exception {
-
+    logger.debug("ActivityResponseProcessorServiceImpl saveActivityResponseData() - starts ");
     // Add Timestamp to bean
     questionnaireActivityResponseBean.setCreatedTimestamp(
         String.valueOf(System.currentTimeMillis()));
@@ -384,13 +388,13 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     String studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
 
     String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
-    logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
+    logger.debug("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
     responsesDao.saveActivityResponseData(
         studyId,
         studyCollectionName,
         AppConstants.ACTIVITIES_COLLECTION_NAME,
         dataToStoreActivityResults);
-    logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
+    logger.debug("ActivityResponseProcessorServiceImpl saveActivityResponseData() - ends ");
   }
 
   private Map<String, Object> getMapForParticipantCollection(

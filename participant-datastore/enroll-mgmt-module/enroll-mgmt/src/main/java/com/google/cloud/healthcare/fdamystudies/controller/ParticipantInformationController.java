@@ -15,10 +15,13 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
@@ -38,9 +41,11 @@ public class ParticipantInformationController {
   private static final Logger logger =
       LoggerFactory.getLogger(ParticipantInformationController.class);
 
-  @Autowired ParticipantInformationService participantInfoService;
+  @Autowired private ParticipantInformationService participantInfoService;
 
-  @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
+  @Autowired private EnrollAuditEventHelper enrollAuditEventHelper;
+
+  @Autowired private StudyRepository studyRepository;
 
   @GetMapping(value = "/participantInfo", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getParticipantDetails(
@@ -54,7 +59,12 @@ public class ParticipantInformationController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     Map<String, String> placeHolders = new HashMap<>();
 
-    auditRequest.setStudyId(studyId);
+    Optional<StudyEntity> optStudyEntity = studyRepository.findByCustomStudyId(studyId);
+    if (optStudyEntity.isPresent()) {
+      auditRequest.setStudyId(optStudyEntity.get().getCustomId());
+      auditRequest.setStudyVersion(String.valueOf(optStudyEntity.get().getVersion()));
+    }
+
     auditRequest.setParticipantId(participantId);
     participantInfoResp = participantInfoService.getParticipantInfoDetails(participantId, studyId);
     if (participantInfoResp != null) {
