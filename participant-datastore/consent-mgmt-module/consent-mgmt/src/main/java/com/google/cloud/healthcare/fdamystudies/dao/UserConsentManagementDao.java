@@ -9,9 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
 
 public interface UserConsentManagementDao {
@@ -26,7 +26,7 @@ public interface UserConsentManagementDao {
 
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId);
 
-  public StudyInfoBean getStudyInfoId(String customStudyId);
+  public StudyEntity getStudyInfo(String customStudyId);
 
   public String getUserDetailsId(String userId);
 }

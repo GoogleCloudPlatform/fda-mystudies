@@ -140,14 +140,15 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     try {
       for (StudiesBean studyBean : studiesBeenList) {
-        auditRequest.setStudyId(studyBean.getStudyId());
         auditRequest.setParticipantId(studyBean.getParticipantId());
         ParticipantStudyEntity participantStudyEntity = null;
 
+        StudyEntity studyEntity = commonDao.getStudyDetails(studyBean.getStudyId().trim());
+        auditRequest.setStudyId(studyEntity.getCustomId());
+        auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
         if (studyParticipantbyIdMap.containsKey(studyBean.getStudyId().trim())) {
           participantStudyEntity = studyParticipantbyIdMap.get(studyBean.getStudyId().trim());
         } else {
-          StudyEntity studyEntity = commonDao.getStudyDetails(studyBean.getStudyId().trim());
           participantStudyEntity = new ParticipantStudyEntity();
           participantStudyEntity.setStudy(studyEntity);
           participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
