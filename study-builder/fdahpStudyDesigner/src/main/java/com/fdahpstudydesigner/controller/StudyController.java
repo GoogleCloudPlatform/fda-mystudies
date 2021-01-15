@@ -3309,7 +3309,7 @@ public class StudyController {
           if (addConsentInfoBo != null) {
             auditRequest.setStudyId(studyBo.getCustomStudyId());
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
-            auditRequest.setStudyVersion(studyBo.getAppId());
+            auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED, auditRequest);
             if (consentInfoBo.getId() != null) {
               request
