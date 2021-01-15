@@ -258,7 +258,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             ? MessageCode.REACTIVATE_USER_SUCCESS
             : MessageCode.DEACTIVATE_USER_SUCCESS);
 
-    auditRequest.setUserId(user.getId());
+    auditRequest.setUserId(statusRequest.getSignedInUserId());
 
     Map<String, String> map = Collections.singletonMap("edited_user_id", user.getId());
     ParticipantManagerEvent participantManagerEvent =

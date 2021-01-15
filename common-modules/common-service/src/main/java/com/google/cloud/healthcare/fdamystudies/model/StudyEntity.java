@@ -102,6 +102,7 @@ public class StudyEntity implements Serializable {
   @Column(name = "modified_by", length = LARGE_LENGTH)
   private String modifiedBy;
 
+  @Column(name = "version")
   private Float version;
 
   @Column(length = XS_LENGTH)

@@ -27,7 +27,9 @@ import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -35,6 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -57,11 +60,13 @@ public class StudyStateController {
 
   private static final Logger logger = LoggerFactory.getLogger(StudyStateController.class);
 
-  @Autowired StudyStateService studyStateService;
+  @Autowired private StudyStateService studyStateService;
 
-  @Autowired CommonService commonService;
+  @Autowired private CommonService commonService;
 
-  @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
+  @Autowired private EnrollAuditEventHelper enrollAuditEventHelper;
+
+  @Autowired private StudyRepository studyRepository;
 
   @PostMapping(
       value = "/updateStudyState",
@@ -150,7 +155,12 @@ public class StudyStateController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
-    auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
+    Optional<StudyEntity> optStudyEntity =
+        studyRepository.findByCustomStudyId(withdrawFromStudyBean.getStudyId());
+    if (optStudyEntity.isPresent()) {
+      auditRequest.setStudyId(optStudyEntity.get().getCustomId());
+      auditRequest.setStudyVersion(String.valueOf(optStudyEntity.get().getVersion()));
+    }
 
     respBean =
         studyStateService.withdrawFromStudy(
