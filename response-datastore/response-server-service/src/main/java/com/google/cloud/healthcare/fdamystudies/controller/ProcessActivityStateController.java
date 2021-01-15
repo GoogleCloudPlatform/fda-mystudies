@@ -118,6 +118,7 @@ public class ProcessActivityStateController {
         participantActivityStateResponseService.saveParticipantActivities(activityStateRequestBean);
         SuccessResponseBean srBean = new SuccessResponseBean();
         srBean.setMessage(AppConstants.SUCCESS_MSG);
+
         auditRequest.setStudyId(activityStateRequestBean.getStudyId());
         auditRequest.setParticipantId(activityStateRequestBean.getParticipantId());
         for (ParticipantActivityBean activity : activityStateRequestBean.getActivity()) {

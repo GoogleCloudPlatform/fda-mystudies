@@ -4448,7 +4448,7 @@ public class StudyDAOImpl implements StudyDAO {
                 studyBo.getId());
 
         if (study != null) {
-          auditRequest.setStudyId(studyBo.getCustomStudyId());
+          auditRequest.setStudyId(study.getCustomStudyId());
           if (studyBo
               .getButtonText()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {

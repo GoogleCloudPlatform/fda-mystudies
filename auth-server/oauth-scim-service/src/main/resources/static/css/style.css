@@ -475,8 +475,7 @@ body#body-container {
 }
 
 .width__110 { 
-  width: 110px !important;
-  display: inline-block !important;
+ text-align: center !important;
 } 
   
 .loading_div { 

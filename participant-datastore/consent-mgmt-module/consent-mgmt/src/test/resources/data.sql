@@ -1,6 +1,6 @@
 INSERT INTO `app_info` (`id`, `custom_app_id`, `created_time`, `app_name`, `created_by`, `updated_time`) VALUES (1, 'app-id-cust', '2020-01-16 15:22:22', 'app-name-1', '0', '2020-03-12 15:17:56');
 	
-INSERT INTO `study_info` (`id`, `custom_id`, `app_info_id`, `name`, `description`, `type`,`created_by`, `created_time`, `updated_time`) VALUES (1, 'StudyofHealth', 1, 'name', 'description', 'OPEN', '0', '2020-03-12 15:23:41',  '2020-03-12 15:24:42'), (2, 'custom-id-2', 1, 'name-2', 'description', 'CLOSED', '0', '2020-03-12 15:23:44', '2020-03-12 15:24:45');
+INSERT INTO `study_info` (`id`, `custom_id`, `app_info_id`, `name`, `description`, `type`,`created_by`, `created_time`, `updated_time`, `version`) VALUES (1, 'StudyofHealth', 1, 'name', 'description', 'OPEN', '0', '2020-03-12 15:23:41',  '2020-03-12 15:24:42', '3.1'), (2, 'custom-id-2', 1, 'name-2', 'description', 'CLOSED', '0', '2020-03-12 15:23:44', '2020-03-12 15:24:45', '3.2');
 
 INSERT INTO `locations` (`id`, `created_time`, `created_by`, `custom_id`, `description`, `is_default`, `name`, `status`) VALUES (2, '2020-03-17 18:59:15', '1', '-customId130.53', 'location-descp-updated', 'N', 'name -1-updated000', 1);
 	

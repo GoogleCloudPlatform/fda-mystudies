@@ -116,6 +116,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId("StudyofHealthClose");
+    auditRequest.setStudyVersion("3.3");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT.getEventCode(), auditRequest);
@@ -272,6 +273,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDY_ID_OF_PARTICIPANT);
+    auditRequest.setStudyVersion("3.5");
     auditRequest.setParticipantId(Constants.PARTICIPANT_ID);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
