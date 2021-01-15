@@ -33,6 +33,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_U
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.EDITED_USER_ID;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
@@ -221,12 +222,13 @@ public class UsersServiceImpl implements UsersService {
           userBO2.setForceLogout(true);
         }
       }
-      String result =
+      UserIdAccessLevelInfo userIdAccessLevelInfo =
           usersDAO.addOrUpdateUserDetails(userBO2, permissions, selectedStudies, permissionValues);
-      if (!result.equals(FdahpStudyDesignerConstants.FAILURE)) {
+      if (userIdAccessLevelInfo != null) {
         if (addFlag) {
-          values.put(StudyBuilderConstants.USER_ID, result);
-          values.put(StudyBuilderConstants.ACCESS_LEVEL, userBO.getAccessLevel());
+          values.put(
+              StudyBuilderConstants.USER_ID, String.valueOf(userIdAccessLevelInfo.getUserId()));
+          values.put(StudyBuilderConstants.ACCESS_LEVEL, userIdAccessLevelInfo.getAccessLevel());
           msg =
               loginService.sendPasswordResetLinkToMail(
                   request, userBO2.getUserEmail(), "", "USER", auditRequest);
@@ -238,8 +240,12 @@ public class UsersServiceImpl implements UsersService {
           }
         }
         if (!addFlag) {
-          values.put(StudyBuilderConstants.EDITED_USER_ID, String.valueOf(result));
-          values.put(StudyBuilderConstants.EDITED_USER_ACCESS_LEVEL, userBO.getAccessLevel());
+          values.put(
+              StudyBuilderConstants.EDITED_USER_ID,
+              String.valueOf(userIdAccessLevelInfo.getUserId()));
+          values.put(
+              StudyBuilderConstants.EDITED_USER_ACCESS_LEVEL,
+              userIdAccessLevelInfo.getAccessLevel());
           auditLogEvents.add(USER_RECORD_UPDATED);
 
           if (emailIdChange) {
