@@ -37,7 +37,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
   @Override
   public String saveParticipant(ParticipantInfoEntity participantBo)
       throws ProcessResponseException {
-    logger.info("ParticipantDaoImpl saveParticipant() - starts ");
+    logger.debug("ParticipantDaoImpl saveParticipant() - starts ");
     Transaction transaction = null;
     Session session = null;
 
@@ -64,7 +64,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
       transaction = session.beginTransaction();
       session.save(participantBo);
       transaction.commit();
-      logger.info("ParticipantDaoImpl saveParticipant() - ends ");
+      logger.debug("ParticipantDaoImpl saveParticipant() - ends ");
       return particpantUniqueIdentifier.toString();
     } catch (PersistenceException e) {
       logger.error("saveParticipant - error " + e.getMessage());
@@ -101,9 +101,8 @@ public class ParticipantDaoImpl implements ParticipantDao {
   @Override
   public boolean isValidParticipant(ParticipantInfoEntity participantBo)
       throws ProcessResponseException {
-
+    logger.debug("ParticipantDaoImpl isValidParticipant() - starts ");
     Session session = null;
-
     try {
       session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
 
@@ -122,6 +121,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
       List<ParticipantInfoEntity> resultList =
           session.createQuery(participantBoCriteria).getResultList();
       if (resultList != null && resultList.size() == 1) {
+        logger.debug("ParticipantDaoImpl isValidParticipant() - ends ");
         return true;
       } else {
         throw new ProcessResponseException(
