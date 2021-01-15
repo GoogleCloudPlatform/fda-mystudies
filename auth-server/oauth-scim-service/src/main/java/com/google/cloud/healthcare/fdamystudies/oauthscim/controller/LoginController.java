@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_NAME_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_VERSION_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_APP_VERSION_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID_COOKIE;
@@ -156,7 +157,9 @@ public class LoginController {
     String mobilePlatform = cookieHelper.getCookieValue(request, MOBILE_PLATFORM_COOKIE);
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
     String appName = cookieHelper.getCookieValue(request, APP_NAME_COOKIE);
+    String appVersion = cookieHelper.getCookieValue(request, APP_VERSION_COOKIE);
 
+    auditRequest.setAppVersion(appVersion);
     boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source);
     if (!attrsAdded) {
       return ERROR_VIEW_NAME;
@@ -252,7 +255,8 @@ public class LoginController {
         CLIENT_APP_VERSION_COOKIE,
         MOBILE_PLATFORM_COOKIE,
         SOURCE_COOKIE,
-        APP_NAME_COOKIE);
+        APP_NAME_COOKIE,
+        APP_VERSION_COOKIE);
 
     String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
     String source = qsParams.getFirst(SOURCE);

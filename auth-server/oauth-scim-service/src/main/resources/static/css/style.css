@@ -240,7 +240,7 @@ footer ul li:last-child a {
 
 .cmn__error {
   position: absolute;
-  bottom: 10%;
+  bottom: 50%;
   background: #f44336;
   padding: 3px 6px;
   color: #fff;
