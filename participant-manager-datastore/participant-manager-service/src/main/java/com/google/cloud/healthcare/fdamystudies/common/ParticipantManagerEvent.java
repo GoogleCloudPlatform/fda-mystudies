@@ -199,7 +199,7 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       "New user created (user ID - ${new_user_id}, access level - ${new_user_access_level}).",
-      "NEW_USER_CREATED"),
+      "NEW_USER_ADDED"),
 
   NEW_USER_INVITATION_EMAIL_SENT(
       PARTICIPANT_MANAGER,

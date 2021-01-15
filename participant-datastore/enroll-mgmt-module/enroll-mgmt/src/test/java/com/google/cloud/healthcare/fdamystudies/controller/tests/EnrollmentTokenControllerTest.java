@@ -153,6 +153,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ENROLLMENT_TOKEN_FOUND_INVALID.getEventCode(), auditRequest);
@@ -307,6 +309,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+    auditRequest.setStudyVersion("3.3");
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
 
@@ -412,6 +415,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+    auditRequest.setStudyVersion("3.3");
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
 
@@ -468,6 +472,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
 

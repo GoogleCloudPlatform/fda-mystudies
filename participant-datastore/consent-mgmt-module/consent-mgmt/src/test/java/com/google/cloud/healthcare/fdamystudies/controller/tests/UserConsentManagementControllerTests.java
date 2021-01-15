@@ -12,7 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementE
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVED;
-import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.USER_ENROLLED_INTO_STUDY;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertNotNull;
@@ -32,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentReqBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -40,6 +38,7 @@ import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
@@ -123,14 +122,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
-    StudyInfoBean studyInfoBean =
-        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+    StudyEntity studyInfo = userConsentManagementService.getStudyInfo(consentStatus.getStudyId());
 
     StudyConsentEntity studyConsent =
         userConsentManagementService.getStudyConsent(
-            Constants.VALID_USER_ID,
-            studyInfoBean.getStudyInfoId(),
-            consentStatus.getConsent().getVersion());
+            Constants.VALID_USER_ID, studyInfo.getId(), consentStatus.getConsent().getVersion());
     assertNotNull(studyConsent);
     assertNotNull(studyConsent.getParticipantStudy());
     assertNotNull(studyConsent.getSharing());
@@ -139,17 +135,15 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_ENROLLED_INTO_STUDY.getEventCode(), auditRequest);
     auditEventMap.put(INFORMED_CONSENT_PROVIDED_FOR_STUDY.getEventCode(), auditRequest);
     auditEventMap.put(SIGNED_CONSENT_DOCUMENT_SAVED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(
-        auditEventMap,
-        USER_ENROLLED_INTO_STUDY,
-        INFORMED_CONSENT_PROVIDED_FOR_STUDY,
-        SIGNED_CONSENT_DOCUMENT_SAVED);
+        auditEventMap, INFORMED_CONSENT_PROVIDED_FOR_STUDY, SIGNED_CONSENT_DOCUMENT_SAVED);
     verifyTokenIntrospectRequest();
 
     // Set mockito expectations for downloading content from cloudStorage
@@ -188,6 +182,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
@@ -232,14 +229,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
-    StudyInfoBean studyInfoBean =
-        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+    StudyEntity studyInfo = userConsentManagementService.getStudyInfo(consentStatus.getStudyId());
 
     StudyConsentEntity studyConsent =
         userConsentManagementService.getStudyConsent(
-            Constants.VALID_USER_ID,
-            studyInfoBean.getStudyInfoId(),
-            consentStatus.getConsent().getVersion());
+            Constants.VALID_USER_ID, studyInfo.getId(), consentStatus.getConsent().getVersion());
     assertNotNull(studyConsent);
     assertNotNull(studyConsent.getParticipantStudy());
     assertNotNull(studyConsent.getSharing());
@@ -248,17 +242,15 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_ENROLLED_INTO_STUDY.getEventCode(), auditRequest);
     auditEventMap.put(INFORMED_CONSENT_PROVIDED_FOR_STUDY.getEventCode(), auditRequest);
     auditEventMap.put(SIGNED_CONSENT_DOCUMENT_SAVED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(
-        auditEventMap,
-        USER_ENROLLED_INTO_STUDY,
-        INFORMED_CONSENT_PROVIDED_FOR_STUDY,
-        SIGNED_CONSENT_DOCUMENT_SAVED);
+        auditEventMap, INFORMED_CONSENT_PROVIDED_FOR_STUDY, SIGNED_CONSENT_DOCUMENT_SAVED);
     verifyTokenIntrospectRequest();
 
     // Reset Audit Event calls
@@ -295,6 +287,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
@@ -339,14 +334,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
-    StudyInfoBean studyInfoBean =
-        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+    StudyEntity studyInfo = userConsentManagementService.getStudyInfo(consentStatus.getStudyId());
 
     StudyConsentEntity studyConsent =
         userConsentManagementService.getStudyConsent(
-            Constants.VALID_USER_ID,
-            studyInfoBean.getStudyInfoId(),
-            consentStatus.getConsent().getVersion());
+            Constants.VALID_USER_ID, studyInfo.getId(), consentStatus.getConsent().getVersion());
     assertNotNull(studyConsent);
     assertNotNull(studyConsent.getParticipantStudy());
     assertNotNull(studyConsent.getSharing());
@@ -355,17 +347,15 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_ENROLLED_INTO_STUDY.getEventCode(), auditRequest);
     auditEventMap.put(INFORMED_CONSENT_PROVIDED_FOR_STUDY.getEventCode(), auditRequest);
     auditEventMap.put(SIGNED_CONSENT_DOCUMENT_SAVED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(
-        auditEventMap,
-        USER_ENROLLED_INTO_STUDY,
-        INFORMED_CONSENT_PROVIDED_FOR_STUDY,
-        SIGNED_CONSENT_DOCUMENT_SAVED);
+        auditEventMap, INFORMED_CONSENT_PROVIDED_FOR_STUDY, SIGNED_CONSENT_DOCUMENT_SAVED);
     verifyTokenIntrospectRequest();
 
     // Reset Audit Event calls
@@ -404,6 +394,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
+    auditRequest.setParticipantId("1");
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
@@ -709,14 +702,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     // check transaction rollback is successful
-    StudyInfoBean studyInfoBean =
-        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+    StudyEntity studyInfo = userConsentManagementService.getStudyInfo(consentStatus.getStudyId());
 
     StudyConsentEntity studyConsent =
         userConsentManagementService.getStudyConsent(
-            Constants.VALID_USER_ID,
-            studyInfoBean.getStudyInfoId(),
-            consentStatus.getConsent().getVersion());
+            Constants.VALID_USER_ID, studyInfo.getId(), consentStatus.getConsent().getVersion());
     assertNull(studyConsent);
   }
 
@@ -739,6 +729,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(
