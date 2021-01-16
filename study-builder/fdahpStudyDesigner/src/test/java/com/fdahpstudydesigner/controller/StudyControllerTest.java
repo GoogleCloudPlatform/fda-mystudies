@@ -119,6 +119,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     NotificationBO notificationBo = new NotificationBO();
     notificationBo.setNotificationText("Study notification");
+    notificationBo.setCustomStudyId("678595");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_STUDY_NOTIFICATION.getPath())
@@ -142,6 +143,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     NotificationBO notificationBo = new NotificationBO();
+    notificationBo.setCustomStudyId("678595");
     notificationBo.setNotificationText("Study notification");
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -167,6 +169,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     NotificationBO notificationBo = new NotificationBO();
     notificationBo.setNotificationText("Study notification");
+    notificationBo.setCustomStudyId("678592");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_STUDY_NOTIFICATION.getPath())
@@ -674,6 +677,8 @@ public class StudyControllerTest extends BaseMockIT {
     StudyBo studyBo = new StudyBo();
     studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
+    studyBo.setVersion(1.1f);
+    studyBo.setAppId("GCP112");
     studyBo.setStudySequenceBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -707,6 +712,7 @@ public class StudyControllerTest extends BaseMockIT {
     studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
     studyBo.setStudySequenceBo(null);
+    studyBo.setAppId("GCP123");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_BASIC_INFO.getPath())
@@ -742,6 +748,8 @@ public class StudyControllerTest extends BaseMockIT {
     StudyBo studyBo = new StudyBo();
     studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
+    studyBo.setVersion(0.0f);
+    studyBo.setAppId("GCP123");
     studyBo.setStudySequenceBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
