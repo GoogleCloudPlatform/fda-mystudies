@@ -1078,7 +1078,16 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         }
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
-
+      if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+        query =
+            session
+                .getNamedQuery("StudyBo.getStudyBycustomStudyId")
+                .setString("customStudyId", customStudyId);
+        query.setMaxResults(1);
+        StudyBo study = (StudyBo) query.uniqueResult();
+        auditRequest.setStudyVersion(study.getVersion().toString());
+        auditRequest.setAppId(study.getAppId());
+      }
       values.put(QUESTION_ID, questionId.toString());
       values.put(STEP_ID, formId.toString());
       auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_DELETED, auditRequest, values);
@@ -1154,7 +1163,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         }
       }
       // Anchordate delete based on stepId end
-
+      query =
+          session
+              .getNamedQuery("StudyBo.getStudyBycustomStudyId")
+              .setString("customStudyId", customStudyId);
+      query.setMaxResults(1);
+      StudyBo study = (StudyBo) query.uniqueResult();
+      auditRequest.setStudyVersion(study.getVersion().toString());
+      auditRequest.setAppId(study.getAppId());
       if (studyVersionBo != null) {
         // doing the soft delete after study launch
         searchQuery =
@@ -1214,6 +1230,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 customStudyId,
                 sessionObject,
                 session,
+                auditRequest,
                 transaction);
       }
       // Reset destination steps in Questionnaire Starts
@@ -1291,6 +1308,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String customStudyId,
       SessionObject sessionObject,
       Session session,
+      AuditLogEventRequest auditRequest,
       Transaction transaction) {
     String message = FdahpStudyDesignerConstants.FAILURE;
     logger.info("StudyQuestionnaireDAOImpl - deleteQuestionnaireStep(session,transction) - starts");
@@ -1298,7 +1316,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     QuestionnairesStepsBo questionnairesStepsBo = null;
     Map<String, String> values = new HashMap<>();
     try {
-      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setStudyId(customStudyId);
       values.put(QUESTION_ID, questionnaireId.toString());
       values.put(STEP_ID, stepId.toString());

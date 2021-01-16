@@ -101,6 +101,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
 
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
     activeTaskBo.setTaskTypeId(123);
+    activeTaskBo.setStudyId(678578);
     activeTaskBo.setActiveTaskFrequenciesBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -239,7 +240,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     sessionAttributes.put(
-        STUDY_SESSION_COUNT_VALUE + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, "6785");
+        STUDY_SESSION_COUNT_VALUE + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, "678592");
 
     mockMvc
         .perform(

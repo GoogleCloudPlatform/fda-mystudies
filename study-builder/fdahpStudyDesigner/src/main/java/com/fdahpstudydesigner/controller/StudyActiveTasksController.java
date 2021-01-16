@@ -125,6 +125,9 @@ public class StudyActiveTasksController {
         map.addAttribute("_S", sessionStudyCount);
         auditRequest.setStudyId(customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+          StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+          auditRequest.setStudyVersion(studyBo.getVersion().toString());
+          auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
           request
               .getSession()
@@ -501,6 +504,11 @@ public class StudyActiveTasksController {
                 .getSession()
                 .setAttribute(sessionStudyCount + "activeTaskInfoId", activeTaskInfoId.toString());
             auditRequest.setStudyId(customStudyId);
+            StudyBo studyBo =
+                studyService.getStudyById(
+                    addActiveTaskBo.getStudyId().toString(), sesObj.getUserId());
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
             values.put("activetask_id", activeTaskBo.getTaskTypeId().toString());
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
