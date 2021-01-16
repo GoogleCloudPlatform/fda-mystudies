@@ -125,7 +125,7 @@ public final class AuthScimConstants {
 
   public static final String CORRELATION_ID_COOKIE = "mystudies_correlationId";
 
-  public static final String CLIENT_APP_VERSION_COOKIE = "mystudies_clientAppVersion";
+  public static final String APP_VERSION_COOKIE = "mystudies_appVersion";
 
   public static final String USER_ID_COOKIE = "mystudies_userId";
 
