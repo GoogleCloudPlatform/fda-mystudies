@@ -1791,12 +1791,7 @@
     scheduletype = $('input[name="scheduleType"]:checked').val();
   }
   $(document).ready(function () {
-    $("#startDate").keydown(function (event) {
-      event.preventDefault();
-    });
-    $("#time0").keydown(function (event) {
-      event.preventDefault();
-    });
+   
     $("#dailyxdaysId").change(function () {
       dailyXday = $("#dailyxdaysId").val();
       console.log(dailyXday)
@@ -2557,14 +2552,14 @@
         $("#startDateWeekly").parent().parent().removeClass("has-error has-danger");
         $("#startDateWeekly").next().children().remove();
         $(".weeklyRegular").hide();
-        $(".weeklyRegular").removeAttr('required');
+        $(".weeklyRegular").find('*').removeAttr('required');
 
         $("#monthlyDateId").hide();
         $("#startDateMonthly").removeAttr('required');
         $("#startDateMonthly").parent().parent().removeClass("has-error has-danger");
         $("#startDateMonthly").next().children().remove();
         $(".monthlyRegular").hide();
-        $(".monthlyRegular").removeAttr('required');
+        $(".monthlyRegular").find('*').removeAttr('required');
       } else {
         $("#weekDaysId").show();
         $("#startDateWeekly").attr('required');
@@ -2844,9 +2839,7 @@
         var id = $(this).attr("id");
         var timeId = '#time' + id;
         $(timeId).data("DateTimePicker").minDate(false);
-        $(timeId).keydown(function (event) {
-          event.preventDefault();
-        });
+       
         if (dt) {
           if (dt != today) {
             $(timeId).data("DateTimePicker").minDate(false);

@@ -141,6 +141,7 @@ public class ProcessActivityResponseController {
                 ErrorCode.EC_701.errorMessage());
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
+
       auditRequest.setStudyId(studyId);
       auditRequest.setParticipantId(participantId);
       auditRequest.setUserId(userId);
@@ -214,6 +215,7 @@ public class ProcessActivityResponseController {
         // Get ParticipantStudyInfo from Registration Server
         ParticipantStudyInformation partStudyInfo =
             partStudyInfoService.getParticipantStudyInfo(studyId, participantId, auditRequest);
+        logger.debug("processActivityResponseForParticipant() after successful rest call");
         if (partStudyInfo == null) {
           logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
           responseServerAuditLogHelper.logEvent(
@@ -314,7 +316,7 @@ public class ProcessActivityResponseController {
           responseServerAuditLogHelper.logEvent(
               ACTIVITY_RESPONSE_NOT_SAVED, auditRequest, notSaveMap);
           logger.error(
-              "Could not save response for participant.\n Study Id: "
+              "Could not save response for withdrawn participant.\n Study Id: "
                   + studyId
                   + "\n Activity Id: "
                   + activityId
@@ -328,7 +330,7 @@ public class ProcessActivityResponseController {
                 ErrorCode.EC_706.code(),
                 ErrorCode.EC_706.errorMessage(),
                 AppConstants.ERROR_STR,
-                "Could not save response for participant.\n Study Id: "
+                "Could not save response for invalid participant.\n Study Id: "
                     + studyId
                     + "\n Activity Id: "
                     + activityId
@@ -338,7 +340,7 @@ public class ProcessActivityResponseController {
                     + participantId);
 
         logger.error(
-            "Could not save response for participant.\n Study Id: "
+            "Could not save response for invalid participant.\n Study Id: "
                 + studyId
                 + "\n Activity Id: "
                 + activityId
@@ -357,7 +359,7 @@ public class ProcessActivityResponseController {
                 AppConstants.ERROR_STR,
                 e.getMessage());
         logger.error(
-            "Could not save response for participant.\n Study Id: "
+            "An error occured while saving response for participant.\n Study Id: "
                 + studyId
                 + "\n Activity Id: "
                 + activityId
@@ -483,6 +485,7 @@ public class ProcessActivityResponseController {
 
   @PostMapping("/participant/withdraw")
   public ResponseEntity<?> withdrawParticipantFromStudy(
+      @RequestHeader String appId,
       @RequestParam(name = "studyId") String studyId,
       @RequestParam(name = "participantId") String participantId,
       @RequestParam(name = "deleteResponses") String deleteResponses,
@@ -501,6 +504,7 @@ public class ProcessActivityResponseController {
       boolean responseDataUpdate = false;
       try {
         auditRequest.setStudyId(studyId);
+        auditRequest.setAppId(appId);
         auditRequest.setParticipantId(participantId);
         Map<String, String> map = new HashMap<>();
         map.put("withdrawal_timetamp", Timestamp.from(Instant.now()).toString());

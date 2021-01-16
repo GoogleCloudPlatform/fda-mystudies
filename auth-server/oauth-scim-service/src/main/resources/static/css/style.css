@@ -82,7 +82,7 @@ a, a:hover {
   width: 100%;
   text-indent: 40px;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .login__btn__container {
@@ -240,7 +240,7 @@ footer ul li:last-child a {
 
 .cmn__error {
   position: absolute;
-  bottom: 10%;
+  bottom: 25%;
   background: #f44336;
   padding: 3px 6px;
   color: #fff;
@@ -475,9 +475,7 @@ body#body-container {
 }
 
 .width__110 { 
-  width: 110px !important;
-  display: inline-block !important; 
-  margin-left: 10% !important;
+ text-align: center !important;
 } 
   
 .loading_div { 

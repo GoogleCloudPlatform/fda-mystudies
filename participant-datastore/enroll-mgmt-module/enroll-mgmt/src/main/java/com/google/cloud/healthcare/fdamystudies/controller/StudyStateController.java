@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.USER_ID;
@@ -24,9 +25,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -34,10 +38,12 @@ import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,11 +62,13 @@ public class StudyStateController {
 
   private static final Logger logger = LoggerFactory.getLogger(StudyStateController.class);
 
-  @Autowired StudyStateService studyStateService;
+  @Autowired private StudyStateService studyStateService;
 
-  @Autowired CommonService commonService;
+  @Autowired private CommonService commonService;
 
-  @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
+  @Autowired private EnrollAuditEventHelper enrollAuditEventHelper;
+
+  @Autowired private StudyRepository studyRepository;
 
   @PostMapping(
       value = "/updateStudyState",
@@ -99,11 +107,15 @@ public class StudyStateController {
       studyStateRespBean =
           studyStateService.saveParticipantStudies(
               studiesBeenList, existParticipantStudies, auditRequest, user);
+      StudiesBean studyInfo = studiesBeenList.get(0);
       if (studyStateRespBean != null
           && studyStateRespBean
               .getMessage()
               .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
         studyStateRespBean.setCode(HttpStatus.OK.value());
+        if (StringUtils.equals(studyInfo.getStatus(), EnrollmentStatus.NOT_ELIGIBLE.getStatus())) {
+          enrollAuditEventHelper.logEvent(USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
+        }
       }
     } else {
       MyStudiesUserRegUtil.getFailureResponse(
@@ -160,7 +172,12 @@ public class StudyStateController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
-    auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
+    Optional<StudyEntity> optStudyEntity =
+        studyRepository.findByCustomStudyId(withdrawFromStudyBean.getStudyId());
+    if (optStudyEntity.isPresent()) {
+      auditRequest.setStudyId(optStudyEntity.get().getCustomId());
+      auditRequest.setStudyVersion(String.valueOf(optStudyEntity.get().getVersion()));
+    }
 
     respBean =
         studyStateService.withdrawFromStudy(
