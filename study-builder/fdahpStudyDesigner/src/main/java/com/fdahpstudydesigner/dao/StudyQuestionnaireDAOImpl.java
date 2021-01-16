@@ -3603,8 +3603,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 questionsBo.getQuestionResponseSubTypeList()) {
               if (((questionResponseSubTypeBo.getText() != null)
                       && !questionResponseSubTypeBo.getText().isEmpty())
-                  && ((questionResponseSubTypeBo.getValue() != null)
-                      && !questionResponseSubTypeBo.getValue().isEmpty())) {
+                  || ((questionResponseSubTypeBo.getValue() != null)
+                      && !questionResponseSubTypeBo.getValue().isEmpty())
+                  || ((questionResponseSubTypeBo.getDescription() != null)
+                      && !questionResponseSubTypeBo.getDescription().isEmpty())
+                  || ((questionResponseSubTypeBo.getExclusive() != null)
+                      && !questionResponseSubTypeBo.getExclusive().isEmpty())) {
                 String fileName;
                 if (questionResponseSubTypeBo.getImageFile() != null) {
                   if ((questionResponseSubTypeBo.getImage() != null)
@@ -4176,8 +4180,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     questionnairesStepsBo.getQuestionResponseSubTypeList()) {
                   if (((questionResponseSubTypeBo.getText() != null)
                           && !questionResponseSubTypeBo.getText().isEmpty())
-                      && ((questionResponseSubTypeBo.getValue() != null)
-                          && !questionResponseSubTypeBo.getValue().isEmpty())) {
+                      || ((questionResponseSubTypeBo.getValue() != null)
+                          && !questionResponseSubTypeBo.getValue().isEmpty())
+                      || ((questionResponseSubTypeBo.getDescription() != null)
+                          && !questionResponseSubTypeBo.getDescription().isEmpty())
+                      || ((questionResponseSubTypeBo.getExclusive() != null)
+                          && !questionResponseSubTypeBo.getExclusive().isEmpty())) {
                     String fileName;
                     if (questionResponseSubTypeBo.getImageFile() != null) {
                       if ((questionResponseSubTypeBo.getImage() != null)
