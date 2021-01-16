@@ -3907,6 +3907,7 @@ public class StudyDAOImpl implements StudyDAO {
             .getType()
             .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
           consentInfoBo.setStatus(true);
+          studySequence.setConsentEduInfo(false);
           if (studySequence.iseConsent()) {
             studySequence.seteConsent(false);
           }

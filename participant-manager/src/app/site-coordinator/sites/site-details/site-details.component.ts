@@ -156,6 +156,7 @@ export class SiteDetailsComponent
           } else {
             this.toastr.success('success');
           }
+          this.fetchSiteParticipant(this.activeTab);
         }),
     );
   }
