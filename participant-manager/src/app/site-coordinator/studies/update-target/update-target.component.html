@@ -15,7 +15,9 @@
             #target="ngModel"
             min="0"
             max="99999"
-            oninput="validity.valid||(value='');"
+            maxLength="5"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
           />
           <div *ngIf="target.invalid && (target.dirty || target.touched)">
             <span
