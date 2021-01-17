@@ -19,56 +19,57 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
-    prefix = "example-dev-apps"
+    bucket = "kyoto-univ-demo-terraform-state"
+    prefix = "kyoto-univ-demo-apps"
   }
 }
 
 # Reserve a static external IP for the Ingress.
 resource "google_compute_global_address" "ingress_static_ip" {
-  name         = "mystudies-ingress-ip"
+  name         = "kyoto-univ-demo-ingress-ip"
   description  = "Reserved static external IP for the GKE cluster Ingress and DNS configurations."
   address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
   project      = module.project.project_id
 }
 
+# Step 7: Cloud Build for Apps Project
 # ***NOTE***: First follow
 # https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 #
 # The following content should be initially commented out if the above manual step is not completed.
-# locals {
-#   apps_dependencies = {
-#     "study-builder"                             = ["study-builder/**"]
-#     "study-datastore"                           = ["study-datastore/**"]
-#     "hydra"                                     = ["hydra/**"]
-#     "auth-server"                               = ["auth-server/**", "common-modules/**"]
-#     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
-#     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
-#     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
-#     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
-#     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
-#     "participant-manager"                       = ["participant-manager/**"]
-#   }
-# }
+#7# locals {
+#7#   apps_dependencies = {
+#7#     "study-builder"                             = ["study-builder/**"]
+#7#     "study-datastore"                           = ["study-datastore/**"]
+#7#     "hydra"                                     = ["hydra/**"]
+#7#     "auth-server"                               = ["auth-server/**", "common-modules/**"]
+#7#     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
+#7#     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
+#7#     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
+#7#     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
+#7#     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
+#7#     "participant-manager"                       = ["participant-manager/**"]
+#7#   }
+#7# }
 
-# resource "google_cloudbuild_trigger" "server_build_triggers" {
-#   for_each = local.apps_dependencies
+#7# resource "google_cloudbuild_trigger" "server_build_triggers" {
+#7#   for_each = local.apps_dependencies
 
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = replace(each.key, "/", "-")
-#
-#   included_files = each.value
-#
-#   github {
-#     owner = "GoogleCloudPlatform"
-#     name  = "example"
-#     push { branch = "^master$" }
-#   }
-#
-#   filename = "${each.key}/cloudbuild.yaml"
-# }
+#7#   provider = google-beta
+#7#   project  = module.project.project_id
+#7#   name     = replace(each.key, "/", "-")
+
+#7#   included_files = each.value
+#7#
+#7#   github {
+#7#     owner = "clipcrow"
+#7#     name  = "fda-mystudies"
+#7#     push { branch = "^master$" }
+#7#   }
+
+#7#   filename = "${each.key}/cloudbuild.yaml"
+#7# }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 # Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
@@ -77,16 +78,16 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
   version = "~> 9.1.0"
 
-  name                    = "example-dev-apps"
+  name                    = "kyoto-univ-demo-apps"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "79101201507"
+  billing_account         = "010908-0509D9-5699ED"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
-  shared_vpc              = "example-dev-networks"
+  shared_vpc              = "kyoto-univ-demo-networks"
   shared_vpc_subnets = [
-    "projects/example-dev-networks/regions/us-central1/subnetworks/example-dev-gke-subnet",
+    "projects/kyoto-univ-demo-networks/regions/asia-northeast1/subnetworks/kyoto-univ-demo-gke-subnet",
   ]
   activate_apis = [
     "binaryauthorization.googleapis.com",
@@ -149,13 +150,13 @@ resource "google_binary_authorization_policy" "policy" {
   }
 }
 
-module "example_dev" {
+module "kyoto_univ_demo" {
   source  = "terraform-google-modules/cloud-dns/google"
   version = "~> 3.0.0"
 
-  name       = "example-dev"
+  name       = "kyoto-univ-demo"
   project_id = module.project.project_id
-  domain     = "example-dev.example.com."
+  domain     = "kyoto-univ-demo.clipcrow.com."
   type       = "public"
 
   recordsets = [
@@ -172,29 +173,28 @@ module "example_dev" {
       type    = "A"
     },
   ]
-
 }
 
-module "example_dev_gke_cluster" {
+module "kyoto_univ_demo_gke_cluster" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
   version = "~> 11.1.0"
 
   # Required.
-  name               = "example-dev-gke-cluster"
+  name               = "kyoto-univ-demo-gke-cluster"
   project_id         = module.project.project_id
-  region             = "us-central1"
+  region             = "asia-northeast1"
   regional           = true
-  network_project_id = "example-dev-networks"
+  network_project_id = "kyoto-univ-demo-networks"
 
-  network                = "example-dev-network"
-  subnetwork             = "example-dev-gke-subnet"
-  ip_range_pods          = "example-dev-pods-range"
-  ip_range_services      = "example-dev-services-range"
+  network                = "kyoto-univ-demo-network"
+  subnetwork             = "kyoto-univ-demo-gke-subnet"
+  ip_range_pods          = "kyoto-univ-demo-pods-range"
+  ip_range_services      = "kyoto-univ-demo-services-range"
   master_ipv4_cidr_block = "192.168.0.0/28"
   master_authorized_networks = [
     {
       cidr_block   = "0.0.0.0/0"
-      display_name = "Example diplay name"
+      display_name = "clipcrow-terraform-deploy-ip"
     },
   ]
   istio                   = true
@@ -213,16 +213,16 @@ module "project_iam_members" {
 
   bindings = {
     "roles/logging.logWriter" = [
-      "serviceAccount:${google_service_account.auth_server_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.hydra_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.response_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.study_builder_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.study_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.consent_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.enroll_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.user_datastore_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.participant_manager_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.auth_server_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.hydra_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.response_datastore_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_builder_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_datastore_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.consent_datastore_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.enroll_datastore_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.user_datastore_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.participant_manager_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@kyoto-univ-demo-apps.iam.gserviceaccount.com",
     ],
   }
 }

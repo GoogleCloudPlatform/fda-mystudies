@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
-    prefix = "example-dev-data"
+    bucket = "kyoto-univ-demo-terraform-state"
+    prefix = "kyoto-univ-demo-data"
   }
 }
 
@@ -31,14 +31,14 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
   version = "~> 9.1.0"
 
-  name                    = "example-dev-data"
+  name                    = "kyoto-univ-demo-data"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "79101201507"
+  billing_account         = "010908-0509D9-5699ED"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
-  shared_vpc              = "example-dev-networks"
+  shared_vpc              = "kyoto-univ-demo-networks"
   activate_apis = [
     "bigquery.googleapis.com",
     "compute.googleapis.com",
@@ -47,11 +47,11 @@ module "project" {
   ]
 }
 
-module "example_dev_mystudies_firestore_data" {
+module "kyoto_univ_demo_mystudies_firestore_data" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.3.0"
 
-  dataset_id = "example_dev_mystudies_firestore_data"
+  dataset_id = "kyoto-univ_demo_mystudies_firestore_data"
   project_id = module.project.project_id
   location   = "us-east1"
 }
@@ -65,52 +65,52 @@ module "project_iam_members" {
 
   bindings = {
     "roles/cloudsql.client" = [
-      "serviceAccount:bastion@example-dev-networks.iam.gserviceaccount.com",
-      "serviceAccount:auth-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:hydra-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-builder-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:consent-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:enroll-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:user-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:participant-manager-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:bastion@kyoto-univ-demo-networks.iam.gserviceaccount.com",
+      "serviceAccount:auth-server-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:hydra-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-builder-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-datastore-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:consent-datastore-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:enroll-datastore-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:user-datastore-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:participant-manager-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
     ],
   }
 }
 
-module "example_dev_mystudies_consent_documents" {
+module "kyoto_univ_demo_mystudies_consent_documents" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-mystudies-consent-documents"
+  name       = "kyoto-univ-demo-mystudies-consent-documents"
   project_id = module.project.project_id
-  location   = "us-central1"
+  location   = "asia-northeast1"
 
   iam_members = [
     {
-      member = "serviceAccount:consent-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:consent-datastore-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
     {
-      member = "serviceAccount:participant-manager-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:participant-manager-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
   ]
 }
 
-module "example_dev_mystudies_study_resources" {
+module "kyoto_univ_demo_mystudies_study_resources" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-mystudies-study-resources"
+  name       = "kyoto-univ-demo-mystudies-study-resources"
   project_id = module.project.project_id
-  location   = "us-central1"
+  location   = "asia-northeast1"
 
   iam_members = [
     {
-      member = "serviceAccount:study-builder-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:study-builder-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
     {
@@ -120,12 +120,12 @@ module "example_dev_mystudies_study_resources" {
   ]
 }
 
-module "example_dev_mystudies_sql_import" {
+module "kyoto_univ_demo_mystudies_sql_import" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-mystudies-sql-import"
+  name       = "kyoto-univ-demo-mystudies-sql-import"
   project_id = module.project.project_id
-  location   = "us-central1"
+  location   = "asia-northeast1"
 
 }

@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-billing_account = "010BB2-E7A763-738CAE"
-project_id      = "btc-terradeploy-devops"
-state_bucket    = "btc-terradeploy-terraform-state"
+billing_account = "010908-0509D9-5699ED"
+project_id      = "kyoto-univ-demo-devops"
+state_bucket    = "kyoto-univ-demo-terraform-state"
 terraform_root  = "deployment/terraform"
 build_viewers = [
-  "group:btc-terradeploy-cicd-viewers@boston-technology.com",
+  "group:kyoto-univ-demo-cicd-viewers@clipcrow.com",
 ]

@@ -19,11 +19,11 @@ set -ex
 MODULES=(
   devops
   audit
-  btc-terradeploy-secrets
-  btc-terradeploy-networks
-  btc-terradeploy-apps
-  btc-terradep-firebase
-  btc-terradep-data
+  kyoto-univ-demo-secrets
+  kyoto-univ-demo-networks
+  kyoto-univ-demo-apps
+  kyoto-univ-demo-firebase
+  kyoto-univ-demo-data
 )
 
 ACTIONS=()

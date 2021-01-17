@@ -13,5 +13,5 @@
 # limitations under the License.
 
 
-folder         = "folders/341654584863"
-auditors_group = "btc-terradeploy-auditors@boston-technology.com"
+folder         = "folders/79101201507"
+auditors_group = "kyoto-univ-demo-auditors@clipcrow.com"

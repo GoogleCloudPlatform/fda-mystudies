@@ -19,7 +19,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "btc-terradeploy-terraform-state"
+    bucket = "kyoto-univ-demo-terraform-state"
     prefix = "kubernetes"
   }
 }
@@ -27,9 +27,9 @@ terraform {
 data "google_client_config" "default" {}
 
 data "google_container_cluster" "gke_cluster" {
-  name     = "btc-terradeploy-gke-cluster"
-  location = "us-east1"
-  project  = "btc-terradeploy-apps"
+  name     = "kyoto-univ-demo-gke-cluster"
+  location = "asia-northeast1"
+  project  = "kyoto-univ-demo-apps"
 }
 
 provider "kubernetes" {
@@ -79,7 +79,7 @@ locals {
 # Data sources from Secret Manager.
 data "google_secret_manager_secret_version" "secrets" {
   provider = google-beta
-  project  = "btc-terradeploy-secrets"
+  project  = "kyoto-univ-demo-secrets"
   secret   = each.key
 
   for_each = toset(concat(
@@ -129,12 +129,12 @@ resource "kubernetes_secret" "shared_secrets" {
   }
 
   data = {
-    consent_bucket_name               = "btc-terradeploy-mystudies-consent-documents"
-    study_resources_bucket_name       = "btc-terradeploy-mystudies-study-resources"
-    institution_resources_bucket_name = "btc-terradeploy-mystudies-institution-resources"
-    base_url                          = "https://participants.btc-terradeploy.boston-technology.com"
-    studies_base_url                  = "https://studies.btc-terradeploy.boston-technology.com"
-    firestore_project_id              = "btc-terradep-firebase"
+    consent_bucket_name               = "kyoto-univ-demo-mystudies-consent-documents"
+    study_resources_bucket_name       = "kyoto-univ-demo-mystudies-study-resources"
+    institution_resources_bucket_name = "kyoto-univ-demo-mystudies-institution-resources"
+    base_url                          = "https://participants.kyoto-univ-demo.clipcrow.com"
+    studies_base_url                  = "https://studies.kyoto-univ-demo.clipcrow.com"
+    firestore_project_id              = "kyoto-univ-demo-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
@@ -239,7 +239,7 @@ resource "kubernetes_secret" "email_credentials" {
 resource "google_service_account_key" "apps_service_account_keys" {
   for_each = toset(local.service_account_ids)
 
-  service_account_id = "${each.key}@btc-terradeploy-apps.iam.gserviceaccount.com"
+  service_account_id = "${each.key}@kyoto-univ-demo-apps.iam.gserviceaccount.com"
 }
 
 resource "kubernetes_secret" "apps_gcloud_keys" {

@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
-    prefix = "example-dev-firebase"
+    bucket = "kyoto-univ-demo-terraform-state"
+    prefix = "kyoto-univ-demo-firebase"
   }
 }
 
@@ -30,22 +30,22 @@ resource "google_firebase_project" "firebase" {
 }
 
 # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
-# resource "google_firestore_index" "activities_index" {
-#   project    = module.project.project_id
-#   collection = "Activities"
-#   fields {
-#     field_path = "participantId"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "createdTimestamp"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "__name__"
-#     order      = "ASCENDING"
-#   }
-# }
+#5# resource "google_firestore_index" "activities_index" {
+#5#   project    = module.project.project_id
+#5#   collection = "Activities"
+#5#   fields {
+#5#     field_path = "participantId"
+#5#     order      = "ASCENDING"
+#5#   }
+#5#   fields {
+#5#     field_path = "createdTimestamp"
+#5#     order      = "ASCENDING"
+#5#   }
+#5#   fields {
+#5#     field_path = "__name__"
+#5#     order      = "ASCENDING"
+#5#   }
+#5# }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 # Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
@@ -54,10 +54,10 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "example-dev-firebase"
+  name                    = "kyoto-univ-demo-firebase"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "79101201507"
+  billing_account         = "010908-0509D9-5699ED"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
@@ -75,11 +75,11 @@ module "project_iam_members" {
 
   bindings = {
     "roles/datastore.user" = [
-      "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
     ],
     "roles/pubsub.subscriber" = [
-      "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@kyoto-univ-demo-apps.iam.gserviceaccount.com",
     ],
   }
 }
@@ -114,13 +114,13 @@ resource "google_service_account" "real_time_triggers" {
   project    = module.project.project_id
 }
 
-module "example_dev_mystudies_firestore_raw_data" {
+module "kyoto_univ_demo_mystudies_firestore_raw_data" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-mystudies-firestore-raw-data"
+  name       = "kyoto-univ-demo-mystudies-firestore-raw-data"
   project_id = module.project.project_id
-  location   = "us-central1"
+  location   = "asia-northeast1"
 
   lifecycle_rules = [
     {
