@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-billing_account = "XXXXXX-XXXXXX-XXXXXX"
-project_id      = "example-dev-devops"
-state_bucket    = "example-dev-terraform-state"
+billing_account = "010908-0509D9-5699ED"
+project_id      = "kyoto-univ-demo-devops"
+state_bucket    = "kyoto-univ-demo-terraform-state"
 terraform_root  = "deployment/terraform"
 build_viewers = [
-  "group:example-dev-cicd-viewers@example.com",
+  "group:kyoto-univ-demo-cicd-viewers@clipcrow.com",
 ]

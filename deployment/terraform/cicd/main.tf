@@ -30,7 +30,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
+    bucket = "kyoto-univ-demo-terraform-state"
     prefix = "cicd"
   }
 }
@@ -137,7 +137,7 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 # Grant Cloud Build Service Account access to the folder.
 resource "google_folder_iam_member" "cloudbuild_sa_folder_iam" {
   for_each = toset(local.cloudbuild_sa_editor_roles)
-  folder   = 0000000000
+  folder   = 79101201507
   role     = each.value
   member   = local.cloudbuild_sa
   depends_on = [
@@ -169,8 +169,8 @@ resource "google_cloudbuild_trigger" "validate" {
   ]
 
   github {
-    owner = "GoogleCloudPlatform"
-    name  = "example"
+    owner = "clipcrow"
+    name  = "fda-mystudies"
     pull_request {
       branch = "^master$"
     }
@@ -198,8 +198,8 @@ resource "google_cloudbuild_trigger" "plan" {
   ]
 
   github {
-    owner = "GoogleCloudPlatform"
-    name  = "example"
+    owner = "clipcrow"
+    name  = "fda-mystudies"
     pull_request {
       branch = "^master$"
     }
@@ -227,8 +227,8 @@ resource "google_cloudbuild_trigger" "apply" {
   ]
 
   github {
-    owner = "GoogleCloudPlatform"
-    name  = "example"
+    owner = "clipcrow"
+    name  = "fda-mystudies"
     push {
       branch = "^master$"
     }
