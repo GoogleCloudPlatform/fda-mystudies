@@ -542,10 +542,9 @@ resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" {
 
   # Load Balancer Health Check IP ranges.
   source_ranges = [
-    "130.211.0.0/22",
-    "209.852.0/22",
+    "35.191.0.0/16",
+    "209.85.152.0/22",
     "209.85.204.0/22",
-    "391.0.0/16",
   ]
 
   target_tags = [
