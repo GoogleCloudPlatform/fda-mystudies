@@ -17,7 +17,6 @@
 set -ex
 
 MODULES=(
-  devops
   audit
   kyoto-demo-secrets
   kyoto-demo-networks
