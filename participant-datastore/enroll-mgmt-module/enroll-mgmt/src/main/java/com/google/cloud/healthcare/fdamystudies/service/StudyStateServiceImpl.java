@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -32,6 +33,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -78,6 +80,8 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
+  @Autowired private StudyRepository studyRepository;
+
   @Override
   @Transactional(readOnly = true)
   public List<ParticipantStudyEntity> getParticipantStudiesList(
@@ -101,7 +105,14 @@ public class StudyStateServiceImpl implements StudyStateService {
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
 
-    if (CollectionUtils.isEmpty(siteIds)) {
+    Optional<StudyEntity> optStudy = studyRepository.findByCustomIds(customStudyIds);
+
+    if (optStudy.isPresent() && optStudy.get().getType().equals(CommonConstants.OPEN_STUDY)) {
+      participantStudyIds =
+          participantStudyRepository.findByStudyIdAndUserDetailId(
+              optStudy.get().getId(), user.getUserId());
+    } else if (CollectionUtils.isEmpty(siteIds)
+        && optStudy.get().getType().equals(CommonConstants.CLOSE_STUDY)) {
       participantStudyIds =
           participantStudyRepository.findByEmailAndStudyCustomIds(user.getEmail(), customStudyIds);
     } else {

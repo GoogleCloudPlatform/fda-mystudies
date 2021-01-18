@@ -118,4 +118,12 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
               + "WHERE prs.id=ps.participant_registry_site_id AND ud.user_id=:userId AND upper(prs.enrollment_token)=:token ",
       nativeQuery = true)
   public String getSiteId(String userId, String token);
+
+  @Query(
+      value =
+          " SELECT ps.id from  participant_study_info ps, user_details ud "
+              + "WHERE ps.user_details_id=ud.id AND ps.study_info_id=:studyId "
+              + "AND ud.user_id=:userId ",
+      nativeQuery = true)
+  public List<String> findByStudyIdAndUserDetailId(String studyId, String userId);
 }
