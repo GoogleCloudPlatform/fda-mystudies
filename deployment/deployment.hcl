@@ -14,16 +14,17 @@ template "mystudies" {
   data = {
     # Prefix that will be prepended to your project and resource names
     # For example, "mystudies"
-    prefix           = "kyoto-univ"
+    prefix           = "kyoto"
     # Environment label that will be appended to PREFIX in your project and resource names
     # For example, "dev"
     env              = "demo"
     # Id of the folder you are deploying into
     # In the form of "0000000000000"
-    folder_id        = "79101201507"
+    folder_id        = "249868370510"
     # Billing account that your projects will be attached to
     # In the form of "XXXXXX-XXXXXX-XXXXXX"
     # billing_account  = "013CA6-52790B-8C10A9"
+    # billing_account  = "013CA6-52790B-8C10A9" CloudAce
     billing_account  = "010908-0509D9-5699ED"
     # Domain that your applications URLs will belong to
     # For example, "example.com"

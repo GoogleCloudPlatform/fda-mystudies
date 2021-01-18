@@ -13,5 +13,5 @@
 # limitations under the License.
 
 
-folder         = "folders/79101201507"
-auditors_group = "kyoto-univ-demo-auditors@clipcrow.com"
+folder         = "folders/249868370510"
+auditors_group = "kyoto-demo-auditors@clipcrow.com"

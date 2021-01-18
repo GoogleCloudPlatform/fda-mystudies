@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-billing_account = "010908-0509D9-5699ED"
-project_id      = "kyoto-demo-devops"
-state_bucket    = "kyoto-demo-terraform-state"
-terraform_root  = "deployment/terraform"
-build_viewers = [
-  "group:kyoto-demo-cicd-viewers@clipcrow.com",
-]
+output "project_id" {
+  value = module.project.project_id
+}
+
+output "project_number" {
+  value = module.project.project_number
+}
