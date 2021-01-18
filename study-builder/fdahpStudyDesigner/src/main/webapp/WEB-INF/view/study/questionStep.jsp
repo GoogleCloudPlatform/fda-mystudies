@@ -3601,6 +3601,8 @@
         } else {
           $('.OtherOptionCls').hide();
           $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+          $("input[name='questionReponseTypeBo.otherPlaceholderText']").val('');
+          $("input[name='questionReponseTypeBo.otherParticipantFill']").val('');
         }
       });
 
@@ -5427,15 +5429,23 @@
         var otherType;
 
         if ($('#textchoiceOtherId').is(':checked')) {
-          otherType="on";
-          var otherIncludeText=$("input[name='questionReponseTypeBo.otherIncludeText']").val();
-          var otherPlaceholderText=$("input[name='questionReponseTypeBo.otherPlaceholderText']").val();
-          var otherParticipantFill=$("input[name='questionReponseTypeBo.otherParticipantFill']").val();
-          
-          
-          questionReponseTypeBo.otherIncludeText=otherIncludeText;
-          questionReponseTypeBo.otherPlaceholderText=otherPlaceholderText;
-          questionReponseTypeBo.otherParticipantFill=otherParticipantFill;
+        	var otherIncludeText;
+            var otherParticipantFill;
+            if ($('#otherYes').is(':checked')) {
+              otherIncludeText="Yes"
+            }else{
+              otherIncludeText="No"
+            }
+            var otherPlaceholderText=$("input[name='questionReponseTypeBo.otherPlaceholderText']").val();
+            if($('#pYes').is(':checked')){
+             otherParticipantFill="Yes"
+            }else{
+               otherParticipantFill="No"
+            }
+
+            questionReponseTypeBo.otherIncludeText=otherIncludeText;
+            questionReponseTypeBo.otherPlaceholderText=otherPlaceholderText;
+            questionReponseTypeBo.otherParticipantFill=otherParticipantFill;
         }else{
           otherType="off"
          }
