@@ -28,7 +28,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "kyoto-univ-demo-terraform-state"
+    bucket = "kyoto-demo-terraform-state"
     prefix = "devops"
   }
 }
@@ -38,9 +38,9 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "kyoto-univ-demo-devops"
+  name                    = "kyoto-demo-devops"
   org_id                  = ""
-  folder_id               = "79101201507"
+  folder_id               = "249868370510"
   billing_account         = "010908-0509D9-5699ED"
   lien                    = true
   default_service_account = "keep"
@@ -59,7 +59,7 @@ module "state_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "kyoto-univ-demo-terraform-state"
+  name       = "kyoto-demo-terraform-state"
   project_id = module.project.project_id
   location   = "asia-northeast1"
 }
@@ -68,12 +68,12 @@ module "state_bucket" {
 resource "google_project_iam_binding" "devops_owners" {
   project = module.project.project_id
   role    = "roles/owner"
-  members = ["group:kyoto-univ-demo-devops-owners@clipcrow.com"]
+  members = ["group:kyoto-demo-devops-owners@clipcrow.com"]
 }
 
 # Org level IAM permissions for org admins.
 resource "google_folder_iam_member" "admin" {
-  folder = "folders/79101201507"
+  folder = "folders/249868370510"
   role   = "roles/resourcemanager.folderAdmin"
-  member = "group:kyoto-univ-demo-folder-admins@clipcrow.com"
+  member = "group:kyoto-demo-folder-admins@clipcrow.com"
 }

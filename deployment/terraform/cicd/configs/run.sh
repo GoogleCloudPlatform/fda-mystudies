@@ -19,11 +19,11 @@ set -ex
 MODULES=(
   devops
   audit
-  kyoto-univ-demo-secrets
-  kyoto-univ-demo-networks
-  kyoto-univ-demo-apps
-  kyoto-univ-demo-firebase
-  kyoto-univ-demo-data
+  kyoto-demo-secrets
+  kyoto-demo-networks
+  kyoto-demo-apps
+  kyoto-demo-firebase
+  kyoto-demo-data
 )
 
 ACTIONS=()
