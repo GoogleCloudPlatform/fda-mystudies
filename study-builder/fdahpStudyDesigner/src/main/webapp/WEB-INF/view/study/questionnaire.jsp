@@ -1938,6 +1938,58 @@
         $('.anchortypeclass').removeAttr('required');
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
+
+
+	        var startDate = $("#startDate").val();
+	  
+	        if(startDate!=''){
+	            var days = $("#days").val();
+	            var endDate = ''
+	            if (startDate) {
+	              $('#time0').prop("disabled", false);
+	              $("#dailyAddTimeButton").removeClass('hide');
+	            }
+	            if (startDate && days && days > 0) {
+	              var dt = new Date(startDate);
+	              dt.setDate(dt.getDate() + Number(days) - 1);
+	              endDate = formatDate(dt);
+	            } else {
+	              startDate = '';
+	              endDate = '';
+	            }
+	            $("#studyDailyLifetimeEnd").val(endDate);
+	            $("#lifeTimeId").text(startDate + ' - ' + endDate);
+	            $("#endDateId").text(endDate ? endDate : 'NA');
+	      }
+	        
+	      var weeklyDate = $("#startWeeklyDate").val();
+	      if(weeklyDate!=''){
+	          var weeks = $("#weeks").val();
+	          $('#startWeeklyDate').attr("readonly", true);
+	          if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks
+	              != null && weeks != '' && typeof weeks != 'undefined')) {
+	            var dt = new Date(weeklyDate);
+	            var weekcount = Number(weeks) * 7;
+	  
+	            dt.setDate(dt.getDate() + Number(weekcount));
+	            endDate = formatDate(dt);
+	            $("#studyWeeklyLifetimeEnd").val(endDate);
+	            $("#weekEndDate").text(endDate);
+	            $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
+	          }
+	      }
+	      var pickStartDate = $("#pickStartDate").val();
+	      if(pickStartDate!=''){
+	          var months = $("#months").val();
+	          if ((pickStartDate != null && pickStartDate != '' && typeof pickStartDate != 'undefined')
+	              && (months != null && months != '' && typeof months != 'undefined')) {
+	            var dt = new Date(pickStartDate);
+	            endDate = moment(moment(dt).add(Number(months), 'M')).format("MM/DD/YYYY");
+	            $("#studyMonthlyLifetimeEnd").val(endDate);
+	            $("#monthEndDate").text(endDate);
+	            $("#monthLifeTimeDate").text(pickStartDate + ' - ' + endDate);
+	        }
+	      }
       }
 
       if (schedule_opts == 'One time') {
