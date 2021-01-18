@@ -36,6 +36,7 @@ import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
@@ -396,6 +397,14 @@ public class NotificationDAOImpl implements NotificationDAO {
         values.put(NEW_NOTIFICATION_ID, String.valueOf(notificationId));
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           auditRequest.setStudyId(notificationBO.getCustomStudyId());
+          query =
+              session
+                  .getNamedQuery("StudyBo.getStudyBycustomStudyId")
+                  .setString("customStudyId", notificationBO.getCustomStudyId());
+          query.setMaxResults(1);
+          StudyBo study = (StudyBo) query.uniqueResult();
+          auditRequest.setStudyVersion(study.getVersion().toString());
+          auditRequest.setAppId(study.getAppId());
           auditLogHelper.logEvent(STUDY_NEW_NOTIFICATION_CREATED, auditRequest, values);
         }
         if ("add".equals(buttonType)) {
@@ -407,12 +416,10 @@ public class NotificationDAOImpl implements NotificationDAO {
           auditLogEvent = APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND;
         } else if ("save".equals(buttonType)
             && FdahpStudyDesignerConstants.STUDYLEVEL.equals(notificationType)) {
-          auditRequest.setStudyId(notificationBO.getCustomStudyId());
           values.put(NOTIFICATION_ID, String.valueOf(notificationId));
           auditLogEvent = STUDY_NOTIFICATION_SAVED_OR_UPDATED;
         } else if ("done".equals(buttonType)
             && FdahpStudyDesignerConstants.STUDYLEVEL.equals(notificationType)) {
-          auditRequest.setStudyId(notificationBO.getCustomStudyId());
           values.put(NOTIFICATION_ID, String.valueOf(notificationId));
           auditLogEvent = STUDY_NOTIFICATION_MARKED_COMPLETE;
         }

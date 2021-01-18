@@ -307,6 +307,9 @@ public class StudyQuestionnaireController {
                   sesObj,
                   customStudyId);
           if (message == FdahpStudyDesignerConstants.SUCCESS) {
+            StudyBo studyBo = studyService.getStudyInfo(studyId);
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
             Map<String, String> values = new HashMap<>();
             values.put(QUESTION_ID, questionnaireId);
             auditLogEventHelper.logEvent(STUDY_QUESTIONNAIRE_DELETED, auditRequest, values);
@@ -2139,6 +2142,9 @@ public class StudyQuestionnaireController {
                       sesObj,
                       customStudyId);
               if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+                StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+                auditRequest.setStudyVersion(studyBo.getVersion().toString());
+                auditRequest.setAppId(studyBo.getAppId());
                 eventEnum = STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
                 auditLogEventHelper.logEvent(eventEnum, auditRequest);
               }
