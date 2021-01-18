@@ -259,6 +259,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
     logger.info(
         "deactivateAcctBean Request=" + ReflectionToStringBuilder.toString(deactivateAcctBean));
+    logger.info("deactivateAcctBean Request=" + deactivateAcctBean.toString());
 
     if (deactivateAcctBean != null
         && deactivateAcctBean.getDeleteData() != null
