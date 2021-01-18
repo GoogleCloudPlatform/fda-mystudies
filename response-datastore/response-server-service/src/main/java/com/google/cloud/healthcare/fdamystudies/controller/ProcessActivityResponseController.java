@@ -102,6 +102,7 @@ public class ProcessActivityResponseController {
     auditRequest.setUserId(userId);
     String applicationId = null;
     String studyId = null;
+    String studyVersion = null;
     String activityId = null;
     String activityVersion = null;
     String participantId = null;
@@ -110,6 +111,7 @@ public class ProcessActivityResponseController {
     try {
       applicationId = questionnaireActivityResponseBean.getApplicationId();
       studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
+      studyVersion = questionnaireActivityResponseBean.getMetadata().getStudyVersion();
       activityId = questionnaireActivityResponseBean.getMetadata().getActivityId();
       activityVersion = questionnaireActivityResponseBean.getMetadata().getVersion();
       participantId = questionnaireActivityResponseBean.getParticipantId();
@@ -145,6 +147,7 @@ public class ProcessActivityResponseController {
       auditRequest.setStudyId(studyId);
       auditRequest.setParticipantId(participantId);
       auditRequest.setUserId(userId);
+      auditRequest.setStudyVersion(studyVersion);
       Map<String, String> activityMap = new HashedMap<>();
       activityMap.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
       activityMap.put(ACTIVITY_ID, activityId);
