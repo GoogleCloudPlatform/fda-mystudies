@@ -490,6 +490,7 @@ public class ProcessActivityResponseController {
   public ResponseEntity<?> withdrawParticipantFromStudy(
       @RequestHeader String appId,
       @RequestParam(name = "studyId") String studyId,
+      @RequestParam(name = "studyVersion") String studyVersion,
       @RequestParam(name = "participantId") String participantId,
       @RequestParam(name = "deleteResponses") String deleteResponses,
       HttpServletRequest request) {
@@ -507,6 +508,7 @@ public class ProcessActivityResponseController {
       boolean responseDataUpdate = false;
       try {
         auditRequest.setStudyId(studyId);
+        auditRequest.setStudyVersion(studyVersion);
         auditRequest.setAppId(appId);
         auditRequest.setParticipantId(participantId);
         Map<String, String> map = new HashMap<>();

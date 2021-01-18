@@ -161,6 +161,7 @@ public class EnrollmentTokenController {
                           enrollmentBean.getStudyId(),
                           enrollmentBean.getToken(),
                           userId,
+                          studyDetails.getVersion(),
                           auditRequest);
                   if (respBean != null) {
                     respBean.setCode(ErrorCode.EC_200.code());
@@ -224,7 +225,11 @@ public class EnrollmentTokenController {
           }
           respBean =
               enrollmentTokenfService.enrollParticipant(
-                  enrollmentBean.getStudyId(), tokenValue, userId, auditRequest);
+                  enrollmentBean.getStudyId(),
+                  tokenValue,
+                  userId,
+                  studyDetails.getVersion(),
+                  auditRequest);
           if (respBean != null) {
             respBean.setCode(ErrorCode.EC_200.code());
             respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
