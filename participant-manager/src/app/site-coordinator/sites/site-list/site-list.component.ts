@@ -10,6 +10,7 @@ import {SearchService} from 'src/app/shared/search.service';
 import {Permission} from 'src/app/shared/permission-enums';
 import {Status, StudyType} from 'src/app/shared/enums';
 import {SearchParameterService} from 'src/app/service/search-parameter.service';
+import {ViewportScroller} from '@angular/common';
 const limit = 10;
 @Component({
   selector: 'app-site-list',
@@ -36,9 +37,13 @@ export class SiteListComponent implements OnInit {
     private modalRef: BsModalRef,
     private readonly sharedService: SearchService,
     private readonly searchParameter: SearchParameterService,
-  ) {}
+    private readonly viewportScroller: ViewportScroller,
+  ) {
+    this.viewportScroller.setHistoryScrollRestoration('manual');
+  }
 
   ngOnInit(): void {
+    this.viewportScroller.setHistoryScrollRestoration('manual');
     this.searchParameter.setSearchParameter('');
     this.searchParameter.searchParam$.subscribe((updatedParameter) => {
       this.manageStudiesBackup = {} as StudyResponse;
@@ -88,6 +93,7 @@ export class SiteListComponent implements OnInit {
   }
 
   loadMoreSites(): void {
+    console.log(this.viewportScroller.getScrollPosition());
     const offset = this.manageStudiesBackup.studies.length;
 
     this.study$ = combineLatest(
@@ -102,7 +108,8 @@ export class SiteListComponent implements OnInit {
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
             : false) && manageStudies.studies.length > 0;
-
+        this.viewportScroller.scrollToPosition([0, 2985]);
+        console.log(this.viewportScroller.getScrollPosition());
         return this.manageStudiesBackup;
       }),
     );
