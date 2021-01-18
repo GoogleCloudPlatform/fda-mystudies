@@ -5428,6 +5428,14 @@
 
         if ($('#textchoiceOtherId').is(':checked')) {
           otherType="on";
+          var otherIncludeText=$("input[name='questionReponseTypeBo.otherIncludeText']").val();
+          var otherPlaceholderText=$("input[name='questionReponseTypeBo.otherPlaceholderText']").val();
+          var otherParticipantFill=$("input[name='questionReponseTypeBo.otherParticipantFill']").val();
+          
+          
+          questionReponseTypeBo.otherIncludeText=otherIncludeText;
+          questionReponseTypeBo.otherPlaceholderText=otherPlaceholderText;
+          questionReponseTypeBo.otherParticipantFill=otherParticipantFill;
         }else{
           otherType="off"
          }
