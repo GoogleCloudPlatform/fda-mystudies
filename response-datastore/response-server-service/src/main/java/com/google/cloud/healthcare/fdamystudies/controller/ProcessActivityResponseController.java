@@ -215,7 +215,6 @@ public class ProcessActivityResponseController {
         // Get ParticipantStudyInfo from Registration Server
         ParticipantStudyInformation partStudyInfo =
             partStudyInfoService.getParticipantStudyInfo(studyId, participantId, auditRequest);
-        logger.debug("processActivityResponseForParticipant() after successful rest call");
         if (partStudyInfo == null) {
           logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
           responseServerAuditLogHelper.logEvent(
