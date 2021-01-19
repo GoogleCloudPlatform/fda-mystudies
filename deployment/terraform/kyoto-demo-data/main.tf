@@ -24,6 +24,42 @@ terraform {
   }
 }
 
+locals {
+  apps = [
+    "auth-server",
+    "response-datastore",
+    "study-builder",
+    "study-datastore",
+    "participant-consent-datastore",
+    "participant-enroll-datastore",
+    "participant-user-datastore",
+    "participant-manager-datastore",
+    "hydra",
+  ]
+}
+
+data "google_secret_manager_secret_version" "db_secrets" {
+  provider = google-beta
+  project  = "kyoto-demo-secrets"
+  secret   = each.key
+
+  for_each = toset(concat(
+    ["auto-mystudies-sql-default-user-password"],
+    formatlist("auto-%s-db-user", local.apps),
+    formatlist("auto-%s-db-password", local.apps))
+  )
+}
+
+resource "google_sql_user" "db_users" {
+  for_each = toset(local.apps)
+
+  name     = data.google_secret_manager_secret_version.db_secrets["auto-${each.key}-db-user"].secret_data
+  instance = module.mystudies.instance_name
+  host     = "%"
+  password = data.google_secret_manager_secret_version.db_secrets["auto-${each.key}-db-password"].secret_data
+  project  = module.project.project_id
+}
+
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 # Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
 # Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
@@ -56,6 +92,20 @@ module "kyoto_demo_mystudies_firestore_data" {
   location   = "us-east1"
 }
 
+module "mystudies" {
+  source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
+  version = "~> 4.1.0"
+
+  name              = "mystudies"
+  project_id        = module.project.project_id
+  region            = "asia-northeast1"
+  zone              = "a"
+  availability_type = "REGIONAL"
+  database_version  = "MYSQL_5_7"
+  vpc_network       = "projects/kyoto-demo-networks/global/networks/kyoto-demo-network"
+  user_password     = data.google_secret_manager_secret_version.db_secrets["auto-mystudies-sql-default-user-password"].secret_data
+}
+
 module "project_iam_members" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 6.3.0"
@@ -64,6 +114,12 @@ module "project_iam_members" {
   mode     = "additive"
 
   bindings = {
+    "roles/bigquery.dataEditor" = [
+      "serviceAccount:kyoto-demo-firebase@appspot.gserviceaccount.com",
+    ],
+    "roles/bigquery.jobUser" = [
+      "serviceAccount:kyoto-demo-firebase@appspot.gserviceaccount.com",
+    ],
     "roles/cloudsql.client" = [
       "serviceAccount:bastion@kyoto-demo-networks.iam.gserviceaccount.com",
       "serviceAccount:auth-server-gke-sa@kyoto-demo-apps.iam.gserviceaccount.com",
