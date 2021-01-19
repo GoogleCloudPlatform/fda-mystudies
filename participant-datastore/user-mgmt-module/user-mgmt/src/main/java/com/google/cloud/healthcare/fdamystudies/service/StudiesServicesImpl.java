@@ -363,6 +363,7 @@ public class StudiesServicesImpl implements StudiesServices {
                 .customField("studyId", notificationBean.getCustomStudyId())
                 .sound("default")
                 .build();
+        logger.info("Json payload" + customPayload);
         service.push(tokens, customPayload);
       }
     }
