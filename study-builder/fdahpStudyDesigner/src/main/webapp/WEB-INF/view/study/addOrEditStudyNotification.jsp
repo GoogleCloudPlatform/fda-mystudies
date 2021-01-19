@@ -72,7 +72,7 @@
       </c:if>
 
       <div class="pl-none mt-none">
-        <div class="gray-xs-f mb-xs">Notification Text (250 characters max)
+        <div class="gray-xs-f mb-xs">Notification text (250 characters max)
           <span
               class="requiredStar">*
           </span>
@@ -94,7 +94,7 @@
                    <c:if
                        test="${notificationBO.notificationScheduleType eq 'notImmediate'}">checked</c:if>
                    <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
-            <label for="inlineRadio1">Schedule a date / time</label>
+            <label for="inlineRadio1">Schedule this notification</label>
           </span>
           <span class="radio radio-inline">
             <input type="radio" id="inlineRadio2" value="immediate" name="currentDateTime"
