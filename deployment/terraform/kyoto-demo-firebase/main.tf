@@ -30,22 +30,22 @@ resource "google_firebase_project" "firebase" {
 }
 
 # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
-#5# resource "google_firestore_index" "activities_index" {
-#5#   project    = module.project.project_id
-#5#   collection = "Activities"
-#5#   fields {
-#5#     field_path = "participantId"
-#5#     order      = "ASCENDING"
-#5#   }
-#5#   fields {
-#5#     field_path = "createdTimestamp"
-#5#     order      = "ASCENDING"
-#5#   }
-#5#   fields {
-#5#     field_path = "__name__"
-#5#     order      = "ASCENDING"
-#5#   }
-#5# }
+resource "google_firestore_index" "activities_index" {
+  project    = module.project.project_id
+  collection = "Activities"
+  fields {
+    field_path = "participantId"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "createdTimestamp"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "__name__"
+    order      = "ASCENDING"
+  }
+}
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 # Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
@@ -74,6 +74,9 @@ module "project_iam_members" {
   mode     = "additive"
 
   bindings = {
+    "roles/datastore.importExportAdmin" = [
+      "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
+    ],
     "roles/datastore.user" = [
       "serviceAccount:response-datastore-gke-sa@kyoto-demo-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@kyoto-demo-apps.iam.gserviceaccount.com",
@@ -132,5 +135,11 @@ module "kyoto_demo_mystudies_firestore_raw_data" {
         with_state = "ANY"
       }
     }
+  ]
+  iam_members = [
+    {
+      member = "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
+      role   = "roles/storage.admin"
+    },
   ]
 }
