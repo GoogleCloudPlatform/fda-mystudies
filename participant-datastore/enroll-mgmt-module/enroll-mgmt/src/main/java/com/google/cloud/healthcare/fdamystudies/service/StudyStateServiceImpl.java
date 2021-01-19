@@ -251,6 +251,9 @@ public class StudyStateServiceImpl implements StudyStateService {
         String enrollmentStatus =
             StringUtils.isNotEmpty(enrollmentHistoryStatus)
                     && EnrollmentStatus.WITHDRAWN.getStatus().equals(enrollmentHistoryStatus)
+                    && EnrollmentStatus.YET_TO_ENROLL
+                        .getStatus()
+                        .equals(participantStudy.getStatus())
                 ? EnrollmentStatus.WITHDRAWN.getStatus()
                 : participantStudy.getStatus();
         studyStateBean.setStatus(enrollmentStatus);
