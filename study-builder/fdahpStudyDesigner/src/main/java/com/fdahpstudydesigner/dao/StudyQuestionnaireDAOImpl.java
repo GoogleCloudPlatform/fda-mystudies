@@ -1752,7 +1752,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if (newSession != null) {
         query = newSession.createQuery(searchQuery).setInteger("questionId", questionId);
       } else {
-        query = session.createQuery(searchQuery);
+        query = session.createQuery(searchQuery).setInteger("questionId", questionId);
       }
       questionConditionBranchList = query.list();
       if (session == null) {
