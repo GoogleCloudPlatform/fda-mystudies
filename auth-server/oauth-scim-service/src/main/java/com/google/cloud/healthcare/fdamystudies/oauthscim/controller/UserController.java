@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
 
@@ -95,10 +94,6 @@ public class UserController {
     auditHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
     ResetPasswordResponse resetPasswordResponse =
         userService.resetPassword(resetPasswordRequest, auditRequest, appName);
-
-    if (resetPasswordResponse.getHttpStatusCode() == HttpStatus.OK.value()) {
-      auditHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
-    }
 
     logger.exit(String.format(STATUS_LOG, resetPasswordResponse.getHttpStatusCode()));
     return ResponseEntity.status(resetPasswordResponse.getHttpStatusCode())

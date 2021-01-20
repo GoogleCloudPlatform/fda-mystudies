@@ -103,7 +103,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       map.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
       map.put(ACTIVITY_ID, activityMetadataBeanFromWcp.getMetadata().getActivityId());
       map.put(ACTIVITY_VERSION, activityMetadataBeanFromWcp.getMetadata().getVersion());
-      map.put(RUN_ID, activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
+      map.put(RUN_ID, questionnaireActivityResponseBean.getMetadata().getActivityRunId());
       responseServerAuditLogHelper.logEvent(
           ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA, auditRequest, map);
       String rawResponseData = null;
@@ -125,7 +125,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       map.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
       map.put(ACTIVITY_ID, activityMetadataBeanFromWcp.getMetadata().getActivityId());
       map.put(ACTIVITY_VERSION, activityMetadataBeanFromWcp.getMetadata().getVersion());
-      map.put(RUN_ID, activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
+      map.put(RUN_ID, questionnaireActivityResponseBean.getMetadata().getActivityRunId());
       responseServerAuditLogHelper.logEvent(
           ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED, auditRequest, map);
       throw new ProcessResponseException(
