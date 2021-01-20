@@ -195,7 +195,10 @@ public class StudyController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
         }
         String permission =
-            (String) request.getSession().getAttribute(FdahpStudyDesignerConstants.PERMISSION);
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.PERMISSION);
         if (FdahpStudyDesignerUtil.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           liveStudyBo = studyService.getStudyLiveStatusByCustomId(studyBo.getCustomStudyId());
