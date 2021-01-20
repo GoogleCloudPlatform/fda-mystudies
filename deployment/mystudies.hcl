@@ -663,38 +663,38 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 #
 # The following content should be initially commented out if the above manual step is not completed.
-#7# locals {
-#7#   apps_dependencies = {
-#7#     "study-builder"                             = ["study-builder/**"]
-#7#     "study-datastore"                           = ["study-datastore/**"]
-#7#     "hydra"                                     = ["hydra/**"]
-#7#     "auth-server"                               = ["auth-server/**", "common-modules/**"]
-#7#     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
-#7#     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
-#7#     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
-#7#     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
-#7#     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
-#7#     "participant-manager"                       = ["participant-manager/**"]
-#7#   }
-#7# }
+locals {
+  apps_dependencies = {
+    "study-builder"                             = ["study-builder/**"]
+    "study-datastore"                           = ["study-datastore/**"]
+    "hydra"                                     = ["hydra/**"]
+    "auth-server"                               = ["auth-server/**", "common-modules/**"]
+    "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
+    "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
+    "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
+    "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
+    "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
+    "participant-manager"                       = ["participant-manager/**"]
+  }
+}
 
-#7# resource "google_cloudbuild_trigger" "server_build_triggers" {
-#7#   for_each = local.apps_dependencies
+resource "google_cloudbuild_trigger" "server_build_triggers" {
+  for_each = local.apps_dependencies
 
-#7#   provider = google-beta
-#7#   project  = module.project.project_id
-#7#   name     = replace(each.key, "/", "-")
+  provider = google-beta
+  project  = module.project.project_id
+  name     = replace(each.key, "/", "-")
 
-#7#   included_files = each.value
-#7#
-#7#   github {
-#7#     owner = "{{.github_owner}}"
-#7#     name  = "{{.github_repo}}"
-#7#     push { branch = "^{{.github_branch}}$" }
-#7#   }
+  included_files = each.value
 
-#7#   filename = "$${each.key}/cloudbuild.yaml"
-#7# }
+  github {
+    owner = "{{.github_owner}}"
+    name  = "{{.github_repo}}"
+    push { branch = "^{{.github_branch}}$" }
+  }
+
+  filename = "$${each.key}/cloudbuild.yaml"
+}
 EOF
     }
   }
@@ -714,9 +714,9 @@ template "project_firebase" {
     resources = {
       iam_members = {
         # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
-        #5# "roles/datastore.importExportAdmin" = [
-        #5# "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
-        #5# ]
+        "roles/datastore.importExportAdmin" = [
+        "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
+        ]
         "roles/datastore.user" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
@@ -730,10 +730,10 @@ template "project_firebase" {
           # Firestore data export
           name = "{{.prefix}}-{{.env}}-mystudies-firestore-raw-data"
           # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
-          #5# iam_members = [{
-          #5#   role   = "roles/storage.admin"
-          #5#   member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
-          #5# }]
+          iam_members = [{
+            role   = "roles/storage.admin"
+            member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
+          }]
           # TTL 7 days.
           lifecycle_rules = [{
             action = {
@@ -770,22 +770,22 @@ resource "google_firebase_project" "firebase" {
 }
 
 # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
-#5# resource "google_firestore_index" "activities_index" {
-#5#   project    = module.project.project_id
-#5#   collection = "Activities"
-#5#   fields {
-#5#     field_path = "participantId"
-#5#     order      = "ASCENDING"
-#5#   }
-#5#   fields {
-#5#     field_path = "createdTimestamp"
-#5#     order      = "ASCENDING"
-#5#   }
-#5#   fields {
-#5#     field_path = "__name__"
-#5#     order      = "ASCENDING"
-#5#   }
-#5# }
+resource "google_firestore_index" "activities_index" {
+  project    = module.project.project_id
+  collection = "Activities"
+  fields {
+    field_path = "participantId"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "createdTimestamp"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "__name__"
+    order      = "ASCENDING"
+  }
+}
 EOF
     }
   }
@@ -809,54 +809,54 @@ template "project_data" {
       }
     }
     # Step 5.4: uncomment and re-run the engine once all previous steps have been completed.
-#5#     terraform_addons = {
-#5#       raw_config = <<EOF
-#5# locals {
-#5#   apps = [
-#5#     "auth-server",
-#5#     "response-datastore",
-#5#     "study-builder",
-#5#     "study-datastore",
-#5#     "participant-consent-datastore",
-#5#     "participant-enroll-datastore",
-#5#     "participant-user-datastore",
-#5#     "participant-manager-datastore",
-#5#     "hydra",
-#5#   ]
-#5# }
+    terraform_addons = {
+      raw_config = <<EOF
+locals {
+  apps = [
+    "auth-server",
+    "response-datastore",
+    "study-builder",
+    "study-datastore",
+    "participant-consent-datastore",
+    "participant-enroll-datastore",
+    "participant-user-datastore",
+    "participant-manager-datastore",
+    "hydra",
+  ]
+}
 
-#5# data "google_secret_manager_secret_version" "db_secrets" {
-#5#   provider = google-beta
-#5#   project  = "{{.prefix}}-{{.env}}-secrets"
-#5#   secret   = each.key
+data "google_secret_manager_secret_version" "db_secrets" {
+  provider = google-beta
+  project  = "{{.prefix}}-{{.env}}-secrets"
+  secret   = each.key
 
-#5#   for_each = toset(concat(
-#5#     ["auto-mystudies-sql-default-user-password"],
-#5#     formatlist("auto-%s-db-user", local.apps),
-#5#     formatlist("auto-%s-db-password", local.apps))
-#5#   )
-#5# }
+  for_each = toset(concat(
+    ["auto-mystudies-sql-default-user-password"],
+    formatlist("auto-%s-db-user", local.apps),
+    formatlist("auto-%s-db-password", local.apps))
+  )
+}
 
-#5# resource "google_sql_user" "db_users" {
-#5#   for_each = toset(local.apps)
+resource "google_sql_user" "db_users" {
+  for_each = toset(local.apps)
 
-#5#   name     = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-user"].secret_data
-#5#   instance = module.mystudies.instance_name
-#5#   host     = "%"
-#5#   password = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-password"].secret_data
-#5#   project  = module.project.project_id
-#5# }
-#5# EOF
-#5#     }
+  name     = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-user"].secret_data
+  instance = module.mystudies.instance_name
+  host     = "%"
+  password = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-password"].secret_data
+  project  = module.project.project_id
+}
+EOF
+    }
     resources = {
       # Step 5.5: uncomment and re-run the engine once all previous steps have been completed.
-      #5# cloud_sql_instances = [{
-      #5#   name               = "mystudies"
-      #5#   type               = "mysql"
-      #5#   network_project_id = "{{.prefix}}-{{.env}}-networks"
-      #5#   network            = "{{.prefix}}-{{.env}}-network"
-      #5#   user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
-      #5# }]
+      cloud_sql_instances = [{
+        name               = "mystudies"
+        type               = "mysql"
+        network_project_id = "{{.prefix}}-{{.env}}-networks"
+        network            = "{{.prefix}}-{{.env}}-network"
+        user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
+      }]
       iam_members = {
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{.prefix}}-{{.env}}-networks.iam.gserviceaccount.com",
@@ -872,12 +872,12 @@ template "project_data" {
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         # Step 5.6: uncomment and re-run the engine once all previous steps have been completed.
-        #5# "roles/bigquery.jobUser" = [
-        #5#   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
-        #5# ]
-        #5# "roles/bigquery.dataEditor" = [
-        #5#   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
-        #5# ]
+        "roles/bigquery.jobUser" = [
+          "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
+        ]
+        "roles/bigquery.dataEditor" = [
+          "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
+        ]
       }
       storage_buckets = [
         {
@@ -907,10 +907,10 @@ template "project_data" {
         {
           name = "{{.prefix}}-{{.env}}-mystudies-sql-import"
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
-          #6# iam_members = [{
-          #6#   role   = "roles/storage.objectViewer"
-          #6#   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
-          #6# }]
+          iam_members = [{
+            role   = "roles/storage.objectViewer"
+            member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          }]
         },
       ]
       bigquery_datasets = [{

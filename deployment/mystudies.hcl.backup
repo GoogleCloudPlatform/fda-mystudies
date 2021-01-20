@@ -715,7 +715,7 @@ template "project_firebase" {
       iam_members = {
         # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
         "roles/datastore.importExportAdmin" = [
-          "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
+        "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
         ]
         "roles/datastore.user" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
@@ -907,10 +907,10 @@ EOF
         {
           name = "{{.prefix}}-{{.env}}-mystudies-sql-import"
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
-          #6# iam_members = [{
-          #6#   role   = "roles/storage.objectViewer"
-          #6#   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
-          #6# }]
+          iam_members = [{
+            role   = "roles/storage.objectViewer"
+            member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          }]
         },
       ]
       bigquery_datasets = [{
