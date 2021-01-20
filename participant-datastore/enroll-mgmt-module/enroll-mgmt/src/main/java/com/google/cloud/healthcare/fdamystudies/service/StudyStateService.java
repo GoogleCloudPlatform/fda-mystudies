@@ -33,4 +33,6 @@ public interface StudyStateService {
 
   public WithDrawFromStudyRespBean withdrawFromStudy(
       String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest);
+
+  public String getSiteId(String userId, String token);
 }
