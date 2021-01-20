@@ -3612,6 +3612,8 @@
       $(".removeImageId").css("visibility", "hidden");
       </c:if>
 
+      
+
       if ($('.value-picker').length > 2) {
     	  $('.ValuePickerContainer').find(".remBtnDis").css("pointer-events", "auto");
         $('.ValuePickerContainer').find(".remBtnDis").removeClass("hide");
