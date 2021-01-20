@@ -1272,14 +1272,16 @@ public class SiteServiceImpl implements SiteService {
       site.setEnrolled(enrolledCount);
     }
 
-    if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
-      Double percentage =
-          (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
-      site.setEnrollmentPercentage(percentage);
-    } else if (site.getInvited() != 0
-        && site.getEnrolled() >= site.getInvited()
-        && studyType.equals(OPEN_STUDY)) {
-      site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
+    if (site.getInvited() != null && site.getEnrolled() != null) {
+      if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
+        Double percentage =
+            (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
+        site.setEnrollmentPercentage(percentage);
+      } else if (site.getInvited() != 0
+          && site.getEnrolled() >= site.getInvited()
+          && studyType.equals(OPEN_STUDY)) {
+        site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
+      }
     }
     studyDetail.getSites().add(site);
     List<SiteDetails> sortedSites =

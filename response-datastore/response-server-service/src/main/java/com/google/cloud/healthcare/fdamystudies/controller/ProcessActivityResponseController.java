@@ -279,7 +279,8 @@ public class ProcessActivityResponseController {
           activityStateMap.put("activity_state", participantActivityBean.getActivityState());
           activityStateMap.put(ACTIVITY_ID, activityId);
           activityStateMap.put(ACTIVITY_VERSION, activityVersion);
-          activityStateMap.put(RUN_ID, participantActivityBean.getActivityRunId());
+          activityStateMap.put(
+              RUN_ID, questionnaireActivityResponseBean.getMetadata().getActivityRunId());
           responseServerAuditLogHelper.logEvent(
               ACTIVITY_STATE_SAVED_OR_UPDATED_AFTER_RESPONSE_SUBMISSION,
               auditRequest,

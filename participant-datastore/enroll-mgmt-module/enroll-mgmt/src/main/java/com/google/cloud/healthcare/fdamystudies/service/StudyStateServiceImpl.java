@@ -290,4 +290,16 @@ public class StudyStateServiceImpl implements StudyStateService {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Ends ");
     return respBean;
   }
+
+  @Override
+  public String getSiteId(String userId, String token) {
+    logger.info("StudyStateServiceImpl getSiteId() - Starts ");
+    String siteId = null;
+    if (StringUtils.isNotEmpty(token)) {
+      siteId = participantStudyRepository.getSiteId(userId, token.toUpperCase());
+    }
+
+    logger.info("StudyStateServiceImpl getSiteId() - Ends ");
+    return StringUtils.defaultString(siteId);
+  }
 }

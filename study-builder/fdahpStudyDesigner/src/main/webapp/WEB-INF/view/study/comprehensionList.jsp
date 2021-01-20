@@ -45,7 +45,7 @@
               <button type="button" class="btn btn-primary blue-btn" id="markAsCompleteBtnId"
                       <c:if
                           test="${!markAsComplete && consentBo.needComprehensionTest eq 'Yes'}">disabled</c:if>
-                      onclick="markAsCompleted();">Mark as Completed
+                      onclick="markAsCompleted();">Mark as completed
               </button>
             </span>
           </div>
@@ -64,7 +64,6 @@
             </span>
           <span class="ct_panel"
                 id="addHelpNote">
-            <small>(Please save to continue)</small>
           </span>
         </div>
         <div class="form-group col-md-5 p-none">

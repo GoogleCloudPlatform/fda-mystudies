@@ -399,8 +399,8 @@ public class StudyMetaDataService {
                     + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                     + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE));
           }
-          count++;
         }
+        count++;
       }
 
     } catch (Exception e) {

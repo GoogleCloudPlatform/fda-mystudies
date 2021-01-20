@@ -128,6 +128,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     // Step-2 call API to details to save participant activities
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
     activityResponseBean.getMetadata().setStudyVersion(STUDY_VERSION);
+    activityResponseBean.getMetadata().setActivityRunId("2");
+
     HttpHeaders headers = TestUtils.newHeadersUser();
     mockMvc
         .perform(
