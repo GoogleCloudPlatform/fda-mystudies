@@ -139,14 +139,15 @@ public class StudyStateServiceImpl implements StudyStateService {
                     (existing, replacement) -> existing));
     try {
       for (StudiesBean studyBean : studiesBeenList) {
-        auditRequest.setStudyId(studyBean.getStudyId());
         auditRequest.setParticipantId(studyBean.getParticipantId());
         ParticipantStudyEntity participantStudyEntity = null;
 
+        StudyEntity studyEntity = commonDao.getStudyDetails(studyBean.getStudyId().trim());
+        auditRequest.setStudyId(studyEntity.getCustomId());
+        auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
         if (studyParticipantbyIdMap.containsKey(studyBean.getStudyId().trim())) {
           participantStudyEntity = studyParticipantbyIdMap.get(studyBean.getStudyId().trim());
         } else {
-          StudyEntity studyEntity = commonDao.getStudyDetails(studyBean.getStudyId().trim());
           participantStudyEntity = new ParticipantStudyEntity();
           participantStudyEntity.setStudy(studyEntity);
           participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
@@ -283,5 +284,17 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Ends ");
     return respBean;
+  }
+
+  @Override
+  public String getSiteId(String userId, String token) {
+    logger.info("StudyStateServiceImpl getSiteId() - Starts ");
+    String siteId = null;
+    if (StringUtils.isNotEmpty(token)) {
+      siteId = participantStudyRepository.getSiteId(userId, token.toUpperCase());
+    }
+
+    logger.info("StudyStateServiceImpl getSiteId() - Ends ");
+    return StringUtils.defaultString(siteId);
   }
 }

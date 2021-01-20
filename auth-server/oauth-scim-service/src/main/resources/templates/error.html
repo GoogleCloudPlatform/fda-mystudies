@@ -25,9 +25,30 @@
   }
 
   .width__110 {
-    width: 110px !important;
-    display: inline-block !important;
+    text-align: center !important;
   }
+
+  .child_text { 
+    color: #353a3e !important;
+    font-family: Muli,sans-serif !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+   }
+}
+
+.child_text { 
+  color: #353a3e !important;
+  font-family: Muli,sans-serif !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+}
+
+.loading_error_text {
+  color: var(--space-gray);
+  font-size: 14px;
+  font-family: Muli, sans-serif;
+  font-weight: 600;
+  text-align: center;
 }
 </style>
 
@@ -37,7 +58,7 @@
     <div class="width__110">
       <img th:src="@{/images/ErrorIcon.svg}" alt="error image " class="mb-md" />
     </div>
-    <div class="child_text Loader__text_error_page">
+    <div class="loading_error_text child_text">
       <div>Sign in is not available.</div>
       <div>Please try again later.</div>
     </div>

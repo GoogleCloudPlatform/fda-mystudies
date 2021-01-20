@@ -52,7 +52,7 @@
         <input type="hidden" id="studyId" name="studyId" value="${studyId}">
       </c:if>
       <div>
-        <div class="gray-xs-f mb-xs mt-md">Question Text (1 to 300 characters)
+        <div class="gray-xs-f mb-xs mt-md">Question (300 characters max)
           <span
               class="requiredStar">*
           </span>
@@ -70,7 +70,7 @@
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) eq 0}">
             <div class="col-md-12 p-none">
               <div class='col-md-6 pl-none'>
-                <div class="gray-xs-f mb-xs">Answer Options (1 to 150 characters)
+                <div class="gray-xs-f mb-xs">Answer options (150 characters max)
                   <span
                       class="requiredStar">*
                   </span>
@@ -161,7 +161,7 @@
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) gt 0}">
             <div class="col-md-12 p-none">
               <div class='col-md-6 pl-none'>
-                <div class="gray-xs-f mb-xs">Answer Options (1 to 150 characters)
+                <div class="gray-xs-f mb-xs">Answer options (150 characters)
                   <span
                       class="requiredStar">*
                   </span>

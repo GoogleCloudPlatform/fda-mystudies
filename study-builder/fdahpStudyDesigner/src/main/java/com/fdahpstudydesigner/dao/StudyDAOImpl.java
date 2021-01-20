@@ -3728,6 +3728,9 @@ public class StudyDAOImpl implements StudyDAO {
       }
       session.saveOrUpdate(consentBo);
       auditRequest.setStudyId(customStudyId);
+      StudyBo studyBo = getStudyById(String.valueOf(consentBo.getStudyId()), sesObj.getUserId());
+      auditRequest.setStudyVersion(studyBo.getVersion().toString());
+      auditRequest.setAppId(studyBo.getAppId());
       if ((customStudyId != null) && !customStudyId.isEmpty()) {
         if (consentBo.getType() != null) {
           if (consentBo.getType().equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
@@ -3907,6 +3910,7 @@ public class StudyDAOImpl implements StudyDAO {
             .getType()
             .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
           consentInfoBo.setStatus(true);
+          studySequence.setConsentEduInfo(false);
           if (studySequence.iseConsent()) {
             studySequence.seteConsent(false);
           }
@@ -4246,6 +4250,8 @@ public class StudyDAOImpl implements StudyDAO {
                   .setInteger(FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId())
                   .uniqueResult();
       auditRequest.setStudyId(studyBo.getCustomStudyId());
+      auditRequest.setStudyVersion(studyBo.getVersion().toString());
+      auditRequest.setAppId(studyBo.getAppId());
       if (studySequenceBo != null) {
         if (StringUtils.isNotEmpty(studyBo.getButtonText())
             && studyBo
@@ -4448,7 +4454,9 @@ public class StudyDAOImpl implements StudyDAO {
                 studyBo.getId());
 
         if (study != null) {
-          auditRequest.setStudyId(studyBo.getCustomStudyId());
+          auditRequest.setStudyId(study.getCustomStudyId());
+          auditRequest.setStudyVersion(study.getVersion().toString());
+          auditRequest.setAppId(study.getAppId());
           if (studyBo
               .getButtonText()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
@@ -5430,7 +5438,6 @@ public class StudyDAOImpl implements StudyDAO {
             query.executeUpdate();
 
             Map<String, String> values = new HashMap<>();
-            auditRequest.setStudyId(studyBo.getCustomStudyId());
 
             // If Consent updated flag -1 then update
             if (consentBo != null) {
@@ -5585,6 +5592,8 @@ public class StudyDAOImpl implements StudyDAO {
                     .uniqueResult();
         if (studyBo != null) {
           auditRequest.setStudyId(studyBo.getCustomStudyId());
+          auditRequest.setStudyVersion(studyBo.getVersion().toString());
+          auditRequest.setAppId(studyBo.getAppId());
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
               || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
             studyBo.setStudyPreActiveFlag(false);

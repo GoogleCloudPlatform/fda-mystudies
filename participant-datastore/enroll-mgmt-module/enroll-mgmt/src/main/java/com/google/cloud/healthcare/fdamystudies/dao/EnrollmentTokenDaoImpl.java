@@ -52,7 +52,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
   @Override
-  public boolean studyExists(String studyId) {
+  public StudyEntity getStudyDetails(String studyId) {
     logger.info("EnrollmentTokenDaoImpl studyExists() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
@@ -72,12 +72,12 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     if (!studyInfoList.isEmpty()) {
       studyEntity = studyInfoList.get(0);
     }
-    if (studyEntity != null) {
+    /*if (studyEntity != null) {
       isStudyExist = true;
-    }
+    }*/
 
     logger.info("EnrollmentTokenDaoImpl studyExists() - Ends ");
-    return isStudyExist;
+    return studyEntity;
   }
 
   @Override

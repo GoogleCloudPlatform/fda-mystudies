@@ -34,7 +34,7 @@
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsCompleteBtnId"
                     onclick="markAsCompleted();" <c:if
-                test="${!markAsComplete}"> disabled </c:if> >Mark as Completed
+                test="${!markAsComplete}"> disabled </c:if> >Mark as completed
             </button>
           </span>
         </div>
