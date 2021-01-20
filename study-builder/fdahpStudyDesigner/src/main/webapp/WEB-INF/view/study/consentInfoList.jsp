@@ -255,6 +255,19 @@
                   $('.fifthConsentReview').find('span').removeClass(
                       'sprites-icons-2 tick pull-right mt-xs');
                 }
+
+                if ($('.fifthComre ').find('span').hasClass(
+                'sprites-icons-2 tick pull-right mt-xs')) {
+                $('.fifthComre ').find('span').removeClass(
+                  'sprites-icons-2 tick pull-right mt-xs');
+                }
+
+                if ($('.fifth ').find('span').hasClass(
+                'sprites-icons-2 tick pull-right mt-xs')) {
+                $('.fifth ').find('span').removeClass(
+                  'sprites-icons-2 tick pull-right mt-xs');
+                }
+
               } else {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Unable to delete consent");
