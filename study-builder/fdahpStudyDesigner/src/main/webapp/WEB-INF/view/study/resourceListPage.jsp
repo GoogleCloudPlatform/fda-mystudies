@@ -41,7 +41,7 @@
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsComp" onclick="markAsCompleted();"
                     <c:if test="${fn:length(resourcesSavedList) ne 0}">disabled</c:if>>
-              Mark as Completed
+              Mark as completed
             </button>
           </span>
         </div>

@@ -840,7 +840,7 @@
                   <div class="time-opts mt-md dailyTimeDiv" id="0">
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <input disabled id="time0" type="text"
+                      <input id="time0" type="text"
                              name="questionnairesFrequenciesList[0].frequencyTime" required
                              class="form-control clock dailyClock" placeholder="Time"
                              onclick='timep(this.id);'/>
@@ -1675,7 +1675,7 @@
             <!-- anchordate end -->
 
             <div class="mt-md">
-              <div class="gray-xs-f mb-xs">Default Lifetime of each run</div>
+              <div class="gray-xs-f mb-xs">Lifetime of each run</div>
               <div class="black-xs-f">As defined by the start and end
                 times selected above
               </div>
@@ -1938,6 +1938,58 @@
         $('.anchortypeclass').removeAttr('required');
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
+
+
+	        var startDate = $("#startDate").val();
+	  
+	        if(startDate!=''){
+	            var days = $("#days").val();
+	            var endDate = ''
+	            if (startDate) {
+	              $('#time0').prop("disabled", false);
+	              $("#dailyAddTimeButton").removeClass('hide');
+	            }
+	            if (startDate && days && days > 0) {
+	              var dt = new Date(startDate);
+	              dt.setDate(dt.getDate() + Number(days) - 1);
+	              endDate = formatDate(dt);
+	            } else {
+	              startDate = '';
+	              endDate = '';
+	            }
+	            $("#studyDailyLifetimeEnd").val(endDate);
+	            $("#lifeTimeId").text(startDate + ' - ' + endDate);
+	            $("#endDateId").text(endDate ? endDate : 'NA');
+	      }
+	        
+	      var weeklyDate = $("#startWeeklyDate").val();
+	      if(weeklyDate!=''){
+	          var weeks = $("#weeks").val();
+	          $('#startWeeklyDate').attr("readonly", true);
+	          if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks
+	              != null && weeks != '' && typeof weeks != 'undefined')) {
+	            var dt = new Date(weeklyDate);
+	            var weekcount = Number(weeks) * 7;
+	  
+	            dt.setDate(dt.getDate() + Number(weekcount));
+	            endDate = formatDate(dt);
+	            $("#studyWeeklyLifetimeEnd").val(endDate);
+	            $("#weekEndDate").text(endDate);
+	            $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
+	          }
+	      }
+	      var pickStartDate = $("#pickStartDate").val();
+	      if(pickStartDate!=''){
+	          var months = $("#months").val();
+	          if ((pickStartDate != null && pickStartDate != '' && typeof pickStartDate != 'undefined')
+	              && (months != null && months != '' && typeof months != 'undefined')) {
+	            var dt = new Date(pickStartDate);
+	            endDate = moment(moment(dt).add(Number(months), 'M')).format("MM/DD/YYYY");
+	            $("#studyMonthlyLifetimeEnd").val(endDate);
+	            $("#monthEndDate").text(endDate);
+	            $("#monthLifeTimeDate").text(pickStartDate + ' - ' + endDate);
+	        }
+	      }
       }
 
       if (schedule_opts == 'One time') {
@@ -2548,6 +2600,7 @@
 
       if (res === 'true') {
         $("#weekDaysId").hide();
+        $("#weekDaysId").find('*').removeAttr('required');
         $("#startDateWeekly").removeAttr('required');
         $("#startDateWeekly").parent().parent().removeClass("has-error has-danger");
         $("#startDateWeekly").next().children().remove();
@@ -2555,6 +2608,7 @@
         $(".weeklyRegular").find('*').removeAttr('required');
 
         $("#monthlyDateId").hide();
+        $("#monthlyDateId").find('*').removeAttr('required');
         $("#startDateMonthly").removeAttr('required');
         $("#startDateMonthly").parent().parent().removeClass("has-error has-danger");
         $("#startDateMonthly").next().children().remove();

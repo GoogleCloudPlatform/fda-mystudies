@@ -27,6 +27,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_LEVEL_NOT
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_NOTIFICATION_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_REPLICATED_FOR_RESEND;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NEW_NOTIFICATION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NOTIFICATION_ID;
@@ -414,6 +415,9 @@ public class NotificationDAOImpl implements NotificationDAO {
         } else if ("resend".equals(buttonType)
             && !notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           auditLogEvent = APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND;
+        } else if ("resend".equals(buttonType)
+            && notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
+          auditLogEvent = STUDY_NOTIFICATION_REPLICATED_FOR_RESEND;
         } else if ("save".equals(buttonType)
             && FdahpStudyDesignerConstants.STUDYLEVEL.equals(notificationType)) {
           values.put(NOTIFICATION_ID, String.valueOf(notificationId));
