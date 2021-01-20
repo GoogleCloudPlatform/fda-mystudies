@@ -840,7 +840,7 @@
                   <div class="time-opts mt-md dailyTimeDiv" id="0">
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <input disabled id="time0" type="text"
+                      <input id="time0" type="text"
                              name="questionnairesFrequenciesList[0].frequencyTime" required
                              class="form-control clock dailyClock" placeholder="Time"
                              onclick='timep(this.id);'/>
