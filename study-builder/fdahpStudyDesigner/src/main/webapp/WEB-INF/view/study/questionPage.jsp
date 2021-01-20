@@ -2472,12 +2472,6 @@ if(document.getElementById("singleSelect").checked==true){
       $("#anchorTextId").parent().find(".help-block").empty();
     }
 
-    if ($('.text-choice').length > 2){
-        $(".remBtnDis").css("pointer-events", "auto");
-    }else{
-     $(".remBtnDis").css("pointer-events", "none");
-    }
-    
     $('#useAnchorDateId').click(function () {
       if ($(this).is(':checked')) {
         $('.useAnchorDateName').show();

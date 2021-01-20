@@ -66,13 +66,13 @@
 							  cursor-none
 						</c:when>
 					</c:choose>" data-toggle="tooltip" data-placement="top"
-                title="${(not empty study.liveStudyId)?((study.flag)?'Draft Version':'Edit'):'Draft Version'}"
+                title="${(not empty study.liveStudyId)?((study.flag)?'Edit draft version':'Edit'):'Edit draft version'}"
                 studyId="${study.id}"></span>
             <c:if test="${not empty study.liveStudyId}">
               <span class="eye-inc viewStudyClass mr-lg" isLive="Yes"
                     studyId="${study.liveStudyId}"
                     permission="view" data-toggle="tooltip" data-placement="top"
-                    title="Last Published Version"></span>
+                    title="View last published version"></span>
             </c:if>
           </td>
         </tr>

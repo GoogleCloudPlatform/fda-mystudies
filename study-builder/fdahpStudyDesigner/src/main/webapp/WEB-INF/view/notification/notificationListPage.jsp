@@ -16,7 +16,7 @@
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none">
       <div class="black-lg-f">
-        Manage app-level notifications
+        Send notifications to app users
       </div>
       <div class="dis-line pull-right ml-md">
         <c:if
@@ -24,7 +24,7 @@
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn notificationDetailsToEdit"
                     actionType="add">
-              Create Notification
+              Create notification
             </button>
           </div>
         </c:if>
@@ -40,7 +40,7 @@
       <table id="app_Wide_Notification_list" class="table table-right tbl">
         <thead>
           <tr>
-            <th id="">TITLE</th>
+            <th id="">Notification</th>
             <th id="" class="linkDis">Status</th>
             <th id="" class="linkDis">ACTIONS</th>
           </tr>
@@ -79,7 +79,7 @@
                   </c:if>
                   <span class="sprites_icon copy notificationDetailsToEdit" actionType="add"
                         notificationText="${fn:escapeXml(notification.notificationText)}"
-                        data-toggle="tooltip" data-placement="top" title="Copy"></span>
+                        data-toggle="tooltip" data-placement="top" title="Copy-into-new"></span>
                 </c:if>
               </td>
             </tr>
