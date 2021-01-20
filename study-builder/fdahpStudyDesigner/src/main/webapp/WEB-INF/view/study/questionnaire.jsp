@@ -1675,7 +1675,7 @@
             <!-- anchordate end -->
 
             <div class="mt-md">
-              <div class="gray-xs-f mb-xs">Default Lifetime of each run</div>
+              <div class="gray-xs-f mb-xs">Lifetime of each run</div>
               <div class="black-xs-f">As defined by the start and end
                 times selected above
               </div>

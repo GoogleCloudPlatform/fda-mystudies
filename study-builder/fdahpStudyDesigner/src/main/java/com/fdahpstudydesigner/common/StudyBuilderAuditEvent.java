@@ -145,6 +145,13 @@ public enum StudyBuilderAuditEvent {
       "Notification saved/updated (notification ID - ${notification_id}).",
       "STUDY_NOTIFICATION_SAVED_OR_UPDATED"),
 
+  STUDY_NOTIFICATION_REPLICATED_FOR_RESEND(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Notification replicated for resend, by user. Existing notification ID : '${old_notification_id}', new notification ID : '${new_notification_id}'.",
+      "STUDY_NOTIFICATION_REPLICATED_FOR_RESEND"),
+
   STUDY_NOTIFICATION_MARKED_COMPLETE(
       STUDY_BUILDER,
       STUDY_DATASTORE,
