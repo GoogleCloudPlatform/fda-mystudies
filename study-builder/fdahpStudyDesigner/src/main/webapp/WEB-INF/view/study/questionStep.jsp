@@ -5429,6 +5429,7 @@
         var otherType;
 
         if ($('#textchoiceOtherId').is(':checked')) {
+        	otherType="on"
         	var otherIncludeText;
             var otherParticipantFill;
             if ($('#otherYes').is(':checked')) {
@@ -5447,7 +5448,7 @@
             questionReponseTypeBo.otherPlaceholderText=otherPlaceholderText;
             questionReponseTypeBo.otherParticipantFill=otherParticipantFill;
         }else{
-          otherType="off"
+          otherType="off";
          }
         
         questionReponseTypeBo.otherText=otherText
