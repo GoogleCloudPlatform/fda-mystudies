@@ -6,15 +6,15 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: kyoto-demo-cert-participants
+  name: <PREFIX>-<ENV>-cert-participants
 spec:
   domains:
-    - participants.kyoto-demo.clipcrow.com
+    - participants.<PREFIX>-<ENV>.<DOMAIN>
 ---
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: kyoto-demo-cert-studies
+  name: <PREFIX>-<ENV>-cert-studies
 spec:
   domains:
-    - studies.kyoto-demo.clipcrow.com
+    - studies.<PREFIX>-<ENV>.<DOMAIN>

@@ -6,50 +6,62 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: study-builder
+  name: participant-manager-datastore
   labels:
-    app: study-builder
+    app: participant-manager-datastore
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: study-builder
+      app: participant-manager-datastore
   template:
     metadata:
       labels:
-        app: study-builder
+        app: participant-manager-datastore
       annotations:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: study-builder
-          image: gcr.io/kyoto-demo-apps/study-builder:latest
+        # application container
+        - name: participant-manager-datastore
+          image: gcr.io/<PREFIX>-<ENV>-apps/participant-manager-datastore:latest
           env:
             # DB ACCESS
+            - name: DB_INSTANCE_URL
+              value: "127.0.0.1" 
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: participant-manager-datastore-credentials
+                  key: dbname
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-credentials
+                  name: participant-manager-datastore-credentials
                   key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-credentials
+                  name: participant-manager-datastore-credentials
                   key: dbpassword
-            - name: DB_NAME
+            # AUTHENTICATION
+            - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-credentials
-                  key: dbname
-            - name: DB_INSTANCE_URL
-              value: "127.0.0.1"      
+                  name: participant-manager-datastore-credentials
+                  key: client_id
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: participant-manager-datastore-credentials
+                  key: secret_key
             # MAIL SERVER
-            - name: FROM_EMAIL_ADDRESS
+            - name: MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: email-credentials
                   key: email_address
-            - name: FROM_EMAIL_PASSWORD
+            - name: MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: email-credentials
@@ -59,74 +71,68 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: smtp_hostname
-            - name: SMTP_USE_IP_ALLOWLIST
+            - name: MAIL_CONTACT_EMAIL
               valueFrom:
                 secretKeyRef:
                   name: email-credentials
-                  key: smtp_use_ip_allowlist
-            - name: FROM_EMAIL_DOMAIN
+                  key: contact_email_address
+            - name: MAIL_FROM_EMAIL
               valueFrom:
                 secretKeyRef:
                   name: email-credentials
-                  key: from_email_domain
-            #  AUTHENTICATION
-            - name: CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: study-builder-credentials
-                  key: client_id
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: study-builder-credentials
-                  key: secret_key
+                  key: from_email_address
             # SERVER CALLS
-            - name: STUDY_BUILDER_BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: studies_base_url
-            - name: PARTICIPANT_USER_DATASTORE_URL
-              value: "http://participant-user-datastore-np:50000/participant-user-datastore"
-            - name: RESPONSE_DATASTORE_URL
-              value: "http://response-datastore-np:50000/response-datastore"
+            - name: HYDRA_ADMIN_URL
+              value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/auth-server"
             # MISC
+            - name: PARTICIPANT_MANAGER_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: base_url
+            - name: PARTICIPANT_MANAGER_URL
+              value: "$(PARTICIPANT_MANAGER_BASE_URL)/participant-manager"
             - name: GCP_BUCKET_NAME
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: study_resources_bucket_name
+                  key: consent_bucket_name
             - name: ORG_NAME
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
                   key: org_name
-            - name: CATALINA_OPTS # server timezone
-              value: -Duser.timezone=America/New_York
+            - name: LOG_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
+
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /studybuilder/healthCheck.do
+              path: /participant-manager-datastore/healthCheck
               port: 8080
             initialDelaySeconds: 180
             periodSeconds: 20
           resources:
             requests:
-              memory: "500Mi"
+              memory: "400Mi"
               cpu: "50m"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
             readOnly: true
+        # sidecar container
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=kyoto-demo-data:asia-northeast1:mystudies=tcp:3306",
+            "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
@@ -135,4 +141,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: study-builder-gke-sa-gcloud-key
+          secretName: participant-manager-gke-sa-gcloud-key
