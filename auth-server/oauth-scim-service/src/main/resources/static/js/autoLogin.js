@@ -7,7 +7,7 @@
  */
 
 window.onload = function() {
-  window.setInterval(function() {
+  window.setTimeout(function() {
     document.autoSignInForm.submit();
   }, 500);
 };
