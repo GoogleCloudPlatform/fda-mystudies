@@ -3051,11 +3051,11 @@
                                       onchange='selectFunction(this);'>
                                 <option value="" selected>Select</option>
                                 <option
-                                    value=">" ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq ">" ? 'selected' :''}>
+                                    value=">" ${(questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "&gt;" || questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq ">") ? 'selected' :''}>
                                   &gt;
                                 </option>
                                 <option
-                                    value="<" ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "<" ? 'selected' :''}>
+                                    value="<" ${(questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "&lt;" || questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "<") ? 'selected' :''}>
                                   &lt;
                                 </option>
                                 <option
