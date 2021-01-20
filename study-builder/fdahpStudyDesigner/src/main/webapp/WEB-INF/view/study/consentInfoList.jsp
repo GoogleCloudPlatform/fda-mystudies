@@ -48,7 +48,7 @@
             <button type="button" class="btn btn-primary blue-btn" id="markAsCompleteBtnId"
                     onclick="markAsCompleted();"
                     <c:if
-                        test="${fn:length(consentInfoList) eq 0 || !markAsComplete}">disabled</c:if>  >Mark as Completed
+                        test="${fn:length(consentInfoList) eq 0 || !markAsComplete}">disabled</c:if>  >Mark as completed
             </button>
           </span>
         </c:if>
@@ -72,7 +72,7 @@
                 <c:if test="${empty permission}">
                   <button type="button" class="btn btn-primary blue-btn" onclick="addConsentPage();">
                     Add
-                    Consent Section
+                    consent section
                   </button>
                 </c:if>
               </div>

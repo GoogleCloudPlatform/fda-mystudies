@@ -200,7 +200,7 @@ export class SiteDetailsComponent
               this.toastr.success(successResponse.message);
             }
             this.changeTab(
-              this.activeTab === OnboardingStatus.Disabled
+              this.activeTab !== OnboardingStatus.Disabled
                 ? OnboardingStatus.Disabled
                 : OnboardingStatus.New,
             );

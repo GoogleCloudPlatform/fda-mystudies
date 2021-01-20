@@ -115,9 +115,7 @@
               <div id="errMsg" class="error_msg">${errMsg}</div>
               <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
               <c:if test="${isValidToken}">
-                <p class="col-xs-12  text-center boxcenter mb-xlg white__text">To
-                  begin using the services on ${orgName} and complete your account setup
-                  process, kindly set up your account password.</p>
+                <div class="lg-space-txt col-xs-12  text-center boxcenter mb-xlg white__text">Set up your Study Builder account</div>
                 <div class=" col-md-6 boxcenter">
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
@@ -153,7 +151,7 @@
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input phoneMask"
-                           id="" name="phoneNumber" placeholder="Phone Number"
+                           id="" name="phoneNumber" placeholder="Phone"
                            value="${userBO.phoneNumber}" data-minlength="12"
                            maxlength="12" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -163,7 +161,7 @@
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="password" maxlength="64" data-minlength="8"
-                           placeholder="Password" required
+                           placeholder="Password*" required
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                            autocomplete="off" data-error="Password is invalid"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -177,7 +175,7 @@
                            id="cfnPassword" name="" maxlength="64"
                            data-match="#password"
                            data-match-error="Whoops, these don't match"
-                           placeholder="Confirm password" required autocomplete="off"/>
+                           placeholder="Confirm password*" required autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>

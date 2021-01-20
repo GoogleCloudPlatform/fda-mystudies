@@ -7,7 +7,7 @@
  */
 
 window.onload = function() {
-  window.setTimeout(function() {
+  window.setInterval(function() {
     document.autoSignInForm.submit();
-  }, 2000);
+  }, 500);
 };
