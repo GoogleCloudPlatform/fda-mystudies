@@ -1177,7 +1177,7 @@
     </div>
     <!-- anchor end-->
     <div class="mt-md">
-      <div class="gray-xs-f mb-xs">Default Lifetime of each run</div>
+      <div class="gray-xs-f mb-xs">Lifetime of each run</div>
       <div class="black-xs-f">As defined by the start and end times selected above</div>
     </div>
   </div>
@@ -2885,43 +2885,6 @@
         $('#Number_of_Failures_spatial_chart_id').prop('checked', false);
       } else {
         $('.chartSection').show();
-        $('.addLineChartBlock_number_of_kicks_recorded_fetal').removeAttr("style");
-        $("#number_of_kicks_recorded_fetal_chart_id").prop("checked", true);
-        $('#number_of_kicks_recorded_fetal_chart_id').val(true);
-        $('.addLineChartBlock_number_of_kicks_recorded_fetal').find('.requireClass').prop(
-            'required', 'required');
-        $('#lineChartId').val('');
-
-        $('.addLineChartBlock_number_of_moves_tower').removeAttr("style");
-        $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').prop('required',
-            'required');
-        $('#number_of_moves_tower_chart_id').val(true);
-        $('#number_of_moves_tower_chart_id').prop('checked', true);
-
-        $('.addLineChartBlock_Score_spatial').removeAttr("style");
-        $("#Score_spatial_chart_id").prop("checked", true);
-        $('#Score_spatial_chart_id').val(true);
-        $('.addLineChartBlock_Score_spatial').find('.requireClass').prop('required', 'required');
-
-        $('.addLineChartBlock_Number_of_Games_spatial').removeAttr("style");
-        $("#Number_of_Games_spatial_chart_id").prop("checked", true);
-        $('#Number_of_Games_spatial_chart_id').val(true);
-        $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').prop('required',
-            'required');
-        $('#lineChartId1').val('');
-
-        $('.addLineChartBlock_Number_of_Failures_spatial').removeAttr("style");
-        $("#Number_of_Failures_spatial_chart_id").prop("checked", true);
-        $('#Number_of_Failures_spatial_chart_id').val(true);
-        $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').prop('required',
-            'required');
-        $('#lineChartId2').val('');
-
-        $('#lineChartId,lineChartId1,lineChartId2').val('');
-        $("#chartId,#chartId1,#chartId2").empty();
-        $("#chartId,#chartId1,#chartId2").attr('required', 'required').prop('required', 'required');
-        $('.rollbackRadioClass').prop('checked', true);
-        $('.rollbackRadioClass').attr('checked', 'checked');
         if (frequencyType == 'Daily') {
           var dailyTimeLength = $('.dailyContainer').find('.dailyTimeDiv').length;
           if (dailyTimeLength == 1) {
