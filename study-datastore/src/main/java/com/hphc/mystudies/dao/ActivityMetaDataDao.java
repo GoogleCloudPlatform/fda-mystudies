@@ -2889,10 +2889,17 @@ public class ActivityMetaDataDao {
                       .uniqueResult();
           if ((activeTaskFrequency != null)
               && StringUtils.isNotEmpty(activeTaskFrequency.getFrequencyTime())) {
-            startDateTime =
-                activeTaskDto.getActiveTaskLifetimeStart()
-                    + " "
-                    + activeTaskFrequency.getFrequencyTime();
+            if (activeTaskFrequency.isLaunchStudy() && activeTaskFrequency.isStudyLifeTime()) {
+              startDateTime =
+                  activeTaskDto.getActiveTaskLifetimeStart()
+                      + " "
+                      + activeTaskFrequency.getFrequencyTime();
+            } else {
+              startDateTime =
+                  activeTaskFrequency.getFrequencyDate()
+                      + " "
+                      + activeTaskFrequency.getFrequencyTime();
+            }
             if (!activeTaskDto
                     .getFrequency()
                     .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
