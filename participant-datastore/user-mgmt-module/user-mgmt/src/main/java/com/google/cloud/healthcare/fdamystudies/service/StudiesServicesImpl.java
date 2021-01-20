@@ -364,6 +364,7 @@ public class StudiesServicesImpl implements StudiesServices {
                 .sound("default")
                 .build();
         logger.info("Json payload" + customPayload);
+        logger.info("tokens" + tokens);
         service.push(tokens, customPayload);
       }
     }
