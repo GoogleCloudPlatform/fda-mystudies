@@ -2600,6 +2600,7 @@
 
       if (res === 'true') {
         $("#weekDaysId").hide();
+        $("#weekDaysId").find('*').removeAttr('required');
         $("#startDateWeekly").removeAttr('required');
         $("#startDateWeekly").parent().parent().removeClass("has-error has-danger");
         $("#startDateWeekly").next().children().remove();
@@ -2607,6 +2608,7 @@
         $(".weeklyRegular").find('*').removeAttr('required');
 
         $("#monthlyDateId").hide();
+        $("#monthlyDateId").find('*').removeAttr('required');
         $("#startDateMonthly").removeAttr('required');
         $("#startDateMonthly").parent().parent().removeClass("has-error has-danger");
         $("#startDateMonthly").next().children().remove();
