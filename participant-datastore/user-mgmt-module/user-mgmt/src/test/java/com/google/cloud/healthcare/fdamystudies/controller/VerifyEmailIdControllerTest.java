@@ -14,6 +14,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.REGISTRATION_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_ACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION;
 import static org.hamcrest.CoreMatchers.is;
@@ -34,6 +35,7 @@ import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import java.util.List;
@@ -58,6 +60,8 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
   @Autowired private UserDetailsRepository repository;
 
   @Autowired private UserProfileManagementDaoImpl userProfileDao;
+
+  @Autowired UserManagementProfileService userManagementProfService;
 
   @Autowired private ObjectMapper objectMapper;
 
@@ -84,8 +88,13 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.INVALID_EMAIL_CODE)));
 
+    UserDetailsEntity user =
+        userManagementProfService.getParticipantDetailsByEmail(
+            "abc@gmail.com", Constants.APP_ID_VALUE);
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
+    auditRequest.setUserId(user.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(
@@ -112,8 +121,13 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.INVALID_EMAIL_CODE)));
 
+    UserDetailsEntity user =
+        userManagementProfService.getParticipantDetailsByEmail(
+            Constants.INVALID_EMAIL_ID, Constants.APP_ID_VALUE);
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
+    auditRequest.setUserId(user.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(
@@ -186,15 +200,24 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
     verify(1, putRequestedFor(urlEqualTo("/auth-server/users/" + Constants.VALID_USER_ID)));
 
+    UserDetailsEntity user =
+        userManagementProfService.getParticipantDetailsByEmail(
+            Constants.VERIFY_CODE_EMAIL, Constants.APP_ID_VALUE);
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
+    auditRequest.setUserId(user.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(USER_ACCOUNT_ACTIVATED.getEventCode(), auditRequest);
     auditEventMap.put(USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION.getEventCode(), auditRequest);
+    auditEventMap.put(REGISTRATION_SUCCEEDED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(
-        auditEventMap, USER_ACCOUNT_ACTIVATED, USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION);
+        auditEventMap,
+        USER_ACCOUNT_ACTIVATED,
+        USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION,
+        REGISTRATION_SUCCEEDED);
   }
 
   private String getEmailIdVerificationForm(String code, String emailId)

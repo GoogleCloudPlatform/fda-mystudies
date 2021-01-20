@@ -47,7 +47,7 @@ public class CookieHelper {
     // An invalid character [32] (space) was present in the Cookie value
     cookieValue = StringUtils.defaultString(cookieValue);
     Cookie cookie = new Cookie(cookieName, URLEncoder.encode(cookieValue, "UTF-8"));
-    cookie.setMaxAge(600);
+    cookie.setMaxAge(1800);
     cookie.setSecure(appConfig.isSecureCookie());
     cookie.setHttpOnly(true);
     cookie.setPath("/");

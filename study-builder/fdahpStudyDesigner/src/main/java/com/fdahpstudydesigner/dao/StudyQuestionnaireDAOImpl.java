@@ -2894,7 +2894,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           searchQuery =
               "From QuestionnaireBo QBO WHERE QBO.customStudyId =:studyId "
                   + " and QBO.active=1 and QBO.live=1 order by QBO.createdDate DESC";
-          query = session.createQuery(searchQuery);
+          query = session.createQuery(searchQuery).setString("studyId", studyId);
         } else {
           query =
               session
