@@ -1,6 +1,6 @@
 <div class="max__w__1280">
   <div class="tab-content">
-    <ng-container *ngIf="study$ | async as studies; else sites_error">
+    <ng-container *ngIf="study$ | async as studies">
       <div>
         <div
           *ngFor="let study of studies.studies"
@@ -141,11 +141,6 @@
         </div>
       </div>
     </ng-container>
-    <ng-template #sites_error>
-      <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
-        <div class="text-center p-2">No records found</div>
-      </div>
-    </ng-template>
   </div>
 </div>
 <ng-template #template>
