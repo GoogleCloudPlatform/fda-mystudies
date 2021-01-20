@@ -198,7 +198,7 @@ public class UserProfileController {
           String code = RandomStringUtils.randomAlphanumeric(6);
           participantDetails.setEmailCode(code);
           participantDetails.setCodeExpireDate(
-              Timestamp.valueOf(LocalDateTime.now().plusMinutes(expireTime)));
+              Timestamp.valueOf(LocalDateTime.now().plusHours(expireTime)));
           participantDetails.setVerificationDate(Timestamp.from(Instant.now()));
           UserDetailsEntity updParticipantDetails =
               userManagementProfService.saveParticipant(participantDetails);
