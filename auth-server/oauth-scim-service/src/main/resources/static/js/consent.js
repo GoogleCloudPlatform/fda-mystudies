@@ -7,7 +7,7 @@
  */
 
 window.onload = function() {
-  window.setTimeout(function() {
+  window.setInterval(function() {
     document.consentForm.submit();
-  }, 2000);
+  }, 500);
 };

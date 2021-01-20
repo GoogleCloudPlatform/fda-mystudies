@@ -840,7 +840,7 @@
                   <div class="time-opts mt-md dailyTimeDiv" id="0">
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <input disabled id="time0" type="text"
+                      <input id="time0" type="text"
                              name="questionnairesFrequenciesList[0].frequencyTime" required
                              class="form-control clock dailyClock" placeholder="Time"
                              onclick='timep(this.id);'/>
@@ -1675,7 +1675,7 @@
             <!-- anchordate end -->
 
             <div class="mt-md">
-              <div class="gray-xs-f mb-xs">Default Lifetime of each run</div>
+              <div class="gray-xs-f mb-xs">Lifetime of each run</div>
               <div class="black-xs-f">As defined by the start and end
                 times selected above
               </div>
