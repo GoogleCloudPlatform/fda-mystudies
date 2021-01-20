@@ -4261,6 +4261,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   }
                   if ((questionConditionBranchBo.getInputType() != null)
                       && questionConditionBranchBo.getInputType().equalsIgnoreCase("MF")) {
+                    questionConditionBranchBo.setInputTypeValue(
+                        questionConditionBranchBo
+                            .getInputTypeValue()
+                            .replace("&lt;", "<")
+                            .replace("&gt;", ">"));
                     session.save(questionConditionBranchBo);
                   }
                   if ((questionConditionBranchBo.getQuestionConditionBranchBos() != null)
@@ -4272,6 +4277,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                         if (conditionBranchBo.getQuestionId() == null) {
                           conditionBranchBo.setQuestionId(questionsBo.getId());
                         }
+                        conditionBranchBo.setInputTypeValue(
+                            conditionBranchBo
+                                .getInputTypeValue()
+                                .replace("&lt;", "<")
+                                .replace("&gt;", ">"));
                         session.save(conditionBranchBo);
                       }
                     }
