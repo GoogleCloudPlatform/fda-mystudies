@@ -16,7 +16,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./sitecoordinator.component.scss'],
 })
 export class SiteCoordinatorComponent implements OnInit {
-  searchPlaceholder = 'Search by Site or Study ID or Name';
+  searchPlaceholder = 'Search by site or study ID or name';
   showSearchBar = false;
   filterQuery = '';
   searchBar: SearchBar | undefined;
