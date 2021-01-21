@@ -24,6 +24,7 @@ import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
+import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorResponseUtil;
@@ -60,6 +61,8 @@ public class EnrollmentTokenController {
 
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
+  @Autowired StudyStateService studyStateService;
+
   @PostMapping(value = "/validateEnrollmentToken", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> validateEnrollmentToken(
       @RequestHeader("userId") String userId,
@@ -84,7 +87,7 @@ public class EnrollmentTokenController {
       if (enrollmentTokenfService.hasParticipant(
           enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
         ErrorResponseUtil.getFailureResponse(
-            ErrorResponseUtil.ErrorCodes.STATUS_103.getValue(),
+            ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
             ErrorResponseUtil.ErrorCodes.TOKEN_ALREADY_USE.getValue(),
             response);
@@ -117,8 +120,11 @@ public class EnrollmentTokenController {
       return null;
     }
 
+    String siteId = studyStateService.getSiteId(userId, enrollmentBean.getToken());
+
     errorBean = new ErrorBean();
     errorBean.setCode(ErrorCode.EC_200.code());
+    errorBean.setSiteId(siteId);
     errorBean.setMessage(ErrorResponseUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
     logger.info("EnrollmentTokenController validateEnrollmentToken() - Ends ");

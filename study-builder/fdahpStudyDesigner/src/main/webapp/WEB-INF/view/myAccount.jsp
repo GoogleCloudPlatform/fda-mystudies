@@ -27,7 +27,7 @@
       <div class="b-bor">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">First Name
+            <div class="gray-xs-f line34">First name
               <span
                   class="requiredStar"> *
               </span>
@@ -48,7 +48,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Last Name
+            <div class="gray-xs-f line34">Last name
               <span
                   class="requiredStar"> *
               </span>
@@ -69,7 +69,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Email Address
+            <div class="gray-xs-f line34">Email
               <small>(100 characters max)</small>
               <span
                   class="requiredStar"> *
@@ -149,7 +149,7 @@
           </div>
           <div class="col-md-2 p-none dis-line form-group mb-none text-right">
             <button id="pwd-link" type="button"
-                    class="btn btn-default gray-btn cur-pointer disChangePassButton">Change Password
+                    class="btn btn-default gray-btn cur-pointer disChangePassButton">Change password
             </button>
           </div>
         </div>
@@ -159,7 +159,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none ">
-                <div class="gray-xs-f line34">Previous password
+                <div class="gray-xs-f line34">Current password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -177,7 +177,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">New Password
+                <div class="gray-xs-f line34">New password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -197,7 +197,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">Confirm new password
+                <div class="gray-xs-f line34">Confirm password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -239,8 +239,8 @@
       <div class="edit-user-list-widget mb-xs">
         <span>Users</span>
         <span class="gray-xs-f pull-right">
-          <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
+           <c:if
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">View only</c:if>
           <c:if
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & edit</c:if>
         </span>
@@ -250,7 +250,7 @@
         <span>Notifications</span>
         <span class="gray-xs-f pull-right">
           <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">View only</c:if>
           <c:if
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & edit</c:if>
         </span>
