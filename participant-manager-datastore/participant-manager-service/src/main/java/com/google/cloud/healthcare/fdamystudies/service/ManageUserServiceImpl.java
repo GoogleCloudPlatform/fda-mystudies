@@ -480,8 +480,9 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     UserRegAdminEntity adminDetails = optAdminDetails.get();
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
-    if (StringUtils.isNotEmpty(adminDetails.getUrAdminAuthId()))
+    if (StringUtils.isNotEmpty(adminDetails.getUrAdminAuthId())) {
       logoutAdminUser(adminDetails.getUrAdminAuthId(), auditRequest);
+    }
 
     userAdminRepository.saveAndFlush(adminDetails);
 
@@ -518,8 +519,9 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
-    if (StringUtils.isNotEmpty(adminDetails.getUrAdminAuthId()))
+    if (StringUtils.isNotEmpty(adminDetails.getUrAdminAuthId())) {
       logoutAdminUser(adminDetails.getUrAdminAuthId(), auditRequest);
+    }
 
     userAdminRepository.saveAndFlush(adminDetails);
 
