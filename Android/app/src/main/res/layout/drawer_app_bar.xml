@@ -168,10 +168,8 @@
                 android:id="@+id/mCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
                 android:text="Cancel"
                 android:textColor="@color/colorSecondary"
                 android:textSize="15sp" />

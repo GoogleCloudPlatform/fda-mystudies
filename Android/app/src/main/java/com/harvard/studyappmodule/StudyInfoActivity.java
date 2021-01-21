@@ -331,6 +331,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 eligibilityConsent.getEligibility(),
                 title,
                 "",
+                "",
                 "test",
                 "join");
         startActivity(intent);
@@ -552,6 +553,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                   eligibilityConsent.getEligibility(),
                   title,
                   data.getStringExtra("enrollId"),
+                  data.getStringExtra("siteId"),
                   "combined",
                   "join");
           startActivity(intent);
