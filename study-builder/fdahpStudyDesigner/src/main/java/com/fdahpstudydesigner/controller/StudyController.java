@@ -4381,6 +4381,7 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
         if (null
             != request
                 .getSession()
@@ -4457,6 +4458,8 @@ public class StudyController {
           if (StringUtils.isNotEmpty(isLive)
               && isLive.equalsIgnoreCase(FdahpStudyDesignerConstants.YES)
               && (studyBo != null)) {
+            auditRequest.setStudyId(studyBo.getCustomStudyId());
+            auditRequest.setStudyVersion(String.valueOf(studyBo.getVersion()));
             studyIdBean = studyService.getLiveVersion(studyBo.getCustomStudyId());
             if (studyIdBean != null) {
               consentBo =
@@ -4532,6 +4535,7 @@ public class StudyController {
         map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
         map.addAttribute("_S", sessionStudyCount);
         mav = new ModelAndView("viewBasicInfo", map);
+        auditLogEventHelper.logEvent(NEW_STUDY_CREATION_INITIATED, auditRequest);
       }
     } catch (Exception e) {
       logger.error("StudyController - viewBasicInfo - ERROR", e);
@@ -4689,7 +4693,6 @@ public class StudyController {
         }
         if (studySessionBean != null) {
           sessionStudyCount = studySessionBean.getSessionStudyCount();
-          eventEnum = NEW_STUDY_CREATION_INITIATED;
         } else {
           ++sessionStudyCount;
           if ((sesObj.getStudySession() != null) && !sesObj.getStudySession().isEmpty()) {
@@ -4725,6 +4728,7 @@ public class StudyController {
             }
             eventEnum = STUDY_ACCESSED_IN_EDIT_MODE;
           }
+          auditLogEventHelper.logEvent(eventEnum, auditRequest);
         }
       }
 
@@ -4741,7 +4745,6 @@ public class StudyController {
           .getSession()
           .setAttribute(sessionStudyCount + FdahpStudyDesignerConstants.IS_LIVE, isLive);
 
-      auditLogEventHelper.logEvent(eventEnum, auditRequest);
       modelAndView = new ModelAndView("redirect:/adminStudies/viewBasicInfo.do", map);
     } catch (Exception e) {
       logger.error("StudyController - viewStudyDetails - ERROR", e);
