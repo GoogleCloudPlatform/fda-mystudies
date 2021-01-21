@@ -2123,7 +2123,6 @@
                           <div class="help-block with-errors red-txt"></div>
                         </div>
                       </div>
-                      <br></br>
                       <c:if test="${questionnaireBo.branching}">
                         <div class="col-md-2 pl-none">
                           <div class="gray-xs-f mb-xs">Destination Step</div>
@@ -4332,6 +4331,25 @@
         }
       });
 
+      $("#scaleDefaultValueId").blur(function(){
+        	var value= $(this).val();
+        	var minValue = $("#scaleMinValueId").val();
+    		var maxValue = $("#scaleMaxValueId").val();
+    		$(this).parent().removeClass("has-danger").removeClass("has-error");
+            $(this).parent().find(".help-block").empty();
+    		if(value != ''){
+    			if(parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)){
+    	    		$(this).parent().removeClass("has-danger").removeClass("has-error");
+    	            $(this).parent().find(".help-block").empty();
+    			}else{
+    				 $(this).val('');
+    	    		 $(this).parent().addClass("has-danger").addClass("has-error");
+    	             $(this).parent().find(".help-block").empty();
+    	             $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
+    			}
+    		}
+        });
+
       $("#continuesScaleMinValueId").blur(function () {
 
         var value = $("#continuesScaleMinValueId").val();
@@ -4446,6 +4464,10 @@
         var maxValue = $("#numericMaxValueId").val();
         $(this).parent().removeClass("has-danger").removeClass("has-error");
         $(this).parent().find(".help-block").empty();
+        var minValue = $("#numericMinValueId").val();
+        if(minValue==''){
+      	  $("#numericMinValueId").val("0");
+         } 
         if (maxValue != '') {
           if (parseInt(value) >= parseInt(maxValue)) {
             $(this).val('');
@@ -4465,6 +4487,10 @@
         var minValue = $("#numericMinValueId").val();
         $(this).parent().removeClass("has-danger").removeClass("has-error");
         $(this).parent().find(".help-block").empty();
+        var maxValue = $("#numericMaxValueId").val();
+        if(maxValue==''){
+      	  $("#numericMaxValueId").val("10000");
+           }
         if (minValue != '') {
           if (parseInt(value) <= parseInt(minValue)) {
             $(this).val('');
@@ -5107,6 +5133,15 @@
             $("#condtionalBranchingId").hide();
           }
           $("#" + responseType.replace(/\s/g, '')).show();
+          if(responseType=='Numeric'){
+          	 if($("#numericMinValueId").val()== ''){
+                   $("#numericMinValueId").val("0");
+                   }
+
+                   if($("#numericMaxValueId").val() == ''){
+                       $("#numericMaxValueId").val("10000");
+                    }
+             }
           $("." + responseType.replace(/\s/g, '') + "Required").attr("required", true);
         } else {
 
@@ -5771,7 +5806,7 @@
       scaleCount = parseInt(scaleCount) + 1;
       if ($('.text-scale').length < 8) {
         var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
-            "	<div class='col-md-4 pl-none'>" +
+            "	<div class='col-md-3 pl-none'>" +
             "    <div class='form-group'>" +
             "      <input type='text' class='form-control TextScaleRequired' name='questionResponseSubTypeList["
             + scaleCount + "].text' id='displayTextSclText" + scaleCount
@@ -5779,7 +5814,7 @@
             "      <div class='help-block with-errors red-txt'></div>" +
             "   </div>" +
             "</div>" +
-            " <div class='col-md-3 pl-none'>" +
+            " <div class='col-md-4 pl-none'>" +
             "    <div class='form-group'>" +
             "       <input type='text' class='form-control TextScaleRequired textScaleValue' class='form-control' name='questionResponseSubTypeList["
             + scaleCount + "].value' id='displayTextSclValue" + scaleCount
