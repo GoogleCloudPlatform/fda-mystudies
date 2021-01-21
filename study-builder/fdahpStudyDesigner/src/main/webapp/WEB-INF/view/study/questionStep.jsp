@@ -2123,7 +2123,6 @@
                           <div class="help-block with-errors red-txt"></div>
                         </div>
                       </div>
-                      <br></br>
                       <c:if test="${questionnaireBo.branching}">
                         <div class="col-md-2 pl-none">
                           <div class="gray-xs-f mb-xs">Destination Step</div>
