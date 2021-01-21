@@ -2833,7 +2833,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         if ((questionsResponseTypeBo.getConditionFormula() != null)
             && StringUtils.isNotEmpty(questionsResponseTypeBo.getConditionFormula())) {
           addOrUpdateQuestionsResponseTypeBo.setConditionFormula(
-              questionsResponseTypeBo.getConditionFormula());
+              questionsResponseTypeBo
+                  .getConditionFormula()
+                  .replace("&lt;", "<")
+                  .replace("&gt;", ">"));
         }
 
         /** Other type set addded by ronalin * */
