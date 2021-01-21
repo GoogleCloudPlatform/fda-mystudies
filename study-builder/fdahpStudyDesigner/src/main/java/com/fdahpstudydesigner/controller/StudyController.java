@@ -4693,6 +4693,7 @@ public class StudyController {
         }
         if (studySessionBean != null) {
           sessionStudyCount = studySessionBean.getSessionStudyCount();
+
         } else {
           ++sessionStudyCount;
           if ((sesObj.getStudySession() != null) && !sesObj.getStudySession().isEmpty()) {
@@ -4728,6 +4729,7 @@ public class StudyController {
             }
             eventEnum = STUDY_ACCESSED_IN_EDIT_MODE;
           }
+          auditLogEventHelper.logEvent(eventEnum, auditRequest);
         }
       }
 
@@ -4744,7 +4746,6 @@ public class StudyController {
           .getSession()
           .setAttribute(sessionStudyCount + FdahpStudyDesignerConstants.IS_LIVE, isLive);
 
-      auditLogEventHelper.logEvent(eventEnum, auditRequest);
       modelAndView = new ModelAndView("redirect:/adminStudies/viewBasicInfo.do", map);
     } catch (Exception e) {
       logger.error("StudyController - viewStudyDetails - ERROR", e);
