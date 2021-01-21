@@ -176,6 +176,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
 
         Intent intent = new Intent(this, EnrollmentValidatedActivity.class);
         intent.putExtra("enrollId", enrollmentID.getText().toString().trim());
+        intent.putExtra("siteId", enrollData.getSiteId());
         intent.putExtra("studyId", getIntent().getStringExtra("studyId"));
         intent.putExtra("title", getIntent().getStringExtra("title"));
         intent.putExtra("eligibility", getIntent().getStringExtra("eligibility"));
@@ -185,6 +186,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
         if (getIntent().getStringExtra("eligibility").equalsIgnoreCase("combined")) {
           Intent intent1 = new Intent();
           intent1.putExtra("enrollId", "" + enteredId);
+          intent1.putExtra("siteId", "" + enrollData.getSiteId());
           setResult(RESULT_OK, intent1);
           finish();
         } else {
