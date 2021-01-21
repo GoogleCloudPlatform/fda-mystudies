@@ -18,8 +18,6 @@ public interface StudyAppDetails {
 
   String getStudyType();
 
-  String getStudyStatus();
-
   String getAppId();
 
   String getCustomAppId();
