@@ -32,7 +32,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -46,6 +48,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -60,6 +63,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -115,6 +119,8 @@ public class BaseMockIT {
   @Autowired protected AuditEventService mockAuditService;
 
   @Autowired protected JavaMailSender emailSender;
+
+  @Autowired private TestRestTemplate restTemplate;
 
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
@@ -329,5 +335,18 @@ public class BaseMockIT {
     assertThat(mail.getDataHandler().getContentType())
         .isEqualToIgnoringCase("text/html; charset=utf-8");
     return mail;
+  }
+
+  protected void generateOpenApiJson() throws IOException {
+    String swagger = this.restTemplate.getForObject("/v2/api-docs", String.class);
+    String documentPath =
+        BaseMockIT.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+    documentPath =
+        documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
+            + "fda-mystudies/documentation/API"
+            + servletContext.getContextPath()
+            + "/openapi.json";
+    FileUtils.write(new File(documentPath), swagger, Charset.defaultCharset());
+    logger.info(String.format("Open API documentation created at %s", documentPath));
   }
 }
