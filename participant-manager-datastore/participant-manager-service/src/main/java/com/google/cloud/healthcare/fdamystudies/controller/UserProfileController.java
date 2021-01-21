@@ -116,12 +116,10 @@ public class UserProfileController {
       @Valid @RequestBody PatchUserRequest userRequest,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userRequest.setUserId(userId);
     userRequest.setSignedInUserId(signedInUserId);
-    PatchUserResponse deactivateResponse =
-        userProfileService.updateUserAccountStatus(userRequest, auditRequest);
+    PatchUserResponse deactivateResponse = userProfileService.updateUserAccountStatus(userRequest);
 
     logger.exit(String.format(STATUS_LOG, deactivateResponse.getHttpStatusCode()));
     return ResponseEntity.status(deactivateResponse.getHttpStatusCode()).body(deactivateResponse);

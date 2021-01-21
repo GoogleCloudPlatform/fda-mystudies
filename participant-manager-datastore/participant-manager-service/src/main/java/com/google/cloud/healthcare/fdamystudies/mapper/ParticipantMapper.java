@@ -226,7 +226,6 @@ public final class ParticipantMapper {
     participantRegistryDetail.setCustomStudyId(studyAppDetails.getCustomStudyId());
     participantRegistryDetail.setStudyName(studyAppDetails.getStudyName());
     participantRegistryDetail.setStudyType(studyAppDetails.getStudyType());
-    participantRegistryDetail.setStudyStatus(studyAppDetails.getStudyStatus());
     participantRegistryDetail.setAppId(studyAppDetails.getAppId());
     participantRegistryDetail.setAppName(studyAppDetails.getAppName());
     participantRegistryDetail.setCustomAppId(studyAppDetails.getCustomAppId());

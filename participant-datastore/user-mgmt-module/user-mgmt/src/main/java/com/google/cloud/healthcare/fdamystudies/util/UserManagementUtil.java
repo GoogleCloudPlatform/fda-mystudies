@@ -16,7 +16,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -51,15 +50,12 @@ public class UserManagementUtil {
   @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
 
   public UpdateEmailStatusResponse updateUserInfoInAuthServer(
-      UpdateEmailStatusRequest updateEmailStatusRequest,
-      String userId,
-      AuditLogEventRequest auditRequest) {
+      UpdateEmailStatusRequest updateEmailStatusRequest, String userId) {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
-    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     HttpEntity<UpdateEmailStatusRequest> request =
         new HttpEntity<>(updateEmailStatusRequest, headers);
@@ -119,7 +115,6 @@ public class UserManagementUtil {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set(AppConstants.APPLICATION_ID, null);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
-    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     request = new HttpEntity<>(null, headers);
 
