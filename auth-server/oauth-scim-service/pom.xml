@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.6.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
-	<artifactId>oauth-scim-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>oauth-scim-service</name>
-	<description>OAuth Scim Service</description>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.2.6.RELEASE</version>
+    <relativePath /> <!-- lookup parent from repository -->
+  </parent>
+  <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+  <artifactId>oauth-scim-service</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>oauth-scim-service</name>
+  <description>OAuth Scim Service</description>
 
-	<properties>
-		<start-class>com.google.cloud.healthcare.fdamystudies.Application</start-class>
-		<java.version>1.8</java.version>
-		<hibernate.version>5.4.2.Final</hibernate.version>
-		<clover.version>4.4.1</clover.version>
-		<common.text.version>1.8</common.text.version>
-		<wiremock.version>2.26.3</wiremock.version>
-		<mockito.version>2.24.0</mockito.version>
-	</properties>
+  <properties>
+    <start-class>com.google.cloud.healthcare.fdamystudies.Application</start-class>
+    <java.version>1.8</java.version>
+    <hibernate.version>5.4.2.Final</hibernate.version>
+    <clover.version>4.4.1</clover.version>
+    <common.text.version>1.8</common.text.version>
+    <wiremock.version>2.26.3</wiremock.version>
+    <mockito.version>2.24.0</mockito.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -108,15 +108,20 @@
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
     <dependency>
-		<groupId>org.mockito</groupId>
-		<artifactId>mockito-junit-jupiter</artifactId>
-		<scope>test</scope>
-	</dependency>
-	<dependency>
-		<groupId>org.mockito</groupId>
-		<artifactId>mockito-core</artifactId>
-		<scope>test</scope>
-	</dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-maven-plugin</artifactId>
+      <version>7.5.0</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -154,21 +159,25 @@
         <artifactId>jib-maven-plugin</artifactId>
         <version>2.6.0</version>
         <configuration>
-          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
-          <container><appRoot>/usr/local/tomcat/webapps/auth-server</appRoot></container>
+          <from>
+            <image>tomcat:9.0.33-jdk11-openjdk</image>
+          </from>
+          <container>
+            <appRoot>/usr/local/tomcat/webapps/auth-server</appRoot>
+          </container>
         </configuration>
       </plugin>
     </plugins>
   </build>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.openclover</groupId>
-				<artifactId>clover-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</reporting>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.openclover</groupId>
+        <artifactId>clover-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <profiles>
     <profile>
