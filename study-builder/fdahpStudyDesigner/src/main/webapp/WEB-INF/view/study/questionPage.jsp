@@ -3118,12 +3118,21 @@ if(document.getElementById("singleSelect").checked==true){
     $("#scaleDefaultValueId").blur(function () {
       var value = $("#scaleDefaultValueId").val();
       var stepSize = $("#scaleStepId").val();
+      var minValue = $("#scaleMinValueId").val();
+	  var maxValue = $("#scaleMaxValueId").val();
       $(this).parent().removeClass("has-danger").removeClass("has-error");
       $(this).parent().find(".help-block").empty();
       if (value != '' && stepSize != '') {
         if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
+          if(parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)){
           $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
           $("#scaleDefaultValueId").parent().find(".help-block").empty();
+         } else {
+		  $(this).val('');
+	      $(this).parent().addClass("has-danger").addClass("has-error");
+	      $(this).parent().find(".help-block").empty();
+	      $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
+		 }
         } else {
           $("#scaleDefaultValueId").val('');
           $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
