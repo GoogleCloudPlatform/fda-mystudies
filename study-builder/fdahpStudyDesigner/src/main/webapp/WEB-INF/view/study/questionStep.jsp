@@ -2984,8 +2984,7 @@
                             <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
-                                Step ${destinationStep.sequenceNo}
-                                : ${destinationStep.stepShortTitle}</option>
+                                Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
@@ -3007,8 +3006,7 @@
                             <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
-                                Step ${destinationStep.sequenceNo}
-                                : ${destinationStep.stepShortTitle}</option>
+                                Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
@@ -5426,6 +5424,7 @@
         var otherType;
 
         if ($('#textchoiceOtherId').is(':checked')) {
+        	otherType="on";
         	var otherIncludeText;
             var otherParticipantFill;
             if ($('#otherYes').is(':checked')) {
@@ -5444,7 +5443,7 @@
             questionReponseTypeBo.otherPlaceholderText=otherPlaceholderText;
             questionReponseTypeBo.otherParticipantFill=otherParticipantFill;
         }else{
-          otherType="off"
+          otherType="off";
          }
         
         questionReponseTypeBo.otherText=otherText
