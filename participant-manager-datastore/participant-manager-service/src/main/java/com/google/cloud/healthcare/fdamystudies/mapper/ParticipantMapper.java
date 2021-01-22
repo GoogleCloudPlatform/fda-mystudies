@@ -60,8 +60,6 @@ public final class ParticipantMapper {
 
     String enrollmentDate = DateTimeUtils.format(studyParticipantDetail.getEnrolledDate());
     participantDetail.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-    participantDetail.setEnrollmentStatus(
-        EnrollmentStatus.getDisplayValue(studyParticipantDetail.getEnrolledStatus()));
 
     return participantDetail;
   }

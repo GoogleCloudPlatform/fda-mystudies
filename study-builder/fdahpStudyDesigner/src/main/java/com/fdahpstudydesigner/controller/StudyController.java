@@ -3226,6 +3226,7 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        int order = 0;
         if (comprehensionTestQuestionBo != null) {
           if (comprehensionTestQuestionBo.getId() != null) {
             comprehensionTestQuestionBo.setModifiedBy(sesObj.getUserId());
@@ -3233,7 +3234,7 @@ public class StudyController {
             comprehensionTestQuestionBo.setStatus(true);
           } else {
             if (comprehensionTestQuestionBo.getStudyId() != null) {
-              int order =
+              order =
                   studyService.comprehensionTestQuestionOrder(
                       comprehensionTestQuestionBo.getStudyId());
               comprehensionTestQuestionBo.setSequenceNo(order);
@@ -3246,7 +3247,7 @@ public class StudyController {
               studyService.saveOrUpdateComprehensionTestQuestion(comprehensionTestQuestionBo);
           map.addAttribute("_S", sessionStudyCount);
           if (addComprehensionTestQuestionBo != null) {
-            if (addComprehensionTestQuestionBo.getId() != null) {
+            if (addComprehensionTestQuestionBo.getId() != null && order == 0) {
               request
                   .getSession()
                   .setAttribute(
@@ -3688,7 +3689,11 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        int seqCount = 0;
         if (eligibilityTestBo != null) {
+          if (eligibilityTestBo.getId() != null) {
+            seqCount = eligibilityTestBo.getSequenceNo();
+          }
           customStudyId =
               (String)
                   request
@@ -3721,12 +3726,22 @@ public class StudyController {
                 .setAttribute(
                     sessionStudyCount + "eligibilityId", eligibilityTestBo.getEligibilityId());
             mav = new ModelAndView("redirect:viewStudyEligibiltyTestQusAns.do", map);
+          } else if ((eligibilityTestBo != null)
+              && (FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)
+                  .equals(eligibilityTestBo.getType())
+              && seqCount != 0) {
+            request
+                .getSession()
+                .setAttribute(
+                    sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
+                    propMap.get("update.eligibilitytest.success.message"));
+            mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
+                    propMap.get("save.eligibilitytest.success.message"));
             mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           }
         } else {
@@ -4458,8 +4473,6 @@ public class StudyController {
           if (StringUtils.isNotEmpty(isLive)
               && isLive.equalsIgnoreCase(FdahpStudyDesignerConstants.YES)
               && (studyBo != null)) {
-            auditRequest.setStudyId(studyBo.getCustomStudyId());
-            auditRequest.setStudyVersion(String.valueOf(studyBo.getVersion()));
             studyIdBean = studyService.getLiveVersion(studyBo.getCustomStudyId());
             if (studyIdBean != null) {
               consentBo =
@@ -4504,6 +4517,7 @@ public class StudyController {
           }
         }
         if (studyBo == null) {
+          auditLogEventHelper.logEvent(NEW_STUDY_CREATION_INITIATED, auditRequest);
           studyBo = new StudyBo();
           studyBo.setType(FdahpStudyDesignerConstants.STUDY_TYPE_GT);
         } else if ((studyBo != null) && StringUtils.isNotEmpty(studyBo.getCustomStudyId())) {
@@ -4535,7 +4549,6 @@ public class StudyController {
         map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
         map.addAttribute("_S", sessionStudyCount);
         mav = new ModelAndView("viewBasicInfo", map);
-        auditLogEventHelper.logEvent(NEW_STUDY_CREATION_INITIATED, auditRequest);
       }
     } catch (Exception e) {
       logger.error("StudyController - viewBasicInfo - ERROR", e);

@@ -236,16 +236,21 @@
       <div class="blue-md-f text-uppercase mb-md">Assigned Permissions</div>
 
       <!-- Assigned Permissions List-->
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW') or
+              fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
       <div class="edit-user-list-widget mb-xs">
         <span>Users</span>
         <span class="gray-xs-f pull-right">
-          <c:if
+           <c:if
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">View only</c:if>
           <c:if
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & edit</c:if>
         </span>
       </div>
+      </c:if>
 
+	 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT') or
+              fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
       <div class="edit-user-list-widget mb-xs">
         <span>Notifications</span>
         <span class="gray-xs-f pull-right">
@@ -255,17 +260,14 @@
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & edit</c:if>
         </span>
       </div>
+      </c:if>
 
 
       <!-- Assigned Permissions List-->
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
       <div class="edit-user-list-widget">
         <span>Studies</span>
-        <span class="gray-xs-f pull-right">
-          <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">No</c:if>
-          <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">Yes</c:if>
-        </span>
+        <span class="gray-xs-f pull-right">Yes</span>
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
           <div class="mt-lg pl-md">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
@@ -294,6 +296,7 @@
           </div>
         </c:if>
       </div>
+      </c:if>
     </div>
   </div>
 </div>
