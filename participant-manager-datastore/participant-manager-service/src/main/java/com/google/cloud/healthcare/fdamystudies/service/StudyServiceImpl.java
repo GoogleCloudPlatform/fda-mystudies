@@ -17,6 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -31,6 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyParticipantDetails;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
@@ -43,6 +45,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -63,6 +66,8 @@ public class StudyServiceImpl implements StudyService {
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
+
+  @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistory;
 
   @Override
   @Transactional(readOnly = true)
@@ -306,7 +311,6 @@ public class StudyServiceImpl implements StudyService {
       studyParticipantDetails =
           studyRepository.getStudyParticipantDetailsForOpenStudy(
               studyAppDetails.getStudyId(),
-              excludeParticipantStudyStatus,
               limit,
               offset,
               orderByCondition,
@@ -335,7 +339,31 @@ public class StudyServiceImpl implements StudyService {
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {
       ParticipantDetail participantDetail =
           ParticipantMapper.fromParticipantStudy(participantDetails);
-      registryParticipants.add(participantDetail);
+
+      String status = null;
+      if (studyAppDetails.getStudyType().equalsIgnoreCase(OPEN_STUDY)) {
+        status =
+            participantEnrollmentHistory.findByStudyIdAndParticipantRegistrySiteId(
+                studyAppDetails.getStudyId(), participantDetails.getParticipantId());
+        if (StringUtils.isNotEmpty(status)
+            && EnrollmentStatus.WITHDRAWN.getStatus().equals(status)
+            && EnrollmentStatus.NOT_ELIGIBLE
+                .getStatus()
+                .equals(participantDetails.getEnrolledStatus())) {
+          participantDetail.setEnrollmentStatus(EnrollmentStatus.WITHDRAWN.getDisplayValue());
+        } else {
+          participantDetail.setEnrollmentStatus(
+              EnrollmentStatus.getDisplayValue(participantDetails.getEnrolledStatus()));
+        }
+      } else {
+        participantDetail.setEnrollmentStatus(
+            EnrollmentStatus.getDisplayValue(participantDetails.getEnrolledStatus()));
+      }
+
+      if (!ArrayUtils.contains(
+          excludeParticipantStudyStatus, participantDetail.getEnrollmentStatus())) {
+        registryParticipants.add(participantDetail);
+      }
     }
 
     participantRegistryDetail.setRegistryParticipants(registryParticipants);

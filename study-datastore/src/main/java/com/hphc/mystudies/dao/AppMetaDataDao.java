@@ -125,8 +125,8 @@ public class AppMetaDataDao {
         notificationStudyTypeQuery =
             "from NotificationDto NDTO"
                 + " where NDTO.notificationSubType in (:notificationTypeList) "
-                + " and NDTO.appId=:appId"
-                + " or NDTO.appId is null and NDTO.notificationSent=true"
+                + " and (NDTO.appId=:appId"
+                + " or NDTO.appId is null) and NDTO.notificationSent=true"
                 + " ORDER BY NDTO.scheduleDate DESC";
 
         notificationList =
