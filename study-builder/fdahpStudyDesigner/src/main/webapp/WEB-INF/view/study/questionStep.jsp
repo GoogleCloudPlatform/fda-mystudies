@@ -1926,7 +1926,7 @@
                       </div>
                     </div>
                     <c:if test="${questionnaireBo.branching}">
-                      <div class="col-md-4 pl-none">
+                      <div class="col-md-3 pl-none">
                         <div class="form-group">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextSclStepId0" class="selectpicker">
