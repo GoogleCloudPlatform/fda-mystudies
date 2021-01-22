@@ -9,7 +9,7 @@
         >
           <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
         </a>
-        <span class="pr-2">Edit Admin Details</span>
+        <span class="pr-2">Edit admin details</span>
 
         <span [ngClass]="statusColour(user.status)" class="text__34a853g__14">
           {{ user.status }}
@@ -23,10 +23,10 @@
         >
           {{
             user.status === userStatus.Deactivated
-              ? "Activate Admin"
+              ? "Activate admin"
               : user.status === userStatus.Invited
-              ? "Delete Admin"
-              : "Deactivate Admin"
+              ? "Delete admin"
+              : "Deactivate admin"
           }}
         </button>
         <button
@@ -34,7 +34,7 @@
           (click)="resendInvitation()"
           class="btn banner__default__btn pad__5__13 bt__font12__pad113 ml-sm"
         >
-          Resend Invitation
+          Resend invitation
         </button>
       </div>
     </div>
@@ -47,13 +47,13 @@
       <div class="row border-bottom__c4d1e6">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
           <div class="form-group">
-            <label for="fname">First Name</label>
+            <label for="fname">First name</label>
             <input
               [ngClass]="{
                 'custom_not-allowed': user.status === userStatus.Deactivated
               }"
               [readonly]="user.status === userStatus.Deactivated"
-              placeholder="Enter First Name"
+              placeholder="Enter first name"
               type="text"
               class="form-control"
               id="fname"
@@ -74,20 +74,20 @@
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.required"
               >
-                Enter a first name.
+                Enter a first name
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.pattern"
               >
-                Please fill out this field.
+                Please fill out this field
               </span>
             </div>
           </div>
         </div>
         <div class="col-xs-12 col-md-6 p-none">
           <div class="form-group">
-            <label for="lname">Last Name</label>
+            <label for="lname">Last name</label>
             <input
               [ngClass]="{
                 'custom_not-allowed': user.status === userStatus.Deactivated
@@ -102,7 +102,7 @@
               pattern=".*[^ ].*"
               class="form-control"
               id="lname"
-              placeholder="Enter Last Name"
+              placeholder="Enter last name"
             />
 
             <div
@@ -112,13 +112,13 @@
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.required"
               >
-                Enter a last name.
+                Enter a last name
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.pattern"
               >
-                Please fill out this field.
+                Please fill out this field
               </span>
             </div>
           </div>
@@ -132,7 +132,7 @@
               type="email"
               class="form-control not-allowed"
               id="emailId"
-              placeholder="Enter Email"
+              placeholder="Enter email"
               [(ngModel)]="user.email"
               name="emailText"
               readonly
@@ -256,7 +256,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                     }"
                     for="location_view_edit_permssion"
                   >
-                    View And Edit
+                    View and edit
                   </label>
                 </span>
               </div>
@@ -266,7 +266,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
       </section>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="form-group">
-          <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
+          <div class="user__card__title pb-lg">Sites, studies and apps</div>
           <div class="select__form-control__parent">
             <label
               [ngClass]="{
@@ -287,7 +287,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                 bindLabel="name"
                 bindValue="customId"
                 class="form-control select__form-control"
-                placeholder="Enter App ID or Name"
+                placeholder="Enter app ID or name"
                 [hideSelected]="true"
                 [(ngModel)]="selectedAppsIds"
                 [ngModelOptions]="{standalone: true}"
@@ -377,7 +377,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                               class="font12"
                               for="appRadioEdit{{ app.id }}"
                             >
-                              View And Edit
+                              View and edit
                             </label>
                           </span>
                         </div>
@@ -497,20 +497,30 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                       class="font12"
                                       for="studyRadioEdit{{ study.studyId }}"
                                     >
-                                      View And Edit
+                                      View and edit
                                     </label>
                                   </span>
                                 </div>
                               </div>
                               <div
-                                class="fa__plus__minus mob_pull_right"
-                                type="button"
-                                data-toggle="collapse"
-                                [attr.data-target]="
-                                  '#collapseTwo' + study.studyId
-                                "
-                                aria-expanded="false"
-                              ></div>
+                                class="app__id_num flex__justify__space-between"
+                              >
+                                <div class="orange__text__sm font-12 pr-2">
+                                  {{
+                                    study.selectedSitesCount
+                                      | i18nPlural: sitesMessageMapping
+                                  }}
+                                </div>
+                                <div
+                                  class="fa__plus__minus mob_pull_right"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  [attr.data-target]="
+                                    '#collapseTwo' + study.studyId
+                                  "
+                                  aria-expanded="false"
+                                ></div>
+                              </div>
                             </div>
                           </div>
                           <div
@@ -604,7 +614,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                       class="font12"
                                       for="siteRadioEdit{{ site.siteId }}"
                                     >
-                                      View And Edit
+                                      View and edit
                                     </label>
                                   </span>
                                 </div>

@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
 
@@ -32,6 +34,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -78,6 +81,8 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
+  @Autowired private StudyRepository studyRepository;
+
   @Override
   @Transactional(readOnly = true)
   public List<ParticipantStudyEntity> getParticipantStudiesList(
@@ -101,7 +106,13 @@ public class StudyStateServiceImpl implements StudyStateService {
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
 
-    if (CollectionUtils.isEmpty(siteIds)) {
+    Optional<StudyEntity> optStudy = studyRepository.findByCustomIds(customStudyIds);
+
+    if (optStudy.isPresent() && optStudy.get().getType().equals(OPEN_STUDY)) {
+      participantStudyIds =
+          participantStudyRepository.findByStudyIdAndUserDetailId(
+              optStudy.get().getId(), user.getUserId());
+    } else if (CollectionUtils.isEmpty(siteIds) && optStudy.get().getType().equals(CLOSE_STUDY)) {
       participantStudyIds =
           participantStudyRepository.findByEmailAndStudyCustomIds(user.getEmail(), customStudyIds);
     } else {
@@ -238,6 +249,9 @@ public class StudyStateServiceImpl implements StudyStateService {
         String enrollmentStatus =
             StringUtils.isNotEmpty(enrollmentHistoryStatus)
                     && EnrollmentStatus.WITHDRAWN.getStatus().equals(enrollmentHistoryStatus)
+                    && EnrollmentStatus.YET_TO_ENROLL
+                        .getStatus()
+                        .equals(participantStudy.getStatus())
                 ? EnrollmentStatus.WITHDRAWN.getStatus()
                 : participantStudy.getStatus();
         studyStateBean.setStatus(enrollmentStatus);
@@ -276,7 +290,12 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantStudy.get().setParticipantId(null);
       participantStudyRepository.saveAndFlush(participantStudy.get());
 
-      enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete, auditRequest);
+      enrollUtil.withDrawParticipantFromStudy(
+          participantId,
+          participantStudy.get().getStudy().getVersion(),
+          studyId,
+          delete,
+          auditRequest);
       respBean = new WithDrawFromStudyRespBean();
       respBean.setCode(HttpStatus.OK.value());
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
@@ -284,5 +303,17 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Ends ");
     return respBean;
+  }
+
+  @Override
+  public String getSiteId(String userId, String token) {
+    logger.info("StudyStateServiceImpl getSiteId() - Starts ");
+    String siteId = null;
+    if (StringUtils.isNotEmpty(token)) {
+      siteId = participantStudyRepository.getSiteId(userId, token.toUpperCase());
+    }
+
+    logger.info("StudyStateServiceImpl getSiteId() - Ends ");
+    return StringUtils.defaultString(siteId);
   }
 }
