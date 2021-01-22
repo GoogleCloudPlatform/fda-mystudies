@@ -3262,7 +3262,8 @@ if(document.getElementById("singleSelect").checked==true){
       var minValue = $("#numericMinValueId").val();
       if(minValue==''){
     	  $("#numericMinValueId").val("0");
-       }
+       } 
+
       $(this).parent().removeClass("has-danger").removeClass("has-error");
       $(this).parent().find(".help-block").empty();
       if (maxValue != '') {
@@ -3720,15 +3721,17 @@ if(document.getElementById("singleSelect").checked==true){
         $("#rlaResonseDataType").text(dataType);
         $("#rlaResonseTypeDescription").text(description);
         $("#" + responseType.replace(/\s/g, '')).show();
-        if(responseType=='Numeric'){
-       	 if($("#numericMinValueId").val()== ''){
-                $("#numericMinValueId").val("0");
-                }
 
-                if($("#numericMaxValueId").val() == ''){
-                    $("#numericMaxValueId").val("10000");
+         if(responseType=='Numeric'){
+        	 if($("#numericMinValueId").val()== ''){
+                 $("#numericMinValueId").val("0");
                  }
-          }
+
+                 if($("#numericMaxValueId").val() == ''){
+                     $("#numericMaxValueId").val("10000");
+                  }
+           }
+        
         $("." + responseType.replace(/\s/g, '') + "Required").attr("required", true);
         if (dashboard == 'true') {
           $("#useStasticDataContainerId").show();

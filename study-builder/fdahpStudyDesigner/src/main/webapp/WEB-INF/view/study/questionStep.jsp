@@ -2984,8 +2984,7 @@
                             <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
-                                Step ${destinationStep.sequenceNo}
-                                : ${destinationStep.stepShortTitle}</option>
+                                Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
@@ -3007,8 +3006,7 @@
                             <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
-                                Step ${destinationStep.sequenceNo}
-                                : ${destinationStep.stepShortTitle}</option>
+                                Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
@@ -5134,14 +5132,15 @@
           }
           $("#" + responseType.replace(/\s/g, '')).show();
           if(responseType=='Numeric'){
-          	 if($("#numericMinValueId").val()== ''){
-                   $("#numericMinValueId").val("0");
-                   }
 
-                   if($("#numericMaxValueId").val() == ''){
-                       $("#numericMaxValueId").val("10000");
-                    }
-             }
+         	 if($("#numericMinValueId").val()== ''){
+                  $("#numericMinValueId").val("0");
+                  }
+
+                  if($("#numericMaxValueId").val() == ''){
+                      $("#numericMaxValueId").val("10000");
+                   }
+            }
           $("." + responseType.replace(/\s/g, '') + "Required").attr("required", true);
         } else {
 
@@ -5464,7 +5463,8 @@
         var otherType;
 
         if ($('#textchoiceOtherId').is(':checked')) {
-        	otherType="on"
+
+        	otherType="on";
         	var otherIncludeText;
             var otherParticipantFill;
             if ($('#otherYes').is(':checked')) {
