@@ -3680,7 +3680,6 @@
       $('.manuallyContainer').find('.manually-option').each(function () {
         if ($(this).find('.cusTime').parent().find('.help-block').children().length > 0) {
           a++;
-          $(this).find('.cusTime').val('');
         }
       });
       isValidManuallySchedule = !(a > 0);
@@ -4234,12 +4233,12 @@
     }
     var valid = true;
     if (y && x) {
-      if (parseInt(x) >= parseInt(y)) {
+      if (parseInt(x) > parseInt(y)) {
         if (clickDone && isFromValid($('#onetimeydaysId').parents('form')))
           $('#onetimeydaysId').focus();
         $('#onetimeydaysId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y days should be greater than X days."));
         valid = false;
       } else {
         $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4404,12 +4403,12 @@
       if (parent_id === "0") {
 
         if (ydayValue !== "") {
-          if (xdayValue >= ydayValue) {
+          if (xdayValue > ydayValue) {
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Y should be greater than X."));
+                "Y days should be greater than X days."));
             $("#addbtn" + parent_id).addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
@@ -4427,12 +4426,12 @@
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue <= pydayValue) {
+        if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current and previous rows."));
+              "Child X days should be greater than parent Y days."));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -4440,12 +4439,12 @@
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
           $("#addbtn" + parent_id).addClass("not-allowed");
           if (ydayValue !== "") {
-            if (xdayValue >= ydayValue) {
+            if (xdayValue > ydayValue) {
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Y should be greater than X."));
+                  "Y days should be greater than X days."));
               $("#addbtn" + parent_id).addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -4479,12 +4478,12 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue <= xdayValue) {
+      if (ydayValue < xdayValue) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y days should be greater than X days."));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -4518,12 +4517,12 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue <= xdayValue) {
+      if (ydayValue < xdayValue) {
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y days should be greater than X days."));
         $("#addbtn" + parent_id).addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");
@@ -4539,12 +4538,12 @@
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue <= pydayValue) {
+        if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current and previous rows."));
+              "Child X days should be greater than parent Y days."));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
