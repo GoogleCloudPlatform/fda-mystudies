@@ -2,13 +2,13 @@
   <div class="row border__bottom__c4d1e6 background__dfe4ec p-xlg">
     <div class="col-xs-12 col-md-5 p-none">
       <div name="customId">
-        <label>study</label>
+        <label>Study</label>
         <div>{{ newSite.name }}</div>
       </div>
     </div>
     <div class="col-xs-12 col-md-7 p-none">
       <div name="appId">
-        <label>app</label>
+        <label>App</label>
         <div class="font14">{{ newSite.appName }}</div>
       </div>
     </div>
@@ -29,9 +29,9 @@
                 required
                 name="location"
                 #location="ngModel"
-                placeholder="Enter App ID or Name"
+                placeholder="Enter app ID or name"
               >
-                <option value="" disabled selected>Select Location</option>
+                <option value="" disabled selected>Select location</option>
                 <option
                   class="cursor__pointer"
                   *ngFor="let location of manageLocations.locations"
@@ -50,7 +50,7 @@
               class="help-block with-errors error__msg"
               *ngIf="site.locationId === '' || site.locationId === '0'"
             >
-              Select a location.
+              Select a location
             </span>
           </div>
         </div>
