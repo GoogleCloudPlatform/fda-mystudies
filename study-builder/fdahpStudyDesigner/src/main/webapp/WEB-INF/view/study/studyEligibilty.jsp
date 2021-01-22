@@ -41,7 +41,7 @@
             <span id="spancomId" class="tool-tip" data-toggle="tooltip"
                   data-placement="bottom" data-original-title="">
               <button type="button" class="btn btn-primary blue-btn submitEle"
-                      actType="mark" id="doneBut">Mark as Completed
+                      actType="mark" id="doneBut">Mark as completed
               </button>
           </div>
         </c:if>
@@ -57,16 +57,19 @@
         <div class="gray-xs-f mb-sm">
           Choose the method to be used for ascertaining participant
           eligibility
-          <small style="display: none;" id="forceContinueMsgId">(Please
-            save to continue)
-          </small>
+          <span>
+            <span
+               data-toggle="tooltip" data-placement="bottom"
+               title="Selecting any method that uses an enrollment token will make the study a 'closed' study requiring the participant to have an invitiation to participate. Invitations containing enrollment tokens can be generated and sent to particpants using the Participant Manager. Studies that use only the elgiibility test are referred to as 'open' studies and any app user that passes the test, will be allowed to enroll into the study."
+               class="filled-tooltip"></span>
+            </span>
         </div>
         <span class="radio radio-info radio-inline p-45"><input
             type="radio" id="inlineRadio1" value="1" class="eligibilityOptCls"
             name="eligibilityMechanism" required
             <c:if test="${eligibility.eligibilityMechanism eq 1}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
-          <label for="inlineRadio1">Token Validation</label>
+          <label for="inlineRadio1">Token validation</label>
         </span>
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="2"
@@ -75,7 +78,7 @@
                                                      <c:if
                                                          test="${eligibility.eligibilityMechanism eq 2}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
-          <label for="inlineRadio2">Token Validation and Eligibility</label>
+          <label for="inlineRadio2">Token validation and eligibility test</label>
         </span>
         <span class="radio radio-inline"><input type="radio"
                                                 id="inlineRadio3" value="3"
@@ -84,7 +87,7 @@
                                                 <c:if
                                                     test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>> <label
-            for="inlineRadio3">Eligibility</label>
+            for="inlineRadio3">Eligibility test</label>
         </span>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -93,10 +96,16 @@
         <div class="blue-md-f mb-md text-uppercase">Token Validation</div>
         <div>
           <div class="gray-xs-f mb-xs">
-            Instruction Text
+            Instruction text
             <small>(230 characters max)</small>
             <span
                 class="requiredStar">*
+            </span>
+            <span>
+            <span
+               data-toggle="tooltip" data-placement="top"
+               title="This is the text that participant sees as an introductory instruction for the eligibility module of the study in the mobile app. Suggested text has been provided inline."
+               class="filled-tooltip"></span>
             </span>
           </div>
           <div class="form-group elaborateClass">
@@ -112,7 +121,13 @@
          <c:if test="${eligibility.eligibilityMechanism eq 1}">style="display: none;"</c:if>>
       <div class="right-content-head">
         <div class="text-right">
-          <div class="black-md-f  dis-line pull-left line34">Eligibility
+          <div class="black-md-f  dis-line pull-left line34">Eligibility test questions
+          <span>
+            <span
+               data-toggle="tooltip" data-placement="top"
+               title="Set up questions with a Yes/No answer format for the study's eligibility test. Mark the answer(s) that if selected will let the user 'pass' the question. App users are required to pass all the questions in the test to be considered eligible to participate in the study."
+               class="filled-tooltip"></span>
+            </span>
           </div>
           <div class="dis-line form-group mb-none mr-sm">
             <c:if test="${empty permission}">

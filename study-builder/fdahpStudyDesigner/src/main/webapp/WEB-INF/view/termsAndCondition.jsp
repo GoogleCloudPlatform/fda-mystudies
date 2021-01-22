@@ -25,7 +25,7 @@
         </div>
       </section>
       <section>
-        <div class="main__container__title">Terms and Conditions</div>
+        <div class="main__container__title">Terms of use</div>
         <div class="main__container">
           <div class="main__content">
             <h2>SUBTITLE GOES HERE</h2>

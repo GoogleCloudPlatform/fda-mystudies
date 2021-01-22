@@ -36,6 +36,7 @@ import static com.google.cloud.healthcare.fdamystudies.utils.Constants.QUESTION_
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.SITE_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_COLLECTION_NAME_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_VERSION;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.SUCCESS;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.VALID_USER_ID;
@@ -126,6 +127,9 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
     // Step-2 call API to details to save participant activities
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
+    activityResponseBean.getMetadata().setStudyVersion(STUDY_VERSION);
+    activityResponseBean.getMetadata().setActivityRunId("2");
+
     HttpHeaders headers = TestUtils.newHeadersUser();
     mockMvc
         .perform(
@@ -175,6 +179,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(activityResponseBean.getMetadata().getStudyId());
+    auditRequest.setStudyVersion(activityResponseBean.getMetadata().getStudyVersion());
     auditRequest.setParticipantId(activityResponseBean.getParticipantId());
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -221,6 +226,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnBadRequestForInvalidParticipant() throws Exception {
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
+    activityResponseBean.getMetadata().setStudyVersion(STUDY_VERSION);
     activityResponseBean.setParticipantId(IdGenerator.id());
     HttpHeaders headers = TestUtils.newHeadersUser();
     mockMvc
@@ -236,6 +242,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(VALID_USER_ID);
     auditRequest.setStudyId(activityResponseBean.getMetadata().getStudyId());
+    auditRequest.setStudyVersion(activityResponseBean.getMetadata().getStudyVersion());
     auditRequest.setParticipantId(activityResponseBean.getParticipantId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
@@ -352,7 +359,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .headers(headers)
                 .queryParam("deleteResponses", "")
                 .queryParam("participantId", participantBo.getParticipantId())
-                .queryParam("studyId", STUDY_ID_VALUE))
+                .queryParam("studyId", STUDY_ID_VALUE)
+                .queryParam("studyVersion", STUDY_VERSION))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(SUCCESS)));
@@ -377,6 +385,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(VALID_USER_ID);
     auditRequest.setStudyId(STUDY_ID_VALUE);
+    auditRequest.setStudyVersion(STUDY_VERSION);
     auditRequest.setParticipantId(participantBo.getParticipantId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
@@ -415,7 +424,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .headers(headers)
                 .queryParam("deleteResponses", "true")
                 .queryParam("participantId", participantBo.getParticipantId())
-                .queryParam("studyId", STUDY_ID_VALUE))
+                .queryParam("studyId", STUDY_ID_VALUE)
+                .queryParam("studyVersion", STUDY_VERSION))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(SUCCESS)));
@@ -441,6 +451,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(STUDY_ID_VALUE);
+    auditRequest.setStudyVersion(STUDY_VERSION);
     auditRequest.setParticipantId(participantBo.getParticipantId());
     auditRequest.setUserId(VALID_USER_ID);
 
@@ -465,7 +476,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .headers(headers)
                 .queryParam("deleteResponses", "")
                 .queryParam("participantId", "")
-                .queryParam("studyId", ""))
+                .queryParam("studyId", "")
+                .queryParam("studyVersion", ""))
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.userMessage", is(EC_701.errorMessage())));
