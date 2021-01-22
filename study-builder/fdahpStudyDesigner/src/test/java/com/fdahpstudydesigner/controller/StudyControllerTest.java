@@ -299,8 +299,6 @@ public class StudyControllerTest extends BaseMockIT {
     StudySessionBean studySessionBean = new StudySessionBean();
     studySessionBean.setIsLive("live");
     studySessionBean.setPermission("permission");
-    studySessionBean.setStudyId(STUDY_ID_VALUE);
-    studySessionBean.setSessionStudyCount(0);
 
     List<StudySessionBean> studySessionBeans = new ArrayList<>();
     studySessionBeans.add(studySessionBean);
@@ -317,7 +315,6 @@ public class StudyControllerTest extends BaseMockIT {
             post(PathMappingUri.VIEW_BASIC_INFO.getPath())
                 .param(FdahpStudyDesignerConstants.IS_LIVE, "live")
                 .param(FdahpStudyDesignerConstants.PERMISSION, "permission")
-                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
         .andDo(print())

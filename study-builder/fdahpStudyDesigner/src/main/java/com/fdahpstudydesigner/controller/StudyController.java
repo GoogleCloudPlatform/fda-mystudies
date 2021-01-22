@@ -4473,8 +4473,6 @@ public class StudyController {
           if (StringUtils.isNotEmpty(isLive)
               && isLive.equalsIgnoreCase(FdahpStudyDesignerConstants.YES)
               && (studyBo != null)) {
-            auditRequest.setStudyId(studyBo.getCustomStudyId());
-            auditRequest.setStudyVersion(String.valueOf(studyBo.getVersion()));
             studyIdBean = studyService.getLiveVersion(studyBo.getCustomStudyId());
             if (studyIdBean != null) {
               consentBo =
@@ -4519,6 +4517,7 @@ public class StudyController {
           }
         }
         if (studyBo == null) {
+          auditLogEventHelper.logEvent(NEW_STUDY_CREATION_INITIATED, auditRequest);
           studyBo = new StudyBo();
           studyBo.setType(FdahpStudyDesignerConstants.STUDY_TYPE_GT);
         } else if ((studyBo != null) && StringUtils.isNotEmpty(studyBo.getCustomStudyId())) {
@@ -4550,7 +4549,6 @@ public class StudyController {
         map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
         map.addAttribute("_S", sessionStudyCount);
         mav = new ModelAndView("viewBasicInfo", map);
-        auditLogEventHelper.logEvent(NEW_STUDY_CREATION_INITIATED, auditRequest);
       }
     } catch (Exception e) {
       logger.error("StudyController - viewBasicInfo - ERROR", e);
