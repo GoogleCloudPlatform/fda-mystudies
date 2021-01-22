@@ -8,6 +8,6 @@
 		"headers": {
 			"Content-Type": "application/json;charset=UTF-8"
 		},
-		"bodyFileName": "oauth-scim-service/auth-server-deactivate-account-response.json"
+		"bodyFileName": "oauth-scim-service/auth-server-logout-admin-user-response.json"
 	}
 }
