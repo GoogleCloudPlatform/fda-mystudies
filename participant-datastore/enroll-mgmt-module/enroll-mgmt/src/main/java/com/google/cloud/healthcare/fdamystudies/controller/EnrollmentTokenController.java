@@ -87,7 +87,7 @@ public class EnrollmentTokenController {
       if (enrollmentTokenfService.hasParticipant(
           enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
         ErrorResponseUtil.getFailureResponse(
-            ErrorResponseUtil.ErrorCodes.STATUS_103.getValue(),
+            ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
             ErrorResponseUtil.ErrorCodes.TOKEN_ALREADY_USE.getValue(),
             response);
