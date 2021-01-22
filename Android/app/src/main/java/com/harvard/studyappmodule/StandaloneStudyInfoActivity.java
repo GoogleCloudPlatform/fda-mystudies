@@ -609,6 +609,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                 eligibilityConsent.getEligibility(),
                 study.getStudies().get(0).getTitle(),
                 "",
+                "",
                 "test",
                 "join");
         startActivity(intent);
@@ -655,6 +656,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                   eligibilityConsent.getEligibility(),
                   study.getStudies().get(0).getTitle(),
                   data.getStringExtra("enrollId"),
+                  data.getStringExtra("siteId"),
                   "combined",
                   "join");
           startActivity(intent);
