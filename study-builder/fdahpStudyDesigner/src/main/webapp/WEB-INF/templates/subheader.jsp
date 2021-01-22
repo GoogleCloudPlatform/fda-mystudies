@@ -19,7 +19,7 @@
   <div class="md-container">
     <div class="col-sm-12 col-md-12 col-lg-12 p-none mb-md">
       <div class="black-lg-f">
-        Manage Studies
+        Configure and manage studies
       </div>
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
         <div class="dis-line pull-right ml-md mt-xs">
@@ -33,7 +33,7 @@
                     <span class="switch-label deactivate_switch-label" data-on="Off" data-off="On"></span>
                     <span class="switch-handle deactivate_switch-handle"></span>
                   </label>
-            <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create Study
+            <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create study
             </button>
           </div>
         </div>

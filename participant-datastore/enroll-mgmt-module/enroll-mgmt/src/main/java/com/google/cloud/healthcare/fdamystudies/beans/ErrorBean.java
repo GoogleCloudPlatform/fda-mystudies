@@ -12,6 +12,15 @@ public class ErrorBean {
 
   private Integer code = 0;
   private String message = "";
+  private String siteId;
+
+  public String getSiteId() {
+    return siteId;
+  }
+
+  public void setSiteId(String siteId) {
+    this.siteId = siteId;
+  }
 
   public Integer getCode() {
     return code;

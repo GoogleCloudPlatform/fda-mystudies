@@ -3,12 +3,12 @@
     <div class="row border__bottom__c4d1e6">
       <div class="col-xs-12 col-md-12 p-none">
         <div class="form-group border-radius__77">
-          <label for="email">Edit Enrollment Target</label>
+          <label for="email">Edit enrollment target</label>
           <input
             name="target"
             type="number"
             class="form-control"
-            placeholder="Enter Enrollment Target"
+            placeholder="Enter enrollment target"
             [(ngModel)]="updateTargetEnrollmentRequest.targetEnrollment"
             required
             name="target"
@@ -24,13 +24,13 @@
               class="help-block with-errors error__msg"
               *ngIf="target.errors?.required"
             >
-              Enter an enrollment target.
+              Enter an enrollment target
             </span>
             <span
               class="help-block with-errors error__msg"
               *ngIf="target.errors?.min"
             >
-              target is invalid.
+              target is invalid
             </span>
           </div>
         </div>
