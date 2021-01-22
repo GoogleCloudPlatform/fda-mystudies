@@ -47,7 +47,7 @@ export class SiteListComponent implements OnInit {
     });
 
     this.sharedService.updateSearchPlaceHolder(
-      'Search by Site or Study ID or Name',
+      'Search by site or study ID or name',
     );
   }
   closeModal(): void {
