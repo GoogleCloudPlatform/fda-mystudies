@@ -9,6 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
 
@@ -108,12 +110,12 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     Optional<StudyEntity> optStudy = studyRepository.findByCustomIds(customStudyIds);
 
-    if (optStudy.isPresent() && optStudy.get().getType().equals(CommonConstants.OPEN_STUDY)) {
+
+    if (optStudy.isPresent() && optStudy.get().getType().equals(OPEN_STUDY)) {
       participantStudyIds =
           participantStudyRepository.findByStudyIdAndUserDetailId(
               optStudy.get().getId(), user.getUserId());
-    } else if (CollectionUtils.isEmpty(siteIds)
-        && optStudy.get().getType().equals(CommonConstants.CLOSE_STUDY)) {
+    } else if (CollectionUtils.isEmpty(siteIds) && optStudy.get().getType().equals(CLOSE_STUDY)) {
       participantStudyIds =
           participantStudyRepository.findByEmailAndStudyCustomIds(user.getEmail(), customStudyIds);
     } else {
@@ -296,7 +298,12 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantStudy.get().setParticipantId(null);
       participantStudyRepository.saveAndFlush(participantStudy.get());
 
-      enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete, auditRequest);
+      enrollUtil.withDrawParticipantFromStudy(
+          participantId,
+          participantStudy.get().getStudy().getVersion(),
+          studyId,
+          delete,
+          auditRequest);
       respBean = new WithDrawFromStudyRespBean();
       respBean.setCode(HttpStatus.OK.value());
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());

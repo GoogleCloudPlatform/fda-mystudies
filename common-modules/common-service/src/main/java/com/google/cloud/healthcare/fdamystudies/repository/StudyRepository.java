@@ -116,7 +116,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "loc.name AS locationName, loc.custom_id AS locationCustomId, "
               + "prs.invitation_time AS invitedDate, prs.id AS participantId, stu.type AS studyType "
               + "FROM participant_registry_site prs "
-              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id AND psi.status NOT IN (:excludeParticipantStudyStatus) "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id  "
               + "LEFT JOIN study_info stu ON psi.study_info_id = stu.id  "
               + "LEFT JOIN sites si ON si.id=prs.site_id "
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
@@ -135,12 +135,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
   public List<StudyParticipantDetails> getStudyParticipantDetailsForOpenStudy(
-      String studyId,
-      String[] excludeParticipantStudyStatus,
-      Integer limit,
-      Integer offset,
-      String orderByCondition,
-      String searchTerm);
+      String studyId, Integer limit, Integer offset, String orderByCondition, String searchTerm);
 
   @Query(
       value =
