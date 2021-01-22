@@ -290,7 +290,12 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantStudy.get().setParticipantId(null);
       participantStudyRepository.saveAndFlush(participantStudy.get());
 
-      enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete, auditRequest);
+      enrollUtil.withDrawParticipantFromStudy(
+          participantId,
+          participantStudy.get().getStudy().getVersion(),
+          studyId,
+          delete,
+          auditRequest);
       respBean = new WithDrawFromStudyRespBean();
       respBean.setCode(HttpStatus.OK.value());
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
