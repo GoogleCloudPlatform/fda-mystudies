@@ -4102,9 +4102,11 @@ if(document.getElementById("singleSelect").checked==true){
 
     var response_type_id = $("#questionResponseTypeId").val();
     var question_response_type_id = $("#responseQuestionId").val();
+    var vertical = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
 
     questionReponseTypeBo.responseTypeId = response_type_id;
     questionReponseTypeBo.questionsResponseTypeId = question_response_type_id;
+    questionReponseTypeBo.vertical = vertical;
 
     questionsBo.questionReponseTypeBo = questionReponseTypeBo;
     if (fromId != null && fromId != '' && typeof fromId != 'undefined' &&
