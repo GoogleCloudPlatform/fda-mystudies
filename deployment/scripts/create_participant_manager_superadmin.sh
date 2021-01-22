@@ -30,7 +30,7 @@ TMPFILE=$(mktemp)
 
 echo "USE \`oauth_server_hydra\`;" >> ${TMPFILE}
 
-SALT=`printf "%s" uuidgen | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
+SALT=`printf "%s" $(uuidgen) | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 HASH=`printf "%s%s" $SALT $PWD | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 if [[ "$OSTYPE" == "darwin"* ]]; then
 DATE=`date -v +30d +"%F %T"`

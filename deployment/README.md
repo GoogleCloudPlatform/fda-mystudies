@@ -320,6 +320,7 @@ time, an initial superadmin account needs to be generated for each application.
 generates an initial superadmin account for Participant Manager.
 
 ```bash
+sudo apt-get install uuid-runtime -y
 ./scripts/create_participant_manager_superadmin.sh <prefix> <env> <email> <password>
 ```
 
