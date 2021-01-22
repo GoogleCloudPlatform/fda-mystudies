@@ -51,6 +51,7 @@ import java.util.UUID;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -267,6 +268,7 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
+  @Disabled
   public void shouldReturnRefreshTokenForAuthorizationCodeGrant() throws Exception {
     // Step-1 call the API and expect access and refresh tokens in response
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -309,6 +311,7 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
+  @Disabled
   public void shouldReturnNewTokensForRefreshTokenGrant() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
