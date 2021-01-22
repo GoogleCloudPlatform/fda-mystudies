@@ -74,12 +74,16 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   @Override
   @Transactional
   public EnrollmentResponseBean enrollParticipant(
-      String shortName, String tokenValue, String userId, AuditLogEventRequest auditRequest) {
+      String shortName,
+      String tokenValue,
+      String userId,
+      Float studyVersion,
+      AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
     boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
     String hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue.toUpperCase());
     String participantId =
-        enrollUtil.getParticipantId("", hashedTokenValue, shortName, auditRequest);
+        enrollUtil.getParticipantId("", hashedTokenValue, shortName, studyVersion, auditRequest);
     EnrollmentResponseBean participantBean =
         enrollmentTokenDao.enrollParticipant(
             shortName,

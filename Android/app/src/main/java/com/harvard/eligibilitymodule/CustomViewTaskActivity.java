@@ -53,6 +53,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   private static final String EXTRA_STUDYID = "ViewTaskActivity.ExtraStudyId";
   private static final String STUDYID = "ViewTaskActivity.StudyId";
   private static final String ENROLLID = "ViewTaskActivity.EnrollId";
+  private static final String SITEID = "ViewTaskActivity.siteId";
   private static final String PDF_TITLE = "ViewTaskActivity.pdfTitle";
   private static final String EXTRA_TASK_RESULT = "ViewTaskActivity.ExtraTaskResult";
   private static final String EXTRA_STEP = "ViewTaskActivity.ExtraStep";
@@ -63,6 +64,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   private Task task;
   private String studyId;
   private String enrollId;
+  private String siteId;
   private String eligibility;
   private String type;
   private String pdfTitle;
@@ -77,6 +79,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
       Eligibility correctAnswers,
       String title,
       String enrollId,
+      String siteId,
       String eligibility,
       String type) {
     Intent intent = new Intent(context, CustomViewTaskActivity.class);
@@ -84,6 +87,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
     intent.putExtra(EXTRA_STUDYID, surveyId);
     intent.putExtra(PDF_TITLE, title);
     intent.putExtra(STUDYID, studyId);
+    intent.putExtra(SITEID, siteId);
     intent.putExtra(ENROLLID, enrollId);
     intent.putExtra(ELIGIBILITY, eligibility);
     intent.putExtra(TYPE, type);
@@ -108,6 +112,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
     if (savedInstanceState == null) {
       task = (Task) getIntent().getSerializableExtra(EXTRA_TASK);
       studyId = (String) getIntent().getSerializableExtra(STUDYID);
+      siteId = (String) getIntent().getSerializableExtra(SITEID);
       enrollId = (String) getIntent().getSerializableExtra(ENROLLID);
       eligibility = (String) getIntent().getSerializableExtra(ELIGIBILITY);
       type = (String) getIntent().getSerializableExtra(TYPE);
@@ -116,6 +121,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
     } else {
       task = (Task) savedInstanceState.getSerializable(EXTRA_TASK);
       studyId = (String) savedInstanceState.getSerializable(STUDYID);
+      siteId = (String) savedInstanceState.getSerializable(SITEID);
       enrollId = (String) savedInstanceState.getSerializable(ENROLLID);
       eligibility = (String) savedInstanceState.getSerializable(ELIGIBILITY);
       type = (String) savedInstanceState.getSerializable(TYPE);
@@ -154,6 +160,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
     } else {
       Intent intent = new Intent(this, NotEligibleActivity.class);
       intent.putExtra("studyId", "" + studyId);
+      intent.putExtra("siteId", "" + siteId);
       startActivity(intent);
       finish();
     }
@@ -253,6 +260,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
 
     Intent intent = new Intent(this, EligibleActivity.class);
     intent.putExtra("studyId", studyId);
+    intent.putExtra("siteId", siteId);
     intent.putExtra("enrollId", enrollId);
     intent.putExtra("title", pdfTitle);
     intent.putExtra("eligibility", eligibility);
