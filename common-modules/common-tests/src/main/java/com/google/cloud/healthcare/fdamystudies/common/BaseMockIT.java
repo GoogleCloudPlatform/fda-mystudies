@@ -341,14 +341,12 @@ public class BaseMockIT {
     String swagger = this.restTemplate.getForObject("/v2/api-docs", String.class);
     String documentPath =
         BaseMockIT.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-    if (StringUtils.isNoneBlank(documentPath)) {
-      documentPath =
-          documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
-              + "fda-mystudies/documentation/API"
-              + servletContext.getContextPath()
-              + "/openapi.json";
-      FileUtils.write(new File(documentPath), swagger, Charset.defaultCharset());
-    }
+    documentPath =
+        documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
+            + "fda-mystudies/documentation/API"
+            + servletContext.getContextPath()
+            + "/openapi.json";
+    FileUtils.write(new File(documentPath), swagger, Charset.defaultCharset());
     logger.info(String.format("Open API documentation created at %s", documentPath));
   }
 }
