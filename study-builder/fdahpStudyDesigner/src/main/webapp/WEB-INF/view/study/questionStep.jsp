@@ -2168,7 +2168,7 @@
 
                   <!-- Section Start -->
                   <div class="mt-xlg text-choice otherOptionChecked" id="0">
-                    <div class="col-md-4 pl-none">
+                    <div class="col-md-3 pl-none">
                       <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
                         <span
                             class="requiredStar">*
@@ -2273,7 +2273,7 @@
                   <!-- Section End -->
                   <!-- Section Start -->
                   <div class="mt-xlg text-choice" id="1">
-                    <div class="col-md-4 pl-none">
+                    <div class="col-md-3 pl-none">
                       <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
                         <span
                             class="requiredStar">*
