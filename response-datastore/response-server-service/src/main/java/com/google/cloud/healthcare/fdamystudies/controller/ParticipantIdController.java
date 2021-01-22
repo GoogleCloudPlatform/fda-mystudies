@@ -70,6 +70,7 @@ public class ParticipantIdController {
       String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
 
       auditRequest.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
+      auditRequest.setStudyVersion(enrollmentTokenIdentifierBean.getStudyVersion());
       auditRequest.setAppId(applicationId);
       auditRequest.setParticipantId(particpantUniqueIdentifier);
       responseServerAuditLogHelper.logEvent(PARTICIPANT_ID_GENERATED, auditRequest);
