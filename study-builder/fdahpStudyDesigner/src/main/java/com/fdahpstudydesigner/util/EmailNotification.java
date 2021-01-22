@@ -48,6 +48,7 @@ public class EmailNotification {
         toMail = toMail.trim();
         mail.setToemail(toMail.toLowerCase());
       }
+      mail.setFromEmailUsername(propMap.get("from.email.username"));
       mail.setFromEmailAddress(propMap.get("from.email.address"));
       mail.setFromEmailPassword(propMap.get("from.email.password"));
       mail.setSmtpHostname(propMap.get("smtp.hostname"));
@@ -89,6 +90,7 @@ public class EmailNotification {
         mail.setToemail(StringUtils.join(toMailListNew, ','));
       }
       mail.setFromEmailAddress(propMap.get("from.email.address"));
+      mail.setFromEmailUsername(propMap.get("from.email.username"));
       mail.setFromEmailPassword(propMap.get("from.email.password"));
       mail.setSmtpHostname(propMap.get("smtp.hostname"));
       mail.setSmtpPortvalue(propMap.get("smtp.portvalue"));
@@ -126,6 +128,7 @@ public class EmailNotification {
         toMail = toMail.trim();
         mail.setToemail(toMail.toLowerCase());
       }
+      mail.setFromEmailUsername(propMap.get("from.email.username"));
       mail.setFromEmailAddress(propMap.get("from.email.address"));
       mail.setFromEmailPassword(propMap.get("from.email.password"));
       mail.setSmtpHostname(propMap.get("smtp.hostname"));

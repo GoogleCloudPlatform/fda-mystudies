@@ -58,6 +58,7 @@ public class Mail {
   private String ccEmail;
   private String fromEmailAddress = "";
   private String fromEmailName = "";
+  private String fromEmailUsername = "";
   private String fromEmailPassword;
   private String messageBody;
   private String smtpHostname = "";
@@ -95,6 +96,10 @@ public class Mail {
 
   public String getFromEmailName() {
     return fromEmailName;
+  }
+
+  public String getFromEmailUsername() {
+    return fromEmailUsername;
   }
 
   public String getFromEmailPassword() {
@@ -151,14 +156,14 @@ public class Mail {
     logger.info("Mail.sendemail() :: Starts");
     boolean sentMail = false;
     try {
-      final String username = this.getFromEmailAddress();
+      final String username = this.getFromEmailUsername();
       final String password = this.getFromEmailPassword();
       Properties props = makeProperties(useIpWhitelist);
       Session session =
           useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
 
       Message message = new MimeMessage(session);
-      message.setFrom(new InternetAddress(username));
+      message.setFrom(new InternetAddress(this.getFromEmailAddress()));
       if (StringUtils.isNotBlank(this.getToemail())) {
         if (this.getToemail().indexOf(',') != -1) {
           message.setRecipients(
@@ -201,7 +206,7 @@ public class Mail {
     Multipart multipart = null;
 
     try {
-      final String username = this.getFromEmailAddress();
+      final String username = this.getFromEmailUsername();
       final String password = this.getFromEmailPassword();
       Properties props = makeProperties(useIpWhitelist);
       Session session =
@@ -223,7 +228,7 @@ public class Mail {
         message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(this.getBccEmail()));
       }
       message.setSubject(this.subject);
-      message.setFrom(new InternetAddress(username));
+      message.setFrom(new InternetAddress(this.getFromEmailAddress()));
 
       // Create the message part
       messageBodyPart = new MimeBodyPart();
@@ -306,6 +311,15 @@ public class Mail {
 
   public void setFromEmailName(String fromEmailName) {
     this.fromEmailName = fromEmailName;
+  }
+
+  public void setFromEmailUsername(String fromEmailUsername) {
+
+    if (!fromEmailUsername.equals("")) {
+      this.fromEmailUsername = fromEmailUsername;
+    } else {
+      this.fromEmailUsername= fromEmailAddress;
+    }
   }
 
   public void setFromEmailPassword(String fromEmailPassword) {
