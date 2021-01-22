@@ -1079,6 +1079,8 @@
         if (charCode == 16)
           isShift = false;
         if (!isShift && $(this).val()) {
+        	 $(this).parent().find(".help-block").empty();
+        	 $(this).parent().removeClass("has-danger").removeClass("has-error");
           var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
           if (!regularExpression.test($(this).val())) {
             var newVal = $(this).val().replace(/[^ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,
