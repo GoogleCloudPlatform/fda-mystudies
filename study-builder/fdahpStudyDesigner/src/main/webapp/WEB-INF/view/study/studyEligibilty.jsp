@@ -206,6 +206,7 @@
   $(document)
       .ready(
           function () {
+        	$('.studyClass').addClass("active");
             $(".menuNav li.active").removeClass('active');
             $(".menuNav li.fourth").addClass('active');
             <c:if test="${not empty permission}">

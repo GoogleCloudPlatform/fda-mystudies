@@ -2462,7 +2462,7 @@ if(document.getElementById("singleSelect").checked==true){
 	$('.textChoiceExclusive').parent().parent().hide();	
 }
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     if ($('#useAnchorDateId').is(':checked')) {
       $("#anchorTextId").attr('required', true);
     } else {

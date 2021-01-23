@@ -129,7 +129,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     <c:if test="${actionTypeForQuestionPage == 'view'}">
     $('#basicInfoFormId input,textarea ').prop('disabled', true);
     $( '#summernote').summernote('disable');

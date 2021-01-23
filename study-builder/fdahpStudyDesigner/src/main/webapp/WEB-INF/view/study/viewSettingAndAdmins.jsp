@@ -211,6 +211,7 @@
 </div>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     <c:if test="${empty permission && fn:contains(permissions,5)}">
    
     $('[data-toggle="tooltip"]').tooltip();
