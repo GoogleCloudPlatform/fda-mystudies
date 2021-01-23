@@ -598,6 +598,7 @@
     var shortTitleStatFlag = true;
     var durationFlag = true;
     $(document).ready(function () {
+      $('.studyClass').addClass("active");
       $('#fetalKickId').mask("99");
       $('#fetalKickId').keyup(function (event) {
         var fetalKick = $(this).val();
@@ -1079,6 +1080,8 @@
         if (charCode == 16)
           isShift = false;
         if (!isShift && $(this).val()) {
+        	 $(this).parent().find(".help-block").empty();
+        	 $(this).parent().removeClass("has-danger").removeClass("has-error");
           var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
           if (!regularExpression.test($(this).val())) {
             var newVal = $(this).val().replace(/[^ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,

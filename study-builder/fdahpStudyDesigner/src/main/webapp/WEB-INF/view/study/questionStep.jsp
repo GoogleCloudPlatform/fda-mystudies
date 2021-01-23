@@ -2123,7 +2123,6 @@
                           <div class="help-block with-errors red-txt"></div>
                         </div>
                       </div>
-                      <br></br>
                       <c:if test="${questionnaireBo.branching}">
                         <div class="col-md-2 pl-none">
                           <div class="gray-xs-f mb-xs">Destination Step</div>
@@ -2985,8 +2984,7 @@
                             <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
-                                Step ${destinationStep.sequenceNo}
-                                : ${destinationStep.stepShortTitle}</option>
+                                Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
@@ -3008,8 +3006,7 @@
                             <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
-                                Step ${destinationStep.sequenceNo}
-                                : ${destinationStep.stepShortTitle}</option>
+                                Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
@@ -3420,7 +3417,7 @@
   <!-- End right Content here -->
   <script type="text/javascript">
     $(document).ready(function () {
-
+      $('.studyClass').addClass("active");
       if ($('#useAnchorDateId').is(':checked')) {
         $("#anchorTextId").attr('required', true);
       } else {
@@ -4454,6 +4451,10 @@
         var maxValue = $("#numericMaxValueId").val();
         $(this).parent().removeClass("has-danger").removeClass("has-error");
         $(this).parent().find(".help-block").empty();
+        var minValue = $("#numericMinValueId").val();
+        if(minValue==''){
+      	  $("#numericMinValueId").val("0");
+         } 
         if (maxValue != '') {
           if (parseInt(value) >= parseInt(maxValue)) {
             $(this).val('');
@@ -4473,6 +4474,10 @@
         var minValue = $("#numericMinValueId").val();
         $(this).parent().removeClass("has-danger").removeClass("has-error");
         $(this).parent().find(".help-block").empty();
+        var maxValue = $("#numericMaxValueId").val();
+        if(maxValue==''){
+      	  $("#numericMaxValueId").val("10000");
+           }
         if (minValue != '') {
           if (parseInt(value) <= parseInt(minValue)) {
             $(this).val('');
@@ -5115,6 +5120,15 @@
             $("#condtionalBranchingId").hide();
           }
           $("#" + responseType.replace(/\s/g, '')).show();
+          if(responseType=='Numeric'){
+         	 if($("#numericMinValueId").val()== ''){
+                  $("#numericMinValueId").val("0");
+                  }
+
+                  if($("#numericMaxValueId").val() == ''){
+                      $("#numericMaxValueId").val("10000");
+                   }
+            }
           $("." + responseType.replace(/\s/g, '') + "Required").attr("required", true);
         } else {
 
@@ -5437,6 +5451,7 @@
         var otherType;
 
         if ($('#textchoiceOtherId').is(':checked')) {
+        	otherType="on";
         	var otherIncludeText;
             var otherParticipantFill;
             if ($('#otherYes').is(':checked')) {
@@ -5455,7 +5470,7 @@
             questionReponseTypeBo.otherPlaceholderText=otherPlaceholderText;
             questionReponseTypeBo.otherParticipantFill=otherParticipantFill;
         }else{
-          otherType="off"
+          otherType="off";
          }
         
         questionReponseTypeBo.otherText=otherText
@@ -5778,7 +5793,7 @@
       scaleCount = parseInt(scaleCount) + 1;
       if ($('.text-scale').length < 8) {
         var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
-            "	<div class='col-md-4 pl-none'>" +
+            "	<div class='col-md-3 pl-none'>" +
             "    <div class='form-group'>" +
             "      <input type='text' class='form-control TextScaleRequired' name='questionResponseSubTypeList["
             + scaleCount + "].text' id='displayTextSclText" + scaleCount
@@ -5786,7 +5801,7 @@
             "      <div class='help-block with-errors red-txt'></div>" +
             "   </div>" +
             "</div>" +
-            " <div class='col-md-3 pl-none'>" +
+            " <div class='col-md-4 pl-none'>" +
             "    <div class='form-group'>" +
             "       <input type='text' class='form-control TextScaleRequired textScaleValue' class='form-control' name='questionResponseSubTypeList["
             + scaleCount + "].value' id='displayTextSclValue" + scaleCount

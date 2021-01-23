@@ -278,6 +278,7 @@
   $(document)
       .ready(
           function () {
+        	$('.studyClass').addClass("active");
             $('#removeUrl').css("visibility", "hidden");
             var file = $('#uploadImg').val();
             var thumbnailImageId = $('#thumbnailImageId').val();

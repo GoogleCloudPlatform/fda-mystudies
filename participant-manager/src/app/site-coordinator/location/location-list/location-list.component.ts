@@ -32,7 +32,7 @@ export class LocationListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sharedService.updateSearchPlaceHolder('Search Location');
+    this.sharedService.updateSearchPlaceHolder('Search location');
     this.getLocation();
   }
 
