@@ -598,6 +598,7 @@
     var shortTitleStatFlag = true;
     var durationFlag = true;
     $(document).ready(function () {
+      $('.studyClass').addClass("active");
       $('#fetalKickId').mask("99");
       $('#fetalKickId').keyup(function (event) {
         var fetalKick = $(this).val();
