@@ -975,29 +975,30 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   func taskViewControllerSupportsSaveAndRestore(_: ORKTaskViewController) -> Bool {
     return true
   }
-  
+
   /// This method updates the study status to DB and Server.
   /// - Parameter status: `UserStudyStatus.StudyStatus` to be updated.
   fileprivate func updateStudyStatus(status: UserStudyStatus.StudyStatus) {
-    
+
     guard let currentStudy = Study.currentStudy,
-          let studyID = currentStudy.studyId else { return }
-    
+      let studyID = currentStudy.studyId
+    else { return }
+
     let currentUserStudyStatus = User.currentUser.updateStudyStatus(
       studyId: studyID,
       status: status
     )
-    
+
     Study.currentStudy?.userParticipateState = currentUserStudyStatus
-    
+
     DBHandler.updateStudyParticipationStatus(study: currentStudy)
-    
+
     EnrollServices().updateUserParticipatedStatus(
       studyStauts: currentUserStudyStatus,
       delegate: self
     )
   }
-  
+
   public func taskViewController(
     _ taskViewController: ORKTaskViewController,
     didFinishWith reason: ORKTaskViewControllerFinishReason,
@@ -1113,7 +1114,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
         self.isUpdatingIneligibility = true
         self.updateStudyStatus(status: .notEligible)
       }
-      
+
       if stepIndentifer == kEligibilityVerifiedScreen {
         stepViewController.continueButtonTitle = kContinueButtonTitle
         isUpdatingIneligibility = true
