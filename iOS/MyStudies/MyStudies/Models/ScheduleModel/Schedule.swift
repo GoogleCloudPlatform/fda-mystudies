@@ -169,7 +169,7 @@ class Schedule {
 
     let offset = UserDefaults.standard.value(forKey: "offset") as? Int
     let updatedStartTime = startTime.addingTimeInterval(TimeInterval(offset!))
-    let updatedEndTime = endTime?.addingTimeInterval(TimeInterval(offset!))
+    guard let updatedEndTime = endTime?.addingTimeInterval(TimeInterval(offset!)) else { return }
 
     let dayOfWeek = self.getCurrentWeekDay(date: updatedStartTime)
     let calendar = Calendar.currentUTC()
@@ -182,13 +182,13 @@ class Schedule {
       to: updatedStartTime
     )
     var runId = 1
-    while runStartDate?.compare(updatedEndTime!) == .orderedAscending {
+    while runStartDate?.compare(updatedEndTime) == .orderedAscending {
       var runEndDate = calendar.date(
         byAdding: .second,
         value: ((7 * 86400) - 1),
         to: runStartDate!
       )
-      if runEndDate?.compare(updatedEndTime!) == .orderedDescending {
+      if runEndDate?.compare(updatedEndTime) == .orderedDescending {
         runEndDate = updatedEndTime
       }
 
