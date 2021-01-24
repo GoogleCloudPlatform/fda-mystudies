@@ -127,6 +127,7 @@
 <script>
   var dataTable;
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li.active").removeClass('active');
     $(".sixthTask").addClass('active');
