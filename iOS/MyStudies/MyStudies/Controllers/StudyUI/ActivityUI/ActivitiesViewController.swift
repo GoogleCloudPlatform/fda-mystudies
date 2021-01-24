@@ -1263,7 +1263,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
                 // Create the stats for FetalKick
                 if let result = fetalKickResult {
 
-                  let value = Float(result.duration)
+                  let value = Float(result.duration) / 60.0
                   let kickcount = Float(result.totalKickCount)
                   let dict = ActivityBuilder.currentActivityBuilder.activity?
                     .steps?.first!
