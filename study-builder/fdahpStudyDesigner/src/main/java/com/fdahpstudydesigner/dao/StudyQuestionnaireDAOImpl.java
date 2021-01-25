@@ -970,7 +970,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @Override
   public String deleteFromStepQuestion(
-      Integer formId, Integer questionId, SessionObject sessionObject, String customStudyId) {
+      Integer formId,
+      Integer questionId,
+      SessionObject sessionObject,
+      String customStudyId,
+      AuditLogEventRequest auditRequest) {
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     logger.info("StudyQuestionnaireDAOImpl - deleteFromStepQuestion() - Starts");
@@ -978,7 +982,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     StudyVersionBo studyVersionBo = null;
     Map<String, String> values = new HashMap<>();
     try {
-      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setStudyId(customStudyId);
 
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -1085,7 +1088,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 .setString("customStudyId", customStudyId);
         query.setMaxResults(1);
         StudyBo study = (StudyBo) query.uniqueResult();
-        auditRequest.setStudyVersion(study.getVersion().toString());
+        if (studyVersionBo != null) {
+          auditRequest.setStudyVersion(studyVersionBo.getStudyVersion().toString());
+        } else {
+          auditRequest.setStudyVersion(study.getVersion().toString());
+        }
         auditRequest.setAppId(study.getAppId());
       }
       values.put(QUESTION_ID, questionId.toString());
