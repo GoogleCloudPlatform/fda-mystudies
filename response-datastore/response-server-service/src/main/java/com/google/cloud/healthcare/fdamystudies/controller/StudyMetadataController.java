@@ -62,6 +62,7 @@ public class StudyMetadataController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setAppId(studyMetadataBean.getAppId());
     auditRequest.setStudyId(studyMetadataBean.getStudyId());
+    auditRequest.setStudyVersion(studyMetadataBean.getStudyVersion());
 
     studyMetadataService.saveStudyMetadata(studyMetadataBean);
     responseServerAuditLogHelper.logEvent(STUDY_METADATA_RECEIVED, auditRequest);
