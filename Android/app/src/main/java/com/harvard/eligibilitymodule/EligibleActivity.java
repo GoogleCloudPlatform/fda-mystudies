@@ -159,6 +159,10 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     JSONObject studiestatus = new JSONObject();
     try {
       studiestatus.put("studyId", getIntent().getStringExtra("studyId"));
+      if (getIntent().getStringExtra("siteId") != null
+              && !getIntent().getStringExtra("siteId").equalsIgnoreCase("")) {
+        studiestatus.put("siteId", getIntent().getStringExtra("siteId"));
+      }
       studiestatus.put("status", StudyFragment.YET_TO_JOIN);
     } catch (JSONException e) {
       Logger.log(e);

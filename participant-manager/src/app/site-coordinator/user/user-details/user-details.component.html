@@ -8,7 +8,7 @@
         >
           <img class="mr-sm" src="assets/svgs/back-arrow.svg" alt="Go Back" />
         </a>
-        <span>Admin Details</span>
+        <span>Admin details</span>
       </div>
       <div>
         <button
@@ -32,7 +32,7 @@
     >
       <div>
         <div class="mb__mb-sm">
-          <div class="blue__text__md">Participant Email</div>
+          <div class="blue__text__md">Participant email</div>
           <div class="participant-email">{{ user.email }}</div>
         </div>
         <div>
@@ -40,11 +40,11 @@
             class="flex__justify__space-between flex__wrap user__details__label"
           >
             <div>
-              <div class="blue__text__md">First Name</div>
+              <div class="blue__text__md">First name</div>
               <div class="participant__label">{{ user.firstName }}</div>
             </div>
             <div>
-              <div class="blue__text__md">Last Name</div>
+              <div class="blue__text__md">Last name</div>
               <div class="participant__label">{{ user.lastName }}</div>
             </div>
             <div>
@@ -63,7 +63,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                     aria-hidden="true"
                   ></i>
                 </span>
-                <span *ngIf="!user.superAdmin">Site Admin</span>
+                <span *ngIf="!user.superAdmin">Site admin</span>
               </div>
             </div>
             <div>
@@ -106,7 +106,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                 *ngIf="user.manageLocations == permission.ViewAndEdit"
                 class="txt__green pl-2"
               >
-                View And Edit
+                View and edit
               </span>
             </div>
           </div>
@@ -116,7 +116,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
 
     <section class="bg__white card__inside__pad box__shadow-cmn m-none">
       <div class="form-group pb-0">
-        <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
+        <div class="user__card__title pb-lg">Sites, studies and apps</div>
       </div>
 
       <div class="form-group pt-none pt-0">
@@ -148,13 +148,13 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                           *ngIf="app.permission == permission.View"
                           class="txt__green font12"
                         >
-                          View Only
+                          View only
                         </span>
                         <span
                           *ngIf="app.permission == permission.ViewAndEdit"
                           class="txt__green font12"
                         >
-                          View And Edit
+                          View and edit
                         </span>
                       </div>
                     </div>
@@ -218,7 +218,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     *ngIf="study.permission == permission.View"
                                     class="txt__green font12"
                                   >
-                                    View Only
+                                    View only
                                   </span>
                                   <span
                                     *ngIf="
@@ -226,7 +226,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     "
                                     class="txt__green font12"
                                   >
-                                    View And Edit
+                                    View and edit
                                   </span>
                                 </div>
                               </div>
@@ -289,7 +289,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                   *ngIf="site.permission == permission.View"
                                   class="txt__green font12"
                                 >
-                                  ( View Only )
+                                  ( View only )
                                 </span>
                                 <span
                                   *ngIf="
@@ -297,7 +297,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                   "
                                   class="txt__green font12"
                                 >
-                                  ( View And Edit )
+                                  ( View and edit )
                                 </span>
                               </span>
                             </div>

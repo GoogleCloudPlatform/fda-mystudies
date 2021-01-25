@@ -52,7 +52,7 @@ export class StudyDetailsComponent
 
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder(
-      'Search by Site ID or Participant Email',
+      'Search by site ID or participant email',
     );
 
     this.subs.add(
@@ -80,7 +80,7 @@ export class StudyDetailsComponent
           studyDetails.participantRegistryDetail.studyType === StudyType.Open
         ) {
           this.sharedService.updateSearchPlaceHolder(
-            'Search Participant Email',
+            'Search participant email',
           );
         }
         return studyDetails;

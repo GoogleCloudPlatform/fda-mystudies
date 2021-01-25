@@ -293,7 +293,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     <c:if test="${actionTypeForQuestionPage == 'view'}">
     $('#formStepId input[type="text"]').prop('disabled', true);
     $('#formStepId input[type="radio"]').prop('disabled', true);
