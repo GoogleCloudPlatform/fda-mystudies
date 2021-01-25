@@ -3,7 +3,7 @@
     <ng-container *ngIf="study$ | async as studies; else sites_error">
       <div>
         <div
-          *ngFor="let study of studiesBackup"
+          *ngFor="let study of studiesDisplay"
           class="bg__white cards box__shadow-cmn ml-none mr-none studies_row"
         >
           <div class="flex__ flex__row">

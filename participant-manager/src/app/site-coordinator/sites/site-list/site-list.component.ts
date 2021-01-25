@@ -20,7 +20,7 @@ const limit = 10;
 export class SiteListComponent implements OnInit {
   study$: Observable<StudyResponse> = of();
   manageStudiesBackup = {} as StudyResponse;
-  studiesBackup: Study[] = [];
+  studiesDisplay: Study[] = [];
   study = {} as Study;
   permission = Permission;
   studyTypes = StudyType;
@@ -69,7 +69,7 @@ export class SiteListComponent implements OnInit {
         const studies = [];
         this.manageStudiesBackup = {...manageStudies};
         studies.push(...manageStudies.studies);
-        this.studiesBackup = studies;
+        this.studiesDisplay = studies;
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
@@ -105,31 +105,13 @@ export class SiteListComponent implements OnInit {
         const studies = [];
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
-        this.studiesBackup = studies;
+        this.studiesDisplay = studies;
         this.manageStudiesBackup.studies = studies;
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
             : false) && manageStudies.studies.length > 0;
       });
-    // combineLatest(
-    //   this.studiesService.getStudiesWithSites(limit, offset, this.searchValue),
-    // ).pipe(
-    //   map(([manageStudies]) => {
-    //     const studies = [];
-    //     studies.push(...this.manageStudiesBackup.studies);
-    //     studies.push(...manageStudies.studies);
-    //     this.studiesBackup = studies;
-    //     this.manageStudiesBackup.studies = studies;
-    //     this.loadMoreEnabled =
-    //       (this.manageStudiesBackup.studies.length % limit === 0
-    //         ? true
-    //         : false) && manageStudies.studies.length > 0;
-    //     this.viewportScroller.scrollToPosition([0, 2985]);
-    //     console.log(this.viewportScroller.getScrollPosition());
-    //     return this.manageStudiesBackup;
-    //   }),
-    // );
   }
   cancel(): void {
     this.modalRef.hide();
