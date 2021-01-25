@@ -114,6 +114,7 @@
 <script type="text/javascript">
   var dataTable;
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $('[data-toggle="tooltip"]').tooltip();
 

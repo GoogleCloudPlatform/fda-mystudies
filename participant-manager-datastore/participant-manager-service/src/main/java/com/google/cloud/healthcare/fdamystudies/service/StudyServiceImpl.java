@@ -347,9 +347,12 @@ public class StudyServiceImpl implements StudyService {
                 studyAppDetails.getStudyId(), participantDetails.getParticipantId());
         if (StringUtils.isNotEmpty(status)
             && EnrollmentStatus.WITHDRAWN.getStatus().equals(status)
-            && EnrollmentStatus.NOT_ELIGIBLE
-                .getStatus()
-                .equals(participantDetails.getEnrolledStatus())) {
+            && (EnrollmentStatus.NOT_ELIGIBLE
+                    .getStatus()
+                    .equals(participantDetails.getEnrolledStatus())
+                || EnrollmentStatus.YET_TO_ENROLL
+                    .getStatus()
+                    .equals(participantDetails.getEnrolledStatus()))) {
           participantDetail.setEnrollmentStatus(EnrollmentStatus.WITHDRAWN.getDisplayValue());
         } else {
           participantDetail.setEnrollmentStatus(
