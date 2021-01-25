@@ -4614,6 +4614,7 @@ public class StudyDAOImpl implements StudyDAO {
             newstudyVersionBo.setStudyVersion(1.0f);
             session.save(newstudyVersionBo);
           }
+          auditRequest.setStudyVersion(String.valueOf(newstudyVersionBo.getStudyVersion()));
 
           // create new Study and made it draft study
           StudyBo studyDreaftBo = SerializationUtils.clone(studyBo);
@@ -5604,7 +5605,6 @@ public class StudyDAOImpl implements StudyDAO {
                     .uniqueResult();
         if (studyBo != null) {
           auditRequest.setStudyId(studyBo.getCustomStudyId());
-          auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
               || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
@@ -5828,6 +5828,7 @@ public class StudyDAOImpl implements StudyDAO {
               }
               session.update(liveStudy);
               message = FdahpStudyDesignerConstants.SUCCESS;
+              auditRequest.setStudyVersion(liveStudy.getVersion().toString());
             }
           }
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
