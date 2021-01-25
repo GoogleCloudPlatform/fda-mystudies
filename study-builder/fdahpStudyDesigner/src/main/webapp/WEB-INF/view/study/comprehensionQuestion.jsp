@@ -251,6 +251,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     <c:if test="${actionPage eq 'view'}">
     $('#comprehensionFormId input,textarea,select').prop('disabled', true);
     $('.TestQuestionButtonHide').hide();
