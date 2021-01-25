@@ -23,9 +23,9 @@ export class AppListComponent implements OnInit {
     'other': '# App Users',
   };
   studiesMessageMapping: {[k: string]: string} = {
-    '=0': 'No Studies',
-    '=1': 'One Study',
-    'other': '# Studies',
+    '=0': 'No studies',
+    '=1': 'One study',
+    'other': '# studies',
   };
   loadMoreEnabled = true;
 

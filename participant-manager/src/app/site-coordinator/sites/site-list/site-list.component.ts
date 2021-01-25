@@ -26,9 +26,9 @@ export class SiteListComponent implements OnInit {
   searchValue = '';
   loadMoreEnabled = false;
   messageMapping: {[k: string]: string} = {
-    '=0': 'No Sites',
-    '=1': 'One Site',
-    'other': '# Sites',
+    '=0': 'No sites',
+    '=1': 'One site',
+    'other': '# sites',
   };
   constructor(
     private readonly studiesService: StudiesService,
