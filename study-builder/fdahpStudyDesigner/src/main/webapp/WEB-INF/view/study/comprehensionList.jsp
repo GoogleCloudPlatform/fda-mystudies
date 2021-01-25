@@ -161,6 +161,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
     $("#createStudyId").show();

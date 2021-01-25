@@ -1801,14 +1801,14 @@
                   title="Enter text choices in the order you want them to appear on the slider. You can enter a text that will be displayed for each slider position, and an associated  value to be captured if that position is selected by the user.  You can also select a destination step for each choice, if you have branching enabled for the questionnaire. "></span>
             </div>
             <div class="row">
-              <div class="col-md-4 pl-none">
+              <div class="col-md-3 pl-none">
                 <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
                   <span
-                      class="requiredStar">*
+                      class="requiredStar" style="float: right;">*
                   </span>
                 </div>
               </div>
-              <div class="col-md-3 pl-none">
+              <div class="col-md-4 pl-none">
                 <div class="gray-xs-f mb-xs">Value (1 to 50 characters)
                   <span
                       class="requiredStar">*
@@ -1905,7 +1905,7 @@
                 </c:when>
                 <c:otherwise>
                   <div class="text-scale row" id="0">
-                    <div class="col-md-4 pl-none">
+                    <div class="col-md-3 pl-none">
                       <div class="form-group">
                         <input type="text" class="form-control TextScaleRequired"
                                name="questionResponseSubTypeList[0].text"
@@ -1915,7 +1915,7 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <div class="col-md-3 pl-none">
+                    <div class="col-md-4 pl-none">
                       <div class="form-group">
                         <input type="text" class="form-control TextScaleRequired textScaleValue"
                                name="questionResponseSubTypeList[0].value"
@@ -1956,7 +1956,7 @@
                     </div>
                   </div>
                   <div class="text-scale row" id="1">
-                    <div class="col-md-4 pl-none">
+                    <div class="col-md-3 pl-none">
                       <div class="form-group">
                         <input type="text" class="form-control TextScaleRequired"
                                name="questionResponseSubTypeList[1].text"
@@ -1966,7 +1966,7 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <div class="col-md-3 pl-none">
+                    <div class="col-md-4 pl-none">
                       <div class="form-group">
                         <input type="text" class="form-control TextScaleRequired textScaleValue"
                                name="questionResponseSubTypeList[1].value"
@@ -3417,7 +3417,7 @@
   <!-- End right Content here -->
   <script type="text/javascript">
     $(document).ready(function () {
-
+      $('.studyClass').addClass("active");
       if ($('#useAnchorDateId').is(':checked')) {
         $("#anchorTextId").attr('required', true);
       } else {
@@ -4298,34 +4298,44 @@
           }
         }
       });
+      
       $("#scaleDefaultValueId").blur(function () {
-        var value = $("#scaleDefaultValueId").val();
-        var stepSize = $("#scaleStepId").val();
-        $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-        $("#scaleDefaultValueId").parent().find(".help-block").empty();
-        if (value != '' && stepSize != '') {
-          if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
-            $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+          var value = $("#scaleDefaultValueId").val();
+          var stepSize = $("#scaleStepId").val();
+          var minValue = $("#scaleMinValueId").val();
+  		   var maxValue = $("#scaleMaxValueId").val();
+          $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+          $("#scaleDefaultValueId").parent().find(".help-block").empty();
+          if (value != '' && stepSize != '') {
+            if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
+          	  if(parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)){
+              $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+              $("#scaleDefaultValueId").parent().find(".help-block").empty();
+          	  }else{
+  				 $(this).val('');
+  	    		 $(this).parent().addClass("has-danger").addClass("has-error");
+  	             $(this).parent().find(".help-block").empty();
+  	             $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
+  			}
+            } else {
+              $("#scaleDefaultValueId").val('');
+              $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#scaleDefaultValueId").parent().find(".help-block").empty();
+              $("#scaleDefaultValueId").parent().find(".help-block").append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter an integer from 0 to number of steps"));
+            }
           } else {
-            $("#scaleDefaultValueId").val('');
-            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-            $("#scaleDefaultValueId").parent().find(".help-block").empty();
-            $("#scaleDefaultValueId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an integer from 0 to number of steps"));
+            if (value != '') {
+              $("#scaleDefaultValueId").val('');
+              $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#scaleDefaultValueId").parent().find(".help-block").empty();
+              $("#scaleDefaultValueId").parent().find(".help-block").append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter an step size first "));
+            }
           }
-        } else {
-          if (value != '') {
-            $("#scaleDefaultValueId").val('');
-            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-            $("#scaleDefaultValueId").parent().find(".help-block").empty();
-            $("#scaleDefaultValueId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an step size first "));
-          }
-        }
-      });
+        });
 
       $("#continuesScaleMinValueId").blur(function () {
 
@@ -5567,9 +5577,13 @@
 
       var response_type_id = $("#questionResponseTypeId").val();
       var question_response_type_id = $("#responseQuestionId").val();
+      var vertical = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
+      
 
       questionReponseTypeBo.responseTypeId = response_type_id;
       questionReponseTypeBo.questionsResponseTypeId = question_response_type_id;
+      questionReponseTypeBo.vertical = vertical;
+      
 
       questionnaireStep.questionReponseTypeBo = questionReponseTypeBo;
       if (quesstionnaireId && shortTitle) {

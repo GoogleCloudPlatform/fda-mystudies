@@ -81,6 +81,7 @@
 <!-- End right Content here -->
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     // Fancy Scroll Bar
     var changeTabSchedule = true;
 
