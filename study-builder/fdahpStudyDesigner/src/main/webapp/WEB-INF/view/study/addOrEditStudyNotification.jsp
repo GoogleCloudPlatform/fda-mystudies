@@ -165,6 +165,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     var appId = '${appId}';
     $(".menuNav li").removeClass('active');
     $(".eigthNotification").addClass('active');

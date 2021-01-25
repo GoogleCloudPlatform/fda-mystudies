@@ -183,7 +183,7 @@
 <script type="text/javascript">
   $(document).ready(function () {
     // Fancy Scroll Bar
-
+    $('.studyClass').addClass("active");
     <c:if test="${actionPage eq 'view'}">
     $('#consentInfoFormId input,textarea').prop('disabled', true);
     $('#consentInfoFormId .elaborateClass').addClass('linkDis');

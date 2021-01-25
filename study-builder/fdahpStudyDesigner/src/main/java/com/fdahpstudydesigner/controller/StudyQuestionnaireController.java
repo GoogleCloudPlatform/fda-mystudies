@@ -200,7 +200,11 @@ public class StudyQuestionnaireController {
         if (!formId.isEmpty() && !questionId.isEmpty()) {
           message =
               studyQuestionnaireService.deleteFromStepQuestion(
-                  Integer.valueOf(formId), Integer.valueOf(questionId), sesObj, customStudyId);
+                  Integer.valueOf(formId),
+                  Integer.valueOf(questionId),
+                  sesObj,
+                  customStudyId,
+                  auditRequest);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             Map<String, String> values = new HashMap<>();
             values.put(QUESTION_ID, questionId.toString());
