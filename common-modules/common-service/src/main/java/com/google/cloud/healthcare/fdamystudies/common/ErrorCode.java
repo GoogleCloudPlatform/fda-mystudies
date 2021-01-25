@@ -52,7 +52,8 @@ public enum ErrorCode {
       400,
       "EC_0006",
       HttpStatus.BAD_REQUEST.toString(),
-      "Your password has expired. Please use the Forgot Password link to get password help."),
+      //"Your password has expired. Please use the Forgot Password link to get password help."),
+      "XXXXXXXXXXXXXXXX XXXXXXXXXXx get password help."),
 
   EMAIL_EXISTS(
       409,
