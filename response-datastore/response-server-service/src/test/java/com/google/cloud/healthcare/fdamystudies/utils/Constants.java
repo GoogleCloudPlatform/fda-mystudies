@@ -51,6 +51,8 @@ public final class Constants {
 
   public static final String STUDY_ID_VALUE = "ASignature01";
 
+  public static final String STUDY_VERSION = "3.2";
+
   public static final String STUDY_COLLECTION_NAME_VALUE = "ASignature01-RESPONSES";
 
   public static final String SUCCESS = "SUCCESS";

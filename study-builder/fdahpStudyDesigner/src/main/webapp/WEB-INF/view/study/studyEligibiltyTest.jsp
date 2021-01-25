@@ -141,7 +141,7 @@
   var isValid = false;
   var oldShortTitle = "${fn:escapeXml(eligibilityTest.shortTitle)}";
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     $(".menuNav li.active").removeClass('active');
     $(".menuNav li.fourth").addClass('active');
 
