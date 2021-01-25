@@ -405,6 +405,9 @@ public class UserServiceImpl implements UserService {
     String hash = getTextValue(passwordNode, HASH);
     String salt = getTextValue(passwordNode, SALT);
 
+    logger.info("hash : " + hash);
+    logger.info("salt : " + salt);
+
     // check the account status and password expiry condition
     validatePasswordExpiryAndAccountStatus(userEntity, userInfo, auditRequest);
 
@@ -543,7 +546,13 @@ public class UserServiceImpl implements UserService {
         userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
             ? userInfo.get(ACCOUNT_LOCKED_PASSWORD)
             : userInfo.get(PASSWORD);
+
+    logger.info("STATUS CODE --> [ " + userEntity.getStatus() + " ]");
+
     boolean passwordExpired = isPasswordExpired(passwordNode);
+
+    logger.info("!!!!!!!!!! password expired ???? --> [ " + passwordExpired + " ]");
+
     UserAccountStatus accountStatus = UserAccountStatus.valueOf(userEntity.getStatus());
     switch (accountStatus) {
       case DEACTIVATED:
@@ -567,6 +576,20 @@ public class UserServiceImpl implements UserService {
   }
 
   private boolean isPasswordExpired(JsonNode passwordNode) {
+    boolean flg_TIMESTAMP = passwordNode.hasNonNull(EXPIRE_TIMESTAMP);
+    long db_TIMESTAMP = passwordNode.get(EXPIRE_TIMESTAMP).longValue();
+    long now_TIMESTAMP = Instant.now().toEpochMilli();
+    boolean flg_OTP_USED = passwordNode.hasNonNull(OTP_USED);
+
+    logger.info(" db timestamp is null ?? --> [ " + flg_TIMESTAMP + " ]");
+    logger.info(" db timestamp --> [ " + db_TIMESTAMP + " ]");
+    logger.info("now timestamp --> [ " + now_TIMESTAMP + " ]");
+    if (flg_OTP_USED) {
+        logger.info("otp_used --> [ " + passwordNode.get(OTP_USED).booleanValue() + " ]" );
+    } else {
+        logger.info("otp_used is null ...... orz");
+    }
+
     return (passwordNode.hasNonNull(EXPIRE_TIMESTAMP)
             && Instant.now().toEpochMilli() > passwordNode.get(EXPIRE_TIMESTAMP).longValue()
         || passwordNode.hasNonNull(OTP_USED) && passwordNode.get(OTP_USED).booleanValue());
