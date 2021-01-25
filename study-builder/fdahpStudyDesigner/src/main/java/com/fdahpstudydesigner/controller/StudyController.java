@@ -4396,6 +4396,7 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
         if (null
             != request
                 .getSession()
@@ -4516,6 +4517,7 @@ public class StudyController {
           }
         }
         if (studyBo == null) {
+          auditLogEventHelper.logEvent(NEW_STUDY_CREATION_INITIATED, auditRequest);
           studyBo = new StudyBo();
           studyBo.setType(FdahpStudyDesignerConstants.STUDY_TYPE_GT);
         } else if ((studyBo != null) && StringUtils.isNotEmpty(studyBo.getCustomStudyId())) {
@@ -4704,7 +4706,6 @@ public class StudyController {
         }
         if (studySessionBean != null) {
           sessionStudyCount = studySessionBean.getSessionStudyCount();
-          eventEnum = NEW_STUDY_CREATION_INITIATED;
         } else {
           ++sessionStudyCount;
           if ((sesObj.getStudySession() != null) && !sesObj.getStudySession().isEmpty()) {
@@ -4740,6 +4741,7 @@ public class StudyController {
             }
             eventEnum = STUDY_ACCESSED_IN_EDIT_MODE;
           }
+          auditLogEventHelper.logEvent(eventEnum, auditRequest);
         }
       }
 
@@ -4756,7 +4758,6 @@ public class StudyController {
           .getSession()
           .setAttribute(sessionStudyCount + FdahpStudyDesignerConstants.IS_LIVE, isLive);
 
-      auditLogEventHelper.logEvent(eventEnum, auditRequest);
       modelAndView = new ModelAndView("redirect:/adminStudies/viewBasicInfo.do", map);
     } catch (Exception e) {
       logger.error("StudyController - viewStudyDetails - ERROR", e);
