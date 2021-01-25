@@ -34,6 +34,7 @@ import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -340,7 +341,10 @@ public class BaseMockIT {
   protected void generateOpenApiJson() throws IOException {
     String swagger = this.restTemplate.getForObject("/v2/api-docs", String.class);
     String documentPath =
-        BaseMockIT.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        URLDecoder.decode(
+            BaseMockIT.class.getProtectionDomain().getCodeSource().getLocation().getPath(),
+            "UTF-8");
+
     documentPath =
         documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
             + "fda-mystudies/documentation/API"
