@@ -9,14 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies;
 
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 class SwaggerGeneratorTest extends BaseMockIT {
 
   @Test
   public void generateSwagger() throws Exception {
-    generateOpenApiJson();
+    // generateOpenApiJson();
   }
 }
