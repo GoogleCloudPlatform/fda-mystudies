@@ -92,7 +92,7 @@ class ResourcesViewController: UIViewController {
 
     self.tableView?.estimatedRowHeight = 65
     self.tableView?.rowHeight = UITableView.automaticDimension
-
+    self.tableView?.tableFooterView = UIView()
     if Utilities.isStandaloneApp() {
       self.setNavigationBarItem()
     } else {
@@ -568,26 +568,6 @@ extension ResourcesViewController: UITableViewDataSource {
       return cell
     }
     return UITableViewCell()
-  }
-
-  func tableView(
-    _ tableView: UITableView,
-    viewForFooterInSection section: Int
-  ) -> UIView? {
-    let result = UIView()
-
-    // recreate insets from existing ones in the table view
-    let insets = tableView.separatorInset
-    let width = tableView.bounds.width - insets.left - insets.right
-    let sepFrame = CGRect(x: insets.left, y: -0.5, width: width, height: 0.5)
-
-    // create layer with separator, setting color
-    let sep = CALayer()
-    sep.frame = sepFrame
-    sep.backgroundColor = tableView.separatorColor?.cgColor
-    result.layer.addSublayer(sep)
-
-    return result
   }
 
 }

@@ -4706,7 +4706,6 @@ public class StudyController {
         }
         if (studySessionBean != null) {
           sessionStudyCount = studySessionBean.getSessionStudyCount();
-
         } else {
           ++sessionStudyCount;
           if ((sesObj.getStudySession() != null) && !sesObj.getStudySession().isEmpty()) {

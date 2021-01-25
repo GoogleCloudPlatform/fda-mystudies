@@ -2500,6 +2500,7 @@ public class SurveyActivitiesFragment extends Fragment
     try {
       studiestatus.put("studyId", ((SurveyActivity) context).getStudyId());
       studiestatus.put("siteId", studies.getSiteId());
+      studiestatus.put("participantId", studies.getParticipantId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
 

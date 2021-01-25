@@ -450,10 +450,12 @@
       $('.changeView1').prop('disabled', true);
     }
     var role = '${userBO.roleName}';
+    <c:if test="${actionPage ne 'VIEW_PAGE'}">
     if (role) {
       setStudySettingByRole(role);
     }
-
+    </c:if>
+    
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       setStudySettingByRole(element);

@@ -121,6 +121,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li").removeClass('active');
     $(".eigthNotification").addClass('active');

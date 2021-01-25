@@ -2462,7 +2462,7 @@ if(document.getElementById("singleSelect").checked==true){
 	$('.textChoiceExclusive').parent().parent().hide();	
 }
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     if ($('#useAnchorDateId').is(':checked')) {
       $("#anchorTextId").attr('required', true);
     } else {
@@ -3116,42 +3116,42 @@ if(document.getElementById("singleSelect").checked==true){
       }
     });
     $("#scaleDefaultValueId").blur(function () {
-      var value = $("#scaleDefaultValueId").val();
-      var stepSize = $("#scaleStepId").val();
-      var minValue = $("#scaleMinValueId").val();
-	  var maxValue = $("#scaleMaxValueId").val();
-      $(this).parent().removeClass("has-danger").removeClass("has-error");
-      $(this).parent().find(".help-block").empty();
-      if (value != '' && stepSize != '') {
-        if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
-          if(parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)){
-          $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-          $("#scaleDefaultValueId").parent().find(".help-block").empty();
-         } else {
-		  $(this).val('');
-	      $(this).parent().addClass("has-danger").addClass("has-error");
-	      $(this).parent().find(".help-block").empty();
-	      $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
-		 }
+        var value = $("#scaleDefaultValueId").val();
+        var stepSize = $("#scaleStepId").val();
+        var minValue = $("#scaleMinValueId").val();
+  	     var maxValue = $("#scaleMaxValueId").val();
+        $(this).parent().removeClass("has-danger").removeClass("has-error");
+        $(this).parent().find(".help-block").empty();
+        if (value != '' && stepSize != '') {
+          if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
+            if(parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)){
+            $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+           } else {
+  		  $(this).val('');
+  	      $(this).parent().addClass("has-danger").addClass("has-error");
+  	      $(this).parent().find(".help-block").empty();
+  	      $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
+  		 }
+          } else {
+            $("#scaleDefaultValueId").val('');
+            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+            $("#scaleDefaultValueId").parent().find(".help-block").append(
+          	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer from 0 to number of steps"));
+          }
         } else {
-          $("#scaleDefaultValueId").val('');
-          $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-          $("#scaleDefaultValueId").parent().find(".help-block").empty();
-          $("#scaleDefaultValueId").parent().find(".help-block").append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please enter an integer from 0 to number of steps"));
+          if (value != '') {
+            $("#scaleDefaultValueId").val('');
+            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+            $("#scaleDefaultValueId").parent().find(".help-block").append(
+          	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an step size first "));
+          }
         }
-      } else {
-        if (value != '') {
-          $("#scaleDefaultValueId").val('');
-          $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-          $("#scaleDefaultValueId").parent().find(".help-block").empty();
-          $("#scaleDefaultValueId").parent().find(".help-block").append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please enter an step size first "));
-        }
-      }
-    });
+      });
     $("#continuesScaleMinValueId").blur(function () {
       var value = $("#continuesScaleMinValueId").val();
       var maxValue = $("#continuesScaleMaxValueId").val();
@@ -4113,9 +4113,11 @@ if(document.getElementById("singleSelect").checked==true){
 
     var response_type_id = $("#questionResponseTypeId").val();
     var question_response_type_id = $("#responseQuestionId").val();
+    var vertical = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
 
     questionReponseTypeBo.responseTypeId = response_type_id;
     questionReponseTypeBo.questionsResponseTypeId = question_response_type_id;
+    questionReponseTypeBo.vertical = vertical;
 
     questionsBo.questionReponseTypeBo = questionReponseTypeBo;
     if (fromId != null && fromId != '' && typeof fromId != 'undefined' &&
