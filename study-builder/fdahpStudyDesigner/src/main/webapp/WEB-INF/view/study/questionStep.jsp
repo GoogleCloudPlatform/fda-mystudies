@@ -3466,6 +3466,7 @@
        if ($('#textchoiceOtherId').is(':checked')) {
          $('.textchoiceOtherCls').show();
          $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+         $('.textchoiceOtherCls').find('#otherDestinationTextChoiceStepId').attr('required', false);
          $('.OtherOptionCls').find('input:text,select').removeAttr('required');
 
          if(${actionTypeForQuestionPage == 'edit'} || ${actionTypeForQuestionPage == 'view'}){
@@ -3565,6 +3566,7 @@
                }
           $('.textchoiceOtherCls').show();
           $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+          $('.textchoiceOtherCls').find('#otherDestinationTextChoiceStepId').attr('required', false);
           $('.OtherOptionCls').find('input:text,select').removeAttr('required');
         } else {
 
@@ -3662,6 +3664,7 @@
           if ($('#textchoiceOtherId').is(':checked')) {
             $('.textchoiceOtherCls').show();
             $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+            $('.textchoiceOtherCls').find('#otherDestinationTextChoiceStepId').attr('required', false);
             $('.OtherOptionCls').find('input:text,select').removeAttr('required');
           } else {
             $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
@@ -7161,6 +7164,7 @@
       if ($('#textchoiceOtherId').is(':checked')) {
         $('.textchoiceOtherCls').show();
         $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+        $('.textchoiceOtherCls').find('#otherDestinationTextChoiceStepId').attr('required', false);
         $('.OtherOptionCls').find('input:text,select').removeAttr('required');
       } else {
         $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
