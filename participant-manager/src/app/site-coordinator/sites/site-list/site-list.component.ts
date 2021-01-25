@@ -20,6 +20,7 @@ const limit = 10;
 export class SiteListComponent implements OnInit {
   study$: Observable<StudyResponse> = of();
   manageStudiesBackup = {} as StudyResponse;
+  studiesBackup: Study[] = [];
   study = {} as Study;
   permission = Permission;
   studyTypes = StudyType;
@@ -65,7 +66,10 @@ export class SiteListComponent implements OnInit {
       this.studiesService.getStudiesWithSites(limit, 0, this.searchValue),
     ).pipe(
       map(([manageStudies]) => {
+        const studies = [];
         this.manageStudiesBackup = {...manageStudies};
+        studies.push(...manageStudies.studies);
+        this.studiesBackup = studies;
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
@@ -95,24 +99,37 @@ export class SiteListComponent implements OnInit {
   loadMoreSites(): void {
     console.log(this.viewportScroller.getScrollPosition());
     const offset = this.manageStudiesBackup.studies.length;
-
-    this.study$ = combineLatest(
-      this.studiesService.getStudiesWithSites(limit, offset, this.searchValue),
-    ).pipe(
-      map(([manageStudies]) => {
+    this.studiesService
+      .getStudiesWithSites(limit, offset, this.searchValue)
+      .subscribe((manageStudies) => {
         const studies = [];
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
+        this.studiesBackup = studies;
         this.manageStudiesBackup.studies = studies;
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
             : false) && manageStudies.studies.length > 0;
-        this.viewportScroller.scrollToPosition([0, 2985]);
-        console.log(this.viewportScroller.getScrollPosition());
-        return this.manageStudiesBackup;
-      }),
-    );
+      });
+    // combineLatest(
+    //   this.studiesService.getStudiesWithSites(limit, offset, this.searchValue),
+    // ).pipe(
+    //   map(([manageStudies]) => {
+    //     const studies = [];
+    //     studies.push(...this.manageStudiesBackup.studies);
+    //     studies.push(...manageStudies.studies);
+    //     this.studiesBackup = studies;
+    //     this.manageStudiesBackup.studies = studies;
+    //     this.loadMoreEnabled =
+    //       (this.manageStudiesBackup.studies.length % limit === 0
+    //         ? true
+    //         : false) && manageStudies.studies.length > 0;
+    //     this.viewportScroller.scrollToPosition([0, 2985]);
+    //     console.log(this.viewportScroller.getScrollPosition());
+    //     return this.manageStudiesBackup;
+    //   }),
+    // );
   }
   cancel(): void {
     this.modalRef.hide();
