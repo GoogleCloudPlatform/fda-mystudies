@@ -117,11 +117,6 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-maven-plugin</artifactId>
-      <version>7.5.0</version>
-    </dependency>
   </dependencies>
 
   <build>
