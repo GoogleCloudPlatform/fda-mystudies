@@ -46,7 +46,7 @@ export class StudyListComponent implements OnInit {
       this.getStudies();
     });
 
-    this.sharedService.updateSearchPlaceHolder('Search By Study ID or Name');
+    this.sharedService.updateSearchPlaceHolder('Search by study ID or name');
   }
 
   getStudies(): void {

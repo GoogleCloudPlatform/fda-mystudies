@@ -28,5 +28,6 @@ public interface EnrollmentTokenService {
       String shortName,
       @Nullable String tokenValue,
       String userId,
+      Float studyVersion,
       AuditLogEventRequest auditRequest);
 }

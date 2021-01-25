@@ -98,6 +98,15 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
         transaction = session.beginTransaction();
 
+        query =
+            session
+                .getNamedQuery("StudyBo.getStudyBycustomStudyId")
+                .setString("customStudyId", customStudyId);
+        query.setMaxResults(1);
+        StudyBo study = (StudyBo) query.uniqueResult();
+        auditRequest.setStudyVersion(study.getVersion().toString());
+        auditRequest.setAppId(study.getAppId());
+
         queryString =
             "DELETE From NotificationBO where activeTaskId=:activeId AND notificationSent=false";
         session

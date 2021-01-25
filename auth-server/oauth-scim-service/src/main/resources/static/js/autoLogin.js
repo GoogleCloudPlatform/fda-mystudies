@@ -9,5 +9,5 @@
 window.onload = function() {
   window.setTimeout(function() {
     document.autoSignInForm.submit();
-  }, 2000);
+  }, 500);
 };

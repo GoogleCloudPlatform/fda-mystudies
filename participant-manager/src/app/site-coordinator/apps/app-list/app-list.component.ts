@@ -46,7 +46,7 @@ export class AppListComponent implements OnInit {
       this.searchValue = updatedParameter;
       this.getApps();
     });
-    this.sharedService.updateSearchPlaceHolder('Search by App ID or Name');
+    this.sharedService.updateSearchPlaceHolder('Search by app ID or name');
   }
   getApps(): void {
     this.manageApp$ = combineLatest(

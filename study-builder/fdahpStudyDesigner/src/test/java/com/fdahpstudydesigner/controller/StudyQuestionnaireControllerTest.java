@@ -53,7 +53,7 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
         .perform(
             post(PathMappingUri.DELETE_QUESTIONNAIRES.getPath())
                 .headers(headers)
-                .param("studyId", "58")
+                .param("studyId", "678574")
                 .param("questionnaireId", "1")
                 .sessionAttr(CUSTOM_STUDY_ID_ATTR_NAME, "OpenStudy002")
                 .sessionAttrs(getSessionAttributes()))

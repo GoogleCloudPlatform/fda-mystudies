@@ -8,7 +8,7 @@
           >
             <div>
               <a (click)="backClicked()" class="cursor__pointer">
-                <img src="assets/svgs/back-arrow.svg" alt="Go Back" />
+                <img src="assets/svgs/back-arrow.svg" alt="Go back" />
               </a>
             </div>
             <div class="pl-1">
@@ -19,7 +19,7 @@
                     studyTypes.Open
                   "
                 >
-                  Study Participant Registry
+                  Study participant registry
                 </span>
                 <span
                   *ngIf="
@@ -27,7 +27,7 @@
                     studyTypes.Open
                   "
                 >
-                  Enrollment Registry
+                  Enrollment registry
                 </span>
               </div>
               <div class="flex__justify__space-between">
@@ -38,8 +38,8 @@
                   "
                   class="pr-xlg"
                 >
-                  <div class="banner__label">SITE</div>
-                  <div class="banner__text">NA (Open Study)</div>
+                  <div class="banner__label">Site</div>
+                  <div class="banner__text">NA (Open study)</div>
                 </div>
                 <div class="pr-xlg">
                   <div class="banner__label">
@@ -84,8 +84,8 @@
           class="pt-1"
         >
           <div class="enrollment-label mt-4">
-            <span class="btn mt-2 enrol_btn p-none">
-              Enrollment Target:
+            <span class="btn mt-2 enrol_btn p-none cursor__text">
+              Enrollment target:
               {{ studyDetails.participantRegistryDetail.targetEnrollment }}
             </span>
             <button
@@ -128,7 +128,7 @@
           <thead class="custom__thead">
             <tr>
               <th>
-                <mfDefaultSorter by="_email">Participant Email</mfDefaultSorter>
+                <mfDefaultSorter by="_email">Participant email</mfDefaultSorter>
               </th>
               <th
                 *ngIf="
@@ -145,17 +145,17 @@
                 "
               >
                 <mfDefaultSorter by="_onboardingStatus">
-                  Onboarding Status
+                  Onboarding status
                 </mfDefaultSorter>
               </th>
               <th>
                 <mfDefaultSorter by="_enrollmentStatus">
-                  Enrollment Status
+                  Enrollment status
                 </mfDefaultSorter>
               </th>
               <th>
                 <mfDefaultSorter by="_enrollmentDate">
-                  Enrollment Date
+                  Enrollment date
                 </mfDefaultSorter>
               </th>
             </tr>

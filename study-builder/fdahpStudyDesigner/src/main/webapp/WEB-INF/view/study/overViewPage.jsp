@@ -33,7 +33,7 @@
 
           <div class="dis-line form-group mb-none">
             <button type="button" class="btn btn-primary blue-btn submitEle"
-                    id="completedId" actType="completed">Mark as Completed
+                    id="completedId" actType="completed">Mark as completed
             </button>
           </div>
         </c:if>
@@ -49,7 +49,7 @@
 
       <div>
         <div class="gray-xs-f mb-xs">
-          Study Video URL (if available)
+          Study video URL (if available)
           <small>(300 characters max)</small>
         </div>
         <div class="form-group">
@@ -67,18 +67,18 @@
       <div class="overview_section">
         <div class="panel-group overview-panel" id="accordion">
           <div class="black-md-f mb-md">
-            Study Overview Pages
+            Study overview pages
             <span>
               <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="right"
                     data-html="true"
                     title=""
                     data-original-title="
-	                 	<p class='text-left'>These pages are meant for the introductory, 'Quick Overview' section of your study in the mobile app. It is intended to help users get a quick snapshot summary of what the study is about and how it may benefit them and others.</p>
-						<p class='text-left'>Each page has an image, title and about 180-200 characters of description allowed. Given below are some suggested topics you can touch upon in these pages (remember to key in lines that can best describe your study in a way that people will be able to relate to and understand):</p>	
-						<div class='text-left'>o Study Purpose and Goals</div>
-						<div class='text-left'>o Target Audience</div>
-						<div class='text-left'>o Usage of Participant Data</div>
+	                 	<p class='text-left'>These pages are meant for an introductory section of your study in the mobile app. It is intended to help users get a quick summary of what the study is about and how it may benefit them and others.</p>
+						<p class='text-left'>Each page has an image, title and about 200 character-length of description allowed. Given below are some suggested topics you can touch upon in these pages:</p>	
+						<div class='text-left'>o Study purpose and goals</div>
+						<div class='text-left'>o Target audience</div>
+						<div class='text-left'>o Data usage</div>
 						<div class='text-left'>o Benefits / Why one must participate?</div>
 	                 "></span>
             </span>
@@ -116,7 +116,7 @@
                       <span class="filled-tooltip"
                             data-toggle="tooltip" data-placement="top" data-html="true"
                             title=""
-                            data-original-title="The 'Default' image shown below is used in the mobile app unless you over-ride it by uploading an 'Alternate' image. Please note that the image you upload must be of type .JPG or .PNG, and have a size of 750 x 1334 pixels."></span>
+                            data-original-title="The default image shown below will be used for pages of the study overview in the mobile app. You can upload an alternate image if you wish to use another. The image you upload must be of type .JPG or .PNG, and have a size of 750x1334 pixels."></span>
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
@@ -154,7 +154,7 @@
                   
                   <div class="mt-lg" style="margin-top:1px !important;  font-size:10px; ;display:inline-block">
                     <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important">
-                     Default Image                     
+                     Default image                     
                     </div>
                     </div>
                      &nbsp; 
@@ -163,7 +163,7 @@
                     
                     <div class="mt-lg" style="margin-top:1px !important; margin-left:-6px; font-size:10px ;display:inline-block">
                     <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important">
-                     Alternate Image                     
+                     Alternate image                     
                     </div>
                     </div>
 
@@ -244,7 +244,7 @@
                               data-toggle="tooltip" data-placement="top"
                               data-html="true"
                               title="" src="/studybuilder/images/icons/tooltip.png"
-                              data-original-title="<span class='font24'>.</span></span>The 'Default' image shown below is used in the mobile app unless you over-ride it by uploading an 'Alternate' image. Please note that the image you upload must be of type .JPG or .PNG, and have a size of <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels."></span>
+                              data-original-title="<span class='font24'>.</span></span>The default image shown below will be used for pages of the study overview in the mobile app. You can upload an alternate image if you wish to use another. The image you upload must be of type .JPG or .PNG, and have a size of  <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels."></span>
                     </div>
                       <div class="thumb" style="display: inline-block;width:77px !important">
                        <c:choose>
@@ -297,7 +297,7 @@
                   </div>
                    <div class="mt-lg" style="margin-top:1px !important;  font-size:10px; display:inline-block">
                     <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important">
-                     Default Image                     
+                     Default image                     
                     </div>
                     </div>
                      &nbsp; 
@@ -306,7 +306,7 @@
                       
                    <div class="mt-lg" style="margin-top:1px !important; margin-left:-3px; font-size:10px ;display:inline-block">
                     <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important">
-                     Alternate Image                     
+                     Alternate image                     
                     </div>
                     </div>
                   <div class="mt-lg">
@@ -368,7 +368,7 @@
 <script>
 
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     <c:if test="${user eq 'logout_login_user'}">
     bootbox.alert({
       closeButton: false,
@@ -493,9 +493,9 @@
           "</div>" +
           "</div>" +
           "<div class='mt-lg' style='margin-top:1px !important;  font-size:10px; display:inline-block'>"+
-          " <div class='gray-xs-f' style='font-size:12px !important;font-weight:500 !important ; color:#4a5054 !important'> Default Image</div></div> &nbsp; &nbsp; &nbsp;"+
+          " <div class='gray-xs-f' style='font-size:12px !important;font-weight:500 !important ; color:#4a5054 !important'> Default image</div></div> &nbsp; &nbsp; &nbsp;"+
           " <div class='mt-lg' style='margin-top:1px !important; margin-left:-7px; font-size:10px ;display:inline-block'><div class='gray-xs-f'  style='font-size:12px !important;font-weight:500 !important ; color:#4a5054 !important'>"+
-           "Alternate Image </div></div> "
+           "Alternate image </div></div> "
            +
           "<div class=mt-lg>" +
           "<div class='gray-xs-f mb-xs'>Title <small>(50 characters max) </small><span class='requiredStar'>*</span></div>"

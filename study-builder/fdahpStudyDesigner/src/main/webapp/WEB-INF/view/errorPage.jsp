@@ -112,6 +112,13 @@ html, body {
     font-size: 100%;
     font-weight: 600; 
 }
+
+.width__50 {
+  width: 50%;
+}
+.mar_0_auto {
+  margin: 0 auto;
+}
 </style>
   </head>
   <body>
@@ -138,8 +145,8 @@ html, body {
         <span class="display-1 d-block">
           <img src="/studybuilder/images/icons/ErrorIcon.svg" alt="Page not found here" />
         </span>
-        <div class="invalidLink_text mt-4 mb-4">This link is no longer valid to be used. 
-                Please contact the system admin for assistance with your account or sign in if already registered.
+        <div class="invalidLink_text mt-4 mb-4 width__50  mar_0_auto">This link is no longer valid to be used. 
+        For any assistance needed with your account,<br> please contact the system admin.
         </div>
       </div>
 </div>

@@ -27,8 +27,8 @@ public enum UserMgmntEvent implements AuditLogEvent {
       null,
       SCIM_AUTH_SERVER,
       PARTICIPANT_USER_DATASTORE,
-      "User ID created after successful registration on auth server.",
-      "USER_CREATED"),
+      "New user registration succeeded.",
+      "REGISTRATION_SUCCEEDED"),
 
   REGISTRATION_FAILED(
       null,

@@ -40,7 +40,7 @@
               test="${not empty userBO.userPassword && userBO.enabled && not userBO.emailChanged}">
             <div class="dis-inline mt-sm">
               <span class="stat">
-                <span class="black-sm-f">Status:
+                <span class="black-sm-f">Account status:
                   <span
                       class="gray-xs-f mb-xs pl-xs"> Active
                   </span>
@@ -51,7 +51,7 @@
           <c:if
               test="${not empty userBO.userPassword &&  not userBO.enabled}">
             <div class="dis-inline mt-sm">
-              <span class="black-sm-f">Status:
+              <span class="black-sm-f">Account status:
                 <span
                     class="gray-xs-f mb-xs pl-xs"> Deactivated
                 </span>
@@ -60,10 +60,10 @@
           </c:if>
           <c:if test="${empty userBO.userPassword}">
             <div class="dis-inline mt-sm">
-              <span class="black-sm-f">Status:
+              <span class="black-sm-f">Account status:
                 <span
-                    class="gray-xs-f mb-xs pl-xs pr-md"> Invitation Sent,
-                  Account Activation Pending
+                    class="gray-xs-f mb-xs pl-xs pr-md"> Invitation sent,
+                   pending activation
                 </span>
               </span>
 		   <c:choose>
@@ -86,7 +86,7 @@
           </c:if>
           <c:if test="${userBO.emailChanged}">
             <div class="dis-inline mt-sm">
-              <span class="black-sm-f">Status:
+              <span class="black-sm-f">Account status:
                 <span
                     class="gray-xs-f mb-xs pl-xs"> Pending Verification
                 </span>
@@ -126,12 +126,12 @@
       <div class="ed-user-layout row">
         <!-- Edit User Layout-->
 
-        <div class="blue-md-f text-uppercase mb-md">Study Information</div>
+        <div class="blue-md-f text-uppercase mb-md">User Information</div>
         <div class="col-md-12 p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
-              First Name
+              First name
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -145,7 +145,7 @@
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-              Last Name
+              Last name
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -162,7 +162,7 @@
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
-              Email Address
+              Email
               <c:if test="${actionPage ne 'VIEW_PAGE'}">&nbsp;<small>(100
                 characters max)</small>
               </c:if>
@@ -201,7 +201,7 @@
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="blue-md-f text-uppercase mt-lg mb-md">
-              Assign Role
+              Role
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -355,7 +355,7 @@
               </c:if>
             </div>
             <!-- Selected Study items -->
-            <div class="study-selected mt-md">
+            <div class="study-selected mt-md" style="font-weight: bold;">
               <c:forEach items="${studyBOs}" var="study">
                 <div class="study-selected-item selStd" id="std${study.id}">
                   <input type="hidden" class="stdCls" id="${study.id}" name=""
@@ -450,10 +450,12 @@
       $('.changeView1').prop('disabled', true);
     }
     var role = '${userBO.roleName}';
+    <c:if test="${actionPage ne 'VIEW_PAGE'}">
     if (role) {
       setStudySettingByRole(role);
     }
-
+    </c:if>
+    
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       setStudySettingByRole(element);

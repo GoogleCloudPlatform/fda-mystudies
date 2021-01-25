@@ -27,7 +27,7 @@
           <button type="button"
                   class="btn btn-primary blue-btn markCompleted <c:if test="${not empty notificationSavedList}">linkDis</c:if>"
                   onclick="markAsCompleted();"
-          >Mark as Completed
+          >Mark as completed
           </button>
         </div>
       </c:if>
@@ -121,6 +121,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li").removeClass('active');
     $(".eigthNotification").addClass('active');

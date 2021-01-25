@@ -49,8 +49,8 @@
       <input type="hidden" name="id" value="${eligibilityTest.id}"/>
       <input type="hidden" id="eligibilityId" name="eligibilityId" value="${eligibilityId}"/>
       <input type="hidden" id="sequenceNo" name="sequenceNo" value="${eligibilityTest.sequenceNo}"/>
-      <div class=" col-lg-4 col-md-5 pl-none">
-        <div class="gray-xs-f mb-xs">Short title (1 to 15 characters)
+      <div class=" col-lg-5 col-md-5 pl-none pr-none">
+        <div class="gray-xs-f mb-xs">Question key or short title (15 characters max) 
           <span
               class="requiredStar"> *
           </span>
@@ -69,7 +69,7 @@
         </div>
       </div>
       <div class="clearfix"></div>
-      <div class="gray-xs-f mb-xs">Question (1 to 250 characters)
+      <div class="gray-xs-f mb-xs">Question (250 characters max)
         <span
             class="requiredStar"> *
         </span>
@@ -82,10 +82,16 @@
       <div class="clearfix"></div>
       <div class="col-lg-5 col-md-5 p-none">
         <div class="form-group col-md-12 p-none mr-md mb-none">
-          <div class="gray-xs-f mb-xs col-md-6 pl-none ">Response Options</div>
+          <div class="gray-xs-f mb-xs col-md-6 pl-none ">Response options</div>
           <div class="gray-xs-f mb-xs col-md-6 pr-none">Pass / Fail
             <span
                 class="requiredStar"> *
+            </span>
+            <span>
+            <span
+               data-toggle="tooltip" data-placement="top"
+               title="Indicate if the user should pass the question if they select this answer."
+               class="filled-tooltip"></span>
             </span>
           </div>
         </div>
@@ -135,7 +141,7 @@
   var isValid = false;
   var oldShortTitle = "${fn:escapeXml(eligibilityTest.shortTitle)}";
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     $(".menuNav li.active").removeClass('active');
     $(".menuNav li.fourth").addClass('active');
 

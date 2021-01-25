@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ais-Yu-8zr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ais-Yu-8zr">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1204,67 +1204,54 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" id="jOk-hM-9Oa">
-                                <rect key="frame" x="0.0" y="600" width="414" height="155"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fK6-h0-PuL">
-                                        <rect key="frame" x="21.5" y="30" width="371" height="43"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                        <state key="normal" title="I agree, proceed to deleting my account">
-                                            <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="4"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                                <integer key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="deleteAccountAction:" destination="cV9-St-ahQ" eventType="touchUpInside" id="aFG-60-gos"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SU0-O1-TlB">
-                                        <rect key="frame" x="21.5" y="88" width="371" height="43"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                        <state key="normal" title="I do not wish to delete my account">
-                                            <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="4"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                                <integer key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="doNotDeleteAccountAction:" destination="cV9-St-ahQ" eventType="touchUpInside" id="X6W-Ay-ETw"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fK6-h0-PuL">
+                                <rect key="frame" x="22" y="633" width="370" height="43"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="centerX" secondItem="jOk-hM-9Oa" secondAttribute="centerX" id="2jU-nz-HvY"/>
-                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="width" secondItem="fK6-h0-PuL" secondAttribute="width" id="3Fw-GH-a4a"/>
-                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="trailing" secondItem="fK6-h0-PuL" secondAttribute="trailing" id="AWZ-Mq-HTl"/>
-                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="height" secondItem="fK6-h0-PuL" secondAttribute="height" id="BcA-xk-k5K"/>
-                                    <constraint firstItem="fK6-h0-PuL" firstAttribute="height" secondItem="jOk-hM-9Oa" secondAttribute="height" multiplier="43/155" id="QGv-kG-15y"/>
-                                    <constraint firstItem="fK6-h0-PuL" firstAttribute="width" secondItem="jOk-hM-9Oa" secondAttribute="width" multiplier="336/375" id="S4t-FH-rU5"/>
-                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="leading" secondItem="fK6-h0-PuL" secondAttribute="leading" id="XGb-9K-Kfd"/>
-                                    <constraint firstItem="SU0-O1-TlB" firstAttribute="centerY" secondItem="jOk-hM-9Oa" secondAttribute="centerY" multiplier="1.4129" id="mbY-hZ-4FW"/>
-                                    <constraint firstItem="fK6-h0-PuL" firstAttribute="centerY" secondItem="jOk-hM-9Oa" secondAttribute="centerY" multiplier="0.664516" id="qoA-lP-GW0"/>
-                                    <constraint firstItem="fK6-h0-PuL" firstAttribute="centerX" secondItem="jOk-hM-9Oa" secondAttribute="centerX" id="yAX-sQ-Sbu"/>
+                                    <constraint firstAttribute="height" constant="43" id="Mrf-1X-yGD"/>
                                 </constraints>
-                            </view>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                <state key="normal" title="I agree, proceed to deleting my account">
+                                    <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="deleteAccountAction:" destination="cV9-St-ahQ" eventType="touchUpInside" id="aFG-60-gos"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SU0-O1-TlB">
+                                <rect key="frame" x="22" y="691" width="370" height="43"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="43" id="hQv-tv-djm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                <state key="normal" title="I do not wish to delete my account">
+                                    <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="doNotDeleteAccountAction:" destination="cV9-St-ahQ" eventType="touchUpInside" id="X6W-Ay-ETw"/>
+                                </connections>
+                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have chosen to delete your FDA app account. This will result in automatic withdrawl from all Studies." lineBreakMode="tailTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="pJo-F3-pDh">
                                 <rect key="frame" x="20" y="25" width="374" height="56"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1284,10 +1271,16 @@
                         <constraints>
                             <constraint firstItem="pJo-F3-pDh" firstAttribute="top" secondItem="lKO-kh-Nb3" secondAttribute="bottom" constant="25" id="CLT-I4-4su"/>
                             <constraint firstItem="Xge-QA-lNq" firstAttribute="leading" secondItem="pJo-F3-pDh" secondAttribute="leading" id="EC5-1N-38g"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="fK6-h0-PuL" secondAttribute="trailing" constant="2" id="EeJ-lA-GIc"/>
                             <constraint firstAttribute="trailingMargin" secondItem="pJo-F3-pDh" secondAttribute="trailing" id="K1d-3A-S0M"/>
+                            <constraint firstItem="fK6-h0-PuL" firstAttribute="leading" secondItem="olx-YB-iUs" secondAttribute="leadingMargin" constant="2" id="OeO-ia-ffF"/>
+                            <constraint firstItem="SU0-O1-TlB" firstAttribute="leading" secondItem="fK6-h0-PuL" secondAttribute="leading" id="URu-b2-0do"/>
                             <constraint firstItem="pJo-F3-pDh" firstAttribute="leading" secondItem="olx-YB-iUs" secondAttribute="leadingMargin" id="YLy-jH-kHd"/>
                             <constraint firstItem="Xge-QA-lNq" firstAttribute="trailing" secondItem="pJo-F3-pDh" secondAttribute="trailing" id="bi2-ra-tbt"/>
+                            <constraint firstItem="SU0-O1-TlB" firstAttribute="trailing" secondItem="fK6-h0-PuL" secondAttribute="trailing" id="gFW-zX-J7y"/>
+                            <constraint firstItem="Gw9-js-utt" firstAttribute="top" secondItem="SU0-O1-TlB" secondAttribute="bottom" constant="40" id="jXn-8n-D78"/>
                             <constraint firstItem="Xge-QA-lNq" firstAttribute="top" secondItem="pJo-F3-pDh" secondAttribute="bottom" constant="30" id="q0b-NY-JOS"/>
+                            <constraint firstItem="SU0-O1-TlB" firstAttribute="top" secondItem="fK6-h0-PuL" secondAttribute="bottom" constant="15" id="xYc-vl-D4C"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="BGP-ID-Ow1"/>
