@@ -90,13 +90,22 @@ class ResourceDetailViewController: UIViewController {
         {
           activityIndicator.startAnimating()
           activityIndicator.isHidden.toggle()
-          if let url = checkIfFileExists(pdfNameFromUrl: resourceURL.lastPathComponent) {
+          let fileURL = checkIfFileExists(pdfNameFromUrl: resourceURL.lastPathComponent)
+          if let url = fileURL {
             webView.loadFileURL(url, allowingReadAccessTo: url)
             self.isFileAvailable = true
           } else {
             self.webView.load(URLRequest(url: resourceURL))
           }
         }
+      } else if self.resource?.file?.mimeType == .txt,
+        let resourceHtmlString = self.resource?.file?.link
+      {
+        webView.allowsBackForwardNavigationGestures = false
+        webView.loadHTMLString(
+          WebViewController.headerString + resourceHtmlString.stringByDecodingHTMLEntities,
+          baseURL: nil
+        )
       } else if let htmlString = self.htmlString {
         webView.allowsBackForwardNavigationGestures = false
         webView.loadHTMLString(WebViewController.headerString + htmlString, baseURL: nil)
@@ -104,9 +113,6 @@ class ResourceDetailViewController: UIViewController {
         let url = URL(string: requestLink)
       {
         self.webView.load(URLRequest(url: url))
-      } else if let resourceHtmlString = self.resource?.file?.link {
-        webView.allowsBackForwardNavigationGestures = false
-        webView.loadHTMLString(WebViewController.headerString + resourceHtmlString.stringByDecodingHTMLEntities, baseURL: nil)
       }
     }
   }
@@ -264,7 +270,7 @@ extension ResourceDetailViewController {
     } else if let resourceHTML = resourceLink,
       self.resource?.file?.mimeType != .pdf
     {
-      let pdfData = webView.renderSelfToPdfData(htmlString: resourceHTML)
+      let pdfData = webView.renderSelfToPdfData(htmlString: resourceHTML.stringByDecodingHTMLEntities)
       if let tempPath = tempResourceFilePath {
         attachResource(from: tempPath)
         completion(true)

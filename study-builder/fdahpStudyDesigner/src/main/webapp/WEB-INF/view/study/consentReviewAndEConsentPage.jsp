@@ -380,6 +380,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     //check the type of page action(view/edit)
     newLearnMoreConsentDocument();
     if ('${permission}' == 'view') {
