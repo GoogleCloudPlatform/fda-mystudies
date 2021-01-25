@@ -1199,6 +1199,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
     try {
       studiestatus.put("studyId", getIntent().getStringExtra(STUDYID));
       studiestatus.put("siteId", studies.getSiteId());
+      studiestatus.put("participantId", studies.getParticipantId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
 
