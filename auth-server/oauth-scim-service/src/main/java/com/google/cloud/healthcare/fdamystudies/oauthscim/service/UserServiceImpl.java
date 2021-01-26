@@ -581,8 +581,12 @@ public class UserServiceImpl implements UserService {
     long now_TIMESTAMP = Instant.now().toEpochMilli();
     boolean flg_OTP_USED = passwordNode.hasNonNull(OTP_USED);
 
+    logger.info("");
+    logger.info( passwordNode.toPrettyString());
+    logger.info("");
     logger.info(" db timestamp is null ?? --> [ " + flg_TIMESTAMP + " ]");
-    logger.info(" db timestamp --> [ " + db_TIMESTAMP + " ]");
+    logger.info(" db timestamp longValue() --> [ " + db_TIMESTAMP + " ]");
+    logger.info(" db timestamp test()      --> [ " + passwordNode.get(EXPIRE_TIMESTAMP).asText() + " ]");
     logger.info("now timestamp --> [ " + now_TIMESTAMP + " ]");
     if (flg_OTP_USED) {
         logger.info("otp_used --> [ " + passwordNode.get(OTP_USED).booleanValue() + " ]" );
