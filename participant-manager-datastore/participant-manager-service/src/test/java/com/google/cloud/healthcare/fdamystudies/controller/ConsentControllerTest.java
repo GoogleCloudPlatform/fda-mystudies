@@ -29,6 +29,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -76,6 +77,8 @@ public class ConsentControllerTest extends BaseMockIT {
 
   private SiteEntity siteEntity;
 
+  private LocationEntity locationEntity;
+
   private ParticipantRegistrySiteEntity participantRegistrySiteEntity;
 
   private ParticipantStudyEntity participantStudyEntity;
@@ -102,6 +105,14 @@ public class ConsentControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnConsentDocument() throws Exception {
+    locationEntity = testDataHelper.createLocation();
+    appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
+    siteEntity.setLocation(locationEntity);
+    participantStudyEntity.setSite(siteEntity);
+    studyEntity.setApp(appEntity);
+    studyConsentEntity.setParticipantStudy(participantStudyEntity);
+    testDataHelper.getStudyConsentRepository().saveAndFlush(studyConsentEntity);
+
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -134,9 +145,10 @@ public class ConsentControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setSiteId(siteEntity.getId());
     auditRequest.setParticipantId(participantStudyEntity.getId());
-    auditRequest.setAppId(studyEntity.getAppId());
-    auditRequest.setStudyId(studyEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(CONSENT_DOCUMENT_DOWNLOADED.getEventCode(), auditRequest);

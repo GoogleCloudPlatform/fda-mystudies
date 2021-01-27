@@ -97,13 +97,15 @@ public class ConsentServiceImpl implements ConsentService {
     }
 
     SiteEntity site = studyConsentEntity.getParticipantStudy().getSite();
-    auditRequest.setSiteId(site.getId());
+    auditRequest.setSiteId(site.getLocation().getCustomId());
     auditRequest.setParticipantId(studyConsentEntity.getParticipantStudy().getId());
-    auditRequest.setAppId(site.getStudy().getAppId());
-    auditRequest.setStudyId(site.getStudyId());
+    auditRequest.setAppId(site.getStudy().getApp().getAppId());
+    auditRequest.setStudyId(site.getStudy().getCustomId());
     auditRequest.setUserId(userId);
+    auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
+
     Map<String, String> map = new HashedMap<>();
-    map.put("site_id", site.getId());
+    map.put("site_id", site.getLocation().getCustomId());
     map.put("participant_id", studyConsentEntity.getParticipantStudy().getId());
     map.put("consent_version", studyConsentEntity.getVersion());
     participantManagerHelper.logEvent(CONSENT_DOCUMENT_DOWNLOADED, auditRequest, map);

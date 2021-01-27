@@ -103,7 +103,6 @@ public class UserController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userRequest.setUserId(userId);
-    auditRequest.setUserId(userId);
 
     ChangePasswordResponse userResponse = userService.changePassword(userRequest, auditRequest);
 
