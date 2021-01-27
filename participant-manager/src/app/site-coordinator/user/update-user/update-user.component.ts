@@ -36,9 +36,9 @@ export class UpdateUserComponent
   adminId = '';
   userStatus = Status;
   sitesMessageMapping: {[k: string]: string} = {
-    '=0': '0 Sites',
-    '=1': '1 Site',
-    'other': '# Sites',
+    '=0': '0 sites',
+    '=1': '1 site',
+    'other': '# sites',
   };
   selectedAppsIds: string[] = [];
   @ViewChildren('permissionCheckBox')
