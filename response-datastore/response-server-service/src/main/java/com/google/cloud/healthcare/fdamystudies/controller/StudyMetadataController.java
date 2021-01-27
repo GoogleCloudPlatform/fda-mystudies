@@ -59,6 +59,9 @@ public class StudyMetadataController {
               ErrorCode.EC_701.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
+    System.out.println(
+        "******StudyVersion For Response server (studymetadata) : "
+            + studyMetadataBean.getStudyVersion());
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setAppId(studyMetadataBean.getAppId());
     auditRequest.setStudyId(studyMetadataBean.getStudyId());
