@@ -283,9 +283,16 @@ public class StudyServiceImpl implements StudyService {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAppDetails(studyAppDetails, user);
 
+    Optional<StudyEntity> optStudyEntity = studyRepository.findById(studyId);
+    StudyEntity study =
+        optStudyEntity.orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND));
+    auditRequest.setUserId(userId);
+    auditRequest.setStudyId(study.getCustomId());
+    auditRequest.setAppId(study.getApp().getAppId());
+    auditRequest.setStudyVersion(String.valueOf(study.getVersion()));
+
     return prepareRegistryParticipantResponse(
         participantRegistryDetail,
-        userId,
         studyAppDetails,
         excludeParticipantStudyStatus,
         limit,
@@ -297,7 +304,6 @@ public class StudyServiceImpl implements StudyService {
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
       ParticipantRegistryDetail participantRegistryDetail,
-      String userId,
       StudyAppDetails studyAppDetails,
       String[] excludeParticipantStudyStatus,
       Integer limit,
@@ -384,9 +390,6 @@ public class StudyServiceImpl implements StudyService {
 
     participantRegistryResponse.setTotalParticipantCount(participantCount);
 
-    auditRequest.setUserId(userId);
-    auditRequest.setStudyId(studyAppDetails.getStudyId());
-    auditRequest.setAppId(participantRegistryDetail.getAppId());
     participantManagerHelper.logEvent(STUDY_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
 
     logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
