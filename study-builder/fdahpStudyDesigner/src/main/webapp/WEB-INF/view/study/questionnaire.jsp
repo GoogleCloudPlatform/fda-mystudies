@@ -3109,7 +3109,6 @@
   }
 
   function saveQuestionnaire(item, callback) {
-
     var id = $("#id").val();
     var study_id = $("#studyId").val();
     var title_text = $("#titleId").val();
@@ -3441,7 +3440,7 @@
       }
 
       if (repeat_questionnaire_anchor != null && repeat_questionnaire_anchor != ''
-          && typeof repeat_questionnaire_anchor != 'undefined') {
+          && typeof repeat_questionnaire_anchor != 'undefined'  && questionnaire.scheduleType == 'AnchorDate') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire_anchor;
       }
 
@@ -3456,7 +3455,7 @@
       }
 
       if (frequence_time_anchor != null && frequence_time_anchor != ''
-          && typeof frequence_time_anchor != 'undefined') {
+          && typeof frequence_time_anchor != 'undefined' && questionnaire.scheduleType == 'AnchorDate') {
         questionnaireFrequencey.frequencyTime = frequence_time_anchor;
       }
 
@@ -3513,7 +3512,7 @@
       }
 
       if (repeat_questionnaire_anchor != null && repeat_questionnaire_anchor != ''
-          && typeof repeat_questionnaire_anchor != 'undefined') {
+          && typeof repeat_questionnaire_anchor != 'undefined'  && questionnaire.scheduleType == 'AnchorDate') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire_anchor;
       }
 
@@ -3530,7 +3529,7 @@
         questionnaireFrequencey.frequencyTime = frequencetime;
       }
       if (frequencetime_anchor != null && frequencetime_anchor != '' && typeof frequencetime_anchor
-          != 'undefined') {
+          != 'undefined' && questionnaire.scheduleType == 'AnchorDate') {
         questionnaireFrequencey.frequencyTime = frequencetime_anchor;
       }
       if (monthlyXSign != null && monthlyXSign != '' && typeof monthlyXSign != 'undefined') {
