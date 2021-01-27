@@ -1197,7 +1197,7 @@
   }
   var customAnchorCount = 0;
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     $(".remBtnDis").addClass("hide");
 
     $('.selectpicker').selectpicker('refresh');

@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/auth-server/users/TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQh/logout"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		},
+		"bodyFileName": "oauth-scim-service/auth-server-logout-admin-user-response.json"
+	}
+}

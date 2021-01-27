@@ -63,6 +63,9 @@ public class AppPropertyConfig implements Serializable {
   @Value("${auth.server.updateStatusUrl}")
   private String authServerUpdateStatusUrl;
 
+  @Value("${auth.server.logout.user.url}")
+  private String authLogoutUserUrl;
+
   @Value("${mail.contact-email}")
   private String contactEmail;
 

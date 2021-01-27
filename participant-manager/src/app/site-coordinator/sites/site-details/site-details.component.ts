@@ -64,7 +64,7 @@ export class SiteDetailsComponent
     this.modalRef = this.modalService.show(templateRef);
   }
   ngOnInit(): void {
-    this.sharedService.updateSearchPlaceHolder('Search Participant Email');
+    this.sharedService.updateSearchPlaceHolder('Search participant email');
     this.subs.add(
       this.route.params.subscribe((params) => {
         if (params.siteId) {
@@ -124,11 +124,11 @@ export class SiteDetailsComponent
   changeTab(tab: OnboardingStatus): void {
     this.selectedAll = false;
     this.sendResend =
-      tab === OnboardingStatus.New ? 'Send Invitation' : 'Resend Invitation';
+      tab === OnboardingStatus.New ? 'Send invitation' : 'Resend invitation';
     this.enableDisable =
       tab === OnboardingStatus.New || tab === OnboardingStatus.Invited
-        ? 'Disable Invitation'
-        : 'Enable Invitation';
+        ? 'Disable invitation'
+        : 'Enable invitation';
     this.activeTab = tab;
     this.toggleDisplay = false;
     this.userIds = [];
@@ -218,8 +218,8 @@ export class SiteDetailsComponent
       this.userIds.push(newlyCreatedparticpants.id),
     );
     this.modalRef.hide();
-    this.sendResend = 'Send Invitation';
-    this.enableDisable = 'Disable Invitation';
+    this.sendResend = 'Send invitation';
+    this.enableDisable = 'Disable invitation';
     this.activeTab = OnboardingStatus.New;
     this.toggleDisplay = false;
     this.fetchSiteParticipant(OnboardingStatus.New);
@@ -232,8 +232,8 @@ export class SiteDetailsComponent
       this.userIds.push(newlyCreatedparticpants.id),
     );
     this.modalRef.hide();
-    this.sendResend = 'Send Invitation';
-    this.enableDisable = 'Disable Invitation';
+    this.sendResend = 'Send invitation';
+    this.enableDisable = 'Disable invitation';
     this.activeTab = OnboardingStatus.New;
     this.toggleDisplay = false;
     this.fetchSiteParticipant(OnboardingStatus.New);

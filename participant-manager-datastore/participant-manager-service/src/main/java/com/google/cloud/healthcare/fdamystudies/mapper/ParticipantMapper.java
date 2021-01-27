@@ -60,8 +60,6 @@ public final class ParticipantMapper {
 
     String enrollmentDate = DateTimeUtils.format(studyParticipantDetail.getEnrolledDate());
     participantDetail.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-    participantDetail.setEnrollmentStatus(
-        EnrollmentStatus.getDisplayValue(studyParticipantDetail.getEnrolledStatus()));
 
     return participantDetail;
   }
@@ -197,8 +195,14 @@ public final class ParticipantMapper {
     participantDetail.setOnboardingStatus(status);
 
     ParticipantStudyEntity participantStudy = participantRegistry.getParticipantStudies().get(0);
-    participantDetail.setEnrollmentStatus(
-        EnrollmentStatus.getDisplayValue(participantStudy.getStatus()));
+
+    if (participantRegistry.getStudy().getType().equals(CommonConstants.OPEN_STUDY)
+        && !EnrollmentStatus.ENROLLED.getStatus().equals(participantStudy.getStatus())) {
+      participantDetail.setEnrollmentStatus(EnrollmentStatus.WITHDRAWN.getDisplayValue());
+    } else {
+      participantDetail.setEnrollmentStatus(
+          EnrollmentStatus.getDisplayValue(participantStudy.getStatus()));
+    }
 
     String enrolledDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
     participantDetail.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE));

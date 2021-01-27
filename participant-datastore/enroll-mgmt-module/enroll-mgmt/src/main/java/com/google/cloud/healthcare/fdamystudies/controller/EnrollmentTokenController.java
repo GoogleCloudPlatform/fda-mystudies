@@ -87,7 +87,7 @@ public class EnrollmentTokenController {
       if (enrollmentTokenfService.hasParticipant(
           enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
         ErrorResponseUtil.getFailureResponse(
-            ErrorResponseUtil.ErrorCodes.STATUS_103.getValue(),
+            ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
             ErrorResponseUtil.ErrorCodes.TOKEN_ALREADY_USE.getValue(),
             response);
@@ -167,6 +167,7 @@ public class EnrollmentTokenController {
                           enrollmentBean.getStudyId(),
                           enrollmentBean.getToken(),
                           userId,
+                          studyDetails.getVersion(),
                           auditRequest);
                   if (respBean != null) {
                     respBean.setCode(ErrorCode.EC_200.code());
@@ -230,12 +231,17 @@ public class EnrollmentTokenController {
           }
           respBean =
               enrollmentTokenfService.enrollParticipant(
-                  enrollmentBean.getStudyId(), tokenValue, userId, auditRequest);
+                  enrollmentBean.getStudyId(),
+                  tokenValue,
+                  userId,
+                  studyDetails.getVersion(),
+                  auditRequest);
           if (respBean != null) {
             respBean.setCode(ErrorCode.EC_200.code());
             respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
             enrollAuditEventHelper.logEvent(USER_FOUND_ELIGIBLE_FOR_STUDY, auditRequest);
+            enrollAuditEventHelper.logEvent(USER_ENROLLED_INTO_STUDY, auditRequest);
           }
         }
       } else {

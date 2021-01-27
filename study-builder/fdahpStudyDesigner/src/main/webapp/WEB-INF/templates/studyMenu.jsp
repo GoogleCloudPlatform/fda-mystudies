@@ -100,13 +100,13 @@
         </c:if>
       </li>
 
-      <li class=" eigthNotification commonCls <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'cursor-none':''}">
+      <li class=" eigthNotification commonCls">
         Notifications
         <c:if test="${studyBo.studySequenceBo.miscellaneousNotification}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="tenth commonCls <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'cursor-none':''}">
+      <li class="tenth commonCls">
         Actions
       </li>
     </ul>

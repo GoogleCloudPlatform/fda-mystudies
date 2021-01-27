@@ -166,6 +166,10 @@ class EnrollServices: NSObject {
 
   // MARK: Parsers
 
+  private func handleValidateEnrolment(response: JSONDictionary?) {
+    Study.currentStudy?.userParticipateState.siteID = response?["siteId"] as? String ?? ""
+  }
+
   func handleUpdateTokenResponse() {
     self.sendRequestWith(
       method: self.method,
@@ -222,8 +226,8 @@ extension EnrollServices: NMWebServiceDelegate {
       self.handleGetStudyStatesResponse(response: response as? JSONDictionary ?? [:])
 
     case EnrollmentMethods.updateStudyState.description as String: break
-    case EnrollmentMethods.validateEnrollmentToken.description as String: break
-
+    case EnrollmentMethods.validateEnrollmentToken.description as String:
+      self.handleValidateEnrolment(response: response as? JSONDictionary)
     case EnrollmentMethods.enroll.description as String:
       self.handleEnrollForStudy(response: response as? [String: Any] ?? [:])
 

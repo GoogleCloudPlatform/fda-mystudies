@@ -256,11 +256,11 @@ class ResponseServices: NSObject {
 
             // duration
             let durationDetail = data["duration"] as? [String: Any]
-            let duration = (durationDetail?["value"] as? Float)!
+            let duration = durationDetail?["value"] as? Double ?? 0.0
 
             let valueDetail =
               [
-                "value": duration,
+                "value": duration / 60,  // Show duration in minutes which is stored in seconds on server.
                 "count": count,
                 "date": date,
               ] as [String: Any]

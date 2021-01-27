@@ -1791,7 +1791,7 @@
     scheduletype = $('input[name="scheduleType"]:checked').val();
   }
   $(document).ready(function () {
-   
+	$('.studyClass').addClass("active");
     $("#dailyxdaysId").change(function () {
       dailyXday = $("#dailyxdaysId").val();
       console.log(dailyXday)

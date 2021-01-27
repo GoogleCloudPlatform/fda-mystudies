@@ -17,6 +17,6 @@ import lombok.ToString;
 @ToString
 public class EnrollmentBodyProvider {
   private String tokenIdentifier;
-
   private String customStudyId;
+  private String studyVersion;
 }
