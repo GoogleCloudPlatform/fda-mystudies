@@ -2350,16 +2350,6 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
-          SetDialogHelper.setNeutralDialog(
-              context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete2),
-              false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
         } else if (missed > 0) {
           SetDialogHelper.setNeutralDialog(
               context,
@@ -2388,16 +2378,6 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
-          SetDialogHelper.setNeutralDialog(
-              context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete2),
-              false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
         } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
