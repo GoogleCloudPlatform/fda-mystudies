@@ -382,14 +382,25 @@ public class StudyMetaDataService {
 
       List<InfoBean> infoBeans = studyInfoResponse.getInfo();
 
+      int count = 0;
+
       for (InfoBean infoBean : infoBeans) {
         if (infoBean.getImage() == null || infoBean.getImage().equals("")) {
-          infoBean.setImage(
-              propMap.get("fda.imgDisplaydPath")
-                  + propMap.get("cloud.bucket.name")
-                  + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                  + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE));
+          if (count == 0) {
+            infoBean.setImage(
+                propMap.get("fda.imgDisplaydPath")
+                    + propMap.get("cloud.bucket.name")
+                    + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE));
+          } else {
+            infoBean.setImage(
+                propMap.get("fda.imgDisplaydPath")
+                    + propMap.get("cloud.bucket.name")
+                    + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE));
+          }
         }
+        count++;
       }
 
     } catch (Exception e) {

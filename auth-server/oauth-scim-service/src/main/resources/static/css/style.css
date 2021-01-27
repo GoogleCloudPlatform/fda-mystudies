@@ -240,7 +240,7 @@ footer ul li:last-child a {
 
 .cmn__error {
   position: absolute;
-  bottom: 10%;
+  bottom: 25%;
   background: #f44336;
   padding: 3px 6px;
   color: #fff;
@@ -475,8 +475,7 @@ body#body-container {
 }
 
 .width__110 { 
-  width: 110px !important;
-  display: inline-block !important;
+ text-align: center !important;
 } 
   
 .loading_div { 

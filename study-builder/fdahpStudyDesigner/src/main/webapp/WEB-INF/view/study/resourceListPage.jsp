@@ -41,7 +41,7 @@
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsComp" onclick="markAsCompleted();"
                     <c:if test="${fn:length(resourcesSavedList) ne 0}">disabled</c:if>>
-              Mark as Completed
+              Mark as completed
             </button>
           </span>
         </div>
@@ -114,6 +114,7 @@
 <script type="text/javascript">
   var dataTable;
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $('[data-toggle="tooltip"]').tooltip();
 

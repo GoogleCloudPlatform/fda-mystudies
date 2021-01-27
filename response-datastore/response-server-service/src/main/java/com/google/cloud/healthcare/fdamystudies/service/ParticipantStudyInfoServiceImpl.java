@@ -39,7 +39,7 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
   public ParticipantStudyInformation getParticipantStudyInfo(
       String studyId, String participantId, AuditLogEventRequest auditRequest)
       throws ProcessResponseException {
-    logger.debug("getParticipantStudyInfo() - starts ");
+    logger.debug("ParticipantStudyInformation getParticipantStudyInfo() - starts ");
     HttpHeaders headers = null;
 
     ResponseEntity<?> responseEntity = null;
@@ -61,7 +61,7 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
     ParticipantStudyInformation partStudyInfo =
         (ParticipantStudyInformation) responseEntity.getBody();
 
-    logger.debug("getStudyActivityMetadata() - ends");
+    logger.debug("ParticipantStudyInformation getParticipantStudyInfo() - ends");
     return partStudyInfo;
   }
 }

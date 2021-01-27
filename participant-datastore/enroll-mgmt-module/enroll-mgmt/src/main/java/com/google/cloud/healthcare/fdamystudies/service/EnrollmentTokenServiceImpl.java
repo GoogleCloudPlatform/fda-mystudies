@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.dao.EnrollmentTokenDao;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import javax.validation.constraints.NotNull;
@@ -63,22 +64,26 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Override
   @Transactional(readOnly = true)
-  public boolean studyExists(String studyId) {
+  public StudyEntity getStudyDetails(String studyId) {
     logger.info("EnrollmentTokenServiceImpl studyExists() - Starts ");
-    boolean isStudyExist = enrollmentTokenDao.studyExists(studyId);
+    StudyEntity studyDetails = enrollmentTokenDao.getStudyDetails(studyId);
     logger.info("EnrollmentTokenServiceImpl studyExists() - Ends ");
-    return isStudyExist;
+    return studyDetails;
   }
 
   @Override
   @Transactional
   public EnrollmentResponseBean enrollParticipant(
-      String shortName, String tokenValue, String userId, AuditLogEventRequest auditRequest) {
+      String shortName,
+      String tokenValue,
+      String userId,
+      Float studyVersion,
+      AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
     boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
     String hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue.toUpperCase());
     String participantId =
-        enrollUtil.getParticipantId("", hashedTokenValue, shortName, auditRequest);
+        enrollUtil.getParticipantId("", hashedTokenValue, shortName, studyVersion, auditRequest);
     EnrollmentResponseBean participantBean =
         enrollmentTokenDao.enrollParticipant(
             shortName,

@@ -140,6 +140,7 @@ public class EnrollmentManagementUtil {
       String applicationId,
       String hashedTokenValue,
       String studyId,
+      Float studyVersion,
       AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentManagementUtil getParticipantId() - starts ");
     HttpHeaders headers = null;
@@ -151,13 +152,14 @@ public class EnrollmentManagementUtil {
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("applicationId", applicationId);
       headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
       AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
       bodyProvider = new EnrollmentBodyProvider();
       bodyProvider.setTokenIdentifier(hashedTokenValue);
       bodyProvider.setCustomStudyId(studyId);
+      bodyProvider.setStudyVersion(String.valueOf(studyVersion));
+
       requestBody = new HttpEntity<>(bodyProvider, headers);
       responseEntity =
           restTemplate.postForEntity(appConfig.getAddParticipantId(), requestBody, String.class);
@@ -179,7 +181,11 @@ public class EnrollmentManagementUtil {
   }
 
   public String withDrawParticipantFromStudy(
-      String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest) {
+      String participantId,
+      Float studyVersion,
+      String studyId,
+      boolean delete,
+      AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
@@ -187,7 +193,6 @@ public class EnrollmentManagementUtil {
 
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.APPLICATION_ID, null);
     headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
     AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
@@ -197,6 +202,8 @@ public class EnrollmentManagementUtil {
         appConfig.getWithdrawStudyUrl()
             + "?studyId="
             + studyId
+            + "&studyVersion="
+            + String.valueOf(studyVersion)
             + "&participantId="
             + participantId
             + "&deleteResponses="

@@ -195,7 +195,10 @@ public class StudyController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
         }
         String permission =
-            (String) request.getSession().getAttribute(FdahpStudyDesignerConstants.PERMISSION);
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.PERMISSION);
         if (FdahpStudyDesignerUtil.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           liveStudyBo = studyService.getStudyLiveStatusByCustomId(studyBo.getCustomStudyId());
@@ -470,7 +473,10 @@ public class StudyController {
                 FdahpStudyDesignerConstants.CONESENT,
                 sesObj,
                 customStudyId);
+        StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+          auditRequest.setStudyVersion(studyBo.getVersion().toString());
+          auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_CONSENT_SECTIONS_MARKED_COMPLETE, auditRequest);
           request
               .getSession()
@@ -2044,6 +2050,9 @@ public class StudyController {
                 Integer.parseInt(studyId), markCompleted, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+          StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+          auditRequest.setStudyVersion(studyBo.getVersion().toString());
+          auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE, auditRequest);
           request
               .getSession()
@@ -2210,6 +2219,11 @@ public class StudyController {
                 customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           // STUDY_QUESTIONNAIRES_SECTION_MARKED_COMPLETE
+          StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+          if (studyBo != null) {
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
+          }
           auditLogEventHelper.logEvent(STUDY_QUESTIONNAIRES_SECTION_MARKED_COMPLETE, auditRequest);
           request
               .getSession()
@@ -2737,6 +2751,9 @@ public class StudyController {
                   sesObj,
                   customStudyId);
           if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+            StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_RESOURCE_SECTION_MARKED_COMPLETE, auditRequest);
             request
                 .getSession()
@@ -3151,6 +3168,7 @@ public class StudyController {
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (StringUtils.isNotEmpty(studyBo.getCustomStudyId())) {
             auditRequest.setStudyId(studyBo.getCustomStudyId());
+            auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_SAVED_IN_DRAFT_STATE, auditRequest);
             request
                 .getSession()
@@ -3208,6 +3226,7 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        int order = 0;
         if (comprehensionTestQuestionBo != null) {
           if (comprehensionTestQuestionBo.getId() != null) {
             comprehensionTestQuestionBo.setModifiedBy(sesObj.getUserId());
@@ -3215,7 +3234,7 @@ public class StudyController {
             comprehensionTestQuestionBo.setStatus(true);
           } else {
             if (comprehensionTestQuestionBo.getStudyId() != null) {
-              int order =
+              order =
                   studyService.comprehensionTestQuestionOrder(
                       comprehensionTestQuestionBo.getStudyId());
               comprehensionTestQuestionBo.setSequenceNo(order);
@@ -3228,7 +3247,7 @@ public class StudyController {
               studyService.saveOrUpdateComprehensionTestQuestion(comprehensionTestQuestionBo);
           map.addAttribute("_S", sessionStudyCount);
           if (addComprehensionTestQuestionBo != null) {
-            if (addComprehensionTestQuestionBo.getId() != null) {
+            if (addComprehensionTestQuestionBo.getId() != null && order == 0) {
               request
                   .getSession()
                   .setAttribute(
@@ -3293,6 +3312,8 @@ public class StudyController {
                   String.valueOf(consentInfoBo.getStudyId()), sesObj.getUserId());
           if (addConsentInfoBo != null) {
             auditRequest.setStudyId(studyBo.getCustomStudyId());
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED, auditRequest);
             if (consentInfoBo.getId() != null) {
               request
@@ -3382,6 +3403,8 @@ public class StudyController {
         if (resourceBO != null) {
           StudyBo studyBo = studyService.getStudyInfo(studyId);
           auditRequest.setStudyId(studyBo.getCustomStudyId());
+          auditRequest.setStudyVersion(studyBo.getVersion().toString());
+          auditRequest.setAppId(studyBo.getAppId());
           if (!("").equals(buttonText)) {
             if (("save").equalsIgnoreCase(buttonText)) {
               resourceBO.setAction(false);
@@ -3599,6 +3622,11 @@ public class StudyController {
         auditRequest.setStudyId(customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(result)) {
+          StudyBo studyBo =
+              studyService.getStudyById(
+                  String.valueOf(eligibilityBo.getStudyId()), sesObj.getUserId());
+          auditRequest.setStudyVersion(studyBo.getVersion().toString());
+          auditRequest.setAppId(studyBo.getAppId());
           if ((eligibilityBo != null) && ("save").equals(eligibilityBo.getActionType())) {
             request
                 .getSession()
@@ -3661,7 +3689,11 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        int seqCount = 0;
         if (eligibilityTestBo != null) {
+          if (eligibilityTestBo.getId() != null) {
+            seqCount = eligibilityTestBo.getSequenceNo();
+          }
           customStudyId =
               (String)
                   request
@@ -3694,12 +3726,22 @@ public class StudyController {
                 .setAttribute(
                     sessionStudyCount + "eligibilityId", eligibilityTestBo.getEligibilityId());
             mav = new ModelAndView("redirect:viewStudyEligibiltyTestQusAns.do", map);
+          } else if ((eligibilityTestBo != null)
+              && (FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)
+                  .equals(eligibilityTestBo.getType())
+              && seqCount != 0) {
+            request
+                .getSession()
+                .setAttribute(
+                    sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
+                    propMap.get("update.eligibilitytest.success.message"));
+            mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
+                    propMap.get("save.eligibilitytest.success.message"));
             mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           }
         } else {
@@ -4354,6 +4396,7 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
         if (null
             != request
                 .getSession()
@@ -4474,6 +4517,7 @@ public class StudyController {
           }
         }
         if (studyBo == null) {
+          auditLogEventHelper.logEvent(NEW_STUDY_CREATION_INITIATED, auditRequest);
           studyBo = new StudyBo();
           studyBo.setType(FdahpStudyDesignerConstants.STUDY_TYPE_GT);
         } else if ((studyBo != null) && StringUtils.isNotEmpty(studyBo.getCustomStudyId())) {
@@ -4650,7 +4694,6 @@ public class StudyController {
                   : 0);
       if (sesObj != null) {
         StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-        auditRequest.setStudyId(studyBo.getCustomStudyId());
         if ((sesObj.getStudySessionBeans() != null) && !sesObj.getStudySessionBeans().isEmpty()) {
           for (StudySessionBean sessionBean : sesObj.getStudySessionBeans()) {
             if ((sessionBean != null)
@@ -4663,7 +4706,6 @@ public class StudyController {
         }
         if (studySessionBean != null) {
           sessionStudyCount = studySessionBean.getSessionStudyCount();
-          eventEnum = NEW_STUDY_CREATION_INITIATED;
         } else {
           ++sessionStudyCount;
           if ((sesObj.getStudySession() != null) && !sesObj.getStudySession().isEmpty()) {
@@ -4683,14 +4725,23 @@ public class StudyController {
           studySessionBeans.add(studySessionBean);
           sesObj.setStudySessionBeans(studySessionBeans);
           if (permission.equalsIgnoreCase("View")) {
+            auditRequest.setStudyId(studyBo.getCustomStudyId());
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
             if (!isLive.isEmpty() && !studyId.isEmpty()) {
               eventEnum = LAST_PUBLISHED_VERSION_OF_STUDY_VIEWED;
             } else {
               eventEnum = STUDY_VIEWED;
             }
           } else {
+            if (studyBo != null) {
+              auditRequest.setStudyId(studyBo.getCustomStudyId());
+              auditRequest.setStudyVersion(studyBo.getVersion().toString());
+              auditRequest.setAppId(studyBo.getAppId());
+            }
             eventEnum = STUDY_ACCESSED_IN_EDIT_MODE;
           }
+          auditLogEventHelper.logEvent(eventEnum, auditRequest);
         }
       }
 
@@ -4707,7 +4758,6 @@ public class StudyController {
           .getSession()
           .setAttribute(sessionStudyCount + FdahpStudyDesignerConstants.IS_LIVE, isLive);
 
-      auditLogEventHelper.logEvent(eventEnum, auditRequest);
       modelAndView = new ModelAndView("redirect:/adminStudies/viewBasicInfo.do", map);
     } catch (Exception e) {
       logger.error("StudyController - viewStudyDetails - ERROR", e);

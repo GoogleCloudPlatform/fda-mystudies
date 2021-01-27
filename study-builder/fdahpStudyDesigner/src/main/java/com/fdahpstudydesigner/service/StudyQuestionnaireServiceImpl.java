@@ -23,6 +23,7 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
@@ -124,13 +125,17 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
 
   @Override
   public String deleteFromStepQuestion(
-      Integer formId, Integer questionId, SessionObject sessionObject, String customStudyId) {
+      Integer formId,
+      Integer questionId,
+      SessionObject sessionObject,
+      String customStudyId,
+      AuditLogEventRequest auditRequest) {
     logger.info("StudyQuestionnaireServiceImpl - deleteFromStepQuestion - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
           studyQuestionnaireDAO.deleteFromStepQuestion(
-              formId, questionId, sessionObject, customStudyId);
+              formId, questionId, sessionObject, customStudyId, auditRequest);
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - deleteFromStepQuestion - Error", e);
     }

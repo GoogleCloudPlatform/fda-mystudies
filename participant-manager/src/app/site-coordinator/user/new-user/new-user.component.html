@@ -8,7 +8,7 @@
         >
           <img src="assets/svgs/back-arrow.svg" alt="Go Back" />
         </a>
-        <span class="pl-2">Add New Admin</span>
+        <span class="pl-2">Add new admin</span>
       </div>
     </div>
   </div>
@@ -20,9 +20,9 @@
       <div class="row border-bottom__c4d1e6">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
           <div class="form-group">
-            <label for="fname">First Name</label>
+            <label for="fname">First name</label>
             <input
-              placeholder="Enter First Name"
+              placeholder="Enter first name"
               type="text"
               class="form-control"
               id="fname"
@@ -43,20 +43,20 @@
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.required"
               >
-                Enter a first name.
+                Enter a first name
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.pattern"
               >
-                Please fill out this field.
+                Please fill out this field
               </span>
             </div>
           </div>
         </div>
         <div class="col-xs-12 col-md-6 p-none">
           <div class="form-group">
-            <label for="lname">Last Name</label>
+            <label for="lname">Last name</label>
             <input
               type="text"
               maxlength="50"
@@ -67,7 +67,7 @@
               pattern=".*[^ ].*"
               class="form-control"
               id="lname"
-              placeholder="Enter Last Name"
+              placeholder="Enter last name"
             />
 
             <div
@@ -77,13 +77,13 @@
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.required"
               >
-                Enter a last name.
+                Enter a last name
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.pattern"
               >
-                Please fill out this field.
+                Please fill out this field
               </span>
             </div>
           </div>
@@ -97,7 +97,7 @@
               type="email"
               class="form-control"
               id="emailId"
-              placeholder="Enter Email"
+              placeholder="Enter email"
               [(ngModel)]="user.email"
               pattern="[a-zA-Z0-9\+\.\_\%\-\+]{1,256}\@[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+"
               name="emailText"
@@ -113,13 +113,13 @@
                 class="help-block with-errors error__msg"
                 *ngIf="emailText.errors?.required"
               >
-                Enter an email.
+                Enter an email
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="emailText.errors?.pattern"
               >
-                Enter a valid email.
+                Enter a valid email
               </span>
             </div>
           </div>
@@ -204,7 +204,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                     [disabled]="!user.manageLocationsSelected"
                   />
                   <label for="location_view_edit_permssion">
-                    View And Edit
+                    View and edit
                   </label>
                 </span>
               </div>
@@ -214,7 +214,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
       </section>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="form-group pb-0">
-          <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
+          <div class="user__card__title pb-lg">Sites, studies and apps</div>
           <div class="select__form-control__parent">
             <label class="wrap pb-1 text-initial">Add an app</label>
             <ng-select
@@ -223,7 +223,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
               [multiple]="true"
               bindLabel="name"
               class="form-control select__form-control"
-              placeholder="Enter App ID or Name"
+              placeholder="Enter app ID or name"
               [hideSelected]="true"
               [(ngModel)]="selectedApps"
               [ngModelOptions]="{standalone: true}"
@@ -280,7 +280,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                               (change)="appRadioButtonChange(app)"
                             />
                             <label for="appRadioEdit{{ app.id }}">
-                              View And Edit
+                              View and edit
                             </label>
                           </span>
                         </div>
@@ -368,20 +368,30 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     <label
                                       for="studyRadioEdit{{ study.studyId }}"
                                     >
-                                      View And Edit
+                                      View and edit
                                     </label>
                                   </span>
                                 </div>
                               </div>
                               <div
-                                class="fa__plus__minus"
-                                type="button"
-                                data-toggle="collapse"
-                                [attr.data-target]="
-                                  '#collapseTwo' + study.studyId
-                                "
-                                aria-expanded="false"
-                              ></div>
+                                class="app__id_num flex__justify__space-between"
+                              >
+                                <div class="orange__text__sm font-12 pr-2">
+                                  {{
+                                    study.selectedSitesCount
+                                      | i18nPlural: sitesMessageMapping
+                                  }}
+                                </div>
+                                <div
+                                  class="fa__plus__minus"
+                                  type="button"
+                                  data-toggle="collapse"
+                                  [attr.data-target]="
+                                    '#collapseTwo' + study.studyId
+                                  "
+                                  aria-expanded="false"
+                                ></div>
+                              </div>
                             </div>
                           </div>
                           <div
@@ -446,7 +456,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                       name="siteRadioGroup{{ site.siteId }}"
                                     />
                                     <label for="siteRadioEdit{{ site.siteId }}">
-                                      View And Edit
+                                      View and edit
                                     </label>
                                   </span>
                                 </div>

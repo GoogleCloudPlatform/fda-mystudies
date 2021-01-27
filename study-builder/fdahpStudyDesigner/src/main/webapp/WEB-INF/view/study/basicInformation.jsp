@@ -41,7 +41,7 @@
             <button type="button" class="btn btn-primary blue-btn actBut"
                     id="completedId"
                     <c:if test="${not studyBo.viewPermission }">disabled</c:if>>Mark
-              as Completed
+              as completed
             </button>
           </div>
         </c:if>
@@ -102,8 +102,7 @@
       <div class="col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            Study Name
-            <small>(50 characters max)</small>
+            Study name
             <span
                 class="requiredStar"> *
             </span>
@@ -118,8 +117,7 @@
 
         <div class="col-md-6 pr-none">
           <div class="gray-xs-f mb-xs">
-            Study Website
-            <span>(e.g: http://www.google.com)</span>
+            Study website
             <small>(100
               characters max)
             </small>   
@@ -138,7 +136,7 @@
 
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-xs">
-          Descriptive Study Name
+          Descriptive study name
           <small>(150 characters max)</small>
           <span
               class="requiredStar"> *
@@ -155,7 +153,7 @@
       <div class="col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            Study Type
+            Study type
             <span class="requiredStar"> *</span>
           </div>
           <div class="form-group">
@@ -202,11 +200,11 @@
 		<div class="col-md-12 p-none mb-xxlg">
           <div class="col-md-6 pr-none thumbImageDIv" style="margin-left:-13px">
           <div class="gray-xs-f mb-sm">
-            Study Thumbnail Image
+            Study thumbnail image
             <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="top"
                     data-html="true"
-                    title="<span class='font24 text-weight-light pull-left'></span> The 'Default' image shown below is used in the mobile app unless you over-ride it by uploading an 'Alternate' image. Please note that the image you upload must be of type .JPG or .PNG, and have a size of 225x225 pixels."/>
+                    title="<span class='font24 text-weight-light pull-left'></span> The default image shown below will be used for the study list thumbnail in the mobile app. You can upload an alternate image if you wish to use another. The image you upload must be of type .JPG or .PNG, and have a size of 225x225 pixels."/>
             </span>
       </div>
           
@@ -260,11 +258,11 @@
          
            <div class="mt-lg" style="margin-top:1px !important;  font-size:10px; ">
                     <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important; display:inline-block">
-                     Default Image                     
+                     Default image                     
             </div>
              &nbsp; &nbsp; &nbsp;&nbsp;
             <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important; display:inline-block">
-                     Alternate Image                     
+                     Alternate image                     
             </div>
             </div>
                     
@@ -280,6 +278,7 @@
   $(document)
       .ready(
           function () {
+        	$('.studyClass').addClass("active");
             $('#removeUrl').css("visibility", "hidden");
             var file = $('#uploadImg').val();
             var thumbnailImageId = $('#thumbnailImageId').val();

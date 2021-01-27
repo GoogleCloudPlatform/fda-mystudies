@@ -380,6 +380,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     //check the type of page action(view/edit)
     newLearnMoreConsentDocument();
     if ('${permission}' == 'view') {
@@ -886,8 +887,8 @@
     $("#titleModalId").text("Learn more");
     if (learn_more_desc != ' ' && learn_more_desc != '' && learn_more_desc != null
         && typeof learn_more_desc != 'undefined') {
-        $("#accordionEllipsis").text(learn_more_desc);
-        $("#accordionCollapse1").text(learn_more_desc);
+        $("#accordionEllipsis").html(learn_more_desc);
+        $("#accordionCollapse1").html(learn_more_desc);
         $("#accordianNA").hide();
         $("#accordion").show();
         
@@ -897,8 +898,8 @@
         $("#tagLineDescriptionModalId").hide();
       } else {
     	learn_more_desc = '';
-        $("#accordionEllipsis").text(learn_more_desc);
-        $("#accordionCollapse1").text(learn_more_desc);
+        $("#accordionEllipsis").html(learn_more_desc);
+        $("#accordionCollapse1").html(learn_more_desc);
         $("#shortDescriptionModalId").text(' - NA - ');
         $("#accordianNA").show();
         $("#accordion").hide();

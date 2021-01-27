@@ -72,7 +72,7 @@
       </c:if>
 
       <div class="pl-none mt-none">
-        <div class="gray-xs-f mb-xs">Notification Text (250 characters max)
+        <div class="gray-xs-f mb-xs">Notification text (250 characters max)
           <span
               class="requiredStar">*
           </span>
@@ -94,7 +94,7 @@
                    <c:if
                        test="${notificationBO.notificationScheduleType eq 'notImmediate'}">checked</c:if>
                    <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
-            <label for="inlineRadio1">Schedule a date / time</label>
+            <label for="inlineRadio1">Schedule this notification</label>
           </span>
           <span class="radio radio-inline">
             <input type="radio" id="inlineRadio2" value="immediate" name="currentDateTime"
@@ -142,7 +142,7 @@
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
- <div class="form-group mr-sm" style="white-space: normal; margin-top: -15px;">
+ <div class="form-group mr-sm" style="white-space: normal; margin-top: -9px;">
  For studies that are live, notifications get published for scheduled delivery to participants as soon as you mark the Notifications section complete.
  </div>
     </div>
@@ -165,6 +165,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     var appId = '${appId}';
     $(".menuNav li").removeClass('active');
     $(".eigthNotification").addClass('active');

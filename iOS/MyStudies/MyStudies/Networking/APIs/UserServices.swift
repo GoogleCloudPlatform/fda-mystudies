@@ -164,6 +164,7 @@ class UserServices: NSObject {
         [
           "studyId": studyToDelete.studyId,
           "delete": "\(studyToDelete.shouldDelete ?? false)",
+          kStudyParticipantId: studyToDelete.participantId,
         ]
       studiesDict.append(dict)
     }

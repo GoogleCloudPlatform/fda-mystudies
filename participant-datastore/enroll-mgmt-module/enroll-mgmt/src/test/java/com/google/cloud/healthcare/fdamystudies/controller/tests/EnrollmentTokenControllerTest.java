@@ -153,6 +153,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ENROLLMENT_TOKEN_FOUND_INVALID.getEventCode(), auditRequest);
@@ -163,7 +165,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void validateEnrollmentTokenForbidden() throws Exception {
+  public void validateEnrollmentTokenAlreadyUsedBadRequest() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
     headers.add("Authorization", VALID_BEARER_TOKEN);
@@ -190,7 +192,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
                 .content(requestJson)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isForbidden());
+        .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest(2);
   }
@@ -307,6 +309,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+    auditRequest.setStudyVersion("3.3");
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
 
@@ -412,6 +415,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+    auditRequest.setStudyVersion("3.3");
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
 
@@ -468,6 +472,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setStudyVersion("3.1");
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
 

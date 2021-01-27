@@ -339,7 +339,7 @@
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
 
     <c:if test="${isstudyProtocol eq 'isstudyProtocol' && empty resourceBO.title}">
     $('#resourceTitle').val('Study Protocol');

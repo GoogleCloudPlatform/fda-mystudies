@@ -10,12 +10,13 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import javax.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
 
 public interface EnrollmentTokenService {
 
-  public boolean studyExists(String shortName);
+  public StudyEntity getStudyDetails(String shortName);
 
   public boolean hasParticipant(String shortName, @NotNull String tokenValue);
 
@@ -27,5 +28,6 @@ public interface EnrollmentTokenService {
       String shortName,
       @Nullable String tokenValue,
       String userId,
+      Float studyVersion,
       AuditLogEventRequest auditRequest);
 }

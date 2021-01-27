@@ -37,7 +37,7 @@
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsComp" onclick="markAsCompleted();"
                     <c:if test="${!markAsComplete}">disabled</c:if>>
-              Mark as Completed
+              Mark as completed
             </button>
           </span>
         </div>
@@ -127,6 +127,7 @@
 <script>
   var dataTable;
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li.active").removeClass('active');
     $(".sixthTask").addClass('active');

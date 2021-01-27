@@ -116,7 +116,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "loc.name AS locationName, loc.custom_id AS locationCustomId, "
               + "prs.invitation_time AS invitedDate, prs.id AS participantId, stu.type AS studyType "
               + "FROM participant_registry_site prs "
-              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id AND psi.status NOT IN (:excludeParticipantStudyStatus) "
+              + "LEFT JOIN participant_study_info psi ON prs.id=psi.participant_registry_site_id  "
               + "LEFT JOIN study_info stu ON psi.study_info_id = stu.id  "
               + "LEFT JOIN sites si ON si.id=prs.site_id "
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
@@ -135,12 +135,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
   public List<StudyParticipantDetails> getStudyParticipantDetailsForOpenStudy(
-      String studyId,
-      String[] excludeParticipantStudyStatus,
-      Integer limit,
-      Integer offset,
-      String orderByCondition,
-      String searchTerm);
+      String studyId, Integer limit, Integer offset, String orderByCondition, String searchTerm);
 
   @Query(
       value =
@@ -220,14 +215,14 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "LEFT JOIN sites si ON si.study_id=stu.id "
               + "LEFT JOIN locations loc ON loc.id=si.location_id "
               + "LEFT JOIN app_info ai ON stu.app_info_id = ai.id "
-              + "WHERE (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% OR loc.name LIKE %:searchTerm%) "
+              + "WHERE (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% OR (loc.name LIKE %:searchTerm% AND stu.type='CLOSE')) "
               + "ORDER BY stu.created_time DESC "
               + "LIMIT :limit OFFSET :offset) AS study "
               + "LEFT JOIN ( "
               + "SELECT si.created_time AS siteCreatedTimeStamp, si.id AS siteId, si.study_id AS studyId, si.target_enrollment AS targetEnrollment, loc.name AS siteName "
               + "FROM sites si, locations loc, study_info stu "
               + "WHERE stu.id=si.study_id AND loc.id=si.location_id AND "
-              + "(stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% OR loc.name LIKE %:searchTerm%) "
+              + "(stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% OR (loc.name LIKE %:searchTerm% AND stu.type='CLOSE')) "
               + ") AS site ON study.studyId= site.studyId ",
       nativeQuery = true)
   public List<StudySiteInfo> getStudySiteDetails(Integer limit, Integer offset, String searchTerm);
@@ -305,4 +300,13 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "AND (stu.name LIKE %:searchTerm% OR stu.custom_id LIKE %:searchTerm% ) ORDER BY stu.created_time DESC  LIMIT :limit OFFSET :offset ",
       nativeQuery = true)
   public List<StudyEntity> findAll(Integer limit, Integer offset, String searchTerm);
+
+  @Query("SELECT study from StudyEntity study where study.customId=:customStudyId")
+  public Optional<StudyEntity> findByCustomStudyId(String customStudyId);
+
+  @Query(
+      value =
+          "SELECT * FROM study_info study where study.custom_id IN (:customIds) ORDER BY study.created_time  LIMIT 1",
+      nativeQuery = true)
+  public Optional<StudyEntity> findByCustomIds(List<String> customIds);
 }
