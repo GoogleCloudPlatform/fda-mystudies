@@ -272,12 +272,12 @@
           <div class="mt-lg pl-md">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
               <div class="pb-md bor-dashed">
-                <span class="dot">Create New Studies</span>
+                <span class="dot">Create new studies</span>
               </div>
             </c:if>
             <div class="pl-sm pt-md">
               <span
-                  class="gray-xs-f text-weight-semibold text-uppercase">Existing Study Permissions
+                  class="gray-xs-f text-weight-bold">List of studies assigned
               </span>
             </div>
             <c:forEach items="${studyAndPermissionList}" var="studyAndPermission">
