@@ -41,7 +41,7 @@
           </div>
         </c:if>
         <div class="pl-none">
-          <div class="gray-xs-f mb-xs mt-xs">Notification Text (250 characters max)
+          <div class="gray-xs-f mb-xs mt-xs">Notification text (250 characters max)
             <span
                 class="requiredStar">*
             </span>
@@ -63,7 +63,12 @@
                          test="${notificationBO.notificationScheduleType eq 'notImmediate'}">checked</c:if>
                      <c:if
                          test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
-              <label for="inlineRadio1">Schedule a date/time</label>
+              <label for="inlineRadio1">Schedule this notification
+              <span
+               data-toggle="tooltip" data-placement="top"
+               title="The notification will get fired at the selected date and time as per server time zone."
+               class="filled-tooltip"></span>
+              </label>
             </span>
             <span class="radio radio-inline">
               <input type="radio" id="inlineRadio2" value="immediate"
@@ -74,6 +79,7 @@
             </span>
             <div class="help-block with-errors red-txt"></div>
             <c:if test="${not empty notificationHistoryNoDateTime}">
+             <div class="gray-xs-f mb-xs mt-xs">Previously sent on: </div>
               <c:forEach items="${notificationHistoryNoDateTime}" var="notificationHistory">
                 <span
                     class="lastSendDateTime">${notificationHistory.notificationSentdtTime}</span>
@@ -112,20 +118,26 @@
           </div>
         </div>
 
-        <div class=" ">
+     <div class=" ">
           <div class="form-group">
             <div class="gray-xs-f mb-xs">App to which the notification must be sent</div>
-            <select id="appId" class="selectpicker" name="appId">
-              <option value=''>Select</option>
+			<c:choose>
+             <c:when test="${notificationBO.actionPage eq 'view'}">
+               <input type="text" value="${notificationBO.appId}" disabled="">
+             </c:when>
+             <c:otherwise>
+              <select id="appId" class="selectpicker" name="appId">
+              <option value=''>Select app ID</option>
               <c:forEach items="${gatewayAppList}" var="app">
                 <option
                     value="${app}" ${notificationBO.appId eq app ? 'selected' : ''}>${app}</option>
               </c:forEach>
-            </select>
+              </select>
+            </c:otherwise>
+            </c:choose>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-
 
       </div>
     </div>
@@ -189,6 +201,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
+	  $('[data-toggle="tooltip"]').tooltip();
     $('#rowId').parent().removeClass('white-bg');
     $("#notification").addClass("active");
 

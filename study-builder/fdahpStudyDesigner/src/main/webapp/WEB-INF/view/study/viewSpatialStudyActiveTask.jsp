@@ -1715,6 +1715,7 @@
 </div>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     var taskId = $('#taskContentId').val();
     if (taskId) {
       var frequencyType = '${activeTaskBo.frequency}';

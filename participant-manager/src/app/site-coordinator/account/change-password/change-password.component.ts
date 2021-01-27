@@ -18,10 +18,10 @@ export class ChangePasswordComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   resetPasswordForm: FormGroup;
-  changePasswordTitle = 'Change Password';
+  changePasswordTitle = 'Change password';
   currentPasswordValidationMessage = 'Enter your current password';
-  currentPasswordPlaceholder = 'Enter Current Password';
-  currentPasswordlabel = 'Current Password';
+  currentPasswordPlaceholder = 'Enter current password';
+  currentPasswordlabel = 'Current password';
   hideClickable = true;
   constructor(
     private readonly fb: FormBuilder,
@@ -53,14 +53,15 @@ export class ChangePasswordComponent
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       if (params.action && params.action === 'passwordsetup') {
-        this.changePasswordTitle = 'SET UP PASSWORD';
+        this.changePasswordTitle = 'Set up password';
         this.currentPasswordValidationMessage = 'Enter your temporary password';
-        this.currentPasswordPlaceholder = 'Enter Temporary Password';
-        this.currentPasswordlabel = 'Temporary Password';
+        this.currentPasswordPlaceholder = 'Enter temporary password';
+        this.currentPasswordlabel = 'Temporary password';
       }
     }),
-      (this.passCriteria = `Your password must be at least 8 characters long and contain lower case, 
-      upper case, numeric and special characters.`);
+      (this.passCriteria = `Your password must be at least 8 characters long    
+and contain lower case, upper case, numeric and
+special characters.`);
     this.displayHeader.showHeaders$.subscribe((visible) => {
       this.hideClickable = visible;
     });

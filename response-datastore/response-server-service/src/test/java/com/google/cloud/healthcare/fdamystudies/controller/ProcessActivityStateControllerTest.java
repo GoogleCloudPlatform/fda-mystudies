@@ -82,6 +82,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId("RT3");
+    auditRequest.setStudyVersion("NA");
     auditRequest.setParticipantId("567");
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -211,6 +212,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(studyId);
+    auditRequest.setStudyVersion("NA");
     auditRequest.setParticipantId(participantId);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();

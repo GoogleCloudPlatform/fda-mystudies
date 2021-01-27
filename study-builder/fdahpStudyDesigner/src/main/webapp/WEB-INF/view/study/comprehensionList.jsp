@@ -45,7 +45,7 @@
               <button type="button" class="btn btn-primary blue-btn" id="markAsCompleteBtnId"
                       <c:if
                           test="${!markAsComplete && consentBo.needComprehensionTest eq 'Yes'}">disabled</c:if>
-                      onclick="markAsCompleted();">Mark as Completed
+                      onclick="markAsCompleted();">Mark as completed
               </button>
             </span>
           </div>
@@ -64,7 +64,6 @@
             </span>
           <span class="ct_panel"
                 id="addHelpNote">
-            <small>(Please save to continue)</small>
           </span>
         </div>
         <div class="form-group col-md-5 p-none">
@@ -162,6 +161,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
     $("#createStudyId").show();
@@ -297,7 +297,7 @@
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The value should not be more than no of questions or zero"));
+            "The score should be less than or equal to the number of questions and greater than 0."));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");
@@ -443,7 +443,7 @@
 
       if (!table.data().count()) {
         $('#alertMsg').show();
-        $("#alertMsg").removeClass('s-box').addClass('e-box').text("Add atleast one question !");
+        $("#alertMsg").removeClass('s-box').addClass('e-box').text("Add at least one question");
         setTimeout(hideDisplayMessage, 4000);
       } else if (isFromValid("#comprehensionInfoForm")) {
         saveConsent("Done");
@@ -493,7 +493,7 @@
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The value should not be more than no of questions or zero"));
+            "The score should be less than or equal to the number of questions and greater than 0."));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");

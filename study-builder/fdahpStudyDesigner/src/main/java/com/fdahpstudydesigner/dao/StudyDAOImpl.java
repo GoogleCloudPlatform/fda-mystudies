@@ -328,12 +328,9 @@ public class StudyDAOImpl implements StudyDAO {
                     .setInteger(FdahpStudyDesignerConstants.STUDY_ID, studyId)
                     .uniqueResult();
         if (studySequence != null) {
-          if (consentInfoList.size() == 1) {
-            studySequence.setConsentEduInfo(false);
-          }
-          if (studySequence.iseConsent()) {
-            studySequence.seteConsent(false);
-          }
+          studySequence.setConsentEduInfo(false);
+          studySequence.seteConsent(false);
+          studySequence.setComprehensionTest(false);
           session.saveOrUpdate(studySequence);
         }
       }
@@ -3860,6 +3857,21 @@ public class StudyDAOImpl implements StudyDAO {
           }
         }
       }
+
+      StudySequenceBo studySequence =
+          (StudySequenceBo)
+              session
+                  .getNamedQuery(FdahpStudyDesignerConstants.STUDY_SEQUENCE_BY_ID)
+                  .setInteger(
+                      FdahpStudyDesignerConstants.STUDY_ID,
+                      comprehensionTestQuestionBo.getStudyId())
+                  .uniqueResult();
+
+      if (studySequence != null) {
+        studySequence.setComprehensionTest(false);
+        session.save(studySequence);
+      }
+
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
@@ -4602,6 +4614,7 @@ public class StudyDAOImpl implements StudyDAO {
             newstudyVersionBo.setStudyVersion(1.0f);
             session.save(newstudyVersionBo);
           }
+          auditRequest.setStudyVersion(String.valueOf(newstudyVersionBo.getStudyVersion()));
 
           // create new Study and made it draft study
           StudyBo studyDreaftBo = SerializationUtils.clone(studyBo);
@@ -5592,7 +5605,6 @@ public class StudyDAOImpl implements StudyDAO {
                     .uniqueResult();
         if (studyBo != null) {
           auditRequest.setStudyId(studyBo.getCustomStudyId());
-          auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
               || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)) {
@@ -5816,6 +5828,7 @@ public class StudyDAOImpl implements StudyDAO {
               }
               session.update(liveStudy);
               message = FdahpStudyDesignerConstants.SUCCESS;
+              auditRequest.setStudyVersion(liveStudy.getVersion().toString());
             }
           }
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {

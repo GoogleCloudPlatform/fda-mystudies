@@ -114,7 +114,7 @@ public class NotificationServiceImpl implements NotificationService {
                     FdahpStudyDesignerConstants.DB_SDF_DATE_TIME,
                     FdahpStudyDesignerConstants.SDF_TIME); // 11:16:12
             // AM
-            notificationHistoryBO.setNotificationSentdtTime("Last Sent on " + date + " at " + time);
+            notificationHistoryBO.setNotificationSentdtTime(date + " at " + time);
           }
         }
       }
