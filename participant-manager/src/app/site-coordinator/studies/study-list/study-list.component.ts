@@ -18,7 +18,7 @@ const limit = 10;
 })
 export class StudyListComponent implements OnInit {
   studyList$: Observable<StudyResponse> = of();
-  studies: Study[] = [];
+  studiesDisplay: Study[] = [];
   manageStudiesBackup = {} as StudyResponse;
   studyTypes = StudyType;
   messageMapping: {[k: string]: string} = {
@@ -54,12 +54,14 @@ export class StudyListComponent implements OnInit {
       this.studiesService.getStudies(limit, 0, this.searchValue),
     ).pipe(
       map(([manageStudies]) => {
+        const studies = [];
         this.manageStudiesBackup = {...manageStudies};
+        studies.push(...manageStudies.studies);
+        this.studiesDisplay = studies;
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
             : false) && manageStudies.studies.length > 0;
-
         return this.manageStudiesBackup;
       }),
     );
@@ -79,23 +81,21 @@ export class StudyListComponent implements OnInit {
     }
   }
 
-  loadMoreSites() {
+  loadMoreSites(): void {
     const offset = this.manageStudiesBackup.studies.length;
-    this.studyList$ = combineLatest(
-      this.studiesService.getStudies(limit, offset, this.searchValue),
-    ).pipe(
-      map(([manageStudies]) => {
+    this.studiesService
+      .getStudies(limit, offset, this.searchValue)
+      .subscribe((manageStudies) => {
         const studies = [];
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
+        this.studiesDisplay = studies;
         this.manageStudiesBackup.studies = studies;
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
             : false) && manageStudies.studies.length > 0;
-        return this.manageStudiesBackup;
-      }),
-    );
+      });
   }
 
   checkViewPermission(permission: number): boolean {
