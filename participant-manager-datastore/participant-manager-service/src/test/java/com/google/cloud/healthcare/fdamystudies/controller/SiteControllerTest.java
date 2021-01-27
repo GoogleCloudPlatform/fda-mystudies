@@ -513,6 +513,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldAddNewParticipant() throws Exception {
     // Step 1: Set studyEntity
     siteEntity.setStudy(studyEntity);
+    siteEntity.setLocation(locationEntity);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     ParticipantDetailRequest participantRequest = newParticipantRequest();
 
@@ -552,11 +553,12 @@ public class SiteControllerTest extends BaseMockIT {
     assertEquals(siteEntity.getId(), optParticipantStudy.get().getSite().getId());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setAppId(appEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
     auditRequest.setParticipantId(participantId);
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PARTICIPANT_EMAIL_ADDED.getEventCode(), auditRequest);
@@ -705,6 +707,8 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSiteParticipantsForDisabled() throws Exception {
     siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     participantRegistrySiteEntity =
         testDataHelper.createParticipantRegistrySite(siteEntity, studyEntity);
 
@@ -735,7 +739,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldNotReturnSiteParticipantsForNotEligible() throws Exception {
-
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     participantStudyEntity.setStatus(EnrollmentStatus.YET_TO_ENROLL.getStatus());
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -759,7 +764,7 @@ public class SiteControllerTest extends BaseMockIT {
     // Step 1: set onboarding status to 'N'
     studyEntity.setStatus(DEACTIVATED);
     siteEntity.setStudy(studyEntity);
-    //  testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+    siteEntity.setLocation(locationEntity);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
     participantRegistrySiteEntity.setSite(siteEntity);
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
@@ -801,11 +806,11 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
-
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
 
@@ -816,6 +821,8 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSiteParticipantsRegistry() throws Exception {
     // Step 1: set onboarding status to 'N' and super admin to false
+
+    siteEntity.setLocation(locationEntity);
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     siteEntity.setStudy(studyEntity);
@@ -859,11 +866,11 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
-
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
 
@@ -873,15 +880,13 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnSiteParticipantsRegistryForEnrolledStatus() throws Exception {
-    // Step 1: set enrollment status to 'IN_PROGRESS'
-    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
-    participantStudyEntity = participantStudyRepository.saveAndFlush(participantStudyEntity);
 
     // Step 2: set onboarding status to 'E'
     siteEntity.setStudy(studyEntity);
-    //  testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+    siteEntity.setLocation(locationEntity);
     participantRegistrySiteEntity.setSite(siteEntity);
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
     testDataHelper
         .getParticipantRegistrySiteRepository()
         .saveAndFlush(participantRegistrySiteEntity);
@@ -912,10 +917,11 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
@@ -928,6 +934,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnSiteParticipantsRegistryForDisabledParticipants() throws Exception {
     // Step 1: set onboarding status to 'D'
     siteEntity.setStudy(studyEntity);
+    siteEntity.setLocation(locationEntity);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
     participantRegistrySiteEntity.setSite(siteEntity);
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
@@ -962,10 +969,11 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
@@ -997,6 +1005,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldDecomissionSite() throws Exception {
     // Step 1: set status to ACTIVE
     siteEntity.setStatus(SiteStatus.ACTIVE.value());
+    siteEntity.setLocation(locationEntity);
     siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     // Step 2: Call API and expect DECOMMISSION_SITE_SUCCESS message
@@ -1024,9 +1033,11 @@ public class SiteControllerTest extends BaseMockIT {
     assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteId);
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SITE_DECOMMISSIONED_FOR_STUDY.getEventCode(), auditRequest);
@@ -1072,10 +1083,11 @@ public class SiteControllerTest extends BaseMockIT {
     assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteId);
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SITE_ACTIVATED_FOR_STUDY.getEventCode(), auditRequest);
 
@@ -1143,6 +1155,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldDecomissionSiteForSuperAdmin() throws Exception {
     // Step 1: set status to ACTIVE
     siteEntity.setStatus(SiteStatus.ACTIVE.value());
+    siteEntity.setLocation(locationEntity);
     siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     userRegAdminEntity.setSuperAdmin(true);
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
@@ -1796,6 +1809,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAccessDeniedForImportNewParticipant() throws Exception {
     // Step 1: set manage site permission to view only
+    siteEntity.setLocation(locationEntity);
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
@@ -1824,6 +1838,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnUserNotFoundForImportNewParticipant() throws Exception {
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, IdGenerator.id());
 
@@ -1847,6 +1863,7 @@ public class SiteControllerTest extends BaseMockIT {
     // Step 1: set study type to open study
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
     studyEntity.setType(CommonConstants.OPEN_STUDY);
+    siteEntity.setLocation(locationEntity);
     siteEntity.setStudy(studyEntity);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
@@ -1867,9 +1884,11 @@ public class SiteControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
+
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED.getEventCode(), auditRequest);
 
@@ -1899,6 +1918,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnWithBadHeaders() throws Exception {
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -1918,9 +1939,10 @@ public class SiteControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED.getEventCode(), auditRequest);
 
@@ -1948,6 +1970,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnImportNewParticipantAndInvalidEmail() throws Exception {
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -1992,9 +2016,11 @@ public class SiteControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
+
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PARTICIPANTS_EMAIL_LIST_IMPORT_PARTIAL_FAILED.getEventCode(), auditRequest);
 
@@ -2004,6 +2030,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnImportNewParticipant() throws Exception {
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -2038,9 +2066,11 @@ public class SiteControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
+
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PARTICIPANTS_EMAIL_LIST_IMPORTED.getEventCode(), auditRequest);
 
@@ -2139,6 +2169,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldUpdateParticipantStatus() throws Exception {
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     // Step 1:set request body
     ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
 
@@ -2166,10 +2198,11 @@ public class SiteControllerTest extends BaseMockIT {
         participantStatusRequest.getStatus(), participantRegistrySiteEntity.getOnboardingStatus());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PARTICIPANT_INVITATION_ENABLED.getEventCode(), auditRequest);
@@ -2179,6 +2212,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldUpdateParticipantStatusToDisabled() throws Exception {
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     // Step 1:set request body
     ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
     participantStatusRequest.setStatus("D");
@@ -2214,10 +2249,11 @@ public class SiteControllerTest extends BaseMockIT {
     assertNull(optParticipantStudyEntity.get().getWithdrawalDate());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteEntity.getId());
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PARTICIPANT_INVITATION_DISABLED.getEventCode(), auditRequest);
