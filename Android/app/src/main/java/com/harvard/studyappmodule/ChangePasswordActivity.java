@@ -222,7 +222,7 @@ public class ChangePasswordActivity extends AppCompatActivity
   }
 
   private boolean checkPasswordContainsEmailID(String password) {
-    if (password.contains(emailId)) {
+    if (emailId != null && password.contains(emailId)) {
       return true;
     } else {
       return false;
