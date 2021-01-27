@@ -2,6 +2,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<style>
+.validateActiveTask{
+     position: absolute;
+    font-size: 11px !important;
+    line-height: 12px;
+    margin: 0px;
+}
+</style>
+
 <div class="changeContent">
   <form:form action="/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}"
              name="activeContentFormId" id="activeContentFormId" method="post" role="form">
@@ -28,8 +37,10 @@
                id="shortTitleId" name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
             <c:if
                 test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
-               maxlength="50" required/>
-        <div class="help-block with-errors red-txt"></div>
+               maxlength="50" required/>              
+               
+        <div id="activityvalidate" class="validateActiveTask with-errors red-txt">
+         </div>
       </div>
     </div>
   </div>
@@ -1056,24 +1067,82 @@
       $('input').on('drop', function () {
         return false;
       });
-      $(document).find('input[type = text][custAttType = customValidate	]').keyup(function (e) {
-          var evt = (e) ? e : window.event;
-          var charCode = (evt.which) ? evt.which : evt.keyCode;
-          if (charCode == 16)
-            isShift = false;
-          if (!isShift && $(this).val()) {
-            var regularExpression = /^[a-z0-9_-]*$/;
-            if (!regularExpression.test($(this).val())) {
-              var newVal = $(this).val().replace(/[^a-z0-9_-]/g,
-                  '');
-              e.preventDefault();
-              $(this).val(newVal);
-              $(this).parent().addClass("has-danger has-error");
-              $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
-                  "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."));
-          }
-        }
-      });
+     
+      $('input[type = text][custAttType = customValidate]').blur(function(){
+    		 var newVal = $(this)
+             .val()
+             .replace(
+                 /[^a-z0-9_-]/g,
+                 '');
+    $(this).val(newVal);
+        if(newVal==''){
+        	  var validateAcitveTask= document.getElementById("validateUL");
+              if(validateAcitveTask!=undefined){
+             	 validateAcitveTask.remove();
+               }
+         }
+             
+      }); 
+     
+    
+               $('input[type = text][custAttType = customValidate]')
+              .on(
+                  'keyup',
+                  function (e) {
+                    var evt = (e) ? e : window.event;
+                    var charCode = (evt.which) ? evt.which
+                        : evt.keyCode;
+                    if (charCode == 16)
+                      isShift = false;
+                    if (!isShift && $(this).val()) {
+                      var regularExpression = /^[a-z0-9_-]*$/;
+                      if (!regularExpression.test($(this)
+                          .val())) { 
+                       var validationactivity= document.getElementById("activityvalidate");
+                      //Create an unordered list
+                      if(document.getElementById("validateUL")==undefined){
+                       var list = document.createElement('ul');
+                       list.setAttribute("id","validateUL");
+                       
+                       list.setAttribute("class","list-unstyled");
+                       list.setAttribute("style","white-space:nowrap");
+                       var li = document.createElement('li');
+                       li.textContent = "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus).";
+                   	   list.appendChild(li);
+                   	   validationactivity.appendChild(list);
+                      }
+  
+                        var oldValue = $(this).val().length;
+                        var newVal = $(this)
+                        .val()
+                        .replace(
+                            /[^a-z0-9_-]/g,
+                            '');   
+
+                        if(newVal==''){
+                        	 $(this).val('');
+                          
+                            } else{
+                                if(newVal.length==oldValue){
+                                 	$( "#test" ).remove( "#validateUL" );
+                             	   
+                                }else{
+                                	$(this).val(newVal);
+                                	}
+                                }      
+                        
+                         }
+                      else{
+          	              
+                         var validateAcitveTask= document.getElementById("validateUL");
+                         if(validateAcitveTask!=undefined){
+                        	 validateAcitveTask.remove();
+                             }
+                         
+                           }
+                    }
+                  
+                  });       
       $(document).find('input[type = text][custAttType != cust]').keyup(function (e) {
         var evt = (e) ? e : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
