@@ -147,7 +147,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void setUp() {
     locationEntity = testDataHelper.createSiteLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
-    appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
+    appEntity = testDataHelper.createAppEntityForSiteControllerTest(userRegAdminEntity);
     studyEntity = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
     siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
     participantRegistrySiteEntity =
