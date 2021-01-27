@@ -241,6 +241,7 @@ public class EnrollmentTokenController {
             respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
             enrollAuditEventHelper.logEvent(USER_FOUND_ELIGIBLE_FOR_STUDY, auditRequest);
+            enrollAuditEventHelper.logEvent(USER_ENROLLED_INTO_STUDY, auditRequest);
           }
         }
       } else {
