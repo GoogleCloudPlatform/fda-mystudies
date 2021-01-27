@@ -92,6 +92,7 @@ public class StudyControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
+    locationEntity = testDataHelper.createLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
     studyEntity = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
@@ -409,8 +410,6 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnStudyParticipantsForDisabled() throws Exception {
-
-    locationEntity = testDataHelper.createLocation();
     studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
     siteEntity.setTargetEnrollment(0);
@@ -451,7 +450,6 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
-    locationEntity = testDataHelper.createLocation();
     studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
     siteEntity.setTargetEnrollment(0);
@@ -490,8 +488,10 @@ public class StudyControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
@@ -507,7 +507,6 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
-    locationEntity = testDataHelper.createLocation();
     studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
     siteEntity.setTargetEnrollment(0);
@@ -545,9 +544,10 @@ public class StudyControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
-
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
 
@@ -560,7 +560,6 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
-    locationEntity = testDataHelper.createLocation();
     studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
     siteEntity.setTargetEnrollment(0);
@@ -588,8 +587,10 @@ public class StudyControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
@@ -603,7 +604,6 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
-    locationEntity = testDataHelper.createLocation();
     studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
     siteEntity.setTargetEnrollment(0);
@@ -646,8 +646,10 @@ public class StudyControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
@@ -660,7 +662,6 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldReturnStudyParticipantsForPagination() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
-    locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -762,6 +763,9 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldUpdateTargetEnrollmentForSuperAdmin() throws Exception {
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
     // Step 1:Set request body
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
 
@@ -794,8 +798,10 @@ public class StudyControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ENROLLMENT_TARGET_UPDATED.getEventCode(), auditRequest);
@@ -806,6 +812,9 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldUpdateTargetEnrollment() throws Exception {
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
     // Step 1:Set request body
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
     userRegAdminEntity.setSuperAdmin(false);
@@ -840,8 +849,10 @@ public class StudyControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(studyEntity.getId());
-    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ENROLLMENT_TARGET_UPDATED.getEventCode(), auditRequest);
