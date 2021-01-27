@@ -145,7 +145,7 @@ public class SiteControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
-    locationEntity = testDataHelper.createLocation();
+    locationEntity = testDataHelper.createSiteLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
     studyEntity = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
