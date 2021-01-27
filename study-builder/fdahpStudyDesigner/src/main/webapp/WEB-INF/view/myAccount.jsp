@@ -242,7 +242,7 @@
         <span>Users</span>
         <span class="gray-xs-f pull-right">
            <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">View only</c:if>
+              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
           <c:if
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & edit</c:if>
         </span>
@@ -255,7 +255,7 @@
         <span>Notifications</span>
         <span class="gray-xs-f pull-right">
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">View only</c:if>
+              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
           <c:if
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & edit</c:if>
         </span>
