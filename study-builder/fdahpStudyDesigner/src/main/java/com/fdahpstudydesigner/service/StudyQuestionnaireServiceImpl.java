@@ -1092,4 +1092,10 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     logger.info("StudyQuestionnaireServiceImpl - isAnchorDateExistByQuestionnaire - Starts");
     return studyQuestionnaireDAO.isAnchorDateExistByQuestionnaire(questionnaireId);
   }
+
+  @Override
+  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId) {
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireById - Starts");
+    return studyQuestionnaireDAO.getQuestionnaireById(questionnaireId);
+  }
 }

@@ -509,7 +509,7 @@ public class StudyActiveTasksController {
                     addActiveTaskBo.getStudyId().toString(), sesObj.getUserId());
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
             auditRequest.setAppId(studyBo.getAppId());
-            values.put("activetask_id", activeTaskBo.getTaskTypeId().toString());
+            values.put("activetask_id", activeTaskBo.getShortTitle());
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
