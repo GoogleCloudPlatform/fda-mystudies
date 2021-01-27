@@ -22,9 +22,9 @@ export class StudyListComponent implements OnInit {
   manageStudiesBackup = {} as StudyResponse;
   studyTypes = StudyType;
   messageMapping: {[k: string]: string} = {
-    '=0': 'No Sites',
-    '=1': 'One Site',
-    'other': '# Sites',
+    '=0': 'No sites',
+    '=1': 'One site',
+    'other': '# sites',
   };
   loadMoreEnabled = true;
   searchValue = '';
