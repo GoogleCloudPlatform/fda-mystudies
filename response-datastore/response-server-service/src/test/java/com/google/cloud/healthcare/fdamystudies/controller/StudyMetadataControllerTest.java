@@ -37,7 +37,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class StudyMetadataControllerTest extends BaseMockIT {
@@ -92,6 +91,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(studyMetadataBeanRequest.getStudyId());
+    auditRequest.setStudyVersion("1.0");
     auditRequest.setAppId(studyMetadataBeanRequest.getAppId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
