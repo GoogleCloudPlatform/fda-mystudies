@@ -40,7 +40,7 @@ public class AuditEventServiceImpl implements AuditEventService {
     logger.entry(
         String.format("begin postAuditLogEvent() for %s event", auditRequest.getEventCode()));
 
-    Logging logging = LoggingOptions.getDefaultInstance().getService();
+//Logging logging = LoggingOptions.getDefaultInstance().getService();
 
     // The data to write to the log
     Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);
@@ -54,7 +54,7 @@ public class AuditEventServiceImpl implements AuditEventService {
             .build();
 
     // Writes the log entry asynchronously
-    logging.write(Collections.singleton(entry));
+//logging.write(Collections.singleton(entry));
     logger.exit(
         String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }

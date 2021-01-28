@@ -24,7 +24,7 @@ public class AuditEventService {
             String.format("begin postAuditLogEvent() for %s event", auditRequest.getEventCode()));
 
     JsonNode requestBody = getObjectMapper().convertValue(auditRequest, JsonNode.class);
-    Logging logging = LoggingOptions.getDefaultInstance().getService();
+//Logging logging = LoggingOptions.getDefaultInstance().getService();
 
     // The data to write to the log
     Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);
@@ -36,7 +36,7 @@ public class AuditEventService {
             .setResource(MonitoredResource.newBuilder("global").build())
             .build();
     // Writes the log entry asynchronously
-    logging.write(Collections.singleton(entry));
+//logging.write(Collections.singleton(entry));
 
     LOGGER.debug(String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }
