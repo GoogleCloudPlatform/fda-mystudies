@@ -103,6 +103,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     activeTaskBo.setTaskTypeId(123);
     activeTaskBo.setStudyId(678578);
     activeTaskBo.setActiveTaskFrequenciesBo(null);
+    activeTaskBo.setShortTitle("ActiveTaskShortTitle");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT.getPath())
@@ -191,6 +192,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     activeTaskBo.setTaskTypeId(123);
     activeTaskBo.setStudyId(678574);
     activeTaskBo.setActiveTaskFrequenciesBo(null);
+    activeTaskBo.setShortTitle("ActiveTaskShortTitle");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT.getPath())
