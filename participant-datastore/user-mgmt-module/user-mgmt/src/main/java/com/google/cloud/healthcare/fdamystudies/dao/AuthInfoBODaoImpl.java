@@ -61,6 +61,9 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
             if (devicetype.equalsIgnoreCase(AppConstants.DEVICE_ANDROID)) {
               androidJsonArray.put(devicetoken.trim());
             } else if (devicetype.equalsIgnoreCase(AppConstants.DEVICE_IOS)) {
+              logger.info(
+                  "AuthInfoBODaoImpl.getDeviceTokenOfAllUsers() IOS devicetoken -"
+                      + devicetoken.trim());
               iosJsonArray.put(devicetoken.trim());
             } else {
               logger.error("Invalid Device Type");
