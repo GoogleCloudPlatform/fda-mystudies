@@ -49,8 +49,7 @@
           <c:forEach items="${notificationList}" var="notification" varStatus="status">
             <tr>
               <td>
-                <div class="dis-ellipsis lg-ellipsis"
-                     title="${fn:escapeXml(notification.notificationText)}">${fn:escapeXml(notification.notificationText)}</div>
+                <div class="dis-ellipsis lg-ellipsis">${fn:escapeXml(notification.notificationText)}</div>
               </td>
               <td>${notification.checkNotificationSendingStatus}</td>
               <td>
