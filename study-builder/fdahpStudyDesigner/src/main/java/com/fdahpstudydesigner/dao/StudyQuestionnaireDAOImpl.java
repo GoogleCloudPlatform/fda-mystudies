@@ -1088,11 +1088,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 .setString("customStudyId", customStudyId);
         query.setMaxResults(1);
         StudyBo study = (StudyBo) query.uniqueResult();
-        if (studyVersionBo != null) {
-          auditRequest.setStudyVersion(studyVersionBo.getStudyVersion().toString());
-        } else {
-          auditRequest.setStudyVersion(study.getVersion().toString());
-        }
+        auditRequest.setStudyVersion(study.getVersion().toString());
         auditRequest.setAppId(study.getAppId());
       }
       values.put(QUESTION_ID, questionId.toString());
