@@ -244,7 +244,7 @@
            <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & edit</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View and edit</c:if>
         </span>
       </div>
       </c:if>
@@ -257,7 +257,7 @@
           <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & edit</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View and edit</c:if>
         </span>
       </div>
       </c:if>
@@ -272,12 +272,12 @@
           <div class="mt-lg pl-md">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
               <div class="pb-md bor-dashed">
-                <span class="dot">Create New Studies</span>
+                <span class="dot">Create new studies</span>
               </div>
             </c:if>
             <div class="pl-sm pt-md">
               <span
-                  class="gray-xs-f text-weight-semibold text-uppercase">Existing Study Permissions
+                  class="gray-xs-f text-weight-bold">List of studies assigned
               </span>
             </div>
             <c:forEach items="${studyAndPermissionList}" var="studyAndPermission">
