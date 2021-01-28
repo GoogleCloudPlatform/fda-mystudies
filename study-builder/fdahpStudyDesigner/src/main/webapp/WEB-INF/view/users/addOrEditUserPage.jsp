@@ -200,7 +200,7 @@
         <div class="col-md-12 p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
-            <div class="blue-md-f text-uppercase mt-lg mb-md">
+            <div class="blue-md-f mt-lg mb-md">
               Role
               <span class="requiredStar"> *</span>
             </div>
@@ -246,7 +246,7 @@
 
         <div class="clearfix"></div>
         <!-- Assign Permissions -->
-        <div class="blue-md-f text-uppercase mt-lg">Assign Permissions</div>
+        <div class="blue-md-f text-uppercase mt-lg">Assigned Permissions</div>
         <div class="pull-right mb-xs">
           <span class="gray-xs-f">View only</span>
           <span
@@ -328,7 +328,7 @@
                   value="${fn:contains(permissions,8)?'1':''}"
               <c:if test="${fn:contains(permissions,8)}"> checked</c:if>
                   <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-                <label for="inlineCheckbox5"> Create New Studies </label>
+                <label for="inlineCheckbox5"> Create new studies </label>
               </span>
             </div>
             <div class="mt-md study-list mb-md addHide">
@@ -347,7 +347,7 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions
+                  class="mr-lg text-weight-bold">List of studies assigned
               </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
@@ -355,7 +355,7 @@
               </c:if>
             </div>
             <!-- Selected Study items -->
-            <div class="study-selected mt-md" style="font-weight: bold;">
+            <div class="study-selected mt-md">
               <c:forEach items="${studyBOs}" var="study">
                 <div class="study-selected-item selStd" id="std${study.id}">
                   <input type="hidden" class="stdCls" id="${study.id}" name=""
