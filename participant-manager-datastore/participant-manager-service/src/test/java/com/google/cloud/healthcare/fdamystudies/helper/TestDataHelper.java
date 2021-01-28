@@ -213,6 +213,46 @@ public class TestDataHelper {
     return locationEntity;
   }
 
+  public LocationEntity createSiteLocation() {
+    LocationEntity locationEntity = newSiteLocationEntity();
+    SiteEntity siteEntity = newSiteControllerEntity();
+    locationEntity.addSiteEntity(siteEntity);
+    return locationRepository.saveAndFlush(locationEntity);
+  }
+
+  public LocationEntity newSiteLocationEntity() {
+    LocationEntity locationEntity = new LocationEntity();
+    locationEntity.setCustomId("Location@#$03");
+    locationEntity.setDescription("California, CA");
+    locationEntity.setName(RandomStringUtils.randomAlphanumeric(8));
+    locationEntity.setStatus(ACTIVE_STATUS);
+    locationEntity.setIsDefault(NO);
+    return locationEntity;
+  }
+
+  public SiteEntity newSiteControllerEntity() {
+    SiteEntity siteEntity = new SiteEntity();
+    siteEntity.setName("siteControllerName");
+    siteEntity.setStatus(ACTIVE_STATUS);
+    return siteEntity;
+  }
+
+  public AppEntity createAppEntityForSiteControllerTest(UserRegAdminEntity userEntity) {
+    AppEntity appEntity = appEntity();
+    AppPermissionEntity appPermissionEntity = new AppPermissionEntity();
+    appPermissionEntity.setEdit(Permission.EDIT);
+    appPermissionEntity.setUrAdminUser(userEntity);
+    appEntity.addAppPermissionEntity(appPermissionEntity);
+    return appRepository.saveAndFlush(appEntity);
+  }
+
+  public AppEntity appEntity() {
+    AppEntity appEntity = new AppEntity();
+    appEntity.setAppId("MyStudies-Id-2");
+    appEntity.setAppName("MyStudies-2");
+    return appEntity;
+  }
+
   public UserRegAdminEntity createUserRegAdminEntity() {
     return userRegAdminRepository.saveAndFlush(newUserRegAdminEntity());
   }
