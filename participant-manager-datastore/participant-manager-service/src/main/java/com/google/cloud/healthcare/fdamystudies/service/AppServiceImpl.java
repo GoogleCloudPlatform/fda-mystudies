@@ -531,7 +531,7 @@ public class AppServiceImpl implements AppService {
             app.getAppName());
     appParticipantsResponse.getParticipants().addAll(participants);
 
-    auditRequest.setAppId(appId);
+    auditRequest.setAppId(app.getAppId());
     auditRequest.setUserId(adminId);
     participantManagerHelper.logEvent(APP_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
     return appParticipantsResponse;

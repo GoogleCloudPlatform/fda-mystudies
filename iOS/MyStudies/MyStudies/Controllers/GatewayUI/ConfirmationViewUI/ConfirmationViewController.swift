@@ -125,6 +125,30 @@ class ConfirmationViewController: UIViewController {
       }
     } else {
       self.removeProgressIndicator()
+      self.createListOfStudiesToDelete()
+    }
+  }
+
+  private func createListOfStudiesToDelete() {
+
+    for study in studiesToDisplay {
+      let studyId = study.studyId ?? ""
+      let participantId = study.userParticipateState.participantId ?? ""
+      let studyName = study.name ?? ""
+      let withdrawalConfigration = study.withdrawalConfigration ?? StudyWithdrawalConfigration()
+      let withdrawnStudy = StudyToDelete(
+        studyId: studyId,
+        participantId: participantId,
+        studyName: studyName,
+        withdrawalConfigration: withdrawalConfigration
+      )
+
+      if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.deleteData {
+        withdrawnStudy.shouldDelete = true
+      } else if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.noAction {
+        withdrawnStudy.shouldDelete = false
+      }
+      studiesToWithdraw.append(withdrawnStudy)
     }
   }
 

@@ -503,26 +503,36 @@ class UserStudyStatus {
   func getParticipatedUserStudyStatus() -> [String: Any] {
 
     let id = self.participantId ?? ""
-    let studyDetail =
+    var studyDetail =
       [
         kStudyId: self.studyId,
         kStudyStatus: self.status.paramValue,
-        kStudyParticipantId: id,
-        "siteId": siteID ?? "",
       ] as [String: Any]
+    if !siteID.isEmpty {
+      studyDetail["siteId"] = siteID
+    }
+    if !id.isEmpty {
+      studyDetail[kStudyParticipantId] = id
+    }
     return studyDetail
   }
 
   /// JSONDictionary` contains StudyID, Completion Status and Adherence Status
   /// - Returns: `JSONDictionary` object
   func getCompletionAdherence() -> [String: Any] {
-    let studyDetail =
+    let id = self.participantId ?? ""
+    var studyDetail =
       [
         kStudyId: self.studyId,
-        "siteId": siteID ?? "",
         "completion": completion,
         "adherence": adherence,
       ] as [String: Any]
+    if !siteID.isEmpty {
+      studyDetail["siteId"] = siteID
+    }
+    if !id.isEmpty {
+      studyDetail[kStudyParticipantId] = id
+    }
     return studyDetail
   }
 
