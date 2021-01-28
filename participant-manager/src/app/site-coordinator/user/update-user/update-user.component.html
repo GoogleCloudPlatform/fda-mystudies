@@ -292,6 +292,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                 [(ngModel)]="selectedAppsIds"
                 [ngModelOptions]="{standalone: true}"
                 (add)="add($event)"
+                notFoundText="No records found"
               ></ng-select>
             </label>
           </div>
