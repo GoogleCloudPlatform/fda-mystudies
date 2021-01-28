@@ -19,14 +19,14 @@ export class AppListComponent implements OnInit {
   appList: App[] = [];
   manageAppsBackup = {} as ManageApps;
   appUsersMessageMapping: {[k: string]: string} = {
-    '=0': 'No App Users',
-    '=1': 'One App User',
-    'other': '# App Users',
+    '=0': 'No app users',
+    '=1': 'One app user',
+    'other': '# app users',
   };
   studiesMessageMapping: {[k: string]: string} = {
-    '=0': 'No Studies',
-    '=1': 'One Study',
-    'other': '# Studies',
+    '=0': 'No studies',
+    '=1': 'One study',
+    'other': '# studies',
   };
   loadMoreEnabled = true;
 
