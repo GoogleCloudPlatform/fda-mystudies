@@ -46,6 +46,9 @@
   .tool-tip [disabled] {
     pointer-events: none;
   }
+   
+  .display_inl_tbl { display: inline-table !important; } 
+ 
 </style>
 <div class="gray-xs-f mb-sm">Active Task Schedule Type</div>
 <div class="pb-lg ">
@@ -896,20 +899,22 @@
          value="${activeTaskBo.frequency}">
   <input type="hidden" name="type" id="type" value="schedule">
   <div class="manually all mt-lg dis-none">
-    <div class="gray-xs-f mb-sm">Select time period
-      <span class="requiredStar"> *</span>
-      <span
-          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-          data-toggle="tooltip"
-          data-placement="bottom"
-          title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-      </span>
-    </div>
+  
     <div class="manuallyContainer">
       <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) eq 0}">
         <div class="manually-option mb-md form-group" id="0">
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
+                  <span class="display_inl_tbl">
+                  <div class="gray-xs-f mb-sm">Select a date range
+                    <span class="requiredStar"> *</span>
+                    <span
+                       class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                     </span>
+                  </div>
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="StartDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusStrDate"
@@ -927,6 +932,18 @@
                    name="activeTaskCustomScheduleBo[0].frequencyEndDate" placeholder="End Date"
                    onclick='customEndDate(this.id,0);' required/>
             <span class='help-block with-errors red-txt'></span>
+            
+             </span>
+            <span class="display_inl_tbl">
+            <div class="gray-xs-f mb-sm">Select a time
+                <span class="requiredStar"> *</span>
+           <span
+          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+      </span>
+    </div>
           </span>
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="customTime0" type="text" count='0' class="form-control clock cusTime"
@@ -936,6 +953,7 @@
             <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
+          </span>
         </div>
       </c:if>
       <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) gt 0}">
@@ -1178,7 +1196,7 @@
     <!-- anchor end-->
     <div class="mt-md">
       <div class="gray-xs-f mb-xs">Lifetime of each run</div>
-      <div class="black-xs-f">As defined by the start and end times selected above</div>
+      <div class="black-xs-f">Each run begins at the selected time on the start date and expires at the same time on the end date</div>
     </div>
   </div>
 </form:form>

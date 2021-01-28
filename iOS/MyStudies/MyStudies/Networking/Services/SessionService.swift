@@ -18,6 +18,7 @@ class SessionService {
       static let source = "source"
       static let appVersion = "appVersion"
       static let userID = "userId"
+      static let appName = "appName"
     }
 
     static var headers: StringDictionary {
@@ -28,6 +29,7 @@ class SessionService {
         JSONKey.source: "MOBILE APPS",
         JSONKey.appVersion: Utilities.getAppVersion(),
         JSONKey.userID: User.currentUser.userId ?? "",
+        JSONKey.appName: Utilities.appName(),
       ]
     }
   }
