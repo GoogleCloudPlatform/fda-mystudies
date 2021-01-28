@@ -151,4 +151,6 @@ public interface StudyQuestionnaireService {
   public List<AnchorDateTypeBo> getAnchorTypesByStudyId(String customStudyId);
 
   public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId);
+
+  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId);
 }

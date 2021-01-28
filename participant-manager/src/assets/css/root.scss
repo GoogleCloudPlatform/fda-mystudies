@@ -52,6 +52,22 @@ html {
     padding-right: 30px !important;
     padding-left: 35px !important;
   }
+
+  .usr_dtls_search__ {
+    border: transparent;
+    min-width: 300px !important;
+    height: 32px !important;
+    font-size: 87.5% !important;
+    background-color: var(--aqualight-gray) !important;
+    background-image: url("assets/svgs/search.svg") !important;
+    background-repeat: no-repeat !important;
+    background-position: 3% !important;
+    text-indent: 5px !important;
+    margin-right: 20px !important;
+    padding-right: 30px !important;
+    padding-left: 30px !important;
+  }
+
   .bg__white .search__user__details {
     height: 32px;
     margin-bottom: 20px;

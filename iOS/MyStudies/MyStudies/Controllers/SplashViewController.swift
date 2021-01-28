@@ -34,11 +34,6 @@ class SplashViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    for (key, value) in ProcessInfo.processInfo.environment {
-      print("\(key): \(value)")
-    }
-
   }
 
   override func viewWillAppear(_ animated: Bool) {

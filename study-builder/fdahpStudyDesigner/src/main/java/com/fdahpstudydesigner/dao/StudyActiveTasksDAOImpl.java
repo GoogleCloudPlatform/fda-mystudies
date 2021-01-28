@@ -141,7 +141,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               .setParameter("activeTaskId", activeTaskBo.getId())
               .executeUpdate();
 
-          values.put("activetask_id", activeTaskBo.getId().toString());
+          values.put("activetask_id", activeTaskBo.getShortTitle());
           eventEnum = STUDY_ACTIVE_TASK_DELETED;
         } else {
           // hard delete active task before study launch
@@ -163,7 +163,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               .setParameter("activeTaskId", activeTaskBo.getId())
               .executeUpdate();
 
-          values.put("activetask_id", activeTaskBo.getId().toString());
+          values.put("activetask_id", activeTaskBo.getShortTitle());
           eventEnum = STUDY_ACTIVE_TASK_DELETED;
         }
         query =

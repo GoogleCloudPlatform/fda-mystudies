@@ -106,7 +106,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.ResourceUtils;
@@ -123,7 +122,6 @@ public class SiteControllerTest extends BaseMockIT {
   @Autowired private SiteRepository siteRepository;
   @Autowired private ParticipantStudyRepository participantStudyRepository;
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
-  @Autowired private JavaMailSender emailSender;
   @Autowired private StudyConsentRepository studyConsentRepository;
 
   private UserRegAdminEntity userRegAdminEntity;

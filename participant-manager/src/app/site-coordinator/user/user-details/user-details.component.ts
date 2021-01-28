@@ -6,7 +6,7 @@ import {User} from 'src/app/entity/user';
 import {ManageUserDetails} from '../shared/manage-user-details';
 import {Permission} from 'src/app/shared/permission-enums';
 import {Status} from 'src/app/shared/enums';
-
+import {App} from '../shared/app-details';
 @Component({
   selector: 'user-details',
   templateUrl: './user-details.component.html',
@@ -23,7 +23,8 @@ export class UserDetailsComponent
     'other': '# sites',
   };
   onBoardingStatus = Status;
-
+  filterQuery = '';
+  userAppsBackup: App[] = [];
   constructor(
     private readonly route: ActivatedRoute,
     private readonly userService: UserService,
@@ -50,6 +51,9 @@ export class UserDetailsComponent
           this.user = data.user;
           this.user.manageLocationsSelected =
             this.user.manageLocations !== null;
+          this.userAppsBackup = <App[]>(
+            JSON.parse(JSON.stringify(this.user.apps))
+          );
         }),
     );
   }
@@ -60,6 +64,21 @@ export class UserDetailsComponent
       return 'txt__light-gray';
     } else {
       return 'txt__space-gray';
+    }
+  }
+  public onKeyUp(): void {
+    if (this.filterQuery.trim()) {
+      this.user.apps = this.userAppsBackup.filter(
+        (app: App) =>
+          app.customId
+            .toLowerCase()
+            .includes(this.filterQuery.trim().toLowerCase()) ||
+          app.name
+            .toLowerCase()
+            .includes(this.filterQuery.trim().toLowerCase()),
+      );
+    } else {
+      this.user.apps = this.userAppsBackup;
     }
   }
 }
