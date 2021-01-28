@@ -136,7 +136,7 @@
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
                  name="comprehensionTestMinimumScore"
                  value="${consentBo.comprehensionTestMinimumScore}"
-                 maxlength="3" onkeypress="return isNumber(event)">
+                 maxlength="3" onkeypress="return isNumber(event)" Style="width:200px">
           <div class="help-block with-errors red-txt"></div>
         </div>
         <input type="hidden" name="consentId" id="consentId" value="${consentBo.id}"/>
