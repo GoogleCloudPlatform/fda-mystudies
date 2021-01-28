@@ -6,6 +6,15 @@
 <jsp:useBean id="date" class="java.util.Date"/>
 <c:set var="tz" value="America/Los_Angeles"/>
 
+<style>
+.bootstrap-select>.dropdown-toggle {
+    width: 274px !important;
+}
+.bootstrap-select.btn-group .dropdown-menu {
+    min-width: 274px !important;
+    }
+</style>
+
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
