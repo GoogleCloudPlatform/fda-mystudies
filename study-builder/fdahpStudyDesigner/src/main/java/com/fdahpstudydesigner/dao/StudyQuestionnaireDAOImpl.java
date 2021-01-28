@@ -1088,11 +1088,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 .setString("customStudyId", customStudyId);
         query.setMaxResults(1);
         StudyBo study = (StudyBo) query.uniqueResult();
-        if (studyVersionBo != null) {
-          auditRequest.setStudyVersion(studyVersionBo.getStudyVersion().toString());
-        } else {
-          auditRequest.setStudyVersion(study.getVersion().toString());
-        }
+        auditRequest.setStudyVersion(study.getVersion().toString());
         auditRequest.setAppId(study.getAppId());
       }
       values.put(QUESTION_ID, questionId.toString());
@@ -1208,8 +1204,19 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   .setInteger("stepId", stepId)
                   .setString("steptype", stepType);
           query.executeUpdate();
-          values.put(QUESTION_ID, questionnaireId.toString());
-          values.put(STEP_ID, stepId.toString());
+
+          QuestionnaireBo questionnaireBo =
+              (QuestionnaireBo)
+                  session
+                      .createQuery("from QuestionnaireBo QBO where QBO.id=:questionnaireId")
+                      .setInteger("questionnaireId", questionnaireId)
+                      .uniqueResult();
+          if (questionnaireBo != null) {
+            values.put(QUESTION_ID, questionnaireBo.getShortTitle());
+          }
+
+          values.put(STEP_ID, questionnairesStepsBo.getStepShortTitle());
+
           if (questionnairesStepsBo
               .getStepType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.INSTRUCTION_STEP)) {
@@ -1324,8 +1331,16 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     Map<String, String> values = new HashMap<>();
     try {
       auditRequest.setStudyId(customStudyId);
-      values.put(QUESTION_ID, questionnaireId.toString());
-      values.put(STEP_ID, stepId.toString());
+      QuestionnaireBo questionnaireBo =
+          (QuestionnaireBo)
+              session
+                  .createQuery("from QuestionnaireBo QBO where QBO.id=:questionnaireId")
+                  .setInteger("questionnaireId", questionnaireId)
+                  .uniqueResult();
+      if (questionnaireBo != null) {
+        values.put(QUESTION_ID, questionnaireBo.getShortTitle());
+      }
+
       searchQuery =
           "From QuestionnairesStepsBo QSBO where QSBO.instructionFormId=:stepId "
               + " and QSBO.questionnairesId=:questionnaireId "
@@ -1339,6 +1354,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   .setString("stepType", stepType)
                   .uniqueResult();
       if (questionnairesStepsBo != null) {
+        values.put(STEP_ID, questionnairesStepsBo.getStepShortTitle());
+
         String updateQuery =
             "update QuestionnairesStepsBo QSBO set QSBO.sequenceNo=QSBO.sequenceNo-1,QSBO.modifiedBy=:userId "
                 + ",QSBO.modifiedOn=:currentDateAndTime "
@@ -4946,5 +4963,31 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     }
     logger.info("StudyQuestionnaireDAOImpl - updateAnchordateInQuestionnaire - Ends");
     return message;
+  }
+
+  @Override
+  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId) {
+    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireById() - Starts");
+    Session session = null;
+    QuestionnaireBo questionnaireBo = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      questionnaireBo =
+          (QuestionnaireBo)
+              session
+                  .createQuery("from QuestionnaireBo QBO where QBO.id=:questionnaireId")
+                  .setInteger("questionnaireId", questionnaireId)
+                  .uniqueResult();
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("StudyQuestionnaireDAOImpl - getQuestionnaireById() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+
+    return questionnaireBo;
   }
 }

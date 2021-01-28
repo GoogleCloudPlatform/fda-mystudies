@@ -206,6 +206,7 @@ public class StudyQuestionnaireController {
                   customStudyId,
                   auditRequest);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
+
             Map<String, String> values = new HashMap<>();
             values.put(QUESTION_ID, questionId.toString());
             values.put(FORM_ID, formId.toString());
@@ -304,6 +305,13 @@ public class StudyQuestionnaireController {
                 : request.getParameter("questionnaireId");
         auditRequest.setStudyId(customStudyId);
         if (!studyId.isEmpty() && !questionnaireId.isEmpty()) {
+          Map<String, String> values = new HashMap<>();
+          QuestionnaireBo questionnaireDetails =
+              studyQuestionnaireService.getQuestionnaireById(Integer.valueOf(questionnaireId));
+          if (questionnaireDetails != null) {
+            values.put(QUESTION_ID, questionnaireDetails.getShortTitle());
+          }
+
           message =
               studyQuestionnaireService.deletQuestionnaire(
                   Integer.valueOf(studyId),
@@ -314,8 +322,6 @@ public class StudyQuestionnaireController {
             StudyBo studyBo = studyService.getStudyInfo(studyId);
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
             auditRequest.setAppId(studyBo.getAppId());
-            Map<String, String> values = new HashMap<>();
-            values.put(QUESTION_ID, questionnaireId);
             auditLogEventHelper.logEvent(STUDY_QUESTIONNAIRE_DELETED, auditRequest, values);
           }
 
