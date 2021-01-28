@@ -65,8 +65,9 @@
     width: 150px;
   / / font-size: 10 px !important;
   }
-
-  /* error box css end here  */
+ /* error box css end here  */
+  
+  .display_inl_tbl { display: inline-table !important; }  
 </style>
 
 <script type="text/javascript">
@@ -1353,16 +1354,7 @@
                  id="previousFrequency" value="${questionnaireBo.frequency}">
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="manually all mt-lg dis-none">
-            <div class="gray-xs-f mb-sm">
-              Select time period
-              <span class="requiredStar">*</span>
-              <span
-                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-              </span>
-            </div>
+         
             <div class="manuallyContainer">
               <c:if
                   test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
@@ -1370,6 +1362,18 @@
                   <input type="hidden"
                          name="questionnaireCustomScheduleBo[0].questionnairesId"
                          id="questionnairesId" value="${questionnaireBo.id}">
+                          
+                         <span class="display_inl_tbl">
+                          <div class="gray-xs-f mb-sm">
+                        Select a date range
+                         <span class="requiredStar">*</span>
+              <span
+                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+              </span>
+            </div>
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="StartDate0" type="text" count='0'
@@ -1392,6 +1396,19 @@
                            required/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
+                   </span>
+
+                  <span class="display_inl_tbl">
+                  <div class="gray-xs-f mb-sm">
+              Select a time
+              <span class="requiredStar">*</span>
+              <span
+                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+              </span>
+            </div>
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="customTime0" type="text" count='0'
@@ -1402,6 +1419,7 @@
                   </span>
                   <span class="addbtn addBtnDis align-span-center mr-md"
                         onclick="addDate();">+
+                  </span>
                   </span>
                 </div>
               </c:if>
@@ -1676,8 +1694,7 @@
 
             <div class="mt-md">
               <div class="gray-xs-f mb-xs">Lifetime of each run</div>
-              <div class="black-xs-f">As defined by the start and end
-                times selected above
+              <div class="black-xs-f">Each run begins at the selected time on the start date and expires at the same time on the end date
               </div>
             </div>
           </div>
@@ -3109,7 +3126,6 @@
   }
 
   function saveQuestionnaire(item, callback) {
-
     var id = $("#id").val();
     var study_id = $("#studyId").val();
     var title_text = $("#titleId").val();
@@ -3441,7 +3457,7 @@
       }
 
       if (repeat_questionnaire_anchor != null && repeat_questionnaire_anchor != ''
-          && typeof repeat_questionnaire_anchor != 'undefined') {
+          && typeof repeat_questionnaire_anchor != 'undefined'  && questionnaire.scheduleType == 'AnchorDate') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire_anchor;
       }
 
@@ -3456,7 +3472,7 @@
       }
 
       if (frequence_time_anchor != null && frequence_time_anchor != ''
-          && typeof frequence_time_anchor != 'undefined') {
+          && typeof frequence_time_anchor != 'undefined' && questionnaire.scheduleType == 'AnchorDate') {
         questionnaireFrequencey.frequencyTime = frequence_time_anchor;
       }
 
@@ -3513,7 +3529,7 @@
       }
 
       if (repeat_questionnaire_anchor != null && repeat_questionnaire_anchor != ''
-          && typeof repeat_questionnaire_anchor != 'undefined') {
+          && typeof repeat_questionnaire_anchor != 'undefined'  && questionnaire.scheduleType == 'AnchorDate') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire_anchor;
       }
 
@@ -3530,7 +3546,7 @@
         questionnaireFrequencey.frequencyTime = frequencetime;
       }
       if (frequencetime_anchor != null && frequencetime_anchor != '' && typeof frequencetime_anchor
-          != 'undefined') {
+          != 'undefined' && questionnaire.scheduleType == 'AnchorDate') {
         questionnaireFrequencey.frequencyTime = frequencetime_anchor;
       }
       if (monthlyXSign != null && monthlyXSign != '' && typeof monthlyXSign != 'undefined') {

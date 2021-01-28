@@ -99,7 +99,7 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-
+  <c:if test="${empty  sessionScope[isLive]}">
       <li class=" eigthNotification commonCls">
         Notifications
         <c:if test="${studyBo.studySequenceBo.miscellaneousNotification}">
@@ -109,6 +109,7 @@
       <li class="tenth commonCls">
         Actions
       </li>
+      </c:if>
     </ul>
   </div>
 </div>

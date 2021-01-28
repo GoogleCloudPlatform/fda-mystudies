@@ -525,6 +525,7 @@ public class UsersController {
                 auditLogEventHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
               } else {
                 values.put("viewed_user_id", userId);
+                System.out.println("******* USER_RECORD_VIEWED captured *******");
                 auditLogEventHelper.logEvent(USER_RECORD_VIEWED, auditRequest, values);
               }
             }

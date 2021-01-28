@@ -67,7 +67,7 @@ public class FdahpStudyDesignerConstants {
       "The study must have at least one questionnaire or active task added before attempting this action.";
 
   public static final String ACTIVETASK_DATE_ERROR_MSG =
-      "One or more of the study’s activities or resources has a schedule that needs an anchor date. Please add an anchor date and try again.";
+      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again.";
   public static final String ACTIVETASK_LIST = "activeTaskList";
   public static final String ACTIVITY_MESSAGE = "activityMsg";
   public static final String ACTIVITY_STUDY_ID = "activityStudyId";
@@ -446,6 +446,9 @@ public class FdahpStudyDesignerConstants {
   public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
   public static final String FDA_SMD_STUDY_PAGE_PATH = "fda.smd.study.pagePath";
   public static final String ALLOW_REJOIN_TEXT = "Are you sure you want to leave the study?";
+
+  public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
+      "study.basicInformation.defaultImage";
 
   public static final String CONSENT_AGREEMENT =
       "By tapping on Agree, you confirm that you have reviewed the consent document and agree to participate in the study.";

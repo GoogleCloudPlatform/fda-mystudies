@@ -490,7 +490,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     if StudyUpdates.studyConsentUpdated {
       // Study consent is updated: Please Present Consent UI.
-      let navigationController = (self.window?.rootViewController as? UINavigationController)!
+      guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
       var topController: UIViewController = navigationController
       if navigationController.viewControllers.count > 0 {
         topController = navigationController.viewControllers.first!
@@ -592,77 +592,69 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   /// Handler for local & remote notification
   /// - Parameter userInfoDetails: contains the info for notification
-  func handleLocalAndRemoteNotification(userInfoDetails: [String: Any]) {
+  func handleLocalAndRemoteNotification(userInfoDetails: [String: Any]?) {
 
-    var notificationType: String? = ""
-    var notificationSubType: AppNotification.NotificationSubType? = .announcement
     // User info is valid
-    if (userInfoDetails.count) > 0 {
+    if let userInfoDetails = userInfoDetails,
+      !userInfoDetails.isEmpty
+    {
 
-      if Utilities.isValidValue(someObject: userInfoDetails[kNotificationType] as AnyObject) {
-        notificationType = userInfoDetails[kNotificationType] as? String
-      }
-      if Utilities.isValidValue(
-        someObject: userInfoDetails[kNotificationSubType] as AnyObject
-      ) {
-        notificationSubType = AppNotification.NotificationSubType(
-          rawValue: (userInfoDetails[kNotificationSubType] as? String)!
-        )
-      }
+      let notificationType = userInfoDetails[kNotificationType] as? String ?? ""
+
+      let subType =
+        AppNotification.NotificationSubType(
+          rawValue: (userInfoDetails[kNotificationSubType] as? String ?? "")
+        ) ?? .announcement
 
       if notificationType == AppNotification.NotificationType.study.rawValue {  // Study Level Notification
 
-        var studyId: String? = ""
-
-        if Utilities.isValidValue(someObject: userInfoDetails[kStudyId] as AnyObject) {
-          studyId = userInfoDetails[kStudyId] as? String
-        }
-
-        if studyId != nil || studyId != "" {
+        if let studyId = userInfoDetails[kStudyId] as? String,
+          !studyId.isEmpty
+        {
 
           var initialVC: UIViewController?
 
           if Gateway.instance.studies?.isEmpty == false {
-            let study = Gateway.instance.studies?.filter({ $0.studyId == studyId })
-              .first
-            Study.updateCurrentStudy(study: study!)
+            guard
+              let study = Gateway.instance.studies?.filter({ $0.studyId == studyId })
+                .first
+            else { return }
+            Study.updateCurrentStudy(study: study)
           }
           // fetch the visible view controller
-          let navigationController = (self.window?.rootViewController as? UINavigationController)!
-          let menuVC = navigationController.viewControllers.last
+          let navigationController = self.window?.rootViewController as? UINavigationController
+          let menuVC = navigationController?.viewControllers.last
           if menuVC is FDASlideMenuViewController {
-            let mainController = (menuVC as? FDASlideMenuViewController)!
+            let mainController = (menuVC as? FDASlideMenuViewController)?
               .mainViewController
             if mainController is UINavigationController {
-              let nav = (mainController as? UINavigationController)!
-              initialVC = nav.viewControllers.last
+              let nav = mainController as? UINavigationController
+              initialVC = nav?.viewControllers.last
             }
           }
           // Handling Notifications based on SubType
-          switch notificationSubType! as AppNotification.NotificationSubType {
+          switch subType {
           case .activity, .resource:  // Activity & Resource  Notifications
 
             if !(initialVC is UITabBarController) {
               // push tabbar and switch to activty tab
-
-              self.pushToTabbar(
-                viewController: initialVC!,
-                selectedTab: (notificationSubType! as AppNotification.NotificationSubType
-                  == .activity) ? 0 : 2
-              )
-
+              if let initialVC = initialVC {
+                self.pushToTabbar(
+                  viewController: initialVC,
+                  selectedTab: subType == .activity ? 0 : 2
+                )
+              }
             } else {
               // switch to activity tab
-              (initialVC as? UITabBarController)!.selectedIndex =
-                (notificationSubType! as AppNotification.NotificationSubType
-                  == .activity) ? 0 : 2
+              (initialVC as? UITabBarController)?.selectedIndex =
+                subType == .activity ? 0 : 2
             }
 
           case .study, .studyEvent:  // Study Notifications
 
             let leftController =
-              ((menuVC as? FDASlideMenuViewController)!.leftViewController
-              as? LeftMenuViewController)!
+              (menuVC as? FDASlideMenuViewController)?.leftViewController
+              as? LeftMenuViewController
 
             if !(initialVC is StudyListViewController) {
 
@@ -675,8 +667,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 NotificationHandler.instance.appOpenFromNotification = true
                 NotificationHandler.instance.studyId = studyId
 
-                leftController.changeViewController(.studyList)
-                leftController.createLeftmenuItems()
+                leftController?.changeViewController(.studyList)
+                leftController?.createLeftmenuItems()
 
               }
             } else {
@@ -684,8 +676,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
               NotificationHandler.instance.appOpenFromNotification = true
               NotificationHandler.instance.studyId = studyId
 
-              leftController.changeViewController(.studyList)
-              leftController.createLeftmenuItems()
+              leftController?.changeViewController(.studyList)
+              leftController?.createLeftmenuItems()
             }
 
           case .announcement:
@@ -1728,7 +1720,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     UIApplication.shared.applicationIconBadgeNumber = 0
 
     if UIApplication.shared.applicationState == UIApplication.State.background
-      || (UIApplication.shared.applicationState == UIApplication.State.inactive)
+      || UIApplication.shared.applicationState == UIApplication.State.active
     {
 
       self.handleLocalAndRemoteNotification(userInfoDetails: (userInfo as? [String: Any])!)

@@ -314,6 +314,7 @@ public class UserServiceImpl implements UserService {
 
     ErrorCode errorCode =
         validateChangePasswordRequest(userRequest, currentPwdNode, passwordHistory, userEntity);
+
     auditRequest.setUserId(userRequest.getUserId());
     if (errorCode != null) {
       auditHelper.logEvent(PASSWORD_CHANGE_FAILED, auditRequest);

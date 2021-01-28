@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_VERSION_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
@@ -83,11 +82,12 @@ public class CallbackController {
     String accountStatus = cookieHelper.getCookieValue(request, ACCOUNT_STATUS_COOKIE);
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform, source);
-    String appVersion = cookieHelper.getCookieValue(request, APP_VERSION_COOKIE);
 
     String redirectUrl = null;
     if (StringUtils.equals(
-        accountStatus, String.valueOf(UserAccountStatus.PASSWORD_RESET.getStatus()))) {
+            accountStatus, String.valueOf(UserAccountStatus.PASSWORD_RESET.getStatus()))
+        || StringUtils.equals(
+            accountStatus, String.valueOf(UserAccountStatus.ACCOUNT_LOCKED.getStatus()))) {
       Optional<UserEntity> optUserEntity = userService.findByUserId(userId);
       if (optUserEntity.isPresent()) {
         UserEntity user = optUserEntity.get();

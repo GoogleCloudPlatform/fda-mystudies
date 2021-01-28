@@ -218,12 +218,13 @@ public class SiteServiceImpl implements SiteService {
     SiteResponse siteResponse =
         saveSiteWithSitePermissions(siteRequest.getUserId(), location, study);
 
-    auditRequest.setAppId(study.getAppId());
-    auditRequest.setStudyId(siteRequest.getStudyId());
+    auditRequest.setAppId(study.getApp().getAppId());
+    auditRequest.setStudyId(study.getCustomId());
     auditRequest.setUserId(siteRequest.getUserId());
-    auditRequest.setSiteId(siteResponse.getSiteId());
+    auditRequest.setSiteId(location.getCustomId());
+    auditRequest.setStudyVersion(String.valueOf(study.getVersion()));
 
-    Map<String, String> map = Collections.singletonMap("site_id", siteResponse.getSiteId());
+    Map<String, String> map = Collections.singletonMap("site_id", location.getCustomId());
     participantManagerHelper.logEvent(SITE_ADDED_FOR_STUDY, auditRequest, map);
     logger.exit(
         String.format(
@@ -291,13 +292,14 @@ public class SiteServiceImpl implements SiteService {
         new ParticipantResponse(
             MessageCode.ADD_PARTICIPANT_SUCCESS, participantRegistrySite.getId());
 
-    auditRequest.setAppId(site.getStudy().getAppId());
-    auditRequest.setStudyId(site.getStudyId());
+    auditRequest.setAppId(site.getStudy().getApp().getAppId());
+    auditRequest.setStudyId(site.getStudy().getCustomId());
     auditRequest.setUserId(userId);
-    auditRequest.setSiteId(site.getId());
+    auditRequest.setSiteId(site.getLocation().getCustomId());
     auditRequest.setParticipantId(participantRegistrySite.getId());
+    auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
 
-    Map<String, String> map = Collections.singletonMap("site_id", site.getId());
+    Map<String, String> map = Collections.singletonMap("site_id", site.getLocation().getCustomId());
     participantManagerHelper.logEvent(PARTICIPANT_EMAIL_ADDED, auditRequest, map);
 
     logger.exit(String.format("participantRegistrySiteId=%s", participantRegistrySite.getId()));
@@ -359,9 +361,7 @@ public class SiteServiceImpl implements SiteService {
     logger.info("getParticipants()");
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
 
-    if (!optSite.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.SITE_NOT_FOUND);
-    }
+    SiteEntity site = optSite.orElseThrow(() -> new ErrorCodeException(ErrorCode.SITE_NOT_FOUND));
 
     ParticipantRegistryDetail participantRegistryDetail = null;
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
@@ -370,8 +370,7 @@ public class SiteServiceImpl implements SiteService {
     }
 
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
-      participantRegistryDetail =
-          ParticipantMapper.fromSite(optSite.get(), Permission.EDIT, siteId);
+      participantRegistryDetail = ParticipantMapper.fromSite(site, Permission.EDIT, siteId);
       participantRegistryDetail.setStudyPermission(Permission.EDIT.value());
     } else {
       Optional<SitePermissionEntity> optSitePermission =
@@ -383,7 +382,7 @@ public class SiteServiceImpl implements SiteService {
         throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       }
       participantRegistryDetail =
-          ParticipantMapper.fromSite(optSite.get(), optSitePermission.get().getCanEdit(), siteId);
+          ParticipantMapper.fromSite(site, optSitePermission.get().getCanEdit(), siteId);
 
       Optional<StudyPermissionEntity> studyPermissionOpt =
           studyPermissionRepository.findByStudyIdAndUserId(
@@ -434,12 +433,13 @@ public class SiteServiceImpl implements SiteService {
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
 
     participantRegistryResponse.setTotalParticipantCount(totalParticipantsCount);
-    auditRequest.setSiteId(siteId);
-    auditRequest.setStudyId(optSite.get().getStudyId());
-    auditRequest.setAppId(optSite.get().getStudy().getAppId());
+    auditRequest.setSiteId(site.getLocation().getCustomId());
+    auditRequest.setStudyId(site.getStudy().getCustomId());
+    auditRequest.setAppId(site.getStudy().getApp().getAppId());
     auditRequest.setUserId(userId);
+    auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
 
-    Map<String, String> map = Collections.singletonMap("site_id", siteId);
+    Map<String, String> map = Collections.singletonMap("site_id", site.getLocation().getCustomId());
     participantManagerHelper.logEvent(SITE_PARTICIPANT_REGISTRY_VIEWED, auditRequest, map);
 
     logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
@@ -523,14 +523,15 @@ public class SiteServiceImpl implements SiteService {
     validateDecommissionSiteRequest(userId, siteId, user);
 
     Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
-    auditRequest.setUserId(userId);
-    auditRequest.setSiteId(siteId);
-    auditRequest.setStudyId(optSiteEntity.get().getStudyId());
-    auditRequest.setAppId(optSiteEntity.get().getStudy().getId());
-
-    Map<String, String> map = Collections.singletonMap("site_id", siteId);
-
     SiteEntity site = optSiteEntity.get();
+    auditRequest.setUserId(userId);
+    auditRequest.setSiteId(site.getLocation().getCustomId());
+    auditRequest.setStudyId(site.getStudy().getCustomId());
+    auditRequest.setAppId(site.getStudy().getApp().getAppId());
+    auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
+
+    Map<String, String> map = Collections.singletonMap("site_id", site.getLocation().getCustomId());
+
     if (SiteStatus.DEACTIVE == SiteStatus.fromValue(site.getStatus())) {
       checkPreConditionsForSiteActivate(site);
 
@@ -908,12 +909,14 @@ public class SiteServiceImpl implements SiteService {
     }
 
     SiteEntity siteEntity = optSite.get();
-    auditRequest.setSiteId(siteId);
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
     auditRequest.setUserId(userId);
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
+    auditRequest.setStudyId(siteEntity.getStudy().getCustomId());
+    auditRequest.setAppId(siteEntity.getStudy().getApp().getAppId());
+    auditRequest.setStudyVersion(String.valueOf(siteEntity.getStudy().getVersion()));
 
-    Map<String, String> map = Collections.singletonMap("site_id", siteEntity.getId());
+    Map<String, String> map =
+        Collections.singletonMap("site_id", siteEntity.getLocation().getCustomId());
 
     if (siteEntity.getStudy() != null && OPEN_STUDY.equals(siteEntity.getStudy().getType())) {
       participantManagerHelper.logEvent(PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED, auditRequest, map);
@@ -1109,13 +1112,14 @@ public class SiteServiceImpl implements SiteService {
 
     SiteEntity site = optSite.get();
 
-    auditRequest.setSiteId(site.getId());
+    auditRequest.setSiteId(site.getLocation().getCustomId());
     auditRequest.setUserId(participantStatusRequest.getUserId());
-    auditRequest.setStudyId(site.getStudyId());
-    auditRequest.setAppId(site.getStudy().getAppId());
+    auditRequest.setStudyId(site.getStudy().getCustomId());
+    auditRequest.setAppId(site.getStudy().getApp().getAppId());
+    auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
 
     MessageCode messageCode = null;
-    Map<String, String> map = Collections.singletonMap("site_id", optSite.get().getId());
+    Map<String, String> map = Collections.singletonMap("site_id", site.getLocation().getCustomId());
     if (participantStatusRequest.getStatus().equals(OnboardingStatus.DISABLED.getCode())) {
       participantManagerHelper.logEvent(PARTICIPANT_INVITATION_DISABLED, auditRequest, map);
       messageCode = MessageCode.INVITATION_DISABLED_SUCCESS;
@@ -1391,11 +1395,12 @@ public class SiteServiceImpl implements SiteService {
     siteRepository.saveAndFlush(site);
 
     auditRequest.setUserId(enrollmentRequest.getUserId());
-    auditRequest.setStudyId(enrollmentRequest.getStudyId());
-    auditRequest.setSiteId(site.getId());
-    auditRequest.setAppId(study.getAppId());
+    auditRequest.setStudyId(study.getCustomId());
+    auditRequest.setSiteId(site.getLocation().getCustomId());
+    auditRequest.setAppId(study.getApp().getAppId());
+    auditRequest.setStudyVersion(String.valueOf(study.getVersion()));
 
-    Map<String, String> map = Collections.singletonMap("site_id", site.getId());
+    Map<String, String> map = Collections.singletonMap("site_id", site.getLocation().getCustomId());
     participantManagerHelper.logEvent(ENROLLMENT_TARGET_UPDATED, auditRequest, map);
 
     logger.exit(
@@ -1468,13 +1473,16 @@ public class SiteServiceImpl implements SiteService {
               templateArgs);
       EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
 
+      SiteEntity site = participantRegistrySiteEntity.getSite();
       Map<String, String> map =
-          Collections.singletonMap("site_id", participantRegistrySiteEntity.getSite().getId());
+          Collections.singletonMap("site_id", site.getLocation().getCustomId());
       AuditLogEventRequest auditRequest =
           SiteMapper.prepareAuditlogRequest(invitedParticipantsEmailEntity);
-      auditRequest.setSiteId(participantRegistrySiteEntity.getSite().getId());
-      auditRequest.setStudyId(participantRegistrySiteEntity.getSite().getStudyId());
+      auditRequest.setSiteId(site.getLocation().getCustomId());
+      auditRequest.setStudyId(site.getStudy().getCustomId());
+      auditRequest.setAppId(site.getStudy().getApp().getAppId());
       auditRequest.setParticipantId(participantRegistrySiteEntity.getId());
+      auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
 
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
           .getMessage()
