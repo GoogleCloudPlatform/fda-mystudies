@@ -15,6 +15,8 @@ This open-source repository contains the code necessary to run a complete FDA My
 
 Open-source [deployment tools](deployment) are included for semi-automated deployment to Google Cloud Platform (GCP). These tools can be used to deploy the FDA MyStudies platform in just a few hours. These tools follow compliance guidelines to simplify the end-to-end compliance journey. Deployment to other platforms and on-premise systems can be performed manually.
 
+To receive release notifications and other important announcements related to the repository, subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/).
+
 ![Platform Illustration](documentation/images/platform_illustration.png "Platform Illustration")
 
 ## Documentation and guides
@@ -62,6 +64,8 @@ Google Cloud can support compliance with 21 CFR Part 11 regulations when using G
 ## Release notes
 
 For a detailed list of changes to the FDA MyStudies codebase, see *[What’s new](/documentation/whats-new.md)*.
+
+Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and other important announcements related to the repository.
 
 ## Feedback
 
