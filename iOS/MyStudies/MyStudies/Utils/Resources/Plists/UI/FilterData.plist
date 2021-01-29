@@ -31,13 +31,13 @@
 			</dict>
 			<dict>
 				<key>name</key>
-				<string>Not Eligible</string>
+				<string>Not eligible</string>
 				<key>isEnabled</key>
 				<false/>
 			</dict>
 			<dict>
 				<key>name</key>
-				<string>Yet To Enroll</string>
+				<string>Yet To enroll</string>
 				<key>isEnabled</key>
 				<true/>
 			</dict>
