@@ -206,7 +206,7 @@ public class LoginController {
     logger.info("Http Status code   ---> [ " + authenticationResponse.getHttpStatusCode() + " ]");
     logger.info("is2xxSuccessful ?? ---> [ " + authenticationResponse.is2xxSuccessful() + " ]");
     if (authenticationResponse.is2xxSuccessful()) {
-      logger.exit("authentication success, redirect to consent page");
+      logger.info("authentication success, redirect to consent page");
       cookieHelper.addCookie(response, USER_ID_COOKIE, authenticationResponse.getUserId());
       cookieHelper.addCookie(
           response,
@@ -242,6 +242,11 @@ public class LoginController {
     ResponseEntity<JsonNode> result = oauthService.loginAccept(userId, loginChallenge);
     if (result.getStatusCode().is2xxSuccessful()) {
       String redirectUrl = JsonUtils.getTextValue(result.getBody(), REDIRECT_TO);
+
+      logger.info("res status --> [ " + response.getStatus() + " ]");
+      logger.info("-------------------");
+      logger.info("redirect URL --> \n" + redirectUrl);
+      logger.info("-------------------");
       return redirect(response, redirectUrl);
     }
     return ERROR_VIEW_NAME;

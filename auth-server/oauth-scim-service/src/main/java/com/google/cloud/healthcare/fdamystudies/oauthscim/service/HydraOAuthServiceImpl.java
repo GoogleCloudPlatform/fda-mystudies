@@ -156,12 +156,16 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   @Override
   public ResponseEntity<JsonNode> loginAccept(String userId, String loginChallenge) {
 
+    logger.info("HydraOAuthService.loginAccept called !!!!!!!!!!!!!!!!!!!!!!");
+    logger.info("userId         --> [ " + userId + " ]");
+    logger.info("loginChallenge --> [ " + loginChallenge + " ]");
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
     StringBuilder url = new StringBuilder(loginAcceptEndpoint);
     url.append("?").append(LOGIN_CHALLENGE).append("=").append(loginChallenge);
+    logger.info("redirect url --> \n" + url.toString());
 
     ObjectNode requestParams = getObjectNode();
     requestParams.put("subject", userId);
@@ -170,6 +174,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
     ResponseEntity<JsonNode> response =
         getRestTemplate().exchange(url.toString(), HttpMethod.PUT, requestEntity, JsonNode.class);
+    logger.info("oauth response is OK ? ---> [ " + response.getStatusCode().is2xxSuccessful() + " ]");
 
     if (!response.getStatusCode().is2xxSuccessful()) {
       logger.error(
