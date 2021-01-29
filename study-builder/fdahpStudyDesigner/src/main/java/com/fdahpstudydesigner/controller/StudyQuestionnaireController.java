@@ -196,6 +196,10 @@ public class StudyQuestionnaireController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("questionnairesId"))
                 ? ""
                 : request.getParameter("questionnairesId");
+        String stepShortTitle =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("stepShortTitle"))
+                ? ""
+                : request.getParameter("stepShortTitle");
         auditRequest.setStudyId(customStudyId);
         if (!formId.isEmpty() && !questionId.isEmpty()) {
           message =
@@ -208,10 +212,20 @@ public class StudyQuestionnaireController {
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
 
             Map<String, String> values = new HashMap<>();
-            values.put(QUESTION_ID, questionId.toString());
-            values.put(FORM_ID, formId.toString());
-            values.put(STEP_ID, formId.toString());
+            QuestionnaireBo questionnaireDetails =
+                studyQuestionnaireService.getQuestionnaireById(Integer.valueOf(questionnairesId));
+            if (questionnaireDetails != null) {
+              values.put(QUESTION_ID, questionnaireDetails.getShortTitle());
+            }
+            values.put(FORM_ID, stepShortTitle);
+
+            QuestionsBo questionBo =
+                studyQuestionnaireService.getQuestionById(Integer.valueOf(questionId));
+            if (questionBo != null) {
+              values.put(STEP_ID, questionBo.getShortTitle());
+            }
             auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_IN_FORM_DELETED, auditRequest, values);
+
             questionnairesStepsBo =
                 studyQuestionnaireService.getQuestionnaireStep(
                     Integer.valueOf(formId),
