@@ -271,12 +271,16 @@
       $(".right-content-body").parents("form").validator();
       saveComrehensionTestQuestion();
     });
+    
     if ($('.ans-opts').length > 2) {
       $(".remBtnDis").removeClass("hide");
       $(".remBtnDis").css("pointer-events", "auto");
     } else {
       $(".remBtnDis").addClass("hide");
       $(".remBtnDis").css("pointer-events", "none");
+    }
+    if (${actionPage == 'view'}) {
+  	  $('.ans-opts').find(".remBtnDis").css("pointer-events", "none");
     }
   });
   var ansCount = $(".ans-opts").length;
