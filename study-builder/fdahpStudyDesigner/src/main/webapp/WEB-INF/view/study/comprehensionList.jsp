@@ -83,25 +83,31 @@
     </div>
     <!--  Start body tab section -->
     <div
-        class="right-content-body pt-none pb-none <c:if test="${empty consentBo.needComprehensionTest || consentBo.needComprehensionTest eq 'No'}">ct_panel</c:if>"
+        class="pt-none pb-none<c:if test="${empty consentBo.needComprehensionTest || consentBo.needComprehensionTest eq 'No'}">ct_panel</c:if>"
         id="mainContainer">
-      <div>
+        <div class="right-content-head">
+        <div class="text-right">
+          <div class="black-md-f dis-line pull-left line34">Comprehension test questions
+          </div>
+          <div class="dis-line form-group mb-none mr-sm">
+            <c:if test="${empty permission}">
+              <button type="button" class="btn btn-primary blue-btn"
+                      id="addQuestionId"
+                            onclick="addComphernsionQuestionPage();">+ Add Question
+              </button>
+            </c:if>
+          </div>
+        </div>
+      </div>
+      <div class="right-content-body">
         <table id="comprehension_list" class="display bor-none" cellspacing="0" width="100%">
           <thead>
             <tr>
               <th id="">
                 <span class="marL10">#</span>
               </th>
-              <th id="">Question</th>
-              <th id="">
-                <c:if test="${empty permission}">
-                  <div class="dis-line form-group mb-none">
-                    <button type="button" class="btn btn-primary blue-btn" id="addQuestionId"
-                            onclick="addComphernsionQuestionPage();">Add Question
-                    </button>
-                  </div>
-                </c:if>
-              </th>
+              <th id="">Questions</th>
+              <th id="">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -130,7 +136,7 @@
         </table>
       </div>
 
-      <div class="mt-xlg" id="displayTitleId">
+      <div class="right-content-body mt-xlg" id="displayTitleId">
         <div class="gray-xs-f mb-xs">Minimum score needed to pass</div>
         <div class="form-group col-md-5 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
