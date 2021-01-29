@@ -60,7 +60,11 @@ public class ConsentController {
       HttpServletResponse response,
       Model model)
       throws UnsupportedEncodingException {
-    logger.info(String.format("%s request(GET /consent)", request.getRequestURI()));
+
+    try {
+
+    logger.info(String.format("%s request(GET /consent) ======= start =========", request.getRequestURI()));
+    logger.info("referer --> [ " + request.getHeader("REFERER") + " ]");
 
     cookieHelper.addCookie(response, CONSENT_CHALLENGE_COOKIE, consentChallenge);
     MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
@@ -76,6 +80,10 @@ public class ConsentController {
     auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
 
     return ERROR_VIEW_NAME;
+
+    } finally {
+      logger.info(String.format("%s request(GET /consent) ======= end =========", request.getRequestURI()));
+    }
   }
 
   private String redirect(HttpServletResponse response, String redirectUrl) {
@@ -87,7 +95,10 @@ public class ConsentController {
   @PostMapping(value = "/consent")
   public String authenticate(HttpServletRequest request, HttpServletResponse response, Model model)
       throws UnsupportedEncodingException {
-    logger.info(String.format("%s request(POST /consent)", request.getRequestURI()));
+      try {
+
+    logger.info(String.format("%s request(POST /consent) ======= start =========", request.getRequestURI()));
+    logger.info("referer --> [ " + request.getHeader("REFERER") + " ]");
 
     String consentChallenge = cookieHelper.getCookieValue(request, CONSENT_CHALLENGE_COOKIE);
 
@@ -106,6 +117,10 @@ public class ConsentController {
     auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
 
     return ERROR_VIEW_NAME;
+
+      } finally {
+        logger.info(String.format("%s request(POST /consent) ======= end =========", request.getRequestURI()));
+      }
   }
 
   @ExceptionHandler(Exception.class)

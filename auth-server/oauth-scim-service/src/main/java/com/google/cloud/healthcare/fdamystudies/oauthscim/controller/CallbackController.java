@@ -61,10 +61,13 @@ public class CallbackController {
       HttpServletResponse response,
       Model model)
       throws UnsupportedEncodingException {
-    logger.info("=============================");
-    logger.info("came from hydra server");
-    logger.info(String.format("%s request", request.getRequestURI()));
-    logger.info("=============================");
+
+    try {
+
+
+    logger.info(String.format("%s request(GET /callback) ======= start =========", request.getRequestURI()));
+    logger.info("referer --> [ " + request.getHeader("REFERER") + " ]");
+    //logger.info(String.format("%s request", request.getRequestURI()));
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -125,6 +128,10 @@ public class CallbackController {
 
     logger.info(String.format("redirect to %s from /login", callbackUrl));
     return redirect(response, redirectUrl);
+
+    } finally {
+      logger.info(String.format("%s request(GET /callback) ======= end =========", request.getRequestURI()));
+    }
   }
 
   private String redirect(HttpServletResponse response, String redirectUrl) {

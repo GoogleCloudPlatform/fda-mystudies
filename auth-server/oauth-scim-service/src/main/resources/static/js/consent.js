@@ -8,6 +8,7 @@
 
 window.onload = function() {
   window.setTimeout(function() {
+    alert("どうよ！");
     document.consentForm.submit();
   }, 2000);
 };
