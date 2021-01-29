@@ -2243,7 +2243,7 @@ option {
 }
 
 .logout {
-  padding: 50px 50px 0;
+  padding: 30px 50px 0;
   top: 0;
 }
 
@@ -2407,7 +2407,7 @@ option {
   left: 0;
   right: 0;
   margin: auto;
-  padding-bottom: 46px;
+  padding-bottom: 30px;
 }
 
 #lg-container .footer span, #lg-container .foot span {
@@ -2670,5 +2670,5 @@ a:focus {
 
 .logo__space {
   padding-left: 40px !important;
-  padding-top: 40px !important;
+  padding-top: 30px !important;
 } 
