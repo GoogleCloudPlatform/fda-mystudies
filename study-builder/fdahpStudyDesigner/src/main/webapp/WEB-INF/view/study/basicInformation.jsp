@@ -6,6 +6,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
+<style>
+.uploadImg{
+margin-top:16px !important;
+}
+</style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -235,7 +240,7 @@
                   Image
                 </a>
               </span>
-              <div class="form-group mb-none mt-sm" >
+              <div class="form-group mb-none mt-sm uploadImg">
                 <button id="uploadImgbtn" type="button"
                         class="btn btn-default gray-btn imageButtonDis">Upload
 					   
@@ -256,7 +261,7 @@
             </div>
           </div>
          
-           <div class="mt-lg" style="margin-top:1px !important;  font-size:10px; ">
+           <div class="mt-lg" style="margin-top:-5px !important;  font-size:10px; ">
                     <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important; display:inline-block">
                      Default image                     
             </div>
