@@ -343,13 +343,17 @@ class LocalNotification: NSObject {
             kActivityId: notification.activityId!,
           ]
 
-          // Reschedule top 50 Local Notifications.
-          LocalNotification.scheduleNotificationOn(
-            date: notification.startDate!,
-            message: notification.message!,
-            userInfo: userInfo,
-            id: notification.id
-          )
+          if let message = notification.message,
+            let startDate = notification.startDate
+          {
+            // Reschedule top 50 Local Notifications.
+            LocalNotification.scheduleNotificationOn(
+              date: startDate,
+              message: message,
+              userInfo: userInfo,
+              id: notification.id
+            )
+          }
         }
       }
     }

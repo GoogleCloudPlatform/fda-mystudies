@@ -1422,7 +1422,10 @@ public class StudyServiceImpl implements StudyService {
 
         studyDetails.setLogoImageUrl(
             StringUtils.isEmpty(studyBo.getThumbnailImage())
-                ? ""
+                ? propMap.get("fda.imgDisplaydPath")
+                    + propMap.get("cloud.bucket.name")
+                    + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    + propMap.get(FdahpStudyDesignerConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE)
                 : propMap.get("fda.imgDisplaydPath")
                     + propMap.get("cloud.bucket.name")
                     + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
@@ -1446,9 +1449,9 @@ public class StudyServiceImpl implements StudyService {
     }
     logger.info("StudyServiceImpl - validateStudyAction() - Ends");
     return markAsCompleted;
-}
+  }
+
   public StudyBo getStudyInfo(String studyId) {
     return studyDAO.getStudy(Integer.valueOf(studyId));
-
   }
 }
