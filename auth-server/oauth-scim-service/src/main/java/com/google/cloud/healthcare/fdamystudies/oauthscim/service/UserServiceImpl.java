@@ -405,16 +405,18 @@ public class UserServiceImpl implements UserService {
     String hash = getTextValue(passwordNode, HASH);
     String salt = getTextValue(passwordNode, SALT);
 
-    logger.info("hash : " + hash);
     logger.info("salt : " + salt);
+    logger.info("hash : " + hash);
 
     // check the account status and password expiry condition
     validatePasswordExpiryAndAccountStatus(userEntity, userInfo, auditRequest);
 
     // compare passwords
     String passwordHash = hash(user.getPassword(), salt);
+    logger.info("pswd : " + passwordHash);
     if (StringUtils.equals(passwordHash, hash)) {
       // reset login attempts
+      logger.info("------> ログイン認証OK！！！！！");
       return updateLoginAttemptsAndAuthenticationTime(userEntity, userInfo, auditRequest);
     }
 
@@ -572,6 +574,7 @@ public class UserServiceImpl implements UserService {
           auditHelper.logEvent(SIGNIN_FAILED_EXPIRED_PASSWORD, auditRequest);
           throw new ErrorCodeException(ErrorCode.PASSWORD_EXPIRED);
         }
+        logger.info("パスワードの有効期限OK！！");
     }
   }
 
@@ -584,14 +587,14 @@ public class UserServiceImpl implements UserService {
     logger.info("");
     logger.info( passwordNode.toPrettyString());
     logger.info("");
-    logger.info(" db timestamp is null ?? --> [ " + flg_TIMESTAMP + " ]");
-    logger.info(" db timestamp longValue() --> [ " + db_TIMESTAMP + " ]");
-    logger.info(" db timestamp test()      --> [ " + passwordNode.get(EXPIRE_TIMESTAMP).asText() + " ]");
-    logger.info("now timestamp --> [ " + now_TIMESTAMP + " ]");
+    logger.info(" db timestamp is null ??   --> [ " + flg_TIMESTAMP + " ]");
+    logger.info(" db timestamp longValue()  --> [ " + db_TIMESTAMP + " ]");
+    logger.info(" db timestamp test()       --> [ " + passwordNode.get(EXPIRE_TIMESTAMP).asText() + " ]");
+    logger.info(" now timestamp             --> [ " + now_TIMESTAMP + " ]");
     if (flg_OTP_USED) {
-        logger.info("otp_used --> [ " + passwordNode.get(OTP_USED).booleanValue() + " ]" );
+      logger.info(" otp_used                  --> [ " + passwordNode.get(OTP_USED).booleanValue() + " ]" );
     } else {
-        logger.info("otp_used is null ...... orz");
+        logger.info(" otp_used is null ...... ");
     }
 
     return (passwordNode.hasNonNull(EXPIRE_TIMESTAMP)

@@ -146,7 +146,9 @@ public class LoginController {
       HttpServletRequest request,
       HttpServletResponse response)
       throws JsonProcessingException, UnsupportedEncodingException {
-    logger.entry(String.format("%s request", request.getRequestURI()));
+    logger.info("======================");
+    logger.info(String.format("%s request", request.getRequestURI()));
+    logger.info("======================");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     String tempRegId = cookieHelper.getCookieValue(request, TEMP_REG_ID_COOKIE);
@@ -160,9 +162,13 @@ public class LoginController {
       return ERROR_VIEW_NAME;
     }
 
+    logger.info("tempRegId      ---> [ " + tempRegId + " ]");
+    logger.info("loginChallenge ---> [ " + loginChallenge + " ]");
     if (StringUtils.isNotEmpty(tempRegId)) {
+      logger.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
       return redirectToLoginOrConsentPage(tempRegId, loginChallenge, response);
     }
+    logger.info("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
 
     // validate login credentials
     ValidationErrorResponse errors = validateRequiredParams(request, "email", "password");
@@ -182,8 +188,14 @@ public class LoginController {
     user.setPassword(loginRequest.getPassword());
     user.setAppId(appId);
 
+    logger.info("email  --> [ " + user.getEmail() + " ]");
+    logger.info("pswd   --> [ " + user.getPassword() + " ]");
+    logger.info("AppId   --> [ " + appId + " ]");
+
     AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
 
+    logger.info("Account Status ---> [ " + authenticationResponse.getAccountStatus() + " ]");
+    logger.info("Status list ---> [ 0:ACTIVE / 1:PENDING CONF / 2:LOCKED / 3:PWD RESET / 4:DEACTIVATED ");
     if (UserAccountStatus.PENDING_CONFIRMATION.getStatus()
         == authenticationResponse.getAccountStatus()) {
       String redirectUrl = redirectConfig.getAccountActivationUrl(mobilePlatform, source);
@@ -191,6 +203,8 @@ public class LoginController {
       return redirect(response, url);
     }
 
+    logger.info("Http Status code   ---> [ " + authenticationResponse.getHttpStatusCode() + " ]");
+    logger.info("is2xxSuccessful ?? ---> [ " + authenticationResponse.is2xxSuccessful() + " ]");
     if (authenticationResponse.is2xxSuccessful()) {
       logger.exit("authentication success, redirect to consent page");
       cookieHelper.addCookie(response, USER_ID_COOKIE, authenticationResponse.getUserId());
@@ -199,6 +213,7 @@ public class LoginController {
           ACCOUNT_STATUS_COOKIE,
           String.valueOf(authenticationResponse.getAccountStatus()));
     } else {
+      logger.exit("why not successful ? but not fail. [ " + LOGIN_VIEW_NAME + " ]");
       return LOGIN_VIEW_NAME;
     }
     return redirectToConsentPage(loginChallenge, authenticationResponse.getUserId(), response);
