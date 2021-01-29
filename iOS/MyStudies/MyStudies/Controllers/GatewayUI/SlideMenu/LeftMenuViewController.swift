@@ -439,7 +439,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           errorAlertActionTitle2: NSLocalizedString(kAlertSignOutLaterTitle, comment: ""),
           viewControllerUsed: self,
           action1: {
-            self.sendRequestToSignOut()
+            LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
           },
           action2: {
             // Cancel Action.
@@ -454,7 +454,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
           viewControllerUsed: self,
           action1: {
-            self.sendRequestToSignOut()
+            LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
           },
           action2: {
             // Cancel Action.
@@ -480,6 +480,14 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         )
       }
     }
+  }
+
+  /// This methods updates the push token on server with an empty string to avoid push notifications when user logs out.
+  /// This change was done from client side due to Hydra limitations which is not able to
+  /// set the push token to null with logout service.
+  /// - Parameter delegate: Service delegate.
+  final class func updatePushTokenToEmptyString(delegate: NMWebServiceDelegate) {
+    UserServices().updateUserProfile(deviceToken: "", delegate: delegate)
   }
 
   /// As the user is Signed out Remove passcode from the keychain
@@ -572,11 +580,15 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
+    if requestName as String == RegistrationMethods.updateUserProfile.description {
+      self.sendRequestToSignOut()
+    } else {
+      UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
+    }
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
+    UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
 
     if error.code == HTTPError.forbidden.rawValue {  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
