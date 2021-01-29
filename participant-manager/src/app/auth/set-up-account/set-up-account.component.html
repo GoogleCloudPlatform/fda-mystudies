@@ -172,7 +172,7 @@
             type="submit"
             name="save"
             class="btn bt__add mr-sm"
-            [disabled]="!setupAccountForm.valid"
+            [disabled]="!setupAccountForm.valid || disableButton"
           >
             Submit
           </button>
@@ -181,6 +181,7 @@
             name="cancel"
             type="button"
             class="btn bt__cancel"
+            [disabled]="disableButton"
           >
             Cancel
           </button>
