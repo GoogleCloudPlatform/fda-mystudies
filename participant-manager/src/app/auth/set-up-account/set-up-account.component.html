@@ -2,7 +2,10 @@
   <div id="desktop-menu">
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
-        <a href="#" class="navbar-brand">
+        <a
+          [routerLink]="disableButton ? [] : ['/coordinator']"
+          class="navbar-brand"
+        >
           <img
             class="mr-sm width__auto"
             src="assets/images/branding/landing-logo.png"
