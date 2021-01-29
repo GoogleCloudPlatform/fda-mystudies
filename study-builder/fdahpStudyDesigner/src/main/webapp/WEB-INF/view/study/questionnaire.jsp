@@ -3066,8 +3066,8 @@
   }
 
   function customStartDate(id, count) {
-
-    $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
+	  $('.manually-option').find('.cusTime').prop('disabled', false);
+      $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       minDate: serverDate(),
       useCurrent: false,
@@ -3094,6 +3094,7 @@
   }
 
   function customEndDate(id, count) {
+	$('.manually-option').find('.cusTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       minDate: serverDate(),
