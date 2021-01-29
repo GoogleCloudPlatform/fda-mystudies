@@ -233,7 +233,7 @@
       ],
       "lengthChange": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "pageLength": 15
     });

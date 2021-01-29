@@ -161,7 +161,7 @@
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) gt 0}">
             <div class="col-md-12 p-none">
               <div class='col-md-6 pl-none'>
-                <div class="gray-xs-f mb-xs">Answer options (150 characters)
+                <div class="gray-xs-f mb-xs">Answer options (150 characters max)
                   <span
                       class="requiredStar">*
                   </span>
@@ -225,7 +225,7 @@
       <div class="clearfix"></div>
 
       <div>
-      <div class="gray-xs-f mb-sm">Consider the question to be correctly answered if the participant responds with
+      <div class="gray-xs-f mb-sm">Consider the question to be correctly answered if the app user responds with
           <span
               class="requiredStar">*
           </span>
@@ -461,7 +461,7 @@
     } else {
       $('#alertMsg').show();
       $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-          "Please select at least one correct answer as yes.");
+          "Please mark at least one of the answer options as the correct answer.");
       setTimeout(hideDisplayMessage, 3000);
       return false;
     }

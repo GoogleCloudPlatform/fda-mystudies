@@ -132,7 +132,7 @@
           <div class="dis-line form-group mb-none mr-sm">
             <c:if test="${empty permission}">
               <button type="button" class="btn btn-primary blue-btn"
-                      id="addQaId">+ Add Question
+                      id="addQaId">+ Add question
               </button>
             </c:if>
           </div>
@@ -287,7 +287,7 @@
                   "info": false,
                   "filter": false,
                   language: {
-                    "zeroRecords": "You haven't created any content yet.",
+                    "zeroRecords": "No content created yet.",
                   },
                   rowReorder: reorder,
                   "columnDefs": [{
