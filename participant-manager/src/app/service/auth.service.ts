@@ -34,7 +34,7 @@ export class AuthService {
     //     sessionStorage.setItem('pkceChallenge', challenge);
     //   }
     // });
-     // TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
+    // TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
 
     sessionStorage.setItem(
       'pkceVerifier',
@@ -56,7 +56,6 @@ export class AuthService {
       .set('code_challenge_method', 'S256')
       .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
       .set('correlationId', sessionStorage.getItem('correlationId') || '')
-      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.authServerRedirectUrl)
       .set('state', uuidv4())
       .set('source', this.source)
