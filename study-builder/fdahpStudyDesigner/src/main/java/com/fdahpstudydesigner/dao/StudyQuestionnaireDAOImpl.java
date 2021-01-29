@@ -4990,4 +4990,30 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
     return questionnaireBo;
   }
+
+  @Override
+  public QuestionsBo getQuestionById(Integer questionId) {
+    logger.info("StudyQuestionnaireDAOImpl - getQuestionById() - Starts");
+    Session session = null;
+    QuestionsBo questionBo = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      questionBo =
+          (QuestionsBo)
+              session
+                  .createQuery("from QuestionsBo QBO where QBO.id=:questionId")
+                  .setInteger("questionId", questionId)
+                  .uniqueResult();
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("StudyQuestionnaireDAOImpl - getQuestionById() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+
+    return questionBo;
+  }
 }
