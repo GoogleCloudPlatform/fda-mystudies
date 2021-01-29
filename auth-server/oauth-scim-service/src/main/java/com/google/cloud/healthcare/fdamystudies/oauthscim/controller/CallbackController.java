@@ -61,10 +61,14 @@ public class CallbackController {
       HttpServletResponse response,
       Model model)
       throws UnsupportedEncodingException {
-    logger.entry(String.format("%s request", request.getRequestURI()));
+    logger.info("=============================");
+    logger.info("came from hydra server");
+    logger.info(String.format("%s request", request.getRequestURI()));
+    logger.info("=============================");
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
+    logger.info("code is Empty?? --> [ " + StringUtils.isEmpty(code) + " ]");
     if (StringUtils.isEmpty(code)) {
       logger.error("authorization code is empty, return error view");
       auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
@@ -72,6 +76,7 @@ public class CallbackController {
     }
 
     String userId = cookieHelper.getCookieValue(request, USER_ID_COOKIE);
+    logger.info("userId from cookie --> [ " + userId + " ]");
     if (StringUtils.isEmpty(userId)) {
       logger.error("userId cookie value is empty, return error view");
       auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
@@ -83,9 +88,16 @@ public class CallbackController {
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform, source);
 
+    logger.info("mobilePlatform --> [ " + mobilePlatform + " ]");
+    logger.info("source         --> [ " + source + " ]");
+    logger.info("callbackUrl    --> [ " + callbackUrl + " ]");
+    logger.info("accountStatus  --> [ " + accountStatus + " ]");
+
+    logger.info("Status list ---> [ 0:ACTIVE / 1:PENDING CONF / 2:LOCKED / 3:PWD RESET / 4:DEACTIVATED ");
     String redirectUrl = null;
     if (StringUtils.equals(
         accountStatus, String.valueOf(UserAccountStatus.PASSWORD_RESET.getStatus()))) {
+      logger.info("パスワードリセットの場合");
       Optional<UserEntity> optUserEntity = userService.findByUserId(userId);
       if (optUserEntity.isPresent()) {
         UserEntity user = optUserEntity.get();
@@ -95,18 +107,23 @@ public class CallbackController {
                 callbackUrl, code, userId, accountStatus, user.getEmail());
       }
     } else {
+      logger.info("パスワードリセット以外の場合");
       redirectUrl =
           String.format(
               "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
     }
+    logger.info("---------------");
+    logger.info("redirectUrl --> \n" + redirectUrl);
+    logger.info("---------------");
 
     if (UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus)) {
       auditHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
+      logger.info("SIGNIN SUCCEEDED!!!!!");
     } else {
       auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED, auditRequest);
     }
 
-    logger.exit(String.format("redirect to %s from /login", callbackUrl));
+    logger.info(String.format("redirect to %s from /login", callbackUrl));
     return redirect(response, redirectUrl);
   }
 

@@ -60,13 +60,15 @@ public class ConsentController {
       HttpServletResponse response,
       Model model)
       throws UnsupportedEncodingException {
-    logger.entry(String.format("%s request", request.getRequestURI()));
+    logger.info(String.format("%s request(GET /consent)", request.getRequestURI()));
 
     cookieHelper.addCookie(response, CONSENT_CHALLENGE_COOKIE, consentChallenge);
     MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
     paramMap.add(CONSENT_CHALLENGE, consentChallenge);
     ResponseEntity<JsonNode> consentResponse = oauthService.requestConsent(paramMap);
+    logger.info("hydra(oauth2)の認証結果 --> [ " + consentResponse.getStatusCode().is2xxSuccessful() + " ]");
     if (consentResponse.getStatusCode().is2xxSuccessful()) {
+      logger.info("ConsentController.authorize() end. return string : consent");
       return "consent";
     }
 
@@ -85,7 +87,7 @@ public class ConsentController {
   @PostMapping(value = "/consent")
   public String authenticate(HttpServletRequest request, HttpServletResponse response, Model model)
       throws UnsupportedEncodingException {
-    logger.entry(String.format("%s request", request.getRequestURI()));
+    logger.info(String.format("%s request(POST /consent)", request.getRequestURI()));
 
     String consentChallenge = cookieHelper.getCookieValue(request, CONSENT_CHALLENGE_COOKIE);
 
@@ -93,8 +95,10 @@ public class ConsentController {
     paramMap.add(CONSENT_CHALLENGE, consentChallenge);
     ResponseEntity<JsonNode> consentResponse = oauthService.consentAccept(paramMap);
 
+    logger.info("hydra(oauth2)の認証結果 --> [ " + consentResponse.getStatusCode().is2xxSuccessful() + " ]");
     if (consentResponse.getStatusCode().is2xxSuccessful()) {
       String redirectUrl = getTextValue(consentResponse.getBody(), REDIRECT_TO);
+      logger.info("ConsentController.authorize() end. redirect to ...\n" + redirectUrl);
       return redirect(response, redirectUrl);
     }
 
