@@ -12,17 +12,22 @@ import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse.Violation;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.util.MultiValueMap;
 
 public final class RequestParamValidator {
 
+  private static XLogger logger = XLoggerFactory.getXLogger(RequestParamValidator.class.getName());
   private RequestParamValidator() {}
 
   public static ValidationErrorResponse validateRequiredParams(
       MultiValueMap<String, String> paramMap, String... paramNames) {
     ValidationErrorResponse error = new ValidationErrorResponse();
     for (String param : paramNames) {
+      logger.info("[" + param + "] is empty?? --> [ " + StringUtils.isEmpty(paramMap.getFirst(param)) + " ]");
       if (StringUtils.isEmpty(paramMap.getFirst(param))) {
+        logger.info("        --> [" + param + "] must not be blank.... orz");
         error.getViolations().add(new Violation(param, "must not be blank"));
       }
     }

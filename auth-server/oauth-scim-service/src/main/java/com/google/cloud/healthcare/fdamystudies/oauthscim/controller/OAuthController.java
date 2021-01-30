@@ -9,15 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValidator.validateRequiredParams;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION_CODE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CODE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CODE_VERIFIER;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_TYPE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_URI;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SCOPE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.*;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -69,24 +61,30 @@ public class OAuthController {
       @RequestHeader HttpHeaders headers,
       HttpServletRequest request)
       throws JsonProcessingException {
-    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    logger.info("\n============================================");
+    logger.info(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     String grantType = StringUtils.defaultString(paramMap.getFirst(GRANT_TYPE));
+    logger.info("referer   ---> [ " + request.getHeader("REFERER") + " ]");
+    logger.info("grantType ---> [ " + grantType + " ]");
     // validate required params
     ValidationErrorResponse errors = null;
     switch (grantType) {
       case REFRESH_TOKEN:
+        logger.info("case in grantType -> [ " + REFRESH_TOKEN + " ]");
         errors = validateRequiredParams(paramMap, REFRESH_TOKEN, REDIRECT_URI, CLIENT_ID, USER_ID);
 
         break;
       case AUTHORIZATION_CODE:
+        logger.info("case in grantType -> [ " + AUTHORIZATION_CODE + " ]");
         errors =
             validateRequiredParams(paramMap, CODE, REDIRECT_URI, SCOPE, USER_ID, CODE_VERIFIER);
 
         break;
       default:
         // client_credentials grant type
+        logger.info("case in grantType -> [ " + CLIENT_CREDENTIALS + " ] (default)");
         errors = validateRequiredParams(paramMap, GRANT_TYPE, REDIRECT_URI, SCOPE);
     }
 
