@@ -61,7 +61,7 @@ public class OAuthController {
       @RequestHeader HttpHeaders headers,
       HttpServletRequest request)
       throws JsonProcessingException {
-    logger.info("\n============================================");
+    logger.info("\n\n=============================================================");
     logger.info(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -89,8 +89,10 @@ public class OAuthController {
     }
 
     if (errors.hasErrors()) {
-      logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
+      logger.info(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    } else {
+      logger.info("パラータにエラーはありませんでした。");
     }
 
     // get token from hydra

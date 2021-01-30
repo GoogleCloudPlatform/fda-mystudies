@@ -96,7 +96,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
       HttpHeaders headers,
       AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
-    logger.entry(String.format("getToken() for grant_type=%s", paramMap.getFirst(GRANT_TYPE)));
+    logger.info(String.format("getToken() for grant_type=%s", paramMap.getFirst(GRANT_TYPE)));
 
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
     String grantType = paramMap.getFirst(GRANT_TYPE);
@@ -108,9 +108,11 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     ResponseEntity<JsonNode> response =
         getRestTemplate().postForEntity(tokenEndpoint, requestEntity, JsonNode.class);
 
+    logger.info("refresh_token is not null ??" + response.getBody().hasNonNull(REFRESH_TOKEN));
     if ((REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType))
         && response.getBody().hasNonNull(REFRESH_TOKEN)) {
       String refreshToken = getTextValue(response.getBody(), REFRESH_TOKEN);
+      logger.info("refresh token ---> [ " + refreshToken + " ]");
       UserResponse userResponse =
           userService.revokeAndReplaceRefreshToken(
               paramMap.getFirst(USER_ID), refreshToken, auditRequest);

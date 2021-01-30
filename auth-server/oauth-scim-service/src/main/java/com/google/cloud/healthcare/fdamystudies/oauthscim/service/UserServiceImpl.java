@@ -659,7 +659,7 @@ public class UserServiceImpl implements UserService {
   public UserResponse revokeAndReplaceRefreshToken(
       String userId, String refreshToken, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
-    logger.entry("revokeAndReplaceRefreshToken(userId, refreshToken)");
+    logger.info("revokeAndReplaceRefreshToken(userId, refreshToken)");
     Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
     if (!optUserEntity.isPresent()) {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
@@ -676,11 +676,14 @@ public class UserServiceImpl implements UserService {
       MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
       requestParams.add(TOKEN, prevRefreshToken);
       ResponseEntity<JsonNode> response = oauthService.revokeToken(requestParams, headers);
+      logger.info("'response' TYPE is ... [ " + response.getClass().getName() + " ]");
+      logger.info("Response HTTP STATUS CODE ---> [ " + String.valueOf(response.getStatusCode().value()) + " ]");
       if (!response.getStatusCode().is2xxSuccessful()) {
         throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
       }
     }
 
+    logger.info("refreshToken is Empty?? ---> [ " + StringUtils.isEmpty(refreshToken) + " ]");
     if (StringUtils.isEmpty(refreshToken)) {
       userInfo.remove(REFRESH_TOKEN);
     } else {
@@ -692,8 +695,7 @@ public class UserServiceImpl implements UserService {
 
     UserResponse userResponse = new UserResponse();
     userResponse.setHttpStatusCode(HttpStatus.OK.value());
-    logger.exit(
-        "previous refresh token revoked and replaced with new refresh token for the given user");
+    logger.info( "previous refresh token revoked and replaced with new refresh token for the given user");
     return userResponse;
   }
 
