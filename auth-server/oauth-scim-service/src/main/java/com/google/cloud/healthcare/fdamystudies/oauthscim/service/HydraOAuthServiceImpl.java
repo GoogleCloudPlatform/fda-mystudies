@@ -100,10 +100,13 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
     String grantType = paramMap.getFirst(GRANT_TYPE);
+    logger.info("grantType ---> [ " + grantType + " ]");
     if (REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType)) {
+      logger.info("encodedAuthorization ---> [ " + encodedAuthorization + " ]");
       headers.set(AUTHORIZATION, encodedAuthorization);
     }
 
+    logger.info("tokenEndpoint ---> [ " + tokenEndpoint + " ]");
     HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);
     ResponseEntity<JsonNode> response =
         getRestTemplate().postForEntity(tokenEndpoint, requestEntity, JsonNode.class);

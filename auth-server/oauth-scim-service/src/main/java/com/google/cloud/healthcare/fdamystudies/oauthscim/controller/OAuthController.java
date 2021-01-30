@@ -92,7 +92,7 @@ public class OAuthController {
       logger.info(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     } else {
-      logger.info("パラータにエラーはありませんでした。");
+      logger.info("parameters has no errors!!");
     }
 
     // get token from hydra
