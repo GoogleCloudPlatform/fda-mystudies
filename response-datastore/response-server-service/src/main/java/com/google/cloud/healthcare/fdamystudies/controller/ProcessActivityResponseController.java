@@ -495,8 +495,10 @@ public class ProcessActivityResponseController {
       @RequestParam(name = "deleteResponses") String deleteResponses,
       HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-
+    logger.debug("ParticipantIdController withdrawParticipantFromStudy() - starts ");
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
+      logger.debug(
+          "ParticipantIdController withdrawParticipantFromStudy() - studyId or participantId is blank ");
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_701.code(),
@@ -538,6 +540,9 @@ public class ProcessActivityResponseController {
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
         if (responseDataUpdate) {
+          logger.debug(
+              "ParticipantIdController withdrawParticipantFromStudy() - Catch responseDataUpdate 1: "
+                  + responseDataUpdate);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_717.code(),
@@ -553,6 +558,9 @@ public class ProcessActivityResponseController {
                   + deleteResponses);
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         } else {
+          logger.debug(
+              "ParticipantIdController withdrawParticipantFromStudy() - Catch responseDataUpdate 2: "
+                  + responseDataUpdate);
           responseServerAuditLogHelper.logEvent(WITHDRAWAL_INFORMATION_UPDATE_FAILED, auditRequest);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
