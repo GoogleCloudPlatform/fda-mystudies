@@ -442,7 +442,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],

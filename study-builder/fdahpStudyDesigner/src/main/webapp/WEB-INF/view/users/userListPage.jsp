@@ -5,6 +5,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<style>
+    #user_list tr td {
+    padding-left: 20px !important;
+}
+#user_list tr th {
+    padding-left: 20px !important;
+}
+</style>
+
 <div
     class="col-xs-12 col-sm-12 col-md-12 col-lg-12 grayeef2f5-bg p-none">
   <div>
@@ -61,7 +70,7 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
   <div class="white-bg">
     <div>
-      <table id="user_list" class="table tbl_rightalign tbl">
+      <table id="user_list" class="table wid100 tbl">
         <thead>
           <tr>
             <th id="">Name
@@ -73,7 +82,7 @@
             <th id="">ROLE
               <span class="sort"></span>
             </th>
-            <th id="">Actions</th>
+            <th id="" class="text-right" style="padding-right: 3% !important;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -89,7 +98,7 @@
                 <div class="dis-ellipsis" title="${user.userEmail}">${user.userEmail}</div>
               </td>
               <td>${user.roleName}</td>
-              <td>
+              <td class="text-right" style="padding-right: 3% !important;">
                 <span class="sprites_icon preview-g mr-lg viewUser"
                       userId="${user.userId}" data-toggle="tooltip"
                       data-placement="top" title="View"></span>
@@ -233,7 +242,7 @@
       ],
       "lengthChange": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "pageLength": 15
     });
