@@ -45,9 +45,7 @@
 
   .tool-tip [disabled] {
     pointer-events: none;
-  }
-   
-  .display_inl_tbl { display: inline-table !important; } 
+  }   
  
 </style>
 <div class="gray-xs-f mb-sm">Active Task Schedule Type</div>
@@ -905,17 +903,19 @@
         <div class="manually-option mb-md form-group" id="0">
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
-                  <span class="display_inl_tbl">
-                  <div class="gray-xs-f mb-sm">Select a date range
-                    <span class="requiredStar"> *</span>
-                    <span
-                       class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                       data-toggle="tooltip"
-                       data-placement="bottom"
-                       title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-                     </span>
-                  </div>
+           <div class="gray-xs-f mb-sm">
+              Select date & time period
+              <span class="requiredStar">*</span>
+              <span
+                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+              </span>
+            </div>
+                  
           <span class="form-group dis-inline vertical-align-middle pr-md">
+            
             <input id="StartDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusStrDate"
                    name="activeTaskCustomScheduleBo[0].frequencyStartDate" value=""
@@ -933,17 +933,9 @@
                    onclick='customEndDate(this.id,0);' required/>
             <span class='help-block with-errors red-txt'></span>
             </span>            
-             </span>
-            <span class="display_inl_tbl">
-            <div class="gray-xs-f mb-sm">Select a time
-                <span class="requiredStar"> *</span>
-           <span
-          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-          data-toggle="tooltip"
-          data-placement="bottom"
-          title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-      </span>
-    </div>
+            
+           
+           
          
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="customTime0" type="text" count='0' class="form-control clock cusTime"
@@ -953,7 +945,7 @@
             <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
-          </span>
+          
         </div>
       </c:if>
       <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) gt 0}">
@@ -1011,9 +1003,9 @@
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
                  
-                  <span class="display_inl_tbl">
-                          <div class="gray-xs-f">
-              Select a date range
+                
+            <div class="gray-xs-f mb-sm">
+              Select time period
               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
@@ -1021,7 +1013,7 @@
                   data-placement="bottom"
                   title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
               </span>
-            </div>
+            </div>               
             
           <span class="mb-sm pr-md">
             <span class="light-txt opacity06">
@@ -1041,6 +1033,7 @@
             </select>
           </span>
           <span class="form-group m-none dis-inline vertical-align-middle">
+            
             <input id="xdays0" type="text"
                    class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate"
                    count='0' placeholder="X"
@@ -1048,6 +1041,7 @@
                    value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
                    maxlength="3" required pattern="[0-9]+"
                    data-pattern-error="Please enter valid number."/>
+               
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1090,18 +1084,9 @@
             </span>
           </span>
           
-               </span>
-                 <span class="display_inl_tbl">
-                          <div class="gray-xs-f mb-xs">
-              Select a time
-              <span class="requiredStar">*</span>
-              <span
-                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-              </span>
-            </div>
+              
+                 
+                          
             
           <span class="form-group  dis-inline vertical-align-middle pr-md"
                 style="margin-bottom: -13px"><input id="manualTime0"
@@ -1115,7 +1100,7 @@
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
                 onclick="addDateAnchor();">+
           </span>
-          </span>
+         
         </div>
       </c:if>
       <c:if
@@ -1243,7 +1228,7 @@
   }
   var customAnchorCount = 0;
   $(document).ready(function () {
-	$('.studyClass').addClass("active");
+  $('.studyClass').addClass("active");
     $(".remBtnDis").addClass("hide");
 
     $('.selectpicker').selectpicker('refresh');
@@ -1692,8 +1677,8 @@
         if (!chkVal) {
           var test =thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").find("ul").length;
           if(test === 0){
-          	thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
-              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not yet added."));
+            thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not yet added."));
           }
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty();
@@ -2121,7 +2106,7 @@
         + "' required name='activeTaskCustomScheduleBo[" + customCount
         + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start Date' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
-        + "	<span class='help-block with-errors red-txt'></span>"
+        + " <span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='gray-xs-f mb-sm pr-md align-span-center'>"
         + "  to "
@@ -2178,7 +2163,7 @@
   }
 
   function customStartDate(id, count) {
-	$('.manually-option').find('.cusTime').prop('disabled', false);
+  $('.manually-option').find('.cusTime').prop('disabled', false);
     $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       minDate: serverDate(),
@@ -2220,7 +2205,7 @@
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
         $('#' + id).parent().find(".help-block").empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                       "End Date and Time Should not be less than Start Date and Time"));
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -3039,7 +3024,7 @@
     if (dt && (couterRef.val() !== 0)) {
       if (moment(dt, "MM/DD/YYYY").toDate() < serverDateTime()) {
         couterRef.parent().addClass('has-error has-danger').find('.help-block.with-errors').empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                 "Please ensure the End Date/Time is greater than current date/time."));
         valid = false;
       } else {
@@ -3262,7 +3247,7 @@
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row."));
+          $("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row."));
           $(".addbtn").addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
