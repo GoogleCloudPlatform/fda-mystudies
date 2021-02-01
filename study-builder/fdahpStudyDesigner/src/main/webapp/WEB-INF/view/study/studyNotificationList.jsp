@@ -49,7 +49,7 @@
                   <button type="button"
                           class="btn btn-primary blue-btn hideButtonIfPaused studyNotificationDetails">
                     Add
-                    Notification
+                    notification
                   </button>
                 </div>
               </c:if>
@@ -150,7 +150,7 @@
       "lengthChange": false,
       "searching": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
     });
 

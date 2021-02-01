@@ -380,13 +380,13 @@ class UserStudyStatus {
     var description: String {
       switch self {
       case .yetToEnroll:
-        return "Yet To Enroll"
+        return "Yet To enroll"
       case .enrolled:
         return "Enrolled"
       case .completed:
         return "Completed"
       case .notEligible:
-        return "Not Eligible"
+        return "Not eligible"
       case .withdrawn:
         return "Withdrawn"
 
@@ -398,11 +398,11 @@ class UserStudyStatus {
       case .yetToEnroll:
         return "No participation"
       case .enrolled:
-        return "Partial Participation"
+        return "Partial participation"
       case .completed:
         return "Completed"
       case .notEligible:
-        return "Not Eligible"
+        return "Not eligible"
       case .withdrawn:
         return "Withdrawn"
 

@@ -92,7 +92,7 @@
           <div class="lg-space-txt">
             Study Builder
           </div>
-          <div class="ll__border__bottom"></div>
+          <div class="ll__border__bottom mb-xs"></div>
           <c:url value='/j_spring_security_check' var="fdaLink"/>
           <input type="hidden" id="fdaLink" value="${fdaLink}">
           <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
@@ -100,7 +100,7 @@
                      autocomplete="off">
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
-            <div class="login pt-xlg">
+            <div class="login pt-lg">
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
                        data-pattern-error="Email address is invalid"

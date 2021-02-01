@@ -248,11 +248,11 @@
     <string name="study_no_enroll">Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join.</string>
     <string name="study_resume">This Study is closed</string>
     <string name="completed">Completed</string>
-    <string name="not_eligible">Not Eligible</string>
+    <string name="not_eligible">Not eligible</string>
     <string name="in_progress">Enrolled</string>
-    <string name="yet_to_join_filter">Yet To Enroll</string>
+    <string name="yet_to_join_filter">Yet to enroll</string>
     <string name="partial_participation">Partial Participation</string>
-    <string name="yet_to_join">Yet To Enroll</string>
+    <string name="yet_to_join">Yet to enroll</string>
     <string name="no_participation">No Participation</string>
     <string name="withdrawn">Withdrawn</string>
     <string name="current1">Current</string>
