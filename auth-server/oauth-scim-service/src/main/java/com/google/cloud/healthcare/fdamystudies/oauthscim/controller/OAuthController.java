@@ -67,17 +67,17 @@ public class OAuthController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     logger.info("repaire value of paramMap!!!!");
-    /*
     for (String key : paramMap.keySet()) {
       String value = paramMap.getFirst(key);
       logger.info("getFirst() key = " + key + "  value --> " + value);
+    /*
       List<String> values = paramMap.get(key);
       for (String v : values) {
         logger.info("     get() key = " + key + "  value --> " + v);
       }
+     */
     }
     logger.info("\n\n");
-     */
 
     String grantType = StringUtils.defaultString(paramMap.getFirst(GRANT_TYPE));
     logger.info("referer   ---> [ " + request.getHeader("REFERER") + " ]");
