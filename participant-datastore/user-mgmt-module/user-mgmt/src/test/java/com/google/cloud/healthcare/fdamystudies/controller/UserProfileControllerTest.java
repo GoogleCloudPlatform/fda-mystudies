@@ -79,6 +79,8 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   private static final String USER_PROFILE_PATH = "/participant-user-datastore/userProfile";
 
+  private static final String STUDY_VERSION = "3.6";
+
   private static final String UPDATE_USER_PROFILE_PATH =
       "/participant-user-datastore/updateUserProfile";
 
@@ -273,7 +275,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     Optional<StudyEntity> optStudyEntity = studyRepository.findByCustomStudyId(Constants.STUDY_ID);
     if (optStudyEntity.isPresent()) {
       StudyEntity studyEntity = optStudyEntity.get();
-      studyEntity.setVersion(3.6f);
+      studyEntity.setVersion(Float.valueOf(STUDY_VERSION));
       studyRepository.saveAndFlush(studyEntity);
     }
 
@@ -322,7 +324,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);
     auditRequest.setStudyId(Constants.STUDY_ID);
-    auditRequest.setStudyVersion("3.6");
+    auditRequest.setStudyVersion(STUDY_VERSION);
     auditRequest.setParticipantId("4");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
