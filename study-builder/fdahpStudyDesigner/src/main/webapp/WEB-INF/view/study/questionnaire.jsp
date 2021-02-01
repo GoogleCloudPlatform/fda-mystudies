@@ -1398,8 +1398,6 @@
                            required/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
-                   </span>
-
                  
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
