@@ -35,14 +35,17 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +76,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Autowired private EmailService emailService;
 
   @Autowired private AppRepository appRepository;
+
+  @Autowired private StudyRepository studyRepository;
 
   @Autowired UserDetailsRepository userDetailsRepository;
 
@@ -278,12 +283,19 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         auditRequest.setParticipantId(studyBean.getParticipantId());
         auditRequest.setUserId(userId);
 
-        retVal =
-            userManagementUtil.withdrawParticipantFromStudy(
-                studyBean.getParticipantId(),
-                studyBean.getStudyId(),
-                studyBean.getDelete(),
-                auditRequest);
+        Optional<StudyEntity> optStudyEntity =
+            studyRepository.findByCustomIds(Arrays.asList(studyBean.getStudyId()));
+
+        if (optStudyEntity.isPresent()) {
+          auditRequest.setStudyVersion(String.valueOf(optStudyEntity.get().getVersion()));
+          retVal =
+              userManagementUtil.withdrawParticipantFromStudy(
+                  studyBean.getParticipantId(),
+                  studyBean.getStudyId(),
+                  String.valueOf(optStudyEntity.get().getVersion()),
+                  studyBean.getDelete(),
+                  auditRequest);
+        }
 
         if (Boolean.valueOf(studyReqBean.getDelete())) {
 
