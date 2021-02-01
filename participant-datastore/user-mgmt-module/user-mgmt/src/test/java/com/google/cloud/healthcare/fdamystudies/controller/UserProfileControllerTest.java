@@ -271,7 +271,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     headers.set(Constants.USER_ID_HEADER, Constants.USER_ID);
 
     Optional<StudyEntity> optStudyEntity = studyRepository.findByCustomStudyId(Constants.STUDY_ID);
-    //    StudyEntity studyEntity = null;
     if (optStudyEntity.isPresent()) {
       StudyEntity studyEntity = optStudyEntity.get();
       studyEntity.setVersion(3.6f);
