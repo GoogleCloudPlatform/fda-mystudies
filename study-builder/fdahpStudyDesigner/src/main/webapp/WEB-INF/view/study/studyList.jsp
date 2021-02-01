@@ -3,12 +3,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <style>
-#studies_list tr td {
-  padding-left: 20px !important;
-}
 #studies_list tr th {
-  padding-left: 20px !important;
+    padding-left: 20px !important;
+}
+#studies_list tr td {
+    padding-left: 20px !important;
 }
 </style>
 

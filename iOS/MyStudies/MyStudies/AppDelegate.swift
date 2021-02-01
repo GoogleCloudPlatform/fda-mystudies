@@ -466,6 +466,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     UserAPI.logout { (status, error) in
       if status {
         if self.iscomingFromForgotPasscode {
+          self.iscomingFromForgotPasscode.toggle()
           self.handleSignoutAfterLogoutResponse()
         } else {
           self.handleSignoutResponse()
@@ -1183,6 +1184,10 @@ extension AppDelegate: NMWebServiceDelegate {
 
     } else if requestName as String == RegistrationMethods.updateUserProfile.description {
 
+      if iscomingFromForgotPasscode {
+        self.sendRequestToSignOut()
+        return
+      }
       let ud = UserDefaults.standard
       ud.set(false, forKey: kNotificationRegistrationIsPending)
       ud.synchronize()
@@ -1664,8 +1669,8 @@ extension AppDelegate: ORKPasscodeDelegate {
             }
 
             self.iscomingFromForgotPasscode = true
-            // Signout if User Forgot Passcode
-            self.sendRequestToSignOut()
+            // Remove the device token first and initiate sign out.
+            LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
           }
         )
       },

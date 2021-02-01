@@ -20,7 +20,7 @@
       <div class="row border-bottom__c4d1e6">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
           <div class="form-group">
-            <label for="fname">First name</label>
+            <label for="fname" class="txt_style_unset">First name</label>
             <input
               placeholder="Enter first name"
               type="text"
@@ -56,7 +56,7 @@
         </div>
         <div class="col-xs-12 col-md-6 p-none">
           <div class="form-group">
-            <label for="lname">Last name</label>
+            <label for="lname" class="txt_style_unset">Last name</label>
             <input
               type="text"
               maxlength="50"
@@ -203,7 +203,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                     [ngModelOptions]="{standalone: true}"
                     [disabled]="!user.manageLocationsSelected"
                   />
-                  <label for="location_view_edit_permssion">
+                  <label
+                    for="location_view_edit_permssion"
+                    class="txt_style_unset"
+                  >
                     View and edit
                   </label>
                 </span>
@@ -279,7 +282,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                               name="appRadioGroup{{ app.id }}"
                               (change)="appRadioButtonChange(app)"
                             />
-                            <label for="appRadioEdit{{ app.id }}">
+                            <label
+                              for="appRadioEdit{{ app.id }}"
+                              class="txt_style_unset"
+                            >
                               View and edit
                             </label>
                           </span>
@@ -367,6 +373,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     />
                                     <label
                                       for="studyRadioEdit{{ study.studyId }}"
+                                      class="txt_style_unset"
                                     >
                                       View and edit
                                     </label>
@@ -455,7 +462,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                       id="siteRadioEdit{{ site.siteId }}"
                                       name="siteRadioGroup{{ site.siteId }}"
                                     />
-                                    <label for="siteRadioEdit{{ site.siteId }}">
+                                    <label
+                                      for="siteRadioEdit{{ site.siteId }}"
+                                      class="txt_style_unset"
+                                    >
                                       View and edit
                                     </label>
                                   </span>
