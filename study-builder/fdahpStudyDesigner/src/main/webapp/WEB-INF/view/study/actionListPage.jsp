@@ -65,7 +65,7 @@
           Updates
         </button>
         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-        This action publishes updates to a study that is live. All sections need to be marked complete in order to publish updates to the study.
+        This action publishes updates to a study that is live. All sections need to be marked complete in order to publish updates to the study. Note that updates to the Notifications section are published immediately upon marking the section complete and do not need the use of this action.
       </div>
       </div>
 

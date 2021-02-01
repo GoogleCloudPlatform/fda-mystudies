@@ -79,6 +79,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   /// A Boolean indicates the user changing the App password.
   private var isChangePasswordEditing = false
 
+  /// A Boolean indicates wheather user sign out initiated.
+  private var isSigningOut = false
+
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
   }
@@ -233,8 +236,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: self,
       action1: {
-
-        self.sendRequestToSignOut()
+        self.isSigningOut = true
+        LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
 
       },
       action2: {
@@ -377,9 +380,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
           UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
         }
       } else {
-        let leftController = (self.slideMenuController()?.leftViewController as? LeftMenuViewController)!
-        leftController.changeViewController(.studyList)
-        leftController.createLeftmenuItems()
+        self.slideMenuController()?.leftViewController?.navigationController?
+          .popToRootViewController(animated: true)
       }
 
     }
@@ -765,8 +767,9 @@ extension ProfileViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    self.removeProgressIndicator()
+
     if requestName as String == RegistrationMethods.userProfile.description {
+      self.removeProgressIndicator()
       self.tableViewProfile?.reloadData()
 
       if (user.settings?.leadTime?.count)! > 0 {
@@ -775,6 +778,12 @@ extension ProfileViewController: NMWebServiceDelegate {
 
     } else if requestName as String == RegistrationMethods.updateUserProfile.description {
 
+      if self.isSigningOut {
+        self.isSigningOut.toggle()
+        self.sendRequestToSignOut()
+        return
+      }
+      self.removeProgressIndicator()
       self.isCellEditable = true
       self.editBarButtonItem?.title = "Edit"
       self.tableViewProfile?.reloadData()
@@ -782,6 +791,7 @@ extension ProfileViewController: NMWebServiceDelegate {
       DBHandler.saveUserSettingsToDatabase()
 
     } else if requestName as String == RegistrationMethods.deactivate.description {
+      self.removeProgressIndicator()
       self.handleDeleteAccountResponse()
     }
   }

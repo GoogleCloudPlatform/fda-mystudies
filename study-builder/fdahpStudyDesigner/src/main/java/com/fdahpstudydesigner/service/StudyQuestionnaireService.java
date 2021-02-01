@@ -153,4 +153,6 @@ public interface StudyQuestionnaireService {
   public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId);
 
   public QuestionnaireBo getQuestionnaireById(Integer questionnaireId);
+
+  public QuestionsBo getQuestionById(Integer valueOf);
 }

@@ -166,4 +166,6 @@ public interface StudyQuestionnaireDAO {
       boolean isChange);
 
   public QuestionnaireBo getQuestionnaireById(Integer questionnaireId);
+
+  public QuestionsBo getQuestionById(Integer questionId);
 }

@@ -9,6 +9,12 @@
   }
 
   -->
+  #app_Wide_Notification_list tr td {
+    padding-left: 20px !important;
+    }
+    #app_Wide_Notification_list tr th {
+    padding-left: 20px !important;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
@@ -37,12 +43,12 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
   <div class="white-bg">
     <div>
-      <table id="app_Wide_Notification_list" class="table table-right tbl">
+      <table id="app_Wide_Notification_list" class="table wid100 tbl">
         <thead>
           <tr>
             <th id="">Notification</th>
             <th id="" class="linkDis">Status</th>
-            <th id="" class="linkDis">ACTIONS</th>
+            <th id="" class="linkDis text-right" style="padding-right: 3% !important;">ACTIONS</th>
           </tr>
         </thead>
         <tbody>
@@ -52,7 +58,7 @@
                 <div class="dis-ellipsis lg-ellipsis">${fn:escapeXml(notification.notificationText)}</div>
               </td>
               <td>${notification.checkNotificationSendingStatus}</td>
-              <td>
+              <td class="linkDis text-right" style="padding-right: 3% !important;">
                 <span class="sprites_icon preview-g mr-lg notificationDetailsToView"
                       actionType="view"
                       notificationId="${notification.notificationId}"
@@ -134,7 +140,7 @@
       "info": false,
       "lengthChange": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "searching": false,
       "pageLength": 15,
