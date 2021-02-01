@@ -92,7 +92,7 @@
       <div class="row">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
           <div class="form-group">
-            <label for="emailId">Email ID</label>
+            <label for="emailId">Email</label>
             <input
               type="email"
               class="form-control"
@@ -137,7 +137,7 @@
                 (change)="superAdminCheckBoxChange()"
               />
               <label class="mt-xs custom_text_transform" for="role">
-                Make this user a superadmin
+                Assign superadmin role
                 <span
                   class="tool"
                   data-tip="A superadmin has application-wide permissions.
@@ -230,6 +230,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
               [hideSelected]="true"
               [(ngModel)]="selectedApps"
               [ngModelOptions]="{standalone: true}"
+              notFoundText="No records found"
             ></ng-select>
           </div>
         </div>
