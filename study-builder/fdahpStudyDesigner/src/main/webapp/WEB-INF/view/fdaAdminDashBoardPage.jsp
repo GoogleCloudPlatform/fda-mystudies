@@ -124,11 +124,11 @@
         <!--container-->
         <div class="landing__content">
           <div class="manage-content-parent">
-            <div class="lg-space-center">
+          <div class="lg-space-center" style="margin-top: 20px !important;margin-bottom: 30px !important;">
               <div class="lg-space-txt">
                 Study Builder
               </div>
-              <div class="ll__border__bottom"></div>
+              <div class="ll__border__bottom mb-xs"></div>
               <div class="lg-space-title">
                 <span>Welcome,</span>
                 <span>${sessionObject.firstName}</span>
