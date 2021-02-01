@@ -50,8 +50,10 @@ import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
@@ -103,6 +105,8 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Autowired private UserDetailsRepository userDetailsRepository;
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
+
+  @Autowired private StudyRepository studyRepository;
 
   @Test
   public void contextLoads() {
@@ -265,6 +269,14 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
     headers.set(Constants.USER_ID_HEADER, Constants.USER_ID);
+
+    Optional<StudyEntity> optStudyEntity = studyRepository.findByCustomStudyId(Constants.STUDY_ID);
+    //    StudyEntity studyEntity = null;
+    if (optStudyEntity.isPresent()) {
+      StudyEntity studyEntity = optStudyEntity.get();
+      studyEntity.setVersion(3.6f);
+      studyRepository.saveAndFlush(studyEntity);
+    }
 
     StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID, Constants.TRUE);
     List<StudyReqBean> list = new ArrayList<StudyReqBean>();
