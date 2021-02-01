@@ -305,11 +305,12 @@ public class UserProfileControllerTest extends BaseMockIT {
         1,
         postRequestedFor(
             urlEqualTo(
-                "/response-datastore/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true")));
+                "/response-datastore/participant/withdraw?studyId=studyId1&studyVersion=3.6&participantId=4&deleteResponses=true")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);
     auditRequest.setStudyId(Constants.STUDY_ID);
+    auditRequest.setStudyVersion("3.6");
     auditRequest.setParticipantId("4");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
