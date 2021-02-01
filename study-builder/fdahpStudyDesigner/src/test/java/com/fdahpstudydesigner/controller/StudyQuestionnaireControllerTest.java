@@ -37,6 +37,8 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
                 .headers(headers)
                 .param("formId", "58")
                 .param("questionId", "85199")
+                .param("stepShortTitle", "short title")
+                .param("questionnairesId", "1")
                 .sessionAttr(CUSTOM_STUDY_ID_ATTR_NAME, "OpenStudy003")
                 .sessionAttrs(getSessionAttributes()))
         .andDo(print())

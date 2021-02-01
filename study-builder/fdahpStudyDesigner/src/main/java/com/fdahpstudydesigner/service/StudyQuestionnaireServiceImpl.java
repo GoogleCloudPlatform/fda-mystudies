@@ -1103,4 +1103,10 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireById - Starts");
     return studyQuestionnaireDAO.getQuestionnaireById(questionnaireId);
   }
+
+  @Override
+  public QuestionsBo getQuestionById(Integer questionId) {
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionById - Starts");
+    return studyQuestionnaireDAO.getQuestionById(questionId);
+  }
 }
