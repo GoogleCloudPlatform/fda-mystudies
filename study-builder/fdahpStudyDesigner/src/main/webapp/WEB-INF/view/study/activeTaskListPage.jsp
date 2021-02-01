@@ -69,7 +69,7 @@
                 <c:if test="${empty permission}">
                   <button type="button" class="btn btn-primary blue-btn"
                           onclick="addActiveTaskPage();">
-                    Add Active Task
+                    Add active task
                   </button>
                 </c:if>
               </div>
@@ -144,7 +144,7 @@
       "order": [[0, "desc"]],
       "info": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "lengthChange": false,
       "searching": false,

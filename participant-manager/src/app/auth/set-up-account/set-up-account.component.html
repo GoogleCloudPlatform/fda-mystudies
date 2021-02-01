@@ -2,7 +2,10 @@
   <div id="desktop-menu">
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
-        <a href="#" class="navbar-brand">
+        <a
+          [routerLink]="disableButton ? [] : ['/coordinator']"
+          class="navbar-brand"
+        >
           <img
             class="mr-sm width__auto"
             src="assets/images/branding/landing-logo.png"
@@ -41,7 +44,7 @@
           <div class="row">
             <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
               <div class="form-group">
-                <label for="fname">First name</label>
+                <label for="fname" class="txt_style_unset">First name</label>
                 <input
                   type="text"
                   class="form-control"
@@ -67,7 +70,7 @@
             </div>
             <div class="col-xs-12 col-md-6 p-none">
               <div class="form-group">
-                <label for="lname">Last name</label>
+                <label for="lname" class="txt_style_unset">Last name</label>
                 <input
                   type="text"
                   class="form-control"
@@ -132,7 +135,9 @@
           </div>
           <div class="col-xs-12 col-md-6 p-none">
             <div class="form-group">
-              <label for="confirmPassword">Confirm password</label>
+              <label for="confirmPassword" class="txt_style_unset">
+                Confirm password
+              </label>
               <input
                 type="password"
                 class="form-control"
@@ -170,7 +175,7 @@
             type="submit"
             name="save"
             class="btn bt__add mr-sm"
-            [disabled]="!setupAccountForm.valid"
+            [disabled]="!setupAccountForm.valid || disableButton"
           >
             Submit
           </button>
@@ -179,6 +184,7 @@
             name="cancel"
             type="button"
             class="btn bt__cancel"
+            [disabled]="disableButton"
           >
             Cancel
           </button>

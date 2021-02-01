@@ -47,7 +47,7 @@
       <div class="row border-bottom__c4d1e6">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
           <div class="form-group">
-            <label for="fname">First name</label>
+            <label for="fname" class="txt_style_unset">First name</label>
             <input
               [ngClass]="{
                 'custom_not-allowed': user.status === userStatus.Deactivated
@@ -87,7 +87,7 @@
         </div>
         <div class="col-xs-12 col-md-6 p-none">
           <div class="form-group">
-            <label for="lname">Last name</label>
+            <label for="lname" class="txt_style_unset">Last name</label>
             <input
               [ngClass]="{
                 'custom_not-allowed': user.status === userStatus.Deactivated
@@ -127,7 +127,7 @@
       <div class="row">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
           <div class="form-group">
-            <label for="emailId">Email ID</label>
+            <label for="emailId">Email</label>
             <input
               type="email"
               class="form-control not-allowed"
@@ -255,6 +255,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                         user.status === userStatus.Deactivated
                     }"
                     for="location_view_edit_permssion"
+                    class="txt_style_unset"
                   >
                     View and edit
                   </label>
@@ -292,6 +293,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                 [(ngModel)]="selectedAppsIds"
                 [ngModelOptions]="{standalone: true}"
                 (add)="add($event)"
+                notFoundText="No records found"
               ></ng-select>
             </label>
           </div>
@@ -374,7 +376,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                 'custom_not-allowed':
                                   user.status === userStatus.Deactivated
                               }"
-                              class="font12"
+                              class="font12 txt_style_unset"
                               for="appRadioEdit{{ app.id }}"
                             >
                               View and edit
@@ -494,7 +496,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                         'custom_not-allowed':
                                           user.status === userStatus.Deactivated
                                       }"
-                                      class="font12"
+                                      class="font12 txt_style_unset"
                                       for="studyRadioEdit{{ study.studyId }}"
                                     >
                                       View and edit
@@ -611,7 +613,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                         'custom_not-allowed':
                                           user.status === userStatus.Deactivated
                                       }"
-                                      class="font12"
+                                      class="font12 txt_style_unset"
                                       for="siteRadioEdit{{ site.siteId }}"
                                     >
                                       View and edit

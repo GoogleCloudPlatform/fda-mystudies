@@ -347,7 +347,7 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-bold">List of studies assigned
+                  class="mr-lg text-weight-bold">List of assigned studies with permissions
               </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">

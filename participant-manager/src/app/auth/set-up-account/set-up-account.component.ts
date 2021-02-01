@@ -24,6 +24,7 @@ export class SetUpAccountComponent
   tempRegId = '';
   setupAccountForm: FormGroup;
   passCriteria = '';
+  disableButton = false;
   constructor(
     private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,
@@ -93,13 +94,14 @@ export class SetUpAccountComponent
       this.setUpAccountService
         .setUpAccount(updatedUser)
         .subscribe((successResponse: SetUpResponse) => {
+          this.disableButton = true;
           this.toastr.success(getMessage(successResponse.code));
           sessionStorage.setItem('tempRegId', successResponse.tempRegId);
           sessionStorage.setItem('userId', successResponse.userId);
           this.authService.initSessionStorage();
           setTimeout(() => {
             this.authService.beginLoginConsentFlow();
-          }, 5000);
+          }, 1000);
         }),
     );
   }

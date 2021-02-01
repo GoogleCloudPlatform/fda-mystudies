@@ -40,11 +40,11 @@
             class="flex__justify__space-between flex__wrap user__details__label"
           >
             <div>
-              <div class="blue__text__md">First name</div>
+              <div class="blue__text__md txt_style_unset">First name</div>
               <div class="participant__label">{{ user.firstName }}</div>
             </div>
             <div>
-              <div class="blue__text__md">Last name</div>
+              <div class="blue__text__md txt_style_unset">Last name</div>
               <div class="participant__label">{{ user.lastName }}</div>
             </div>
             <div>
@@ -104,7 +104,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
               </span>
               <span
                 *ngIf="user.manageLocations == permission.ViewAndEdit"
-                class="txt__green pl-2"
+                class="txt__green pl-2 txt_style_unset"
               >
                 View and edit
               </span>
@@ -162,7 +162,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                         </span>
                         <span
                           *ngIf="app.permission == permission.ViewAndEdit"
-                          class="txt__green font12"
+                          class="txt__green font12 txt_style_unset"
                         >
                           View and edit
                         </span>
@@ -234,7 +234,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     *ngIf="
                                       study.permission == permission.ViewAndEdit
                                     "
-                                    class="txt__green font12"
+                                    class="txt__green font12 txt_style_unset"
                                   >
                                     View and edit
                                   </span>
@@ -305,7 +305,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                   *ngIf="
                                     site.permission == permission.ViewAndEdit
                                   "
-                                  class="txt__green font12"
+                                  class="txt__green font12 txt_style_unset"
                                 >
                                   ( View and edit )
                                 </span>

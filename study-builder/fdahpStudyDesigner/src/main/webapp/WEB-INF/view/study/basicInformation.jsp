@@ -6,6 +6,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
+<style>
+.uploadImg{
+margin-top:16px !important;
+}
+</style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -61,6 +66,11 @@
             <span
                 class="requiredStar"> *
             </span>
+            <span class="filled-tooltip"
+                    data-toggle="tooltip" data-placement="top"
+                    data-html="true"
+                    title="<span class='font24 text-weight-light pull-left'></span> A unique human-readable platform-wide identifier for the study">
+            </span>
           </div>
           <div class="form-group customStudyClass">
             <input type="text" custAttType="cust" autofocus="autofocus"
@@ -103,8 +113,14 @@
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
             Study name
+            <small>(50 characters max)</small>
             <span
                 class="requiredStar"> *
+            </span>
+            <span class="filled-tooltip"
+                    data-toggle="tooltip" data-placement="top"
+                    data-html="true"
+                    title="<span class='font24 text-weight-light pull-left'></span> A short study name for display in the mobile app">
             </span>
           </div>
           <div class="form-group">
@@ -155,6 +171,11 @@
           <div class="gray-xs-f mb-xs">
             Study type
             <span class="requiredStar"> *</span>
+            <span class="filled-tooltip"
+                    data-toggle="tooltip" data-placement="top"
+                    data-html="true"
+                    title="<span class='font24 text-weight-light pull-left'></span> Specify if the study should be part of a 'gateway' app that can house multiple other studies or a 'standalone' app that has just this study. The app ID entered above should belong to an app that matches the selected type.">
+            </span>
           </div>
           <div class="form-group">
             <span class="radio radio-info radio-inline p-45"><input
@@ -204,7 +225,7 @@
             <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="top"
                     data-html="true"
-                    title="<span class='font24 text-weight-light pull-left'></span> The default image shown below will be used for the study list thumbnail in the mobile app. You can upload an alternate image if you wish to use another. The image you upload must be of type .JPG or .PNG, and have a size of 225x225 pixels."/>
+                    title="<span class='font24 text-weight-light pull-left'></span> The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of 225x225 pixels.">
             </span>
       </div>
           
@@ -235,7 +256,7 @@
                   Image
                 </a>
               </span>
-              <div class="form-group mb-none mt-sm" >
+              <div class="form-group mb-none mt-sm uploadImg">
                 <button id="uploadImgbtn" type="button"
                         class="btn btn-default gray-btn imageButtonDis">Upload
 					   
@@ -256,7 +277,7 @@
             </div>
           </div>
          
-           <div class="mt-lg" style="margin-top:1px !important;  font-size:10px; ">
+           <div class="mt-lg" style="margin-top:-5px !important;  font-size:10px; ">
                     <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important; display:inline-block">
                      Default image                     
             </div>
