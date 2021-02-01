@@ -156,18 +156,19 @@ class NotificationViewController: UIViewController {
 
       switch type! as AppNotification.NotificationSubType {
       case .study:
-
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
-      case .resource:
 
+      case .resource:
         viewController?.selectedIndex = 2
         self.navigationController?.pushViewController(viewController!, animated: true)
-      case .activity:
 
+      case .activity:
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
-      default: break
+
+      default:
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
 
       }
     }
