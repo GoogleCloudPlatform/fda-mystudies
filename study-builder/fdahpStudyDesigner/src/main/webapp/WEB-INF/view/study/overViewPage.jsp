@@ -116,7 +116,7 @@
                       <span class="filled-tooltip"
                             data-toggle="tooltip" data-placement="top" data-html="true"
                             title=""
-                            data-original-title="The default image shown below will be used for pages of the study overview in the mobile app. You can upload an alternate image if you wish to use another. The image you upload must be of type .JPG or .PNG, and have a size of 750x1334 pixels."></span>
+                            data-original-title="The default image shown below will be used for pages of the study overview in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of 750x1334 pixels."></span>
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
@@ -244,7 +244,7 @@
                               data-toggle="tooltip" data-placement="top"
                               data-html="true"
                               title="" src="/studybuilder/images/icons/tooltip.png"
-                              data-original-title="<span class='font24'>.</span></span>The default image shown below will be used for pages of the study overview in the mobile app. You can upload an alternate image if you wish to use another. The image you upload must be of type .JPG or .PNG, and have a size of  <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels."></span>
+                              data-original-title="<span class='font24'></span></span>The default image shown below will be used for pages of the study overview in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels."></span>
                     </div>
                       <div class="thumb" style="display: inline-block;width:77px !important">
                        <c:choose>
@@ -470,7 +470,7 @@
           "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
           "<div class=panel-body  pt-none>" +
           "<div>" +
-          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24></span></span> The default image shown below will be used for pages of the study overview in the mobile app. You can upload an alternate image if you wish to use another. The image you upload must be of type .JPG or .PNG, and have a size of 750x570 pixels.'></span> </div>"
+          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24></span></span> The default image shown below will be used for pages of the study overview in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of 750x570 pixels.'></span> </div>"
           +
           "<div>" +
           "<div class=thumb style='display: inline-block;width:77px !important'><img src=<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/> class=wid100></div>" +

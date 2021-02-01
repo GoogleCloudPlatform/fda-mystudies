@@ -295,7 +295,9 @@ class Activity {
       }
 
       if self.startDate != nil
-        && (self.schedulingType == .regular || self.anchorDate?.sourceType == "EnrollmentDate")
+        && (self.schedulingType == .regular
+          || self.anchorDate?.sourceType == "EnrollmentDate"
+          || (self.anchorDate?.sourceType == "ActivityResponse" && isLaunchWithStudy))
       {
         self.calculateActivityRuns(studyId: self.studyId!)
       }
@@ -380,6 +382,11 @@ class Activity {
 
       self.startDate = startdate
       self.endDate = endDate
+    } else if anchorDate?.sourceType == "ActivityResponse"
+      && isLaunchWithStudy
+    {
+      guard let enrollmentDate = Study.currentStudy?.userParticipateState.joiningDate else { return }
+      self.startDate = enrollmentDate
     }
   }
 

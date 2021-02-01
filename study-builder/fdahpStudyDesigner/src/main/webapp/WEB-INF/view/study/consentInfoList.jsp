@@ -141,7 +141,7 @@
       "filter": false,
       rowReorder: reorder,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
       "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {

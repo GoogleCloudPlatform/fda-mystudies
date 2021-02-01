@@ -277,7 +277,7 @@
             </c:if>
             <div class="pl-sm pt-md">
               <span
-                  class="gray-xs-f text-weight-bold">List of studies assigned
+                  class="gray-xs-f text-weight-bold">List of assigned studies with permissions
               </span>
             </div>
             <c:forEach items="${studyAndPermissionList}" var="studyAndPermission">

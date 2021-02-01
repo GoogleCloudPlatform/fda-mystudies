@@ -854,6 +854,13 @@ class DBHandler: NSObject {
     Schedule().getRunsForActivity(
       activity: activity,
       handler: { (runs) in
+        if !runs.isEmpty
+          && dbActivity.frequencyType == Frequency.oneTime.rawValue
+        {
+          try? realm.write {
+            realm.delete(dbActivity.activityRuns)
+          }
+        }
         let dbActivityRuns = List<DBActivityRun>()
         for activityRun in runs {
           let dbActivityRun = DBActivityRun(

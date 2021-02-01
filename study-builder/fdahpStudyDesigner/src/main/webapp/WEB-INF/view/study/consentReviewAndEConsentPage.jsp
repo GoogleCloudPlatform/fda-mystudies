@@ -45,7 +45,7 @@
           </div>
           <div class="dis-line form-group mb-none">
             <button type="button" class="btn btn-primary blue-btn" id="doneId">Mark
-              as Completed
+              as completed
             </button>
           </div>
         </div>
@@ -61,7 +61,7 @@
           </li>
           <li class="consentReview">
             <a data-toggle="tab" href="#menu2">Consent
-              Document for Review
+              document
             </a>
           </li>
         </ul>
@@ -96,12 +96,17 @@
                   id="rootContainer">
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Screen Title
+                    Screen title
                     <small>(250 characters max)</small>
                     <span
                         class="requiredStar">*
                     </span>
-                    E.g. Sharing Options
+                    E.g. Sharing options
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
@@ -121,6 +126,11 @@
                     its partners will receive your study data from your
                     participation in the study. Please indicate if you permit to
                     share your data more broadly to other parties for research.
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
@@ -138,6 +148,11 @@
                     <span
                         class="requiredStar">*
                     </span>
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
@@ -154,6 +169,11 @@
                     <span
                         class="requiredStar">*
                     </span>
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group custom-form">
                     <textarea class="form-control requiredClass" rows="5"
@@ -167,6 +187,11 @@
                     Explanatory text that can be provided in a 'Learn More'
                     section
                     <span class="requiredStar">*</span>
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group">
                     <textarea id="learnMoreTextId" name="learnMoreText"
@@ -253,14 +278,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="mt-xlg dis-inline" id="autoCreateDivId01"
-                 style="display: block;">
-              <div class="sign">Participant's First Name</div>
-              <div class="sign">Last Name</div>
-              <div class="sign">Signature</div>
-              <div class="sign">Date</div>
-              <div class="sign">Time</div>
             </div>
           </div>
         </div>
