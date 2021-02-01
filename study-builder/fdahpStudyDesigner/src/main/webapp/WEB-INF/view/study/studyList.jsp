@@ -158,7 +158,7 @@
 
         "lengthChange": false,
         language: {
-          "zeroRecords": "You haven't created any content yet.",
+          "zeroRecords": "No studies found.",
         },
         "searching": true,
         "pageLength": 10,

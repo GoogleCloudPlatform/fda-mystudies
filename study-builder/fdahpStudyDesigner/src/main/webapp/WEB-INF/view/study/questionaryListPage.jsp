@@ -62,7 +62,7 @@
                 <div class="dis-line form-group mb-none">
                   <button type="button" class="btn btn-primary blue-btn"
                           onclick="addQuestionnaires();">
-                    Add Questionnaire
+                    Add questionnaire
                   </button>
                 </div>
               </c:if>
@@ -129,7 +129,7 @@
         {"bSortable": true}
       ],
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "order": [[0, "desc"]],
       "info": false,
