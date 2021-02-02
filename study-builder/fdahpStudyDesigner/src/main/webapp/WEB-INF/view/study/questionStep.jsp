@@ -5668,13 +5668,13 @@
               if (callback)
                 callback(false);
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       } else {
@@ -6881,7 +6881,7 @@
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                 "RDE (x) should be used only once.");
-            setTimeout(hideDisplayMessage, 3000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
         return isSingle;
@@ -6904,7 +6904,7 @@
           $('#alertMsg').show();
           $("#alertMsg").removeClass('s-box').addClass('e-box').text(
               "Please add atleast one response data element in conditional formula.");
-          setTimeout(hideDisplayMessage, 3000);
+          setTimeout(hideDisplayMessage, 5000);
           return false;
         }
       } else {
