@@ -642,7 +642,7 @@
         <div id="responseTypeDivId">
           <div id="scaleType" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Scale Type
+              <div class="gray-xs-f mb-xs">Scale type
                 <span class="requiredStar">*</span>
               </div>
               <div class="form-group">
@@ -6633,6 +6633,9 @@
             $("#inputTypeErrorValueId" + id).hide();
           });
         }
+      }
+      if (value === "F") {
+    	  $('.form-group').find(".delete ").css("visibility", "hidden");
       }
       $(".numeric__loop").parent().removeClass("has-danger").removeClass("has-error");
       $(".numeric__loop").parent().find(".help-block").empty();

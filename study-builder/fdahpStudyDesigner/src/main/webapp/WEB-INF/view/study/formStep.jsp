@@ -102,7 +102,7 @@
         <div id="sla" class="tab-pane fade in active mt-xlg">
           <div class="row">
             <div class="col-md-6 pl-none">
-              <div class="gray-xs-f mb-xs">Step title or Key (1 to 15 characters)
+              <div class="gray-xs-f mb-xs">Step title or key (1 to 15 characters)
                 <span
                     class="requiredStar">*
                 </span>

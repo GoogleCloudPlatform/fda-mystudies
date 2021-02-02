@@ -567,7 +567,7 @@
         <div id="responseTypeDivId">
           <div id="scaleType" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Scale Type
+              <div class="gray-xs-f mb-xs">Scale type
                 <span class="requiredStar">*</span>
               </div>
               <div>
