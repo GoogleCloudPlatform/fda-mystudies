@@ -323,11 +323,6 @@ public class StudyServiceImpl implements StudyService {
               offset,
               orderByCondition,
               StringUtils.defaultString(searchTerm));
-      participantCount =
-          studyRepository.countParticipantsByStudyIdAndSearchTermForOpenStudy(
-              studyAppDetails.getStudyId(),
-              excludeParticipantStudyStatus,
-              StringUtils.defaultString(searchTerm));
 
       participantCount =
           studyRepository.countOpenStudyParticipants(
