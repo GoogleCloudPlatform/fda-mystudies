@@ -37,7 +37,7 @@ To deploy the [`Participant manager`](/participant-manager/) manually:
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/)
 1. Update landing logo as desired [`landing-logo.png`](src/assets/images/branding/landing-logo.png)
 1. Update favicon as desired [`favicon_pm.png`](src/assets/images/branding/favicon_pm.png)
-1. Update user-facing text as desired, for example termsPageTitle, termsPageDescription,aboutPageTitle, aboutPageDescription, copyright as desired in [`environment.prod.ts`](src/environments/environment.prod.ts)
+1. Update user-facing text as desired, for example termsPageTitle, termsPageDescription,aboutPageTitle, aboutPageDescription, copyright in [`environment.prod.ts`](src/environments/environment.prod.ts)
 1. Deploy the `Participant manager` container to the VM
    - Update the [`environment.prod.ts`](src/environments/environment.prod.ts) file with the values for your deployment (if you change this file you will need to create a new Docker image)
    - Create the Docker image using `sudo docker build --build-arg basehref=/ -t participant-manager-image .` from the `participant-manager/` directory (you may need to [install Docker](https://docs.docker.com/engine/install/debian/))
