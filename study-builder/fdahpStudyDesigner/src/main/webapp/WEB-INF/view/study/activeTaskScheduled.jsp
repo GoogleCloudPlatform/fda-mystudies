@@ -50,7 +50,7 @@
   .display_inl_tbl { display: inline-table !important; } 
  
 </style>
-<div class="gray-xs-f mb-sm">Active Task Schedule Type</div>
+<div class="gray-xs-f mb-sm">Active task schedule type</div>
 <div class="pb-lg ">
   <span class="radio radio-info radio-inline p-40">
     <input type="radio" id="schedule1" class="typeofschedule" scheduletype="Regular"
@@ -73,7 +73,7 @@
            data-toggle="validator">
   <div class="anchortypeclass" style="display:none;">
     <c:if test="${fn:length(anchorTypeList) gt 0}">
-      <div class="gray-xs-f mb-sm">Select Anchor Date Type</div>
+      <div class="gray-xs-f mb-sm">Select anchor date type</div>
       <div class="clearfix"></div>
       <div class="col-md-5 col-lg-5 p-none">
         <div class="form-group">
@@ -94,7 +94,7 @@
   </div>
 </form:form>
 <!-- Ancor date type -->
-<div class="gray-xs-f mb-sm">Active Task Scheduling Options</div>
+<div class="gray-xs-f mb-sm">Active task scheduling options</div>
 <div class="pb-lg b-bor">
   <span class="radio radio-info radio-inline p-40">
     <input type="radio" id="oneTimeRadio1" class="schedule" frequencytype="oneTime"
@@ -121,7 +121,7 @@
     <input type="radio" id="manuallyRadio5" class="schedule" frequencytype="manually"
            value="Manually Schedule"
            name="frequency" ${activeTaskBo.frequency=='Manually Schedule' ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}>
-    <label for="manuallyRadio5">Custom Schedule</label>
+    <label for="manuallyRadio5">Custom schedule</label>
   </span>
 </div>
 <!-- One time Section-->
@@ -163,7 +163,7 @@
         <!-- Anchordate start-->
         <div class="mt-none resetDate">
           <div>
-            <span class="pr-md">Anchor Date</span>
+            <span class="pr-md">Anchor date</span>
             <span>
               <select
                   class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -211,7 +211,7 @@
                      name="activeTaskFrequenciesBo.frequencyTime"
                      value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"  <c:if
                   test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if>
-                     placeholder="Select Time"/>
+                     placeholder="Select time"/>
               <span class='help-block with-errors red-txt'></span>
             </span>
           </div>
@@ -222,7 +222,7 @@
         <span class="form-group m-none dis-inline vertical-align-middle pr-md">
           <input id="chooseDate" type="text"
                  class="mt-sm form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="activeTaskFrequenciesBo.frequencyDate" placeholder="Choose Date"
+                 name="activeTaskFrequenciesBo.frequencyDate" placeholder="Choose date"
                  value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}" required <c:if
               test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
           <span class='help-block with-errors red-txt'></span>
@@ -233,7 +233,7 @@
                  name="activeTaskFrequenciesBo.frequencyTime"
                  value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}" required <c:if
               test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if>
-                 placeholder="Select Time"/>
+                 placeholder="Select time"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -248,7 +248,7 @@
         <input type="checkbox" id="isStudyLifeTime" name="activeTaskFrequenciesBo.isStudyLifeTime"
                value="true" ${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}
                required="required">
-        <label for="isStudyLifeTime"> Study Lifetime</label>
+        <label for="isStudyLifeTime"> Study lifetime</label>
       </span>
       <div class="mt-md form-group regularClass">
         <span class="form-group m-none dis-inline vertical-align-middle pr-md">
@@ -258,13 +258,13 @@
                 type="text"
                 class="form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                 name="activeTaskLifetimeEnd"
-                placeholder="Choose End Date"
+                placeholder="Choose end date"
                 required <c:if
                 test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                 value=""/></c:when>
             <c:otherwise><input id="chooseEndDate" type="text"
                                 class="form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                                name="activeTaskLifetimeEnd" placeholder="Choose End Date"
+                                name="activeTaskLifetimeEnd" placeholder="Choose end date"
                                 required <c:if
                 test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                                 value="${activeTaskBo.activeTaskLifetimeEnd}"/></c:otherwise>
@@ -279,7 +279,7 @@
         <!-- Anchordate start-->
         <div class="mt-none resetDate">
           <div>
-            <span class="pr-md">Anchor Date</span>
+            <span class="pr-md">Anchor date</span>
             <span>
               <select
                   class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -355,7 +355,7 @@
           <br/>
           <input id="startDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 placeholder="Choose Date" required name="activeTaskLifetimeStart"
+                 placeholder="Choose date" required name="activeTaskLifetimeStart"
                  value="${activeTaskBo.activeTaskLifetimeStart}"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -369,7 +369,7 @@
                 <span class="requiredStar">*</span>
               </span>
               <br/>
-              <span class="pr-md">Anchor Date</span>
+              <span class="pr-md">Anchor date</span>
               <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -413,7 +413,7 @@
           <br/>
           <input id="days" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of Times" required
+                 name="repeatActiveTask" placeholder="No of times" required
                  value="${activeTaskBo.repeatActiveTask}"
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -424,7 +424,7 @@
       <div class="clearfix"></div>
     </div>
     <div class="mt-md">
-      <div class="gray-xs-f mb-xs">End Date
+      <div class="gray-xs-f mb-xs">End date
         <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
               data-toggle="tooltip"
               data-placement="bottom"
@@ -573,7 +573,7 @@
           <input id="startWeeklyDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  required
-                 name="activeTaskLifetimeStart" placeholder="Choose Date"
+                 name="activeTaskLifetimeStart" placeholder="Choose date"
                  value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -587,7 +587,7 @@
                 <span class="requiredStar">*</span>
               </span>
               <br/>
-              <span class="pr-md">Anchor Date</span>
+              <span class="pr-md">Anchor date</span>
               <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -638,7 +638,7 @@
             <br/>
             <input id="weeksAnchor" type="text"
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   name="repeatActiveTask" placeholder="No of Times"
+                   name="repeatActiveTask" placeholder="No of times"
                    value="${activeTaskBo.repeatActiveTask}" required
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -659,7 +659,7 @@
           <br/>
           <input id="weeks" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of Times"
+                 name="repeatActiveTask" placeholder="No of times"
                  value="${activeTaskBo.repeatActiveTask}" required
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -670,7 +670,7 @@
       <div class="clearfix"></div>
     </div>
     <div class="mt-md">
-      <div class="gray-xs-f mb-xs">End Date
+      <div class="gray-xs-f mb-xs">End date
         <span
             class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
@@ -709,7 +709,7 @@
   <input type="hidden" name="type" id="type" value="schedule">
   <div class="month all mt-lg dis-none">
     <div id="monthlyDateId">
-      <span class="gray-xs-f">Select Date/Time (of the month)
+      <span class="gray-xs-f">Select date/time (of the month)
         <span
             class="requiredStar"> *
         </span>
@@ -726,7 +726,7 @@
           <input id="startDateMonthly" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  required
-                 placeholder="Choose Date" name="activeTaskFrequenciesBo.frequencyDate"
+                 placeholder="Choose date" name="activeTaskFrequenciesBo.frequencyDate"
                  value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -760,7 +760,7 @@
           <br/>
           <input id="pickStartDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 placeholder="Choose Start Date" required name="activeTaskLifetimeStart"
+                 placeholder="Choose start date" required name="activeTaskLifetimeStart"
                  value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -776,7 +776,7 @@
                 </span>
               </span>
               <br/>
-              <span class="pr-md">Anchor Date</span>
+              <span class="pr-md">Anchor date</span>
               <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -831,7 +831,7 @@
             <br/>
             <input id="monthsAnchor" type="text"
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   name="repeatActiveTask" placeholder="No of Times" required
+                   name="repeatActiveTask" placeholder="No of times" required
                    value="${activeTaskBo.repeatActiveTask}"
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -853,7 +853,7 @@
           <br/>
           <input id="months" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of Times" required
+                 name="repeatActiveTask" placeholder="No of times" required
                  value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number." maxlength="3"/>
@@ -863,7 +863,7 @@
       <div class="clearfix"></div>
     </div>
     <div class="mt-md col-md-12 p-none">
-      <div class="gray-xs-f mb-xs">End Date
+      <div class="gray-xs-f mb-xs">End date
         <span
             class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
@@ -919,7 +919,7 @@
             <input id="StartDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusStrDate"
                    name="activeTaskCustomScheduleBo[0].frequencyStartDate" value=""
-                   placeholder="Start Date"
+                   placeholder="Start date"
                    onclick='customStartDate(this.id,0);' required/>
             <span class='help-block with-errors red-txt'></span>
           </span>
@@ -929,7 +929,7 @@
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="EndDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusEndDate"
-                   name="activeTaskCustomScheduleBo[0].frequencyEndDate" placeholder="End Date"
+                   name="activeTaskCustomScheduleBo[0].frequencyEndDate" placeholder="End date"
                    onclick='customEndDate(this.id,0);' required/>
             <span class='help-block with-errors red-txt'></span>
             </span>            
@@ -971,7 +971,7 @@
               <input id="StartDate${customVar.index}" type="text" count='${customVar.index}'
                      class="form-control calendar cusStrDate ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyStartDate"
-                     value="${activeTaskCustomScheduleBo.frequencyStartDate}" placeholder="Start Date"
+                     value="${activeTaskCustomScheduleBo.frequencyStartDate}" placeholder="Start date"
                      onclick='customStartDate(this.id,${customVar.index});' required/>
               <span class='help-block with-errors red-txt'></span>
             </span>
@@ -982,7 +982,7 @@
               <input id="EndDate${customVar.index}" type="text" count='${customVar.index}'
                      class="form-control calendar cusEndDate ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndDate"
-                     value="${activeTaskCustomScheduleBo.frequencyEndDate}" placeholder="End Date"
+                     value="${activeTaskCustomScheduleBo.frequencyEndDate}" placeholder="End date"
                      onclick='customEndDate(this.id,${customVar.index});' required/>
               <span class='help-block with-errors red-txt'></span>
             </span>
@@ -1025,7 +1025,7 @@
             
           <span class="mb-sm pr-md">
             <span class="light-txt opacity06">
-              Anchor Date
+              Anchor date
             </span>
           </span>
           <span>
@@ -1132,7 +1132,7 @@
                    id="activeTaskId" value="${activeTaskCustomScheduleBo.activeTaskId}">
             <span class="mb-sm pr-md">
               <span
-                  class="light-txt opacity06"> Anchor Date
+                  class="light-txt opacity06"> Anchor date
               </span>
             </span>
             <span>
@@ -2119,7 +2119,7 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start Date' onclick='customStartDate(this.id,"
+        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start date' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -2129,7 +2129,7 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End Date' onclick='customEndDate(this.id,"
+        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End date' onclick='customEndDate(this.id,"
         + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -3085,7 +3085,7 @@
     customAnchorCount = $('.manually-anchor-option').length;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount
         + "'>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor Date </span></span>"
+        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
         + "<span><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
@@ -3098,7 +3098,7 @@
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor Date </span></span>"
+        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].yDaysSign' id='ySign" + customAnchorCount + "'>"

@@ -26,9 +26,7 @@ import {
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
 
-  private readonly refreshTokenSubject: BehaviorSubject<unknown> = new BehaviorSubject<unknown>(
-    null,
-  );
+  private readonly refreshTokenSubject = new BehaviorSubject<unknown>(null);
   appId = 'PARTICIPANT MANAGER';
   mobilePlatform = 'DESKTOP';
   source = 'PARTICIPANT MANAGER';
