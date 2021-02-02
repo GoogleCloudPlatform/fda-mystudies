@@ -6634,6 +6634,9 @@
           });
         }
       }
+      if (value === "F") {
+    	  $('.form-group').find(".delete ").css("visibility", "hidden");
+      }
       $(".numeric__loop").parent().removeClass("has-danger").removeClass("has-error");
       $(".numeric__loop").parent().find(".help-block").empty();
       $(".numeric__loop").parents("form").validator("destroy");
