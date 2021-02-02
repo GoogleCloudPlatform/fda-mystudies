@@ -14,7 +14,7 @@ window.onload = function() {
   window.setTimeout(function() {
   document.consentForm.submit();
   hideLoader();
-  }, 10000);
+  }, 5000);
 };
 
 var hideLoader = function () {
