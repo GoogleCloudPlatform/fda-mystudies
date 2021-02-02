@@ -119,13 +119,13 @@
   <div class="right-content-body pt-none pl-none pr-none">
     <ul class="nav nav-tabs review-tabs gray-bg">
       <li class="stepLevel active">
-        <a data-toggle="tab" href="#sla">Step-level Attributes</a>
+        <a data-toggle="tab" href="#sla">Step-level attributes</a>
       </li>
       <li class="questionLevel">
-        <a data-toggle="tab" href="#qla">Question-level Attributes</a>
+        <a data-toggle="tab" href="#qla">Question-level attributes</a>
       </li>
       <li class="responseLevel">
-        <a data-toggle="tab" href="#rla">Response-level Attributes</a>
+        <a data-toggle="tab" href="#rla">Response-level attributes</a>
       </li>
     </ul>
     <div class="tab-content pl-xlg pr-xlg">
@@ -144,7 +144,7 @@
       <div id="sla" class="tab-pane fade in active mt-xlg">
         <div class="row">
           <div class="col-md-6 pl-none">
-            <div class="gray-xs-f mb-xs">Short Title or Key (15 characters max)
+            <div class="gray-xs-f mb-xs">Short title or key (15 characters max)
               <span
                   class="requiredStar">*
               </span>
@@ -168,13 +168,13 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="gray-xs-f mb-xs">Step Type</div>
-            <div>Question Step</div>
+            <div class="gray-xs-f mb-xs">Step type</div>
+            <div>Question step</div>
           </div>
           <div class="clearfix"></div>
           <c:if test="${questionnaireBo.branching}">
             <div class="col-md-4 col-lg-3 p-none">
-              <div class="gray-xs-f mb-xs">Default Destination Step
+              <div class="gray-xs-f mb-xs">Default destination step
                 <span
                     class="requiredStar">*
                 </span>
@@ -205,7 +205,7 @@
         <input type="hidden" name="questionsBo.id" id="questionId"
                value="${questionnairesStepsBo.questionsBo.id}">
         <div class="col-md-10 p-none">
-          <div class="gray-xs-f mb-xs">Question Text (1 to 300 characters)
+          <div class="gray-xs-f mb-xs">Question text (1 to 300 characters)
             <span
                 class="requiredStar">*
             </span>
@@ -235,7 +235,7 @@
         </div>
         <div class="clearfix"></div>
         <div>
-          <div class="gray-xs-f mb-xs">Is this a Skippable Step?</div>
+          <div class="gray-xs-f mb-xs">Is this a skippable step?</div>
           <div>
             <span class="radio radio-info radio-inline p-45">
               <input type="radio" id="skiappableYes" value="Yes"
@@ -250,7 +250,7 @@
           </div>
         </div>
         <div class="mt-lg">
-          <div class="gray-xs-f">Response Type
+          <div class="gray-xs-f">Response type
             <span class="requiredStar">*</span>
           </div>
           <div class="gray-xs-f mb-xs">
@@ -286,7 +286,7 @@
             </div>
           </div>
           <div class="col-md-6 mb-lg">
-            <div class="gray-xs-f mb-xs">Data Type</div>
+            <div class="gray-xs-f mb-xs">Data type</div>
             <div id="responseTypeDataType"> - NA -</div>
           </div>
         </div>
@@ -503,9 +503,9 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-10 p-none">
-            <div class="gray-xs-f mb-xs">Display name for the Stat (e.g. Total Hours of Activity
-              Over 6
-              Months) (1 to 50 characters)
+            <div class="gray-xs-f mb-xs">Display name for the stat (e.g. Total hours of activity
+              over 6
+              months) (1 to 50 characters)
               <span class="requiredStar">*</span>
             </div>
             <div class="form-group">
@@ -519,7 +519,7 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-6 col-lg-4 p-none">
-            <div class="gray-xs-f mb-xs">Display Units (e.g. hours) (1 to 15 characters)
+            <div class="gray-xs-f mb-xs">Display units (e.g. hours) (1 to 15 characters)
               <span
                   class="requiredStar">*
               </span>
@@ -538,7 +538,7 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-4 col-lg-3 p-none">
-            <div class="gray-xs-f mb-xs">Stat Type for image upload
+            <div class="gray-xs-f mb-xs">Stat type for image upload
               <span
                   class="requiredStar">*
               </span>
@@ -588,17 +588,17 @@
                 <span class="mr-sm"><img
                     src="../images/icons/tick.png"
                     alt=""/></span>
-                <span>Current Day</span>
+                <span>Current day</span>
               </span>
               <span class="mr-lg">
                 <span class="mr-sm"><img src="../images/icons/tick.png"
                                          alt=""/></span>
-                <span>Current Week</span>
+                <span>Current week</span>
               </span>
               <span class="mr-lg">
                 <span class="mr-sm"><img src="../images/icons/tick.png"
                                          alt=""/></span>
-                <span>Current Month</span>
+                <span>Current month</span>
               </span>
               <span class="txt-gray">(Rollback option provided for these three options)</span>
             </div>
@@ -608,7 +608,7 @@
       <!---  Form-level Attributes --->
       <div id="rla" class="tab-pane fade mt-lg">
         <div class="col-md-4 col-lg-4 p-none">
-          <div class="gray-xs-f mb-xs">Response Type</div>
+          <div class="gray-xs-f mb-xs">Response type</div>
           <small>The type of interface needed to capture the response</small>
           <div class="form-group">
             <input type="text" class="form-control" id="rlaResonseType" disabled>
@@ -623,7 +623,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="gray-xs-f mb-xs">Data Type</div>
+            <div class="gray-xs-f mb-xs">Data type</div>
             <div id="rlaResonseDataType"> - NA -</div>
           </div>
         </div>
@@ -665,7 +665,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">Minimum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -682,7 +682,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">Maximum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -731,7 +731,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Step Size
+                  <div class="gray-xs-f mb-xs">Step size
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -754,7 +754,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Number of Steps
+                  <div class="gray-xs-f mb-xs">Number of steps
                     <span class="requiredStar">*</span>
                     <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                           title="This represents the number of steps the scale is divided into."></span>
@@ -794,7 +794,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Minimum Value
+                  <div class="gray-xs-f mb-xs">Image for minimum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -835,7 +835,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Maximum Value
+                  <div class="gray-xs-f mb-xs">Image for maximum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -881,7 +881,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">Minimum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -898,7 +898,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">Maximum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -938,7 +938,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-4 p-none">
-                  <div class="gray-xs-f mb-xs">Max Fraction Digits
+                  <div class="gray-xs-f mb-xs">Max fraction digits
                     <span
                         class="requiredStar">*
                     </span>
@@ -992,7 +992,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Minimum Value
+                  <div class="gray-xs-f mb-xs">Image for minimum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -1034,7 +1034,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Maximum Value
+                  <div class="gray-xs-f mb-xs">Image for maximum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -1078,7 +1078,7 @@
           </div>
           <div id="Location" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Use Current Location
+              <div class="gray-xs-f mb-xs">Use current location
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1105,7 +1105,7 @@
             <div class="row mt-lg">
               <div class="col-md-6 pl-none">
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 40 characters)
+                  <div class="gray-xs-f mb-xs">Placeholder text (1 to 40 characters)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter an input hint to the user"></span>
@@ -1122,7 +1122,7 @@
           </div>
           <div id="Text" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Allow Multiple Lines?
+              <div class="gray-xs-f mb-xs">Allow multiple lines?
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1161,7 +1161,7 @@
               </div>
               <div class="col-md-4">
                 <div class="col-md-6 col-lg-4 p-none">
-                  <div class="gray-xs-f mb-xs">Max Length
+                  <div class="gray-xs-f mb-xs">Max length
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter an integer for the maximum length of text allowed. If left empty, there will be no max limit applied."></span>
@@ -1180,7 +1180,7 @@
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-none">
 
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Special Validations
+                  <div class="gray-xs-f mb-xs">Special validations
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Define any special case rules you wish to be applied for the participant-entered text. If the participant's input does not meet these conditions, an admin-defined error message will be shown asking them to retry. "></span>
@@ -1256,7 +1256,7 @@
             <div class="clearfix"></div>
             <div class="row">
               <div class="col-md-6 p-none">
-                <div class="gray-xs-f mb-xs">Invalid Message (1 to 200 characters)
+                <div class="gray-xs-f mb-xs">Invalid message (1 to 200 characters)
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       title="Enter text to be presented to the user when invalid input is received."></span>
@@ -1275,7 +1275,7 @@
           </div>
           <div id="Height" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Measurement System
+              <div class="gray-xs-f mb-xs">Measurement system
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1306,7 +1306,7 @@
             <div class="row mt-md">
               <div class="col-md-6 pl-none">
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 20 characters)
+                  <div class="gray-xs-f mb-xs">Placeholder text (1 to 20 characters)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter an input hint to the user"></span>
@@ -1340,7 +1340,7 @@
                 </div>
               </div>
               <div class="col-md-2">
-                <div class="gray-xs-f mb-xs">Default Value
+                <div class="gray-xs-f mb-xs">Default value
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1396,7 +1396,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 30 characters)
+                  <div class="gray-xs-f mb-xs">Placeholder text (1 to 30 characters)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Provide an input hint to the user"></span>
@@ -1413,7 +1413,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">Minimum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter minimum value allowed"></span>
@@ -1429,7 +1429,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">Maximum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter maximum value allowed"></span>
@@ -1507,7 +1507,7 @@
               <div class="row">
                 <div class="col-md-6 pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Minimum Date
+                    <div class="gray-xs-f mb-xs">Minimum date
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                           title="Enter minimum date allowed."></span>
@@ -1524,7 +1524,7 @@
               <div class="row">
                 <div class="col-md-6  pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Maximum Date
+                    <div class="gray-xs-f mb-xs">Maximum date
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                           title="Enter maximum date allowed"></span>
@@ -1541,7 +1541,7 @@
               <div class="row">
                 <div class="col-md-6  pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Default Date
+                    <div class="gray-xs-f mb-xs">Default date
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                           title="Enter default date to be shown as selected"></span>
@@ -1571,7 +1571,7 @@
                      name="questionResponseSubTypeList[0].responseSubTypeValueId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].responseSubTypeValueId)}">
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text
+                <div class="gray-xs-f mb-xs">Display text
                   <span class="requiredStar">*</span>
                 </div>
                 <div class="form-group">
@@ -1669,7 +1669,7 @@
             </div>
             <div class="row mt-sm" id="0">
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text (1 to 20 characters)
+                <div class="gray-xs-f mb-xs">Display text (1 to 20 characters)
                   <span
                       class="requiredStar">*
                   </span>
@@ -1809,7 +1809,7 @@
             </div>
             <div class="row">
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                   <span
                       class="requiredStar" style="float: right;">*
                   </span>
@@ -2045,14 +2045,14 @@
                   <input type="radio" class="TextChoiceRequired" id="singleSelect" value="Single"
                          name="questionReponseTypeBo.selectionStyle"  ${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
-                  <label for="singleSelect">Single Select</label>
+                  <label for="singleSelect">Single select</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" class="TextChoiceRequired" id="multipleSelect"
                          value="Multiple"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
-                  <label for="multipleSelect">Multiple Select</label>
+                  <label for="multipleSelect">Multiple select</label>
                 </span>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -2074,7 +2074,7 @@
                     <!-- Section Start -->
                     <div class="mt-xlg text-choice" id="${subtype.index}">
                       <div class="col-md-4 pl-none">
-                        <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                        <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                           <span
                               class="requiredStar">*
                           </span>
@@ -2186,7 +2186,7 @@
                   <!-- Section Start -->
                   <div class="mt-xlg text-choice otherOptionChecked" id="0">
                     <div class="col-md-4 pl-none">
-                      <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                      <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                         <span
                             class="requiredStar">*
                         </span>
@@ -2291,7 +2291,7 @@
                   <!-- Section Start -->
                   <div class="mt-xlg text-choice" id="1">
                     <div class="col-md-4 pl-none">
-                      <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                      <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                         <span
                             class="requiredStar">*
                         </span>
@@ -2407,7 +2407,7 @@
                 <!-- Section Start  -->
                 <div class="mt-xlg">
                   <div class="col-md-4 pl-none">
-                    <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                    <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                       <span
                           class="requiredStar">*
                       </span>
@@ -2571,7 +2571,7 @@
                   </div>
                 </div>
                 <div class="col-md-2 pl-none col-smthumb-2">
-                  <div class="gray-xs-f mb-xs">Selected Image
+                  <div class="gray-xs-f mb-xs">Selected image
                     <span
                         class="requiredStar">*
                     </span>
@@ -2582,7 +2582,7 @@
                   </div>
                 </div>
                 <div class="col-md-2 pl-none">
-                  <div class="gray-xs-f mb-xs">Display Text
+                  <div class="gray-xs-f mb-xs">Display text
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -5668,13 +5668,13 @@
               if (callback)
                 callback(false);
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       } else {
@@ -5924,7 +5924,7 @@
       var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
       var newTextChoice = "<div class='mt-xlg text-choice' id='" + choiceCount + "'>" +
           "<div class='col-md-4 pl-none'>" +
-          "   <div class='gray-xs-f mb-xs'>Display Text (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
+          "   <div class='gray-xs-f mb-xs'>Display text (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
           +
           "   <div class='form-group mb-none'>" +
           "   <input type='text' class='form-control TextChoiceRequired' name='questionResponseSubTypeList["
@@ -6881,7 +6881,7 @@
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                 "RDE (x) should be used only once.");
-            setTimeout(hideDisplayMessage, 3000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
         return isSingle;
@@ -6904,7 +6904,7 @@
           $('#alertMsg').show();
           $("#alertMsg").removeClass('s-box').addClass('e-box').text(
               "Please add atleast one response data element in conditional formula.");
-          setTimeout(hideDisplayMessage, 3000);
+          setTimeout(hideDisplayMessage, 5000);
           return false;
         }
       } else {

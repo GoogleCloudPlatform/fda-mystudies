@@ -229,11 +229,11 @@
                       "Unable to delete resource");
                   $('#alertMsg').show();
                 }
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               },
               error: function (xhr, status, error) {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               }
             });
           }

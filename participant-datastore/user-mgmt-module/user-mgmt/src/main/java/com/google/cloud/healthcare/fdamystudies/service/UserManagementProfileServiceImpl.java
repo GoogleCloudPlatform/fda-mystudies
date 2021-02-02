@@ -45,7 +45,6 @@ import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -284,7 +283,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         auditRequest.setUserId(userId);
 
         Optional<StudyEntity> optStudyEntity =
-            studyRepository.findByCustomIds(Arrays.asList(studyBean.getStudyId()));
+            studyRepository.findByCustomStudyId(studyBean.getStudyId());
 
         if (optStudyEntity.isPresent()) {
           auditRequest.setStudyVersion(String.valueOf(optStudyEntity.get().getVersion()));

@@ -52,7 +52,7 @@
       <input type="hidden" name="questionnairesStepsBo.stepId" id="stepId"
              value="${instructionsBo.questionnairesStepsBo.stepId}">
       <div class="col-md-6 pl-none">
-        <div class="gray-xs-f mb-xs">Step Short Title or Key (15 characters max)
+        <div class="gray-xs-f mb-xs">Step short title or key (15 characters max)
           <span
               class="requiredStar">*
           </span>
@@ -73,8 +73,8 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="gray-xs-f mb-xs">Step Type</div>
-        <div>Instruction Step</div>
+        <div class="gray-xs-f mb-xs">Step type</div>
+        <div>Instruction step</div>
       </div>
       <div class="clearfix"></div>
       <div class="gray-xs-f mb-xs">Title (250 characters max)
@@ -88,7 +88,7 @@
       </div>
       <div class="clearfix"></div>
 
-      <div class="gray-xs-f mb-xs">Instruction Text
+      <div class="gray-xs-f mb-xs">Instruction text
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
@@ -100,7 +100,7 @@
       <div class="clearfix"></div>
       <c:if test="${questionnaireBo.branching}">
         <div class="col-md-4 col-lg-3 p-none">
-          <div class="gray-xs-f mb-xs">Default Destination Step
+          <div class="gray-xs-f mb-xs">Default destination step
             <span class="requiredStar">*</span>
             <span
                 class="ml-xs sprites_v3 filled-tooltip"></span>
@@ -351,13 +351,13 @@
             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             $('#alertMsg').show();
           }
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         },
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
           $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         }
       });
     } else {

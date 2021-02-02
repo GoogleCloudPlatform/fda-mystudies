@@ -745,7 +745,7 @@
             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             $('#alertMsg').show();
           }
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         },
         global: false
       });
