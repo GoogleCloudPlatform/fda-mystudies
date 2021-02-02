@@ -20,7 +20,7 @@
          name="currentPage">
   <div class="pt-lg">
     <div class="gray-xs-f mb-sm">
-      Activity Short Title or Key
+      Activity short title or key
       <small>(50 characters max)</small>
       <span
           class="requiredStar"> *
@@ -241,8 +241,8 @@
 
         <div>
           <div class="gray-xs-f mb-sm">
-            Display name for the Stat (e.g. Total Hours of Activity Over 6
-            Months)
+            Display name for the stat (e.g. Total hours of activity over 6
+            months)
             <small>(50 characters max)</small>
             <span
                 class="requiredStar"> *
@@ -257,7 +257,7 @@
 
         <div>
           <div class="gray-xs-f mb-sm">
-            Display Units (e.g. hours)
+            Display units (e.g. hours)
             <small>(15 characters max)</small>
             <span
                 class="requiredStar"> *
@@ -275,7 +275,7 @@
 
         <div>
           <div class="gray-xs-f mb-sm">
-            Stat Type for image display
+            Stat type for image display
             <span class="requiredStar"> *</span>
           </div>
           <div class="add_notify_option form-group">
@@ -318,19 +318,19 @@
               <span class="mr-sm"><img
                   src="../images/icons/tick.png"
                   alt=""/></span>
-              <span>Current Day</span>
+              <span>Current day</span>
             </span>
             <span
                 class="mr-lg">
               <span class="mr-sm"><img
                   src="../images/icons/tick.png" alt=""/></span>
-              <span>Current Week</span>
+              <span>Current week</span>
             </span>
             <span
                 class="mr-lg">
               <span class="mr-sm"><img
                   src="../images/icons/tick.png" alt=""/></span>
-              <span>Current Month</span>
+              <span>Current month</span>
             </span>
             <span class="txt-gray">(Rollback option provided for
               these three options)
@@ -527,8 +527,8 @@
 
             <div>
               <div class="gray-xs-f mb-sm">
-                Display name for the Stat (e.g. Total Hours of Activity Over 6
-                Months)
+                Display name for the stat (e.g. Total hours of activity over 6
+                months)
                 <small> (50 characters max)</small>
                 <span
                     class="requiredStar"> *
@@ -546,7 +546,7 @@
 
             <div>
               <div class="gray-xs-f mb-sm">
-                Display Units (e.g. hours)
+                Display units (e.g. hours)
                 <small>(15 characters max)</small>
                 <span
                     class="requiredStar"> *
@@ -568,7 +568,7 @@
 
               <div>
                 <div class="gray-xs-f mb-sm">
-                  Stat Type for image display
+                  Stat type for image display
                   <span class="requiredStar">
                     *
                   </span>
@@ -615,19 +615,19 @@
                     <span class="mr-sm"><img
                         src="../images/icons/tick.png"
                         alt=""/></span>
-                    <span>Current Day</span>
+                    <span>Current day</span>
                   </span>
                   <span
                       class="mr-lg">
                     <span class="mr-sm"><img
                         src="../images/icons/tick.png" alt=""/></span>
-                    <span>Current Week</span>
+                    <span>Current week</span>
                   </span>
                   <span class="mr-lg">
                     <span class="mr-sm"><img
                         src="../images/icons/tick.png"
                         alt=""/></span>
-                    <span>Current Month</span>
+                    <span>Current month</span>
                   </span>
                   <span class="txt-gray">(Rollback option provided for
                     these three options)
