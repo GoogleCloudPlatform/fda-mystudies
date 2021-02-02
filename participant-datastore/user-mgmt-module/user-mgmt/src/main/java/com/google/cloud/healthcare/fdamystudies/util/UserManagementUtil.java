@@ -108,7 +108,11 @@ public class UserManagementUtil {
   }
 
   public String withdrawParticipantFromStudy(
-      String participantId, String studyId, String delete, AuditLogEventRequest auditRequest) {
+      String participantId,
+      String studyId,
+      String studyVersion,
+      String delete,
+      AuditLogEventRequest auditRequest) {
     logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
@@ -117,7 +121,6 @@ public class UserManagementUtil {
 
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.APPLICATION_ID, null);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
     AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
@@ -127,6 +130,8 @@ public class UserManagementUtil {
         appConfig.getWithdrawStudyUrl()
             + "?studyId="
             + studyId
+            + "&studyVersion="
+            + studyVersion
             + "&participantId="
             + participantId
             + "&deleteResponses="
