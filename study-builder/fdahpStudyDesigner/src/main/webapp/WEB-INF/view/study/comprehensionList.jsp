@@ -167,6 +167,11 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
+   if(mainContainerDivision==true){
+		var mainContainerDivision = $('#mainContainer').hide();		   
+	 }
+	
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
