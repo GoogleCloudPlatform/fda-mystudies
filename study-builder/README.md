@@ -33,7 +33,7 @@ To deploy the [`Study builder`](/study-builder/) manually:
 1. Update user-facing text as desired, for example in [`termsAndCondition.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/view/termsAndCondition.jsp), [`copyright.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/templates/copyright.jsp) and [`privacypolicy.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/view/privacypolicy.jsp)
 1. Update org.name as desired in [`application.properties`](fdahpStudyDesigner/src/main/resources/application.properties) file
 1. Update landing logo as desired [`logo_landing_welcome.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_landing_welcome.png)
-1. Update landing logo as desired [`logo_innerScreens.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_innerScreens.png) for inner screen
+1. Update landing logo as desired [`logo_innerScreens.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_innerScreens.png) for inner screens
 1. Update favicon as desired [`FAV_Icon.png`](fdahpStudyDesigner/src/main/webapp/images/icons/FAV_Icon.png)
 1. Deploy the `Study builder` container to the VM
     -    Create the Docker image using `sudo mvn -B package -Pprod com.google.cloud.tools:jib-maven-plugin:2.5.2:dockerBuild -f fdahpStudyDesigner/pom.xml -Dimage=study-builder-image` (you may need to [install Docker](https://docs.docker.com/engine/install/debian/) and Maven, for example `sudo apt install maven`)
