@@ -1231,7 +1231,7 @@
 
     if ($("#schedule2").prop("checked")) {
 
-
+    	 var schedule_opts = $("input[name='frequency']:checked").val();
         $("#weekDaysId").hide();
         $("#weekDaysId").find('input:text').removeAttr('required', true);
         $(".weeklyRegular").hide();
@@ -1407,6 +1407,9 @@
 
         $("#monthlyDateId").show();
         $("#monthlyDateId").attr('required', true);
+
+        $(".monthlyRegular").show();
+        $(".monthlyRegular").attr('required', true);
 
         $("#activeMonthlyRegular").show();
         $("#months").attr('required', true);
