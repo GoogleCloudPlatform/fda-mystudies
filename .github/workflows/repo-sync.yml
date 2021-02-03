@@ -23,5 +23,5 @@ jobs:
       name: Create pull request
       with:
         source_branch: ${{ secrets.INTERMEDIATE_BRANCH }}
-        destination_branch: terraform-sync
+        destination_branch: terraform-btc
         github_token: ${{ secrets.PERSONAL_KEY }}
