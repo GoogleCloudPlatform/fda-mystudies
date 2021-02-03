@@ -8,7 +8,6 @@
 
 window.onload = function() {
   window.setTimeout(function() {
-    alert("consentForm continue");
     document.consentForm.submit();
   }, 500);
   

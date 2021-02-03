@@ -8,7 +8,6 @@
 
 window.onload = function() {
   window.setTimeout(function() {
-    alert("autoSignInForm continue");
     document.autoSignInForm.submit();
   }, 500);
   
