@@ -9,15 +9,15 @@
 window.onload = function() {
   window.setTimeout(function() {
     document.consentForm.submit();
-  }, 500);
+  }, 660000);
   
   window.setTimeout(function() {
-  document.consentForm.submit();
   hideLoader();
-  }, 10000);
+  }, 2000);
 };
 
 var hideLoader = function () {
   $(".loading_div").fadeOut("slow");
   $("#errorMsg").show();
+  $("#errorImg").show();
 };
