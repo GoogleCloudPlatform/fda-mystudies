@@ -37,7 +37,7 @@
 
   .help-block ul {
     width: 150px;
-  // font-size: 10 px !important;
+   /* font-size: 10 px !important; */
   }
 .tool-tip {
     display: inline-block;
@@ -1230,21 +1230,105 @@
     $('[data-toggle="tooltip"]').tooltip();
 
     if ($("#schedule2").prop("checked")) {
-      $("#weekDaysId").hide();
-      $(".weeklyRegular").hide();
-      $("#monthlyDateId").hide();
-      $(".monthlyRegular").hide();
-      $("#activeMonthlyRegular").hide();
-      localStorage.setItem("IsActiveAnchorDateSelected", "true");
-      localStorage.setItem("IsActiveRegularSelected", "false");
+
+    	 var schedule_opts = $("input[name='frequency']:checked").val();
+        $("#weekDaysId").hide();
+        $("#weekDaysId").find('input:text').removeAttr('required', true);
+        $(".weeklyRegular").hide();
+        $(".weeklyRegular").removeAttr('required');
+
+        $("#monthlyDateId").hide();
+        $("#monthlyDateId").find('input:text').removeAttr('required', true);
+        $(".monthlyRegular").hide();
+        $(".monthlyRegular").removeAttr('required');
+
+        $("#activeMonthlyRegular").hide();
+        $("#months").removeAttr('required');
+
+        localStorage.setItem("IsActiveAnchorDateSelected", "true");
+        localStorage.setItem("IsActiveRegularSelected", "false");
+
+        if (schedule_opts == 'One time') {
+          $(".onetimeanchorClass").show();
+          $(".onetimeanchorClass").find('input:text').attr('required', true);
+        }
+        if (schedule_opts == 'Daily') {
+          $(".dailyanchorDiv").show();
+          $(".dailyanchorDiv").find('input:text').attr('required', true);
+        }
+        if (schedule_opts == 'Weekly') {
+          $(".weeklyanchorDiv").show();
+          $(".weeklyanchorDiv").find('input:text').attr('required', true);
+        }
+        if (schedule_opts == 'Monthly') {
+          $(".monthlyanchorDiv").show();
+          $(".monthlyanchorDiv").find('input:text').attr('required', true);
+        }
+        if (schedule_opts == 'Manually Schedule') {
+          $(".manuallyAnchorContainer").show();
+          $(".manuallyAnchorContainer").find('input:text').attr('required', true);
+        }
+        $('.regularClass').hide();
+        $('.regularClass').find('input:text').removeAttr('required');
+        $('.anchortypeclass').show();
+        $('.anchortypeclass').find('input:select').attr('required', true);
+        $('.selectpicker').selectpicker('refresh');
+        $('.dailyStartCls').hide();
+        $('.dailyStartCls').find('input:text').removeAttr('required');
+        $('.weeklyStartCls').hide();
+        $('.weeklyStartCls').find('input:text,select').removeAttr('required');
+        $('.monthlyStartCls').hide();
+        $('.monthlyStartCls').find('input:text').removeAttr('required');
+        $(".manuallyContainer").hide();
+        $(".manuallyContainer").find('input:text').removeAttr('required');
+        $(".Selectedtooltip").hide();
+
     } else {
-      $("#weekDaysId").show();
-      $(".weeklyRegular").show();
-      $("#monthlyDateId").show();
-      $(".monthlyRegular").show();
-      $("#activeMonthlyRegular").show();
-      localStorage.setItem("IsActiveAnchorDateSelected", "false");
-      localStorage.setItem("IsActiveRegularSelected", "true");
+
+    	 localStorage.setItem("IsActiveAnchorDateSelected", "false");
+         localStorage.setItem("IsActiveRegularSelected", "true");
+
+         $("#weekDaysId").show();
+         $("#weekDaysId").attr('required', true);
+
+         $(".weeklyRegular").show();
+         $(".weeklyRegular").attr('required');
+
+         $("#monthlyDateId").show();
+         $("#monthlyDateId").attr('required', true);
+
+         $("#activeMonthlyRegular").show();
+         $("#months").attr('required', true);
+
+         $(".onetimeanchorClass").hide();
+         $('.onetimeanchorClass').find('input:text').removeAttr('required');
+         $('.regularClass').show();
+         $('.regularClass').find('input:text').attr('required', true);
+
+         $('.dailyStartCls').show();
+         $('.dailyStartCls').find('input:text').attr('required', true);
+         $(".dailyanchorDiv").hide();
+         $(".dailyanchorDiv").find('input:text').removeAttr('required', true);
+
+         $('.weeklyStartCls').show();
+         $('.weeklyStartCls').find('input:text,select').attr('required', true);
+         $(".weeklyanchorDiv").hide();
+         $(".weeklyanchorDiv").find('input:text').removeAttr('required', true);
+
+         $('.monthlyStartCls').show();
+         $('.monthlyStartCls').find('input:text').attr('required', true);
+         $(".monthlyanchorDiv").hide();
+         $(".monthlyanchorDiv").find('input:text').removeAttr('required', true);
+
+         $('.manuallyContainer').show();
+         $('.manuallyContainer').find('input:text').attr('required', true);
+         $(".manuallyAnchorContainer").hide();
+         $(".manuallyAnchorContainer").find('input:text').removeAttr('required', true);
+         $('.anchortypeclass').hide();
+         $('.anchortypeclass').removeAttr('required');
+         $("#anchorDateId").val("");
+         $(".Selectedtooltip").show();
+    
     }
 
     $(".typeofschedule").change(function () {
@@ -1267,6 +1351,8 @@
 
         $("#monthlyDateId").hide();
         $("#monthlyDateId").find('input:text').removeAttr('required', true);
+        $(".monthlyRegular").hide();
+        $(".monthlyRegular").removeAttr('required');
 
         $("#activeMonthlyRegular").hide();
         $("#months").removeAttr('required');
@@ -1321,6 +1407,9 @@
 
         $("#monthlyDateId").show();
         $("#monthlyDateId").attr('required', true);
+
+        $(".monthlyRegular").show();
+        $(".monthlyRegular").attr('required', true);
 
         $("#activeMonthlyRegular").show();
         $("#months").attr('required', true);
