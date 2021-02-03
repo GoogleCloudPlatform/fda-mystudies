@@ -8,13 +8,14 @@
 
 window.onload = function() {
   window.setTimeout(function() {
+    alert("autoSignInForm continue");
     document.autoSignInForm.submit();
   }, 500);
   
   window.setTimeout(function() {
   document.autoSignInForm.submit();
   hideLoader();
-  }, 5000);
+  }, 10000);
 };
 
 var hideLoader = function () {

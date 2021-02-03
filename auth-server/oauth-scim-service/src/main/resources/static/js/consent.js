@@ -8,13 +8,14 @@
 
 window.onload = function() {
   window.setTimeout(function() {
+    alert("consentForm continue");
     document.consentForm.submit();
   }, 500);
   
   window.setTimeout(function() {
   document.consentForm.submit();
   hideLoader();
-  }, 5000);
+  }, 10000);
 };
 
 var hideLoader = function () {
