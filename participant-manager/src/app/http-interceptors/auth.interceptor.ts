@@ -25,6 +25,7 @@ import {
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
+
   private readonly refreshTokenSubject = new BehaviorSubject<unknown>(null);
   appId = 'PARTICIPANT MANAGER';
   mobilePlatform = 'DESKTOP';

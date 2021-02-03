@@ -37,7 +37,7 @@
 
   .help-block ul {
     width: 150px;
-  / / font-size: 10 px !important;
+  // font-size: 10 px !important;
   }
 .tool-tip {
     display: inline-block;
@@ -45,7 +45,7 @@
 
   .tool-tip [disabled] {
     pointer-events: none;
-  }   
+  }
  
 </style>
 <div class="gray-xs-f mb-sm">Active task schedule type</div>
@@ -71,7 +71,8 @@
            data-toggle="validator">
   <div class="anchortypeclass" style="display:none;">
     <c:if test="${fn:length(anchorTypeList) gt 0}">
-      <div class="gray-xs-f mb-sm">Select anchor date Type</div>
+
+      <div class="gray-xs-f mb-sm">Select anchor date type</div>
       <div class="clearfix"></div>
       <div class="col-md-5 col-lg-5 p-none">
         <div class="form-group">
@@ -903,17 +904,17 @@
         <div class="manually-option mb-md form-group" id="0">
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
-           <div class="gray-xs-f mb-sm">
-              Select date & time period
-              <span class="requiredStar">*</span>
-              <span
-                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-              </span>
-            </div>
-                  
+
+                 
+                  <div class="gray-xs-f mb-sm">Select a date range
+                    <span class="requiredStar"> *</span>
+                    <span
+                       class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                     </span>
+                  </div>
           <span class="form-group dis-inline vertical-align-middle pr-md">
             
             <input id="StartDate0" type="text" count='0'
@@ -933,10 +934,7 @@
                    onclick='customEndDate(this.id,0);' required/>
             <span class='help-block with-errors red-txt'></span>
             </span>            
-            
-           
-           
-         
+
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="customTime0" type="text" count='0' class="form-control clock cusTime"
                    name="activeTaskCustomScheduleBo[0].frequencyTime" placeholder="Time"
@@ -1003,9 +1001,10 @@
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
                  
-                
-            <div class="gray-xs-f mb-sm">
-              Select time period
+
+                 
+            <div class="gray-xs-f">
+              Select a date range
               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
@@ -1083,11 +1082,7 @@
                 class="light-txt opacity06"> days
             </span>
           </span>
-          
-              
-                 
-                          
-            
+                  
           <span class="form-group  dis-inline vertical-align-middle pr-md"
                 style="margin-bottom: -13px"><input id="manualTime0"
                                                     type="text" class="form-control clock"
@@ -1100,7 +1095,7 @@
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
                 onclick="addDateAnchor();">+
           </span>
-         
+
         </div>
       </c:if>
       <c:if
