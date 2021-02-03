@@ -1229,6 +1229,7 @@
     $('[data-toggle="tooltip"]').tooltip();
 
     if ($("#schedule2").prop("checked")) {
+    	 var schedule_opts = $("input[name='frequency']:checked").val();
     	  $("#weekDaysId").hide();
         $("#weekDaysId").find('input:text').removeAttr('required', true);
         $(".weeklyRegular").hide();
