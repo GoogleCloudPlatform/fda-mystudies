@@ -105,9 +105,8 @@ public class EnrollmentTokenController {
         ErrorResponseUtil.getFailureResponse(
             ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue(),
+            ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
             response);
-
         enrollAuditEventHelper.logEvent(ENROLLMENT_TOKEN_FOUND_INVALID, auditRequest);
         return null;
       }
@@ -180,11 +179,11 @@ public class EnrollmentTokenController {
                   ErrorResponseUtil.getFailureResponse(
                       ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
                       ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                      ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue(),
+                      ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
                       response);
                   errorBean = new ErrorBean();
                   errorBean.setCode(HttpStatus.BAD_REQUEST.value());
-                  errorBean.setMessage(ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue());
+                  errorBean.setMessage(ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue());
 
                   return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                 }
