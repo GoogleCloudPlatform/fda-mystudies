@@ -2673,7 +2673,7 @@ a:focus {
   padding-top: 30px !important;
 } 
 
-#studies_list tr td span.edit-inc-draft:hover {
+td span.edit-inc-draft:hover {
     background: url(../images/icons/edit_draft_icon__hover.png) no-repeat;
     width: 20px;
     height: 22px;
@@ -2682,7 +2682,7 @@ a:focus {
   vertical-align: middle;
     }
     
-    #studies_list tr td span.edit-inc:hover {
+td span.edit-inc:hover {
     background: url(../images/icons/edit_icn__hover.png) no-repeat;
     width: 20px;
     height: 22px;
@@ -2691,7 +2691,7 @@ a:focus {
   vertical-align: middle;
     }
    
-    #studies_list tr td span.eye-inc:hover {
+td span.eye-inc:hover {
     background: url(../images/icons/live_icn__hover.png) no-repeat;
     width: 20px;
     height: 16px;
