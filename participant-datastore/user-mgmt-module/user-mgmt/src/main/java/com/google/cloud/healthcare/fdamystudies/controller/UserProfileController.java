@@ -34,6 +34,8 @@ import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -58,6 +60,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "User Profile",
+    value = "User Profile",
+    description = "Operations pertaining to user profile in user management service")
 @RestController
 @Validated
 public class UserProfileController {
@@ -75,6 +81,7 @@ public class UserProfileController {
   @Value("${email.code.expire_time}")
   private long expireTime;
 
+  @ApiOperation(value = "Fetch user profile")
   @GetMapping(value = "/userProfile", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUserProfile(
       @RequestHeader("userId") String userId,
@@ -107,6 +114,7 @@ public class UserProfileController {
     return new ResponseEntity<>(userProfileRespBean, HttpStatus.OK);
   }
 
+  @ApiOperation(value = "Update user profile")
   @PostMapping(
       value = "/updateUserProfile",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -135,6 +143,7 @@ public class UserProfileController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
+  @ApiOperation(value = "Deactivate user")
   @DeleteMapping(
       value = "/deactivate",
       consumes = MediaType.APPLICATION_JSON_VALUE,
