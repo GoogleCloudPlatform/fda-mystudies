@@ -40,6 +40,7 @@
   font-family: Muli,sans-serif !important;
   font-weight: 600 !important;
   text-align: center !important;
+  margin-top: 5% !important;
 }
 </style>
 </head>
@@ -62,9 +63,13 @@
             style="display: none" />
         </div>
       </div>
-      <div id="errorMsg" style="display:none;" 
-      class="loading_text_error child_text_error loading_div">
-      Something went wrong. Please try again.
+      <div >
+        <div id="errorImg" class="width__110" style="display: none;margin-top: 120px !important;">
+          <img th:src="@{/images/ErrorIcon.svg}" alt="error image " class="mb-md" />
+        </div>
+        <div id="errorMsg" class="loading_text_error child_text_error loading_div" style="display: none;" >
+          Something went wrong. Please try again.
+        </div>
       </div>
     </div>
     <div style="display: none">

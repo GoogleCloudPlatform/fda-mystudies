@@ -12,7 +12,6 @@ window.onload = function() {
   }, 500);
   
   window.setTimeout(function() {
-  document.consentForm.submit();
   hideLoader();
   }, 10000);
 };
@@ -20,4 +19,5 @@ window.onload = function() {
 var hideLoader = function () {
   $(".loading_div").fadeOut("slow");
   $("#errorMsg").show();
+  $("#errorImg").show();
 };
