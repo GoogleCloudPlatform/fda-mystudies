@@ -94,4 +94,12 @@ public final class CommonConstants {
   public static final String ACTIVITY_STATE = "activity_state";
 
   public static final String PAGE_NO = "0";
+
+  public static final String UNAUTHORIZED_MESSAGE = "Unauthorized or Invalid token";
+
+  public static final String APPLICATION_ERROR_MESSAGE =
+      "Sorry, an error has occurred and your request could not be processed. Please try again later.";
+
+  public static final String BAD_REQUEST_MESSAGE =
+      "Invalid entries found in the submitted form. Please try again.";
 }
