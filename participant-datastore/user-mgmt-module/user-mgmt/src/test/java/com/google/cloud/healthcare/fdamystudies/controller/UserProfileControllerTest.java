@@ -72,7 +72,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
@@ -96,8 +95,6 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Autowired private FdaEaUserDetailsServiceImpl service;
 
   @Autowired private ObjectMapper objectMapper;
-
-  @Autowired private JavaMailSender emailSender;
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawUrl;

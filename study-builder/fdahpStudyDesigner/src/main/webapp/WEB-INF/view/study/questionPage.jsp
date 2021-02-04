@@ -22,7 +22,13 @@
     margin-top: 10px;
   }
   
-  .display__flex__center{
+  .questionary_page_edit {
+  margin-top: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  }
+  
+  .questionary_page {
     margin-top: 10px !important;
   }
   
@@ -1244,7 +1250,7 @@
           </div>
         </div>
         <div id="Timeinterval" style="display: none;">
-          <div class="row mt-sm display__flex__center">
+          <div class="row mt-sm questionary_page">
             <div class="col-md-2 pl-none">
               <div class="gray-xs-f mb-xs">Step value
                 <span class="requiredStar">*</span>
@@ -1929,7 +1935,7 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <div class="col-md-12 p-none display__flex__center">
+                    <div class="col-md-12 p-none questionary_page">
                       <div class="col-md-10 pl-none">
                         <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
@@ -2011,7 +2017,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-12 p-none display__flex__center">
+                  <div class="col-md-12 p-none questionary_page_edit">
                     <div class="col-md-10 pl-none">
                       <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)
                       </div>
@@ -2090,7 +2096,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-12 p-none display__flex__center">
+                  <div class="col-md-12 p-none questionary_page_edit">
                     <div class="col-md-10 pl-none">
                       <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)
                       </div>
@@ -4448,7 +4454,7 @@ if(document.getElementById("singleSelect").checked==true){
         "   </div>" +
         "</div> ";
     newTextChoice +=
-        "<div class='col-md-12 p-none display__flex__center'><div class='col-md-10 pl-none'>" +
+        "<div class='col-md-12 p-none questionary_page_edit'><div class='col-md-10 pl-none'>" +
         "   <div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) </div>"+
         "   <div class='form-group'>					     " +
         "      <textarea class='form-control' name='questionResponseSubTypeList[" + choiceCount

@@ -63,11 +63,10 @@
   /* error box css start here  */
   .help-block ul {
     width: 150px;
-  / / font-size: 10 px !important;
+  // font-size: 10 px !important;
   }
  /* error box css end here  */
   
- 
 </style>
 
 <script type="text/javascript">
@@ -216,7 +215,7 @@
             <div
                 class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
                 onclick="getQuestionnaireStep('Instruction');">Add
-              instruction step
+              Instruction step
             </div>
             <div
                 class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
@@ -1365,7 +1364,6 @@
                          name="questionnaireCustomScheduleBo[0].questionnairesId"
                          id="questionnairesId" value="${questionnaireBo.id}">
                           
-                       
                           <div class="gray-xs-f mb-sm">
                         Select a date range
                          <span class="requiredStar">*</span>
@@ -1398,10 +1396,6 @@
                            required/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
-                  
-
-                 
-                  
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="customTime0" type="text" count='0'
@@ -1572,9 +1566,7 @@
                         class="light-txt opacity06"> days
                     </span>
                   </span>
-                  
-                   
-            
+                
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md"
                       style="margin-bottom: -13px"><input id="manualTime0"

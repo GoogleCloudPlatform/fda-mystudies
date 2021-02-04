@@ -69,7 +69,7 @@
           <div class="black-md-f mb-md">
             Study overview pages
             <span>
-              <span class="filled-tooltip"
+              <span class="filled-tooltip studytip"
                     data-toggle="tooltip" data-placement="right"
                     data-html="true"
                     title=""
