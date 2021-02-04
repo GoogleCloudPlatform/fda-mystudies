@@ -30,6 +30,8 @@ import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorResponseUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.TokenUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -46,6 +48,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Enrollment",
+    value = "enroll management",
+    description = "Operations pertaining to enroll flow in enrollment module")
 @RestController
 public class EnrollmentTokenController {
 
@@ -63,6 +69,7 @@ public class EnrollmentTokenController {
 
   @Autowired StudyStateService studyStateService;
 
+  @ApiOperation(value = "validates enrollment token of the participant ")
   @PostMapping(value = "/validateEnrollmentToken", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> validateEnrollmentToken(
       @RequestHeader("userId") String userId,
@@ -123,6 +130,7 @@ public class EnrollmentTokenController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
+  @ApiOperation(value = "enrolling into a study")
   @PostMapping(
       value = "/enroll",
       consumes = MediaType.APPLICATION_JSON_VALUE,

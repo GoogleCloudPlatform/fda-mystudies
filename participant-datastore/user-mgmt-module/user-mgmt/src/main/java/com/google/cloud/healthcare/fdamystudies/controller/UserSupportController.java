@@ -19,6 +19,8 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -34,6 +36,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Support",
+    value = "Support",
+    description = "Operations pertaining to support in user management service")
 @RestController
 public class UserSupportController {
 
@@ -41,6 +47,7 @@ public class UserSupportController {
 
   @Autowired UserSupportService supportService;
 
+  @ApiOperation(value = "Feedback")
   @PostMapping(
       value = "/feedback",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -69,6 +76,7 @@ public class UserSupportController {
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 
+  @ApiOperation(value = "Contact us")
   @PostMapping(
       value = "/contactUs",
       consumes = MediaType.APPLICATION_JSON_VALUE,

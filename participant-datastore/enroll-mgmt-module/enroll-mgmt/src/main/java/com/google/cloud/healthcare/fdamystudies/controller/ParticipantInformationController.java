@@ -19,6 +19,8 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +37,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Participant Information",
+    value = "participant information related api",
+    description = "Operations pertaining to get participant details")
 @RestController
 public class ParticipantInformationController {
 
@@ -47,6 +53,7 @@ public class ParticipantInformationController {
 
   @Autowired private StudyRepository studyRepository;
 
+  @ApiOperation(value = "fetch participant's enrollment details")
   @GetMapping(value = "/participantInfo", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getParticipantDetails(
       @RequestParam(name = "studyId") String studyId,
