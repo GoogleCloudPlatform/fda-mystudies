@@ -8,12 +8,12 @@
 
 var fieldErrors = {
   "email": {
-	"required": "Enter an email.",
-	"invalid": "Enter a valid email."
+	"required": "Enter an email",
+	"invalid": "Enter a valid email"
   },
   "password": {
-	"required": "Enter a password.",
-	"invalid": "Enter a valid password."
+	"required": "Enter a password",
+	"invalid": "Enter a valid password"
   }
 }
 

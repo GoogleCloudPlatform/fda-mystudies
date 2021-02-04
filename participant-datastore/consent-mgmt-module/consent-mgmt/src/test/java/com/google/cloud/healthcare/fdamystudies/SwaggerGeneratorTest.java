@@ -15,7 +15,7 @@ class SwaggerGeneratorTest extends BaseMockIT {
 
   @Test
   public void createApiDocs() throws Exception {
-    /* String documentPath = generateApiDocs();
+    /*String documentPath = generateApiDocs();
     assertTrue(new File(documentPath).exists());*/
   }
 }
