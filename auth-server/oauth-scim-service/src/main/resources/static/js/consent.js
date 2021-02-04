@@ -9,11 +9,11 @@
 window.onload = function() {
   window.setTimeout(function() {
     document.consentForm.submit();
-  }, 660000);
+  }, 500);
   
   window.setTimeout(function() {
   hideLoader();
-  }, 2000);
+  }, 10000);
 };
 
 var hideLoader = function () {
