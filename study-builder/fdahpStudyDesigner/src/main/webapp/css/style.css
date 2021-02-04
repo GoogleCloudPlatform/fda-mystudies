@@ -2672,3 +2672,30 @@ a:focus {
   padding-left: 40px !important;
   padding-top: 30px !important;
 } 
+
+td span.edit-inc-draft:hover {
+    background: url(../images/icons/edit_draft_icon__hover.png) no-repeat;
+    width: 20px;
+    height: 22px;
+  	display: inline-block;
+  	cursor: pointer;
+  vertical-align: middle;
+    }
+    
+td span.edit-inc:hover {
+    background: url(../images/icons/edit_icn__hover.png) no-repeat;
+    width: 20px;
+    height: 22px;
+  	display: inline-block;
+  	cursor: pointer;
+  vertical-align: middle;
+    }
+   
+td span.eye-inc:hover {
+    background: url(../images/icons/live_icn__hover.png) no-repeat;
+    width: 20px;
+    height: 16px;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: middle;
+}
