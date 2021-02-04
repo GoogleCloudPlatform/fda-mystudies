@@ -19,7 +19,7 @@ public class AuditEventHelper {
   @Autowired private CommonApplicationPropertyConfig commonPropConfig;
 
   public void logEvent(AuditLogEvent eventEnum, AuditLogEventRequest auditRequest) {
-    // logEvent(eventEnum, auditRequest, null);
+    logEvent(eventEnum, auditRequest, null);
   }
 
   public void logEvent(
