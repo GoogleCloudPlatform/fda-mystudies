@@ -15,6 +15,8 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.UserRegistrationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.ext.XLogger;
@@ -29,6 +31,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "User Registration",
+    value = "User Registration",
+    description = "Operations pertaining to user register in user management service")
 @RestController
 public class UserRegistrationController {
 
@@ -41,11 +47,13 @@ public class UserRegistrationController {
   @Value("${email.code.expire_time}")
   private long expireTime;
 
+  @ApiOperation(value = "Health check")
   @GetMapping("/healthCheck")
   public ResponseEntity<?> healthCheck() {
     return ResponseEntity.ok("Up and Running");
   }
 
+  @ApiOperation(value = "Register new user")
   @PostMapping("/register")
   public ResponseEntity<UserRegistrationResponse> registerUser(
       @Valid @RequestBody UserRegistrationForm user,
