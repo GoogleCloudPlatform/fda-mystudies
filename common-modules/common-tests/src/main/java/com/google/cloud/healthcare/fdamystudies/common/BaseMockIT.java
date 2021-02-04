@@ -25,6 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
@@ -35,6 +38,7 @@ import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -120,11 +124,11 @@ public class BaseMockIT {
 
   @Autowired protected JavaMailSender emailSender;
 
-  @Autowired private TestRestTemplate restTemplate;
-
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   @LocalServerPort int randomServerPort;
+
+  @Autowired private TestRestTemplate restTemplate;
 
   @PostConstruct
   public void logServerPort() {
@@ -337,17 +341,29 @@ public class BaseMockIT {
     return mail;
   }
 
-  protected void generateOpenApiJson() throws IOException {
-    String swagger = this.restTemplate.getForObject("/v2/api-docs", String.class);
-    String documentPath =
-        BaseMockIT.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+  protected String generateApiDocs() throws IOException {
+    // get swagger json
+    String apiDocs = this.restTemplate.getForObject("/v2/api-docs", String.class);
 
+    // format the json
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+    ObjectNode jsonObjNode = mapper.readValue(apiDocs, ObjectNode.class);
+    jsonObjNode.put("host", "localhost:8080");
+
+    // prepare the filepath
+    String documentPath = Paths.get("").toAbsolutePath().toString();
     documentPath =
         documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
             + "fda-mystudies/documentation/API"
             + servletContext.getContextPath()
             + "/openapi.json";
-    FileUtils.write(new File(documentPath), swagger, Charset.defaultCharset());
+    documentPath = documentPath.replace(" ", "_");
+
+    // write api-docs json to a file
+    FileUtils.write(new File(documentPath), jsonObjNode.toPrettyString(), Charset.defaultCharset());
     logger.info(String.format("Open API documentation created at %s", documentPath));
+    return documentPath;
   }
 }
