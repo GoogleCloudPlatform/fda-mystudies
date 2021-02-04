@@ -17,6 +17,6 @@ class SwaggerGeneratorTest extends BaseMockIT {
 
   @Test
   public void generateSwagger() throws Exception {
-    generateOpenApiJson();
+    generateApiDocs();
   }
 }
