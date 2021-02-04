@@ -51,14 +51,12 @@ echo "DELETE FROM user_permission_mapping WHERE user_id=1;" >> ${TMPFILE}
 echo "REPLACE into users
 (
   user_id, first_name, last_name, email, password, role_id, created_by,
-  created_date, modified_by, modified_date, status, access_code,
-  accountNonExpired, accountNonLocked, credentialsNonExpired, password_expiry_datetime,
+  created_date, modified_by, modified_date, status, accountNonExpired, accountNonLocked, credentialsNonExpired, password_expiry_datetime,
   security_token, token_expiry_date, token_used, force_logout, access_level)
 VALUES
 (
   1, 'Account', 'Manager', '${EMAIL}', '${HASH}', 1, 1,
-  '${DATETIME}', 1, '${DATETIME}', 1, '${ACCESS_CODE}',
-  1, 1, 1, '${EXPIRY_DATETIME}',
+  '${DATETIME}', 1, '${DATETIME}', 1, 1, 1, 1, '${EXPIRY_DATETIME}',
   '${TOKEN}', '${EXPIRY_DATETIME}', 0, 'N', 'SUPERADMIN');
 " >> ${TMPFILE}
 
