@@ -17,6 +17,8 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.AppService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.Arrays;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Apps",
+    value = "apps related api's",
+    description = "Operations pertaining to apps in participant manager")
 @RestController
 @RequestMapping("/apps")
 public class AppController {
@@ -44,6 +50,8 @@ public class AppController {
 
   private static final String BEGIN_REQUEST_LOG = "%s request";
 
+  @ApiOperation(
+      value = "fetch a list of apps that correspond to the Studies to which user have permissions")
   @GetMapping
   public ResponseEntity<AppResponse> getApps(
       @RequestHeader(name = USER_ID_HEADER) String userId,
@@ -71,6 +79,7 @@ public class AppController {
     return ResponseEntity.status(appResponse.getHttpStatusCode()).body(appResponse);
   }
 
+  @ApiOperation(value = "fetch app registrants with enrolled studies")
   @GetMapping("/{appId}/participants")
   public ResponseEntity<AppParticipantsResponse> getAppParticipants(
       @PathVariable String appId,

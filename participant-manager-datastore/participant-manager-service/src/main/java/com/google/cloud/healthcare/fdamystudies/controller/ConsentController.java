@@ -13,6 +13,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentDocumentResponse;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ConsentService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -23,6 +25,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Get Consent Document",
+    value = "Consent related api",
+    description = "Operations pertaining to download consent document in participant manager")
 @RestController
 public class ConsentController {
 
@@ -30,6 +36,7 @@ public class ConsentController {
 
   @Autowired private ConsentService consentService;
 
+  @ApiOperation(value = "fetch consent document")
   @GetMapping("/consents/{consentId}/consentDocument")
   public ResponseEntity<ConsentDocumentResponse> getConsentDocument(
       @PathVariable String consentId,
