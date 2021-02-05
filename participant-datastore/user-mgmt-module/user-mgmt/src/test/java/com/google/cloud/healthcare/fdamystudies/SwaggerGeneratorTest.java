@@ -8,14 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies;
 
+import static org.junit.Assert.assertTrue;
+
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import java.io.File;
 import org.junit.jupiter.api.Test;
 
 class SwaggerGeneratorTest extends BaseMockIT {
 
   @Test
   public void createApiDocs() throws Exception {
-    /*  String documentPath = generateApiDocs();
-    assertTrue(new File(documentPath).exists());*/
+    String documentPath = generateApiDocs();
+    assertTrue(new File(documentPath).exists());
   }
 }
