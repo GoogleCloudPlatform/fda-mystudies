@@ -91,11 +91,10 @@
                 <c:if test="${fn:contains(aspList.capability , 'Project Lead' )}"> plRow </c:if>
                 <c:if test="${fn:contains(aspList.capability , 'Coordinator' )}"> cRow </c:if>>
               <td>
-                <div class="dis-ellipsis"
-                     title="${fn:escapeXml(user.userFullName)}">${fn:escapeXml(user.userFullName)}</div>
+                <div class="dis-ellipsis">${fn:escapeXml(user.userFullName)}</div>
               </td>
               <td>
-                <div class="dis-ellipsis" title="${user.userEmail}">${user.userEmail}</div>
+                <div class="dis-ellipsis">${user.userEmail}</div>
               </td>
               <td>${user.roleName}</td>
               <td>

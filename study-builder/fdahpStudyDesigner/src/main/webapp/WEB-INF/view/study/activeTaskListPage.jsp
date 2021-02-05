@@ -81,8 +81,7 @@
             <tr id="row${activeTasksInfo.id}">
               <td style="display: none;">${activeTasksInfo.createdDate}</td>
               <td>
-                <div class="dis-ellipsis pr-100"
-                     title="${fn:escapeXml(activeTasksInfo.displayName)}">${activeTasksInfo.displayName}</div>
+                <div class="dis-ellipsis pr-100">${activeTasksInfo.displayName}</div>
               </td>
               <td>${activeTasksInfo.type}</td>
               <td>${activeTasksInfo.frequency  == 'Manually Schedule' ? 'Custom Schedule' : activeTasksInfo.frequency}</td>
