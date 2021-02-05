@@ -213,7 +213,7 @@
             id="${taskMasterAttributeBo.attributeName}_stat_id"
             name="taskAttributeValueBos[1].useForStatistic" value="option1">
           <label for="${taskMasterAttributeBo.attributeName}_stat_id">Use
-            for Statistic</label>
+            for statistic</label>
         </span>
       </div>
       <div
@@ -494,7 +494,7 @@
                 <c:if test="${taskValueAttributeBo.useForStatistic==true}">checked</c:if>
                 value="${taskValueAttributeBo.useForStatistic}"> <label
                 for="${taskMasterAttributeBo.attributeName}_stat_id">Use
-              for Statistic</label>
+              for statistic</label>
             </span>
           </div>
           <div
