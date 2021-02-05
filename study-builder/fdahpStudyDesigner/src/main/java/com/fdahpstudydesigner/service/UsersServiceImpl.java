@@ -182,6 +182,8 @@ public class UsersServiceImpl implements UsersService {
     UserBO adminFullNameIfSizeOne = null;
     UserBO userBO3 = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    int passwordResetLinkExpirationInDay =
+        Integer.parseInt(propMap.get("password.resetLink.expiration.in.hour"));
 
     try {
       if (null == userBO.getUserId()) {
@@ -281,6 +283,9 @@ public class UsersServiceImpl implements UsersService {
               "$sessionAdminFullName",
               userSession.getFirstName() + " " + userSession.getLastName());
           keyValueForSubject.put("$orgName", propMap.get("orgName"));
+          keyValueForSubject.put(
+              "$passwordResetLinkExpirationInDay",
+              String.valueOf(passwordResetLinkExpirationInDay));
           if (addFlag) {
             dynamicContent =
                 FdahpStudyDesignerUtil.genarateEmailContent(
