@@ -7,25 +7,25 @@
 # Script to copy client ids and secret keys from gcloud secret and register them
 # in Hydra.
 # Run like:
-# $ ./scripts/register_clients_in_hydra.sh <prefix> <env> <base_url>
-# base_url should your env domain name, e.g. https://mystudies.mydomainname.com
+# $ ./scripts/register_clients_in_hydra.sh <prefix> <env> <domain>
+# domain should your env domain name, e.g. mydomainname.com
 
 #!/bin/bash
 if [ "$#" -ne 3 ]; then
-  echo 'Please provide deployment prefix and env in the order of <prefix> <env> <base_url of auth server>'
+  echo 'Please provide deployment prefix and env in the order of <prefix> <env> <domain>'
   exit 1
 fi
 
 PREFIX=${1}
 ENV=${2}
-AUTH_SERVER_BASE_URL=${3}
+DOMAIN=${3}
 shift 3
 
 set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 # used by client side applications
-SCIM_AUTH_EXTERNAL_URL="${AUTH_SERVER_BASE_URL}/auth-server"
+SCIM_AUTH_EXTERNAL_URL="participants.${PREFIX}-${ENV}.${DOMAIN}/auth-server"
 # used in server to server calls
 SCIM_AUTH_URL="http://auth-server-np:50000/auth-server"
 HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
@@ -48,7 +48,11 @@ OUTPUT="curl --location --request POST \"${HYDRA_ADMIN_URL}/clients\" \\
     \"created_at\": \"${DATETIME}\",
     \"grant_types\": [\"authorization_code\",\"refresh_token\",\"client_credentials\"],
     \"token_endpoint_auth_method\": \"client_secret_basic\",
-    \"redirect_uris\": [\"${SCIM_AUTH_EXTERNAL_URL}/callback\", \"${SCIM_AUTH_URL}/callback\"]
+    \"redirect_uris\": [
+      \"http://${SCIM_AUTH_EXTERNAL_URL}/callback\",
+      \"https://${SCIM_AUTH_EXTERNAL_URL}/callback\",
+      \"${SCIM_AUTH_URL}/callback\"
+    ]
   }';
 "
 
@@ -72,7 +76,11 @@ do
     \"created_at\": \"${DATETIME}\",
     \"grant_types\": [\"client_credentials\"],
     \"token_endpoint_auth_method\": \"client_secret_basic\",
-    \"redirect_uris\": [\"${SCIM_AUTH_EXTERNAL_URL}/callback\", \"${SCIM_AUTH_URL}/callback\"]
+    \"redirect_uris\": [
+      \"http://${SCIM_AUTH_EXTERNAL_URL}/callback\",
+      \"https://${SCIM_AUTH_EXTERNAL_URL}/callback\",
+      \"${SCIM_AUTH_URL}/callback\"
+    ]
   }';"
 done
 
@@ -80,5 +88,3 @@ HYDRA_POD=`kubectl get pods --no-headers -o custom-columns=":metadata.name" | gr
 
 echo "Running registration commands in Hydra pod"
 kubectl exec ${HYDRA_POD} -c hydra-ic -- bash -c "${OUTPUT}"
-
-rm ${TMPFILE}
