@@ -20,6 +20,8 @@ import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "Study metadata", value = "Study metadata", description = "Study metadata")
 @RestController
 public class StudyMetadataController {
   @Autowired private StudyMetadataService studyMetadataService;
@@ -41,6 +44,9 @@ public class StudyMetadataController {
 
   private static final Logger logger = LoggerFactory.getLogger(StudyMetadataController.class);
 
+  @ApiOperation(
+      value =
+          "Add or update study metadata in response server when a study is published from study builder")
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
       @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request)

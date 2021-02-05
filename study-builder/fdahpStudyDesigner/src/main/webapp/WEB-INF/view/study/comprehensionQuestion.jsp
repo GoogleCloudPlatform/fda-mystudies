@@ -504,4 +504,8 @@
     $(item).parent().addClass("has-danger").addClass("has-error");
     $(item).parent().find(".help-block").empty();
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>

@@ -21,6 +21,8 @@ import com.google.cloud.healthcare.fdamystudies.service.ParticipantService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,6 +35,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Get participant id",
+    value = "Get participant id based on study",
+    description = "Get participant id based on study")
 @RestController
 public class ParticipantIdController {
 
@@ -42,6 +48,7 @@ public class ParticipantIdController {
 
   private static final Logger logger = LoggerFactory.getLogger(ParticipantIdController.class);
 
+  @ApiOperation(value = "Generate participant id from response server")
   @PostMapping("/participant/add")
   public ResponseEntity<?> addParticipantIdentifier(
       @RequestHeader("appId") String applicationId,
