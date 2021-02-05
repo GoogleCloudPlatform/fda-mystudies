@@ -37,8 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(
     tags = "Studies",
-    value = "Get access token and refresh token based on grant type",
-    description = "Operations pertaining to users in auth server")
+    value = "Studies",
+    description = "Operations pertaining to Studies in user management service")
 @RestController
 @Validated
 @RequestMapping("/studies")

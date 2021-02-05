@@ -355,8 +355,6 @@ public class BaseMockIT {
     // prepare the filepath
     String documentPath = Paths.get("").toAbsolutePath().toString();
     if (StringUtils.contains(documentPath, "fda-mystudies")) {
-      System.out.println("documentPath = " + documentPath);
-      logger.info(String.format("documentation created at %s", documentPath));
       documentPath =
           documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
               + "fda-mystudies/documentation/API";

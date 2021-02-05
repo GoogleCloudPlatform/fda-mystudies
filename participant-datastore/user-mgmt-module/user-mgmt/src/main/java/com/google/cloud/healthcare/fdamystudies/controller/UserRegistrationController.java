@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(
     tags = "User Registration",
     value = "User Registration",
-    description = "Operations pertaining to user register in user management service")
+    description = "Operations pertaining to register the user in user management service")
 @RestController
 public class UserRegistrationController {
 
@@ -47,13 +47,13 @@ public class UserRegistrationController {
   @Value("${email.code.expire_time}")
   private long expireTime;
 
-  @ApiOperation(value = "Health check")
+  @ApiOperation(value = "Provides an indication about the health of the service")
   @GetMapping("/healthCheck")
   public ResponseEntity<?> healthCheck() {
     return ResponseEntity.ok("Up and Running");
   }
 
-  @ApiOperation(value = "Register new user")
+  @ApiOperation(value = "Register the new user")
   @PostMapping("/register")
   public ResponseEntity<UserRegistrationResponse> registerUser(
       @Valid @RequestBody UserRegistrationForm user,
