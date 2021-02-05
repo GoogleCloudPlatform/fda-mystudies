@@ -57,7 +57,9 @@ import org.springframework.web.bind.annotation.RestController;
     value =
         "This service is developed on the response server and called by mobile app. "
             + "The response data will be agregated and stored on cloud firestore using Firestore's SDK.",
-    description = "Process activity state")
+    description =
+        "This service is developed on the response server and called by mobile app. "
+            + "The response data will be agregated and stored on cloud firestore using Firestore's SDK.")
 @RestController
 public class ProcessActivityStateController {
   @Autowired
