@@ -61,6 +61,18 @@ export class StudyDetailsComponent
           this.studyId = params.studyId as string;
         }
         this.getStudyDetails();
+        this.studyDetail$ = this.studyDetail$.pipe(
+          map((studyDetails) => {
+            if (
+              studyDetails.participantRegistryDetail.studyType === StudyType.Open
+            ) {
+              this.sharedService.updateSearchPlaceHolder(
+                'Search participant email',
+              );
+            }
+            return studyDetails;
+          }),
+        );
       }),
     );
   }
@@ -76,13 +88,6 @@ export class StudyDetailsComponent
       ),
     ).pipe(
       map(([studyDetails]) => {
-        if (
-          studyDetails.participantRegistryDetail.studyType === StudyType.Open
-        ) {
-          this.sharedService.updateSearchPlaceHolder(
-            'Search participant email',
-          );
-        }
         return studyDetails;
       }),
     );
