@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: response-datastore
-          image: gcr.io/fda-mystudies-dev-apps/response-datastore:latest
+          image: gcr.io/<PREFIX>-<ENV>-apps/response-datastore:latest
           env:
             # DB ACCESS
             - name: DB_USER
@@ -71,7 +71,7 @@ spec:
             - name: STUDY_DATASTORE_URL
               value: "http://study-datastore-np:50000/study-datastore"
             - name: PARTICIPANT_ENROLL_DATASTORE_URL
-              value: "http://participant-enroll-datastore-np:50000/participant-enroll-datastore"
+              value: "http://participant-enroll-datastore:50000/participant-enroll-datastore"
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL
@@ -110,7 +110,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+            "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
