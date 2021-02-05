@@ -22,6 +22,8 @@ import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.service.LocationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.ArrayUtils;
@@ -41,6 +43,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Locations",
+    value = "Location related api's",
+    description = "Operations pertaining to Locations in participant manager")
 @RestController
 public class LocationController {
 
@@ -52,6 +58,7 @@ public class LocationController {
 
   @Autowired private LocationService locationService;
 
+  @ApiOperation(value = "create a new location")
   @PostMapping("/locations")
   @ResponseStatus(HttpStatus.CREATED)
   public LocationDetailsResponse addNewLocation(
@@ -70,6 +77,7 @@ public class LocationController {
     return LocationMapper.toLocationDetailsResponse(created, MessageCode.ADD_LOCATION_SUCCESS);
   }
 
+  @ApiOperation(value = "update existing location")
   @PutMapping("/locations/{locationId}")
   public ResponseEntity<LocationDetailsResponse> updateLocation(
       @RequestHeader(name = USER_ID_HEADER) String userId,
@@ -91,6 +99,7 @@ public class LocationController {
     return ResponseEntity.status(locationResponse.getHttpStatusCode()).body(locationResponse);
   }
 
+  @ApiOperation(value = "fetch location details")
   @GetMapping(value = {"/locations"})
   public ResponseEntity<LocationResponse> getLocations(
       @RequestHeader(name = USER_ID_HEADER) String userId,
@@ -135,6 +144,7 @@ public class LocationController {
     return ResponseEntity.status(locationResponse.getHttpStatusCode()).body(locationResponse);
   }
 
+  @ApiOperation(value = "fetch location based on location id")
   @GetMapping(value = {"/locations/{locationId}"})
   public ResponseEntity<LocationDetailsResponse> getLocationById(
       @RequestHeader(name = USER_ID_HEADER) String userId,
