@@ -11,8 +11,9 @@ export const environment = {
     'https://<BASE_URL>/auth-server/callback',
   hydraClientId: '<AUTH_SERVER_CLIENT_ID>',
   appVersion: 'v0.1',
-  termsPageTitle: 'terms title goes here',
-  termsPageDescription: 'terms description goes here',
-  aboutPageTitle: 'about page title goes here',
-  aboutPageDescription: 'about page description goes here',
+  termsPageTitle: 'Terms title goes here',
+  termsPageDescription: 'Terms description goes here',
+  aboutPageTitle: 'About page title goes here',
+  aboutPageDescription: 'About page description goes here',
+  copyright: 'Copyright 2020 Google LLC.',
 };
