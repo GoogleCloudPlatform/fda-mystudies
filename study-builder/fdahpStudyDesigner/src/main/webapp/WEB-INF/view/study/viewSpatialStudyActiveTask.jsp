@@ -2,6 +2,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<style>
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+	    text-transform: inherit; !important
+		}
+</style>
 <div class="changeContent">
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}"
@@ -347,7 +352,7 @@
                   id="${taskMasterAttributeBo.attributeName}_stat_id" class="statisticsBlock"
                   name="taskAttributeValueBos[7].useForStatistic" value="option1">
                 <label for="${taskMasterAttributeBo.attributeName}_stat_id">Use
-                  for Statistic</label>
+                  for statistic</label>
               </span>
             </div>
             <div
@@ -538,7 +543,7 @@
                   id="${taskMasterAttributeBo.attributeName}_stat_id" class="statisticsBlock"
                   name="taskAttributeValueBos[8].useForStatistic" value="option1">
                 <label for="${taskMasterAttributeBo.attributeName}_stat_id">Use
-                  for Statistic</label>
+                  for statistic</label>
               </span>
             </div>
             <div
@@ -729,7 +734,7 @@
                   id="${taskMasterAttributeBo.attributeName}_stat_id" class="statisticsBlock"
                   name="taskAttributeValueBos[9].useForStatistic" value="option1">
                 <label for="${taskMasterAttributeBo.attributeName}_stat_id">Use
-                  for Statistic</label>
+                  for statistic</label>
               </span>
             </div>
             <div

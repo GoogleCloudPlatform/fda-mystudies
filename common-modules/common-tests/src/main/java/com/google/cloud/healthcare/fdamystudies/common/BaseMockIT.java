@@ -354,13 +354,13 @@ public class BaseMockIT {
 
     // prepare the filepath
     String documentPath = Paths.get("").toAbsolutePath().toString();
-    documentPath =
-        documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
-            + "fda-mystudies/documentation/API"
-            + servletContext.getContextPath()
-            + "/openapi.json";
+    if (StringUtils.contains(documentPath, "fda-mystudies")) {
+      documentPath =
+          documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
+              + "fda-mystudies/documentation/API";
+    }
+    documentPath += servletContext.getContextPath() + "/openapi.json";
     documentPath = documentPath.replace(" ", "_");
-
     // write api-docs json to a file
     FileUtils.write(new File(documentPath), jsonObjNode.toPrettyString(), Charset.defaultCharset());
     logger.info(String.format("Open API documentation created at %s", documentPath));

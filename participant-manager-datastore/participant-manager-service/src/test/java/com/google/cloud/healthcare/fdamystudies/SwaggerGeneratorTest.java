@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import java.io.File;

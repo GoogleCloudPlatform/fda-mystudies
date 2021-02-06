@@ -30,6 +30,8 @@ import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityState
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +52,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Process activity state",
+    value =
+        "This service is developed on the response server and called by mobile app. "
+            + "The response data will be agregated and stored on cloud firestore using Firestore's SDK.",
+    description =
+        "This service is developed on the response server and called by mobile app. "
+            + "The response data will be agregated and stored on cloud firestore using Firestore's SDK.")
 @RestController
 public class ProcessActivityStateController {
   @Autowired
@@ -60,6 +70,7 @@ public class ProcessActivityStateController {
   private static final Logger logger =
       LoggerFactory.getLogger(ProcessActivityStateController.class);
 
+  @ApiOperation(value = "Get activity state")
   @GetMapping(
       value = "/participant/get-activity-state",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -96,6 +107,7 @@ public class ProcessActivityStateController {
     }
   }
 
+  @ApiOperation(value = "Update activity state")
   @PostMapping("/participant/update-activity-state")
   public ResponseEntity<?> updateActivityState(
       @RequestBody ActivityStateRequestBean activityStateRequestBean,

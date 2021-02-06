@@ -143,7 +143,7 @@ public class UserProfileController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
-  @ApiOperation(value = "Deactivate user")
+  @ApiOperation(value = "Deactivate the user")
   @DeleteMapping(
       value = "/deactivate",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -176,6 +176,7 @@ public class UserProfileController {
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 
+  @ApiOperation(value = "Resend confirmation to the user via email")
   @PostMapping(
       value = "/resendConfirmation",
       consumes = MediaType.APPLICATION_JSON_VALUE,

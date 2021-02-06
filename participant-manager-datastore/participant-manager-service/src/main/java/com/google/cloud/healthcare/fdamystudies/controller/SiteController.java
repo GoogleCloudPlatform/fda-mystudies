@@ -29,6 +29,8 @@ import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +50,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Api(
+    tags = "Sites",
+    value = "Site related api's",
+    description = "Operations pertaining to Sites in participant manager")
 @RestController
 public class SiteController {
 
@@ -59,6 +65,7 @@ public class SiteController {
 
   @Autowired private SiteService siteService;
 
+  @ApiOperation(value = "create a new site for a study")
   @PostMapping(
       value = "/sites",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -79,6 +86,7 @@ public class SiteController {
     return ResponseEntity.status(siteResponse.getHttpStatusCode()).body(siteResponse);
   }
 
+  @ApiOperation(value = "add a new participant for a site")
   @PostMapping(
       value = "/sites/{siteId}/participants",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -98,6 +106,7 @@ public class SiteController {
     return ResponseEntity.status(participantResponse.getHttpStatusCode()).body(participantResponse);
   }
 
+  @ApiOperation(value = "fetch participants related to particular site")
   @GetMapping(value = "/sites/{siteId}/participants", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ParticipantRegistryResponse> getSiteParticipant(
       @PathVariable String siteId,
@@ -120,6 +129,7 @@ public class SiteController {
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
 
+  @ApiOperation(value = "Activate/Deactivate site for a study")
   @PutMapping(
       value = "/sites/{siteId}/decommission",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -139,6 +149,7 @@ public class SiteController {
         .body(decomissionSiteResponse);
   }
 
+  @ApiOperation(value = "fetch participant details with enrollment history")
   @GetMapping("/sites/{participantRegistrySiteId}/participant")
   public ResponseEntity<ParticipantDetailResponse> getParticipantDetails(
       @PathVariable String participantRegistrySiteId,
@@ -155,6 +166,7 @@ public class SiteController {
     return ResponseEntity.status(participantDetails.getHttpStatusCode()).body(participantDetails);
   }
 
+  @ApiOperation(value = "Send/Resend invitation to participants")
   @PostMapping("/sites/{siteId}/participants/invite")
   public ResponseEntity<InviteParticipantResponse> inviteParticipants(
       @Valid @RequestBody InviteParticipantRequest inviteParticipantRequest,
@@ -175,6 +187,7 @@ public class SiteController {
         .body(inviteParticipantResponse);
   }
 
+  @ApiOperation(value = "import participants from file")
   @PostMapping(
       value = "/sites/{siteId}/participants/import",
       produces = MediaType.APPLICATION_JSON_VALUE)
@@ -192,6 +205,7 @@ public class SiteController {
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
 
+  @ApiOperation(value = "update onbording status for a participant")
   @PatchMapping("/sites/{siteId}/participants/status")
   public ResponseEntity<ParticipantStatusResponse> updateOnboardingStatus(
       @PathVariable String siteId,
@@ -210,6 +224,7 @@ public class SiteController {
     return ResponseEntity.status(response.getHttpStatusCode()).body(response);
   }
 
+  @ApiOperation(value = "fetch a list of sites that user have permissions")
   @GetMapping("/sites")
   public ResponseEntity<SiteDetailsResponse> getSites(
       @RequestHeader(name = USER_ID_HEADER) String userId,
