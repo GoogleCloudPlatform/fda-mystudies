@@ -410,11 +410,12 @@
     // Removing selected file upload image
     $(document).on("click", ".removeUrl", function () {
       $(this).css("visibility", "hidden");
+      $('.uploadImg').val('');
       $(this).parent().parent().find(".thumb img").attr("src",
           "/studybuilder/images/dummy-img.jpg");
       $(this).parent().parent().find(".imagePathCls").val('');
     });
-
+    
     //deleting panel
     var b = $("#accordion").find(".panel-default").length;
     if (b == 1) {
