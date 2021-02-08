@@ -456,7 +456,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               keyValueForSubject.put("$firstName", userdetails.getFirstName());
               keyValueForSubject2.put("$firstName", userdetails.getFirstName());
               keyValueForSubject.put("$lastName", userdetails.getLastName());
+              keyValueForSubject.put(
+                  "$passwordResetLinkExpirationInDay",
+                  String.valueOf(passwordResetLinkExpirationInDay));
+              keyValueForSubject2.put(
+                  "$passwordResetLinkExpirationInDay",
+                  String.valueOf(passwordResetLinkExpirationInDay));
               keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
+
               customerCareMail = propMap.get("email.address.customer.service");
               keyValueForSubject.put("$customerCareMail", customerCareMail);
               keyValueForSubject2.put("$customerCareMail", customerCareMail);
