@@ -7209,4 +7209,8 @@
         $('.OtherOptionCls').find('input:text,select').removeAttr('required');
       }
     })
+    
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
   </script>
