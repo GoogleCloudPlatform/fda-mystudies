@@ -36,9 +36,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api(
-    tags = "Get participant id",
-    value = "Get participant id based on study",
-    description = "Get participant id based on study")
+    tags = "Generate participant id",
+    value = "Generate participant id based on study",
+    description = "Generate participant id based on study")
 @RestController
 public class ParticipantIdController {
 
@@ -48,7 +48,7 @@ public class ParticipantIdController {
 
   private static final Logger logger = LoggerFactory.getLogger(ParticipantIdController.class);
 
-  @ApiOperation(value = "Generate participant id from response server")
+  @ApiOperation(value = "Generate participant id from response datastore")
   @PostMapping("/participant/add")
   public ResponseEntity<?> addParticipantIdentifier(
       @RequestHeader("appId") String applicationId,

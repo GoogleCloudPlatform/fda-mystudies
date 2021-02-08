@@ -79,14 +79,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(
-    tags = "Process activity response",
-    value =
-        "This service is developed on the response server and called by mobile app. "
-            + "The response data will be agregated and stored on cloud firestore using Firestore's SDK.",
-    description =
-        "This service is developed on the response server and called by mobile app. "
-            + "The response data will be agregated and stored on cloud firestore using Firestore's SDK.")
+@Api(tags = "Process activity response", description = "Response activity operation performed")
 @RestController
 public class ProcessActivityResponseController {
   @Autowired private ParticipantService participantService;
@@ -498,7 +491,7 @@ public class ProcessActivityResponseController {
     }
   }
 
-  @ApiOperation(value = "Withdraw participant from study from response server")
+  @ApiOperation(value = "Withdraw participant from study from response datastore")
   @PostMapping("/participant/withdraw")
   public ResponseEntity<?> withdrawParticipantFromStudy(
       @RequestHeader String appId,

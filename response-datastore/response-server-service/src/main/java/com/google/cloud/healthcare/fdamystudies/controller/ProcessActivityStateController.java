@@ -52,14 +52,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(
-    tags = "Process activity state",
-    value =
-        "This service is developed on the response server and called by mobile app. "
-            + "The response data will be agregated and stored on cloud firestore using Firestore's SDK.",
-    description =
-        "This service is developed on the response server and called by mobile app. "
-            + "The response data will be agregated and stored on cloud firestore using Firestore's SDK.")
+@Api(tags = "Process activity state", description = "Activity state operation performed")
 @RestController
 public class ProcessActivityStateController {
   @Autowired

@@ -35,7 +35,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "Study metadata", value = "Study metadata", description = "Study metadata")
+@Api(
+    tags = "Study metadata",
+    value = "Study metadata",
+    description =
+        "Operations pertaining to study metadata, once study is published from study builder")
 @RestController
 public class StudyMetadataController {
   @Autowired private StudyMetadataService studyMetadataService;
@@ -46,7 +50,7 @@ public class StudyMetadataController {
 
   @ApiOperation(
       value =
-          "Add or update study metadata in response server when a study is published from study builder")
+          "Add or update study metadata in response datastore when a study is published from study builder")
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
       @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request)
