@@ -37,6 +37,8 @@ export class SiteDetailsComponent
   enableDisable = '';
   toggleDisplay = false;
   userIds: string[] = [];
+  userIdsBackup: string[] = [];
+  activeTabForDisabled='';
   onBoardingStatus = OnboardingStatus;
   activeTab = OnboardingStatus.All;
   newlyImportedParticipants: Participant[] = [];
@@ -97,6 +99,20 @@ export class SiteDetailsComponent
             if (result.length > 0) {
               participant.newlyCreatedUser = true;
             }
+
+            if(this.activeTabForDisabled === OnboardingStatus.Disabled){
+         
+              for (let registryParticipant in this.siteDetailsBackup.participantRegistryDetail.registryParticipants) {
+                let participant = this.siteDetailsBackup.participantRegistryDetail.registryParticipants[registryParticipant];
+                if(this.userIdsBackup.includes(participant.id)){
+                  participant.newlyCreatedUser= true;
+                 }
+              }
+              this.activeTabForDisabled=""
+              this.userIds=this.userIdsBackup
+              return this.siteDetailsBackup.participantRegistryDetail.registryParticipants;
+           
+            }
             return participant;
           },
         );
@@ -114,6 +130,7 @@ export class SiteDetailsComponent
           (participant: RegistryParticipant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()),
         );
+
         return this.siteDetailsBackup;
       }),
     );
@@ -129,10 +146,13 @@ export class SiteDetailsComponent
       tab === OnboardingStatus.New || tab === OnboardingStatus.Invited
         ? 'Disable invitation'
         : 'Enable invitation';
+
+    this.activeTabForDisabled=this.activeTab;
     this.activeTab = tab;
     this.toggleDisplay = false;
+    this.userIdsBackup=this.userIds;
     this.userIds = [];
-    this.fetchSiteParticipant(tab);
+    this.fetchSiteParticipant(tab); 
   }
 
   rowCheckBoxChange(event: Event): void {
