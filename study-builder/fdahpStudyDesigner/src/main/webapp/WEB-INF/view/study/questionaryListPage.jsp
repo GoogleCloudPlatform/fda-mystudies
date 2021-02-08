@@ -74,8 +74,7 @@
             <tr>
               <td>${questionnaryInfo.createdDate}</td>
               <td>
-                <div class="dis-ellipsis pr-100"
-                     title="${fn:escapeXml(questionnaryInfo.title)}">${questionnaryInfo.title}</div>
+                <div class="dis-ellipsis pr-100">${questionnaryInfo.title}</div>
               </td>
               <td>${questionnaryInfo.frequency == 'Manually Schedule' ? 'Custom Schedule' :questionnaryInfo.frequency}</td>
               <td style="width:200px !important;">
