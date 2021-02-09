@@ -34,6 +34,7 @@ data "google_container_cluster" "gke_cluster" {
 }
 
 provider "kubernetes" {
+  version                = "1.13.3"
   load_config_file       = false
   token                  = data.google_client_config.default.access_token
   host                   = data.google_container_cluster.gke_cluster.endpoint
