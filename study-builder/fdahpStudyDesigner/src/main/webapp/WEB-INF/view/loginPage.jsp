@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html class="overflow-hidden" lang="en">
+<html class="overflow-hidden" lang="ja">
   <head>
     <!-- Basic -->
     <meta charset="utf-8">
