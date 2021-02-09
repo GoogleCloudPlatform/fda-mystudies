@@ -353,11 +353,11 @@
             $('#completedId').removeAttr('disabled');
             bootbox.alert(errorMessage);
           } else {
-      	    if ($('.checkbox input:checked').length == 0) {
-      	      $("input").attr("required", true);
-      	    } else {
-      	      submitButton(buttonText);
-      	    }
+            if ($('.checkbox input:checked').length == 0) {
+              $("input").attr("required", true);
+            } else {
+              submitButton(buttonText);
+            }
           }
         },
         error: function status(data, status) {
