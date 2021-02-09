@@ -76,7 +76,7 @@
               <c:if
                   test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I')}">disabled</c:if>
               data-error="Please check these box if you want to proceed."
-              required> <label for="inlineCheckbox1"> iOS </label>
+              > <label for="inlineCheckbox1"> iOS </label>
           </span>
           <span class="checkbox checkbox-inline"><input
               type="checkbox" class="platformClass" id="inlineCheckbox2"
@@ -85,7 +85,7 @@
               <c:if
                   test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A')}">disabled</c:if>
               data-error="Please check these box if you want to proceed."
-              required> <label for="inlineCheckbox2"> Android </label>
+              > <label for="inlineCheckbox2"> Android </label>
           </span>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -345,15 +345,19 @@
           "${_csrf.parameterName}": "${_csrf.token}",
         },
         success: function platformValid(data, status) {
-        	 var message = data.message;
-             var errorMessage = data.errorMessage;
+      	  var message = data.message;
+          var errorMessage = data.errorMessage;
             
           $("body").removeClass("loading");
           if (message == "SUCCESS") {
             $('#completedId').removeAttr('disabled');
             bootbox.alert(errorMessage);
           } else {
-            submitButton(buttonText);
+      	    if ($('.checkbox input:checked').length == 0) {
+      	      $("input").attr("required", true);
+      	    } else {
+      	      submitButton(buttonText);
+      	    }
           }
         },
         error: function status(data, status) {
@@ -365,7 +369,11 @@
         global: false
       });
     } else {
-      submitButton(buttonText);
+      if ($('.checkbox input:checked').length == 0) {
+        $("input").attr("required", true);
+      } else {
+        submitButton(buttonText);
+      }
     }
   }
   function submitButton(buttonText) {
