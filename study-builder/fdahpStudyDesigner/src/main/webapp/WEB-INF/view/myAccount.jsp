@@ -8,9 +8,9 @@
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="black-lg-f">
-      My Account <c:if test="${accountManager eq 'Yes'}">
+      ?? ????? <c:if test="${accountManager eq 'Yes'}">
       <span
-          class="gray-xs-f ml-xlg">Account Manager
+          class="gray-xs-f ml-xlg">????? ???
       </span>
     </c:if>
     </div>
@@ -27,32 +27,10 @@
       <div class="b-bor">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">First Name
-              <small>(50 characters max)</small>
+            <div class="gray-xs-f line34">?
+              <small>(50????)</small>
               <span
-                  class="requiredStar"> *
-              </span>
-            </div>
-          </div>
-          <div class="col-md-6 p-none">
-            <div class="form-group cursAllow">
-              <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
-                     name="firstName" value="${fn:escapeXml(userBO.firstName)}"
-                     oldVal="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required readonly/>
-              <div class="help-block with-errors red-txt"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="b-bor mt-md">
-        <div class="ed-user-layout row">
-          <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Last Name
-              <small>(50 characters max)</small>
-              <span
-                  class="requiredStar"> *
+                      class="requiredStar"> *
               </span>
             </div>
           </div>
@@ -71,8 +49,30 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Email Address
-              <small>(100 characters max)</small>
+            <div class="gray-xs-f line34">?
+              <small>(50????)</small>
+              <span
+                      class="requiredStar"> *
+              </span>
+            </div>
+          </div>
+          <div class="col-md-6 p-none">
+            <div class="form-group cursAllow">
+              <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
+                     name="firstName" value="${fn:escapeXml(userBO.firstName)}"
+                     oldVal="${fn:escapeXml(userBO.firstName)}"
+                     maxlength="50" required readonly/>
+              <div class="help-block with-errors red-txt"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="b-bor mt-md">
+        <div class="ed-user-layout row">
+          <div class="col-md-4 p-none">
+            <div class="gray-xs-f line34">???????
+              <small>(100????)</small>
               <span
                   class="requiredStar"> *
               </span>
@@ -94,7 +94,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Phone (XXX - XXX - XXXX)
+            <div class="gray-xs-f line34">???? (???????
               <span
                   class="requiredStar"> *
               </span>
@@ -105,7 +105,7 @@
               <input type="text"
                      class="form-control edit-field bor-trans phoneMask resetVal linkDis"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     oldVal="${userBO.phoneNumber}" maxlength="12" data-minlength="12" required
+                     oldVal="${userBO.phoneNumber}" maxlength="13" data-minlength="12" required
                      readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -116,7 +116,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Role</div>
+            <div class="gray-xs-f line34">??</div>
           </div>
           <div class="col-md-6 p-none ">
             <div class="form-group cur-not-allowed roleDisable">
@@ -132,10 +132,10 @@
       <div id="hideProfileButton" class="mt-xlg">
         <div class="text-right">
           <div class="dis-line form-group mb-none">
-            <button id="editable" type="button" class="btn btn-primary blue-btn">Edit</button>
-            <button id="ed-cancel" type="button" class="btn btn-default gray-btn dis-none">Cancel
+            <button id="editable" type="button" class="btn btn-primary blue-btn">??</button>
+            <button id="ed-cancel" type="button" class="btn btn-default gray-btn dis-none">?????
             </button>
-            <button id="ed-update" type="submit" class="btn btn-primary blue-btn dis-none">Update
+            <button id="ed-update" type="submit" class="btn btn-primary blue-btn dis-none">??
             </button>
           </div>
         </div>
@@ -147,14 +147,14 @@
       <div class="row" id="hideChangePwd">
         <div class="col-md-12 pl-none pr-none">
           <div class="col-md-3 p-none">
-            <div class="gray-xs-f line34">Password</div>
+            <div class="gray-xs-f line34">?????</div>
           </div>
           <div class="col-md-7 p-none">
             <span class="chngpassdot">........</span>
           </div>
           <div class="col-md-2 p-none dis-line form-group mb-none text-right">
             <button id="pwd-link" type="button"
-                    class="btn btn-default gray-btn cur-pointer disChangePassButton">Change Password
+                    class="btn btn-default gray-btn cur-pointer disChangePassButton">???????
             </button>
           </div>
         </div>
@@ -164,7 +164,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none ">
-                <div class="gray-xs-f line34">Previous password
+                <div class="gray-xs-f line34">????????
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -182,7 +182,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">New Password
+                <div class="gray-xs-f line34">????????
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -202,7 +202,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">Confirm new password
+                <div class="gray-xs-f line34">????????????
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -238,33 +238,33 @@
   <div class="white-bg box-space">
 
     <div class="ed-user-layout row">
-      <div class="blue-md-f text-uppercase mb-md">Assigned Permissions</div>
+      <div class="blue-md-f text-uppercase mb-md">????</div>
 
       <!-- Assigned Permissions List-->
       <div class="edit-user-list-widget mb-xs">
-        <span>Users</span>
+        <span>??????</span>
         <span class="gray-xs-f pull-right">
           <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
+              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">????</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & edit</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">?? & ??</c:if>
         </span>
       </div>
 
       <div class="edit-user-list-widget mb-xs">
-        <span>Notifications</span>
+        <span>??????</span>
         <span class="gray-xs-f pull-right">
           <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
+              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">????</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & edit</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">?? & ??</c:if>
         </span>
       </div>
 
 
       <!-- Assigned Permissions List-->
       <div class="edit-user-list-widget">
-        <span>Studies</span>
+        <span>????</span>
         <span class="gray-xs-f pull-right">
           <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">No</c:if>
@@ -275,12 +275,12 @@
           <div class="mt-lg pl-md">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
               <div class="pb-md bor-dashed">
-                <span class="dot">Create New Studies</span>
+                <span class="dot">?????????</span>
               </div>
             </c:if>
             <div class="pl-sm pt-md">
               <span
-                  class="gray-xs-f text-weight-semibold text-uppercase">Existing Study Permissions
+                  class="gray-xs-f text-weight-semibold text-uppercase">???????????
               </span>
             </div>
             <c:forEach items="${studyAndPermissionList}" var="studyAndPermission">
@@ -290,9 +290,9 @@
                 </span>
                 <span class="gray-xs-f pull-right">
                   <c:if
-                      test="${not studyAndPermission.viewPermission}">View only</c:if>
+                      test="${not studyAndPermission.viewPermission}">????</c:if>
                   <c:if
-                      test="${studyAndPermission.viewPermission}">View and edit</c:if>
+                      test="${studyAndPermission.viewPermission}">?? and ??</c:if>
                 </span>
               </div>
             </c:forEach>
