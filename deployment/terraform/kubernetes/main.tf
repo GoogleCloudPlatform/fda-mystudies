@@ -35,7 +35,6 @@ data "google_container_cluster" "gke_cluster" {
 terraform {
   required_providers {
     kubernetes = {
-      source  = "hashicorp/kubernetes"
       version = "<= 1.13.3"
     }
   }
