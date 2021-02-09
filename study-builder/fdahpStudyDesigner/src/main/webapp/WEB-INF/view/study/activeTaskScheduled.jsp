@@ -906,7 +906,7 @@
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
 
                  
-                  <div class="gray-xs-f mb-sm">Select a date range
+                  <div class="gray-xs-f mb-sm">Select a date range and a start and end time for each run of the activity
                     <span class="requiredStar"> *</span>
                     <span
                        class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
@@ -1004,7 +1004,7 @@
 
                  
             <div class="gray-xs-f">
-              Select a date range
+             Select a date range and a start and end time for each run of the activity
               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
