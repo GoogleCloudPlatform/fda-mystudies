@@ -112,7 +112,8 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title=Account status: Invitation sent, pending activation"</c:if>
+                                                 test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"
+                                                 </c:if>
                                              <c:if
                                                  test="${user.emailChanged}">title="Account status: Pending Verification"</c:if>
                                              <c:if
