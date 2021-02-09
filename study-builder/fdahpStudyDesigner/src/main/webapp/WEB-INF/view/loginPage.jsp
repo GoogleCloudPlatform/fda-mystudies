@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -117,9 +118,6 @@
               <div class="pb-md pt-xs">
                 <a id="forgot_pwd"
                    class="gray-link white__text"
-                   <!--
-                   href="javascript:void(0)">Forgot password?
-                   -->
                    href="javascript:void(0)">パスワードをお忘れの方はこちら
                 </a>
               </div>
@@ -132,7 +130,7 @@
             <div class="pwd dis-none">
               <div class="mb-lg">
                 <h3 style="    color: #fff; padding-top: 20px;" class="mt-none">パスワードをお忘れですか?</h3>
-                <div class="mt-md white__text">メールアドレスを入力して下さい。パスワードをリセットするリンクを送信します。
+                <div class="mt-md white__text">ログインIDのメールアドレスを入力して下さい。パスワードをリセットするリンクを送信します。
                     <!--
                 <div class="mt-md white__text">Enter your email to receive a password reset link
                     -->
@@ -150,7 +148,7 @@
                 <button type="submit" class="btn lg-btn" id="log-btn">SUBMIT</button>
               </div>
               <div class="pt-xs">
-                <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to sign in
+                <a id="login" class="gray-link white__text" href="javascript:void(0)">サインイン画面に戻る
                 </a>
               </div>
             </div>

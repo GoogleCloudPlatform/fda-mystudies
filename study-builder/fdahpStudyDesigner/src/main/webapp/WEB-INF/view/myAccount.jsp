@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -8,9 +8,9 @@
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="black-lg-f">
-      ?? ????? <c:if test="${accountManager eq 'Yes'}">
+      マイ アカウント <c:if test="${accountManager eq 'Yes'}">
       <span
-          class="gray-xs-f ml-xlg">????? ???
+          class="gray-xs-f ml-xlg">アカウント 管理者
       </span>
     </c:if>
     </div>
@@ -27,8 +27,8 @@
       <div class="b-bor">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">?
-              <small>(50????)</small>
+            <div class="gray-xs-f line34">姓
+              <small>(50文字まで)</small>
               <span
                       class="requiredStar"> *
               </span>
@@ -49,8 +49,8 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">?
-              <small>(50????)</small>
+            <div class="gray-xs-f line34">名
+              <small>(50文字まで)</small>
               <span
                       class="requiredStar"> *
               </span>
@@ -71,8 +71,8 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">???????
-              <small>(100????)</small>
+            <div class="gray-xs-f line34">メールアドレス
+              <small>(100文字まで)</small>
               <span
                   class="requiredStar"> *
               </span>
@@ -94,7 +94,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">???? (???????
+            <div class="gray-xs-f line34">電話番号 (ハイフン付き）
               <span
                   class="requiredStar"> *
               </span>
@@ -116,7 +116,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">??</div>
+            <div class="gray-xs-f line34">権限</div>
           </div>
           <div class="col-md-6 p-none ">
             <div class="form-group cur-not-allowed roleDisable">
@@ -132,10 +132,10 @@
       <div id="hideProfileButton" class="mt-xlg">
         <div class="text-right">
           <div class="dis-line form-group mb-none">
-            <button id="editable" type="button" class="btn btn-primary blue-btn">??</button>
-            <button id="ed-cancel" type="button" class="btn btn-default gray-btn dis-none">?????
+            <button id="editable" type="button" class="btn btn-primary blue-btn">変更する</button>
+            <button id="ed-cancel" type="button" class="btn btn-default gray-btn dis-none">キャンセル
             </button>
-            <button id="ed-update" type="submit" class="btn btn-primary blue-btn dis-none">??
+            <button id="ed-update" type="submit" class="btn btn-primary blue-btn dis-none">更新
             </button>
           </div>
         </div>
@@ -147,14 +147,14 @@
       <div class="row" id="hideChangePwd">
         <div class="col-md-12 pl-none pr-none">
           <div class="col-md-3 p-none">
-            <div class="gray-xs-f line34">?????</div>
+            <div class="gray-xs-f line34">パスワード</div>
           </div>
           <div class="col-md-7 p-none">
             <span class="chngpassdot">........</span>
           </div>
           <div class="col-md-2 p-none dis-line form-group mb-none text-right">
             <button id="pwd-link" type="button"
-                    class="btn btn-default gray-btn cur-pointer disChangePassButton">???????
+                    class="btn btn-default gray-btn cur-pointer disChangePassButton">パスワード変更
             </button>
           </div>
         </div>
@@ -164,7 +164,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none ">
-                <div class="gray-xs-f line34">????????
+                <div class="gray-xs-f line34">現在のパスワード
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -182,7 +182,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">????????
+                <div class="gray-xs-f line34">新しいパスワード
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -202,7 +202,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">????????????
+                <div class="gray-xs-f line34">新しいパスワード（確認）
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -238,33 +238,33 @@
   <div class="white-bg box-space">
 
     <div class="ed-user-layout row">
-      <div class="blue-md-f text-uppercase mb-md">????</div>
+      <div class="blue-md-f text-uppercase mb-md">権限設定</div>
 
       <!-- Assigned Permissions List-->
       <div class="edit-user-list-widget mb-xs">
-        <span>??????</span>
+        <span>ユーザー管理</span>
         <span class="gray-xs-f pull-right">
           <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">????</c:if>
+              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">参照のみ</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">?? & ??</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">参照 & 登録</c:if>
         </span>
       </div>
 
       <div class="edit-user-list-widget mb-xs">
-        <span>??????</span>
+        <span>プッシュ通知</span>
         <span class="gray-xs-f pull-right">
           <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">????</c:if>
+              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">参照のみ</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">?? & ??</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">参照 & 登録</c:if>
         </span>
       </div>
 
 
       <!-- Assigned Permissions List-->
       <div class="edit-user-list-widget">
-        <span>????</span>
+        <span>治験情報</span>
         <span class="gray-xs-f pull-right">
           <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">No</c:if>
@@ -275,12 +275,12 @@
           <div class="mt-lg pl-md">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
               <div class="pb-md bor-dashed">
-                <span class="dot">?????????</span>
+                <span class="dot">治験情報の新規作成</span>
               </div>
             </c:if>
             <div class="pl-sm pt-md">
               <span
-                  class="gray-xs-f text-weight-semibold text-uppercase">???????????
+                  class="gray-xs-f text-weight-semibold text-uppercase">作成済み治験情報の権限
               </span>
             </div>
             <c:forEach items="${studyAndPermissionList}" var="studyAndPermission">
@@ -290,9 +290,9 @@
                 </span>
                 <span class="gray-xs-f pull-right">
                   <c:if
-                      test="${not studyAndPermission.viewPermission}">????</c:if>
+                      test="${not studyAndPermission.viewPermission}">参照のみ</c:if>
                   <c:if
-                      test="${studyAndPermission.viewPermission}">?? and ??</c:if>
+                      test="${studyAndPermission.viewPermission}">参照 and 登録</c:if>
                 </span>
               </div>
             </c:forEach>
