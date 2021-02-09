@@ -84,8 +84,8 @@
               </div>
               <div class="ll__border__bottom"></div>
               <div class="lg-space-title">
-                <span>Welcome,</span>
-                <span>${sessionObject.lastName}&nbsp;${sessionObject.firstName}</span>
+                <span>ようこそ、</span>
+                <span>${sessionObject.lastName}&nbsp;${sessionObject.firstName}&nbsp;さん</span>
               </div>
               <div class='lg-icons'>
                 <ul class="lg-icons-list">

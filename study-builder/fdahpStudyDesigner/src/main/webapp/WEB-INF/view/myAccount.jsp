@@ -292,7 +292,7 @@
                   <c:if
                       test="${not studyAndPermission.viewPermission}">参照のみ</c:if>
                   <c:if
-                      test="${studyAndPermission.viewPermission}">参照 and 登録</c:if>
+                      test="${studyAndPermission.viewPermission}">参照 & 登録</c:if>
                 </span>
               </div>
             </c:forEach>

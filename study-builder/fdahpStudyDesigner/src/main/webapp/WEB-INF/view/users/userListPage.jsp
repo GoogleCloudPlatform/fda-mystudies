@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -11,7 +10,7 @@
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none mb-md">
 
-      <div class="black-lg-f" style="margin-top: 0px">Manage Users</div>
+      <div class="black-lg-f" style="margin-top: 0px">ユーザ管理</div>
 
       <div class="dis-inline" style="margin-top: 8px">
         <form class="navbar-form" role="search">
@@ -37,7 +36,7 @@
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
             <button type="button"
                     class="btn btn-primary blue-btn addOrEditUser"
-                    style="margin-top: 12px;">Add User
+                    style="margin-top: 12px;">新規追加
             </button>
           </c:if>
         </div>
@@ -64,16 +63,16 @@
       <table id="user_list" class="table tbl_rightalign tbl">
         <thead>
           <tr>
-            <th id="">Name
+            <th id="">名前
               <span class="sort"></span>
             </th>
-            <th id="">Email address
+            <th id="">メールアドレス
               <span class="sort"></span>
             </th>
-            <th id="">ROLE
+            <th id="">権限
               <span class="sort"></span>
             </th>
-            <th id="">Actions</th>
+            <th id="">アクション</th>
           </tr>
         </thead>
         <tbody>
@@ -104,13 +103,13 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title="Status: Invitation Sent, Account Activation Pending"</c:if>
+                                                 test="${empty user.userPassword}">title="Status: アカウントアクティベーション待ち"</c:if>
                                              <c:if
-                                                 test="${user.emailChanged}">title="Status: Pending Verification"</c:if>
+                                                 test="${user.emailChanged}">title="Status: ユーザー検証待ち"</c:if>
                                              <c:if
-                                                 test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Status: Active"</c:if>
+                                                 test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Status: アクティブ"</c:if>
                                              <c:if
-                                                 test="${!user.emailChanged && not empty user.userPassword &&  not user.enabled}">title="Status: Deactivated"</c:if>>
+                                                 test="${!user.emailChanged && not empty user.userPassword &&  not user.enabled}">title="Status: 利用停止中"</c:if>>
                     <input type="checkbox" class="switch-input"
                            value="${user.enabled ? 1 : 0}" id="${user.userId}"
                            <c:if test="${user.enabled}">checked</c:if>
@@ -154,7 +153,7 @@
     <c:if test="${ownUser eq '1'}">
     bootbox.alert({
       closeButton: false,
-      message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
+      message: 'アカウントは既に更新されています。もう一度サインして再度操作を行って下さい。',
       callback: function (result) {
         var a = document.createElement('a');
         a.href = "/studybuilder/sessionOut.do";
@@ -178,7 +177,7 @@
     $('#enforcePasswordId').on('click', function () {
       bootbox.confirm({
         closeButton: false,
-        message: "Are you sure you wish to enforce password change for all users? Note: This will not apply to your own account.",
+        message: "全てのユーザーにパスワードの変更を強制してもよろしいでしょうか？ 注）自分のアカウントには適用されません。",
         buttons: {
           'cancel': {
             label: 'No',
@@ -233,7 +232,7 @@
       ],
       "lengthChange": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "まだコンテンツを作成していません。",
       },
       "pageLength": 15
     });

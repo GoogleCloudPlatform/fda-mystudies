@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -16,13 +15,13 @@
             src="/studybuilder/images/icons/back-b.png" alt=""/></a>
       </span>
       <c:if test="${actionPage eq 'ADD_PAGE'}">
-        Add New User
+        ユーザー新規作成
       </c:if>
       <c:if test="${actionPage eq 'EDIT_PAGE'}">
-        Edit User Details
+        ユーザー情報編集
       </c:if>
       <c:if test="${actionPage eq 'VIEW_PAGE'}">
-        User Details
+        ユーザー詳細情報
       </c:if>
 
     </div>
@@ -35,7 +34,7 @@
               <span class="stat">
                 <span class="black-sm-f">Status:
                   <span
-                      class="gray-xs-f mb-xs pl-xs"> Active
+                      class="gray-xs-f mb-xs pl-xs"> アクティブ
                   </span>
                 </span>
               </span>
@@ -46,7 +45,7 @@
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Status:
                 <span
-                    class="gray-xs-f mb-xs pl-xs"> Deactivated
+                    class="gray-xs-f mb-xs pl-xs"> 利用停止注
                 </span>
               </span>
             </div>
@@ -55,14 +54,12 @@
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Status:
                 <span
-                    class="gray-xs-f mb-xs pl-xs pr-md"> Invitation Sent,
-                  Account Activation Pending
+                    class="gray-xs-f mb-xs pl-xs pr-md"> アカウントアクティベーション待ち
                 </span>
               </span>
               <span class="black-sm-f resend pl-md">
                 <a
-                    href="javascript:void(0)" id="resendLinkId">Re-send
-                  Activation Link
+                    href="javascript:void(0)" id="resendLinkId">アクティベーションリンク再送信中
                 </a>
               </span>
             </div>
@@ -71,7 +68,7 @@
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Status:
                 <span
-                    class="gray-xs-f mb-xs pl-xs"> Pending Verification
+                    class="gray-xs-f mb-xs pl-xs"> ユーザー検証待ち
                 </span>
               </span>
             </div>
@@ -101,7 +98,7 @@
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"
-                    id="enforcePasswordId">Enforce Password Change
+                    id="enforcePasswordId">パスワード強制変更
             </button>
           </div>
         </c:if>
@@ -109,18 +106,17 @@
       <div class="ed-user-layout row">
         <!-- Edit User Layout-->
 
-        <div class="blue-md-f text-uppercase mb-md">Study Information</div>
+        <div class="blue-md-f text-uppercase mb-md">ユーザー情報</div>
         <div class="col-md-12 p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
-              First Name
+              姓
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
-              <input autofocus="autofocus" type="text" class="form-control"
-                     name="firstName" value="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required
+              <input type="text" class="form-control" name="lastName"
+                     value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -128,12 +124,13 @@
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-              Last Name
+              名
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" name="lastName"
-                     value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required
+              <input autofocus="autofocus" type="text" class="form-control"
+                     name="firstName" value="${fn:escapeXml(userBO.firstName)}"
+                     maxlength="50" required
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -145,9 +142,8 @@
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
-              Email Address
-              <c:if test="${actionPage ne 'VIEW_PAGE'}">&nbsp;<small>(100
-                characters max)</small>
+              メールアドレス
+              <c:if test="${actionPage ne 'VIEW_PAGE'}">&nbsp;<small>(100文字まで)</small>
               </c:if>
               <span class="requiredStar"> *</span>
             </div>
@@ -166,7 +162,7 @@
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-              Phone (XXX - XXX - XXXX)
+              電話番号 (ハイフン付き)
             </div>
             <div class="form-group">
               <input type="text" class="form-control phoneMask"
@@ -184,7 +180,7 @@
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="blue-md-f text-uppercase mt-lg mb-md">
-              Assign Role
+              権限
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -202,8 +198,7 @@
           </div>
           <c:if test="${actionPage ne 'ADD_PAGE'}">
             <div class="col-md-6 pl-none">
-              <div class="blue-md-f text-uppercase mt-lg mb-md">&nbsp;&nbsp;&nbsp;&nbsp;Activate
-                / Deactivate
+              <div class="blue-md-f text-uppercase mt-lg mb-md">&nbsp;&nbsp;&nbsp;&nbsp;アクティブ / 利用停止
               </div>
               <div class="form-group mb-none">
                 <c:if
@@ -231,9 +226,9 @@
         <!-- Assign Permissions -->
         <div class="blue-md-f text-uppercase mt-lg">Assign Permissions</div>
         <div class="pull-right mb-xs">
-          <span class="gray-xs-f">View only</span>
+          <span class="gray-xs-f">参照のみ</span>
           <span
-              class="gray-xs-f ml-lg">View and edit
+              class="gray-xs-f ml-lg">参照 & 登録
           </span>
         </div>
         <div class="clearfix"></div>
@@ -244,7 +239,7 @@
               type="checkbox" class="chk" id="inlineCheckbox1" value="option1"
               <c:if test="${fn:contains(permissions,7)}">checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox1"> Users </label>
+            <label for="inlineCheckbox1"> ユーザー管理 </label>
           </span>
           <span class="pull-right">
             <span
@@ -272,7 +267,7 @@
               type="checkbox" id="inlineCheckbox3" class="chk" value="option1"
               <c:if test="${fn:contains(permissions,4)}">checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox3"> Notifications </label>
+            <label for="inlineCheckbox3"> プッシュ通知管理 </label>
           </span>
           <span class="pull-right">
             <span
@@ -301,7 +296,7 @@
               type="checkbox" id="inlineCheckbox4" name="manageStudies"
               <c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox4"> Studies </label>
+            <label for="inlineCheckbox4"> 治験管理 </label>
           </span>
           <div class="mt-lg pl-lg">
             <div class="pb-md bor-dashed">
@@ -311,14 +306,14 @@
                   value="${fn:contains(permissions,8)?'1':''}"
               <c:if test="${fn:contains(permissions,8)}"> checked</c:if>
                   <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-                <label for="inlineCheckbox5"> Create New Studies </label>
+                <label for="inlineCheckbox5"> 治験情報新規作成 </label>
               </span>
             </div>
             <div class="mt-md study-list mb-md addHide">
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
                 <select
                     class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
-                    title="- Select and Add Studies -" multiple id="multiple">
+                    title="- 治験情報を選択、または追加して下さい -" multiple id="multiple">
                   <c:forEach items="${studyBOList}" var="study">
                     <option value="${study.id}"
                             id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
@@ -330,11 +325,11 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions
+                  class="mr-lg text-weight-semibold text-uppercase">既存の治験情報
               </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
-                <span class="ablue removeAll changeView">x Remove all</span>
+                <span class="ablue removeAll changeView">x 全て削除</span>
               </c:if>
             </div>
             <!-- Selected Study items -->
@@ -386,17 +381,17 @@
         <div class="dis-line text-right ml-md">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button"
-                    class="btn btn-default gray-btn backOrCancelBttn">Cancel
+                    class="btn btn-default gray-btn backOrCancelBttn">キャンセル
             </button>
           </div>
           <c:if test="${actionPage eq 'ADD_PAGE'}">
             <div class="dis-line form-group mb-none">
-              <button type="button" class="btn btn-primary blue-btn addUpdate">Add</button>
+              <button type="button" class="btn btn-primary blue-btn addUpdate">新規追加</button>
             </div>
           </c:if>
           <c:if test="${actionPage eq 'EDIT_PAGE'}">
             <div class="dis-line form-group mb-none">
-              <button type="button" class="btn btn-primary blue-btn addUpdate">Update</button>
+              <button type="button" class="btn btn-primary blue-btn addUpdate">更新</button>
             </div>
           </c:if>
         </div>
@@ -591,7 +586,7 @@
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
 
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-        if ($(this).text() == "- All items are already selected -") {
+        if ($(this).text() == "- 全て選択済みです -") {
           $(this).hide();
         }
       });
@@ -627,7 +622,7 @@
           ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
       if (count == tot_items) {
         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").empty().append(
-        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+        	$("<li> </li>").attr("class","text-center").text("- 全て選択済みです -"));
       }
 
     });
@@ -636,7 +631,7 @@
     $(".removeAll").click(function () {
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-        if ($(this).text() == "- All items are already selected -") {
+        if ($(this).text() == "- 全て選択済みです -") {
           $(this).hide();
         }
       });
@@ -769,7 +764,7 @@
         });
 
     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-      if ($(this).text() == "- All items are already selected -") {
+      if ($(this).text() == "- 全て選択済みです -") {
         $(this).hide();
       }
     });
