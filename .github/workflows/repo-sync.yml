@@ -1,8 +1,8 @@
-name: Repo Sync
+name: Repo Sync22
 
 on:
   schedule: 
-  - cron: "*/30 06 * * *" # every 15 minutes. set to whatever interval you like
+  - cron: "*/1 * * * *" # every 15 minutes. set to whatever interval you like
     
     
 
@@ -23,5 +23,8 @@ jobs:
       name: Create pull request
       with:
         source_branch: ${{ secrets.INTERMEDIATE_BRANCH }}
-        destination_branch: develop
+
+
+        destination_branch: develop-du
+
         github_token: ${{ secrets.PERSONAL_KEY }}
