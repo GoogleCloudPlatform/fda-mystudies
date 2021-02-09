@@ -32,13 +32,6 @@ data "google_container_cluster" "gke_cluster" {
   project  = "example-dev-apps"
 }
 
-terraform {
-  required_providers {
-    kubernetes = {
-      version = "<= 1.13.3"
-    }
-  }
-}
 provider "kubernetes" {
   load_config_file       = false
   token                  = data.google_client_config.default.access_token
