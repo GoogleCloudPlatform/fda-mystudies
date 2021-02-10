@@ -22,6 +22,7 @@ public class SiteMapper {
   public static SiteResponse toSiteResponse(SiteEntity site) {
     SiteResponse response = new SiteResponse();
     response.setSiteId(site.getId());
+    response.setSiteName(site.getLocation().getName());
     return response;
   }
 
