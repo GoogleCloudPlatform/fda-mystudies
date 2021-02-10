@@ -3215,7 +3215,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String searchQuery =
               "From QuestionnairesStepsBo QSBO where QSBO.questionnairesId=:questionnaireId "
                   + "and QSBO.active=1 order by QSBO.sequenceNo ASC";
-          questionnaireStepList = session.createQuery(searchQuery).list();
+          Query query = session.createQuery(searchQuery);
+          query.setInteger("questionnaireId", questionnaireId);
+          questionnaireStepList = query.list();
           if ((null != questionnaireStepList) && !questionnaireStepList.isEmpty()) {
             if (questionnaireStepList.size() == 1) {
               questionnaireStepList.get(0).setDestinationStep(0);
