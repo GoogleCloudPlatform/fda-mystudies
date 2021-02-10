@@ -643,8 +643,16 @@
                             enrollmentStatus.NotEligile
                         "
                       >
+                        <label
+                          [ngClass]="
+                            siteParticipants.participantRegistryDetail
+                              .sitePermission === permission.ViewAndEdit
+                              ? 'chk_box_hidden'
+                              : 'chk_box_hidden2'
+                          "
+                          for="{{ participant.id }}"
+                        ></label>
                         <span
-                          [ngClass]="{'ml-4 pl-3': invitedYetToEnrollCount > 0}"
                           class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',

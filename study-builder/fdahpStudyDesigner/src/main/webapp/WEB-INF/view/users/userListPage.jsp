@@ -112,7 +112,8 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title=Account status: Invitation sent, pending activation"</c:if>
+                                                 test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"
+                                                 </c:if>
                                              <c:if
                                                  test="${user.emailChanged}">title="Account status: Pending Verification"</c:if>
                                              <c:if
@@ -281,12 +282,12 @@
               if (status == 1) {
                 showSucMsg('User successfully deactivated.');
                 $('#' + userId).val("0");
-                $('#label' + userId).attr('data-original-title', 'Status: Deactivated');
+                $('#label' + userId).attr('data-original-title', 'Account status: Deactivated');
                 $('#editIcon' + userId).addClass('cursor-none');
               } else {
                 showSucMsg('User successfully activated.');
                 $('#' + userId).val("1");
-                $('#label' + userId).attr('data-original-title', 'Status: Active');
+                $('#label' + userId).attr('data-original-title', 'Account status: Active');
                 $('#editIcon' + userId).removeClass('cursor-none');
               }
             } else {

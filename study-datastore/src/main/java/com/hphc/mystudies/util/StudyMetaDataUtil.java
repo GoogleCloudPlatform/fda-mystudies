@@ -451,7 +451,7 @@ public class StudyMetaDataUtil {
             String appTokenId = "";
             for (Map.Entry<String, String> map : authPropMap.entrySet()) {
               if (map.getValue().equals(appToken)) {
-                appTokenId = map.getValue();
+                appTokenId = map.getKey();
               }
 
               if (map.getValue().equals(bundleId)) {
