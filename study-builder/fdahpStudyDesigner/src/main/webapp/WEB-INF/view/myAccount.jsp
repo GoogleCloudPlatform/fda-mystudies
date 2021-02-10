@@ -222,10 +222,10 @@
             <div class="dis-line form-group mt-md mb-none">
               <button type="button" class="btn btn-default gray-btn mr-sm" id="cancelBtn"
                       tabindex="4">
-                Cancel
+                キャンセル
               </button>
               <button type="button" class="btn btn-primary blue-btn" id="updateBtn" tabindex="5">
-                Update
+                更新
               </button>
             </div>
           </div>
@@ -392,7 +392,7 @@
             success: function getResponse(data, status) {
               var message = data.message;
               if ('SUCCESS' == message) {
-                showSucMsg('Password updated successfully.');
+                showSucMsg('パスワードの更新が正常終了しました。');
                 $("#cancelBtn").click();
               } else {
                 showErrMsg(message);
@@ -404,7 +404,7 @@
             },
           });
         } else {
-          showErrMsg('New password should not be same as old Password.');
+          showErrMsg('古いパスワードと異なるパスワードを設定して下さい。');
           $(window).scrollTop(0);
           $(".changepwd .emptyField").val("");
           $("#updateBtn").prop('disabled', false);

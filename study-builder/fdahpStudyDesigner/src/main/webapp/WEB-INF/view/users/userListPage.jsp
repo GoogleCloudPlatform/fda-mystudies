@@ -91,13 +91,13 @@
               <td>
                 <span class="sprites_icon preview-g mr-lg viewUser"
                       userId="${user.userId}" data-toggle="tooltip"
-                      data-placement="top" title="View"></span>
+                      data-placement="top" title="参照"></span>
                 <c:if
                     test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
                   <span
                       class="sprites_icon edit-g addOrEditUser <c:if test='${not empty user.userPassword &&  not user.enabled}'>cursor-none</c:if>"
                       userId="${user.userId}" data-toggle="tooltip"
-                      data-placement="top" title="Edit" id="editIcon${user.userId}">
+                      data-placement="top" title="変更" id="editIcon${user.userId}">
                   </span>
                   <span class="ml-lg"><label class="switch"
                                              data-toggle="tooltip" id="label${user.userId}"
@@ -255,7 +255,7 @@
     } else if ("1" == status) {
       msgPart = "deactivate";
     }
-    bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
+    bootbox.confirm("このユーザーを " + msgPart + " にしてよろしいですか？", function (result) {
       if (result) {
         $.ajax({
           url: "/studybuilder/adminUsersEdit/activateOrDeactivateUser.do",

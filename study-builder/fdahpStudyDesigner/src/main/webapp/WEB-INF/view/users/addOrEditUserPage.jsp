@@ -708,7 +708,7 @@
     $('#enforcePasswordId').on('click', function () {
       bootbox.confirm({
         closeButton: false,
-        message: "Are you sure you wish to enforce a password change for this user?",
+        message: "本当にこのユーザーのパスワードを強制変更してもよろしいですか？",
         buttons: {
           'cancel': {
             label: 'No',
@@ -781,7 +781,7 @@
     } else {
       msgPart = "deactivate";
     }
-    bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
+    bootbox.confirm("このユーザーを " + msgPart + " にしてもよろしいですか？", function (result) {
       if (result) {
         if (status == 'true') {
           $('#change' + userId).val(false);

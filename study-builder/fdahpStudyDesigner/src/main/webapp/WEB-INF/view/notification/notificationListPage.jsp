@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -16,7 +16,7 @@
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none">
       <div class="black-lg-f">
-        Manage app-level notifications
+        プッシュ通知管理
       </div>
       <div class="dis-line pull-right ml-md">
         <c:if
@@ -24,7 +24,7 @@
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn notificationDetailsToEdit"
                     actionType="add">
-              Create Notification
+              新規作成
             </button>
           </div>
         </c:if>
@@ -40,9 +40,9 @@
       <table id="app_Wide_Notification_list" class="table table-right tbl">
         <thead>
           <tr>
-            <th id="">TITLE</th>
-            <th id="" class="linkDis">Status</th>
-            <th id="" class="linkDis">ACTIONS</th>
+            <th id="">タイトル</th>
+            <th id="" class="linkDis">ステータス</th>
+            <th id="" class="linkDis">アクション</th>
           </tr>
         </thead>
         <tbody>
@@ -135,7 +135,7 @@
       "info": false,
       "lengthChange": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "プッシュ通知はまだ作成されていません。",
       },
       "searching": false,
       "pageLength": 15,

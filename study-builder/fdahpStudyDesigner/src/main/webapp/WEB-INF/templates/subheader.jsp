@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -19,12 +20,12 @@
   <div class="md-container">
     <div class="col-sm-12 col-md-12 col-lg-12 p-none mb-md">
       <div class="black-lg-f">
-        Manage Studies
+        治験情報管理
       </div>
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
         <div class="dis-line pull-right ml-md mt-xs">
           <div class="form-group mb-none">
-            <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create Study
+            <button type="button" class="btn btn-primary blue-btn addEditStudy"> 新規作成
             </button>
           </div>
         </div>
