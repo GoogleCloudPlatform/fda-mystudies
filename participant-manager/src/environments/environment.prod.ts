@@ -5,8 +5,10 @@ export const environment = {
   participantManagerDatastoreUrl:
     '//participants.btc-qa.boston-technology.com/participant-manager-datastore',
   baseHref: '/participant-manager/',
-  hydraLoginUrl: 'https://participants.btc-qa.boston-technology.com/oauth2/auth',
-  authServerUrl: 'https://participants.btc-qa.boston-technology.com/auth-server',
+  hydraLoginUrl:
+    'https://participants.btc-qa.boston-technology.com/oauth2/auth',
+  authServerUrl:
+    'https://participants.btc-qa.boston-technology.com/auth-server',
   authServerRedirectUrl:
     'https://participants.btc-qa.boston-technology.com/auth-server/callback',
   hydraClientId: 'yvGGhtvbgiDCB2z9',
