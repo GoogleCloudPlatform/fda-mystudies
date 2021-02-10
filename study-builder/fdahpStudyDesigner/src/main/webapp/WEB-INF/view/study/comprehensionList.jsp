@@ -91,10 +91,13 @@
           </div>
           <div class="dis-line form-group mb-none mr-sm">
             <c:if test="${empty permission}">
+            <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"
+                  data-placement="bottom" data-original-title="">
               <button type="button" class="btn btn-primary blue-btn"
                       id="addQuestionId"
                             onclick="addComphernsionQuestionPage();">+ Add question
               </button>
+              </span>
             </c:if>
           </div>
         </div>
@@ -136,7 +139,7 @@
       </div>
 
       <div class="right-content-body mt-xlg" id="displayTitleId">
-        <div class="gray-xs-f mb-xs">Minimum score needed to pass the test</div>
+        <div class="gray-xs-f mb-xs" id="minScoreText">Minimum score needed to pass the test</div>
         <div class="form-group col-md-5 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
                  name="comprehensionTestMinimumScore"
@@ -184,11 +187,14 @@
       var val = $(this).val();
       $("#addQuestionId").attr("disabled", true);
       if (val == "Yes") {
-
+    	$("#saveId").html("Next");
+        $("#comprehensionTestMinimumScore, #minScoreText").hide();
+        $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
         $("#mainContainer").show();
+       $("#markAsCompleteBtnId").attr("disabled", true);
+       $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
         var markAsComplete = "${markAsComplete}"
         if (markAsComplete == "false") {
-          $("#markAsCompleteBtnId").attr("disabled", true);
           $("#helpNote").attr('data-original-title',
               'Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete.');
           $('[data-toggle="tooltip"]').tooltip();
@@ -198,7 +204,7 @@
           $("#addHelpNote").show();
         }
       } else {
-
+    	$("#saveId").html("Save");
         $("#comprehensionTestMinimumScore").val('');
         $("#mainContainer").hide();
         $("#addHelpNote").hide();
@@ -209,6 +215,10 @@
         }
       }
     });
+    if (${comprehensionTestQuestionList.size()} == 0) {
+        $("#markAsCompleteBtnId").attr("disabled", true);
+        $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
+    }
     var viewPermission = "${permission}";
 
     var reorder = true;
@@ -439,6 +449,8 @@
       $('#comprehension_list').DataTable().draw();
     } else {
       $('#comprehension_list').DataTable().draw();
+        $("#markAsCompleteBtnId").attr("disabled", true);
+        $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
     }
     if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
       $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
@@ -526,6 +538,9 @@
 
               $("#consentId").val(consentId);
               $("#addQuestionId").attr("disabled", false);
+              $("#comprehensionTestMinimumScore, #minScoreText").show();
+              $("#spanAddQaId").removeAttr("data-original-title");
+              $("#saveId").html("Save");
               $("#addHelpNote").hide();
               if (type != "save") {
                 document.comprehensionInfoForm.action = "/studybuilder/adminStudies/comprehensionTestMarkAsCompleted.do?_S=${param._S}";
