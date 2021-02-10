@@ -16,10 +16,10 @@ jobs:
         source_repo: ${{ secrets.SOURCE_REPO }}
         source_branch: develop
         destination_branch: ${{ secrets.INTERMEDIATE_BRANCH }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.PERSONAL_KEY }}
     - uses: repo-sync/pull-request@v2
       name: Create pull request
       with:
         source_branch: ${{ secrets.INTERMEDIATE_BRANCH }}
         destination_branch: develop-du
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.PERSONAL_KEY }}
