@@ -353,7 +353,11 @@
             $('#completedId').removeAttr('disabled');
             bootbox.alert(errorMessage);
           } else {
-            submitButton(buttonText);
+      	    if ($('.checkbox input:checked').length == 0) {
+      	      $("input").attr("required", true);
+      	    } else {
+      	      submitButton(buttonText);
+      	    }
           }
         },
         error: function status(data, status) {
@@ -365,7 +369,11 @@
         global: false
       });
     } else {
-      submitButton(buttonText);
+      if ($('.checkbox input:checked').length == 0) {
+          $("input").attr("required", true);
+      } else {
+        submitButton(buttonText);
+      }
     }
   }
   function submitButton(buttonText) {
