@@ -255,10 +255,6 @@ public class LoginCallbackActivity extends AppCompatActivity
           "enroll",
           SharedPreferenceHelper.readPreference(
               LoginCallbackActivity.this, getString(R.string.login_studyinfo_enroll), ""));
-      intent.putExtra(
-          "rejoin",
-          SharedPreferenceHelper.readPreference(
-              LoginCallbackActivity.this, getString(R.string.login_studyinfo_rejoin), ""));
       startActivity(intent);
     } else {
       if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
