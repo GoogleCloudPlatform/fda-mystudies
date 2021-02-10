@@ -2,13 +2,11 @@
 export const environment = {
   production: true,
   // remove http/https to appear relative. xsrf-token skips absolute paths.
-  participantManagerDatastoreUrl:
-    '//<BASE_URL>/participant-manager-datastore',
+  participantManagerDatastoreUrl: '//<BASE_URL>/participant-manager-datastore',
   baseHref: '/participant-manager/',
   hydraLoginUrl: 'https://<BASE_URL>/oauth2/auth',
   authServerUrl: 'https://<BASE_URL>/auth-server',
-  authServerRedirectUrl:
-    'https://<BASE_URL>/auth-server/callback',
+  authServerRedirectUrl: 'https://<BASE_URL>/auth-server/callback',
   hydraClientId: '<AUTH_SERVER_CLIENT_ID>',
   appVersion: 'v0.1',
   termsPageTitle: 'Terms title goes here',
