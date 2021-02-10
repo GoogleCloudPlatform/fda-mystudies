@@ -815,7 +815,6 @@
     }
   });
 
-  // ABC-XYZ !!!!!!!!!!!!!!!!
   function goToBackPage(item) {
     <c:if test="${permission ne 'view'}">
     $(item).prop('disabled', true);

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -8,9 +8,9 @@
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="black-lg-f">
-      マイ アカウント <c:if test="${accountManager eq 'Yes'}">
+      My Account <c:if test="${accountManager eq 'Yes'}">
       <span
-          class="gray-xs-f ml-xlg">アカウント 管理者
+          class="gray-xs-f ml-xlg">Account Manager
       </span>
     </c:if>
     </div>
@@ -27,32 +27,10 @@
       <div class="b-bor">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">姓
-              <small>(50文字まで)</small>
+            <div class="gray-xs-f line34">First Name
+              <small>(50 characters max)</small>
               <span
-                      class="requiredStar"> *
-              </span>
-            </div>
-          </div>
-          <div class="col-md-6 p-none">
-            <div class="form-group cursAllow">
-              <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
-                     name="lastName" value="${fn:escapeXml(userBO.lastName)}"
-                     oldVal="${fn:escapeXml(userBO.lastName)}"
-                     maxlength="50" required readonly/>
-              <div class="help-block with-errors red-txt"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="b-bor mt-md">
-        <div class="ed-user-layout row">
-          <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">名
-              <small>(50文字まで)</small>
-              <span
-                      class="requiredStar"> *
+                  class="requiredStar"> *
               </span>
             </div>
           </div>
@@ -71,8 +49,30 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">メールアドレス
-              <small>(100文字まで)</small>
+            <div class="gray-xs-f line34">Last Name
+              <small>(50 characters max)</small>
+              <span
+                  class="requiredStar"> *
+              </span>
+            </div>
+          </div>
+          <div class="col-md-6 p-none">
+            <div class="form-group cursAllow">
+              <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
+                     name="lastName" value="${fn:escapeXml(userBO.lastName)}"
+                     oldVal="${fn:escapeXml(userBO.lastName)}"
+                     maxlength="50" required readonly/>
+              <div class="help-block with-errors red-txt"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="b-bor mt-md">
+        <div class="ed-user-layout row">
+          <div class="col-md-4 p-none">
+            <div class="gray-xs-f line34">Email Address
+              <small>(100 characters max)</small>
               <span
                   class="requiredStar"> *
               </span>
@@ -94,7 +94,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">電話番号 (ハイフン付き）
+            <div class="gray-xs-f line34">Phone (XXX - XXX - XXXX)
               <span
                   class="requiredStar"> *
               </span>
@@ -105,7 +105,7 @@
               <input type="text"
                      class="form-control edit-field bor-trans phoneMask resetVal linkDis"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     oldVal="${userBO.phoneNumber}" maxlength="13" data-minlength="12" required
+                     oldVal="${userBO.phoneNumber}" maxlength="12" data-minlength="12" required
                      readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -116,7 +116,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">権限</div>
+            <div class="gray-xs-f line34">Role</div>
           </div>
           <div class="col-md-6 p-none ">
             <div class="form-group cur-not-allowed roleDisable">
@@ -132,10 +132,10 @@
       <div id="hideProfileButton" class="mt-xlg">
         <div class="text-right">
           <div class="dis-line form-group mb-none">
-            <button id="editable" type="button" class="btn btn-primary blue-btn">変更する</button>
-            <button id="ed-cancel" type="button" class="btn btn-default gray-btn dis-none">キャンセル
+            <button id="editable" type="button" class="btn btn-primary blue-btn">Edit</button>
+            <button id="ed-cancel" type="button" class="btn btn-default gray-btn dis-none">Cancel
             </button>
-            <button id="ed-update" type="submit" class="btn btn-primary blue-btn dis-none">更新
+            <button id="ed-update" type="submit" class="btn btn-primary blue-btn dis-none">Update
             </button>
           </div>
         </div>
@@ -147,14 +147,14 @@
       <div class="row" id="hideChangePwd">
         <div class="col-md-12 pl-none pr-none">
           <div class="col-md-3 p-none">
-            <div class="gray-xs-f line34">パスワード</div>
+            <div class="gray-xs-f line34">Password</div>
           </div>
           <div class="col-md-7 p-none">
             <span class="chngpassdot">........</span>
           </div>
           <div class="col-md-2 p-none dis-line form-group mb-none text-right">
             <button id="pwd-link" type="button"
-                    class="btn btn-default gray-btn cur-pointer disChangePassButton">パスワード変更
+                    class="btn btn-default gray-btn cur-pointer disChangePassButton">Change Password
             </button>
           </div>
         </div>
@@ -164,7 +164,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none ">
-                <div class="gray-xs-f line34">現在のパスワード
+                <div class="gray-xs-f line34">Previous password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -182,7 +182,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">新しいパスワード
+                <div class="gray-xs-f line34">New Password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -202,7 +202,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">新しいパスワード（確認）
+                <div class="gray-xs-f line34">Confirm new password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -222,10 +222,10 @@
             <div class="dis-line form-group mt-md mb-none">
               <button type="button" class="btn btn-default gray-btn mr-sm" id="cancelBtn"
                       tabindex="4">
-                キャンセル
+                Cancel
               </button>
               <button type="button" class="btn btn-primary blue-btn" id="updateBtn" tabindex="5">
-                更新
+                Update
               </button>
             </div>
           </div>
@@ -238,33 +238,33 @@
   <div class="white-bg box-space">
 
     <div class="ed-user-layout row">
-      <div class="blue-md-f text-uppercase mb-md">権限設定</div>
+      <div class="blue-md-f text-uppercase mb-md">Assigned Permissions</div>
 
       <!-- Assigned Permissions List-->
       <div class="edit-user-list-widget mb-xs">
-        <span>ユーザー管理</span>
+        <span>Users</span>
         <span class="gray-xs-f pull-right">
           <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">参照のみ</c:if>
+              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">参照 & 登録</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & edit</c:if>
         </span>
       </div>
 
       <div class="edit-user-list-widget mb-xs">
-        <span>プッシュ通知</span>
+        <span>Notifications</span>
         <span class="gray-xs-f pull-right">
           <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">参照のみ</c:if>
+              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">参照 & 登録</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & edit</c:if>
         </span>
       </div>
 
 
       <!-- Assigned Permissions List-->
       <div class="edit-user-list-widget">
-        <span>治験情報</span>
+        <span>Studies</span>
         <span class="gray-xs-f pull-right">
           <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">No</c:if>
@@ -275,12 +275,12 @@
           <div class="mt-lg pl-md">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
               <div class="pb-md bor-dashed">
-                <span class="dot">治験情報の新規作成</span>
+                <span class="dot">Create New Studies</span>
               </div>
             </c:if>
             <div class="pl-sm pt-md">
               <span
-                  class="gray-xs-f text-weight-semibold text-uppercase">作成済み治験情報の権限
+                  class="gray-xs-f text-weight-semibold text-uppercase">Existing Study Permissions
               </span>
             </div>
             <c:forEach items="${studyAndPermissionList}" var="studyAndPermission">
@@ -290,9 +290,9 @@
                 </span>
                 <span class="gray-xs-f pull-right">
                   <c:if
-                      test="${not studyAndPermission.viewPermission}">参照のみ</c:if>
+                      test="${not studyAndPermission.viewPermission}">View only</c:if>
                   <c:if
-                      test="${studyAndPermission.viewPermission}">参照 & 登録</c:if>
+                      test="${studyAndPermission.viewPermission}">View and edit</c:if>
                 </span>
               </div>
             </c:forEach>
@@ -392,7 +392,7 @@
             success: function getResponse(data, status) {
               var message = data.message;
               if ('SUCCESS' == message) {
-                showSucMsg('パスワードの更新が正常終了しました。');
+                showSucMsg('Password updated successfully.');
                 $("#cancelBtn").click();
               } else {
                 showErrMsg(message);
@@ -404,7 +404,7 @@
             },
           });
         } else {
-          showErrMsg('古いパスワードと異なるパスワードを設定して下さい。');
+          showErrMsg('New password should not be same as old Password.');
           $(window).scrollTop(0);
           $(".changepwd .emptyField").val("");
           $("#updateBtn").prop('disabled', false);

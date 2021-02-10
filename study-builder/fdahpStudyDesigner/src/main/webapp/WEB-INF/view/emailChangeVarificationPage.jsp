@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page session="true" %>
@@ -6,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html class="overflow-hidden" lang="ja">
+<html class="overflow-hidden" lang="">
   <head>
 
     <!-- Basic -->
@@ -80,12 +79,12 @@
               <div class="mb-lg form-group">
                 <input autofocus="autofocus" type="text" class="input-field wow_input" id=""
                        tabindex="1"
-                       name="accessCode" maxlength="6" placeholder="アクセスコード"
-                       data-error="アクセスコードが正しくありません。" required autocomplete="off"/>
+                       name="accessCode" maxlength="6" placeholder="Access Code"
+                       data-error="Access Code is invalid" required autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
-                <button type="submit" class="btn lg-btn">完了</button>
+                <button type="submit" class="btn lg-btn">Submit</button>
               </div>
             </c:if>
             <c:if test="${not isValidToken}">

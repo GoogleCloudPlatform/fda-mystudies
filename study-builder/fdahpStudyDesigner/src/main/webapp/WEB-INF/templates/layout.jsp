@@ -6,7 +6,7 @@
 <jsp:useBean id="date" class="java.util.Date"/>
 <c:set var="tz" value="America/Los_Angeles"/>
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
   <head>
     <!-- Basic -->
     <meta charset="utf-8">

@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -14,16 +13,16 @@
              title="${fn:escapeXml(not empty studyBo.name?studyBo.name:'Create Study')}">${not empty studyBo.name?studyBo.name:'Create Study'}</div>
         <div class="mb-lg ${empty studyBo.status?'hide':''}">
           <span class="study_status
-	                <c:if test="${studyBo.status eq '公開予定' || studyBo.status eq '公開予定(配信済み)'}">
+	                <c:if test="${studyBo.status eq 'Pre-launch' || studyBo.status eq 'Pre-launch(Published)'}">
 	                    pre-launch_txt
 	                </c:if>
-	                <c:if test="${studyBo.status eq 'アクティブ'}">
+	                <c:if test="${studyBo.status eq 'Active'}">
 	                    active_txt
 	                </c:if>
-	                <c:if test="${studyBo.status eq '一時停止'}">
+	                <c:if test="${studyBo.status eq 'Paused'}">
 	                    paused_txt
 	                </c:if>
-	                <c:if test="${studyBo.status eq '終了・停止済み'}">
+	                <c:if test="${studyBo.status eq 'Deactivated'}">
 	                    deactivated_txt
 	                </c:if>
 	                ">${studyBo.status}</span>
@@ -33,77 +32,78 @@
         </div>
       </li>
       <li class="first active">
-        治験基本情報
+        Study Information
         <c:if test="${studyBo.studySequenceBo.basicInfo}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
       <li class="second commonCls">
-        管理者、その他設定
+        Settings and Admins
         <c:if test="${studyBo.studySequenceBo.settingAdmins}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
       <li class="third commonCls">
-        概要
+        Overview
         <c:if test="${studyBo.studySequenceBo.overView}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
       <li class="fourth commonCls">
-        適格性
+        Eligibility
         <c:if test="${studyBo.studySequenceBo.eligibility}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
       <li class="fifth commonCls">
-        インフォームド・コンセント
+        Informed Consent
         <c:if
             test="${studyBo.studySequenceBo.consentEduInfo && studyBo.studySequenceBo.comprehensionTest && studyBo.studySequenceBo.eConsent}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="sub fifthConsent commonCls"> 同意項目
+      <li class="sub fifthConsent commonCls"> Consent Sections
         <c:if test="${studyBo.studySequenceBo.consentEduInfo}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="sub fifthComre commonCls"> 理解度テスト
+      <li class="sub fifthComre commonCls">Comprehension Test
         <c:if test="${studyBo.studySequenceBo.comprehensionTest}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="sub fifthConsentReview commonCls"> 電子同意書
+      <li class="sub fifthConsentReview commonCls"> Review and E-consent Steps
         <c:if test="${studyBo.studySequenceBo.eConsent}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
       <li class="sixth commonCls">
-        治験アクティビティ
+        Study Activities
       </li>
-      <li class="sub sixthQuestionnaires commonCls"> アンケート
+      <li class="sub sixthQuestionnaires commonCls"> Questionnaires
         <c:if test="${studyBo.studySequenceBo.studyExcQuestionnaries}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if></li>
-      <li class="sub sixthTask commonCls "> アクティブタスク
+      <li class="sub sixthTask commonCls ">
+        Active Tasks
         <c:if test="${studyBo.studySequenceBo.studyExcActiveTask}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class=" eighthResources commonCls">その他文書
+      <li class=" eighthResources commonCls">Resources
         <c:if test="${studyBo.studySequenceBo.miscellaneousResources}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
 
       <li class=" eigthNotification commonCls <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'cursor-none':''}">
-        通知
+        Notifications
         <c:if test="${studyBo.studySequenceBo.miscellaneousNotification}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
       <li class="tenth commonCls <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'cursor-none':''}">
-        治験の公開/非公開
+        Actions
       </li>
     </ul>
   </div>

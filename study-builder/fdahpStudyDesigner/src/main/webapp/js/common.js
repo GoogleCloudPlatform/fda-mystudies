@@ -110,8 +110,7 @@ $(document)
                           .empty()
                           .append($("<ul><li> </li></ul>")
                           .attr("class","list-unstyled")
-                          // .text("Special characters such as #^}{ are not allowed."));
-                          .text("次の特殊文字は入力出来ません。 #^}{ "));
+                          .text("Special characters such as #^}{ are not allowed."));
                     } else {
                       $(this).parent()
                           .find(".help-block").empty();
@@ -128,14 +127,13 @@ $(document)
                     if (charCode == 16)
                       isShift = false;
                     if (!isShift && $(this).val()) {
-                      // var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
-                      var regularExpression = /^[ \u30a0-\u30ff\u3040-\u309f\u3005-\u3006\u30e0-\u9fcfA-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
+                      var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
                       if (!regularExpression.test($(this)
                           .val())) {
                         var newVal = $(this)
                             .val()
                             .replace(
-                                /[^ \u30a0-\u30ff\u3040-\u309f\u3005-\u3006\u30e0-\u9fcfA-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,
+                                /[^ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,
                                 '');
                         e.preventDefault();
                         $(this).val(newVal);
@@ -147,8 +145,7 @@ $(document)
                             .empty()
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
-                            //.text("Special characters such as #^}{ are not allowed."));
-                            .text("次の特殊文字は入力出来ません。 #^}{ "));
+                            .text("Special characters such as #^}{ are not allowed."));
                       }
                     }
                   });
@@ -183,8 +180,7 @@ $(document)
                             .empty()
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
-                            //.text("The characters like (< >) are not allowed."));
-                            .text("半角英数字を入力して下さい。また次の記号は入力出来ません。"));
+                            .text("The characters like (< >) are not allowed."));
                       }
                     }
                   });

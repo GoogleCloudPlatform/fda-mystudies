@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.fdahpstudydesigner.util.SessionObject" %>
+<%@page import="com.fdahpstudydesigner.util.SessionObject" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -25,20 +24,20 @@
           <ul class="nav navbar-nav ml-none">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
               <li class="studyClass">
-                <a href="javascript:void(0)" id="studySection">治験情報管理</a>
+                <a href="javascript:void(0)" id="studySection">Studies</a>
               </li>
             </c:if>
             <c:if
                 test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
               <li id="notification" class="">
                 <a href="javascript:void(0)"
-                   id="manageNotificationSection">プッシュ通知管理
+                   id="manageNotificationSection">Notifications
                 </a>
               </li>
             </c:if>
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
               <li id="users">
-                <a href="javascript:void(0)" id="usersSection">ユーザー管理</a>
+                <a href="javascript:void(0)" id="usersSection">Users</a>
               </li>
             </c:if>
           </ul>
@@ -49,7 +48,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li id="myAccount" class="dropdown ml-lg userLi">
               <a class="dropdown-toggle blue-link" data-toggle="dropdown"
-                 href="javascript:void(0)">${sessionObject.lastName} ${sessionObject.firstName}
+                 href="javascript:void(0)">${sessionObject.firstName} ${sessionObject.lastName}
                 &nbsp;<i
                     class="fa fa-angle-down" aria-hidden="true"></i>
               </a>

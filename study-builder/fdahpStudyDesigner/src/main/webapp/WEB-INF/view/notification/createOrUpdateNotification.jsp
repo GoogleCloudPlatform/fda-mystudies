@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -15,7 +15,7 @@
           <img src="/studybuilder/images/icons/back-b.png" alt=""/></a>
       </span>
       <c:if
-          test="${notificationBO.actionPage eq 'addOrCopy' || notificationBO eq null}">プッシュ通知新規作成</c:if>
+          test="${notificationBO.actionPage eq 'addOrCopy' || notificationBO eq null}">Create Notification</c:if>
       <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
       <c:if test="${notificationBO.actionPage eq 'view'}">View Notification</c:if>
       <c:if test="${notificationBO.actionPage eq 'resend'}">Resend Notification</c:if>
@@ -41,7 +41,7 @@
           </div>
         </c:if>
         <div class="pl-none">
-          <div class="gray-xs-f mb-xs mt-xs">本文 (250 文字まで)
+          <div class="gray-xs-f mb-xs mt-xs">Notification Text (250 characters max)
             <span
                 class="requiredStar">*
             </span>
@@ -63,14 +63,14 @@
                          test="${notificationBO.notificationScheduleType eq 'notImmediate'}">checked</c:if>
                      <c:if
                          test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
-              <label for="inlineRadio1">日時指定配信</label>
+              <label for="inlineRadio1">Schedule a date/time</label>
             </span>
             <span class="radio radio-inline">
               <input type="radio" id="inlineRadio2" value="immediate"
                      name="currentDateTime"
                      <c:if
                          test="${notificationBO.notificationScheduleType eq 'immediate'}">checked</c:if>>
-              <label for="inlineRadio2">即時配信</label>
+              <label for="inlineRadio2">Send immediately</label>
             </span>
             <div class="help-block with-errors red-txt"></div>
             <c:if test="${not empty notificationHistoryNoDateTime}">
@@ -86,7 +86,7 @@
 
 
         <div class="add_notify_option mandatoryForAppNotification">
-          <div class="gray-xs-f mb-xs">日付
+          <div class="gray-xs-f mb-xs">Date
             <span class="requiredStar">*</span>
           </div>
           <div class="form-group date">
@@ -99,7 +99,7 @@
         </div>
 
         <div class="add_notify_option mandatoryForAppNotification">
-          <div class="gray-xs-f mb-xs">時間 <c:if test="${notificationBO.actionPage ne 'view'}">
+          <div class="gray-xs-f mb-xs">Time <c:if test="${notificationBO.actionPage ne 'view'}">
           </c:if>
             <span class="requiredStar">*</span>
           </div>
@@ -114,7 +114,7 @@
 
         <div class=" ">
           <div class="form-group">
-            <div class="gray-xs-f mb-xs">配信先の治験情報</div>
+            <div class="gray-xs-f mb-xs">App to which the notification must be sent</div>
             <select id="appId" class="selectpicker" name="appId">
               <option value=''>Select</option>
               <c:forEach items="${gatewayAppList}" var="app">
@@ -136,14 +136,14 @@
 
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn backOrCancelBtnOfNotification">
-            キャンセル
+            Cancel
           </button>
         </div>
         <c:if test="${empty notificationBO || notificationBO.actionPage eq 'addOrCopy'}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-primary blue-btn addNotification"
                     id="immiSaveButton">
-              新規作成
+              Create
             </button>
           </div>
         </c:if>
@@ -152,7 +152,7 @@
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-primary blue-btn deleteButtonHide"
                     id="deleteNotification">
-              削除
+              Delete
             </button>
           </div>
         </c:if>
@@ -161,7 +161,7 @@
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-primary blue-btn updateNotification"
                     id="immiUpdateButton">
-              更新
+              Update
             </button>
           </div>
         </c:if>
@@ -170,7 +170,7 @@
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-primary blue-btn resendNotification"
                     id="immiResendButton">
-              再送信
+              Resend
             </button>
           </div>
         </c:if>

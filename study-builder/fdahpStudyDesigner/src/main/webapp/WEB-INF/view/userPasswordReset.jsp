@@ -1,12 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page session="true" %>
+<%@page session="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html class="overflow-hidden" lang="ja">
+<html class="overflow-hidden" lang="">
   <head>
 
     <!-- Basic -->
@@ -79,21 +78,22 @@
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${not isInactiveUser && isValidToken}">
               <div>
-              <p class="white__text">メールに記載してあるアクセスコードを使用して、
-                新しいパスワードを設定して下さい。</p>
+              <p class="white__text">Please set up your new password using
+                this form. You would be required to enter the access code
+                provided to you over email for the same.</p>
               <div class="mb-lg form-group">
                 <input autofocus="autofocus" type="text"
                        class="input-field wow_input" id="" tabindex="1"
-                       name="accessCode" maxlength="6" placeholder="アクセスコード"
-                       data-error="アクセスコードが正しくありません。" required autocomplete="off"/>
+                       name="accessCode" maxlength="6" placeholder="Access Code"
+                       data-error="Access Code is invalid" required autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input"
                        id="password" tabindex="2" maxlength="64" data-minlength="8"
-                       placeholder="パスワード" required
+                       placeholder="Password" required
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                       data-error="半角英数字（大小）、記号を含む入力をして下さい。" autocomplete="off"/>
+                       data-error="Password is invalid" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
                 <span class="arrowLeftSugg"></span>
 
@@ -103,12 +103,12 @@
                 <input type="password" class="input-field wow_input"
                        id="cfnPassword" tabindex="3" name="" maxlength="64"
                        data-match="#password"
-                       data-match-error="パスワードが一致しません。"
-                       placeholder="パスワード（確認）" required autocomplete="off"/>
+                       data-match-error="Whoops, these don't match"
+                       placeholder="Confirm new password" required autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
-                <button type="button" class="btn lg-btn" id="resetPasswordBut">登録
+                <button type="button" class="btn lg-btn" id="resetPasswordBut">Submit
                 </button>
               </div>
             </c:if>

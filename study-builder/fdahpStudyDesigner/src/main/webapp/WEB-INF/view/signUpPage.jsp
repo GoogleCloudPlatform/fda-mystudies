@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page session="true" %>
@@ -6,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html class="overflow-hidden" lang="ja">
+<html class="overflow-hidden" lang="">
   <head>
     <!-- Basic -->
     <meta charset="utf-8">
@@ -116,24 +115,15 @@
               <div id="errMsg" class="error_msg">${errMsg}</div>
               <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
               <c:if test="${isValidToken}">
-                <p class="col-xs-12  text-center boxcenter mb-xlg white__text">
-                  ${orgName} サービスのアカウント登録を完了するには、メールに記載されている
-                  アクセスコードを使用して、パスワードを設定してください。</p>
+                <p class="col-xs-12  text-center boxcenter mb-xlg white__text">To
+                  begin using the services on ${orgName} and complete your account setup
+                  process, kindly use the access code provided on your email and
+                  set up your account password.</p>
                 <div class=" col-md-6 boxcenter">
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input" id=""
-                           name="lastName" placeholder="姓"
-                           value="${fn:escapeXml(userBO.lastName)}" maxlength="50"
-                           required autocomplete="off"/>
-                    <div class="help-block with-errors red-txt"></div>
-                  </div>
-                </div>
-
-                <div class="col-xs-6">
-                  <div class="mb-lg form-group">
-                    <input type="text" class="input-field wow_input" id=""
-                           name="firstName" placeholder="名"
+                           name="firstName" placeholder="First Name"
                            value="${fn:escapeXml(userBO.firstName)}" maxlength="50"
                            required autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -142,12 +132,21 @@
 
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
+                    <input type="text" class="input-field wow_input" id=""
+                           name="lastName" placeholder="Last Name"
+                           value="${fn:escapeXml(userBO.lastName)}" maxlength="50"
+                           required autocomplete="off"/>
+                    <div class="help-block with-errors red-txt"></div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="mb-lg form-group">
                     <input type="text"
                            class="input-field wow_input validateUserEmail"
-                           name="userEmail" placeholder="メールアドレス"
+                           name="userEmail" placeholder="Email Address"
                            value="${userBO.userEmail}" oldVal="${userBO.userEmail}"
                            pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                           data-pattern-error="メールアドレスの入力が正しくありません。" maxlength="100"
+                           data-pattern-error="Email address is invalid" maxlength="100"
                            required readonly="readonly" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -155,7 +154,7 @@
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input phoneMask"
-                           id="" name="phoneNumber" placeholder="電話番号（ハイフン付き）"
+                           id="" name="phoneNumber" placeholder="Phone Number"
                            value="${userBO.phoneNumber}" data-minlength="12"
                            maxlength="12" required autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -165,8 +164,8 @@
                   <div class="mb-lg form-group">
                     <input autofocus="autofocus" type="text"
                            class="input-field wow_input" id="" name="accessCode"
-                           maxlength="6" placeholder="アクセスコード"
-                           data-error="アクセスコードが正しくありません。" required
+                           maxlength="6" placeholder="Access Code"
+                           data-error="Access Code is invalid" required
                            autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -175,9 +174,9 @@
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="password" maxlength="64" data-minlength="8"
-                           placeholder="パスワード" required
+                           placeholder="Password" required
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                           autocomplete="off" data-error="半角英数字（大小）、記号を含めて入力して下さい。"/>
+                           autocomplete="off" data-error="Password is invalid"/>
                     <div class="help-block with-errors red-txt"></div>
                     <span class="arrowLeftSugg"></span>
 
@@ -188,8 +187,8 @@
                     <input type="password" class="input-field wow_input"
                            id="cfnPassword" name="" maxlength="64"
                            data-match="#password"
-                           data-match-error="パスワードの入力が一致しません。"
-                           placeholder="パスワード（確認）" required autocomplete="off"/>
+                           data-match-error="Whoops, these don't match"
+                           placeholder="Confirm password" required autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -198,17 +197,17 @@
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
                         required="required"> <label for="inlineCheckbox">
-                      <span class="white__text">次に定める
+                      <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"
-                            class="grey__text" target="_blank">規約
+                            class="grey__text" target="_blank">Terms
                         </a>
-                        、および
+                        and
                         <a
                             href="/studybuilder/privacyPolicy.do"
-                            class="grey__text" target="_blank">個人情報保護方針
+                            class="grey__text" target="_blank">Privacy Policy
                         </a>
-                        に同意します。
+                        associated with using this portal
                       </span>
                     </label>
                     </span>
@@ -218,13 +217,14 @@
                 <div class="clearfix"></div>
                 <div
                     class="mb-lg form-group text-center col-md-4 col-lg-4 boxcenter">
-                  <button type="button" class="btn lg-btn" id="signPasswordBut">登録</button>
+                  <button type="button" class="btn lg-btn" id="signPasswordBut">Submit</button>
                 </div>
               </c:if>
               <c:if test="${not isValidToken}">
                 <p class="passwordExp text-center">
                   <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                  パスワードリセットのリンクの有効期限が切れています。
+                  The
+                  Password Reset Link is either expired or invalid.
                 </p>
               </c:if>
               </div>
@@ -252,7 +252,7 @@
             <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
               <div>
                 <div class="mt-md mb-md">
-                  <u><strong>規約</strong></u>
+                  <u><strong>Terms</strong></u>
                 </div>
                 <span>${masterDataBO.termsText}</span>
               </div>
@@ -273,7 +273,7 @@
             <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
               <div>
                 <div class="mt-md mb-md">
-                  <u><strong>個人情報保護方針</strong></u>
+                  <u><strong>Privacy Policy</strong></u>
                 </div>
                 <span>${masterDataBO.privacyPolicyText}</span>
               </div>
