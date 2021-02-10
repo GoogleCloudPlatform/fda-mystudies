@@ -294,11 +294,6 @@ public class StandaloneActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .writePreference(
                 StandaloneActivity.this,
-                getString(R.string.rejoin),
-                "" + studyListArrayList.get(0).getSetting().getRejoin());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                StandaloneActivity.this,
                 getString(R.string.studyVersion),
                 "" + studyListArrayList.get(0).getStudyVersion());
 
@@ -333,8 +328,6 @@ public class StandaloneActivity extends AppCompatActivity
                   intent.putExtra("position", "0");
                   intent.putExtra(
                       "enroll", "" + studyListArrayList.get(j).getSetting().isEnrolling());
-                  intent.putExtra(
-                      "rejoin", "" + studyListArrayList.get(j).getSetting().getRejoin());
                   startActivity(intent);
                   finish();
                 }
@@ -354,7 +347,6 @@ public class StandaloneActivity extends AppCompatActivity
             intent.putExtra("studyStatus", studyListArrayList.get(0).getStudyStatus());
             intent.putExtra("position", "0");
             intent.putExtra("enroll", "" + studyListArrayList.get(0).getSetting().isEnrolling());
-            intent.putExtra("rejoin", "" + studyListArrayList.get(0).getSetting().getRejoin());
             startActivity(intent);
             finish();
           }
@@ -489,7 +481,6 @@ public class StandaloneActivity extends AppCompatActivity
           intent.putExtra("studyStatus", studyListArrayList.get(0).getStudyStatus());
           intent.putExtra("position", "0");
           intent.putExtra("enroll", "" + studyListArrayList.get(0).getSetting().isEnrolling());
-          intent.putExtra("rejoin", "" + studyListArrayList.get(0).getSetting().getRejoin());
           startActivity(intent);
           finish();
         }
@@ -558,11 +549,6 @@ public class StandaloneActivity extends AppCompatActivity
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StandaloneActivity.this,
-                              getString(R.string.rejoin),
-                              "" + studyListArrayList.get(i).getSetting().getRejoin());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StandaloneActivity.this,
                               getString(R.string.studyVersion),
                               "" + studyListArrayList.get(i).getStudyVersion());
                     } catch (Exception e) {
@@ -608,8 +594,6 @@ public class StandaloneActivity extends AppCompatActivity
                       intent.putExtra("position", "" + i);
                       intent.putExtra(
                           "enroll", "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      intent.putExtra(
-                          "rejoin", "" + studyListArrayList.get(i).getSetting().getRejoin());
                       startActivity(intent);
                       finish();
                     }
@@ -666,11 +650,6 @@ public class StandaloneActivity extends AppCompatActivity
                               StandaloneActivity.this,
                               getString(R.string.enroll),
                               "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StandaloneActivity.this,
-                              getString(R.string.rejoin),
-                              "" + studyListArrayList.get(i).getSetting().getRejoin());
                     } catch (Exception e) {
                       Logger.log(e);
                     }
