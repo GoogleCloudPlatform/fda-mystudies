@@ -33,7 +33,7 @@
         <c:if test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn submitEle"
-                    actType="save">Save
+                    actType="save" id="saveBtn">Save
             </button>
           </div>
 
@@ -131,9 +131,12 @@
           </div>
           <div class="dis-line form-group mb-none mr-sm">
             <c:if test="${empty permission}">
+            <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"
+                  data-placement="bottom" data-original-title="">
               <button type="button" class="btn btn-primary blue-btn"
                       id="addQaId">+ Add question
               </button>
+              </span>
             </c:if>
           </div>
         </div>
@@ -217,14 +220,15 @@
 
             <c:if test="${empty eligibility.id}">
             $('#addQaId').prop('disabled', true);
+            $("#saveBtn").html("Next");
+            $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
             $('.viewIcon, .editIcon, .deleteIcon').addClass('cursor-none');
             </c:if>
-
             if (emVal != "1") {
               if (eligibilityTestSize === 0) {
                 $("#doneBut").attr("disabled", true);
                 $('#spancomId').attr('data-original-title',
-                    'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+                    'Please add 1 or more questions to the test');
               }
             }
 
@@ -420,8 +424,9 @@
                           && eligibilityMechanism != $(
                               this).val()) {
                         $('#forceContinueMsgId').show();
-                        $('#addQaId').prop('disabled',
-                            true);
+                        $('#addQaId').prop('disabled', true);
+                        $("#saveBtn").html("Next");
+                        $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
                         $(
                             '.viewIcon, .editIcon, .deleteIcon')
                             .addClass('cursor-none');
@@ -436,8 +441,9 @@
                         }
                       } else {
                         $('#forceContinueMsgId').hide();
-                        $('#doneBut, #addQaId').prop(
-                            'disabled', false);
+                        $('#doneBut, #addQaId').prop('disabled', false);
+                        $("#saveBtn").html("Save");
+                        $("#spanAddQaId").removeAttr("data-original-title");
                         $('#spancomId').attr(
                             'data-original-title',
                             '');
@@ -460,8 +466,7 @@
                             .slideUp('fast');
                         $('#instructionTextDivId')
                             .slideDown('fast');
-                        $('#doneBut').prop('disabled',
-                            false);
+                        $('#doneBut').prop('disabled',false);
                       } else if ($('#inlineRadio3:checked').length > 0) {
                         $('#instructionTextDivId')
                             .slideUp('fast');
@@ -486,7 +491,7 @@
                         if (eligibilityTestSize === 0) {
                           $("#doneBut").attr("disabled", true);
                           $('#spancomId').attr('data-original-title',
-                              'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+                              'Please add 1 or more questions to the test');
                         }
                       }
 
@@ -637,7 +642,7 @@
       $('#consent_list').DataTable().draw();
       $("#doneBut").attr("disabled", true);
       $('#spancomId').attr('data-original-title',
-          'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+          'Please add 1 or more questions to the test');
     }
   }
 
