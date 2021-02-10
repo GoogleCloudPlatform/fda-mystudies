@@ -2700,3 +2700,9 @@ td span.eye-inc:hover {
     vertical-align: middle;
 }
     
+    
+.tooltip > .tooltip-inner {
+text-align: left !important;
+align-items: left !important;
+width:100%
+}
