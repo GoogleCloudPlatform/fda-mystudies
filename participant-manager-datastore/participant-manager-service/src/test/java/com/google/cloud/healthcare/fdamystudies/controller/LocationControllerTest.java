@@ -499,7 +499,6 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
         .andExpect(jsonPath("$.locations", hasSize(1)))
-        .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)))
         .andExpect(jsonPath("$.locations[0].studyNames").isArray())
         .andExpect(jsonPath("$.locations[0].studyNames[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.totalLocationsCount", is(1)))
@@ -556,8 +555,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
         .andExpect(jsonPath("$.locations", hasSize(10)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
-        .andExpect(jsonPath("$.totalLocationsCount", is(10)))
-        .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)));
+        .andExpect(jsonPath("$.totalLocationsCount", is(10)));
 
     verifyTokenIntrospectRequest(2);
   }
@@ -655,8 +653,7 @@ public class LocationControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations", hasSize(1)))
-        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
-        .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)));
+        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()));
 
     verifyTokenIntrospectRequest();
   }
