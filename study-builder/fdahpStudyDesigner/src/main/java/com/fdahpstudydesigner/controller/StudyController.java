@@ -5155,6 +5155,7 @@ public class StudyController {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+      AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
       userRegistrationServerUrl = map.get("userRegistrationServerUrl");
 
@@ -5196,6 +5197,7 @@ public class StudyController {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+      AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
       responseServerUrl = map.get("responseServerUrl");
 

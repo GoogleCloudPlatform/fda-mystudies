@@ -143,6 +143,7 @@
                        maxlength="100"
                        placeholder="Email address"
                        data-pattern-error="Email address is invalid" required maxlength="100"
+                       data-error="Please complete this field"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
                 <div class="help-block with-errors red-txt"></div>
               </div>

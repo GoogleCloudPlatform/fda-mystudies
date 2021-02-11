@@ -151,6 +151,7 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setCustomId(study.getCustomId());
       studyDetail.setName(study.getName());
       studyDetail.setType(study.getType());
+      studyDetail.setStudyStatus(study.getStatus());
       studyDetail.setLogoImageUrl(study.getLogoImageUrl());
       SiteCount siteCount = sitesPerStudyMap.get(study.getId());
       if (siteCount != null && siteCount.getCount() != null) {
@@ -194,6 +195,7 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setCustomId(study.getCustomId());
       studyDetail.setName(study.getStudyName());
       studyDetail.setType(study.getType());
+      studyDetail.setStudyStatus(study.getStatus());
       studyDetail.setLogoImageUrl(study.getLogoImageUrl());
       studyDetail.setStudyPermission(study.getEdit());
       studyDetail.setSitesCount(
