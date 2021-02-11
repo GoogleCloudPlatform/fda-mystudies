@@ -36,6 +36,7 @@ import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserProfileMapper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
@@ -170,7 +171,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     // Bad request and errors handled in RestResponseErrorHandler class
-    UserResponse authRegistrationResponse = registerUserInAuthServer(setUpAccountRequest);
+    UserResponse authRegistrationResponse =
+        registerUserInAuthServer(setUpAccountRequest, auditRequest);
 
     UserRegAdminEntity userRegAdminUser = optUsers.get();
     userRegAdminUser.setUrAdminAuthId(authRegistrationResponse.getUserId());
@@ -195,7 +197,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     return setUpAccountResponse;
   }
 
-  private UserResponse registerUserInAuthServer(SetUpAccountRequest setUpAccountRequest) {
+  private UserResponse registerUserInAuthServer(
+      SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest) {
     logger.entry("registerUserInAuthServer()");
 
     AuthUserRequest userRequest =
@@ -207,6 +210,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     HttpEntity<AuthUserRequest> requestEntity = new HttpEntity<>(userRequest, headers);
 
@@ -219,7 +223,8 @@ public class UserProfileServiceImpl implements UserProfileService {
   }
 
   @Override
-  public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest) {
+  public PatchUserResponse updateUserAccountStatus(
+      PatchUserRequest statusRequest, AuditLogEventRequest auditRequest) {
     logger.entry("updateUserAccountStatus()");
 
     Optional<UserRegAdminEntity> optSuperAdmin =
@@ -241,7 +246,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     UserRegAdminEntity user = optUser.get();
     if (StringUtils.isNotEmpty(user.getUrAdminAuthId())) {
-      updateUserAccountStatusInAuthServer(user.getUrAdminAuthId(), statusRequest.getStatus());
+      updateUserAccountStatusInAuthServer(
+          user.getUrAdminAuthId(), statusRequest.getStatus(), auditRequest);
     }
 
     user.setStatus(statusRequest.getStatus());
@@ -263,12 +269,14 @@ public class UserProfileServiceImpl implements UserProfileService {
     return new PatchUserResponse(messageCode);
   }
 
-  private void updateUserAccountStatusInAuthServer(String authUserId, Integer status) {
+  private void updateUserAccountStatusInAuthServer(
+      String authUserId, Integer status, AuditLogEventRequest auditRequest) {
     logger.entry("updateUserAccountStatusInAuthServer()");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     UpdateEmailStatusRequest emailStatusRequest = new UpdateEmailStatusRequest();
     UserStatus userStatus = UserStatus.fromValue(status);

@@ -9,7 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantStudyInformation;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 import org.slf4j.Logger;
@@ -34,7 +36,8 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
       LoggerFactory.getLogger(ParticipantStudyInfoServiceImpl.class);
 
   @Override
-  public ParticipantStudyInformation getParticipantStudyInfo(String studyId, String participantId)
+  public ParticipantStudyInformation getParticipantStudyInfo(
+      String studyId, String participantId, AuditLogEventRequest auditRequest)
       throws ProcessResponseException {
     logger.debug("ParticipantStudyInformation getParticipantStudyInfo() - starts ");
     HttpHeaders headers = null;
@@ -43,6 +46,7 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     UriComponentsBuilder getPartInfoUriBuilder =
         UriComponentsBuilder.fromHttpUrl(appConfig.getRegServerPartStudyInfoUrl())

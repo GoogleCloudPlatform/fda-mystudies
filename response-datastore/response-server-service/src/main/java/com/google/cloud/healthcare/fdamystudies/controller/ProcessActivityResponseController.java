@@ -171,7 +171,7 @@ public class ProcessActivityResponseController {
         studyActivityMetadataRequestBean.setActivityVersion(activityVersion);
         QuestionnaireActivityStructureBean activityMetadatFromWcp =
             studyMetadataService.getStudyActivityMetadata(
-                applicationId, studyActivityMetadataRequestBean);
+                applicationId, studyActivityMetadataRequestBean, auditRequest);
         if (activityMetadatFromWcp == null) {
           logger.error(
               "Input values are :\n Study Id: "
@@ -217,7 +217,7 @@ public class ProcessActivityResponseController {
 
         // Get ParticipantStudyInfo from Registration Server
         ParticipantStudyInformation partStudyInfo =
-            partStudyInfoService.getParticipantStudyInfo(studyId, participantId);
+            partStudyInfoService.getParticipantStudyInfo(studyId, participantId, auditRequest);
         if (partStudyInfo == null) {
           logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
           responseServerAuditLogHelper.logEvent(
