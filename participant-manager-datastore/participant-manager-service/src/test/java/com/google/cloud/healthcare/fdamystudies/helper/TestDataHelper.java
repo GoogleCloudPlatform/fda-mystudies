@@ -191,7 +191,7 @@ public class TestDataHelper {
 
   public AppEntity newAppEntity() {
     AppEntity appEntity = new AppEntity();
-    appEntity.setAppId("MyStudies-Id-1");
+    appEntity.setAppId(RandomStringUtils.randomAlphanumeric(8));
     appEntity.setAppName("MyStudies-1");
     return appEntity;
   }
@@ -205,7 +205,7 @@ public class TestDataHelper {
 
   public LocationEntity newLocationEntity() {
     LocationEntity locationEntity = new LocationEntity();
-    locationEntity.setCustomId(CUSTOM_ID_VALUE);
+    locationEntity.setCustomId(RandomStringUtils.randomAlphanumeric(8));
     locationEntity.setDescription(LOCATION_DESCRIPTION_VALUE);
     locationEntity.setName(RandomStringUtils.randomAlphanumeric(8));
     locationEntity.setStatus(ACTIVE_STATUS);
