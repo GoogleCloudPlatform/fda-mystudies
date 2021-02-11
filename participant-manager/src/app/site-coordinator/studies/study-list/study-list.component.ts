@@ -7,7 +7,7 @@ import {of} from 'rxjs';
 import {Study, StudyResponse} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
-import {StudyType} from 'src/app/shared/enums';
+import {Status, StudyType} from 'src/app/shared/enums';
 import {Permission} from 'src/app/shared/permission-enums';
 import {SearchParameterService} from 'src/app/service/search-parameter.service';
 const limit = 10;
@@ -18,16 +18,18 @@ const limit = 10;
 })
 export class StudyListComponent implements OnInit {
   studyList$: Observable<StudyResponse> = of();
-  studies: Study[] = [];
+  studiesDisplay: Study[] = [];
   manageStudiesBackup = {} as StudyResponse;
   studyTypes = StudyType;
   messageMapping: {[k: string]: string} = {
-    '=0': 'No Sites',
-    '=1': 'One Site',
-    'other': '# Sites',
+    '=0': 'No sites',
+    '=1': 'One site',
+    'other': '# sites',
   };
   loadMoreEnabled = true;
   searchValue = '';
+  studyStatus = Status;
+
   constructor(
     private readonly studiesService: StudiesService,
     private readonly router: Router,
@@ -44,7 +46,7 @@ export class StudyListComponent implements OnInit {
       this.getStudies();
     });
 
-    this.sharedService.updateSearchPlaceHolder('Search By Study ID or Name');
+    this.sharedService.updateSearchPlaceHolder('Search by study ID or name');
   }
 
   getStudies(): void {
@@ -52,20 +54,14 @@ export class StudyListComponent implements OnInit {
       this.studiesService.getStudies(limit, 0, this.searchValue),
     ).pipe(
       map(([manageStudies]) => {
+        const studies = [];
         this.manageStudiesBackup = {...manageStudies};
-        if (
-          !manageStudies.superAdmin &&
-          manageStudies.sitePermissionCount < 2
-        ) {
-          this.toastr.error(
-            'This view displays study-wise enrollment if you manage multiple sites.',
-          );
-        }
+        studies.push(...manageStudies.studies);
+        this.studiesDisplay = studies;
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
             : false) && manageStudies.studies.length > 0;
-
         return this.manageStudiesBackup;
       }),
     );
@@ -85,21 +81,21 @@ export class StudyListComponent implements OnInit {
     }
   }
 
-  loadMoreSites() {
+  loadMoreSites(): void {
     const offset = this.manageStudiesBackup.studies.length;
-    this.studyList$ = combineLatest(
-      this.studiesService.getStudies(limit, offset, this.searchValue),
-    ).pipe(
-      map(([manageStudies]) => {
+    this.studiesService
+      .getStudies(limit, offset, this.searchValue)
+      .subscribe((manageStudies) => {
         const studies = [];
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
+        this.studiesDisplay = studies;
         this.manageStudiesBackup.studies = studies;
         this.loadMoreEnabled =
-          this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
-        return this.manageStudiesBackup;
-      }),
-    );
+          (this.manageStudiesBackup.studies.length % limit === 0
+            ? true
+            : false) && manageStudies.studies.length > 0;
+      });
   }
 
   checkViewPermission(permission: number): boolean {

@@ -19,4 +19,5 @@ public class EnrollmentTokenIdentifierBean {
 
   private String tokenIdentifier;
   private String customStudyId;
+  private String studyVersion;
 }

@@ -9,6 +9,12 @@
   }
 
   -->
+  #app_Wide_Notification_list tr td {
+    padding-left: 20px !important;
+    }
+    #app_Wide_Notification_list tr th {
+    padding-left: 20px !important;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
@@ -16,7 +22,7 @@
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none">
       <div class="black-lg-f">
-        Manage app-level notifications
+        Send notifications to app users
       </div>
       <div class="dis-line pull-right ml-md">
         <c:if
@@ -24,7 +30,7 @@
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn notificationDetailsToEdit"
                     actionType="add">
-              Create Notification
+              Create notification
             </button>
           </div>
         </c:if>
@@ -37,23 +43,22 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
   <div class="white-bg">
     <div>
-      <table id="app_Wide_Notification_list" class="table table-right tbl">
+      <table id="app_Wide_Notification_list" class="table wid100 tbl">
         <thead>
           <tr>
-            <th id="">TITLE</th>
+            <th id="">Notification</th>
             <th id="" class="linkDis">Status</th>
-            <th id="" class="linkDis">ACTIONS</th>
+            <th id="" class="linkDis text-right" style="padding-right: 3% !important;">ACTIONS</th>
           </tr>
         </thead>
         <tbody>
           <c:forEach items="${notificationList}" var="notification" varStatus="status">
             <tr>
               <td>
-                <div class="dis-ellipsis lg-ellipsis"
-                     title="${fn:escapeXml(notification.notificationText)}">${fn:escapeXml(notification.notificationText)}</div>
+                <div class="dis-ellipsis lg-ellipsis">${fn:escapeXml(notification.notificationText)}</div>
               </td>
               <td>${notification.checkNotificationSendingStatus}</td>
-              <td>
+              <td class="text-right" style="padding-right: 3% !important;">
                 <span class="sprites_icon preview-g mr-lg notificationDetailsToView"
                       actionType="view"
                       notificationId="${notification.notificationId}"
@@ -79,7 +84,7 @@
                   </c:if>
                   <span class="sprites_icon copy notificationDetailsToEdit" actionType="add"
                         notificationText="${fn:escapeXml(notification.notificationText)}"
-                        data-toggle="tooltip" data-placement="top" title="Copy"></span>
+                        data-toggle="tooltip" data-placement="top" title="Copy-into-new"></span>
                 </c:if>
               </td>
             </tr>
@@ -135,7 +140,7 @@
       "info": false,
       "lengthChange": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "searching": false,
       "pageLength": 15,

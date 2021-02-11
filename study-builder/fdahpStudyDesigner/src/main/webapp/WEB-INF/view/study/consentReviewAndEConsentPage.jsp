@@ -32,7 +32,7 @@
       <div class="right-content-head" style="z-index: 999;">
         <div class="text-right">
           <div class="black-md-f text-uppercase dis-line pull-left line34">
-            Review and E-Consent Steps
+            E-Consent Steps
             <c:set var="isLive">${_S}isLive</c:set>
               ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
           <div class="dis-line form-group mb-none mr-sm">
@@ -45,7 +45,7 @@
           </div>
           <div class="dis-line form-group mb-none">
             <button type="button" class="btn btn-primary blue-btn" id="doneId">Mark
-              as Completed
+              as completed
             </button>
           </div>
         </div>
@@ -61,12 +61,7 @@
           </li>
           <li class="consentReview">
             <a data-toggle="tab" href="#menu2">Consent
-              Document for Review
-            </a>
-          </li>
-          <li class="econsentForm">
-            <a data-toggle="tab" href="#menu3">E-Consent
-              Form
+              document
             </a>
           </li>
         </ul>
@@ -101,12 +96,17 @@
                   id="rootContainer">
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Screen Title
+                    Screen title
                     <small>(250 characters max)</small>
                     <span
                         class="requiredStar">*
                     </span>
-                    E.g. Sharing Options
+                    E.g. Sharing options
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
@@ -126,6 +126,11 @@
                     its partners will receive your study data from your
                     participation in the study. Please indicate if you permit to
                     share your data more broadly to other parties for research.
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
@@ -143,6 +148,11 @@
                     <span
                         class="requiredStar">*
                     </span>
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
@@ -159,6 +169,11 @@
                     <span
                         class="requiredStar">*
                     </span>
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group custom-form">
                     <textarea class="form-control requiredClass" rows="5"
@@ -172,6 +187,11 @@
                     Explanatory text that can be provided in a 'Learn More'
                     section
                     <span class="requiredStar">*</span>
+                    <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
+            		</span>
                   </div>
                   <div class="form-group">
                     <textarea id="learnMoreTextId" name="learnMoreText"
@@ -258,46 +278,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="mt-xlg dis-inline" id="autoCreateDivId01"
-                 style="display: block;">
-              <div class="sign">Participant's First Name</div>
-              <div class="sign">Last Name</div>
-              <div class="sign">Signature</div>
-              <div class="sign">Date</div>
-              <div class="sign">Time</div>
-            </div>
-          </div>
-          <div id="menu3" class="tab-pane fade">
-            <div class="mt-xlg text-weight-semibold">The mobile app
-              captures the following from the user as part of the e-Consent
-              process for the study in the app:
-            </div>
-            <div class="mt-lg">
-              <ul class="list-style-image">
-                <li>Explicit confirmation of consent document review and
-                  agreement
-                  <small>(250 characters max)</small>
-                  <span
-                      class="requiredStar">*
-                  </span>
-                  <span
-                      class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      title="Text message shown to the prospect participant on the app, to confirm Review of and Agreement to the Consent Document."></span>
-                  <div class="form-group mt-sm mb-none">
-                    <input type="text" class="form-control" placeholder=""
-                           required name="aggrementOfTheConsent"
-                           id="aggrementOfTheConsentId"
-                           value="${consentBo.aggrementOfTheConsent}" maxlength="250"/>
-                    <div class="help-block with-errors red-txt"></div>
-                  </div>
-                </li>
-
-                <li>First Name</li>
-                <li>Last Name</li>
-                <li>E-signature</li>
-                <li>Date and Time of providing Consent</li>
-              </ul>
             </div>
           </div>
         </div>
@@ -417,6 +397,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     //check the type of page action(view/edit)
     newLearnMoreConsentDocument();
     if ('${permission}' == 'view') {
@@ -483,87 +464,47 @@
           saveConsentReviewAndEConsentInfo("saveId");
         } else if (id == "doneId") {
           var isvalid = true;
-          var retainTxt = '${studyBo.retainParticipant}';
           if ($('#shareDataPermissionsYes').is(":checked")) {
             isvalid = maxLenLearnMoreEditor();
           }
           isFromValid("#consentReviewFormId");
-          if ($('.custom-form').find('.has-error.has-danger').length < 1 && $('#menu3').find(
-              '.has-error.has-danger').length < 1 && isvalid) {
-            var message = "";
-            var alertType = "";
-            if (retainTxt != null && retainTxt != '' && typeof retainTxt != 'undefined') {
-              if (retainTxt == 'Yes') {
-                alertType = "retained";
-              } else if (retainTxt == 'No') {
-                alertType = "deleted";
+          if ($('.custom-form').find('.has-error.has-danger').length < 1 && isvalid) {
+        	  var consentDocumentType = $('input[name="consentDocType"]:checked').val();
+              if (consentDocumentType == "Auto") {
+                saveConsentReviewAndEConsentInfo("doneId");
               } else {
-                alertType = "retained or deleted as per participant choice";
-              }
-              message = "You have a setting that needs study data to be " + alertType
-                  + " if the participant withdraws from the study. Please ensure you have worded Consent Terms in accordance with this. Click OK to proceed with completing this section or Cancel if you wish to make changes.";
-            }
-            bootbox.confirm({
-              closeButton: false,
-              message: message,
-              buttons: {
-                'cancel': {
-                  label: 'Cancel',
-                },
-                'confirm': {
-                  label: 'OK',
-                },
-              },
-              callback: function (result) {
-                if (result) {
-                  var consentDocumentType = $('input[name="consentDocType"]:checked').val();
-                  if (consentDocumentType == "Auto") {
-                    saveConsentReviewAndEConsentInfo("doneId");
-                  } else {
-                    var content = $('#newDocumentDivId').summernote('code');
-                    if (content != null && content != '' && typeof content != 'undefined' && content
-                        != '<p><br></p>') {
-                      saveConsentReviewAndEConsentInfo("doneId");
-                    } else {
-                      $("#newDocumentDivId").parent().find(".help-block").empty();
-                      $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
-                          ".help-block").empty().append(
-                          $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
-                    }
-                  }
-
+                var content = $('#newDocumentDivId').summernote('code');
+                if (content != null && content != '' && typeof content != 'undefined' && content
+                    != '<p><br></p>') {
+                  saveConsentReviewAndEConsentInfo("doneId");
                 } else {
-                  $("#doneId").prop('disabled', false);
+                  $("#newDocumentDivId").parent().find(".help-block").empty();
+                  $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
+                      ".help-block").append(
+                      '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
                 }
               }
-            });
           } else {
             var slaCount = $('.custom-form').find('.has-error.has-danger').length;
             var qlaCount = $('#menu2').find('.has-error.has-danger').length;
-            var rlaCount = $('#menu3').find('.has-error.has-danger').length;
             if (parseInt(slaCount) >= 1 || $('#learnMoreTextId').parent().find(".help-block").text()
                 != '') {
               $('.shareData a').tab('show');
             } else if (parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(
                 ".help-block").text() != '') {
               $('.consentReview a').tab('show');
-            } else if (parseInt(rlaCount) >= 1) {
-              $('.econsentForm a').tab('show');
             }
           }
         }
       } else {
         var slaCount = $('.custom-form').find('.has-error.has-danger').length;
         var qlaCount = $('#menu2').find('.has-error.has-danger').length;
-        var rlaCount = $('#menu3').find('.has-error.has-danger').length;
         if (parseInt(slaCount) >= 1) {
           $('.shareData a').tab('show');
         } else if (parseInt(qlaCount) >= 1 || $('#newDocumentDivId').parent().find(
             ".help-block").text() != '') {
           $('.consentReview a').tab('show');
-        } else if (parseInt(rlaCount) >= 1) {
-          $('.econsentForm a').tab('show');
-        }
+        } 
       }
     });
 
@@ -618,7 +559,7 @@
           !== undefined) {
         if ($("#inlineRadio1").is(":checked")) {
           <c:forEach items="${consentInfoList}" varStatus="i" var="consentInfo">
-          consentDocumentDivContent += "<span style='font-size:18px;'><strong>"
+          consentDocumentDivContent += "<span style='font-size:15px;'><strong>"
               + "${consentInfo.displayTitle}"
               + "</strong></span><br/>"
               + "<span style='display: block; overflow-wrap: break-word; width: 100%;'>"
@@ -702,7 +643,6 @@
       var learn_more_text = $('#learnMoreTextId').summernote('code');
       learn_more_text = replaceSpecialCharacters(learn_more_text);
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-      var aggrement_of_theconsent = $("#aggrementOfTheConsentId").val();
 
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
@@ -762,9 +702,6 @@
       }
       if (null != allow_Permission) {
         consentInfo.allowWithoutPermission = allow_Permission;
-      }
-      if (null != aggrement_of_theconsent) {
-        consentInfo.aggrementOfTheConsent = aggrement_of_theconsent;
       }
       var data = JSON.stringify(consentInfo);
       $.ajax({
@@ -962,13 +899,13 @@
   function previewLearnMore() {
     $('#cancelButtonId').hide();
     $('#doneButtonId').show();
-    var learn_more_desc = $('learnMoreTextId').summernote('code');
+    var learn_more_desc = $('#learnMoreTextId').summernote('code');
 
     $("#titleModalId").text("Learn more");
     if (learn_more_desc != ' ' && learn_more_desc != '' && learn_more_desc != null
         && typeof learn_more_desc != 'undefined') {
-        $("#accordionEllipsis").text(learn_more_desc);
-        $("#accordionCollapse1").text(learn_more_desc);
+        $("#accordionEllipsis").html(learn_more_desc);
+        $("#accordionCollapse1").html(learn_more_desc);
         $("#accordianNA").hide();
         $("#accordion").show();
         
@@ -978,8 +915,8 @@
         $("#tagLineDescriptionModalId").hide();
       } else {
     	learn_more_desc = '';
-        $("#accordionEllipsis").text(learn_more_desc);
-        $("#accordionCollapse1").text(learn_more_desc);
+        $("#accordionEllipsis").html(learn_more_desc);
+        $("#accordionCollapse1").html(learn_more_desc);
         $("#shortDescriptionModalId").text(' - NA - ');
         $("#accordianNA").show();
         $("#accordion").hide();

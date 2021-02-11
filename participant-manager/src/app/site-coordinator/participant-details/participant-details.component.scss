@@ -5,3 +5,14 @@
 .display__contents {
   display: contents;
 }
+
+.custm_table_width_20 {
+  width: 20%;
+}
+.line_hight__50 {
+  line-height: 50px;
+}
+
+.table tbody tr:last-child td:first-child {
+  border-bottom: none !important;
+}

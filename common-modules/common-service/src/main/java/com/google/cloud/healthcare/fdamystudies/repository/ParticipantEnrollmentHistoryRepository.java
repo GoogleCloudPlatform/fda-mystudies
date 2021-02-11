@@ -32,7 +32,7 @@ public interface ParticipantEnrollmentHistoryRepository
               + "FROM participant_enrollment_history peh, locations loc, sites s "
               + "WHERE peh.site_id=s.id AND s.location_id=loc.id AND peh.status IN ('enrolled','withdrawn') AND "
               + "peh.user_details_id IN (:userIds) AND peh.app_info_id=:appId "
-              + "ORDER BY loc.name DESC",
+              + "ORDER BY peh.created_time DESC",
       nativeQuery = true)
   public List<ParticipantEnrollmentHistory> findParticipantEnrollmentHistoryByAppId(
       String appId, List<String> userIds);
@@ -65,4 +65,21 @@ public interface ParticipantEnrollmentHistoryRepository
               + "withdrawal_timestamp IS NULL AND user_details_id =:userDetailsId",
       nativeQuery = true)
   public void updateWithdrawalDateAndStatusForDeactivatedUser(String userDetailsId, String status);
+
+  @Query(
+      value =
+          "SELECT peh.status "
+              + "FROM participant_enrollment_history peh "
+              + "WHERE peh.site_id=:siteId AND peh.participant_registry_site_id=:participantRegistryId "
+              + "ORDER BY peh.created_time DESC LIMIT 1",
+      nativeQuery = true)
+  public String findBySiteIdAndParticipantRegistryId(String siteId, String participantRegistryId);
+
+  @Query(
+      value =
+          "SELECT peh.status FROM participant_enrollment_history peh WHERE study_info_id=:studyId AND "
+              + "participant_registry_site_id=:participantRegistrySiteId ORDER BY created_time DESC LIMIT 1",
+      nativeQuery = true)
+  public String findByStudyIdAndParticipantRegistrySiteId(
+      String studyId, String participantRegistrySiteId);
 }

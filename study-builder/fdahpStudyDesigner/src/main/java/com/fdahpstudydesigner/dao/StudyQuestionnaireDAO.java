@@ -23,6 +23,7 @@
 
 package com.fdahpstudydesigner.dao;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.HealthKitKeysInfo;
@@ -65,7 +66,11 @@ public interface StudyQuestionnaireDAO {
       Integer questionnaireId, String customStudyId, SessionObject sessionObject);
 
   public String deleteFromStepQuestion(
-      Integer formId, Integer questionId, SessionObject sessionObject, String customStudyId);
+      Integer formId,
+      Integer questionId,
+      SessionObject sessionObject,
+      String customStudyId,
+      AuditLogEventRequest auditRequest);
 
   public String deleteQuestionnaireStep(
       Integer stepId,
@@ -159,4 +164,8 @@ public interface StudyQuestionnaireDAO {
       Integer questionId,
       String stepType,
       boolean isChange);
+
+  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId);
+
+  public QuestionsBo getQuestionById(Integer questionId);
 }

@@ -57,14 +57,14 @@ export class ParticipantDetailsComponent
       this.sendResend =
         participant.participantDetails.onboardingStatus ===
         this.onBoardingStatus.New
-          ? 'Send Invitation'
-          : 'Resend Invitation';
+          ? 'Send invitation'
+          : 'Resend invitation';
 
       this.enableDisable =
         participant.participantDetails.onboardingStatus ===
         this.onBoardingStatus.Disabled
-          ? 'Enable Invitation'
-          : 'Disable Invitation';
+          ? 'Enable invitation'
+          : 'Disable invitation';
     });
   }
 

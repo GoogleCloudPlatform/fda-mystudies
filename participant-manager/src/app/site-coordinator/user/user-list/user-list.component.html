@@ -1,13 +1,13 @@
 <div class="subheader p-none">
   <div class="max__w__1280 m-none">
     <div class="flex__justify__space-between">
-      <div class="subheader__title">Manage Admins</div>
+      <div class="subheader__title">Manage admins</div>
       <div>
         <button
           class="btn btn-primary width__auto blue__btn font14"
           routerLink="/coordinator/users/new"
         >
-          Add New Admin
+          Add new admin
         </button>
       </div>
     </div>
@@ -36,10 +36,10 @@
       <thead class="custom__thead">
         <tr>
           <th>
-            <mfDefaultSorter by="_firstName">First Name</mfDefaultSorter>
+            <mfDefaultSorter by="_firstName">First name</mfDefaultSorter>
           </th>
           <th>
-            <mfDefaultSorter by="_lastName">Last Name</mfDefaultSorter>
+            <mfDefaultSorter by="_lastName">Last name</mfDefaultSorter>
           </th>
           <th>
             <mfDefaultSorter by="_email">Email</mfDefaultSorter>
@@ -54,13 +54,13 @@
           routerLink="/coordinator/users/{{ user.id }}"
         >
           <td>
-            <span class="tbl__td__label">First Name:</span>
-            <span class="no_st_en outline__none">
+            <span class="tbl__td__label">First name:</span>
+            <span class="outline__none">
               {{ user.firstName }}
             </span>
           </td>
           <td>
-            <span class="tbl__td__label">Last Name:</span>
+            <span class="tbl__td__label">Last name:</span>
             {{ user.lastName }}
           </td>
           <td>

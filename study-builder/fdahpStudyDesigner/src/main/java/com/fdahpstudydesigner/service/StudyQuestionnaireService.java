@@ -23,6 +23,7 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
@@ -62,7 +63,11 @@ public interface StudyQuestionnaireService {
       Integer questionnaireId, String customStudyId, SessionObject sessionObject);
 
   public String deleteFromStepQuestion(
-      Integer formId, Integer questionId, SessionObject sessionObject, String customStudyId);
+      Integer formId,
+      Integer questionId,
+      SessionObject sessionObject,
+      String customStudyId,
+      AuditLogEventRequest auditRequest);
 
   public String deleteQuestionnaireStep(
       Integer stepId,
@@ -146,4 +151,8 @@ public interface StudyQuestionnaireService {
   public List<AnchorDateTypeBo> getAnchorTypesByStudyId(String customStudyId);
 
   public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId);
+
+  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId);
+
+  public QuestionsBo getQuestionById(Integer valueOf);
 }

@@ -80,10 +80,11 @@ public class UserProfileController {
       @PathVariable String userId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userProfileRequest.setUserId(userId);
     UserProfileResponse userProfileResponse =
-        userProfileService.updateUserProfile(userProfileRequest);
+        userProfileService.updateUserProfile(userProfileRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, userProfileResponse.getHttpStatusCode()));
     return ResponseEntity.status(userProfileResponse.getHttpStatusCode()).body(userProfileResponse);
@@ -131,8 +132,9 @@ public class UserProfileController {
       @PathVariable String userId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    userProfileService.deleteInvitation(signedInUserId, userId);
+    userProfileService.deleteInvitation(signedInUserId, userId, auditRequest);
 
     logger.exit("Sucessfully deleted invitation");
     return ResponseEntity.status(HttpStatus.OK).body(MessageCode.INVITATION_DELETED_SUCCESSFULLY);

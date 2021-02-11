@@ -44,21 +44,19 @@ public enum MessageCode {
   GET_APPS_DETAILS_SUCCESS(HttpStatus.OK, "MSG_0010", "App details fetched successfully"),
 
   TARGET_ENROLLMENT_UPDATE_SUCCESS(
-      HttpStatus.OK, "MSG_0011", "Enrollment target updated for the study"),
+      HttpStatus.OK, "MSG_0011", "Enrollment target updated for study"),
 
   GET_APP_PARTICIPANTS_SUCCESS(HttpStatus.OK, "MSG_0012", "App participants fetched successfully"),
 
   ADD_NEW_USER_SUCCESS(
-      HttpStatus.CREATED,
-      "MSG_0013",
-      "The newly added user has been invited to use the Participant Manager"),
+      HttpStatus.CREATED, "MSG_0013", "New admin invited to join the Participant Manager"),
 
-  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG_0014", "User record updated"),
+  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG_0014", "Admin's details updated"),
 
-  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG_0015", "User profile fetched successfully"),
+  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG_0015", "Admin user profile fetched successfully"),
 
   GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
-      HttpStatus.OK, "MSG_0016", "User profile with security code fetched successfully"),
+      HttpStatus.OK, "MSG_0016", "Admin user profile with security code fetched successfully"),
 
   GET_PARTICIPANT_DETAILS_SUCCESS(
       HttpStatus.OK, "MSG_0017", "Participant details fetched successfully"),
@@ -85,9 +83,9 @@ public enum MessageCode {
 
   GET_ADMIN_DETAILS_SUCCESS(HttpStatus.OK, "MSG_0027", "Admin details fetched successfully"),
 
-  DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0028", "User deactivated successfully"),
+  DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0028", "Admin user deactivated successfully"),
 
-  REACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0029", "User record activated"),
+  REACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0029", "Admin user reactivated"),
 
   DECOMMISSION_SUCCESS(HttpStatus.OK, "MSG_0030", "Location decommisioned"),
 
@@ -101,9 +99,9 @@ public enum MessageCode {
   PROFILE_UPDATE_SUCCESS(
       HttpStatus.OK, "MSG_0034", "Your account and profile details have been updated"),
 
-  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "MSG_0035", "Your password has been changed successfully"),
+  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "MSG_0035", "Your password has been updated"),
 
-  GET_USERS_SUCCESS(HttpStatus.OK, "MSG_0036", "User details fetched successfully"),
+  GET_USERS_SUCCESS(HttpStatus.OK, "MSG_0036", "Admin user details fetched successfully"),
 
   INVITATION_DISABLED_SUCCESS(
       HttpStatus.OK, "MSG_0039", "Invitation disabled for selected participant(s)"),
@@ -117,7 +115,7 @@ public enum MessageCode {
       HttpStatus.OK, "MSG_0044", "Password help has been sent to your registered email"),
 
   INVITATION_DELETED_SUCCESSFULLY(
-      HttpStatus.OK, "MSG_0045", "The invitation for this user has been deleted");
+      HttpStatus.OK, "MSG_0045", "The invitation for this admin user has been deleted");
 
   private final HttpStatus httpStatus;
   private final String code;

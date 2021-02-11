@@ -2,10 +2,13 @@
   <div class="tab-content">
     <ng-container *ngIf="manageApp$ | async as manageApps">
       <div
-        *ngIf="manageApps.superAdmin || manageApps.studyPermissionCount >= 2"
+        *ngIf="
+          manageApps.superAdmin || manageApps.studyPermissionCount >= 2;
+          else apps_Permission_error
+        "
       >
         <div
-          *ngFor="let app of manageApps.apps"
+          *ngFor="let app of appList"
           class="bg__white cards box__shadow-cmn p-xl ml-none mr-none apps_row"
         >
           <div
@@ -38,7 +41,7 @@
                         app.appUsersCount | i18nPlural: appUsersMessageMapping
                       }}
                     </span>
-                    <span *ngIf="!app.appUsersCount">No App Users</span>
+                    <span *ngIf="!app.appUsersCount">No app users</span>
                   </span>
                 </div>
               </div>
@@ -80,7 +83,7 @@
                     data-tip="Represents the Enrollment Progress for all studies in this app, across the Sites you have permissions to view or manage. This is calculated considering the number of enrolled participants versus how many were invited or what the target was (in case of open studies). Studies for which targets are yet to be defined are not included in this number."
                     tabindex="1"
                   >
-                    <div class="text-grey__sm">Enrollment Progress</div>
+                    <div class="text-grey__sm">Enrollment progress</div>
                   </span>
                 </div>
               </div>
@@ -97,6 +100,14 @@
           </div>
         </div>
       </div>
+      <ng-template #apps_Permission_error>
+        <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
+          <div class="text-center p-2">
+            This view displays app-wise enrollment if you manage multiple
+            studies.
+          </div>
+        </div>
+      </ng-template>
     </ng-container>
   </div>
 </div>

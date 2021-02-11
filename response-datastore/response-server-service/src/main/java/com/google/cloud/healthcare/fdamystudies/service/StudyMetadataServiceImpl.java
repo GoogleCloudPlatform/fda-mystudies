@@ -91,7 +91,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
   public QuestionnaireActivityStructureBean getStudyActivityMetadata(
       String applicationId, StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
       throws ProcessResponseException {
-    logger.debug("getStudyActivityMetadata() - starts ");
+    logger.debug("StudyMetadataServiceImpl getStudyActivityMetadata() - starts ");
     HttpHeaders headers = null;
 
     ResponseEntity<?> responseEntity = null;
@@ -119,7 +119,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
         (QuestionnaireActivityMetaDataBean) responseEntity.getBody();
     QuestionnaireActivityStructureBean retQuestionnaireActivityStructureBean =
         metadataParentBean.getActivity();
-    logger.debug("getStudyActivityMetadata() - ends");
+    logger.debug("StudyMetadataServiceImpl getStudyActivityMetadata() - ends");
     return retQuestionnaireActivityStructureBean;
   }
 

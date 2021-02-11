@@ -24,8 +24,8 @@ public class AppPropertyConfig implements Serializable {
   @Value("${security.xsrf.enabled}")
   private boolean isXsrfEnabled;
 
-  @Value("${securityCodeExpireDate}")
-  private String securityCodeExpireDate;
+  @Value("${securityCodeExpireInHours}")
+  private String securityCodeExpireInHours;
 
   @Value("${enrollmentTokenExpiryInHours}")
   private Integer enrollmentTokenExpiryInHours;
@@ -62,6 +62,9 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${auth.server.updateStatusUrl}")
   private String authServerUpdateStatusUrl;
+
+  @Value("${auth.server.logout.user.url}")
+  private String authLogoutUserUrl;
 
   @Value("${mail.contact-email}")
   private String contactEmail;

@@ -27,8 +27,7 @@
       <div class="b-bor">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">First Name
-              <small>(50 characters max)</small>
+            <div class="gray-xs-f line34">First name
               <span
                   class="requiredStar"> *
               </span>
@@ -49,8 +48,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Last Name
-              <small>(50 characters max)</small>
+            <div class="gray-xs-f line34">Last name
               <span
                   class="requiredStar"> *
               </span>
@@ -71,7 +69,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Email Address
+            <div class="gray-xs-f line34">Email
               <small>(100 characters max)</small>
               <span
                   class="requiredStar"> *
@@ -95,9 +93,6 @@
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
             <div class="gray-xs-f line34">Phone (XXX - XXX - XXXX)
-              <span
-                  class="requiredStar"> *
-              </span>
             </div>
           </div>
           <div class="col-md-6 p-none">
@@ -105,7 +100,7 @@
               <input type="text"
                      class="form-control edit-field bor-trans phoneMask resetVal linkDis"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     oldVal="${userBO.phoneNumber}" maxlength="12" data-minlength="12" required
+                     oldVal="${userBO.phoneNumber}" maxlength="12" data-minlength="12"
                      readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -154,7 +149,7 @@
           </div>
           <div class="col-md-2 p-none dis-line form-group mb-none text-right">
             <button id="pwd-link" type="button"
-                    class="btn btn-default gray-btn cur-pointer disChangePassButton">Change Password
+                    class="btn btn-default gray-btn cur-pointer disChangePassButton">Change password
             </button>
           </div>
         </div>
@@ -164,7 +159,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none ">
-                <div class="gray-xs-f line34">Previous password
+                <div class="gray-xs-f line34">Current password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -182,7 +177,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">New Password
+                <div class="gray-xs-f line34">New password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -202,7 +197,7 @@
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
               <div class="col-md-4 p-none">
-                <div class="gray-xs-f line34">Confirm new password
+                <div class="gray-xs-f line34">Confirm password
                   <span class="requiredStar"> *</span>
                 </div>
               </div>
@@ -241,46 +236,48 @@
       <div class="blue-md-f text-uppercase mb-md">Assigned Permissions</div>
 
       <!-- Assigned Permissions List-->
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW') or
+              fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
       <div class="edit-user-list-widget mb-xs">
         <span>Users</span>
         <span class="gray-xs-f pull-right">
-          <c:if
+           <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View & edit</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View and edit</c:if>
         </span>
       </div>
+      </c:if>
 
+	 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT') or
+              fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
       <div class="edit-user-list-widget mb-xs">
         <span>Notifications</span>
         <span class="gray-xs-f pull-right">
           <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
           <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View & edit</c:if>
+              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View and edit</c:if>
         </span>
       </div>
+      </c:if>
 
 
       <!-- Assigned Permissions List-->
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
       <div class="edit-user-list-widget">
         <span>Studies</span>
-        <span class="gray-xs-f pull-right">
-          <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">No</c:if>
-          <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">Yes</c:if>
-        </span>
+        <span class="gray-xs-f pull-right">Yes</span>
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
           <div class="mt-lg pl-md">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
               <div class="pb-md bor-dashed">
-                <span class="dot">Create New Studies</span>
+                <span class="dot">Create new studies</span>
               </div>
             </c:if>
             <div class="pl-sm pt-md">
               <span
-                  class="gray-xs-f text-weight-semibold text-uppercase">Existing Study Permissions
+                  class="gray-xs-f text-weight-bold">List of assigned studies with permissions
               </span>
             </div>
             <c:forEach items="${studyAndPermissionList}" var="studyAndPermission">
@@ -299,6 +296,7 @@
           </div>
         </c:if>
       </div>
+      </c:if>
     </div>
   </div>
 </div>

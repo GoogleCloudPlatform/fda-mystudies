@@ -91,6 +91,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(studyMetadataBeanRequest.getStudyId());
+    auditRequest.setStudyVersion("1.0");
     auditRequest.setAppId(studyMetadataBeanRequest.getAppId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();

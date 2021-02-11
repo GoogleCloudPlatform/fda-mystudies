@@ -90,13 +90,24 @@ class ResourceDetailViewController: UIViewController {
         {
           activityIndicator.startAnimating()
           activityIndicator.isHidden.toggle()
-          if let url = checkIfFileExists(pdfNameFromUrl: resourceURL.lastPathComponent) {
+          let fileURL = checkIfFileExists(pdfNameFromUrl: resourceURL.lastPathComponent)
+          if let url = fileURL {
             webView.loadFileURL(url, allowingReadAccessTo: url)
             self.isFileAvailable = true
+            self.webView.isHidden = false
           } else {
+            self.webView.isHidden = true
             self.webView.load(URLRequest(url: resourceURL))
           }
         }
+      } else if self.resource?.file?.mimeType == .txt,
+        let resourceHtmlString = self.resource?.file?.link
+      {
+        webView.allowsBackForwardNavigationGestures = false
+        webView.loadHTMLString(
+          WebViewController.headerString + resourceHtmlString.stringByDecodingHTMLEntities,
+          baseURL: nil
+        )
       } else if let htmlString = self.htmlString {
         webView.allowsBackForwardNavigationGestures = false
         webView.loadHTMLString(WebViewController.headerString + htmlString, baseURL: nil)
@@ -104,9 +115,6 @@ class ResourceDetailViewController: UIViewController {
         let url = URL(string: requestLink)
       {
         self.webView.load(URLRequest(url: url))
-      } else if let resourceHtmlString = self.resource?.file?.link {
-        webView.allowsBackForwardNavigationGestures = false
-        webView.loadHTMLString(WebViewController.headerString + resourceHtmlString, baseURL: nil)
       }
     }
   }
@@ -177,9 +185,10 @@ class ResourceDetailViewController: UIViewController {
 extension ResourceDetailViewController: WKNavigationDelegate {
 
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-    self.activityIndicator.stopAnimating()
     if self.resource?.file?.mimeType == .pdf, let url = webView.url, !isFileAvailable {
       savePdf(for: url)
+    } else {
+      self.activityIndicator.stopAnimating()
     }
   }
 
@@ -264,7 +273,7 @@ extension ResourceDetailViewController {
     } else if let resourceHTML = resourceLink,
       self.resource?.file?.mimeType != .pdf
     {
-      let pdfData = webView.renderSelfToPdfData(htmlString: resourceHTML)
+      let pdfData = webView.renderSelfToPdfData(htmlString: resourceHTML.stringByDecodingHTMLEntities)
       if let tempPath = tempResourceFilePath {
         attachResource(from: tempPath)
         completion(true)
@@ -309,7 +318,6 @@ extension ResourceDetailViewController {
       let pdfData = try? Data(contentsOf: url)
       let pdfNameFromUrl = url.lastPathComponent
       let actualPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
-
       do {
         try pdfData?.write(to: actualPath, options: .atomic)
         AKUtility.moveFileToDocuments(
@@ -318,6 +326,14 @@ extension ResourceDetailViewController {
           withName: pdfNameFromUrl
         )
         self?.isFileAvailable = true
+        DispatchQueue.main.async {
+          self?.activityIndicator.stopAnimating()
+          self?.webView.loadHTMLString("", baseURL: nil)
+          self?.webView.evaluateJavaScript("document.body.remove()")
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self?.loadWebView()
+          }
+        }
       } catch {
         Logger.sharedInstance.error(error)
       }

@@ -66,7 +66,7 @@
                     <div>
                       <div>
                         <div class="text-center login-logo">
-                          <img th:src="@{/images/google-logo.png}"
+                          <img th:src="@{/images/landingpage-logo.png}"
                             alt="" />
                         </div>
                         <div
@@ -102,7 +102,7 @@
                           class="col-md-12 col-xs-12 pr-none pl-none text-left">
                           <a class="blue__link forgot__pwd mobile"
                             th:href="${forgot_password_link}">Forgot
-                            Password?</a>
+                            password?</a>
                         </div>
                       </div>
                       <div
@@ -114,8 +114,9 @@
                         </div>
                         <div class="col-md-9 pr-none pl-none text-right">
                           <a class="blue__link forgot__pwd desktop"
+                            style = "margin-left: 60% !important;"
                             th:href="${forgot_password_link}">Forgot
-                            Password?</a> <span
+                            password?</a> <span
                             class="mobile sign__up forgot__pwd costom_ml"
                             th:if="${mobileApp}">New user? <a
                             th:href="${signup_link}" class="blue__link">Sign
@@ -145,7 +146,7 @@
       <ul>
         <li th:if="${!mobileApp}"><a th:href="${about_link}">About</a></li>
         <li th:if="${!mobileApp}"><a th:href="${terms_link}">Terms
-            of Service</a></li>
+            of service</a></li>
         <li th:if="${mobileApp}"><a th:href="${terms_link}">Terms</a></li>
         <li th:if="${mobileApp}"><a
           th:href="${privacy_policy_link}">Privacy Policy</a></li>

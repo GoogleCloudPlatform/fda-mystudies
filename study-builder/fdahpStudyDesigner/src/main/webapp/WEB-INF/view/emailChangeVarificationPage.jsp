@@ -50,7 +50,12 @@
 
     <!-- Head Libs -->
     <script src="vendor/modernizr/modernizr.js"></script>
-
+    
+    <style>
+		.hover_text_white { color:#fff !important;}
+		.hover_text_white:hover { color:#fff !important;}
+		.hover_text_white:focus { color:#fff !important;}
+	</style>
 
   </head>
   <body class="loading background__img">
@@ -67,38 +72,23 @@
           <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
                  csrfToken="${_csrf.token}"/>
           <form:form id="accessCodeForm" data-toggle="validator" role="form"
-                     action="validateAccessCode.do"
+                     action="validateEmailChangeVerification.do"
                      method="post" autocomplete="off">
 
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${isValidToken}">
-              <p class="white__text">To complete your email verification process, kindly use the access
-                code
-                provided on your email.</p>
-              <div class="mb-lg form-group">
-                <input autofocus="autofocus" type="text" class="input-field wow_input" id=""
-                       tabindex="1"
-                       name="accessCode" maxlength="6" placeholder="Access Code"
-                       data-error="Access Code is invalid" required autocomplete="off"/>
-                <div class="help-block with-errors red-txt"></div>
-              </div>
-              <div class="mb-lg form-group">
-                <button type="submit" class="btn lg-btn">Submit</button>
-              </div>
-            </c:if>
-            <c:if test="${not isValidToken}">
-              <p class="passwordExp">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                The Activation Link is either
-                expired or invalid.
-              </p>
-            </c:if>
-            <div>
-              <a id="login" class="gray-link backToLogin white__text" href="javascript:void(0)">Back to
+              <p class="white__text">Thank you. Your email verification process is completed. 
+              Please use the new email address to sign in.</p>
+              <div>
+              <a id="login" class="gray-link backToLogin white__text hover_text_white" href="javascript:void(0)">Back to
                 Sign in
               </a>
             </div>
+            </c:if>
+            <c:if test="${not isValidToken}">
+              <jsp:forward page="errorPage.jsp" />
+            </c:if>
             <input type="hidden" name="securityToken" value="${securityToken}"/>
           </form:form>
         </div>
@@ -147,9 +137,13 @@
 
         addPasswordPopup();
         $('.backToLogin').on('click', function () {
-          $('#backToLoginForm').submit();
+          $('#accessCodeForm').submit();
         });
 
+        $('.backToLogin1').on('click', function () {
+          $('#backToLoginForm').submit();
+        });
+        
         var errMsg = '${errMsg}';
         var isValidToken = '${isValidToken}';
         if (isValidToken) {

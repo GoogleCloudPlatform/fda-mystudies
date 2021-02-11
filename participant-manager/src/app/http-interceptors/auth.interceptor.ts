@@ -14,7 +14,7 @@ import {ToastrService} from 'ngx-toastr';
 import {getMessage} from '../shared/error.codes.enum';
 import {AuthService} from '../service/auth.service';
 import {ApiResponse} from '../entity/api.response.model';
-import {environment} from 'src/environments/environment';
+import {environment} from '@environment';
 import {CookieService} from 'ngx-cookie-service';
 import {AccessToken} from '../entity/access-token';
 import {Router} from '@angular/router';
@@ -25,9 +25,12 @@ import {
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
-  private readonly refreshTokenSubject: BehaviorSubject<
-    unknown
-  > = new BehaviorSubject<unknown>(null);
+
+  private readonly refreshTokenSubject = new BehaviorSubject<unknown>(null);
+  appId = 'PARTICIPANT MANAGER';
+  mobilePlatform = 'DESKTOP';
+  source = 'PARTICIPANT MANAGER';
+
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
@@ -43,7 +46,7 @@ export class AuthInterceptor implements HttpInterceptor {
     void this.spinner.show();
 
     if (!this.authService.hasCredentials()) {
-      return next.handle(req).pipe(
+      return next.handle(this.setHeaders(req)).pipe(
         this.handleError(),
         finalize(() => {
           void this.spinner.hide();
@@ -112,7 +115,14 @@ export class AuthInterceptor implements HttpInterceptor {
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
-        );
+        )
+        .set('appName', '')
+        .set('correlationId', sessionStorage.getItem('correlationId') || '')
+        .set('appId', this.appId)
+        .set('mobilePlatform', this.mobilePlatform)
+        .set('source', this.source)
+        .set('userId', sessionStorage.getItem('userId') || '')
+        .set('appVersion', environment.appVersion || '');
       if (!req.headers.has('Content-Type')) {
         headers = headers.append(
           'Content-Type',
@@ -131,8 +141,12 @@ export class AuthInterceptor implements HttpInterceptor {
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
-        );
-
+        )
+        .set('correlationId', sessionStorage.getItem('correlationId') || '')
+        .set('appId', this.appId)
+        .set('mobilePlatform', this.mobilePlatform)
+        .set('source', this.source)
+        .set('appVersion', environment.appVersion || '');
       if (!req.headers.get('skipIfUpload')) {
         headers = headers.append('Content-Type', 'application/json');
       }
@@ -146,16 +160,19 @@ export class AuthInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
           if (err.url === `${environment.authServerUrl}/oauth2/token`) {
             sessionStorage.clear();
-            void this.router.navigate(['/']);
-            this.toasterService.error(
-              'Your session has expired. Please sign in again.',
-            );
+            void this.router.navigate(['/error/', 'EC_0080']);
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
           } else {
             const customError = err.error as ApiResponse;
             if (getMessage(customError.error_code)) {
-              this.toasterService.error(getMessage(customError.error_code));
+              if (
+                customError.error_code !== 'EC_0070' &&
+                customError.error_code !== 'EC_0071' &&
+                customError.error_code !== 'EC_0072'
+              ) {
+                this.toasterService.error(getMessage(customError.error_code));
+              }
             } else if (
               getGenericMessage(customError.error_code as GenericErrorCode)
             ) {

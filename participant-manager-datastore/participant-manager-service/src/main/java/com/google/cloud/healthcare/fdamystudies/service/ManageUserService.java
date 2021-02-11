@@ -32,7 +32,8 @@ public interface ManageUserService {
       String orderByCondition,
       String searchTerm);
 
-  public AdminUserResponse sendInvitation(String userId, String superAdminUserId);
+  public AdminUserResponse sendInvitation(
+      String userId, String superAdminUserId, AuditLogEventRequest auditRequest);
 
   public void sendUserEmail();
 }

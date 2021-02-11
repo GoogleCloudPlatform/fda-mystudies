@@ -76,6 +76,10 @@ public class NotEligibleActivity extends AppCompatActivity
     JSONObject studiestatus = new JSONObject();
     try {
       studiestatus.put("studyId", getIntent().getStringExtra("studyId"));
+      if (getIntent().getStringExtra("siteId") != null
+              && !getIntent().getStringExtra("siteId").equalsIgnoreCase("")) {
+        studiestatus.put("siteId", getIntent().getStringExtra("siteId"));
+      }
       studiestatus.put("status", StudyFragment.NOT_ELIGIBLE);
     } catch (JSONException e) {
       Logger.log(e);

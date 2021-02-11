@@ -41,7 +41,7 @@
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsComp" onclick="markAsCompleted();"
                     <c:if test="${fn:length(resourcesSavedList) ne 0}">disabled</c:if>>
-              Mark as Completed
+              Mark as completed
             </button>
           </span>
         </div>
@@ -63,7 +63,7 @@
             <th class="text-right" id=""><c:if test="${empty permission}">
               <div class="dis-line form-group mb-none">
                 <button type="button" id="addResourceId"
-                        class="btn btn-primary blue-btn" onclick="addResource();">Add Resource
+                        class="btn btn-primary blue-btn" onclick="addResource();">Add resource
                 </button>
               </div>
             </c:if></th>
@@ -114,6 +114,7 @@
 <script type="text/javascript">
   var dataTable;
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $('[data-toggle="tooltip"]').tooltip();
 
@@ -138,7 +139,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],

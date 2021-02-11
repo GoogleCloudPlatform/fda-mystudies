@@ -12,13 +12,10 @@ import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementE
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVED;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVE_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.STUDY_ENROLLMENT_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.USER_ENROLLED_INTO_STUDY;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.bean.UpdateEligibilityConsentBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
@@ -30,6 +27,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
@@ -48,6 +46,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import org.apache.commons.collections4.map.HashedMap;
@@ -81,6 +80,8 @@ public class UserConsentManagementController {
 
   @Autowired StudyRepository studyRepository;
 
+  @Autowired ParticipantStudyRepository participantStudyRepository;
+
   private static final Logger logger =
       LoggerFactory.getLogger(UserConsentManagementController.class);
 
@@ -90,136 +91,95 @@ public class UserConsentManagementController {
       produces = "application/json")
   public ResponseEntity<?> updateEligibilityConsentStatus(
       @RequestHeader("userId") String userId,
-      @RequestBody ConsentStatusBean consentStatusBean,
+      @Valid @RequestBody ConsentStatusBean consentStatusBean,
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
     logger.info("UserConsentManagementController updateEligibilityConsentStatus() - starts ");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     ErrorBean errorBean = null;
-    StudyInfoBean studyInfoBean = null;
+    StudyEntity studyInfo = null;
     String userDetailId = String.valueOf(0);
-
     String consentdocumentFilepath = null;
-    if ((consentStatusBean != null)
-        && (consentStatusBean.getConsent() != null)
-        && ((consentStatusBean.getConsent().getVersion() != null)
-            && (consentStatusBean.getConsent().getPdf() != null))
-        && (consentStatusBean.getConsent().getStatus() != null)) {
 
-      if (!StringUtils.isEmpty(consentStatusBean.getStudyId()) && !StringUtils.isEmpty(userId)) {
-        auditRequest.setUserId(userId);
-        auditRequest.setStudyId(consentStatusBean.getStudyId());
+    auditRequest.setUserId(userId);
+    studyInfo = userConsentManagementService.getStudyInfo(consentStatusBean.getStudyId());
+    if (studyInfo != null) {
+      auditRequest.setStudyId(studyInfo.getCustomId());
+      auditRequest.setStudyVersion(String.valueOf(studyInfo.getVersion()));
+    }
 
-        studyInfoBean = userConsentManagementService.getStudyInfoId(consentStatusBean.getStudyId());
-        Optional<StudyEntity> optStudy = studyRepository.findById(studyInfoBean.getStudyInfoId());
+    Optional<ParticipantStudyEntity> optParticipantStudies =
+        participantStudyRepository.findByStudyIdAndSiteId(
+            studyInfo.getId(), userId, consentStatusBean.getSiteId());
 
-        ParticipantStudyEntity participantStudies =
-            userConsentManagementService.getParticipantStudies(
-                studyInfoBean.getStudyInfoId(), userId);
-        if (participantStudies != null) {
-          if (consentStatusBean.getEligibility() != null) {
-            participantStudies.setEligibility(consentStatusBean.getEligibility());
-          }
-          DataSharingStatus dataSharing =
-              DataSharingStatus.fromValue(consentStatusBean.getSharing());
-          if (dataSharing == null) {
-            throw new ErrorCodeException(
-                com.google.cloud.healthcare.fdamystudies.common.ErrorCode
-                    .INVALID_DATA_SHARING_STATUS);
-          }
-          participantStudies.setSharing(dataSharing.value());
+    if (optParticipantStudies.isPresent()) {
+      ParticipantStudyEntity participantStudies = optParticipantStudies.get();
+      auditRequest.setParticipantId(participantStudies.getParticipantId());
+      if (consentStatusBean.getEligibility() != null) {
+        participantStudies.setEligibility(consentStatusBean.getEligibility());
+      }
+      DataSharingStatus dataSharing = DataSharingStatus.fromValue(consentStatusBean.getSharing());
+      if (dataSharing == null) {
+        throw new ErrorCodeException(
+            com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_DATA_SHARING_STATUS);
+      }
+      participantStudies.setSharing(dataSharing.value());
 
-          List<ParticipantStudyEntity> participantStudiesList =
-              new ArrayList<ParticipantStudyEntity>();
-          participantStudiesList.add(participantStudies);
-          String message =
-              userConsentManagementService.saveParticipantStudies(participantStudiesList);
+      List<ParticipantStudyEntity> participantStudiesList = new ArrayList<ParticipantStudyEntity>();
+      participantStudiesList.add(participantStudies);
 
-          if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
-            userDetailId = userConsentManagementService.getUserDetailsId(userId);
-            Optional<UserDetailsEntity> optUser = userDetailsRepository.findById(userDetailId);
+      userDetailId = userConsentManagementService.getUserDetailsId(userId);
+      Optional<UserDetailsEntity> optUser = userDetailsRepository.findById(userDetailId);
 
-            StudyConsentEntity studyConsent = new StudyConsentEntity();
-            if (optUser.isPresent()) {
-              studyConsent.setUserDetails(optUser.get());
-            }
+      StudyConsentEntity studyConsent = new StudyConsentEntity();
+      if (optUser.isPresent()) {
+        studyConsent.setUserDetails(optUser.get());
+      }
 
-            if (optStudy.isPresent()) {
-              studyConsent.setStudy(optStudy.get());
-            }
-            studyConsent.setParticipantStudy(participantStudies);
-            studyConsent.setConsentDate(participantStudies.getEnrolledDate());
-            studyConsent.setSharing(dataSharing.value());
-            studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
-            studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
-            if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
-              String underDirectory = userId + "/" + consentStatusBean.getStudyId();
-              String consentDocumentFileName =
-                  consentStatusBean.getConsent().getVersion()
-                      + "_"
-                      + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-                      + ".pdf";
-              saveDocumentToCloudStorage(
-                  auditRequest,
-                  underDirectory,
-                  consentDocumentFileName,
-                  consentStatusBean,
-                  studyConsent);
-              consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
-            }
-            String addConsentMessage = userConsentManagementService.saveStudyConsent(studyConsent);
-            if ((addConsentMessage.equalsIgnoreCase(
-                    MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
-                && message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
-              if (AppConstants.STATUS_COMPLETED.equals(
-                  consentStatusBean.getConsent().getStatus())) {
-                Map<String, String> map = new HashedMap<>();
-                map.put("consent_version", consentStatusBean.getConsent().getVersion());
-                map.put("data_sharing_consent", consentStatusBean.getSharing());
-                consentAuditHelper.logEvent(INFORMED_CONSENT_PROVIDED_FOR_STUDY, auditRequest, map);
-              }
-
-              consentAuditHelper.logEvent(USER_ENROLLED_INTO_STUDY, auditRequest);
-              errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_110.errorMessage());
-            } else {
-              consentAuditHelper.logEvent(STUDY_ENROLLMENT_FAILED, auditRequest);
-              errorBean = new ErrorBean(ErrorCode.EC_111.code(), ErrorCode.EC_111.errorMessage());
-            }
-          } else {
-            MyStudiesUserRegUtil.getFailureResponse(
-                MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.CONSENT_VERSION_REQUIRED.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.CONSENT_VERSION_REQUIRED.getValue(),
-                response);
-            return null;
-          }
-
-        } else {
-          MyStudiesUserRegUtil.getFailureResponse(
-              MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
-              response);
-          return null;
+      studyConsent.setStudy(studyInfo);
+      studyConsent.setParticipantStudy(participantStudies);
+      studyConsent.setConsentDate(participantStudies.getEnrolledDate());
+      studyConsent.setSharing(dataSharing.value());
+      studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
+      studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
+      if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
+        String underDirectory = userId + "/" + consentStatusBean.getStudyId();
+        String consentDocumentFileName =
+            consentStatusBean.getConsent().getVersion()
+                + "_"
+                + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
+                + ".pdf";
+        saveDocumentToCloudStorage(
+            auditRequest, underDirectory, consentDocumentFileName, consentStatusBean, studyConsent);
+        consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
+      }
+      String message = userConsentManagementService.saveParticipantStudies(participantStudiesList);
+      String addConsentMessage = userConsentManagementService.saveStudyConsent(studyConsent);
+      if ((addConsentMessage.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
+          && message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
+        if (AppConstants.STATUS_COMPLETED.equalsIgnoreCase(
+            consentStatusBean.getConsent().getStatus())) {
+          Map<String, String> map = new HashedMap<>();
+          map.put("consent_version", consentStatusBean.getConsent().getVersion());
+          map.put("data_sharing_consent", consentStatusBean.getSharing());
+          consentAuditHelper.logEvent(INFORMED_CONSENT_PROVIDED_FOR_STUDY, auditRequest, map);
         }
 
+        errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_110.errorMessage());
       } else {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-            response);
-        return null;
+        errorBean = new ErrorBean(ErrorCode.EC_111.code(), ErrorCode.EC_111.errorMessage());
       }
+
     } else {
       MyStudiesUserRegUtil.getFailureResponse(
           MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
           response);
       return null;
     }
+
     UpdateEligibilityConsentBean updateEligibilityConsentBean =
         new UpdateEligibilityConsentBean(
             errorBean.getCode(), errorBean.getMessage(), consentdocumentFilepath);
@@ -260,15 +220,17 @@ public class UserConsentManagementController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     ErrorBean errorBean = null;
     ConsentStudyResponseBean consentStudyResponseBean = null;
-    StudyInfoBean studyInfoBean = null;
+    StudyEntity studyInfo = null;
 
-    if (!StringUtils.isEmpty(studyId) && !StringUtils.isEmpty(userId)) {
-      studyInfoBean = userConsentManagementService.getStudyInfoId(studyId);
+    if (!StringUtils.isEmpty(studyId)) {
+      studyInfo = userConsentManagementService.getStudyInfo(studyId);
+      auditRequest.setUserId(userId);
+      auditRequest.setStudyId(studyInfo.getCustomId());
+      auditRequest.setStudyVersion(String.valueOf(studyInfo.getVersion()));
+
       consentStudyResponseBean =
           userConsentManagementService.getStudyConsentDetails(
-              userId, studyInfoBean.getStudyInfoId(), consentVersion, auditRequest);
-      auditRequest.setUserId(userId);
-      auditRequest.setStudyId(studyId);
+              userId, studyInfo.getId(), consentVersion, auditRequest);
 
       if (consentStudyResponseBean.getConsent().getContent() != null) {
         consentStudyResponseBean.setMessage(

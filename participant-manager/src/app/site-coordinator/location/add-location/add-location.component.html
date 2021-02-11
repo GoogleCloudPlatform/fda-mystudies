@@ -4,8 +4,8 @@
       <div>
         <a routerLink="/coordinator/locations" class="subheader__title">
           <img src="assets/svgs/back-arrow.svg" alt="" />
-          <span class="pl-2">Add New Location</span>
         </a>
+        <span class="pl-2">Add new location</span>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
             <input
               type="text"
               class="form-control"
-              placeholder="Enter Location ID"
+              placeholder="Enter location ID"
               [(ngModel)]="location.customId"
               maxlength="15"
               required
@@ -42,13 +42,13 @@
                 class="help-block with-errors error__msg"
                 *ngIf="customId.errors?.required"
               >
-                Enter a location ID.
+                Enter a location ID
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="customId.errors?.maxlength"
               >
-                Location ID exceeds max length (15 characters).
+                Location ID exceeds max length (15 characters)
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -58,18 +58,18 @@
                   !customId.errors.maxlength
                 "
               >
-                Location ID is invalid.
+                Location ID is invalid
               </span>
             </div>
           </div>
         </div>
         <div class="col-xs-12 col-md-6 p-none">
           <div class="form-group">
-            <label for="app">Location Name</label>
+            <label for="app" class="txt_style_unset">Location name</label>
             <input
               type="text"
               class="form-control"
-              placeholder="Enter Location Name"
+              placeholder="Enter location name"
               [(ngModel)]="location.name"
               required
               name="name"
@@ -85,13 +85,13 @@
                 class="help-block with-errors error__msg"
                 *ngIf="name.errors?.required"
               >
-                Enter a location name.
+                Enter a location name
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="name.errors?.maxlength"
               >
-                Location Name exceeds max length (200 characters).
+                Location name exceeds max length (200 characters)
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -99,7 +99,7 @@
                   name.errors && !name.errors.required && !name.errors.maxlength
                 "
               >
-                Location Name is invalid.
+                Location name is invalid
               </span>
             </div>
           </div>
@@ -112,7 +112,7 @@
             <input
               type="text"
               class="form-control"
-              placeholder="Enter Description"
+              placeholder="Enter description"
               [(ngModel)]="location.description"
               required
               name="description"
@@ -131,13 +131,13 @@
                 class="help-block with-errors error__msg"
                 *ngIf="description.errors?.required"
               >
-                Enter a location description.
+                Enter a location description
               </span>
               <span
                 class="help-block with-errors error__msg"
                 *ngIf="description.errors?.maxlength"
               >
-                Location Description exceeds max length (500 characters).
+                Location description exceeds max length (500 characters)
               </span>
               <span
                 class="help-block with-errors error__msg"
@@ -147,7 +147,7 @@
                   !description.errors.maxlength
                 "
               >
-                Location Description is invalid.
+                Location description is invalid
               </span>
             </div>
           </div>

@@ -73,22 +73,6 @@ class EnrollServices: NSObject {
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
 
-  /// Creates a request to update `Study` bookmark status
-  /// - Parameters:
-  ///   - studyStatus: Instance of `UserStudyStatus` to update
-  ///   - delegate: Class object to receive response
-  func updateStudyBookmarkStatus(studyStatus: UserStudyStatus, delegate: NMWebServiceDelegate) {
-    self.delegate = delegate
-
-    let user = User.currentUser
-    let headerParams = [kUserId: user.userId!]
-
-    let params = [kStudies: [studyStatus.getBookmarkUserStudyStatus()]] as [String: Any]
-    let method = EnrollmentMethods.updateStudyState.method
-
-    self.sendRequestWith(method: method, params: params, headers: headerParams)
-  }
-
   /// Creates a request to update `Study` participation status
   /// - Parameters:
   ///   - studyStauts: Instance of `UserStudyStatus` to update
@@ -182,6 +166,10 @@ class EnrollServices: NSObject {
 
   // MARK: Parsers
 
+  private func handleValidateEnrolment(response: JSONDictionary?) {
+    Study.currentStudy?.userParticipateState.siteID = response?["siteId"] as? String ?? ""
+  }
+
   func handleUpdateTokenResponse() {
     self.sendRequestWith(
       method: self.method,
@@ -238,8 +226,8 @@ extension EnrollServices: NMWebServiceDelegate {
       self.handleGetStudyStatesResponse(response: response as? JSONDictionary ?? [:])
 
     case EnrollmentMethods.updateStudyState.description as String: break
-    case EnrollmentMethods.validateEnrollmentToken.description as String: break
-
+    case EnrollmentMethods.validateEnrollmentToken.description as String:
+      self.handleValidateEnrolment(response: response as? JSONDictionary)
     case EnrollmentMethods.enroll.description as String:
       self.handleEnrollForStudy(response: response as? [String: Any] ?? [:])
 

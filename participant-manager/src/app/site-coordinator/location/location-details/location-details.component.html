@@ -8,7 +8,7 @@
         >
           <img src="assets/svgs/back-arrow.svg" alt="Backwards" />
         </a>
-        <span class="pl-1">Location Details</span>
+        <span class="pl-1">Location details</span>
       </div>
       <div *ngIf="locationBackup.locationPermission === permission.ViewAndEdit">
         <button
@@ -18,7 +18,7 @@
         >
           <img class="mr-xs" src="assets/svgs/edit.svg" alt="edit" />
           <span class="text__deco font12__light-grey">
-            Edit Location Details
+            Edit location details
           </span>
         </button>
       </div>
@@ -37,7 +37,7 @@
         </div>
         <div>
           <div class="form-group">
-            <div class="label">Location Name</div>
+            <div class="label txt_style_unset">Location name</div>
             <div class="font16__grey">{{ locationBackup.name }}</div>
           </div>
         </div>
@@ -68,7 +68,7 @@
       class="cards__list mb-xlg"
     >
       <div class="subheader__title mb-lg mt-xlg">
-        Associated Studies ( {{ locationBackup.studyNames?.length }} )
+        Associated studies ( {{ locationBackup.studyNames?.length }} )
       </div>
       <ul data-test="studiesCount" class="box___shadow__radius">
         <li *ngFor="let study of locationBackup.studyNames">{{ study }}</li>

@@ -10,9 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_SENT;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_CREATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_ADDED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.RESEND_INVITATION;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_RECORD_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
 
@@ -29,6 +30,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.User;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppPermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserSitePermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyDetails;
@@ -43,6 +45,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
@@ -65,6 +68,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -78,8 +82,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ManageUserServiceImpl implements ManageUserService {
@@ -109,6 +118,10 @@ public class ManageUserServiceImpl implements ManageUserService {
   @Autowired
   private UserAccountEmailSchedulerTaskRepository userAccountEmailSchedulerTaskRepository;
 
+  @Autowired private RestTemplate restTemplate;
+
+  @Autowired private OAuthService oauthService;
+
   @Override
   @Transactional
   public AdminUserResponse createUser(UserRequest user, AuditLogEventRequest auditRequest) {
@@ -128,7 +141,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       Map<String, String> map = new HashMap<>();
       map.put(CommonConstants.NEW_USER_ID, userResponse.getUserId());
       map.put("new_user_access_level", accessLevel);
-      participantManagerHelper.logEvent(NEW_USER_CREATED, auditRequest, map);
+      participantManagerHelper.logEvent(NEW_USER_ADDED, auditRequest, map);
     }
 
     logger.exit(String.format(CommonConstants.STATUS_LOG, userResponse.getHttpStatusCode()));
@@ -228,7 +241,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     UserRegAdminEntity adminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireInHours()));
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
 
     if (CollectionUtils.isNotEmpty(user.getApps())) {
@@ -408,7 +421,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("saveSuperAdminDetails()");
     UserRegAdminEntity superAdminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireInHours()));
 
     superAdminDetails = userAdminRepository.saveAndFlush(superAdminDetails);
 
@@ -467,6 +480,9 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     UserRegAdminEntity adminDetails = optAdminDetails.get();
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
+    if (StringUtils.isNotEmpty(adminDetails.getUrAdminAuthId())) {
+      logoutAdminUser(adminDetails.getUrAdminAuthId(), auditRequest);
+    }
 
     userAdminRepository.saveAndFlush(adminDetails);
 
@@ -503,6 +519,10 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
+    if (StringUtils.isNotEmpty(adminDetails.getUrAdminAuthId())) {
+      logoutAdminUser(adminDetails.getUrAdminAuthId(), auditRequest);
+    }
+
     userAdminRepository.saveAndFlush(adminDetails);
 
     deleteAppStudySiteLevelPermissions(user.getId());
@@ -541,6 +561,28 @@ public class ManageUserServiceImpl implements ManageUserService {
     studyPermissionRepository.deleteByAdminUserId(userId);
     appPermissionRepository.deleteByAdminUserId(userId);
     logger.exit("Successfully deleted all the assigned permissions");
+  }
+
+  private void logoutAdminUser(String authUserId, AuditLogEventRequest auditRequest) {
+    logger.entry("logoutAdminUser()");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
+
+    UserResponse userResponse = new UserResponse();
+    userResponse.setUserId(authUserId);
+
+    HttpEntity<UserResponse> requestEntity = new HttpEntity<>(userResponse, headers);
+    Map<String, String> map = new HashMap<>();
+    map.put("userId", authUserId);
+
+    ResponseEntity<UserResponse> responseEntity =
+        restTemplate.postForEntity(
+            appConfig.getAuthLogoutUserUrl(), requestEntity, UserResponse.class, map);
+
+    logger.exit(String.format("status=%d", responseEntity.getStatusCodeValue()));
   }
 
   @Override
@@ -730,7 +772,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   private void validateSignedInUser(String adminUserId) {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(adminUserId);
     UserRegAdminEntity user =
-        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     if (!user.isSuperAdmin()) {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
@@ -766,7 +808,8 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Override
   @Transactional
-  public AdminUserResponse sendInvitation(String userId, String superAdminUserId) {
+  public AdminUserResponse sendInvitation(
+      String userId, String superAdminUserId, AuditLogEventRequest auditRequest) {
     logger.entry("sendInvitation()");
     validateInviteRequest(superAdminUserId);
 
@@ -778,7 +821,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     user.setSecurityCodeExpireDate(
         new Timestamp(
             Instant.now()
-                .plus(Long.valueOf(appConfig.getSecurityCodeExpireDate()), ChronoUnit.MINUTES)
+                .plus(Long.valueOf(appConfig.getSecurityCodeExpireInHours()), ChronoUnit.HOURS)
                 .toEpochMilli()));
     user = userAdminRepository.saveAndFlush(user);
 
@@ -786,6 +829,12 @@ public class ManageUserServiceImpl implements ManageUserService {
         UserMapper.toUserAccountEmailSchedulerTaskEntity(
             null, user, EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE);
     userAccountEmailSchedulerTaskRepository.saveAndFlush(emailTaskEntity);
+
+    auditRequest.setUserId(user.getId());
+
+    Map<String, String> map = Collections.singletonMap(CommonConstants.NEW_USER_ID, user.getId());
+    participantManagerHelper.logEvent(RESEND_INVITATION, auditRequest, map);
+
     logger.exit("Invitation to user resent successfully");
     return new AdminUserResponse(MessageCode.INVITATION_SENT_SUCCESSFULLY, user.getId());
   }
@@ -794,7 +843,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
 
     UserRegAdminEntity loggedInUserDetails =
-        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     if (!loggedInUserDetails.isSuperAdmin()) {
       logger.error("Signed in user is not having super admin privileges");

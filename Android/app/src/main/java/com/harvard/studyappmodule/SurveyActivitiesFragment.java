@@ -1955,9 +1955,15 @@ public class SurveyActivitiesFragment extends Fragment
             if (!activitiesArrayList.get(i).getState().equalsIgnoreCase("deleted")) {
               if (starttime != null) {
                 if (AppController.isWithinRange(starttime, endtime)) {
-                  currentactivityList.add(activitiesArrayList.get(i));
-                  currentActivityStatus.add(activityStatus);
-                  currentStatus.add(STATUS_CURRENT);
+                  if (activityStatus.getCurrentRunId() == activityStatus.getTotalRun() && activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
+                    completedactivityList.add(activitiesArrayList.get(i));
+                    completedActivityStatus.add(activityStatus);
+                    completedStatus.add(STATUS_COMPLETED);
+                  } else {
+                    currentactivityList.add(activitiesArrayList.get(i));
+                    currentActivityStatus.add(activityStatus);
+                    currentStatus.add(STATUS_CURRENT);
+                  }
                 } else if (AppController.checkafter(starttime)) {
                   upcomingactivityList.add(activitiesArrayList.get(i));
                   upcomingActivityStatus.add(activityStatus);
@@ -2344,16 +2350,6 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
-          SetDialogHelper.setNeutralDialog(
-              context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete2),
-              false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
         } else if (missed > 0) {
           SetDialogHelper.setNeutralDialog(
               context,
@@ -2382,16 +2378,6 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
-          SetDialogHelper.setNeutralDialog(
-              context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete2),
-              false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
         } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
@@ -2489,8 +2475,12 @@ public class SurveyActivitiesFragment extends Fragment
 
     JSONArray studieslist = new JSONArray();
     JSONObject studiestatus = new JSONObject();
+
+    Studies studies = dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
     try {
       studiestatus.put("studyId", ((SurveyActivity) context).getStudyId());
+      studiestatus.put("siteId", studies.getSiteId());
+      studiestatus.put("participantId", studies.getParticipantId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
 
@@ -2897,7 +2887,6 @@ public class SurveyActivitiesFragment extends Fragment
       activityStatus.put("activityState", IN_PROGRESS);
       activityStatus.put("activityId", activityId);
       activityStatus.put("activityRunId", "" + activityRunId);
-      activityStatus.put("bookmarked", "false");
       activityStatus.put("activityVersion", activityVersion);
 
       activityRun.put("total", activityStatusData.getTotalRun());

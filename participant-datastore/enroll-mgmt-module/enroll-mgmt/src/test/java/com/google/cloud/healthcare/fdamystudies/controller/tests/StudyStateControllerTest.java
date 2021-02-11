@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
@@ -36,11 +37,6 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.controller.StudyStateController;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
@@ -65,16 +61,6 @@ public class StudyStateControllerTest extends BaseMockIT {
 
   @Autowired protected MockMvc mockMvc;
 
-  @Autowired private StudyRepository studyRepository;
-
-  @Autowired private SiteRepository siteRepository;
-
-  @Autowired private UserDetailsRepository userDetailsRepository;
-
-  @Autowired private ParticipantStudyRepository participantStudyRepository;
-
-  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
-
   protected ObjectMapper getObjectMapper() {
     return objectMapper;
   }
@@ -90,7 +76,11 @@ public class StudyStateControllerTest extends BaseMockIT {
   public void updateStudyStateSuccess() throws Exception {
     StudiesBean studiesBean =
         new StudiesBean(
-            "StudyofHealthClose", Constants.BOOKMARKED, Constants.COMPLETION, Constants.ADHERENCE);
+            "StudyofHealthClose",
+            Constants.BOOKMARKED,
+            Constants.COMPLETION,
+            Constants.ADHERENCE,
+            Constants.SITE_ID);
 
     List<StudiesBean> listStudies = new ArrayList<StudiesBean>();
     listStudies.add(studiesBean);
@@ -112,6 +102,8 @@ public class StudyStateControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId("StudyofHealthClose");
+    auditRequest.setStudyVersion("3.3");
+    auditRequest.setParticipantId(NOT_APPLICABLE);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT.getEventCode(), auditRequest);
@@ -158,7 +150,8 @@ public class StudyStateControllerTest extends BaseMockIT {
             Constants.STUDYOF_HEALTH,
             Constants.BOOKMARKED,
             Constants.COMPLETION,
-            Constants.ADHERENCE);
+            Constants.ADHERENCE,
+            Constants.SITE_ID);
 
     List<StudiesBean> listStudies = new ArrayList<StudiesBean>();
     listStudies.add(studiesBean);
@@ -267,6 +260,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDY_ID_OF_PARTICIPANT);
+    auditRequest.setStudyVersion("3.5");
     auditRequest.setParticipantId(Constants.PARTICIPANT_ID);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
@@ -283,8 +277,8 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.studies[3].participantId").isEmpty())
-        .andExpect(jsonPath("$.studies[3].status", is(EnrollmentStatus.WITHDRAWN.getStatus())))
+        .andExpect(jsonPath("$.studies[0].participantId").isEmpty())
+        .andExpect(jsonPath("$.studies[0].status", is(EnrollmentStatus.WITHDRAWN.getStatus())))
         .andReturn();
 
     verifyTokenIntrospectRequest(2);

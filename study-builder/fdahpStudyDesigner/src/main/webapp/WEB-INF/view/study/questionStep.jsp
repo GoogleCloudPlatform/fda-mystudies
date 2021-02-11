@@ -16,11 +16,28 @@
   .tooltip {
     width: 175px;
   }
-
+  
   .display__flex__ {
     display: flex;
     align-items: center;
+    margin-top: 10px;
   }
+  
+  .display__flex__center{
+    margin-top: 10px !important;
+  }
+  
+  .btn{
+  font-size:13px !important
+  }
+  
+  .response_type{
+  cursor: not-allowed;
+  background-color: #eee;
+    opacity: 1;
+    pointer-events:none;
+  }
+  
 </style>
 <script type="text/javascript">
   function isNumber(evt) {
@@ -102,13 +119,13 @@
   <div class="right-content-body pt-none pl-none pr-none">
     <ul class="nav nav-tabs review-tabs gray-bg">
       <li class="stepLevel active">
-        <a data-toggle="tab" href="#sla">Step-level Attributes</a>
+        <a data-toggle="tab" href="#sla">Step-level attributes</a>
       </li>
       <li class="questionLevel">
-        <a data-toggle="tab" href="#qla">Question-level Attributes</a>
+        <a data-toggle="tab" href="#qla">Question-level attributes</a>
       </li>
       <li class="responseLevel">
-        <a data-toggle="tab" href="#rla">Response-level Attributes</a>
+        <a data-toggle="tab" href="#rla">Response-level attributes</a>
       </li>
     </ul>
     <div class="tab-content pl-xlg pr-xlg">
@@ -127,7 +144,7 @@
       <div id="sla" class="tab-pane fade in active mt-xlg">
         <div class="row">
           <div class="col-md-6 pl-none">
-            <div class="gray-xs-f mb-xs">Short Title or Key (15 characters max)
+            <div class="gray-xs-f mb-xs">Short title or key (15 characters max)
               <span
                   class="requiredStar">*
               </span>
@@ -151,13 +168,13 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="gray-xs-f mb-xs">Step Type</div>
-            <div>Question Step</div>
+            <div class="gray-xs-f mb-xs">Step type</div>
+            <div>Question step</div>
           </div>
           <div class="clearfix"></div>
           <c:if test="${questionnaireBo.branching}">
             <div class="col-md-4 col-lg-3 p-none">
-              <div class="gray-xs-f mb-xs">Default Destination Step
+              <div class="gray-xs-f mb-xs">Default destination step
                 <span
                     class="requiredStar">*
                 </span>
@@ -188,7 +205,7 @@
         <input type="hidden" name="questionsBo.id" id="questionId"
                value="${questionnairesStepsBo.questionsBo.id}">
         <div class="col-md-10 p-none">
-          <div class="gray-xs-f mb-xs">Question Text (1 to 300 characters)
+          <div class="gray-xs-f mb-xs">Question text (1 to 300 characters)
             <span
                 class="requiredStar">*
             </span>
@@ -218,7 +235,7 @@
         </div>
         <div class="clearfix"></div>
         <div>
-          <div class="gray-xs-f mb-xs">Is this a Skippable Step?</div>
+          <div class="gray-xs-f mb-xs">Is this a skippable step?</div>
           <div>
             <span class="radio radio-info radio-inline p-45">
               <input type="radio" id="skiappableYes" value="Yes"
@@ -233,7 +250,7 @@
           </div>
         </div>
         <div class="mt-lg">
-          <div class="gray-xs-f">Response Type
+          <div class="gray-xs-f">Response type
             <span class="requiredStar">*</span>
           </div>
           <div class="gray-xs-f mb-xs">
@@ -269,7 +286,7 @@
             </div>
           </div>
           <div class="col-md-6 mb-lg">
-            <div class="gray-xs-f mb-xs">Data Type</div>
+            <div class="gray-xs-f mb-xs">Data type</div>
             <div id="responseTypeDataType"> - NA -</div>
           </div>
         </div>
@@ -486,9 +503,9 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-10 p-none">
-            <div class="gray-xs-f mb-xs">Display name for the Stat (e.g. Total Hours of Activity
-              Over 6
-              Months) (1 to 50 characters)
+            <div class="gray-xs-f mb-xs">Display name for the stat (e.g. Total hours of activity
+              over 6
+              months) (1 to 50 characters)
               <span class="requiredStar">*</span>
             </div>
             <div class="form-group">
@@ -502,7 +519,7 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-6 col-lg-4 p-none">
-            <div class="gray-xs-f mb-xs">Display Units (e.g. hours) (1 to 15 characters)
+            <div class="gray-xs-f mb-xs">Display units (e.g. hours) (1 to 15 characters)
               <span
                   class="requiredStar">*
               </span>
@@ -521,7 +538,7 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-4 col-lg-3 p-none">
-            <div class="gray-xs-f mb-xs">Stat Type for image upload
+            <div class="gray-xs-f mb-xs">Stat type for image upload
               <span
                   class="requiredStar">*
               </span>
@@ -571,17 +588,17 @@
                 <span class="mr-sm"><img
                     src="../images/icons/tick.png"
                     alt=""/></span>
-                <span>Current Day</span>
+                <span>Current day</span>
               </span>
               <span class="mr-lg">
                 <span class="mr-sm"><img src="../images/icons/tick.png"
                                          alt=""/></span>
-                <span>Current Week</span>
+                <span>Current week</span>
               </span>
               <span class="mr-lg">
                 <span class="mr-sm"><img src="../images/icons/tick.png"
                                          alt=""/></span>
-                <span>Current Month</span>
+                <span>Current month</span>
               </span>
               <span class="txt-gray">(Rollback option provided for these three options)</span>
             </div>
@@ -591,7 +608,7 @@
       <!---  Form-level Attributes --->
       <div id="rla" class="tab-pane fade mt-lg">
         <div class="col-md-4 col-lg-4 p-none">
-          <div class="gray-xs-f mb-xs">Response Type</div>
+          <div class="gray-xs-f mb-xs">Response type</div>
           <small>The type of interface needed to capture the response</small>
           <div class="form-group">
             <input type="text" class="form-control" id="rlaResonseType" disabled>
@@ -606,7 +623,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="gray-xs-f mb-xs">Data Type</div>
+            <div class="gray-xs-f mb-xs">Data type</div>
             <div id="rlaResonseDataType"> - NA -</div>
           </div>
         </div>
@@ -625,7 +642,7 @@
         <div id="responseTypeDivId">
           <div id="scaleType" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Scale Type
+              <div class="gray-xs-f mb-xs">Scale type
                 <span class="requiredStar">*</span>
               </div>
               <div class="form-group">
@@ -648,7 +665,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">Minimum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -665,7 +682,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">Maximum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -714,7 +731,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Step Size
+                  <div class="gray-xs-f mb-xs">Step size
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -737,7 +754,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Number of Steps
+                  <div class="gray-xs-f mb-xs">Number of steps
                     <span class="requiredStar">*</span>
                     <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                           title="This represents the number of steps the scale is divided into."></span>
@@ -777,7 +794,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Minimum Value
+                  <div class="gray-xs-f mb-xs">Image for minimum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -818,7 +835,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Maximum Value
+                  <div class="gray-xs-f mb-xs">Image for maximum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -864,7 +881,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">Minimum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -881,7 +898,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">Maximum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -921,7 +938,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-4 p-none">
-                  <div class="gray-xs-f mb-xs">Max Fraction Digits
+                  <div class="gray-xs-f mb-xs">Max fraction digits
                     <span
                         class="requiredStar">*
                     </span>
@@ -975,7 +992,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Minimum Value
+                  <div class="gray-xs-f mb-xs">Image for minimum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -1017,7 +1034,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Maximum Value
+                  <div class="gray-xs-f mb-xs">Image for maximum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -1061,7 +1078,7 @@
           </div>
           <div id="Location" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Use Current Location
+              <div class="gray-xs-f mb-xs">Use current location
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1088,7 +1105,7 @@
             <div class="row mt-lg">
               <div class="col-md-6 pl-none">
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 40 characters)
+                  <div class="gray-xs-f mb-xs">Placeholder text (1 to 40 characters)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter an input hint to the user"></span>
@@ -1105,7 +1122,7 @@
           </div>
           <div id="Text" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Allow Multiple Lines?
+              <div class="gray-xs-f mb-xs">Allow multiple lines?
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1144,7 +1161,7 @@
               </div>
               <div class="col-md-4">
                 <div class="col-md-6 col-lg-4 p-none">
-                  <div class="gray-xs-f mb-xs">Max Length
+                  <div class="gray-xs-f mb-xs">Max length
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter an integer for the maximum length of text allowed. If left empty, there will be no max limit applied."></span>
@@ -1163,7 +1180,7 @@
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-none">
 
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Special Validations
+                  <div class="gray-xs-f mb-xs">Special validations
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Define any special case rules you wish to be applied for the participant-entered text. If the participant's input does not meet these conditions, an admin-defined error message will be shown asking them to retry. "></span>
@@ -1239,7 +1256,7 @@
             <div class="clearfix"></div>
             <div class="row">
               <div class="col-md-6 p-none">
-                <div class="gray-xs-f mb-xs">Invalid Message (1 to 200 characters)
+                <div class="gray-xs-f mb-xs">Invalid message (1 to 200 characters)
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       title="Enter text to be presented to the user when invalid input is received."></span>
@@ -1258,7 +1275,7 @@
           </div>
           <div id="Height" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Measurement System
+              <div class="gray-xs-f mb-xs">Measurement system
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1289,7 +1306,7 @@
             <div class="row mt-md">
               <div class="col-md-6 pl-none">
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 20 characters)
+                  <div class="gray-xs-f mb-xs">Placeholder text (1 to 20 characters)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter an input hint to the user"></span>
@@ -1323,7 +1340,7 @@
                 </div>
               </div>
               <div class="col-md-2">
-                <div class="gray-xs-f mb-xs">Default Value
+                <div class="gray-xs-f mb-xs">Default value
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1379,7 +1396,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 30 characters)
+                  <div class="gray-xs-f mb-xs">Placeholder text (1 to 30 characters)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Provide an input hint to the user"></span>
@@ -1396,7 +1413,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">Minimum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter minimum value allowed"></span>
@@ -1412,7 +1429,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">Maximum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter maximum value allowed"></span>
@@ -1490,7 +1507,7 @@
               <div class="row">
                 <div class="col-md-6 pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Minimum Date
+                    <div class="gray-xs-f mb-xs">Minimum date
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                           title="Enter minimum date allowed."></span>
@@ -1507,7 +1524,7 @@
               <div class="row">
                 <div class="col-md-6  pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Maximum Date
+                    <div class="gray-xs-f mb-xs">Maximum date
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                           title="Enter maximum date allowed"></span>
@@ -1524,7 +1541,7 @@
               <div class="row">
                 <div class="col-md-6  pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Default Date
+                    <div class="gray-xs-f mb-xs">Default date
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                           title="Enter default date to be shown as selected"></span>
@@ -1554,7 +1571,7 @@
                      name="questionResponseSubTypeList[0].responseSubTypeValueId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].responseSubTypeValueId)}">
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text
+                <div class="gray-xs-f mb-xs">Display text
                   <span class="requiredStar">*</span>
                 </div>
                 <div class="form-group">
@@ -1652,7 +1669,7 @@
             </div>
             <div class="row mt-sm" id="0">
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text (1 to 20 characters)
+                <div class="gray-xs-f mb-xs">Display text (1 to 20 characters)
                   <span
                       class="requiredStar">*
                   </span>
@@ -1792,9 +1809,9 @@
             </div>
             <div class="row">
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                   <span
-                      class="requiredStar">*
+                      class="requiredStar" style="float: right;">*
                   </span>
                 </div>
               </div>
@@ -2028,14 +2045,14 @@
                   <input type="radio" class="TextChoiceRequired" id="singleSelect" value="Single"
                          name="questionReponseTypeBo.selectionStyle"  ${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
-                  <label for="singleSelect">Single Select</label>
+                  <label for="singleSelect">Single select</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" class="TextChoiceRequired" id="multipleSelect"
                          value="Multiple"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
-                  <label for="multipleSelect">Multiple Select</label>
+                  <label for="multipleSelect">Multiple select</label>
                 </span>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -2056,8 +2073,8 @@
                              var="questionResponseSubType" varStatus="subtype">
                     <!-- Section Start -->
                     <div class="mt-xlg text-choice" id="${subtype.index}">
-                      <div class="col-md-3 pl-none">
-                        <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                      <div class="col-md-4 pl-none">
+                        <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                           <span
                               class="requiredStar">*
                           </span>
@@ -2093,7 +2110,7 @@
                               class="requiredStar">*
                           </span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-none dropdown-font">
                           <select name="questionResponseSubTypeList[${subtype.index}].exclusive"
                                   id="exclusiveId${subtype.index}" index="${subtype.index}"
                                   title="select" data-error="Please choose one option"
@@ -2142,7 +2159,7 @@
                       </c:if>
                       <div class="col-md-12 p-none display__flex__">
                         <div class="col-md-10 pl-none">
-                          <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                          <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                           <div class="form-group">
                             <textarea class="form-control"
                                       name="questionResponseSubTypeList[${subtype.index}].description"
@@ -2168,8 +2185,8 @@
 
                   <!-- Section Start -->
                   <div class="mt-xlg text-choice otherOptionChecked" id="0">
-                    <div class="col-md-3 pl-none">
-                      <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                    <div class="col-md-4 pl-none">
+                      <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                         <span
                             class="requiredStar">*
                         </span>
@@ -2204,11 +2221,11 @@
                             class="requiredStar">*
                         </span>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-none">
                         <select name="questionResponseSubTypeList[0].exclusive"
                                 id="exclusiveId0" index="0" title="select"
                                 data-error="Please choose one option"
-                                class="selectpicker textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if>"
+                                class="selectpicker dropdown-font textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if>"
                                 <c:if
                                     test="${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}">disabled</c:if>
                                 onchange="setExclusiveData(this);">
@@ -2227,7 +2244,7 @@
                     <c:if test="${questionnaireBo.branching}">
                       <div class="col-md-2 pl-none">
                         <div class="gray-xs-f mb-xs">Destination Step</div>
-                        <div class="form-group">
+                        <div class="form-group mb-none">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextChoiceStepId0"
                                   class="selectpicker destionationYes"
@@ -2251,13 +2268,13 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[0].description"
                                     id="displayTextChoiceDescription0"
-                                    value="${fn:escapeXml(questionResponseSubType.questionResponseSubTypeList[0].description)}"
-                                    maxlength="150">${fn:escapeXml(questionResponseSubType.questionResponseSubTypeList[0].description)}</textarea>
+                                    value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].description)}"
+                                    maxlength="150">${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].description)}</textarea>
                         </div>
                       </div>
                       <div class="col-md-2 pl-none">
@@ -2273,8 +2290,8 @@
                   <!-- Section End -->
                   <!-- Section Start -->
                   <div class="mt-xlg text-choice" id="1">
-                    <div class="col-md-3 pl-none">
-                      <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                    <div class="col-md-4 pl-none">
+                      <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                         <span
                             class="requiredStar">*
                         </span>
@@ -2309,7 +2326,7 @@
                             class="requiredStar">*
                         </span>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-none">
                         <select name="questionResponseSubTypeList[1].exclusive"
                                 id="exclusiveId1" index="1" title="select"
                                 data-error="Please choose one option"
@@ -2356,7 +2373,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[1].description"
@@ -2383,14 +2400,14 @@
               <div class="clearfix"></div>
               <div class="checkbox checkbox-inline">
                 <input type="checkbox" name="questionReponseTypeBo.otherType"
-                       id="textchoiceOtherId" ${not empty questionnairesStepsBo.questionReponseTypeBo.otherType ? 'checked':''}>
+                       id="textchoiceOtherId" ${not empty questionnairesStepsBo.questionReponseTypeBo.otherType && questionnairesStepsBo.questionReponseTypeBo.otherType eq 'on'? 'checked':''}>
                 <label for="textchoiceOtherId"> Include 'Other' as an option ? </label>
               </div>
               <div class="textchoiceOtherCls" style="display: none;">
                 <!-- Section Start  -->
                 <div class="mt-xlg">
-                  <div class="col-md-3 pl-none">
-                    <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                  <div class="col-md-4 pl-none">
+                    <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                       <span
                           class="requiredStar">*
                       </span>
@@ -2469,7 +2486,7 @@
                   </c:if>
                   <div class="col-md-12 p-none display__flex__center">
                     <div class="col-md-10 pl-none">
-                      <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                      <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                       <div class="form-group">
                         <textarea class="form-control"
                                   name="questionReponseTypeBo.otherDescription"
@@ -2554,7 +2571,7 @@
                   </div>
                 </div>
                 <div class="col-md-2 pl-none col-smthumb-2">
-                  <div class="gray-xs-f mb-xs">Selected Image
+                  <div class="gray-xs-f mb-xs">Selected image
                     <span
                         class="requiredStar">*
                     </span>
@@ -2565,7 +2582,7 @@
                   </div>
                 </div>
                 <div class="col-md-2 pl-none">
-                  <div class="gray-xs-f mb-xs">Display Text
+                  <div class="gray-xs-f mb-xs">Display text
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -2974,8 +2991,7 @@
                             <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
-                                Step ${destinationStep.sequenceNo}
-                                : ${destinationStep.stepShortTitle}</option>
+                                Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
@@ -2997,8 +3013,7 @@
                             <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
-                                Step ${destinationStep.sequenceNo}
-                                : ${destinationStep.stepShortTitle}</option>
+                                Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
@@ -3409,7 +3424,7 @@
   <!-- End right Content here -->
   <script type="text/javascript">
     $(document).ready(function () {
-
+      $('.studyClass').addClass("active");
       if ($('#useAnchorDateId').is(':checked')) {
         $("#anchorTextId").attr('required', true);
       } else {
@@ -3436,27 +3451,151 @@
         });
       });
 
+      if (${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || 
+          questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}) {
+          $('.textChoiceExclusive').attr("disabled", true);
+          $('.textChoiceExclusive').attr("required", false);
+          $('.textChoiceExclusive').val('');
+          $('.selectpicker').selectpicker('refresh');
+          $(".textChoiceExclusive").validator('validate');
+          $('.textChoiceExclusive').parent().parent().hide();
+        } else if(${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}){
+          $('.textChoiceExclusive').attr("disabled", false);
+          $('.textChoiceExclusive').attr("required", true);
+          $('.selectpicker').selectpicker('refresh');
+          $('.textChoiceExclusive').parent().parent().show();
+        }
+      
+
+
+      var responseType = $("#responseTypeId").val();
+      if (responseType == '6') {
+       if ($('#textchoiceOtherId').is(':checked')) {
+         $('.textchoiceOtherCls').show();
+         $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+         $('.textchoiceOtherCls').find('#otherDestinationTextChoiceStepId').attr('required', false);
+         $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+
+         if(${actionTypeForQuestionPage == 'edit'} || ${actionTypeForQuestionPage == 'view'}){
+             $('.text-choice').each(function () {
+              var id = $(this).attr("id");
+                 var display_text = $("#displayTextChoiceText" + id).val();
+                 var display_value = $("#displayTextChoiceValue" + id).val();
+                 var display_description = $("#displayTextChoiceDescription" + id).val();
+                 var display_exclusive = $("#exclusiveId" + id).val();
+                 
+
+            if($('.text-choice').length > 1 && display_text=="" && display_value=="" && 
+                    display_description==""){
+
+                if (${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || 
+                   questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}) {
+                 $(this).remove();
+                }else if (${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}) {
+                  if(display_exclusive==""){
+                	  $(this).remove();
+                	  }
+                }
+            }  
+          });
+         }  
+
+         if ($('.text-choice').length > 1){
+           $(".remBtnDis").css("pointer-events", "auto");
+         }else{
+           $(".remBtnDis").css("pointer-events", "none");
+         }
+       
+       } else {
+         $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
+         $('.textchoiceOtherCls').hide();
+         $("input[name='questionReponseTypeBo.otherText']").val('');
+         $("input[name='questionReponseTypeBo.otherValue']").val('');
+         $("textarea[name='questionReponseTypeBo.otherDescription']").val('');
+         $("select[name='questionReponseTypeBo.otherExclusive']").val('');
+         $('.selectpicker').selectpicker('refresh');
+
+         if(${actionTypeForQuestionPage == 'edit'} || ${actionTypeForQuestionPage == 'view'}){
+             $('.text-choice').each(function () {
+              var id = $(this).attr("id");
+                 var display_text = $("#displayTextChoiceText" + id).val();
+                 var display_value = $("#displayTextChoiceValue" + id).val();
+                 var display_description = $("#displayTextChoiceDescription" + id).val();
+            var display_exclusive = $("#exclusiveId" + id).val();
+
+            if($('.text-choice').length > 2 && display_text=="" && display_value=="" && display_description==""){
+
+                if (${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || 
+                   questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}) {
+                  $(this).remove();
+                }else if (${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}) {
+                  if(display_exclusive==""){
+                   $(this).remove();
+                  }
+                }
+             }   
+           });
+          }  
+
+         if ($('.text-choice').length > 2){
+         $(".remBtnDis").css("pointer-events", "auto");
+         }else{
+          $(".remBtnDis").css("pointer-events", "none");
+         }
+       }
+      }
+
+     
       $('#textchoiceOtherId').click(function () {
-        var displayText = $("#displayTextChoiceText0").val().trim();
-        var displayValue = $("#displayTextChoiceValue0").val().trim();
-        var exclusive = $("#exclusiveId0").val().trim();
-        var choiceDescription = $("#displayTextChoiceDescription0").val().trim();
         if ($(this).is(':checked')) {
-          if (displayText.length <= 0 && displayValue.length <= 0 && exclusive.length <= 0
-              && choiceDescription.length <= 0) {
-            $('.otherOptionChecked').hide();
-            $('.otherOptionChecked').find('input:text,select').removeAttr('required');
-          }
+           $('.text-choice').each(function () {
+                 var questionSubResponseType = new Object();
+                 var id = $(this).attr("id");
+                 var displayText = $("#displayTextChoiceText" + id).val();
+                 var displayValue = $("#displayTextChoiceValue" + id).val();
+                 var display_description = $("#displayTextChoiceDescription" + id).val();
+              var display_exclusive = $("#exclusiveId" + id).val();
+
+            if ($('.text-choice').length == 2 && typeof displayText!=='undefined'
+               && typeof displayValue!=='undefined' && typeof display_description!=='undefined' 
+                 && typeof display_exclusive!=='undefined' &&
+                    displayText.trim().length <= 0 && displayValue.trim().length <= 0 && 
+                    display_description.trim().length <= 0 &&
+                    display_exclusive.trim().length <= 0) {
+              $(this).remove();
+            }
+          });
+
+           if ($('.text-choice').length > 1){
+               $(".remBtnDis").css("pointer-events", "auto");
+           }else{
+             $(".remBtnDis").css("pointer-events", "none");
+               }
           $('.textchoiceOtherCls').show();
           $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+          $('.textchoiceOtherCls').find('#otherDestinationTextChoiceStepId').attr('required', false);
           $('.OtherOptionCls').find('input:text,select').removeAttr('required');
         } else {
-          $('.otherOptionChecked').show();
-          $('.otherOptionChecked').find('input:text,select').attr('required', true);
+
+         if ($('.text-choice').length == 1){
+          addTextChoice();
+         }
+         if ($('.text-choice').length > 2){
+          $(".remBtnDis").css("pointer-events", "auto");
+         }else{
+        	  $(".remBtnDis").css("pointer-events", "none");
+         }
+         
+          $("input[name='questionReponseTypeBo.otherText']").val('');
+          $("input[name='questionReponseTypeBo.otherValue']").val('');
+          $("textarea[name='questionReponseTypeBo.otherDescription']").val('');
+          $("select[name='questionReponseTypeBo.otherExclusive']").val('');
+          $('.selectpicker').selectpicker('refresh');
           $('.textchoiceOtherCls').hide();
           $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
-        }
-      });
+         }
+       
+     }); 
 
       $('.otherIncludeTextCls').click(function () {
         var otherText = $('.otherIncludeTextCls:checked').val();
@@ -3466,6 +3605,8 @@
         } else {
           $('.OtherOptionCls').hide();
           $('.OtherOptionCls').find('input:text,select').removeAttr('required');
+          $("input[name='questionReponseTypeBo.otherPlaceholderText']").val('');
+          $("input[name='questionReponseTypeBo.otherParticipantFill']").val('');
         }
       });
 
@@ -3478,25 +3619,36 @@
       </c:if>
 
       if ($('.value-picker').length > 2) {
+    	  $('.ValuePickerContainer').find(".remBtnDis").css("pointer-events", "auto");
         $('.ValuePickerContainer').find(".remBtnDis").removeClass("hide");
       } else {
+    	  $('.ValuePickerContainer').find(".remBtnDis").css("pointer-events", "none");
         $('.ValuePickerContainer').find(".remBtnDis").addClass("hide");
       }
       if ($('.text-scale').length > 2) {
+    	  $('.TextScaleContainer').find(".remBtnDis").css("pointer-events", "auto");
         $('.TextScaleContainer').find(".remBtnDis").removeClass("hide");
       } else {
+    	  $('.TextScaleContainer').find(".remBtnDis").css("pointer-events", "none");
         $('.TextScaleContainer').find(".remBtnDis").addClass("hide");
-      }
-      if ($('.text-choice').length > 2) {
-        $('.TextChoiceContainer').find(".remBtnDis").removeClass("hide");
-      } else {
-        $('.TextChoiceContainer').find(".remBtnDis").addClass("hide");
       }
       if ($('.image-choice').length > 2) {
         $('.ImageChoiceContainer').find(".remBtnDis").removeClass("hide");
+        $('.ImageChoiceContainer').find(".remBtnDis").css("pointer-events", "auto");
       } else {
         $('.ImageChoiceContainer').find(".remBtnDis").addClass("hide");
+        $('.ImageChoiceContainer').find(".remBtnDis").css("pointer-events", "none");
       }
+
+      if (${actionTypeForQuestionPage == 'view'}) {
+    	  $('.TextScaleContainer').find(".remBtnDis").css("pointer-events", "none");
+    	  $('.ImageChoiceContainer').find(".remBtnDis").css("pointer-events", "none");
+    	  $('.ValuePickerContainer').find(".remBtnDis").css("pointer-events", "none");
+    	  $('.TextChoiceContainer').find(".remBtnDis").css("pointer-events", "none");
+    	  $('.form-group').find(".sm-thumb-btn").css("pointer-events", "none");
+    	  $('.btn-group').find(".btn").addClass("response_type");
+      }
+      
       $(".menuNav li.active").removeClass('active');
       $(".sixthQuestionnaires").addClass('active');
       $("#doneId").click(function () {
@@ -3529,6 +3681,7 @@
           if ($('#textchoiceOtherId').is(':checked')) {
             $('.textchoiceOtherCls').show();
             $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+            $('.textchoiceOtherCls').find('#otherDestinationTextChoiceStepId').attr('required', false);
             $('.OtherOptionCls').find('input:text,select').removeAttr('required');
           } else {
             $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');
@@ -4165,34 +4318,44 @@
           }
         }
       });
+      
       $("#scaleDefaultValueId").blur(function () {
-        var value = $("#scaleDefaultValueId").val();
-        var stepSize = $("#scaleStepId").val();
-        $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-        $("#scaleDefaultValueId").parent().find(".help-block").empty();
-        if (value != '' && stepSize != '') {
-          if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
-            $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+          var value = $("#scaleDefaultValueId").val();
+          var stepSize = $("#scaleStepId").val();
+          var minValue = $("#scaleMinValueId").val();
+  		   var maxValue = $("#scaleMaxValueId").val();
+          $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+          $("#scaleDefaultValueId").parent().find(".help-block").empty();
+          if (value != '' && stepSize != '') {
+            if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
+          	  if(parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)){
+              $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+              $("#scaleDefaultValueId").parent().find(".help-block").empty();
+          	  }else{
+  				 $(this).val('');
+  	    		 $(this).parent().addClass("has-danger").addClass("has-error");
+  	             $(this).parent().find(".help-block").empty();
+  	             $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
+  			}
+            } else {
+              $("#scaleDefaultValueId").val('');
+              $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#scaleDefaultValueId").parent().find(".help-block").empty();
+              $("#scaleDefaultValueId").parent().find(".help-block").append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter an integer from 0 to number of steps"));
+            }
           } else {
-            $("#scaleDefaultValueId").val('');
-            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-            $("#scaleDefaultValueId").parent().find(".help-block").empty();
-            $("#scaleDefaultValueId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an integer from 0 to number of steps"));
+            if (value != '') {
+              $("#scaleDefaultValueId").val('');
+              $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+              $("#scaleDefaultValueId").parent().find(".help-block").empty();
+              $("#scaleDefaultValueId").parent().find(".help-block").append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please enter an step size first "));
+            }
           }
-        } else {
-          if (value != '') {
-            $("#scaleDefaultValueId").val('');
-            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-            $("#scaleDefaultValueId").parent().find(".help-block").empty();
-            $("#scaleDefaultValueId").parent().find(".help-block").append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an step size first "));
-          }
-        }
-      });
+        });
 
       $("#continuesScaleMinValueId").blur(function () {
 
@@ -4308,6 +4471,10 @@
         var maxValue = $("#numericMaxValueId").val();
         $(this).parent().removeClass("has-danger").removeClass("has-error");
         $(this).parent().find(".help-block").empty();
+        var minValue = $("#numericMinValueId").val();
+        if(minValue==''){
+      	  $("#numericMinValueId").val("0");
+         } 
         if (maxValue != '') {
           if (parseInt(value) >= parseInt(maxValue)) {
             $(this).val('');
@@ -4327,6 +4494,10 @@
         var minValue = $("#numericMinValueId").val();
         $(this).parent().removeClass("has-danger").removeClass("has-error");
         $(this).parent().find(".help-block").empty();
+        var maxValue = $("#numericMaxValueId").val();
+        if(maxValue==''){
+      	  $("#numericMaxValueId").val("10000");
+           }
         if (minValue != '') {
           if (parseInt(value) <= parseInt(minValue)) {
             $(this).val('');
@@ -4348,6 +4519,7 @@
       $("#responseTypeId").on("change", function () {
         var value = $(this).val();
         getResponseType(value);
+        $('.textChoiceExclusive').parent().parent().hide();
       });
       $('.DateStyleRequired').on("change", function () {
         var value = $(this).val();
@@ -4825,6 +4997,24 @@
               $("#continuesScaleMaxImagePathId").val('');
             }
           }
+          if (responseType == 'Text Choice') {
+
+              if ($('#textchoiceOtherId').is(':checked')) {
+                    if ($('.text-choice').length > 1){
+                     $(".remBtnDis").css("pointer-events", "auto");
+                   }else{
+                     $(".remBtnDis").css("pointer-events", "none");
+                   }
+                 
+              } else {
+    
+                if ($('.text-choice').length > 2){
+                   $(".remBtnDis").css("pointer-events", "auto");
+                }else{
+                  $(".remBtnDis").css("pointer-events", "none");
+                }
+              }
+          }
           if (responseType == 'Numeric') {
             $('input[name="questionReponseTypeBo.style"]').attr("checked", false);
             $("#styleDecimal").attr("checked", true);
@@ -4950,6 +5140,15 @@
             $("#condtionalBranchingId").hide();
           }
           $("#" + responseType.replace(/\s/g, '')).show();
+          if(responseType=='Numeric'){
+         	 if($("#numericMinValueId").val()== ''){
+                  $("#numericMinValueId").val("0");
+                  }
+
+                  if($("#numericMaxValueId").val() == ''){
+                      $("#numericMaxValueId").val("10000");
+                   }
+            }
           $("." + responseType.replace(/\s/g, '') + "Required").attr("required", true);
         } else {
 
@@ -5265,6 +5464,41 @@
           questionSubResponseArray.push(questionSubResponseType);
 
         });
+        var otherText=$("input[name='questionReponseTypeBo.otherText']").val();
+        var otherValue=$("input[name='questionReponseTypeBo.otherValue']").val();
+        var otherDescription=$("textarea[name='questionReponseTypeBo.otherDescription']").val();
+        var otherExclusive=$("select[name='questionReponseTypeBo.otherExclusive']").val();
+        var otherType;
+
+        if ($('#textchoiceOtherId').is(':checked')) {
+        	otherType="on";
+        	var otherIncludeText;
+            var otherParticipantFill;
+            if ($('#otherYes').is(':checked')) {
+              otherIncludeText="Yes"
+            }else{
+              otherIncludeText="No"
+            }
+            var otherPlaceholderText=$("input[name='questionReponseTypeBo.otherPlaceholderText']").val();
+            if($('#pYes').is(':checked')){
+             otherParticipantFill="Yes"
+            }else{
+               otherParticipantFill="No"
+            }
+
+            questionReponseTypeBo.otherIncludeText=otherIncludeText;
+            questionReponseTypeBo.otherPlaceholderText=otherPlaceholderText;
+            questionReponseTypeBo.otherParticipantFill=otherParticipantFill;
+        }else{
+          otherType="off";
+         }
+        
+        questionReponseTypeBo.otherText=otherText
+        questionReponseTypeBo.otherValue=otherValue
+        questionReponseTypeBo.otherDescription=otherDescription
+        questionReponseTypeBo.otherType=otherType
+        questionReponseTypeBo.otherExclusive=otherExclusive;
+        
         questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
       } else if (resType == "Image Choice") {
         var questionSubResponseArray = new Array();
@@ -5363,9 +5597,13 @@
 
       var response_type_id = $("#questionResponseTypeId").val();
       var question_response_type_id = $("#responseQuestionId").val();
+      var vertical = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
+      
 
       questionReponseTypeBo.responseTypeId = response_type_id;
       questionReponseTypeBo.questionsResponseTypeId = question_response_type_id;
+      questionReponseTypeBo.vertical = vertical;
+      
 
       questionnaireStep.questionReponseTypeBo = questionReponseTypeBo;
       if (quesstionnaireId && shortTitle) {
@@ -5489,10 +5727,12 @@
         $('.destionationYes').attr("disabled", false);
         $('.selectpicker').selectpicker('refresh');
         $(".textChoiceExclusive").validator('validate');
+        $('.textChoiceExclusive').parent().parent().hide();
       } else {
         $('.textChoiceExclusive').attr("disabled", false);
         $('.textChoiceExclusive').attr("required", true);
         $('.selectpicker').selectpicker('refresh');
+        $('.textChoiceExclusive').parent().parent().show();
       }
     }
 
@@ -5545,8 +5785,10 @@
       $(".value-picker").parents("form").validator();
       if ($('.value-picker').length > 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
       }
       $('#' + count).find('input:first').focus();
     }
@@ -5561,8 +5803,10 @@
         $(".value-picker").parents("form").validator();
         if ($('.value-picker').length > 2) {
           $(".remBtnDis").removeClass("hide");
+          $(".remBtnDis").css("pointer-events", "auto");
         } else {
           $(".remBtnDis").addClass("hide");
+          $(".remBtnDis").css("pointer-events", "none");
         }
       }
     }
@@ -5620,8 +5864,10 @@
         $(".text-scale").parents("form").validator();
         if ($('.text-scale').length > 2) {
           $(".remBtnDis").removeClass("hide");
+          $(".remBtnDis").css("pointer-events", "auto");
         } else {
           $(".remBtnDis").addClass("hide");
+          $(".remBtnDis").css("pointer-events", "none");
         }
         if ($('.text-scale').length == 8) {
           $(".text-scale:last").find('span.addBtnDis').remove();
@@ -5647,8 +5893,10 @@
         $(".text-scale").parents("form").validator();
         if ($('.text-scale').length > 2) {
           $(".remBtnDis").removeClass("hide");
+          $(".remBtnDis").css("pointer-events", "auto");
         } else {
           $(".remBtnDis").addClass("hide");
+          $(".remBtnDis").css("pointer-events", "none");
         }
         $("#textScalePositionId").val($('.text-scale').length);
         if ($('.text-scale').length == 8) {
@@ -5670,8 +5918,8 @@
       choiceCount = parseInt(choiceCount) + 1;
       var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
       var newTextChoice = "<div class='mt-xlg text-choice' id='" + choiceCount + "'>" +
-          "<div class='col-md-3 pl-none'>" +
-          "   <div class='gray-xs-f mb-xs'>Display Text (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
+          "<div class='col-md-4 pl-none'>" +
+          "   <div class='gray-xs-f mb-xs'>Display text (1 to 100 characters)<span class='requiredStar'>*</span> </div>"
           +
           "   <div class='form-group mb-none'>" +
           "   <input type='text' class='form-control TextChoiceRequired' name='questionResponseSubTypeList["
@@ -5694,7 +5942,7 @@
           "<div class='col-md-2 pl-none'>" +
           "   <div class='gray-xs-f mb-xs'>Mark as exclusive ? <span class='requiredStar'>*</span> </div>"
           +
-          "   <div class='form-group'>";
+          "   <div class='form-group mb-none'>";
       if (selectionStyle == 'Single') {
         newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
             + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
@@ -5728,7 +5976,7 @@
       </c:if>
       newTextChoice += "<div class='col-md-12 p-none display__flex__'><div class='col-md-10 pl-none'>"
           +
-          "<div class='gray-xs-f mb-xs'>Description(1 to 150 characters) </div>" +
+          "<div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) </div>" +
           "<div class='form-group'>" +
           "   <textarea type='text' class='form-control' name='questionResponseSubTypeList["
           + choiceCount + "].description' id='displayTextChoiceDescription" + choiceCount
@@ -5748,26 +5996,51 @@
       $(".text-choice").parent().find(".help-block").empty();
       $(".text-choice").parents("form").validator("destroy");
       $(".text-choice").parents("form").validator();
-      if ($('.text-choice').length > 2) {
+      if ($('.text-choice').length >= 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
       }
       $('#' + choiceCount).find('input:first').focus();
+      if (selectionStyle == 'Single') {
+        	$('.textChoiceExclusive').parent().parent().hide();
+        }else{
+      	  $('.textChoiceExclusive').parent().parent().show();
+        }
     }
 
     function removeTextChoice(param) {
-      if ($('.text-choice').length > 2) {
-        $(param).parents(".text-choice").remove();
-        $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
-        $(".text-choice").parent().find(".help-block").empty();
-        $(".text-choice").parents("form").validator("destroy");
-        $(".text-choice").parents("form").validator();
-        if ($('.text-choice').length > 2) {
-          $(".remBtnDis").removeClass("hide");
-        } else {
-          $(".remBtnDis").addClass("hide");
-        }
+    	if($("#textchoiceOtherId").is(':checked')){
+         if ($('.text-choice').length > 1){
+             $(param).parents(".text-choice").remove();
+             $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
+             $(".text-choice").parent().find(".help-block").empty();
+             $(".text-choice").parents("form").validator("destroy");
+             $(".text-choice").parents("form").validator();
+          if($('.text-choice').length > 1){
+             $(".remBtnDis").removeClass("hide");
+             $(".remBtnDis").css("pointer-events", "auto");
+           }else{
+             $(".remBtnDis").addClass("hide");
+             $(".remBtnDis").css("pointer-events", "none");
+           }
+         }
+      }else{
+         if($('.text-choice').length > 2){
+           $(param).parents(".text-choice").remove();
+           $(".text-choice").parent().removeClass("has-danger").removeClass("has-error");
+           $(".text-choice").parent().find(".help-block").empty();
+           $(".text-choice").parents("form").validator("destroy");
+           $(".text-choice").parents("form").validator();
+           if($('.text-choice').length > 2){
+             $(".remBtnDis").removeClass("hide");
+             $(".remBtnDis").css("pointer-events", "auto");
+           }else{
+             $(".remBtnDis").addClass("hide");
+             $(".remBtnDis").css("pointer-events", "none");
+           }
+         }
       }
     }
 
@@ -5853,8 +6126,10 @@
 
       if ($('.image-choice').length > 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
       }
       $('#' + imageCount).find('input:first').focus();
     }
@@ -5868,8 +6143,10 @@
         $(".image-choice").parents("form").validator();
         if ($('.image-choice').length > 2) {
           $(".remBtnDis").removeClass("hide");
+          $(".remBtnDis").css("pointer-events", "auto");
         } else {
           $(".remBtnDis").addClass("hide");
+          $(".remBtnDis").css("pointer-events", "none");
         }
       }
     }
@@ -6904,6 +7181,7 @@
       if ($('#textchoiceOtherId').is(':checked')) {
         $('.textchoiceOtherCls').show();
         $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
+        $('.textchoiceOtherCls').find('#otherDestinationTextChoiceStepId').attr('required', false);
         $('.OtherOptionCls').find('input:text,select').removeAttr('required');
       } else {
         $('.textchoiceOtherCls').find('input:text,select').removeAttr('required');

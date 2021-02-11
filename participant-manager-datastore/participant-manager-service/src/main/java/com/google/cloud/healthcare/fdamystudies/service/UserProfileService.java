@@ -23,12 +23,14 @@ public interface UserProfileService {
   public UserProfileResponse findUserProfileBySecurityCode(
       String securityCode, AuditLogEventRequest auditRequest);
 
-  public UserProfileResponse updateUserProfile(UserProfileRequest userProfileRequest);
+  public UserProfileResponse updateUserProfile(
+      UserProfileRequest userProfileRequest, AuditLogEventRequest auditRequest);
 
   public SetUpAccountResponse saveUser(
       SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest);
 
   public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest);
 
-  public void deleteInvitation(String signedInUserId, String userId);
+  public void deleteInvitation(
+      String signedInUserId, String userId, AuditLogEventRequest auditRequest);
 }

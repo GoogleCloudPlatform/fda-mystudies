@@ -48,7 +48,7 @@
             <button type="button" class="btn btn-primary blue-btn" id="markAsCompleteBtnId"
                     onclick="markAsCompleted();"
                     <c:if
-                        test="${fn:length(consentInfoList) eq 0 || !markAsComplete}">disabled</c:if>  >Mark as Completed
+                        test="${fn:length(consentInfoList) eq 0 || !markAsComplete}">disabled</c:if>  >Mark as completed
             </button>
           </span>
         </c:if>
@@ -72,7 +72,7 @@
                 <c:if test="${empty permission}">
                   <button type="button" class="btn btn-primary blue-btn" onclick="addConsentPage();">
                     Add
-                    Consent Section
+                    consent section
                   </button>
                 </c:if>
               </div>
@@ -121,6 +121,7 @@
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li").removeClass('active');
     $(".fifthConsent").addClass('active');
@@ -140,7 +141,7 @@
       "filter": false,
       rowReorder: reorder,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
       "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -255,6 +256,19 @@
                   $('.fifthConsentReview').find('span').removeClass(
                       'sprites-icons-2 tick pull-right mt-xs');
                 }
+
+                if ($('.fifthComre ').find('span').hasClass(
+                'sprites-icons-2 tick pull-right mt-xs')) {
+                $('.fifthComre ').find('span').removeClass(
+                  'sprites-icons-2 tick pull-right mt-xs');
+                }
+
+                if ($('.fifth ').find('span').hasClass(
+                'sprites-icons-2 tick pull-right mt-xs')) {
+                $('.fifth ').find('span').removeClass(
+                  'sprites-icons-2 tick pull-right mt-xs');
+                }
+
               } else {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Unable to delete consent");

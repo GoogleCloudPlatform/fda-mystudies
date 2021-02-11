@@ -86,12 +86,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   private static final int GET_PREFERENCES = 101;
 
   private RelativeLayout backBtn;
-  private AppCompatImageView bookmarkimage;
-  private AppCompatTextView visitWebsiteButton;
-  private AppCompatTextView learnMoreButton;
   private AppCompatTextView consentLayButton;
   private AppCompatTextView joinButton;
-  private LinearLayout bottombar;
   private LinearLayout bottombar1;
   private RelativeLayout consentLay;
   private ConsentDocumentData consentDocumentData;
@@ -137,29 +133,20 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
 
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-      bookmarkimage.setVisibility(View.GONE);
       backBtn.setVisibility(View.GONE);
     }
   }
 
   private void initializeXmlId() {
     backBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    bookmarkimage = (AppCompatImageView) findViewById(R.id.imageViewRight);
     joinButton = (AppCompatTextView) findViewById(R.id.joinButton);
-    visitWebsiteButton = (AppCompatTextView) findViewById(R.id.mVisitWebsiteButton);
-    learnMoreButton = (AppCompatTextView) findViewById(R.id.mLernMoreButton);
     consentLayButton = (AppCompatTextView) findViewById(R.id.consentLayButton);
-    bottombar = (LinearLayout) findViewById(R.id.bottom_bar);
     bottombar1 = (LinearLayout) findViewById(R.id.bottom_bar1);
     consentLay = (RelativeLayout) findViewById(R.id.consentLay);
   }
 
   private void setFont() {
     joinButton.setTypeface(AppController.getTypeface(this, "regular"));
-    visitWebsiteButton.setTypeface(
-        AppController.getTypeface(StandaloneStudyInfoActivity.this, "regular"));
-    learnMoreButton.setTypeface(
-        AppController.getTypeface(StandaloneStudyInfoActivity.this, "regular"));
     consentLayButton.setTypeface(
         AppController.getTypeface(StandaloneStudyInfoActivity.this, "regular"));
   }
@@ -206,33 +193,6 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             }
           }
         });
-
-    visitWebsiteButton.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            try {
-              Intent browserIntent =
-                  new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
-              startActivity(browserIntent);
-            } catch (Exception e) {
-              Logger.log(e);
-            }
-          }
-        });
-    learnMoreButton.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            try {
-              Intent intent = new Intent(StandaloneStudyInfoActivity.this, WebViewActivity.class);
-              intent.putExtra("consent", consentDocumentData.getConsent().getContent());
-              startActivity(intent);
-            } catch (Exception e) {
-              Logger.log(e);
-            }
-          }
-        });
   }
 
   private void callGetStudyInfoWebservice() {
@@ -269,20 +229,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           dbServiceSubscriber.saveStudyListToDB(this, study);
           if (study.getStudies().get(0).getStatus().equalsIgnoreCase("active")) {
             callGetStudyInfoWebservice();
-            if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.upcoming))
-                || study
+            if (study
                     .getStudies()
                     .get(0)
                     .getStatus()
                     .equalsIgnoreCase(getString(R.string.closed))) {
               joinButton.setVisibility(View.GONE);
-            }
-            if (study
-                .getStudies()
-                .get(0)
-                .getStatus()
-                .equalsIgnoreCase(getString(R.string.closed))) {
-              bookmarkimage.setVisibility(View.GONE);
             }
           } else {
             Toast.makeText(
@@ -381,11 +333,6 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .writePreference(
                 StandaloneStudyInfoActivity.this,
-                getString(R.string.bookmark),
-                "" + study.getStudies().get(0).isBookmarked());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                StandaloneStudyInfoActivity.this,
                 getString(R.string.status),
                 "" + study.getStudies().get(0).getStatus());
         if (!studies.getStudies().isEmpty()) {
@@ -421,9 +368,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         userPreferenceStudies = studies.getStudies();
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(AppConfig.StudyId, realm);
         if (studyList != null) {
-          if (studyList.getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
-            Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-          } else if (!studyList.getSetting().isEnrolling()) {
+          if (!studyList.getSetting().isEnrolling()) {
             Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
           } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
             Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -632,9 +577,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   }
 
   private void joinStudy() {
-    if (study.getStudies().get(0).getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
-      Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-    } else if (!study.getStudies().get(0).getSetting().isEnrolling()) {
+    if (!study.getStudies().get(0).getSetting().isEnrolling()) {
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
     } else if (study.getStudies().get(0).getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -665,6 +608,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                 AppConfig.StudyId,
                 eligibilityConsent.getEligibility(),
                 study.getStudies().get(0).getTitle(),
+                "",
                 "",
                 "test",
                 "join");
@@ -712,6 +656,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                   eligibilityConsent.getEligibility(),
                   study.getStudies().get(0).getTitle(),
                   data.getStringExtra("enrollId"),
+                  data.getStringExtra("siteId"),
                   "combined",
                   "join");
           startActivity(intent);
@@ -724,17 +669,11 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     joinButton.setVisibility(View.VISIBLE);
     boolean aboutThisStudy = false;
     if ((aboutThisStudy) && studyHome.getStudyWebsite().equalsIgnoreCase("")) {
-      bottombar.setVisibility(View.INVISIBLE);
-      bottombar1.setVisibility(View.GONE);
+      bottombar1.setVisibility(View.INVISIBLE);
       joinButton.setVisibility(View.INVISIBLE);
-      visitWebsiteButton.setClickable(false);
-      learnMoreButton.setClickable(false);
     } else if (aboutThisStudy) {
-      bottombar.setVisibility(View.INVISIBLE);
       bottombar1.setVisibility(View.VISIBLE);
       joinButton.setVisibility(View.INVISIBLE);
-      visitWebsiteButton.setClickable(false);
-      learnMoreButton.setClickable(false);
       if (studyHome.getStudyWebsite() != null
           && !studyHome.getStudyWebsite().equalsIgnoreCase("")) {
         consentLayButton.setText(getResources().getString(R.string.visit_website));
@@ -748,40 +687,25 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
               }
             });
       } else {
-        consentLay.setVisibility(View.GONE);
+        consentLay.setVisibility(View.INVISIBLE);
       }
-    } else if (studyHome.getStudyWebsite().equalsIgnoreCase("")) {
-      bottombar.setVisibility(View.INVISIBLE);
+    } else if (!studyHome.getStudyWebsite().equalsIgnoreCase("")) {
       bottombar1.setVisibility(View.VISIBLE);
-      visitWebsiteButton.setClickable(false);
-      learnMoreButton.setClickable(false);
-      consentLay.setOnClickListener(
-          new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              try {
-                Intent intent = new Intent(StandaloneStudyInfoActivity.this, WebViewActivity.class);
-                intent.putExtra("consent", consentDocumentData.getConsent().getContent());
-                startActivity(intent);
-              } catch (Exception e) {
-                Logger.log(e);
-              }
-            }
-          });
+      consentLayButton.setText(getResources().getString(R.string.visit_website));
+      consentLay.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent browserIntent =
+                  new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
+          startActivity(browserIntent);
+        }
+      });
     } else {
-      bottombar.setVisibility(View.VISIBLE);
-      bottombar1.setVisibility(View.GONE);
-      visitWebsiteButton.setClickable(true);
-      learnMoreButton.setClickable(true);
-    }
-
-    if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.upcoming))
-        || study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.closed))) {
-      joinButton.setVisibility(View.GONE);
+      bottombar1.setVisibility(View.INVISIBLE);
     }
 
     if (study.getStudies().get(0).getStatus().equalsIgnoreCase(getString(R.string.closed))) {
-      bookmarkimage.setVisibility(View.GONE);
+      joinButton.setVisibility(View.GONE);
     }
   }
 

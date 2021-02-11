@@ -44,12 +44,11 @@ public class ParticipantIdController {
 
   @PostMapping("/participant/add")
   public ResponseEntity<?> addParticipantIdentifier(
-      @RequestHeader("applicationId") String applicationId,
+      @RequestHeader("appId") String applicationId,
       @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean,
       HttpServletRequest request) {
     logger.info("ParticipantIdController addParticipantIdentifier() - starts ");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    auditRequest.setAppId(applicationId);
 
     if (enrollmentTokenIdentifierBean == null
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getTokenIdentifier())
@@ -70,6 +69,10 @@ public class ParticipantIdController {
       participantBo.setCreatedBy(applicationId);
       String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
 
+      auditRequest.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
+      auditRequest.setStudyVersion(enrollmentTokenIdentifierBean.getStudyVersion());
+      auditRequest.setAppId(applicationId);
+      auditRequest.setParticipantId(particpantUniqueIdentifier);
       responseServerAuditLogHelper.logEvent(PARTICIPANT_ID_GENERATED, auditRequest);
       logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
       return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);

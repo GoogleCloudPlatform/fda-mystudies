@@ -196,16 +196,34 @@ public class StudyQuestionnaireController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("questionnairesId"))
                 ? ""
                 : request.getParameter("questionnairesId");
+        String stepShortTitle =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("stepShortTitle"))
+                ? ""
+                : request.getParameter("stepShortTitle");
         auditRequest.setStudyId(customStudyId);
         if (!formId.isEmpty() && !questionId.isEmpty()) {
           message =
               studyQuestionnaireService.deleteFromStepQuestion(
-                  Integer.valueOf(formId), Integer.valueOf(questionId), sesObj, customStudyId);
+                  Integer.valueOf(formId),
+                  Integer.valueOf(questionId),
+                  sesObj,
+                  customStudyId,
+                  auditRequest);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
+
             Map<String, String> values = new HashMap<>();
-            values.put(QUESTION_ID, questionId.toString());
-            values.put(FORM_ID, formId.toString());
-            values.put(STEP_ID, formId.toString());
+            QuestionnaireBo questionnaireDetails =
+                studyQuestionnaireService.getQuestionnaireById(Integer.valueOf(questionnairesId));
+            if (questionnaireDetails != null) {
+              values.put(QUESTION_ID, questionnaireDetails.getShortTitle());
+            }
+            values.put(FORM_ID, stepShortTitle);
+
+            QuestionsBo questionBo =
+                studyQuestionnaireService.getQuestionById(Integer.valueOf(questionId));
+            if (questionBo != null) {
+              values.put(STEP_ID, questionBo.getShortTitle());
+            }
             auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_IN_FORM_DELETED, auditRequest, values);
             questionnairesStepsBo =
                 studyQuestionnaireService.getQuestionnaireStep(
@@ -300,6 +318,13 @@ public class StudyQuestionnaireController {
                 : request.getParameter("questionnaireId");
         auditRequest.setStudyId(customStudyId);
         if (!studyId.isEmpty() && !questionnaireId.isEmpty()) {
+          Map<String, String> values = new HashMap<>();
+          QuestionnaireBo questionnaireDetails =
+              studyQuestionnaireService.getQuestionnaireById(Integer.valueOf(questionnaireId));
+          if (questionnaireDetails != null) {
+            values.put(QUESTION_ID, questionnaireDetails.getShortTitle());
+          }
+
           message =
               studyQuestionnaireService.deletQuestionnaire(
                   Integer.valueOf(studyId),
@@ -307,8 +332,9 @@ public class StudyQuestionnaireController {
                   sesObj,
                   customStudyId);
           if (message == FdahpStudyDesignerConstants.SUCCESS) {
-            Map<String, String> values = new HashMap<>();
-            values.put(QUESTION_ID, questionnaireId);
+            StudyBo studyBo = studyService.getStudyInfo(studyId);
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_QUESTIONNAIRE_DELETED, auditRequest, values);
           }
 
@@ -2139,6 +2165,9 @@ public class StudyQuestionnaireController {
                       sesObj,
                       customStudyId);
               if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+                StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+                auditRequest.setStudyVersion(studyBo.getVersion().toString());
+                auditRequest.setAppId(studyBo.getAppId());
                 eventEnum = STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
                 auditLogEventHelper.logEvent(eventEnum, auditRequest);
               }

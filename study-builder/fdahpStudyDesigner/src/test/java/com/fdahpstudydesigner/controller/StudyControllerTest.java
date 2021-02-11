@@ -34,7 +34,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFIC
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PAUSED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PUBLISHED_AS_UPCOMING_STUDY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRES_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESOURCE_MARKED_COMPLETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESOURCE_SAVED_OR_UPDATED;
@@ -118,6 +117,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     NotificationBO notificationBo = new NotificationBO();
     notificationBo.setNotificationText("Study notification");
+    notificationBo.setCustomStudyId("678595");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_STUDY_NOTIFICATION.getPath())
@@ -141,6 +141,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     NotificationBO notificationBo = new NotificationBO();
+    notificationBo.setCustomStudyId("678595");
     notificationBo.setNotificationText("Study notification");
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -166,6 +167,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     NotificationBO notificationBo = new NotificationBO();
     notificationBo.setNotificationText("Study notification");
+    notificationBo.setCustomStudyId("678592");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_STUDY_NOTIFICATION.getPath())
@@ -233,7 +235,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
-        .andExpect(view().name("redirect:viewStudyNotificationList.do"));
+        .andExpect(view().name("redirect:actionList.do"));
 
     verifyAuditEventCall(STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE);
   }
@@ -297,8 +299,6 @@ public class StudyControllerTest extends BaseMockIT {
     StudySessionBean studySessionBean = new StudySessionBean();
     studySessionBean.setIsLive("live");
     studySessionBean.setPermission("permission");
-    studySessionBean.setStudyId(STUDY_ID_VALUE);
-    studySessionBean.setSessionStudyCount(0);
 
     List<StudySessionBean> studySessionBeans = new ArrayList<>();
     studySessionBeans.add(studySessionBean);
@@ -312,15 +312,14 @@ public class StudyControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            post(PathMappingUri.VIEW_STUDY_DETAILS.getPath())
+            post(PathMappingUri.VIEW_BASIC_INFO.getPath())
                 .param(FdahpStudyDesignerConstants.IS_LIVE, "live")
                 .param(FdahpStudyDesignerConstants.PERMISSION, "permission")
-                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
-        .andExpect(status().isFound())
-        .andExpect(view().name("redirect:/adminStudies/viewBasicInfo.do"));
+        .andExpect(status().isOk())
+        .andExpect(view().name("viewBasicInfo"));
 
     verifyAuditEventCall(NEW_STUDY_CREATION_INITIATED);
   }
@@ -387,6 +386,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             post(PathMappingUri.VIEW_STUDY_DETAILS.getPath())
                 .param(FdahpStudyDesignerConstants.PERMISSION, "View")
+                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
@@ -421,6 +421,7 @@ public class StudyControllerTest extends BaseMockIT {
         .perform(
             post(PathMappingUri.VIEW_STUDY_DETAILS.getPath())
                 .headers(headers)
+                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
@@ -453,32 +454,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(status().isOk());
 
     verifyAuditEventCall(STUDY_LAUNCHED);
-  }
-
-  @Test
-  public void shouldUpdateStudyAction() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
-    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
-    session.setSessionId(UUID.randomUUID().toString());
-    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
-
-    HashMap<String, Object> sessionAttributes = getSessionAttributes();
-    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
-
-    mockMvc
-        .perform(
-            post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
-                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
-                .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "publishId")
-                .headers(headers)
-                .sessionAttrs(sessionAttributes))
-        .andDo(print())
-        .andExpect(status().isOk());
-
-    verifyAuditEventCall(STUDY_PUBLISHED_AS_UPCOMING_STUDY);
   }
 
   @Test
@@ -697,6 +672,8 @@ public class StudyControllerTest extends BaseMockIT {
     StudyBo studyBo = new StudyBo();
     studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
+    studyBo.setVersion(1.1f);
+    studyBo.setAppId("GCP112");
     studyBo.setStudySequenceBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -730,6 +707,7 @@ public class StudyControllerTest extends BaseMockIT {
     studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
     studyBo.setStudySequenceBo(null);
+    studyBo.setAppId("GCP123");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_BASIC_INFO.getPath())
@@ -765,6 +743,8 @@ public class StudyControllerTest extends BaseMockIT {
     StudyBo studyBo = new StudyBo();
     studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
+    studyBo.setVersion(0.0f);
+    studyBo.setAppId("GCP123");
     studyBo.setStudySequenceBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -1037,12 +1017,13 @@ public class StudyControllerTest extends BaseMockIT {
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678590");
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(STUDY_ID_INT_VALUE);
+    consentBo.setStudyId(678574);
     consentBo.setType("complete");
-    consentBo.setConsentDocContent("doc");
+    consentBo.setConsentDocContent(
+        "<span style=&#34;font-size:20px;&#34;><strong>Data gathering</strong></span><br/><span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>Auto0016</span><br/>");
 
     mockMvc
         .perform(
@@ -1098,7 +1079,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(STUDY_ID_INT_VALUE);
+    consentBo.setStudyId(678576);
     consentBo.setComprehensionTest("complete");
     consentBo.setConsentDocContent("doc");
 

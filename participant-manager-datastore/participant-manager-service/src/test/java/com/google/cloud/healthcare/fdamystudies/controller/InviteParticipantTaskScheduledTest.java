@@ -78,6 +78,7 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
 
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
+    siteEntity.setLocation(locationEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
     testDataHelper.getSiteRepository().save(siteEntity);
     testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
@@ -102,10 +103,13 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
     assertTrue(inviteParticipantsList.isEmpty());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
-    auditRequest.setAppId(siteEntity.getStudy().getAppId());
+    auditRequest.setSiteId(siteEntity.getLocation().getCustomId());
+    auditRequest.setStudyId(studyEntity.getCustomId());
+    auditRequest.setAppId(appEntity.getAppId());
     auditRequest.setCorrelationId(IdGenerator.id());
+    auditRequest.setParticipantId(participantRegistrySiteEntity.getId());
+    auditRequest.setStudyVersion(String.valueOf(studyEntity.getVersion()));
+
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
 

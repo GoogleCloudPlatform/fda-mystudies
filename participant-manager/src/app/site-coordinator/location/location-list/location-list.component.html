@@ -9,7 +9,7 @@
           (click)="addLocation()"
           class="btn btn-primary width__auto blue__btn font14"
         >
-          Add Location
+          Add location
         </button>
       </div>
     </div>
@@ -39,7 +39,7 @@
             <thead class="custom__thead">
               <tr>
                 <span class="text__387fea__12 mobile__view mr-sm sort_by_txt">
-                  Sort By:
+                  Sort by:
                 </span>
                 <th>
                   <mfDefaultSorter by="_locationId">
@@ -48,10 +48,10 @@
                 </th>
                 <th>
                   <mfDefaultSorter by="_locationName">
-                    Location Name
+                    Location name
                   </mfDefaultSorter>
                 </th>
-                <th>Associated Studies</th>
+                <th>Associated studies</th>
                 <th>
                   <mfDefaultSorter by="_status">Status</mfDefaultSorter>
                 </th>
@@ -73,7 +73,7 @@
                   </span>
                 </td>
                 <td>
-                  <span class="tbl__td__label">Location Name:</span>
+                  <span class="tbl__td__label">Location name:</span>
                   <span
                     (click)="locationDetails(location.locationId)"
                     class="no_st_en"
@@ -82,7 +82,7 @@
                   </span>
                 </td>
                 <td>
-                  <span class="tbl__td__label">Associated Studies:</span>
+                  <span class="tbl__td__label">Associated studies:</span>
                   {{ location.studyNames?.length }}
                 </td>
                 <td>

@@ -15,8 +15,25 @@
   .tooltip {
     width: 200px;
   }
+  
+  .display__flex__ {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .display__flex__center{
+    margin-top: 10px !important;
+  }
+  
+  .btn{
+  font-size:13px !important
+  }
+  
 </style>
 <script type="text/javascript">
+
+
   function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -88,11 +105,11 @@
     <ul class="nav nav-tabs review-tabs gray-bg">
       <li class="questionLevel active">
         <a data-toggle="tab" href="#qla">Question-level
-          Attributes
+          attributes
         </a>
       </li>
       <li class="responseLevel">
-        <a data-toggle="tab" href="#rla">Response-level Attributes</a>
+        <a data-toggle="tab" href="#rla">Response-level attributes</a>
       </li>
     </ul>
     <div class="tab-content pl-xlg pr-xlg">
@@ -111,7 +128,7 @@
       <!---  Form-level Attributes --->
       <div id="qla" class="tab-pane fade active in mt-xlg">
         <div class="col-md-6 pl-none">
-          <div class="gray-xs-f mb-xs">Question Short Title or Key (1 to 15 characters)
+          <div class="gray-xs-f mb-xs">Question short title or key (1 to 15 characters)
             <span
                 class="requiredStar">*
             </span>
@@ -148,7 +165,7 @@
         </div>
         <div class="clearfix"></div>
         <div>
-          <div class="gray-xs-f mb-xs">Is this a Skippable Question?</div>
+          <div class="gray-xs-f mb-xs">Is this a skippable question?</div>
           <div>
             <span class="radio radio-info radio-inline p-45">
               <input type="radio" id="skiappableYes" value="Yes"
@@ -163,7 +180,7 @@
           </div>
         </div>
         <div class="mt-lg">
-          <div class="gray-xs-f">Response Type
+          <div class="gray-xs-f">Response type
             <span class="requiredStar">*</span>
           </div>
           <div class="gray-xs-f mb-xs">
@@ -198,7 +215,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="gray-xs-f mb-xs">Data Type</div>
+            <div class="gray-xs-f mb-xs">Data type</div>
             <div id="responseTypeDataType">- NA -</div>
           </div>
         </div>
@@ -410,9 +427,9 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-10 p-none">
-            <div class="gray-xs-f mb-xs">Display name for the Stat (e.g. Total Hours of Activity
-              Over 6
-              Months) (1 to 50 characters)
+            <div class="gray-xs-f mb-xs">Display name for the stat (e.g. Total hours of activity
+              over 6
+              months) (1 to 50 characters)
               <span class="requiredStar">*</span>
             </div>
             <div class="form-group">
@@ -424,7 +441,7 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-6 col-lg-4 p-none">
-            <div class="gray-xs-f mb-xs">Display Units (e.g. hours) (1 to 15 characters)
+            <div class="gray-xs-f mb-xs">Display units (e.g. hours) (1 to 15 characters)
               <span
                   class="requiredStar">*
               </span>
@@ -441,7 +458,7 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-md-4 col-lg-3 p-none">
-            <div class="gray-xs-f mb-xs">Stat Type for image upload
+            <div class="gray-xs-f mb-xs">Stat type for image upload
               <span
                   class="requiredStar">*
               </span>
@@ -491,17 +508,17 @@
                 <span class="mr-sm"><img
                     src="../images/icons/tick.png"
                     alt=""/></span>
-                <span>Current Day</span>
+                <span>Current day</span>
               </span>
               <span class="mr-lg">
                 <span class="mr-sm"><img src="../images/icons/tick.png"
                                          alt=""/></span>
-                <span>Current Week</span>
+                <span>Current week</span>
               </span>
               <span class="mr-lg">
                 <span class="mr-sm"><img src="../images/icons/tick.png"
                                          alt=""/></span>
-                <span>Current Month</span>
+                <span>Current month</span>
               </span>
               <span class="txt-gray">(Rollback option provided for these three options)</span>
             </div>
@@ -512,7 +529,7 @@
       <!---  Form-level Attributes --->
       <div id="rla" class="tab-pane fade mt-xlg">
         <div class="col-md-4 col-lg-4 p-none">
-          <div class="gray-xs-f mb-xs">Response Type</div>
+          <div class="gray-xs-f mb-xs">Response type</div>
           <div class="gray-xs-f mb-xs">
             <small>The type of interface needed to capture the
               response
@@ -531,7 +548,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="gray-xs-f mb-xs">Data Type</div>
+            <div class="gray-xs-f mb-xs">Data type</div>
             <div id="rlaResonseDataType"> - NA -</div>
           </div>
         </div>
@@ -550,7 +567,7 @@
         <div id="responseTypeDivId">
           <div id="scaleType" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Scale Type
+              <div class="gray-xs-f mb-xs">Scale type
                 <span class="requiredStar">*</span>
               </div>
               <div>
@@ -573,7 +590,7 @@
             <div class="row mt-md mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">Minimum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -590,7 +607,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">Maximum value
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -639,7 +656,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Step Size
+                  <div class="gray-xs-f mb-xs">Step size
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -661,7 +678,7 @@
               </div>
               <div class="col-md-6 ">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Number of Step
+                  <div class="gray-xs-f mb-xs">Number of step
                     <span
                         class="requiredStar">*
                     </span>
@@ -702,7 +719,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Minimum Value
+                  <div class="gray-xs-f mb-xs">Image for minimum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -743,7 +760,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-8 col-lg-8 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Maximum Value
+                  <div class="gray-xs-f mb-xs">Image for maximum value
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
@@ -790,7 +807,7 @@
           <div class="row mt-md mb-xs">
             <div class="col-md-6 pl-none">
               <div class="col-md-9 col-lg-9 p-none">
-                <div class="gray-xs-f mb-xs">Minimum Value
+                <div class="gray-xs-f mb-xs">Minimum value
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -807,7 +824,7 @@
             </div>
             <div class="col-md-6">
               <div class="col-md-9 col-lg-9 p-none">
-                <div class="gray-xs-f mb-xs">Maximum Value
+                <div class="gray-xs-f mb-xs">Maximum value
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -845,7 +862,7 @@
             </div>
             <div class="col-md-6">
               <div class="col-md-6 col-lg-4 p-none">
-                <div class="gray-xs-f mb-xs">Max Fraction Digits
+                <div class="gray-xs-f mb-xs">Max fraction digits
                   <span class="requiredStar">*</span>
                   <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter the maximum number of decimal places to be shown for the values on the scale. Note that your options  (0,1,2,3,4) are limited by the selected maximum and minimum values."></span>
@@ -897,7 +914,7 @@
           <div class="row">
             <div class="col-md-6 pl-none">
               <div class="col-md-8 col-lg-8 pl-none">
-                <div class="gray-xs-f mb-xs">Image for Minimum Value
+                <div class="gray-xs-f mb-xs">Image for minimum value
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" data-html="true"
                       title="Upload an image that represents the minimum value.<br>JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
@@ -937,7 +954,7 @@
             </div>
             <div class="col-md-6">
               <div class="col-md-8 col-lg-8 pl-none">
-                <div class="gray-xs-f mb-xs">Image for Maximum Value
+                <div class="gray-xs-f mb-xs">Image for maximum value
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" data-html="true"
                       title="Upload an image that represents the maximum value.<br>JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
@@ -979,7 +996,7 @@
         </div>
         <div id="Location" style="display: none">
           <div class="mt-lg">
-            <div class="gray-xs-f mb-xs">Use Current Location
+            <div class="gray-xs-f mb-xs">Use current location
               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1006,7 +1023,7 @@
           <div class="row mt-sm">
             <div class="col-md-6 pl-none">
               <div class="col-md-12 col-lg-12 p-none">
-                <div class="gray-xs-f mb-xs">Placeholder Text (1 to 40 characters)
+                <div class="gray-xs-f mb-xs">Placeholder text (1 to 40 characters)
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       title="Enter an input hint to the user"></span>
@@ -1023,7 +1040,7 @@
         </div>
         <div id="Text" style="display: none">
           <div class="mt-lg">
-            <div class="gray-xs-f mb-xs">Allow Multiple Lines?
+            <div class="gray-xs-f mb-xs">Allow multiple lines?
               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1061,7 +1078,7 @@
             </div>
             <div class="col-md-4">
               <div class="col-md-6 col-lg-4 p-none">
-                <div class="gray-xs-f mb-xs">Max Length
+                <div class="gray-xs-f mb-xs">Max length
                   <span
                       class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
@@ -1082,7 +1099,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-none">
 
               <div class="col-md-12 col-lg-12 p-none">
-                <div class="gray-xs-f mb-xs">Special Validations
+                <div class="gray-xs-f mb-xs">Special validations
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       title="Define any special case rules you wish to be applied for the participant-entered text. If the participant's input does not meet these conditions, an admin-defined error message will be shown asking them to retry. "></span>
@@ -1159,7 +1176,7 @@
           <div class="clearfix"></div>
           <div class="row">
             <div class="col-md-6 p-none">
-              <div class="gray-xs-f mb-xs">Invalid Message (1 to 200 characters)
+              <div class="gray-xs-f mb-xs">Invalid message (1 to 200 characters)
                 <span
                     class="requiredStar">*
                 </span>
@@ -1181,7 +1198,7 @@
         </div>
         <div id="Height" style="display: none">
           <div class="mt-lg">
-            <div class="gray-xs-f mb-xs">Measurement System
+            <div class="gray-xs-f mb-xs">Measurement system
               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1212,7 +1229,7 @@
           <div class="row mt-sm">
             <div class="col-md-6 pl-none">
               <div class="col-md-12 col-lg-12 p-none">
-                <div class="gray-xs-f mb-xs">Placeholder Text (1 to 20 characters)
+                <div class="gray-xs-f mb-xs">Placeholder text (1 to 20 characters)
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       title="Enter an input hint to the user"></span>
@@ -1244,7 +1261,7 @@
               </div>
             </div>
             <div class="col-md-2">
-              <div class="gray-xs-f mb-xs">Default Value
+              <div class="gray-xs-f mb-xs">Default value
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1301,7 +1318,7 @@
             </div>
             <div class="col-md-6">
               <div class="col-md-8 col-lg-8 p-none">
-                <div class="gray-xs-f mb-xs">Placeholder Text (1 to 30 characters)
+                <div class="gray-xs-f mb-xs">Placeholder text (1 to 30 characters)
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       title="Provide an input hint to the user"></span>
@@ -1318,7 +1335,7 @@
           <div class="row mb-xs">
             <div class="col-md-6 pl-none">
               <div class="col-md-8 col-lg-8 p-none">
-                <div class="gray-xs-f mb-xs">Minimum Value
+                <div class="gray-xs-f mb-xs">Minimum value
                   <span
                       class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
@@ -1335,7 +1352,7 @@
             </div>
             <div class="col-md-6">
               <div class="col-md-8 col-lg-8 p-none">
-                <div class="gray-xs-f mb-xs">Maximum Value
+                <div class="gray-xs-f mb-xs">Maximum value
                   <span
                       class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
@@ -1414,7 +1431,7 @@
             <div class="row">
               <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Date
+                  <div class="gray-xs-f mb-xs">Minimum date
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter minimum date allowed."></span>
@@ -1430,7 +1447,7 @@
             <div class="row">
               <div class="col-md-6  pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Date
+                  <div class="gray-xs-f mb-xs">Maximum date
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter maximum date allowed"></span>
@@ -1446,7 +1463,7 @@
             <div class="row">
               <div class="col-md-6  pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Default Date
+                  <div class="gray-xs-f mb-xs">Default date
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter default date to be shown as selected"></span>
@@ -1476,7 +1493,7 @@
                    name="questionResponseSubTypeList[0].responseSubTypeValueId"
                    value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].responseSubTypeValueId)}">
             <div class="col-md-3 pl-none">
-              <div class="gray-xs-f mb-xs">Display Text
+              <div class="gray-xs-f mb-xs">Display text
                 <span class="requiredStar">*</span>
               </div>
               <div class="form-group">
@@ -1527,7 +1544,7 @@
           </div>
           <div class="row mt-sm" id="0">
             <div class="col-md-3 pl-none">
-              <div class="gray-xs-f mb-xs">Display Text (1 to 20 characters)
+              <div class="gray-xs-f mb-xs">Display text (1 to 20 characters)
                 <span
                     class="requiredStar">*
                 </span>
@@ -1667,7 +1684,7 @@
           </div>
           <div class="row">
             <div class="col-md-3 pl-none">
-              <div class="gray-xs-f mb-xs">Display Text (1 to 15 characters)
+              <div class="gray-xs-f mb-xs">Display text (1 to 15 characters)
                 <span
                     class="requiredStar">*
                 </span>
@@ -1827,14 +1844,14 @@
                 <input type="radio" class="TextChoiceRequired" id="singleSelect" value="Single"
                        name="questionReponseTypeBo.selectionStyle"  ${empty questionsBo.questionReponseTypeBo.selectionStyle || questionsBo.questionReponseTypeBo.selectionStyle eq 'Single' ? 'checked':''}
                        onchange="getSelectionStyle(this);">
-                <label for="singleSelect">Single Select</label>
+                <label for="singleSelect">Single select</label>
               </span>
               <span class="radio radio-inline">
                 <input type="radio" class="TextChoiceRequired" id="multipleSelect"
                        value="Multiple"
                        name="questionReponseTypeBo.selectionStyle" ${questionsBo.questionReponseTypeBo.selectionStyle eq 'Multiple' ? 'checked':''}
                        onchange="getSelectionStyle(this);">
-                <label for="multipleSelect">Multiple Select</label>
+                <label for="multipleSelect">Multiple select</label>
               </span>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -1858,7 +1875,7 @@
                            name="questionResponseSubTypeList[${subtype.index}].responseSubTypeValueId"
                            value="${questionResponseSubType.responseSubTypeValueId}">
                     <div class="col-md-4 pl-none">
-                      <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                      <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                         <span
                             class="requiredStar">*
                         </span>
@@ -1893,7 +1910,7 @@
                             class="requiredStar">*
                         </span>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-none dropdown-font">
                         <select name="questionResponseSubTypeList[${subtype.index}].exclusive"
                                 id="exclusiveId${subtype.index}" index="${subtype.index}"
                                 title="select" data-error="Please choose one option"
@@ -1914,7 +1931,7 @@
                     </div>
                     <div class="col-md-12 p-none display__flex__center">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
                           <textarea class="form-control"
                                     name="questionResponseSubTypeList[${subtype.index}].description"
@@ -1941,7 +1958,7 @@
                 <!-- Section Start -->
                 <div class="text-choice mt-xlg" id="0">
                   <div class="col-md-4 pl-none">
-                    <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                    <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                       <span
                           class="requiredStar">*
                       </span>
@@ -1976,7 +1993,7 @@
                           class="requiredStar">*
                       </span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-none dropdown-font">
                       <select name="questionResponseSubTypeList[0].exclusive" id="exclusiveId0"
                               index="0" title="select" data-error="Please choose one option"
                               class="selectpicker <c:if test="${questionsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if> textChoiceExclusive"
@@ -1996,10 +2013,7 @@
                   </div>
                   <div class="col-md-12 p-none display__flex__center">
                     <div class="col-md-10 pl-none">
-                      <div class="gray-xs-f mb-xs">Description(1 to 150 characters)
-                        <span
-                            class="requiredStar">*
-                        </span>
+                      <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)
                       </div>
                       <div class="form-group">
                         <textarea class="form-control"
@@ -2023,7 +2037,7 @@
                 <!-- Section End -->
                 <div class="text-choice mt-xlg" id="1">
                   <div class="col-md-4 pl-none">
-                    <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                    <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                       <span
                           class="requiredStar">*
                       </span>
@@ -2031,7 +2045,7 @@
                     <div class="form-group mb-none">
                       <input type="text" class="form-control TextChoiceRequired"
                              name="questionResponseSubTypeList[1].text"
-                             id="displayTextChoiceText0"
+                             id="displayTextChoiceText1"
                              value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].text)}"
                              maxlength="100">
                       <div class="help-block with-errors red-txt"></div>
@@ -2046,7 +2060,7 @@
                     <div class="form-group mb-none">
                       <input type="text" class="form-control TextChoiceRequired textChoiceVal"
                              name="questionResponseSubTypeList[1].value"
-                             id="displayTextChoiceValue0"
+                             id="displayTextChoiceValue1"
                              value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].value)}"
                              maxlength="100">
                       <div class="help-block with-errors red-txt"></div>
@@ -2058,7 +2072,7 @@
                           class="requiredStar">*
                       </span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-none">
                       <select name="questionResponseSubTypeList[1].exclusive" id="exclusiveId1"
                               index="1" title="select" data-error="Please choose one option"
                               class="selectpicker <c:if test="${questionsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextChoiceRequired</c:if> textChoiceExclusive"
@@ -2078,10 +2092,7 @@
                   </div>
                   <div class="col-md-12 p-none display__flex__center">
                     <div class="col-md-10 pl-none">
-                      <div class="gray-xs-f mb-xs">Description(1 to 150 characters)
-                        <span
-                            class="requiredStar">*
-                        </span>
+                      <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)
                       </div>
                       <div class="form-group">
                         <textarea class="form-control"
@@ -2135,7 +2146,7 @@
                 </div>
               </div>
               <div class="col-md-2 pl-none col-smthumb-2">
-                <div class="gray-xs-f mb-xs">Selected Image
+                <div class="gray-xs-f mb-xs">Selected image
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" data-html="true"
@@ -2143,7 +2154,7 @@
                 </div>
               </div>
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text
+                <div class="gray-xs-f mb-xs">Display text
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" data-html="true"
@@ -2446,8 +2457,12 @@
 </div>
 <!-- End right Content here -->
 <script type="text/javascript">
-  $(document).ready(function () {
 
+if(document.getElementById("singleSelect").checked==true){
+	$('.textChoiceExclusive').parent().parent().hide();	
+}
+  $(document).ready(function () {
+	$('.studyClass').addClass("active");
     if ($('#useAnchorDateId').is(':checked')) {
       $("#anchorTextId").attr('required', true);
     } else {
@@ -3101,33 +3116,42 @@
       }
     });
     $("#scaleDefaultValueId").blur(function () {
-      var value = $("#scaleDefaultValueId").val();
-      var stepSize = $("#scaleStepId").val();
-      $(this).parent().removeClass("has-danger").removeClass("has-error");
-      $(this).parent().find(".help-block").empty();
-      if (value != '' && stepSize != '') {
-        if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
-          $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
-          $("#scaleDefaultValueId").parent().find(".help-block").empty();
+        var value = $("#scaleDefaultValueId").val();
+        var stepSize = $("#scaleStepId").val();
+        var minValue = $("#scaleMinValueId").val();
+  	     var maxValue = $("#scaleMaxValueId").val();
+        $(this).parent().removeClass("has-danger").removeClass("has-error");
+        $(this).parent().find(".help-block").empty();
+        if (value != '' && stepSize != '') {
+          if (parseInt(value) >= 0 && parseInt(value) <= parseInt(stepSize)) {
+            if(parseInt(value) >= parseInt(minValue) && parseInt(value) <= parseInt(maxValue)){
+            $("#scaleDefaultValueId").parent().removeClass("has-danger").removeClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+           } else {
+  		  $(this).val('');
+  	      $(this).parent().addClass("has-danger").addClass("has-error");
+  	      $(this).parent().find(".help-block").empty();
+  	      $(this).parent().find(".help-block").append("<ul class='list-unstyled'><li>Please enter an integer between the minimum and maximum  </li></ul>");
+  		 }
+          } else {
+            $("#scaleDefaultValueId").val('');
+            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+            $("#scaleDefaultValueId").parent().find(".help-block").append(
+          	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an integer from 0 to number of steps"));
+          }
         } else {
-          $("#scaleDefaultValueId").val('');
-          $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-          $("#scaleDefaultValueId").parent().find(".help-block").empty();
-          $("#scaleDefaultValueId").parent().find(".help-block").append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please enter an integer from 0 to number of steps"));
+          if (value != '') {
+            $("#scaleDefaultValueId").val('');
+            $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
+            $("#scaleDefaultValueId").parent().find(".help-block").empty();
+            $("#scaleDefaultValueId").parent().find(".help-block").append(
+          	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Please enter an step size first "));
+          }
         }
-      } else {
-        if (value != '') {
-          $("#scaleDefaultValueId").val('');
-          $("#scaleDefaultValueId").parent().addClass("has-danger").addClass("has-error");
-          $("#scaleDefaultValueId").parent().find(".help-block").empty();
-          $("#scaleDefaultValueId").parent().find(".help-block").append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please enter an step size first "));
-        }
-      }
-    });
+      });
     $("#continuesScaleMinValueId").blur(function () {
       var value = $("#continuesScaleMinValueId").val();
       var maxValue = $("#continuesScaleMaxValueId").val();
@@ -3244,6 +3268,10 @@
     $("#numericMinValueId").blur(function () {
       var value = $(this).val();
       var maxValue = $("#numericMaxValueId").val();
+      var minValue = $("#numericMinValueId").val();
+      if(minValue==''){
+    	  $("#numericMinValueId").val("0");
+       } 
       $(this).parent().removeClass("has-danger").removeClass("has-error");
       $(this).parent().find(".help-block").empty();
       if (maxValue != '') {
@@ -3263,6 +3291,10 @@
     $("#numericMaxValueId").blur(function () {
       var value = $(this).val();
       var minValue = $("#numericMinValueId").val();
+      var maxValue = $("#numericMaxValueId").val();
+      if(maxValue==''){
+    	  $("#numericMaxValueId").val("10000");
+         }
       $(this).parent().removeClass("has-danger").removeClass("has-error");
       $(this).parent().find(".help-block").empty();
       if (minValue != '') {
@@ -3285,8 +3317,8 @@
     }
     $("#responseTypeId").on("change", function () {
       var value = $(this).val();
-
       getResponseType(value);
+      $('.textChoiceExclusive').parent().parent().hide();
     });
     $('.DateStyleRequired').on("change", function () {
       var value = $(this).val();
@@ -3373,24 +3405,32 @@
       });
     })
     if ($('.value-picker').length > 2) {
+    	$('.ValuePickerContainer').find(".remBtnDis").css("pointer-events", "auto");
       $('.ValuePickerContainer').find(".remBtnDis").removeClass("hide");
     } else {
+    	$('.ValuePickerContainer').find(".remBtnDis").css("pointer-events", "none");
       $('.ValuePickerContainer').find(".remBtnDis").addClass("hide");
     }
     if ($('.text-scale').length > 2) {
+    	$('.TextScaleContainer').find(".remBtnDis").css("pointer-events", "auto")
       $('.TextScaleContainer').find(".remBtnDis").removeClass("hide");
     } else {
+    	$('.TextScaleContainer').find(".remBtnDis").css("pointer-events", "none")
       $('.TextScaleContainer').find(".remBtnDis").addClass("hide");
     }
     if ($('.text-choice').length > 2) {
+    	 $('.TextChoiceContainer').find(".remBtnDis").css("pointer-events", "auto");
       $('.TextChoiceContainer').find(".remBtnDis").removeClass("hide");
     } else {
+    	 $('.TextChoiceContainer').find(".remBtnDis").css("pointer-events", "none");
       $('.TextChoiceContainer').find(".remBtnDis").addClass("hide");
     }
     if ($('.image-choice').length > 2) {
       $('.ImageChoiceContainer').find(".remBtnDis").removeClass("hide");
+      $('.ImageChoiceContainer').find(".remBtnDis").css("pointer-events", "auto");
     } else {
       $('.ImageChoiceContainer').find(".remBtnDis").addClass("hide");
+      $('.ImageChoiceContainer').find(".remBtnDis").css("pointer-events", "none");
     }
     $('[data-toggle="tooltip"]').tooltip();
     // File Upload
@@ -3689,6 +3729,16 @@
         $("#rlaResonseDataType").text(dataType);
         $("#rlaResonseTypeDescription").text(description);
         $("#" + responseType.replace(/\s/g, '')).show();
+         if(responseType=='Numeric'){
+        	 if($("#numericMinValueId").val()== ''){
+                 $("#numericMinValueId").val("0");
+                 }
+
+                 if($("#numericMaxValueId").val() == ''){
+                     $("#numericMaxValueId").val("10000");
+                  }
+           }
+        
         $("." + responseType.replace(/\s/g, '') + "Required").attr("required", true);
         if (dashboard == 'true') {
           $("#useStasticDataContainerId").show();
@@ -4061,9 +4111,11 @@
 
     var response_type_id = $("#questionResponseTypeId").val();
     var question_response_type_id = $("#responseQuestionId").val();
+    var vertical = $('input[name="questionReponseTypeBo.vertical"]:checked').val();
 
     questionReponseTypeBo.responseTypeId = response_type_id;
     questionReponseTypeBo.questionsResponseTypeId = question_response_type_id;
+    questionReponseTypeBo.vertical = vertical;
 
     questionsBo.questionReponseTypeBo = questionReponseTypeBo;
     if (fromId != null && fromId != '' && typeof fromId != 'undefined' &&
@@ -4189,13 +4241,14 @@
       $('.textChoiceExclusive').attr("disabled", true);
       $('.textChoiceExclusive').attr("required", false);
       $('.textChoiceExclusive').val('');
-
       $('.selectpicker').selectpicker('refresh');
       $(".textChoiceExclusive").validator('validate');
+      $('.textChoiceExclusive').parent().parent().hide();
     } else {
       $('.textChoiceExclusive').attr("disabled", false);
       $('.textChoiceExclusive').attr("required", true);
       $('.selectpicker').selectpicker('refresh');
+      $('.textChoiceExclusive').parent().parent().show();
     }
   }
 
@@ -4234,8 +4287,10 @@
 
     if ($('.value-picker').length > 2) {
       $(".remBtnDis").removeClass("hide");
+      $(".remBtnDis").css("pointer-events", "auto");
     } else {
       $(".remBtnDis").addClass("hide");
+      $(".remBtnDis").css("pointer-events", "none");
     }
     $('#' + count).find('input:first').focus();
   }
@@ -4250,8 +4305,10 @@
       $(".value-picker").parents("form").validator();
       if ($('.value-picker').length > 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
       }
     }
   }
@@ -4294,8 +4351,10 @@
       $(".text-scale").parents("form").validator();
       if ($('.text-scale').length > 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
       }
       if ($('.text-scale').length == 8) {
         $(".text-scale:last").find('span.addBtnDis').remove();
@@ -4321,8 +4380,10 @@
       $(".text-scale").parents("form").validator();
       if ($('.text-scale').length > 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
       }
       $("#textScalePositionId").val($('.text-scale').length);
       if ($('.text-scale').length == 8) {
@@ -4345,7 +4406,7 @@
     var selectionStyle = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
     var newTextChoice = "<div class='text-choice mt-xlg' id='" + choiceCount + "'>" +
         "<div class='col-md-4 pl-none'>" +
-        "   <div class='gray-xs-f mb-xs'>Display Text (1 to 100 characters) <span class='requiredStar'>*</span> </div>"
+        "   <div class='gray-xs-f mb-xs'>Display text (1 to 100 characters) <span class='requiredStar'>*</span> </div>"
         +
         "   <div class='form-group mb-none'>" +
         "   <input type='text' class='form-control TextChoiceRequired' name='questionResponseSubTypeList["
@@ -4368,7 +4429,7 @@
         "<div class='col-md-2 pl-none'>" +
         "   <div class='gray-xs-f mb-xs'>Mark as exclusive ? <span class='requiredStar'>*</span> </div>"
         +
-        "   <div class='form-group'>";
+        "   <div class='form-group mb-none'>";
     if (selectionStyle == 'Single') {
       newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
           + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
@@ -4386,7 +4447,7 @@
         "</div> ";
     newTextChoice +=
         "<div class='col-md-12 p-none display__flex__center'><div class='col-md-10 pl-none'>" +
-        "   <div class='gray-xs-f mb-xs'>Description(1 to 150 characters) <span class='requiredStar'>*</span> </div>"
+        "   <div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) </div>"
         +
         "   <div class='form-group'>					     " +
         "      <textarea class='form-control' name='questionResponseSubTypeList[" + choiceCount
@@ -4409,10 +4470,17 @@
     $(".text-choice").parents("form").validator();
     if ($('.text-choice').length > 2) {
       $(".remBtnDis").removeClass("hide");
+      $(".remBtnDis").css("pointer-events", "auto");
     } else {
       $(".remBtnDis").addClass("hide");
+      $(".remBtnDis").css("pointer-events", "none");
     }
     $('#' + choiceCount).find('input:first').focus();
+    if (selectionStyle == 'Single') {
+    	$('.textChoiceExclusive').parent().parent().hide();
+    }else{
+  	  $('.textChoiceExclusive').parent().parent().show();
+    }
   }
 
   function removeTextChoice(param) {
@@ -4424,8 +4492,10 @@
       $(".text-choice").parents("form").validator();
       if ($('.text-choice').length > 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
       }
     }
   }
@@ -4498,8 +4568,10 @@
 
     if ($('.image-choice').length > 2) {
       $(".remBtnDis").removeClass("hide");
+      $(".remBtnDis").css("pointer-events", "auto");
     } else {
       $(".remBtnDis").addClass("hide");
+      $(".remBtnDis").css("pointer-events", "none");
     }
     $('#' + imageCount).find('input:first').focus();
   }
@@ -4513,8 +4585,10 @@
       $(".image-choice").parents("form").validator();
       if ($('.image-choice').length > 2) {
         $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
       } else {
         $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
       }
     }
   }

@@ -36,7 +36,7 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
   @Override
   public ParticipantStudyInformation getParticipantStudyInfo(String studyId, String participantId)
       throws ProcessResponseException {
-    logger.debug("getParticipantStudyInfo() - starts ");
+    logger.debug("ParticipantStudyInformation getParticipantStudyInfo() - starts ");
     HttpHeaders headers = null;
 
     ResponseEntity<?> responseEntity = null;
@@ -57,7 +57,7 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
     ParticipantStudyInformation partStudyInfo =
         (ParticipantStudyInformation) responseEntity.getBody();
 
-    logger.debug("getStudyActivityMetadata() - ends");
+    logger.debug("ParticipantStudyInformation getParticipantStudyInfo() - ends");
     return partStudyInfo;
   }
 }

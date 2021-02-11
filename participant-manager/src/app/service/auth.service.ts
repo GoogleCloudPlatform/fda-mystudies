@@ -46,7 +46,6 @@ export class AuthService {
       .set('code_challenge_method', 'S256')
       .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
       .set('correlationId', sessionStorage.getItem('correlationId') || '')
-      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.authServerRedirectUrl)
       .set('state', uuidv4())
       .set('source', this.source)

@@ -98,6 +98,15 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
         transaction = session.beginTransaction();
 
+        query =
+            session
+                .getNamedQuery("StudyBo.getStudyBycustomStudyId")
+                .setString("customStudyId", customStudyId);
+        query.setMaxResults(1);
+        StudyBo study = (StudyBo) query.uniqueResult();
+        auditRequest.setStudyVersion(study.getVersion().toString());
+        auditRequest.setAppId(study.getAppId());
+
         queryString =
             "DELETE From NotificationBO where activeTaskId=:activeId AND notificationSent=false";
         session
@@ -122,6 +131,12 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           deleteActQuery =
               "update ActiveTaskAtrributeValuesBo set active=0 where activeTaskId= :activeTaskId";
 
+          query =
+              session
+                  .createQuery(deleteActQuery)
+                  .setParameter("activeTaskId", activeTaskBo.getId());
+          query.executeUpdate();
+
           session
               .createQuery(
                   "update ActiveTaskBo set active=0 ,modifiedBy=:userId"
@@ -132,7 +147,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               .setParameter("activeTaskId", activeTaskBo.getId())
               .executeUpdate();
 
-          values.put("activetask_id", activeTaskBo.getId().toString());
+          values.put("activetask_id", activeTaskBo.getShortTitle());
           eventEnum = STUDY_ACTIVE_TASK_DELETED;
         } else {
           // hard delete active task before study launch
@@ -149,17 +164,20 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
           deleteActQuery = "delete ActiveTaskAtrributeValuesBo where activeTaskId=:activeTaskId";
 
+          query =
+              session
+                  .createQuery(deleteActQuery)
+                  .setParameter("activeTaskId", activeTaskBo.getId());
+          query.executeUpdate();
+
           session
               .createQuery("delete ActiveTaskBo where id =:activeTaskId")
               .setParameter("activeTaskId", activeTaskBo.getId())
               .executeUpdate();
 
-          values.put("activetask_id", activeTaskBo.getId().toString());
+          values.put("activetask_id", activeTaskBo.getShortTitle());
           eventEnum = STUDY_ACTIVE_TASK_DELETED;
         }
-        query =
-            session.createQuery(deleteActQuery).setParameter("activeTaskId", activeTaskBo.getId());
-        query.executeUpdate();
 
         query =
             session

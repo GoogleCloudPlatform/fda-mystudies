@@ -20,10 +20,10 @@
 import IQKeyboardManagerSwift
 import UIKit
 
-let kHelperTextForFilteredStudiesNotFound = "No study found.\nPlease try different Filter Options."
+let kHelperTextForFilteredStudiesNotFound = "No studies found for the filters applied."
 
 let kHelperTextForSearchedStudiesNotFound =
-  "No study found.\nPlease check the spelling or try a different search."
+  "No studies found for the search term(s) used."
 
 let kHelperTextForOffline =
   "No study available right now.\nPlease remain signed in to get notified when there are new studies available."
@@ -89,19 +89,19 @@ class StudyListViewController: UIViewController {
     setNavigationBarItem()
 
     if User.currentUser.userType == .loggedInUser {  // For LoggedIn User
-      tableView?.estimatedRowHeight = 145
+      tableView?.estimatedRowHeight = 152
       tableView?.rowHeight = UITableView.automaticDimension
 
       if !(fdaSlideMenuController()?.isLeftOpen())! {
         sendRequestToGetUserPreference()
       }
     } else {  // For ananomous User
-      tableView?.estimatedRowHeight = 140
+      tableView?.estimatedRowHeight = 152
       tableView?.rowHeight = UITableView.automaticDimension
       // Fetch StudyList
       sendRequestToGetStudyList()
     }
-
+    tableView?.tableFooterView = UIView()
     setNeedsStatusBarAppearanceUpdate()
     self.navigationController?.view.layoutSubviews()
 
@@ -362,18 +362,14 @@ class StudyListViewController: UIViewController {
           if User.currentUser.userType == .loggedInUser {
             self.appliedFilter(
               studyStatus: previousStudyFilters.first!,
-              pariticipationsStatus: previousStudyFilters[safe: 2] ?? [],
-              categories: previousStudyFilters[safe: 3] ?? [],
-              searchText: "",
-              bookmarked: previousStudyFilters[1].count > 0 ? true : false
-            )  // TBD: Crashed
+              participationStatus: previousStudyFilters[safe: 1] ?? [],
+              searchText: ""
+            )
           } else {
             self.appliedFilter(
               studyStatus: previousStudyFilters.first!,
-              pariticipationsStatus: [],
-              categories: previousStudyFilters[1],
-              searchText: "",
-              bookmarked: false
+              participationStatus: [],
+              searchText: ""
             )
           }
         } else {
@@ -386,10 +382,8 @@ class StudyListViewController: UIViewController {
 
           self.appliedFilter(
             studyStatus: filterStrings.studyStatus,
-            pariticipationsStatus: filterStrings.pariticipationsStatus,
-            categories: filterStrings.categories,
-            searchText: filterStrings.searchText,
-            bookmarked: filterStrings.bookmark
+            participationStatus: filterStrings.pariticipationsStatus,
+            searchText: filterStrings.searchText
           )
         }
         self.checkIfFetalKickCountRunning()
@@ -544,12 +538,6 @@ class StudyListViewController: UIViewController {
     EnrollServices().getStudyStates(self)
   }
 
-  /// Send the webservice request to Update BookMarkStatus.
-  /// - Parameter userStudyStatus: Instance of `UserStudyStatus`.
-  func sendRequestToUpdateBookMarkStatus(userStudyStatus: UserStudyStatus) {
-    EnrollServices().updateStudyBookmarkStatus(studyStatus: userStudyStatus, delegate: self)
-  }
-
   // MARK: - Webservice Responses
 
   /// Handle the Study list webservice response.
@@ -697,79 +685,53 @@ extension StudyListViewController: StudyFilterDelegates {
   // Based on applied filter call WS
   func appliedFilter(
     studyStatus: [String],
-    pariticipationsStatus: [String],
-    categories: [String],
-    searchText: String,
-    bookmarked: Bool
+    participationStatus: [String],
+    searchText: String
   ) {
     var previousCollectionData: [[String]] = []
 
     previousCollectionData.append(studyStatus)
     let currentUser = User.currentUser.userType ?? .anonymousUser
     if currentUser == .loggedInUser {
-      previousCollectionData.append(bookmarked == true ? ["Bookmarked"] : [])
-      previousCollectionData.append(pariticipationsStatus)
+      previousCollectionData.append(participationStatus)
     }
-
-    previousCollectionData.append(categories.count == 0 ? [] : categories)
 
     StudyFilterHandler.instance.previousAppliedFilters = previousCollectionData
     StudyFilterHandler.instance.searchText = ""
 
     if studyStatus.isEmpty
-      || (pariticipationsStatus.isEmpty && currentUser != .anonymousUser)
-      || categories.isEmpty
+      || (participationStatus.isEmpty && currentUser != .anonymousUser)
         && searchText.isEmpty
-        && !bookmarked
     {
       self.studiesList = []
       refreshTableViewWith(searchText: searchText)
       return
     }
-
-    /// 1. Filter by study category.
-    var categoryFilteredStudies: [Study] = []
-    if categories.count > 0 {
-      categoryFilteredStudies = allStudyList.filter { categories.contains($0.category!) }
-    }
-
-    /// 2. Filter by study status.
+    // 2. Filter by study status.
     var statusFilteredStudies: [Study] = []
     if studyStatus.count > 0 {
       statusFilteredStudies = allStudyList.filter { studyStatus.contains($0.status.rawValue) }
     }
 
-    /// 3. Filter by user participation status.
+    // 3. Filter by user participation status.
     var participationFilteredStudies: [Study] = []
-    if pariticipationsStatus.count > 0 {
+    if participationStatus.count > 0 {
       participationFilteredStudies = allStudyList.filter {
-        pariticipationsStatus.contains($0.userParticipateState.status.description)
+        participationStatus.contains($0.userParticipateState.status.description)
       }
     }
 
-    /// 4. Filter bookmarked studies.
-    var bookmarkedStudies: [Study] = []
-    if bookmarked {
-      bookmarkedStudies = allStudyList.filter {
-        $0.userParticipateState.bookmarked == bookmarked
-      }
-    }
-
-    /// 5. Filter by searched text.
+    // 4. Filter by searched text.
     var searchTextFilteredStudies: [Study] = []
     if !searchText.isEmpty {
       searchTextFilteredStudies = allStudyList.filter {
         ($0.name?.containsIgnoringCase(searchText))!
-          || ($0.category?.containsIgnoringCase(searchText))! || ($0.description?.containsIgnoringCase(searchText))!
-          || ($0.sponserName?.containsIgnoringCase(searchText))!
       }
     }
 
-    /// 6. Perform Intersections.
+    // 5. Perform Intersections.
     let statusFilteredStudiesSet = Set<Study>(statusFilteredStudies)
     let pariticipationStatusFilteredSet = Set<Study>(participationFilteredStudies)
-    let setCategories = Set<Study>(categoryFilteredStudies)
-    let setBookmarkedStudies = Set<Study>(bookmarkedStudies)
     let setSearchedTextStudies = Set<Study>(searchTextFilteredStudies)
 
     var statusFilteredSet = Set<Study>()
@@ -779,15 +741,11 @@ extension StudyListViewController: StudyFilterDelegates {
     } else {
       statusFilteredSet = statusFilteredStudiesSet
     }
-    statusFilteredSet = statusFilteredSet.intersection(setCategories)
-    if bookmarked {
-      statusFilteredSet = statusFilteredSet.intersection(setBookmarkedStudies)
-    }
     if !setSearchedTextStudies.isEmpty, !searchText.isEmpty {
       statusFilteredSet = statusFilteredSet.intersection(setSearchedTextStudies)
     }
 
-    // Assigning Filtered result to Studlist
+    // 6. Assigning Filtered result to Studlist
     let allStudiesArray: [Study] = Array(statusFilteredSet)
     studiesList = getSortedStudies(studies: allStudiesArray)
     refreshTableViewWith(searchText: searchText)
@@ -840,7 +798,6 @@ extension StudyListViewController: UITableViewDataSource {
       as? StudyListCell)!
 
     cell.populateCellWith(study: studiesList[indexPath.row])
-    cell.delegate = self
 
     return cell
   }
@@ -864,21 +821,6 @@ extension StudyListViewController: UITableViewDelegate {
   }
 }
 
-// MARK: - StudyList Delegates
-
-extension StudyListViewController: StudyListDelegates {
-  func studyBookmarked(_: StudyListCell, bookmarked: Bool, forStudy study: Study) {
-    let user = User.currentUser
-    var userStudyStatus: UserStudyStatus!
-    if bookmarked {
-      userStudyStatus = user.bookmarkStudy(studyId: study.studyId!)
-    } else {
-      userStudyStatus = user.removeBookbarkStudy(studyId: study.studyId!)
-    }
-    sendRequestToUpdateBookMarkStatus(userStudyStatus: userStudyStatus)
-  }
-}
-
 // MARK: SearchBarDelegate
 
 extension StudyListViewController: searchBarDelegate {
@@ -895,18 +837,14 @@ extension StudyListViewController: searchBarDelegate {
         if User.currentUser.userType == .loggedInUser {
           appliedFilter(
             studyStatus: previousCollectionData.first!,
-            pariticipationsStatus: previousCollectionData[2],
-            categories: previousCollectionData[3],
-            searchText: "",
-            bookmarked: previousCollectionData[1].count > 0 ? true : false
+            participationStatus: previousCollectionData[1],
+            searchText: ""
           )
         } else {
           appliedFilter(
             studyStatus: previousCollectionData.first!,
-            pariticipationsStatus: [],
-            categories: previousCollectionData[1],
-            searchText: "",
-            bookmarked: false
+            participationStatus: [],
+            searchText: ""
           )
         }
       } else {
@@ -917,10 +855,8 @@ extension StudyListViewController: searchBarDelegate {
           let filterStrings = appDelegate.getDefaultFilterStrings()
           appliedFilter(
             studyStatus: filterStrings.studyStatus,
-            pariticipationsStatus: filterStrings.pariticipationsStatus,
-            categories: filterStrings.categories,
-            searchText: filterStrings.searchText,
-            bookmarked: filterStrings.bookmark
+            participationStatus: filterStrings.pariticipationsStatus,
+            searchText: filterStrings.searchText
           )
         }
       }
@@ -953,10 +889,8 @@ extension StudyListViewController: searchBarDelegate {
 
         appliedFilter(
           studyStatus: filterStrings.studyStatus,
-          pariticipationsStatus: filterStrings.pariticipationsStatus,
-          categories: filterStrings.categories,
-          searchText: filterStrings.searchText,
-          bookmarked: filterStrings.bookmark
+          participationStatus: filterStrings.pariticipationsStatus,
+          searchText: filterStrings.searchText
         )
       }
     }
@@ -964,10 +898,9 @@ extension StudyListViewController: searchBarDelegate {
     // filter by searched Text
     var searchTextFilteredStudies: [Study]! = []
     if text.count > 0 {
+      let searchText = text.lowercased()
       searchTextFilteredStudies = studiesList.filter {
-        $0.name!.containsIgnoringCase(text) || $0.category!.containsIgnoringCase(text)
-          || $0.description!.containsIgnoringCase(text)
-          || $0.sponserName!.containsIgnoringCase(text)
+        $0.name!.lowercased().containsIgnoringCase(searchText)
       }
 
       StudyFilterHandler.instance.searchText = text

@@ -37,7 +37,7 @@
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsComp" onclick="markAsCompleted();"
                     <c:if test="${!markAsComplete}">disabled</c:if>>
-              Mark as Completed
+              Mark as completed
             </button>
           </span>
         </div>
@@ -69,7 +69,7 @@
                 <c:if test="${empty permission}">
                   <button type="button" class="btn btn-primary blue-btn"
                           onclick="addActiveTaskPage();">
-                    Add Active Task
+                    Add active task
                   </button>
                 </c:if>
               </div>
@@ -127,6 +127,7 @@
 <script>
   var dataTable;
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li.active").removeClass('active');
     $(".sixthTask").addClass('active');
@@ -143,7 +144,7 @@
       "order": [[0, "desc"]],
       "info": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "lengthChange": false,
       "searching": false,

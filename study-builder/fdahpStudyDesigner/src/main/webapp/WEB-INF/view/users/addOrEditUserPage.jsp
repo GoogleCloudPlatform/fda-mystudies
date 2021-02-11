@@ -5,6 +5,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<style>
+.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+</style>
+
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
 
   <!-- widgets section-->
@@ -33,7 +40,7 @@
               test="${not empty userBO.userPassword && userBO.enabled && not userBO.emailChanged}">
             <div class="dis-inline mt-sm">
               <span class="stat">
-                <span class="black-sm-f">Status:
+                <span class="black-sm-f">Account status:
                   <span
                       class="gray-xs-f mb-xs pl-xs"> Active
                   </span>
@@ -44,7 +51,7 @@
           <c:if
               test="${not empty userBO.userPassword &&  not userBO.enabled}">
             <div class="dis-inline mt-sm">
-              <span class="black-sm-f">Status:
+              <span class="black-sm-f">Account status:
                 <span
                     class="gray-xs-f mb-xs pl-xs"> Deactivated
                 </span>
@@ -53,23 +60,33 @@
           </c:if>
           <c:if test="${empty userBO.userPassword}">
             <div class="dis-inline mt-sm">
-              <span class="black-sm-f">Status:
+              <span class="black-sm-f">Account status:
                 <span
-                    class="gray-xs-f mb-xs pl-xs pr-md"> Invitation Sent,
-                  Account Activation Pending
+                    class="gray-xs-f mb-xs pl-xs pr-md"> Invitation sent,
+                   pending activation
                 </span>
               </span>
-              <span class="black-sm-f resend pl-md">
-                <a
-                    href="javascript:void(0)" id="resendLinkId">Re-send
-                  Activation Link
-                </a>
-              </span>
+		   <c:choose>
+			         <c:when test="${actionPage eq 'VIEW_PAGE'}">
+			              <span class="black-sm-f resend pl-md">
+			                <a  href="javascript:void(0)"  id="resendLinkId" class="disabled">Re-send
+			                  Activation Link
+			                </a>
+			              </span>
+			         </c:when>
+			         <c:otherwise>
+			           		<span class="black-sm-f resend pl-md">
+			                <a  href="javascript:void(0)" id="resendLinkId" >Re-send
+			                  Activation Link
+			                </a>
+			              </span>
+			         </c:otherwise>
+	      	 </c:choose> 
             </div>
           </c:if>
           <c:if test="${userBO.emailChanged}">
             <div class="dis-inline mt-sm">
-              <span class="black-sm-f">Status:
+              <span class="black-sm-f">Account status:
                 <span
                     class="gray-xs-f mb-xs pl-xs"> Pending Verification
                 </span>
@@ -109,12 +126,12 @@
       <div class="ed-user-layout row">
         <!-- Edit User Layout-->
 
-        <div class="blue-md-f text-uppercase mb-md">Study Information</div>
+        <div class="blue-md-f text-uppercase mb-md">User Information</div>
         <div class="col-md-12 p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
-              First Name
+              First name
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -128,7 +145,7 @@
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-              Last Name
+              Last name
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -145,7 +162,7 @@
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
-              Email Address
+              Email
               <c:if test="${actionPage ne 'VIEW_PAGE'}">&nbsp;<small>(100
                 characters max)</small>
               </c:if>
@@ -183,8 +200,8 @@
         <div class="col-md-12 p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
-            <div class="blue-md-f text-uppercase mt-lg mb-md">
-              Assign Role
+            <div class="blue-md-f mt-lg mb-md">
+              Role
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
@@ -229,7 +246,7 @@
 
         <div class="clearfix"></div>
         <!-- Assign Permissions -->
-        <div class="blue-md-f text-uppercase mt-lg">Assign Permissions</div>
+        <div class="blue-md-f text-uppercase mt-lg">Assigned Permissions</div>
         <div class="pull-right mb-xs">
           <span class="gray-xs-f">View only</span>
           <span
@@ -311,7 +328,7 @@
                   value="${fn:contains(permissions,8)?'1':''}"
               <c:if test="${fn:contains(permissions,8)}"> checked</c:if>
                   <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-                <label for="inlineCheckbox5"> Create New Studies </label>
+                <label for="inlineCheckbox5"> Create new studies </label>
               </span>
             </div>
             <div class="mt-md study-list mb-md addHide">
@@ -330,7 +347,7 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions
+                  class="mr-lg text-weight-bold">List of assigned studies with permissions
               </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
@@ -433,10 +450,12 @@
       $('.changeView1').prop('disabled', true);
     }
     var role = '${userBO.roleName}';
+    <c:if test="${actionPage ne 'VIEW_PAGE'}">
     if (role) {
       setStudySettingByRole(role);
     }
-
+    </c:if>
+    
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       setStudySettingByRole(element);
