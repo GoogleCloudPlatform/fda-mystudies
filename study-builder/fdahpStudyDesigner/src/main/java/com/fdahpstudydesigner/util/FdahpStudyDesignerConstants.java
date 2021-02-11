@@ -445,7 +445,6 @@ public class FdahpStudyDesignerConstants {
 
   public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
   public static final String FDA_SMD_STUDY_PAGE_PATH = "fda.smd.study.pagePath";
-  public static final String ALLOW_REJOIN_TEXT = "Are you sure you want to leave the study?";
 
   public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
       "study.basicInformation.defaultImage";
