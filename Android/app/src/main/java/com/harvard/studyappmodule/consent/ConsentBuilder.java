@@ -255,7 +255,7 @@ public class ConsentBuilder {
       ConsentDocumentStep documentStep = new ConsentDocumentStepCustom("review");
       documentStep.setConsentHTML(docBuilder.toString());
       documentStep.setStepTitle(R.string.notxt);
-      documentStep.setConfirmMessage(consent.getReview().getReasonForConsent());
+      documentStep.setConfirmMessage(context.getString(R.string.consentConfirmation));
       visualSteps.add(documentStep);
     } else {
       if (consent.getVisualScreens().size() > 0) {
@@ -288,7 +288,7 @@ public class ConsentBuilder {
         documentStep.setConsentHTML(docBuilder.toString());
         documentStep.setStepTitle(R.string.notxt);
         documentStep.setOptional(false);
-        documentStep.setConfirmMessage(consent.getReview().getReasonForConsent());
+        documentStep.setConfirmMessage(context.getString(R.string.consentConfirmation));
         visualSteps.add(documentStep);
       }
     }
