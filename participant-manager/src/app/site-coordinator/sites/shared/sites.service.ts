@@ -4,6 +4,7 @@ import {AddSiteRequest} from './add.sites.request';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@environment';
 import {ApiResponse} from 'src/app/entity/api.response.model';
+import { SiteResponse } from '../../studies/shared/site.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,8 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 export class SitesService {
   constructor(private readonly http: HttpClient) {}
 
-  add(addSite: AddSiteRequest): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(
+  add(addSite: AddSiteRequest): Observable<SiteResponse> {
+    return this.http.post<SiteResponse>(
       `${environment.participantManagerDatastoreUrl}/sites`,
       addSite,
     );

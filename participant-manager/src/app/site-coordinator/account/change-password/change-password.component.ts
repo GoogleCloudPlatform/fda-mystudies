@@ -23,6 +23,13 @@ export class ChangePasswordComponent
   currentPasswordPlaceholder = 'Enter current password';
   currentPasswordlabel = 'Current password';
   hideClickable = true;
+  passwordMeterLow = '.25';
+  passwordMeterHigh = '.75';
+  passwordMeterValue = '.2';
+  passwordMeterOptimum = '.8';
+  meterStatus = '';
+  submitted = false;
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -45,6 +52,7 @@ export class ChangePasswordComponent
         validator: [mustMatch('newPassword', 'confirmPassword')],
       },
     );
+    this.onChange();
   }
   passCriteria = '';
   get ressetPassword() {
@@ -68,6 +76,8 @@ special characters.`);
   }
   changePassword(): void {
     if (!this.resetPasswordForm.valid) return;
+    this.submitted = true;
+
     const changePassword: ChangePassword = {
       currentPassword: String(
         this.resetPasswordForm.controls['currentPassword'].value,
@@ -84,7 +94,45 @@ special characters.`);
         void this.router.navigate(['/coordinator/studies/sites']);
       });
   }
-  cancel() {
+  cancel(): void {
     void this.router.navigate(['/coordinator/studies/sites']);
+  }
+  onChange(): void {
+    this.resetPasswordForm.valueChanges.subscribe(() => {
+      // if (typeof val.phoneNumber === 'string') {
+      //   // const maskedVal = this.currencyMask.transform(val.amount);
+      //   // if (val.amount ) {
+      //   //   this.registerForm.patchValue({amount: maskedVal});
+      //   // }
+      // }
+      const secretkeylenth = String(
+        this.resetPasswordForm.controls['newPassword'].value,
+      );
+      if (this.resetPasswordForm.controls['newPassword'].errors) {
+        this.passwordMeterLow = '.25';
+        this.passwordMeterHigh = '.75';
+        this.passwordMeterValue = '.2';
+        this.passwordMeterOptimum = '.8';
+        this.meterStatus = 'Weak';
+      } else if (secretkeylenth.length >= 8 && secretkeylenth.length <= 16) {
+        this.passwordMeterLow = '.25';
+        this.passwordMeterHigh = '.75';
+        this.passwordMeterValue = '.5';
+        this.passwordMeterOptimum = '.15';
+        this.meterStatus = 'Fair';
+      } else if (secretkeylenth.length > 16 && secretkeylenth.length <= 32) {
+        this.passwordMeterLow = '.10';
+        this.passwordMeterHigh = '1';
+        this.passwordMeterValue = '.7';
+        this.passwordMeterOptimum = '.15';
+        this.meterStatus = 'Good';
+      } else if (secretkeylenth.length > 32) {
+        this.passwordMeterLow = '.10';
+        this.passwordMeterHigh = '1';
+        this.passwordMeterValue = '1';
+        this.passwordMeterOptimum = '.20';
+        this.meterStatus = 'Strong';
+      }
+    });
   }
 }

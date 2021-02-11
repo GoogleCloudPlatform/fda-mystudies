@@ -20,8 +20,11 @@ public class SiteResponse extends BaseResponse {
 
   private String siteId;
 
-  public SiteResponse(String siteId, MessageCode messageCode) {
+  private String siteName;
+
+  public SiteResponse(String siteId, String siteName, MessageCode messageCode) {
     super(messageCode);
     this.siteId = siteId;
+    this.siteName = siteName;
   }
 }
