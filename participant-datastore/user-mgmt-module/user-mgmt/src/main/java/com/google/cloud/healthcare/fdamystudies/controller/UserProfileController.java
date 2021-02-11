@@ -183,6 +183,7 @@ public class UserProfileController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resendConfirmation(
       @RequestHeader("appId") String appId,
+      @RequestHeader String appName,
       @Valid @RequestBody ResetPasswordBean resetPasswordBean,
       @Context HttpServletResponse response,
       HttpServletRequest request)
@@ -215,7 +216,10 @@ public class UserProfileController {
           if (updParticipantDetails != null) {
             EmailResponse emailResponse =
                 userManagementProfService.resendConfirmationthroughEmail(
-                    appId, participantDetails.getEmailCode(), participantDetails.getEmail());
+                    appId,
+                    participantDetails.getEmailCode(),
+                    participantDetails.getEmail(),
+                    appName);
             if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
                 .getMessage()
                 .equals(emailResponse.getMessage())) {

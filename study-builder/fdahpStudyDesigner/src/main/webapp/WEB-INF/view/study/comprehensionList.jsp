@@ -173,7 +173,6 @@
    if(mainContainerDivision==true){
 		var mainContainerDivision = $('#mainContainer').hide();		   
 	 }
-	
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
@@ -215,7 +214,8 @@
         }
       }
     });
-    if (${comprehensionTestQuestionList.size()} == 0) {
+    var needComprehensionTestTxt = $('input[name="needComprehensionTest"]:checked').val();
+    if (needComprehensionTestTxt == "Yes" && ${comprehensionTestQuestionList.size()} == 0) {
         $("#markAsCompleteBtnId").attr("disabled", true);
         $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
     }
