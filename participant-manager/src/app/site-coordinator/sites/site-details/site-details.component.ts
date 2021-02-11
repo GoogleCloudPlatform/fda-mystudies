@@ -92,6 +92,18 @@ export class SiteDetailsComponent
 
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants.map(
           (participant) => {
+
+            if(this.activeTabForDisabled === OnboardingStatus.Disabled){
+              const resultFromDisabled= this.userIds.filter(
+                (idsFromDisabled)=> 
+                idsFromDisabled === participant.id,
+              );
+              if(resultFromDisabled.length > 0){
+                participant.newlyCreatedUser = true;
+                
+              }
+
+            }else{
             const result = this.newlyImportedParticipants.filter(
               (newlyVreatedEmails) =>
                 newlyVreatedEmails.email === participant.email,
@@ -100,19 +112,7 @@ export class SiteDetailsComponent
               participant.newlyCreatedUser = true;
             }
 
-            if(this.activeTabForDisabled === OnboardingStatus.Disabled){
-         
-              for (let registryParticipant in this.siteDetailsBackup.participantRegistryDetail.registryParticipants) {
-                let participant = this.siteDetailsBackup.participantRegistryDetail.registryParticipants[registryParticipant];
-                if(this.userIdsBackup.includes(participant.id)){
-                  participant.newlyCreatedUser= true;
-                 }
-              }
-              this.activeTabForDisabled=""
-              this.userIds=this.userIdsBackup
-              return this.siteDetailsBackup.participantRegistryDetail.registryParticipants;
-           
-            }
+          }
             return participant;
           },
         );
@@ -130,6 +130,7 @@ export class SiteDetailsComponent
           (participant: RegistryParticipant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()),
         );
+      
 
         return this.siteDetailsBackup;
       }),
@@ -152,7 +153,11 @@ export class SiteDetailsComponent
     this.toggleDisplay = false;
     this.userIdsBackup=this.userIds;
     this.userIds = [];
-    this.fetchSiteParticipant(tab); 
+
+    if(this.activeTabForDisabled === OnboardingStatus.Disabled){
+      this.userIds=this.userIdsBackup;
+    }  
+    this.fetchSiteParticipant(tab);
   }
 
   rowCheckBoxChange(event: Event): void {
