@@ -34,7 +34,7 @@ this["JST"]["popover"] = function (obj) {
     obj || (obj = {});
     var __t, __p = '', __e = _.escape;
     with (obj) {
-        __p += '<div class="jq-password-validator__popover" style="color:#2d2926;">\n\t<header><b>Your password must</b></header>\n</div>\n';
+        __p += '<div class="jq-password-validator__popover" style="color:#2d2926;">\n\t<header><b>パスワードは以下を満たして下さい。</b></header>\n</div>\n';
 
     }
     return __p
@@ -81,34 +81,34 @@ this["JST"]["row"] = function (obj) {
             validate : function (password) {
                 return password.match(/[A-Z]/) != null;
             },
-            message : "an upper case letter"
+            message : "英字(大)を1文字以上含む"
         },
         lower : {
             validate : function (password) {
                 return password.match(/[a-z]/) != null;
             },
-            message : "a lower case letter"
+            message : "英字(小)を1文字以上含む"
         },
         digit : {
             validate : function (password) {
                 return password.match(/\d/) != null;
             },
-            message : "a number"
+            message : "数字を1文字以上含む"
         },
         spacial : {
             validate : function (password) {
                 return password.match(/[!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]/) != null;
             },
-            message : "<span style='border-bottom: 0px;'>a special character<br><span style='font-size:12px;color:#a94442;'>! &quot; # $ %&amp; ' () * + , - . : ; &lt; =&gt; ? @ [ \] ^ _ ` {} | ~</span><span>"
+            message : "<span style='border-bottom: 0px;'>次の記号を1文字以上含む<br><span style='font-size:12px;color:#a94442;'>! &quot; # $ %&amp; ' () * + , - . : ; &lt; =&gt; ? @ [ \] ^ _ ` {} | ~</span><span>"
         },
         length : {
             validate : function (password, settings) {
                 return password.length >= settings.length;
             },
             message : function (settings) {
-                return settings.length + " characters";
+                return settings.length + " 文字以上";
             },
-            preface : "be at least"
+            preface : "半角文字で"
         }
     };
 
@@ -138,7 +138,7 @@ this["JST"]["row"] = function (obj) {
                     message = validators[requirement].message;
                 }
 
-                var preface = validators[requirement].preface || "contain";
+                var preface = validators[requirement].preface || "";
 
                 var ruleMarkup = JST.row({
                     ruleName : requirement,

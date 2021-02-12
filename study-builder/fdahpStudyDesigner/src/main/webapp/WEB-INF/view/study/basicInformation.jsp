@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -20,7 +19,7 @@
     <div class="right-content-head">
       <div class="text-right">
         <div class="black-md-f text-uppercase dis-line pull-left line34">
-          Study Information
+          治験基本情報
           <c:set var="isLive">${_S}isLive</c:set>
             ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </div>
@@ -56,8 +55,8 @@
       <div class="col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            Study ID
-            <small>(15 characters max)</small>
+            治験ID（Study ID）
+            <small>(15 文字まで)</small>
             <span
                 class="requiredStar"> *
             </span>
@@ -75,8 +74,8 @@
         </div>
         <div class="col-md-6 pr-none">
           <div class="gray-xs-f mb-xs">
-            Study Name
-            <small>(50 characters max)</small>
+            治験名
+            <small>(50 文字まで)</small>
             <span
                 class="requiredStar"> *
             </span>
@@ -93,8 +92,8 @@
       <div class="col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            App ID
-            <small>(15 characters max)</small>
+            アプリケーションID（スマホアプリID、App ID）
+            <small>(15 文字まで)</small>
             <span
                 class="requiredStar"> *
             </span>
@@ -118,7 +117,7 @@
 
         <div class="col-md-6 pr-none">
           <div class="gray-xs-f mb-xs">
-            Study Category
+            カテゴリ
             <span class="requiredStar"> *</span>
           </div>
           <div class="form-group">
@@ -138,8 +137,8 @@
 
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-xs">
-          Descriptive Study Name
-          <small>(150 characters max)</small>
+          治験の概略的名称
+          <small>(150 文字まで)</small>
           <span
               class="requiredStar"> *
           </span>
@@ -154,8 +153,8 @@
       <div class="col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            Research Sponsor
-            <small>(100 characters max)</small>
+            スポンサー
+            <small>(100 文字まで)</small>
             <span
                 class="requiredStar"> *
             </span>
@@ -168,8 +167,8 @@
         </div>
         <div class="col-md-6">
           <div class="gray-xs-f mb-xs">
-            Tentative Duration
-            <small>(3 numbers max)</small>
+            暫定期間
+            <small>(3 桁以下の数字)</small>
             <span
                 class="requiredStar"> *
             </span>
@@ -204,8 +203,8 @@
       
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-xs">
-          Study Tagline
-          <small>(100 characters max)</small>
+          略名（キャッチフレーズ）
+          <small>(100 文字まで)</small>
           <span
               class="requiredStar"> *
           </span>
@@ -220,7 +219,7 @@
 
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-xs">
-          Description
+          説明
           <span class="requiredStar"> *</span>
         </div>
         <div class="form-group">
@@ -232,10 +231,9 @@
       <div class="col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            Study Website
+            関連 Website
             <span>(e.g: http://www.google.com)</span>
-            <small>(100
-              characters max)
+            <small>(100 文字まで)
             </small>
           </div>
           <div class="form-group">
@@ -249,9 +247,8 @@
         </div>
         <div class="col-md-6 pr-none">
           <div class="gray-xs-f mb-xs">
-            Email Address (for participant feedback)
-            <small>(100
-              characters max)
+            お問い合わせ用メールアドレス (治験者からのフィードバック等)
+            <small>(100 文字まで)
             </small>
             <span class="requiredStar"> *</span>
           </div>
@@ -268,7 +265,7 @@
       <div class="col-md-12 p-none mb-xxlg">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            Study Type
+            治験の種類
             <span class="requiredStar"> *</span>
           </div>
           <div class="form-group">
@@ -297,7 +294,7 @@
         </div>
         <div class="col-md-6 pr-none thumbImageDIv">
           <div class="gray-xs-f mb-sm">
-            Study Thumbnail Image
+            サムネイル画像
             <span>
               <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="top"
@@ -324,14 +321,12 @@
               <span id="removeUrl" class="blue-link elaborateHide">X
                 <a
                     href="javascript:void(0)"
-                    class="blue-link txt-decoration-underline pl-xs">Remove
-                  Image
+                    class="blue-link txt-decoration-underline pl-xs">画像削除
                 </a>
               </span>
               <div class="form-group mb-none mt-sm">
                 <button id="uploadImgbtn" type="button"
-                        class="btn btn-default gray-btn imageButtonDis">Upload
-                  Image
+                        class="btn btn-default gray-btn imageButtonDis">アップロード
                 </button>
                 <span>
                   <span

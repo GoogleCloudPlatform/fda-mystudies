@@ -1,9 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
 <!DOCTYPE html>
-<html class="overflow-hidden" lang="">
+<html class="overflow-hidden" lang="ja">
   <head>
 
     <!-- Basic -->
@@ -66,7 +67,7 @@
         <div class="dis-line pull-right ml-md line34">
           <a href="/studybuilder/sessionOut.do"
              class="blue-link text-weight-normal text-uppercase">
-            <span class="white__text">sign Out</span>
+            <span class="white__text">サイン アウト</span>
           </a>
         </div>
       </div>
@@ -83,8 +84,8 @@
               </div>
               <div class="ll__border__bottom"></div>
               <div class="lg-space-title">
-                <span>Welcome,</span>
-                <span>${sessionObject.firstName}</span>
+                <span>ようこそ、</span>
+                <span>${sessionObject.lastName}&nbsp;${sessionObject.firstName}&nbsp;さん</span>
               </div>
               <div class='lg-icons'>
                 <ul class="lg-icons-list">
@@ -92,7 +93,10 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/studies-w.png" alt="">
                     </a>
+                    <div class='studyList'>治験情報<br> 管理<br>
+                    <!--
                     <div class='studyList'>Configure<br> Studies<br>
+                    -->
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -104,7 +108,10 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/notifications-w.png" alt="">
                     </a>
+                    <div class='studyList'>プッシュ通知<br> 管理<br>
+                        <!--
                     <div class='studyList'>Send<br> Notifications<br>
+                        -->
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -112,7 +119,10 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/user-w.png" alt="">
                     </a>
+                    <div>ユーザー<br> 管理<br>
+                        <!--
                     <div>Manage<br> Users<br>
+                        -->
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -120,7 +130,10 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/account-w.png" alt="">
                     </a>
+                    <div>マイ<br> アカウント<br>
+                        <!--
                     <div>My<br> Account<br>
+                        -->
                       <span>&nbsp;</span>
                     </div>
                   </li>

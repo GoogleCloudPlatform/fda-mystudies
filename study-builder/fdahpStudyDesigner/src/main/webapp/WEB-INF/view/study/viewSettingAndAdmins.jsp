@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -28,7 +27,7 @@
     <div class="right-content-head">
       <div class="text-right">
         <div class="black-md-f text-uppercase dis-line pull-left line34">
-          SETTINGS AND ADMINS
+          管理者、その他設定
           <c:set var="isLive">${_S}isLive</c:set>
             ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
 
@@ -59,7 +58,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          Platform(s) Supported
+          展開するアプリケーション
           <span class="requiredStar"> *</span>
           <span
               class="sprites_v3 filled-tooltip" id="infoIconId"></span>
@@ -91,7 +90,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          Allow participants to enroll?
+          参加者の登録を許可しますか？
           <span class="requiredStar"> *</span>
         </div>
 
@@ -120,7 +119,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          Use participant enrollment date as anchor date?
+          参加者の登録日をアンカー日付として使用しますか？
           <span
               class="requiredStar"> *
           </span>
@@ -156,7 +155,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          Retain participant data when they leave a study?
+          本治験から治験者が離脱する際、治験者のデータを保持しますか？
           <span
               class="requiredStar">*
           </span>
@@ -181,8 +180,7 @@
                                                   name="retainParticipant"
                                                   <c:if
                                                       test="${studyBo.retainParticipant eq 'All'}">checked</c:if>
-                                                  required> <label for="inlineRadio5">Allow
-            participant to choose to have their data retained or deleted</label>
+                                                  required> <label for="inlineRadio5">治験者がデータを保持/削除のどちらかを任意で選択させるようにする</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -192,7 +190,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          Allow app user to rejoin a study after withdrawing from it?
+          一度離脱した治験者の再参加を許可しますか？
           <span
               class="requiredStar">*
           </span>
@@ -219,11 +217,11 @@
         </div>
 
         <div class="gray-xs-f ">
-          Alert text for participants attempting to leave a study
+          治験者が離脱する際の確認メッセージ
           <span>
             <span
                 data-toggle="tooltip" data-placement="top"
-                title="Enter a message that should be shown to participants when they attempt to leave the study indicating whether or not they have the option to re-join the study."
+                title="治験者が治験を離れようとしたときに、治験に再度参加するオプションがあるかどうかを示すメッセージを入力します。"
                 class="filled-tooltip"></span>
           </span>
         </div>
@@ -233,10 +231,10 @@
           <div class="form-group m-none elaborateClass">
             <textarea class="form-control" maxlength="250" rows="5"
                       id="rejoin_comment_yes"
-                      data-error="Please enter plain text of up to 250 characters max."
-                      placeholder="Please enter text that the user should see when they leave a study to let them know whether they can or cannot Rejoin the study">${fn:escapeXml(studyBo.allowRejoinText)}</textarea>
+                      data-error="入力をお願いします。"
+                      placeholder="ユーザーが治験を終了するときに表示するテキストを入力して、治験に再参加できるかどうかを知らせてください">${fn:escapeXml(studyBo.allowRejoinText)}</textarea>
             <div>
-              <small>(250 characters max)</small>
+              <small>(250 文字まで)</small>
             </div>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -246,10 +244,10 @@
           <div class="form-group m-none elaborateClass">
             <textarea class="form-control" maxlength="250" rows="5"
                       id="rejoin_comment_no"
-                      data-error="Please enter plain text of up to 250 characters max."
-                      placeholder="Please enter text that the user should see when they leave a study to let them know whether they can or cannot Rejoin the study">${fn:escapeXml(studyBo.allowRejoinText)}</textarea>
+                      data-error="入力をお願いします。"
+                      placeholder="ユーザーが治験を終了するときに表示するテキストを入力して、治験に再参加できるかどうかを知らせてください">${fn:escapeXml(studyBo.allowRejoinText)}</textarea>
             <div>
-              <small>(250 characters max)</small>
+              <small>(250 文字まで)</small>
             </div>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -260,14 +258,13 @@
       <!-- Start Section-->
       <c:if test="${fn:contains(permissions,7)}">
         <div>
-          <div class="black-md-f text-uppercase line34">MANAGE LIST OF
-            ADMINS ASSIGNED TO THE STUDY
+          <div class="black-md-f text-uppercase line34">治験の管理者
           </div>
           <c:if test="${empty permission && fn:contains(permissions,5)}">
             <div class="dis-line form-group mb-none">
               <button type="button"
                       class="btn btn-primary blue-btn mb-sm mt-xs"
-                      onclick="addAdmin();">+ Add Admin
+                      onclick="addAdmin();">+ 管理者の追加
               </button>
             </div>
           </c:if>
@@ -276,10 +273,10 @@
                  cellspacing="0" width="80%">
             <thead>
               <tr>
-                <th id="">&nbsp;&nbsp;&nbsp;Admins</th>
-                <th id="">View</th>
-                <th id="">View & Edit</th>
-                <th id="">Project Lead</th>
+                <th id="">&nbsp;&nbsp;&nbsp;管理者</th>
+                <th id="">参照</th>
+                <th id="">参照 & 登録</th>
+                <th id="">プロジェクトリーダー</th>
                 <th id=""></th>
 
               </tr>
@@ -289,8 +286,10 @@
                 <tr id="studyAdminRowId${perm.userId}" class="studyAdminRowCls"
                     studyUserId="${perm.userId}">
                   <td>
-                    <span class="dis-ellipsis"
-                          title="${fn:escapeXml(perm.userFullName)}">${perm.userFullName}</span>
+                      <!--
+                    <span class="dis-ellipsis" title="${fn:escapeXml(perm.userFullName)}">${perm.userFullName}</span>
+                      -->
+                    <span class="dis-ellipsis" title="${fn:escapeXml(perm.lastName + " " + perm.firstName)}">${perm.lastName + " " + perm.firstName}</span>
                   </td>
                   <td>
                     <span class="radio radio-info radio-inline p-45">

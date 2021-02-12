@@ -1,8 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html class="overflow-hidden" lang="en">
+<html class="overflow-hidden" lang="ja">
   <head>
     <!-- Basic -->
     <meta charset="utf-8">
@@ -97,27 +98,27 @@
             <div class="login pt-xlg">
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
-                       data-pattern-error="Email address is invalid"
-                       placeholder="Email address" required maxlength="100"
-                       data-error="Please complete this field"
+                       data-pattern-error="メールアドレスの入力が正しくありません。"
+                       placeholder="メールアドレス" required maxlength="100"
+                       data-error="入力をお願いします。"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" autofocus
                        autocomplete="off">
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input" id="password"
-                       placeholder="Password" required maxlength="64"
-                       data-error="Please complete this field"
+                       placeholder="パスワード" required maxlength="64"
+                       data-error="入力をお願いします。"
                        autocomplete="off" readonly onfocus="$(this).removeAttr('readonly');">
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
-                <button type="button" id="loginBtnId" class="btn lg-btn">SIGN IN</button>
+                <button type="button" id="loginBtnId" class="btn lg-btn">サイン イン</button>
               </div>
               <div class="pb-md pt-xs">
                 <a id="forgot_pwd"
                    class="gray-link white__text"
-                   href="javascript:void(0)">Forgot password?
+                   href="javascript:void(0)">パスワードをお忘れの方はこちら
                 </a>
               </div>
             </div>
@@ -128,15 +129,18 @@
                      autocomplete="off">
             <div class="pwd dis-none">
               <div class="mb-lg">
-                <h3 style="    color: #fff; padding-top: 20px;" class="mt-none">Forgot password?</h3>
+                <h3 style="    color: #fff; padding-top: 20px;" class="mt-none">パスワードをお忘れですか?</h3>
+                <div class="mt-md white__text">ログインIDのメールアドレスを入力して下さい。パスワードをリセットするリンクを送信します。
+                    <!--
                 <div class="mt-md white__text">Enter your email to receive a password reset link
+                    -->
                 </div>
               </div>
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="emailReg" name="email"
                        maxlength="100"
-                       placeholder="Email address"
-                       data-pattern-error="Email address is invalid" required maxlength="100"
+                       placeholder="メールアドレス"
+                       data-pattern-error="メールアドレスの入力が正しくありません。" required maxlength="100"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -144,7 +148,7 @@
                 <button type="submit" class="btn lg-btn" id="log-btn">SUBMIT</button>
               </div>
               <div class="pt-xs">
-                <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to sign in
+                <a id="login" class="gray-link white__text" href="javascript:void(0)">サインイン画面に戻る
                 </a>
               </div>
             </div>
@@ -279,14 +283,14 @@
             if (emailAdd == '') {
               if (isIE || isEdge) {
                 $('#email').parent().find(".help-block").empty().append(
-                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please complete this field"));
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("入力をお願いします。"));
               } else {
                 $('#email').parent().find(".help-block").empty().append(
-                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please complete this field"));
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text("入力をお願いします。"));
               }
             } else if (!isEmail) {
               $('#email').parent().find(".help-block").empty().append(
-            		  $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Email address is invalid"));
+            		  $("<ul><li> </li></ul>").attr("class","list-unstyled").text("メールアドレスの入力が正しくありません。"));
             }
           }
         });

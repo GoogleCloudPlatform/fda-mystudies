@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -15,25 +15,25 @@
         <th style="display: none;" id="">Live Study ID
           <span class="sort"></span>
         </th>
-        <th id="">Study ID
+        <th id="">治験ID
           <span class="sort"></span>
         </th>
-        <th id="">Study name
+        <th id="">治験名
           <span class="sort"></span>
         </th>
-        <th id="">Category
+        <th id="">変えゴリ
           <span class="sort"></span>
         </th>
-        <th id="">Project lead
+        <th id="">管理者
           <span class="sort"></span>
         </th>
-        <th id="">Research Sponsor
+        <th id="">スポンサー
           <span class="sort"></span>
         </th>
-        <th id="">Status
+        <th id="">ステータス
           <span class="sort"></span>
         </th>
-        <th id="">Actions</th>
+        <th id="">アクション</th>
       </tr>
     </thead>
     <tbody>
