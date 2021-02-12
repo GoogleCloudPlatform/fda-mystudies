@@ -734,11 +734,6 @@ public class StudyMetaDataDao {
                           .replaceAll("em>", "i>")
                           .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
             }
-
-            reviewBean.setReasonForConsent(
-                StringUtils.isNotEmpty(consentDto.getAggrementOfConsent())
-                    ? consentDto.getAggrementOfConsent()
-                    : StudyMetaDataConstants.REASON_FOR_CONSENT);
             consent.setReview(reviewBean);
           }
           eligibilityConsentResponse.setConsent(consent);

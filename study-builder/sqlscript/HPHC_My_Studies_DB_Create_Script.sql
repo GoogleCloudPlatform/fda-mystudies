@@ -351,7 +351,6 @@ CREATE TABLE IF NOT EXISTS `consent` (
   `text_of_the_permission` varchar(255) DEFAULT NULL,
   `version` float DEFAULT NULL,
   `need_comprehension_test` varchar(255) DEFAULT NULL,
-  `aggrement_of_consent` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `study_id_idx` (`study_id`),
   CONSTRAINT `FK_study_consent_id` FOREIGN KEY (`study_id`) REFERENCES `studies` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
