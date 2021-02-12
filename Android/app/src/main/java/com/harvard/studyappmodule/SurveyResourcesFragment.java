@@ -995,7 +995,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       JSONObject jsonObject = new JSONObject();
       jsonObject.put("studyId", AppConfig.StudyId);
       jsonArray1.put(jsonObject);
-      obj.put("deleteData", jsonArray1);
+      obj.put("studyData", jsonArray1);
     } catch (JSONException e) {
       Logger.log(e);
     }
