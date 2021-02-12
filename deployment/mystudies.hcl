@@ -623,7 +623,14 @@ template "project_apps" {
       binary_authorization = {
         admission_whitelist_patterns = [{
           name_pattern = "gcr.io/cloudsql-docker/*"
-        }]
+          },
+          {
+          name_pattern = "gcr.io/gke-release/istio/*" 
+          },
+          {
+          name_pattern = "docker.io/prom/*"
+            }
+          ]
       }
       # DNS sets up nameservers to connect to the GKE clusters.
       dns_zones = [{
