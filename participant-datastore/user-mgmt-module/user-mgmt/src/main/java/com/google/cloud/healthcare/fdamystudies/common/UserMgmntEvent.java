@@ -134,27 +134,6 @@ public enum UserMgmntEvent implements AuditLogEvent {
       "Profile/Preferences update by app user failed.",
       "USER_PROFILE_UPDATE_FAILED"),
 
-  DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL(
-      MOBILE_APPS,
-      PARTICIPANT_USER_DATASTORE,
-      null,
-      "Based on participant choice/study setting, the data retention setting upon withdrawal from study is read as '${delete_or_retain}'.",
-      "DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL"),
-
-  PARTICIPANT_DATA_DELETED(
-      PARTICIPANT_USER_DATASTORE,
-      PARTICIPANT_USER_DATASTORE,
-      null,
-      "Participant's study related data was deleted or nullified.",
-      "PARTICIPANT_DATA_DELETED"),
-
-  PARTICIPANT_DATA_DELETION_FAILED(
-      PARTICIPANT_USER_DATASTORE,
-      PARTICIPANT_USER_DATASTORE,
-      null,
-      "Participant's study related data could not be completely deleted or nullified.",
-      "PARTICIPANT_DATA_DELETION_FAILED"),
-
   WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE(
       PARTICIPANT_USER_DATASTORE,
       RESPONSE_DATASTORE,
@@ -166,7 +145,7 @@ public enum UserMgmntEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       RESPONSE_DATASTORE,
       null,
-      "Communication failed to Response Datastore about participant's study withdrawal information and corresponding Data Retention setting '${delete_or_retain}'.",
+      "Communication failed to Response Datastore about participant's study withdrawal information.",
       "WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED"),
 
   STUDY_METADATA_RECEIVED(

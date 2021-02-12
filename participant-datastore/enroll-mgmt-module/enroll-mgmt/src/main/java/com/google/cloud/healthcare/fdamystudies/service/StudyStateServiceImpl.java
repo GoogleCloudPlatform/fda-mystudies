@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
@@ -20,7 +19,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -110,7 +108,6 @@ public class StudyStateServiceImpl implements StudyStateService {
             .collect(Collectors.toList());
 
     Optional<StudyEntity> optStudy = studyRepository.findByCustomIds(customStudyIds);
-
 
     if (optStudy.isPresent() && optStudy.get().getType().equals(OPEN_STUDY)) {
       participantStudyIds =
@@ -274,11 +271,11 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Override
   @Transactional
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest) {
+      String participantId, String studyId, AuditLogEventRequest auditRequest) {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
 
-    String message = studyStateDao.withdrawFromStudy(participantId, studyId, delete);
+    String message = studyStateDao.withdrawFromStudy(participantId, studyId);
     if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
       Optional<ParticipantStudyEntity> participantStudy =
           participantStudyRepository.findByParticipantId(participantId);
@@ -300,11 +297,7 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantStudyRepository.saveAndFlush(participantStudy.get());
 
       enrollUtil.withDrawParticipantFromStudy(
-          participantId,
-          participantStudy.get().getStudy().getVersion(),
-          studyId,
-          delete,
-          auditRequest);
+          participantId, participantStudy.get().getStudy().getVersion(), studyId, auditRequest);
       respBean = new WithDrawFromStudyRespBean();
       respBean.setCode(HttpStatus.OK.value());
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());

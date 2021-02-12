@@ -80,7 +80,7 @@ public class StudyStateDaoImpl implements StudyStateDao {
   }
 
   @Override
-  public String withdrawFromStudy(String participantId, String studyId, boolean delete) {
+  public String withdrawFromStudy(String participantId, String studyId) {
     logger.info("StudyStateDaoImpl withdrawFromStudy() - Ends ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     CriteriaBuilder criteriaBuilder = null;

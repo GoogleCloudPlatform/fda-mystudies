@@ -181,11 +181,7 @@ public class EnrollmentManagementUtil {
   }
 
   public String withDrawParticipantFromStudy(
-      String participantId,
-      Float studyVersion,
-      String studyId,
-      boolean delete,
-      AuditLogEventRequest auditRequest) {
+      String participantId, Float studyVersion, String studyId, AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
@@ -205,9 +201,7 @@ public class EnrollmentManagementUtil {
             + "&studyVersion="
             + String.valueOf(studyVersion)
             + "&participantId="
-            + participantId
-            + "&deleteResponses="
-            + String.valueOf(delete);
+            + participantId;
 
     ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 

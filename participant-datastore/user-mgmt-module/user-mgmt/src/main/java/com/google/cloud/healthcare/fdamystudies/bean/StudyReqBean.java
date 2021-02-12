@@ -21,5 +21,4 @@ import lombok.ToString;
 @ToString
 public class StudyReqBean {
   private String studyId;
-  private String delete;
 }
