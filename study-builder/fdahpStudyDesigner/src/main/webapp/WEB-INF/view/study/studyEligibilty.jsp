@@ -194,11 +194,7 @@
 <script type="text/javascript">
   var viewPermission = "${permission}";
   var permission = "${permission}";
-  var chkDone = $
-  {
-    chkDone
-  }
-  ;
+  var chkDone = ${chkDone};
   var eligibilityMechanism = '${eligibility.eligibilityMechanism}';
   console.log("viewPermission:" + viewPermission);
   var reorder = true;
@@ -224,15 +220,13 @@
             $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
             $('.viewIcon, .editIcon, .deleteIcon').addClass('cursor-none');
             </c:if>
-            if (emVal != "1") {
-              if (eligibilityTestSize === 0) {
-                $("#doneBut").attr("disabled", true);
-                $('#spancomId').attr('data-original-title',
-                    'Please add 1 or more questions to the test');
-              }
-            }
 
-            if ((!chkDone) && eligibilityMechanism != "1") {
+            if(chkDone){
+                    $("#doneBut").attr("disabled", false);
+                    $('#spancomId').removeAttr('data-original-title');
+            }
+            
+            if (!chkDone && eligibilityMechanism != "1") {
               $('#doneBut').prop('disabled', true);
               $('#spancomId')
                   .attr(
@@ -240,6 +234,14 @@
                       'Please ensure individual list items are marked Done, before marking the section as Complete');
               $('[data-toggle="tooltip"]').tooltip();
             }
+
+            if (emVal != "1") {
+                if (eligibilityTestSize === 0) {
+                  $("#doneBut").attr("disabled", true);
+                  $('#spancomId').attr('data-original-title',
+                      'Please add 1 or more questions to the test');
+                }
+             }
             initActions();
             $('.submitEle').click(
                 function (e) {
@@ -430,8 +432,7 @@
                         $(
                             '.viewIcon, .editIcon, .deleteIcon')
                             .addClass('cursor-none');
-                        if (!chkDone
-                            && $(this).val() != '1') {
+                        if (!chkDone && $(this).val() != '1') {
                           $('#doneBut').prop(
                               'disabled', true);
                           $('#spancomId')
@@ -451,8 +452,7 @@
                             '.viewIcon, .editIcon, .deleteIcon')
                             .removeClass(
                                 'cursor-none');
-                        if (!chkDone
-                            && $(this).val() != '1') {
+                        if (!chkDone && $(this).val() != '1') {
                           $('#doneBut').prop(
                               'disabled', true);
                           $('#spancomId')
@@ -467,6 +467,7 @@
                         $('#instructionTextDivId')
                             .slideDown('fast');
                         $('#doneBut').prop('disabled',false);
+                        $('#spancomId').removeAttr('data-original-title');
                       } else if ($('#inlineRadio3:checked').length > 0) {
                         $('#instructionTextDivId')
                             .slideUp('fast');
@@ -486,9 +487,8 @@
                       }
 
                       emVal = $("input[name='eligibilityMechanism']:checked").val();
-                      eligibilityTestSize =${eligibilityTestList.size()};
                       if (emVal != "1") {
-                        if (eligibilityTestSize === 0) {
+                        if (eligibilityTestSize == 0) {
                           $("#doneBut").attr("disabled", true);
                           $('#spancomId').attr('data-original-title',
                               'Please add 1 or more questions to the test');
@@ -567,6 +567,7 @@
                             reloadEligibiltyTestDataTable(data.eligibiltyTestList);
                             if ($('#consent_list tbody tr').length == 1
                                 && $('#consent_list tbody tr td').length == 1) {
+                              eligibilityTestSize--;
                               chkDone = false;
                               $('#doneBut').prop(
                                   'disabled',
