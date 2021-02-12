@@ -24,17 +24,7 @@ package com.hphc.mystudies.bean;
 
 public class ReviewBean {
 
-  private String reasonForConsent = "";
-
   private String reviewHTML = "";
-
-  public String getReasonForConsent() {
-    return reasonForConsent;
-  }
-
-  public void setReasonForConsent(String reasonForConsent) {
-    this.reasonForConsent = reasonForConsent;
-  }
 
   public String getReviewHTML() {
     return reviewHTML;

@@ -445,13 +445,9 @@ public class FdahpStudyDesignerConstants {
 
   public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
   public static final String FDA_SMD_STUDY_PAGE_PATH = "fda.smd.study.pagePath";
-  public static final String ALLOW_REJOIN_TEXT = "Are you sure you want to leave the study?";
 
   public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
       "study.basicInformation.defaultImage";
-
-  public static final String CONSENT_AGREEMENT =
-      "By tapping on Agree, you confirm that you have reviewed the consent document and agree to participate in the study.";
 
   private FdahpStudyDesignerConstants() {
     // Do nothing

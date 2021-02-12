@@ -44,7 +44,6 @@ import com.hphc.mystudies.bean.SharingBean;
 import com.hphc.mystudies.bean.StudyBean;
 import com.hphc.mystudies.bean.StudyInfoResponse;
 import com.hphc.mystudies.bean.StudyResponse;
-import com.hphc.mystudies.bean.WithdrawalConfigBean;
 import com.hphc.mystudies.dto.ActiveTaskDto;
 import com.hphc.mystudies.dto.AnchorDateTypeDto;
 import com.hphc.mystudies.dto.ComprehensionTestQuestionDto;
@@ -340,12 +339,7 @@ public class StudyMetaDataDao {
                   break;
               }
             }
-            if (StringUtils.isNotEmpty(studyDto.getAllowRejoin())
-                && studyDto.getAllowRejoin().equalsIgnoreCase(StudyMetaDataConstants.YES)) {
-              settings.setRejoin(true);
-            } else {
-              settings.setRejoin(false);
-            }
+
             if (StringUtils.isNotEmpty(studyDto.getEnrollingParticipants())
                 && studyDto
                     .getEnrollingParticipants()
@@ -740,11 +734,6 @@ public class StudyMetaDataDao {
                           .replaceAll("em>", "i>")
                           .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
             }
-
-            reviewBean.setReasonForConsent(
-                StringUtils.isNotEmpty(consentDto.getAggrementOfConsent())
-                    ? consentDto.getAggrementOfConsent()
-                    : StudyMetaDataConstants.REASON_FOR_CONSENT);
             consent.setReview(reviewBean);
           }
           eligibilityConsentResponse.setConsent(consent);
@@ -1179,26 +1168,6 @@ public class StudyMetaDataDao {
           infoList.add(info);
         }
         studyInfoResponse.setInfo(infoList);
-
-        WithdrawalConfigBean withdrawConfig = new WithdrawalConfigBean();
-        switch (studyDto.getRetainParticipant()) {
-          case StudyMetaDataConstants.YES:
-            withdrawConfig.setType(StudyMetaDataConstants.STUDY_WITHDRAW_CONFIG_NO_ACTION);
-            break;
-          case StudyMetaDataConstants.NO:
-            withdrawConfig.setType(StudyMetaDataConstants.STUDY_WITHDRAW_CONFIG_DELETE_DATA);
-            break;
-          case StudyMetaDataConstants.ALL:
-            withdrawConfig.setType(StudyMetaDataConstants.STUDY_WITHDRAW_CONFIG_ASK_USER);
-            break;
-          default:
-            break;
-        }
-        withdrawConfig.setMessage(
-            StringUtils.isEmpty(studyDto.getAllowRejoinText())
-                ? ""
-                : studyDto.getAllowRejoinText());
-        studyInfoResponse.setWithdrawalConfig(withdrawConfig);
 
         if (!studyDto
             .getStatus()
@@ -1688,12 +1657,7 @@ public class StudyMetaDataDao {
                   break;
               }
             }
-            if (StringUtils.isNotEmpty(studyDto.getAllowRejoin())
-                && studyDto.getAllowRejoin().equalsIgnoreCase(StudyMetaDataConstants.YES)) {
-              settings.setRejoin(true);
-            } else {
-              settings.setRejoin(false);
-            }
+
             if (StringUtils.isNotEmpty(studyDto.getEnrollingParticipants())
                 && studyDto
                     .getEnrollingParticipants()

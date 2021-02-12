@@ -4378,8 +4378,6 @@ public class StudyDAOImpl implements StudyDAO {
     StudySequenceBo studySequence = null;
     StudyBo study = null;
 
-    boolean ownUserForceLogout = false;
-    StudyBuilderAuditEvent eventEnum = null;
     Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
@@ -4405,9 +4403,6 @@ public class StudyDAOImpl implements StudyDAO {
             // validation of anchor date
             study.setPlatform(studyBo.getPlatform());
             study.setEnrollingParticipants(studyBo.getEnrollingParticipants());
-            study.setRetainParticipant(studyBo.getRetainParticipant());
-            study.setAllowRejoin(studyBo.getAllowRejoin());
-            study.setAllowRejoinText(FdahpStudyDesignerConstants.ALLOW_REJOIN_TEXT);
             study.setModifiedBy(studyBo.getUserId());
             study.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
             // Phase2a code Start(adding enrollment date as anchor date(yes/no))
@@ -4416,8 +4411,6 @@ public class StudyDAOImpl implements StudyDAO {
             session.saveOrUpdate(study);
 
             values.put("enrollment_setting", String.valueOf(study.getEnrollingParticipants()));
-            values.put("rejoin_setting", String.valueOf(study.getAllowRejoin()));
-            values.put("dataretention_setting", String.valueOf(study.getRetainParticipant()));
 
             // setting true to setting admins
             // setting and admins section of Study completed or not
@@ -4453,7 +4446,6 @@ public class StudyDAOImpl implements StudyDAO {
                   .setString("enrollment", FdahpStudyDesignerConstants.ANCHOR_TYPE_ENROLLMENTDATE)
                   .executeUpdate();
             }
-            // Phase2a code end
           }
         }
 

@@ -36,8 +36,6 @@ public class StudyInfoResponse {
 
   private AnchorDateBean anchorDate = new AnchorDateBean();
 
-  private WithdrawalConfigBean withdrawalConfig = new WithdrawalConfigBean();
-
   public String getMessage() {
     return message;
   }
@@ -68,13 +66,5 @@ public class StudyInfoResponse {
 
   public void setAnchorDate(AnchorDateBean anchorDate) {
     this.anchorDate = anchorDate;
-  }
-
-  public WithdrawalConfigBean getWithdrawalConfig() {
-    return withdrawalConfig;
-  }
-
-  public void setWithdrawalConfig(WithdrawalConfigBean withdrawalConfig) {
-    this.withdrawalConfig = withdrawalConfig;
   }
 }
