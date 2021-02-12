@@ -97,15 +97,6 @@ public class StudyDto implements Serializable {
   @Column(name = "enrolling_participants")
   private String enrollingParticipants;
 
-  @Column(name = "retain_participant")
-  private String retainParticipant;
-
-  @Column(name = "allow_rejoin")
-  private String allowRejoin;
-
-  @Column(name = "allow_rejoin_text")
-  private String allowRejoinText;
-
   @Column(name = "irb_review")
   private String irbReview;
 
@@ -267,30 +258,6 @@ public class StudyDto implements Serializable {
 
   public void setEnrollingParticipants(String enrollingParticipants) {
     this.enrollingParticipants = enrollingParticipants;
-  }
-
-  public String getRetainParticipant() {
-    return retainParticipant;
-  }
-
-  public void setRetainParticipant(String retainParticipant) {
-    this.retainParticipant = retainParticipant;
-  }
-
-  public String getAllowRejoin() {
-    return allowRejoin;
-  }
-
-  public void setAllowRejoin(String allowRejoin) {
-    this.allowRejoin = allowRejoin;
-  }
-
-  public String getAllowRejoinText() {
-    return allowRejoinText;
-  }
-
-  public void setAllowRejoinText(String allowRejoinText) {
-    this.allowRejoinText = allowRejoinText;
   }
 
   public String getIrbReview() {

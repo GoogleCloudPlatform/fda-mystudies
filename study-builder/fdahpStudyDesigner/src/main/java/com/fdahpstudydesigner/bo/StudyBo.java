@@ -60,12 +60,6 @@ public class StudyBo implements Serializable {
 
   private static final long serialVersionUID = 2147840266295837728L;
 
-  @Column(name = "allow_rejoin")
-  private String allowRejoin;
-
-  @Column(name = "allow_rejoin_text")
-  private String allowRejoinText;
-
   @Transient private String buttonText;
 
   @Column(name = "category")
@@ -140,9 +134,6 @@ public class StudyBo implements Serializable {
   @Column(name = "research_sponsor")
   private String researchSponsor;
 
-  @Column(name = "retain_participant")
-  private String retainParticipant;
-
   @Column(name = "sequence_number")
   private Integer sequenceNumber;
 
@@ -193,14 +184,6 @@ public class StudyBo implements Serializable {
 
   @Column(name = "app_id")
   private String appId;
-
-  public String getAllowRejoin() {
-    return allowRejoin;
-  }
-
-  public String getAllowRejoinText() {
-    return allowRejoinText;
-  }
 
   public String getButtonText() {
     return buttonText;
@@ -302,10 +285,6 @@ public class StudyBo implements Serializable {
     return researchSponsor;
   }
 
-  public String getRetainParticipant() {
-    return retainParticipant;
-  }
-
   public Integer getSequenceNumber() {
     return sequenceNumber;
   }
@@ -368,14 +347,6 @@ public class StudyBo implements Serializable {
 
   public boolean isViewPermission() {
     return viewPermission;
-  }
-
-  public void setAllowRejoin(String allowRejoin) {
-    this.allowRejoin = allowRejoin;
-  }
-
-  public void setAllowRejoinText(String allowRejoinText) {
-    this.allowRejoinText = allowRejoinText;
   }
 
   public void setButtonText(String buttonText) {
@@ -476,10 +447,6 @@ public class StudyBo implements Serializable {
 
   public void setResearchSponsor(String researchSponsor) {
     this.researchSponsor = researchSponsor;
-  }
-
-  public void setRetainParticipant(String retainParticipant) {
-    this.retainParticipant = retainParticipant;
   }
 
   public void setSequenceNumber(Integer sequenceNumber) {
