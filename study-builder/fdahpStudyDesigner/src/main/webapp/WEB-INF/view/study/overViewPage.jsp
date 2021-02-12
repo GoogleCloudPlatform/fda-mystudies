@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -17,23 +16,23 @@
     <div class="right-content-head">
       <div class="text-right">
         <div class="black-md-f text-uppercase dis-line pull-left line34">
-          Overview
+          概要
           <c:set var="isLive">${_S}isLive</c:set>
             ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
 
         <div class="dis-line form-group mb-none mr-sm">
-          <button type="button" class="btn btn-default gray-btn cancelBut">Cancel</button>
+          <button type="button" class="btn btn-default gray-btn cancelBut">キャンセル</button>
         </div>
         <c:if test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn submitEle"
-                    actType="save">Save
+                    actType="save">下書き保存
             </button>
           </div>
 
           <div class="dis-line form-group mb-none">
             <button type="button" class="btn btn-primary blue-btn submitEle"
-                    id="completedId" actType="completed">Mark as Completed
+                    id="completedId" actType="completed">完了として次へ
             </button>
           </div>
         </c:if>
@@ -49,8 +48,8 @@
 
       <div>
         <div class="gray-xs-f mb-xs">
-          Study Video URL (if available)
-          <small>(300 characters max)</small>
+          動画URL (任意)
+          <small>(300 文字まで)</small>
         </div>
         <div class="form-group">
           <input autofocus="autofocus" type="text" class="form-control"
@@ -58,7 +57,7 @@
                  value="${studyBo.mediaLink}" maxlength="300"
                  pattern="^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                  title="Include http://"
-                 data-pattern-error="Please enter a valid URL">
+                 data-pattern-error="正しいURLを入力して下さい。">
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -67,19 +66,19 @@
       <div class="overview_section">
         <div class="panel-group overview-panel" id="accordion">
           <div class="black-md-f mb-md">
-            Study Overview Pages
+            概要説明ページ設定
             <span>
               <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="right"
                     data-html="true"
                     title=""
                     data-original-title="
-	                 	<p class='text-left'>These pages are meant for the introductory, 'Quick Overview' section of your study in the mobile app. It is intended to help users get a quick snapshot summary of what the study is about and how it may benefit them and others.</p>
-						<p class='text-left'>Each page has an image, title and about 180-200 characters of description allowed. Given below are some suggested topics you can touch upon in these pages (remember to key in lines that can best describe your study in a way that people will be able to relate to and understand):</p>	
-						<div class='text-left'>o Study Purpose and Goals</div>
-						<div class='text-left'>o Target Audience</div>
-						<div class='text-left'>o Usage of Participant Data</div>
-						<div class='text-left'>o Benefits / Why one must participate?</div>
+	                 	<p class='text-left'>これらのページは、モバイルアプリでの学習の概要「クイック概要」セクションを対象としています。これは、ユーザーが治験の内容と、それが自分や他の人にどのように役立つかについての簡単なスナップショットの要約を取得できるようにすることを目的としています。</p>
+						<p class='text-left'>各ページには、画像、タイトル、および約180〜200文字の説明が入力できます。以下に、これらのページで説明することができるよくあるトピックをいくつか示します:</p>
+						<div class='text-left'>o 治験の目的と目標</div>
+						<div class='text-left'>o 対象となる方々</div>
+						<div class='text-left'>o データの使い道</div>
+						<div class='text-left'>o メリット / 参加する理由</div>
 	                 "></span>
             </span>
           </div>
@@ -111,12 +110,12 @@
                 <div class="panel-body pt-none">
 
                   <div class="gray-xs-f mb-sm">
-                    Image
+                    背景画像
                     <span>
                       <span class="filled-tooltip"
                             data-toggle="tooltip" data-placement="top" data-html="true"
                             title=""
-                            data-original-title=" JPEG / PNG <br> Recommended Size: 750x1334 pixels"></span>
+                            data-original-title=" JPEG / PNG <br> 画像サイズ: 750x1334 pix"></span>
                     </span>
                     <span class="requiredStar"> *</span>
                   </div>
@@ -130,13 +129,13 @@
                         <a
                             href="javascript:void(0)"
                             class="blue-link txt-decoration-underline pl-xs">Remove
-                          Image
+                          背景画像
                         </a>
                       </span>
                       <div class="form-group mb-none mt-sm">
                         <button id="" type="button"
                                 class="btn btn-default gray-btn uploadImgbtn">Upload
-                          Image
+                          背景画像
                         </button>
                         <input id="1" class="dis-none uploadImg" data-imageId='1'
                                type="file" name="multipartFiles"
@@ -150,8 +149,8 @@
 
                   <div class="mt-xlg">
                     <div class="gray-xs-f mb-xs">
-                      Title
-                      <small>(50 characters max)</small>
+                      ページタイトル
+                      <small>(50 文字まで)</small>
                       <span
                           class="requiredStar">*
                       </span>
@@ -165,8 +164,8 @@
                   </div>
                   <div class="mt-xlg">
                     <div class="gray-xs-f mb-xs">
-                      Description
-                      <small>(200 characters max)</small>
+                      説明
+                      <small>(200 文字まで)</small>
                       <span
                           class="requiredStar">*
                       </span>
@@ -174,7 +173,7 @@
                     <div class="form-group elaborateClass">
                       <textarea class=" form-control updateInput" rows="5"
                                 id="editor1" name="description" required
-                                data-error="Please enter plain text of up to 200 characters max."
+                                data-error="説明文の入力をお願いします。"
                                 maxlength="200"></textarea>
 
                       <div class="help-block with-errors red-txt"></div>
@@ -219,13 +218,13 @@
                 <div class="panel-body  pt-none">
                   <div>
                     <div class="gray-xs-f mb-sm">
-                      Image
+                      背景画像
                       <span>
                         <span class="filled-tooltip"
                               data-toggle="tooltip" data-placement="top"
                               data-html="true"
                               title="" src="/studybuilder/images/icons/tooltip.png"
-                              data-original-title="<span class='font24'>.</span></span> JPEG/PNG<br><span class='font24'>.</span> Recommended Size: <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels"></span>
+                              data-original-title="<span class='font24'>.</span></span> JPEG/PNG<br><span class='font24'>.</span> 画像サイズ: <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pix"></span>
                         <span class="requiredStar"> *</span>
                     </div>
                     <div>
@@ -241,7 +240,7 @@
                           <a
                               href="javascript:void(0)"
                               class="blue-link txt-decoration-underline pl-xs">Remove
-                            Image
+                            背景画像
                           </a>
                         </span>
                         <div class="form-group mb-none mt-sm"
@@ -265,8 +264,8 @@
                   </div>
                   <div class="mt-lg">
                     <div class="gray-xs-f mb-xs">
-                      Title
-                      <small>(50 characters max)</small>
+                      ページタイトル
+                      <small>(50 文字まで)</small>
                       <span
                           class="requiredStar">*
                       </span>
@@ -280,8 +279,8 @@
                   </div>
                   <div class="mt-md">
                     <div class="gray-xs-f mb-xs">
-                      Description
-                      <small>(200 characters max)</small>
+                      説明
+                      <small>(200 文字まで)</small>
                       <span
                           class="requiredStar">*
                       </span>
@@ -289,7 +288,7 @@
                     <div class="form-group elaborateClass">
                       <textarea class="form-control updateInput" rows="5"
                                 name="description" id="editor${spbSt.count}" required
-                                data-error="Please enter plain text of up to 200 characters max."
+                                data-error="説明文の入力をお願いします。"
                                 maxlength="200">${studyPageBo.description}</textarea>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -431,10 +430,10 @@
           "<div class=thumb><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
           "<div class=dis-inline>" +
           "<span class='blue-link removeUrl elaborateHide' id='hideRemoveUrl" + count
-          + "'>X<a href='javascript:void(0)' class='blue-link pl-xs txt-decoration-underline'>Remove Image</a></span>"
+          + "'>X<a href='javascript:void(0)' class='blue-link pl-xs txt-decoration-underline'>画像削除</a></span>"
           +
           "<div class='form-group mb-none mt-sm'>" +
-          "<button class='btn btn-default gray-btn uploadImgbtn' type=button>Upload Image</button>"
+          "<button class='btn btn-default gray-btn uploadImgbtn' type=button>画像アップロード</button>"
           +
           "<input class='dis-none uploadImg' data-imageId='" + count
           + "' accept='.png, .jpg, .jpeg' name='multipartFiles' onchange=readURL(this) type=file required data-error='Please select an image.'>"
@@ -446,7 +445,7 @@
           "</div>" +
           "</div>" +
           "<div class=mt-lg>" +
-          "<div class='gray-xs-f mb-xs'>Title <small>(50 characters max) </small><span class='requiredStar'>*</span></div>"
+          "<div class='gray-xs-f mb-xs'>ページタイトル <small>(50 文字まで) </small><span class='requiredStar'>*</span></div>"
           +
           "<div class=form-group>" +
           "<input type='text' class='form-control updateInput'  name='title' required maxlength='50'>"
@@ -455,7 +454,7 @@
           "</div>" +
           "</div>" +
           "<div class=mt-lg>" +
-          "<div class='gray-xs-f mb-xs'>Description <small>(200 characters max) </small><span class='requiredStar'>*</span></div>"
+          "<div class='gray-xs-f mb-xs'>説明 <small>(200 文字まで) </small><span class='requiredStar'>*</span></div>"
           +
           "<div class='form-group elaborateClass'><textarea class='form-control updateInput' name='description' id='editor"
           + countId

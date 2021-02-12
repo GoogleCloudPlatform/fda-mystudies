@@ -289,7 +289,7 @@
                       <!--
                     <span class="dis-ellipsis" title="${fn:escapeXml(perm.userFullName)}">${perm.userFullName}</span>
                       -->
-                    <span class="dis-ellipsis" title="${fn:escapeXml(perm.lastName + " " + perm.firstName)}">${perm.lastName + " " + perm.firstName}</span>
+                    <span class="dis-ellipsis" title="${fn:escapeXml(perm.lastName)} ${fn:escapeXml(perm.firstName)}">${perm.lastName}&nbsp;${perm.firstName}</span>
                   </td>
                   <td>
                     <span class="radio radio-info radio-inline p-45">
