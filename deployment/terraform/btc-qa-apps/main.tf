@@ -148,6 +148,12 @@ resource "google_binary_authorization_policy" "policy" {
   admission_whitelist_patterns {
     name_pattern = "gcr.io/cloudsql-docker/*"
   }
+  admission_whitelist_patterns {
+    name_pattern = "gcr.io/gke-release/istio/*"
+  }
+  admission_whitelist_patterns {
+    name_pattern = "docker.io/prom/*"
+  }
 }
 
 module "btc_qa" {
