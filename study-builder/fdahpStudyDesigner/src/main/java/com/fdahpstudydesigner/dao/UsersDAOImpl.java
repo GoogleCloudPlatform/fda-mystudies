@@ -447,7 +447,8 @@ public class UsersDAOImpl implements UsersDAO {
           userBO.setUserPassword(null != obj[6] ? String.valueOf(obj[6]) : "");
           userBO.setEmailChanged(null != obj[7] ? (Boolean) obj[7] : false);
           userBO.setAccessLevel(null != obj[8] ? String.valueOf(obj[8]) : "");
-          userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
+          //userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
+          userBO.setUserFullName(userBO.getLastName() + " " + userBO.getFirstName());
           userList.add(userBO);
         }
       }

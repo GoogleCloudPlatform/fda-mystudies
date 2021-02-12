@@ -90,7 +90,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          参加者の登録を許可しますか？
+          ユーザーの治験への登録を許可しますか？
           <span class="requiredStar"> *</span>
         </div>
 
@@ -119,7 +119,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          参加者の登録日をアンカー日付として使用しますか？
+          ユーザーの登録日をアンカー日付として使用しますか？
           <span
               class="requiredStar"> *
           </span>
@@ -155,7 +155,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          本治験から治験者が離脱する際、治験者のデータを保持しますか？
+          本治験からユーザーが離脱する際、ユーザーのデータを保持しますか？
           <span
               class="requiredStar">*
           </span>
@@ -180,7 +180,7 @@
                                                   name="retainParticipant"
                                                   <c:if
                                                       test="${studyBo.retainParticipant eq 'All'}">checked</c:if>
-                                                  required> <label for="inlineRadio5">治験者がデータを保持/削除のどちらかを任意で選択させるようにする</label>
+                                                  required> <label for="inlineRadio5">ユーザーがデータを保持/削除のどちらかを任意で選択させるようにする</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -190,7 +190,7 @@
       <!-- Start Section-->
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-sm">
-          一度離脱した治験者の再参加を許可しますか？
+          一度離脱したユーザーの再参加を許可しますか？
           <span
               class="requiredStar">*
           </span>
@@ -217,11 +217,11 @@
         </div>
 
         <div class="gray-xs-f ">
-          治験者が離脱する際の確認メッセージ
+          ユーザーが離脱する際の確認メッセージ
           <span>
             <span
                 data-toggle="tooltip" data-placement="top"
-                title="治験者が治験を離れようとしたときに、治験に再度参加するオプションがあるかどうかを示すメッセージを入力します。"
+                title="ユーザーが治験を離れようとしたときに、治験に再度参加するオプションがあるかどうかを示すメッセージを入力します。"
                 class="filled-tooltip"></span>
           </span>
         </div>
@@ -286,10 +286,7 @@
                 <tr id="studyAdminRowId${perm.userId}" class="studyAdminRowCls"
                     studyUserId="${perm.userId}">
                   <td>
-                      <!--
                     <span class="dis-ellipsis" title="${fn:escapeXml(perm.userFullName)}">${perm.userFullName}</span>
-                      -->
-                    <span class="dis-ellipsis" title="${fn:escapeXml(perm.lastName)} ${fn:escapeXml(perm.firstName)}">${perm.lastName}&nbsp;${perm.firstName}</span>
                   </td>
                   <td>
                     <span class="radio radio-info radio-inline p-45">

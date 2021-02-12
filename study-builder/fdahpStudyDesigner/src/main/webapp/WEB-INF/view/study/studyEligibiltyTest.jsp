@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -19,24 +19,24 @@
               class="mr-xs cur-pointer"
               onclick="goToBackPage(this);"><img
               src="../images/icons/back-b.png" alt=""/></span>
-          <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Eligibility Question</c:if>
-          <c:if test="${actionTypeForQuestionPage == 'view'}">View Eligibility Question <c:set
+          <c:if test="${actionTypeForQuestionPage == 'edit'}">適格性テストの編集</c:if>
+          <c:if test="${actionTypeForQuestionPage == 'view'}">適格性テスト詳細 <c:set
               var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
           </c:if>
-          <c:if test="${actionTypeForQuestionPage == 'add'}">Add Eligibility Question</c:if>
+          <c:if test="${actionTypeForQuestionPage == 'add'}">適格性テストの追加</c:if>
         </div>
         <input type="hidden" value="${actionTypeForQuestionPage}" name="actionTypeForQuestionPage">
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">
-            Cancel
+            キャンセル
           </button>
         </div>
         <c:if test="${actionTypeForQuestionPage ne 'view'}">
           <div class="dis-line form-group mb-none mr-sm">
-            <button type="button" class="btn btn-default gray-btn" id="saveId">Save</button>
+            <button type="button" class="btn btn-default gray-btn" id="saveId">下書き保存</button>
           </div>
           <div class="dis-line form-group mb-none">
-            <button type="button" class="btn btn-primary blue-btn" id="doneId">Done</button>
+            <button type="button" class="btn btn-primary blue-btn" id="doneId">完了</button>
           </div>
         </c:if>
       </div>
@@ -50,7 +50,7 @@
       <input type="hidden" id="eligibilityId" name="eligibilityId" value="${eligibilityId}"/>
       <input type="hidden" id="sequenceNo" name="sequenceNo" value="${eligibilityTest.sequenceNo}"/>
       <div class=" col-lg-4 col-md-5 pl-none">
-        <div class="gray-xs-f mb-xs">Short title (1 to 15 characters)
+        <div class="gray-xs-f mb-xs">タイトル (1 文字以上 15 文字以下)
           <span
               class="requiredStar"> *
           </span>
@@ -69,7 +69,7 @@
         </div>
       </div>
       <div class="clearfix"></div>
-      <div class="gray-xs-f mb-xs">Question (1 to 250 characters)
+      <div class="gray-xs-f mb-xs">質問内容 (1 文字以上 250 文字以下)
         <span
             class="requiredStar"> *
         </span>
@@ -82,8 +82,8 @@
       <div class="clearfix"></div>
       <div class="col-lg-5 col-md-5 p-none">
         <div class="form-group col-md-12 p-none mr-md mb-none">
-          <div class="gray-xs-f mb-xs col-md-6 pl-none ">Response Options</div>
-          <div class="gray-xs-f mb-xs col-md-6 pr-none">Pass / Fail
+          <div class="gray-xs-f mb-xs col-md-6 pl-none ">回答の形式</div>
+          <div class="gray-xs-f mb-xs col-md-6 pr-none">正解 / 不正解
             <span
                 class="requiredStar"> *
             </span>
@@ -114,11 +114,11 @@
           <div class="form-group col-md-6 pr-none">
             <select class="selectpicker elaborateClass form-control" required title="Select"
                     name="responseNoOption" id="resNoOptId" onchange="chkValidChoosedOption()">
-              <option value="true" ${eligibilityTest.responseNoOption ? 'selected':''} >Pass
+              <option value="true" ${eligibilityTest.responseNoOption ? 'selected':''} >
+                正解
               </option>
-              <option
-                  value="false" ${not empty eligibilityTest.responseNoOption && not eligibilityTest.responseNoOption ? 'selected':''}>
-                Fail
+              <option value="false" ${not empty eligibilityTest.responseNoOption && not eligibilityTest.responseNoOption ? 'selected':''}>
+                不正解
               </option>
             </select>
             <div class="help-block with-errors red-txt"></div>
@@ -224,8 +224,7 @@
               $(thisAttr).parent().find(".help-block").empty();
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  shortTitle
-                  + " has already been used in the past."));
+                  shortTitle + " は既に登録済みです。"));
               callback(false);
             }
           },
@@ -247,13 +246,13 @@
     <c:if test="${actionTypeForQuestionPage ne 'view'}">
     bootbox.confirm({
       closeButton: false,
-      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      message: '未保存の質問があります。保存をしないと編集内容が削除されてしまいます。本当にこのページを離れますか？',
       buttons: {
         'cancel': {
-          label: 'Cancel',
+          label: 'キャンセル',
         },
         'confirm': {
-          label: 'OK',
+          label: 'はい',
         },
       },
       callback: function (result) {

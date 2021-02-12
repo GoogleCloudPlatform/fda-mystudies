@@ -23,17 +23,17 @@
     <div class="right-content-head">
       <div class="text-right">
         <div class="black-md-f text-uppercase dis-line pull-left line34">
-          Eligibility
+          適格性
           <c:set var="isLive">${_S}isLive</c:set>
             ${not empty  sessionScope[isLive] ? '<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
 
         <div class="dis-line form-group mb-none mr-sm">
-          <button type="button" class="btn btn-default gray-btn cancelBut">Cancel</button>
+          <button type="button" class="btn btn-default gray-btn cancelBut">キャンセル</button>
         </div>
         <c:if test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn submitEle"
-                    actType="save">Save
+                    actType="save">下書き保存
             </button>
           </div>
 
@@ -41,7 +41,7 @@
             <span id="spancomId" class="tool-tip" data-toggle="tooltip"
                   data-placement="bottom" data-original-title="">
               <button type="button" class="btn btn-primary blue-btn submitEle"
-                      actType="mark" id="doneBut">Mark as Completed
+                      actType="mark" id="doneBut">完了
               </button>
           </div>
         </c:if>
@@ -55,10 +55,8 @@
     <div class="right-content-body">
       <div class="mb-xlg form-group" id="eligibilityOptDivId">
         <div class="gray-xs-f mb-sm">
-          Choose the method to be used for ascertaining participant
-          eligibility
-          <small style="display: none;" id="forceContinueMsgId">(Please
-            save to continue)
+          ユーザーの適格性をどのような方法で確認しますか？
+          <small style="display: none;" id="forceContinueMsgId">(下書き保存をし、再度登録をお願いします)
           </small>
         </div>
         <span class="radio radio-info radio-inline p-45"><input
@@ -66,7 +64,7 @@
             name="eligibilityMechanism" required
             <c:if test="${eligibility.eligibilityMechanism eq 1}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
-          <label for="inlineRadio1">Token Validation</label>
+          <label for="inlineRadio1">認証トークン</label>
         </span>
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="2"
@@ -75,7 +73,7 @@
                                                      <c:if
                                                          test="${eligibility.eligibilityMechanism eq 2}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
-          <label for="inlineRadio2">Token Validation and Eligibility</label>
+          <label for="inlineRadio2">認証トークン と 適格性テスト</label>
         </span>
         <span class="radio radio-inline"><input type="radio"
                                                 id="inlineRadio3" value="3"
@@ -84,7 +82,7 @@
                                                 <c:if
                                                     test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>> <label
-            for="inlineRadio3">Eligibility</label>
+            for="inlineRadio3">適格性テスト</label>
         </span>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -93,8 +91,8 @@
         <div class="blue-md-f mb-md text-uppercase">Token Validation</div>
         <div>
           <div class="gray-xs-f mb-xs">
-            Instruction Text
-            <small>(230 characters max)</small>
+            概要
+            <small>(230 文字まで)</small>
             <span
                 class="requiredStar">*
             </span>
@@ -112,12 +110,12 @@
          <c:if test="${eligibility.eligibilityMechanism eq 1}">style="display: none;"</c:if>>
       <div class="right-content-head">
         <div class="text-right">
-          <div class="black-md-f  dis-line pull-left line34">Eligibility
+          <div class="black-md-f  dis-line pull-left line34">適格性の質問
           </div>
           <div class="dis-line form-group mb-none mr-sm">
             <c:if test="${empty permission}">
               <button type="button" class="btn btn-primary blue-btn"
-                      id="addQaId">+ Add Question
+                      id="addQaId">+ 質問の追加
               </button>
             </c:if>
           </div>
@@ -131,8 +129,8 @@
               <th id="">
                 <span class="marL10">#</span>
               </th>
-              <th id="">Questions</th>
-              <th id="">Actions</th>
+              <th id="">質問</th>
+              <th id="">アクション</th>
             </tr>
           </thead>
           <tbody>
@@ -209,7 +207,7 @@
               if (eligibilityTestSize === 0) {
                 $("#doneBut").attr("disabled", true);
                 $('#spancomId').attr('data-original-title',
-                    'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+                    'このセクションを完了にする前に、１つ以上の適格性テストの登録をお願いします。');
               }
             }
 
@@ -532,7 +530,7 @@
                                 .addClass(
                                     's-box')
                                 .text(
-                                    "Question deleted successfully");
+                                    "質問を削除しました。");
                             $('#alertMsg').show();
                             if ($('.fifthConsent')
                                 .find('span')
@@ -559,7 +557,7 @@
                                 .addClass(
                                     'e-box')
                                 .text(
-                                    "Unable to delete Question");
+                                    "この質問削除できません。");
                             $('#alertMsg').show();
                           }
                           setTimeout(
@@ -604,15 +602,15 @@
                       .push("<span class='dis-ellipsis' title='" + DOMPurify.sanitize(obj.question) + "'>"
                           + DOMPurify.sanitize(obj.question) + "</span>");
                 }
-                var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="View" etId="'
+                var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="参照" etId="'
                     + parseInt(obj.id) + '"></span> '
                     + '<span class="'
                     + (DOMPurify.sanitize(obj.status) ? "edit-inc"
                         : "edit-inc-draft")
-                    + ' mr-md mr-lg  editIcon" data-toggle="tooltip" data-placement="top" title="Edit"  etId="'
+                    + ' mr-md mr-lg  editIcon" data-toggle="tooltip" data-placement="top" title="編集"  etId="'
                     + parseInt(obj.id)
                     + '"></span>'
-                    + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns('
+                    + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="削除" onclick="deleteEligibiltyTestQusAns('
                 datarow.push(actions);
                 $('#consent_list').DataTable().row.add(datarow);
               });
@@ -622,7 +620,7 @@
       $('#consent_list').DataTable().draw();
       $("#doneBut").attr("disabled", true);
       $('#spancomId').attr('data-original-title',
-          'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+          'このセクションを完了にする前に、１つ以上の適格性テストの登録をお願いします。');
     }
   }
 

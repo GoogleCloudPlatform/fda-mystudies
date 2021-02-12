@@ -32,7 +32,7 @@
 
           <div class="dis-line form-group mb-none">
             <button type="button" class="btn btn-primary blue-btn submitEle"
-                    id="completedId" actType="completed">完了として次へ
+                    id="completedId" actType="completed">完了
             </button>
           </div>
         </c:if>
@@ -306,7 +306,7 @@
             <button id="addpage" type="button"
                     class="btn btn-primary blue-btn">
               <span class="mr-xs">+</span>
-              Add page
+              ページ追加
             </button>
           </div>
         </div>

@@ -1419,7 +1419,8 @@ public class StudyDAOImpl implements StudyDAO {
           userBO.setLastName(null != obj[2] ? String.valueOf(obj[2]) : "");
           userBO.setUserEmail(null != obj[3] ? String.valueOf(obj[3]) : "");
           userBO.setRoleName(null != obj[4] ? String.valueOf(obj[4]) : "");
-          userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
+          //userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
+          userBO.setUserFullName(userBO.getLastName() + " " + userBO.getFirstName());
           userList.add(userBO);
         }
       }
@@ -1461,9 +1462,9 @@ public class StudyDAOImpl implements StudyDAO {
           StudyPermissionBO studyPermissionBO = new StudyPermissionBO();
           studyPermissionBO.setUserId(null != obj[0] ? (Integer) obj[0] : 0);
           studyPermissionBO.setUserFullName(
-              (null != obj[1] ? String.valueOf(obj[1]) : "")
+              (null != obj[2] ? String.valueOf(obj[2]) : "")
                   + " "
-                  + (null != obj[2] ? String.valueOf(obj[2]) : ""));
+                  + (null != obj[1] ? String.valueOf(obj[1]) : ""));
           studyPermissionBO.setViewPermission((boolean) obj[3] ? true : false);
           studyPermissionBO.setProjectLead(
               null != obj[4] ? Integer.parseInt(obj[4].toString()) : 0);
