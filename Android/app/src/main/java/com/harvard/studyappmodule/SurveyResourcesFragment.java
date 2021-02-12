@@ -95,7 +95,6 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   private DbServiceSubscriber dbServiceSubscriber;
   private static String RESOURCES = "resources";
   private Realm realm;
-  private String participantDatastoreServer = "false";
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
 
   @Override
@@ -881,14 +880,6 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     }
   }
 
-  public String getType() {
-    return studyHome.getWithdrawalConfig().getType();
-  }
-
-  public String getLeaveStudyMessage() {
-    return studyHome.getWithdrawalConfig().getMessage();
-  }
-
   public void updateuserpreference() {
     HashMap<String, String> header = new HashMap();
     header.put(
@@ -909,7 +900,6 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     try {
       jsonObject.put("participantId", studies.getParticipantId());
       jsonObject.put("studyId", ((SurveyActivity) context).getStudyId());
-      jsonObject.put("delete", participantDatastoreServer);
     } catch (JSONException e) {
       Logger.log(e);
     }
@@ -933,8 +923,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
 
-  public void responseServerWithdrawFromStudy(String flag) {
-    participantDatastoreServer = flag;
+  public void responseServerWithdrawFromStudy() {
     AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
     dbServiceSubscriber.deleteActivityRunsFromDbByStudyID(
         context, ((SurveyActivity) context).getStudyId());
@@ -1005,7 +994,6 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       JSONArray jsonArray1 = new JSONArray();
       JSONObject jsonObject = new JSONObject();
       jsonObject.put("studyId", AppConfig.StudyId);
-      jsonObject.put("delete", participantDatastoreServer);
       jsonArray1.put(jsonObject);
       obj.put("deleteData", jsonArray1);
     } catch (JSONException e) {
