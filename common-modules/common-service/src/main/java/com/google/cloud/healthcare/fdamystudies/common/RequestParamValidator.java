@@ -25,7 +25,7 @@ public final class RequestParamValidator {
       MultiValueMap<String, String> paramMap, String... paramNames) {
     ValidationErrorResponse error = new ValidationErrorResponse();
     for (String param : paramNames) {
-      logger.info("[" + param + "] is empty?? --> [ " + StringUtils.isEmpty(paramMap.getFirst(param)) + " ]   --> value : [ " + paramMap.get(param) + " ]");
+      logger.info("[" + param + "] is empty?? --> [ " + StringUtils.isEmpty(paramMap.getFirst(param)) + " ]   --> value : [ " + paramMap.getFirst(param) + " ]");
       if (StringUtils.isEmpty(paramMap.getFirst(param))) {
         logger.info("        --> [" + param + "] must not be blank.... orz");
         error.getViolations().add(new Violation(param, "must not be blank"));

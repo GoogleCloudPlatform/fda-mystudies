@@ -8,12 +8,12 @@
 
 var fieldErrors = {
   "email": {
-	"required": "Enter an email",
-	"invalid": "Enter a valid email"
+	"required": "メールアドレスを入力して下さい",
+	"invalid": "正しいメールアドレスを入力して下さい"
   },
   "password": {
-	"required": "Enter a password",
-	"invalid": "Enter a valid password"
+	"required": "パスワードを入力して下さい",
+	"invalid": "8文字以上の半角文字で入力して下さい"
   }
 }
 

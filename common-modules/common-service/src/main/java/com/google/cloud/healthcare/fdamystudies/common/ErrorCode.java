@@ -46,14 +46,13 @@ public enum ErrorCode {
       400,
       "EC_0005",
       Constants.BAD_REQUEST,
-      "Wrong email or password. Try again or click Forgot Password"),
+      "メールアドレスかパスワードが間違っています。 入力内容をご確認下さい。"),
 
   PASSWORD_EXPIRED(
       400,
       "EC_0006",
       HttpStatus.BAD_REQUEST.toString(),
-      //"Your password has expired. Please use the Forgot Password link to get password help."),
-      "XXXXXXXXXXXXXXXX XXXXXXXXXXx get password help."),
+      "Your password has expired. Please use the Forgot Password link to get password help."),
 
   EMAIL_EXISTS(
       409,
@@ -129,7 +128,7 @@ public enum ErrorCode {
       HttpStatus.FORBIDDEN.toString(),
       "You do not have permission to view or add or update locations"),
 
-  USER_NOT_FOUND(404, "EC_0024", HttpStatus.NOT_FOUND.toString(), "User not found"),
+  USER_NOT_FOUND(404, "EC_0024", HttpStatus.NOT_FOUND.toString(), "ユーザーが見つかりませんでした"),
 
   CUSTOM_ID_EXISTS(400, "EC_0025", Constants.BAD_REQUEST, "Location ID already exists"),
 
