@@ -9,7 +9,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:th="https://www.thymeleaf.org">
 <head>
-<title>Sign in</title>
+<title>サインイン</title>
 
 <link rel="stylesheet"
   href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
@@ -99,8 +99,7 @@
                         <div
                           class="col-md-12 col-xs-12 pr-none pl-none text-left">
                           <a class="blue__link forgot__pwd mobile"
-                            th:href="${forgot_password_link}">Forgot
-                            Password?</a>
+                            th:href="${forgot_password_link}">パスワードを忘れた方</a>
                         </div>
                       </div>
                       <div
@@ -111,10 +110,9 @@
                         </div>
                         <div class="col-md-9 pr-none pl-none text-right">
                           <a class="blue__link forgot__pwd desktop"
-                            th:href="${forgot_password_link}">パスワードをお忘れですか？</a> <span
+                            th:href="${forgot_password_link}">パスワードを忘れた方</a> <span
                             class="mobile sign__up forgot__pwd costom_ml"
-                            th:if="${mobileApp}">New user? <a
-                            th:href="${signup_link}" class="blue__link">Sign
+                            th:if="${mobileApp}">新規作成はこちら <a th:href="${signup_link}" class="blue__link">Sign
                               up</a>
                           </span>
                         </div>
