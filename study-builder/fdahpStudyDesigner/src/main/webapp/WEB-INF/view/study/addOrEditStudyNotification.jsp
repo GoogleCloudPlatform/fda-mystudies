@@ -100,7 +100,7 @@
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           data-toggle="tooltip"
           data-placement="top"
-          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}">
+          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}.">
       </span>
           </span>
           <span class="radio radio-inline">
