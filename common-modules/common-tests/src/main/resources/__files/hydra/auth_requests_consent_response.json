@@ -15,7 +15,7 @@
     "redirect_uris": [
       "http://localhost:8002/auth-server/login",
       "http://localhost:8002/auth-server/consent",
-      "https://35.222.67.4:5555/callback"
+      "https://localhost:5555/callback"
     ],
     "grant_types": [
       "authorization_code",
@@ -48,7 +48,7 @@
     "metadata": {
     }
   },
-  "request_url": "https://35.222.67.4:9000/oauth2/auth?client_id=oauth-scim-client-id&scope=offline_access&response_type=code&state=cc209bbe-3144-4afd-a44b-943fc00e225f&redirect_uri=http://localhost:8002/auth-server/login&code_challenge_method=S256&code_challenge=dwtuGg4a2pTKCaB8rGeMESyH5u9ikUALdIg2B16afAQ",
+  "request_url": "https://localhost:9000/oauth2/auth?client_id=oauth-scim-client-id&scope=offline_access&response_type=code&state=cc209bbe-3144-4afd-a44b-943fc00e225f&redirect_uri=http://localhost:8002/auth-server/login&code_challenge_method=S256&code_challenge=dwtuGg4a2pTKCaB8rGeMESyH5u9ikUALdIg2B16afAQ",
   "login_challenge": "226d351cb7284c7ab08f0ae15e06cd1c",
   "login_session_id": "09165624-c866-4dbc-96c6-5ecba23c00b5",
   "acr": "",

@@ -29,8 +29,7 @@ To deploy the [`Auth server`](/auth-server/) manually:
 1. [Create](https://cloud.google.com/compute/docs/instances/create-start-instance) a Compute Engine VM instance with your preferred machine type and OS (for example, e2-medium and Debian 10), then [reserve a static IP](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-internal-ip-address)
 1. Verify that your VM instance has the `Stackdriver Logging API` write [access scope](https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam) (on by default) and that your VM’s [service account](https://cloud.google.com/compute/docs/access/service-accounts#default_service_account) has the [`Logs Writer`](https://cloud.google.com/logging/docs/access-control) role (off by default) 
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/)
-1. Update the organization name as desired for org.name in the [application.properties](oauth-scim-service/src/main/resources/application.properties) file
-1. Update the landing page logo as desired replacing the image [landingpage-logo.png](oauth-scim-service/src/main/resources/static/images/landingpage-logo.png) (ensure you keep the same file name)
+1. Update the landing page logo as desired replacing the image [landingpage-logo.png](oauth-scim-service/src/main/resources/static/images/landingpage-logo.png) (keep the same file name)
 1. Create a Cloud SQL instance with MySQL v5.7 ([instructions](https://cloud.google.com/sql/docs/mysql/create-instance))
 1. Configure the `Auth server` database on the Cloud SQL instance
     -    Create a user account that the `Auth server` application will use to access this instance ([instructions](https://cloud.google.com/sql/docs/mysql/create-manage-users))
