@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -144,15 +145,15 @@
                 </td>
                 <td>
                   <span class="sprites_icon preview-g mr-lg viewIcon"
-                        data-toggle="tooltip" data-placement="top" title="View"
+                        data-toggle="tooltip" data-placement="top" title="参照"
                         etId="${etQusAns.id}"></span>
                   <span
                       class="${etQusAns.status ? 'edit-inc' : 'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if> editIcon"
-                      data-toggle="tooltip" data-placement="top" title="Edit"
+                      data-toggle="tooltip" data-placement="top" title="編集"
                       etId='${etQusAns.id}'></span>
                   <span
                       class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if> deleteIcon"
-                      data-toggle="tooltip" data-placement="top" title="Delete"
+                      data-toggle="tooltip" data-placement="top" title="削除"
                       onclick="deleteEligibiltyTestQusAns('${etQusAns.id}', this);"></span>
                 </td>
               </tr>
