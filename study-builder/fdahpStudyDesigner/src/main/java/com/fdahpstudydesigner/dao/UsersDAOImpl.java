@@ -524,7 +524,7 @@ public class UsersDAOImpl implements UsersDAO {
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.createQuery(" FROM RoleBO RBO ");
+      query = session.createQuery(" FROM RoleBO RBO ORDER BY RBO.roleName DESC ");
       roleBOList = query.list();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserRoleList() - ERROR", e);

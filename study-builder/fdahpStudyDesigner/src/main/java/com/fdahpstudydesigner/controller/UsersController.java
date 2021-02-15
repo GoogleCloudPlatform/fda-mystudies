@@ -220,6 +220,15 @@ public class UsersController {
           userBO.setModifiedBy(userSession.getUserId());
           userBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         }
+
+        if (userBO.getRoleId().equals(1)) {
+          permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT);
+          permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT);
+          permissionList.add(FdahpStudyDesignerConstants.ROLE_CREATE_MANAGE_STUDIES);
+          permissions = FdahpStudyDesignerConstants.SUPER_ADMIN_PERMISSIONS;
+          permissionValues = "1,1";
+        }
+
         if (!"".equals(manageUsers)) {
           if ("0".equals(manageUsers)) {
             permissions += count > 1 ? ",ROLE_MANAGE_USERS_VIEW" : "ROLE_MANAGE_USERS_VIEW";
