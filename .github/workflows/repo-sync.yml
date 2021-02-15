@@ -2,7 +2,7 @@ name: Repo Sync
 
 on:
   schedule: 
-  - cron: "*/30 06 * * *" # every 15 minutes. set to whatever interval you like
+  - cron: "*/30 06 * * *" # It runs every day 6:00 UTC. set to whatever interval you like
     
     
 
