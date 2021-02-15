@@ -1,3 +1,9 @@
+# This Git hub action workflows to keep pairs of git repos in sync.
+# It runs on a Schedule time set by the user in the script. 
+# Shortly after changes are made to the default branch of repo A, the Actions workflow runs on repo B and generates a pull request including the recent changes from repo A. 
+# If more changes are made to repo A before the pull request is merged, those changes will be added to the existing pull request. 
+# The same is true in the opposite direction: changes made to repo B will eventually get picked up by the workflow in repo A.
+# For more information please refer thislink: https://github.com/repo-sync/repo-sync
 name: Repo Sync
 
 on:
