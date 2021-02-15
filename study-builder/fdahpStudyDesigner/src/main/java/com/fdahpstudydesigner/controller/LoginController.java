@@ -314,7 +314,7 @@ public class LoginController {
         checkSecurityToken = true;
       }
       map.addAttribute("isValidToken", checkSecurityToken);
-      mv = new ModelAndView("emailChangeVarificationPage", map);
+      mv = new ModelAndView("emailChangeVerificationPage", map);
     } catch (Exception e) {
       logger.error("LoginController - createPassword() - ERROR ", e);
     }

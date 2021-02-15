@@ -15,7 +15,7 @@
     "redirect_uris": [
       "http://localhost:8002/auth-server/login",
       "http://localhost:8002/auth-server/consent",
-      "https://35.222.67.4:5555/callback"
+      "https://localhost:5555/callback"
     ],
     "grant_types": [
       "authorization_code",
@@ -48,6 +48,6 @@
     "metadata": {
     }
   },
-  "request_url": "https://35.222.67.4:9000/oauth2/auth?client_id=oauth-scim-client-id&scope=offline_access&response_type=code&state=56d674f2-11dc-4350-86c7-33f11111f50a&redirect_uri=http://localhost:8002/auth-server/login&code_challenge_method=S256&code_challenge=lojRxBcyRjUtlUN6vLQ_jSzdntnhf_xdV5sCmQWANOQ&tempRegId=ec2045a1-0cd3-4998-b515-7f9703dff5bf&source=PARTICIPANT MANAGER",
+  "request_url": "https://localhost:9000/oauth2/auth?client_id=oauth-scim-client-id&scope=offline_access&response_type=code&state=56d674f2-11dc-4350-86c7-33f11111f50a&redirect_uri=http://localhost:8002/auth-server/login&code_challenge_method=S256&code_challenge=lojRxBcyRjUtlUN6vLQ_jSzdntnhf_xdV5sCmQWANOQ&tempRegId=ec2045a1-0cd3-4998-b515-7f9703dff5bf&source=PARTICIPANT MANAGER",
   "session_id": "e1bd0d70-e223-4dfa-9bbb-d58f497ed9d6"
 }
