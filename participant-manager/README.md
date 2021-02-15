@@ -35,7 +35,7 @@ To deploy the [`Participant manager`](/participant-manager/) manually:
 1. [Create](https://cloud.google.com/compute/docs/instances/create-start-instance) a Compute Engine VM instance with your preferred machine type and OS (for example, e2-medium and Debian 10), then [reserve a static IP](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-internal-ip-address)
 1. Verify that your VM instance has the `Stackdriver Logging API` write [access scope](https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam) (on by default) and that your VM’s [service account](https://cloud.google.com/compute/docs/access/service-accounts#default_service_account) has the [`Logs Writer`](https://cloud.google.com/logging/docs/access-control) role (off by default)
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/)
-1. Optional. Customize branding by updating images and text
+1. Optional: Customize branding by updating images and text
    - Update the landing page logo as desired replacing the image [`landing-logo.png`](src/assets/images/branding/landing-logo.png) (ensure you keep the same file name)
    - Update the favicon as desired replacing the image [`favicon_pm.png`](src/assets/images/branding/favicon_pm.png) (ensure you keep the same file name)
    - Update user-facing text as desired, for example termsPageTitle, termsPageDescription,aboutPageTitle, aboutPageDescription, copyright in [`environment.prod.ts`](src/environments/environment.prod.ts)
