@@ -162,7 +162,6 @@ public class UsersServiceImpl implements UsersService {
       HttpServletRequest request,
       UserBO userBO,
       String permissions,
-      List<Integer> permissionList,
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,
@@ -171,8 +170,6 @@ public class UsersServiceImpl implements UsersService {
     UserBO userBO2 = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
     boolean addFlag = false;
-    String activity = "";
-    String activityDetail = "";
     List<StudyBuilderAuditEvent> auditLogEvents = new LinkedList<>();
     Map<String, String> values = new HashMap<>();
     boolean emailIdChange = false;

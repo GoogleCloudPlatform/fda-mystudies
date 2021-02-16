@@ -255,34 +255,7 @@
         </div>
         <div class="clearfix"></div>
 
-        <!-- Gray Widget-->
-        <div class="edit-user-list-widget">
-          <span class="checkbox checkbox-inline"><input
-              type="checkbox" class="chk" id="inlineCheckbox1" value="option1"
-              <c:if test="${fn:contains(permissions,7)}">checked</c:if>
-              <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox1"> Users </label>
-          </span>
-          <span class="pull-right">
-            <span
-                class="radio radio-info radio-inline p-45"><input
-                type="radio" class="musr" id="inlineRadio1" value="0"
-                name="manageUsers"
-                <c:if test="${fn:contains(permissions,7)}">checked</c:if>
-                <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-              <label for="inlineRadio1"></label>
-            </span>
-            <span class="radio radio-inline"><input type="radio"
-                                                    class="musr" id="inlineRadio2" value="1"
-                                                    name="manageUsers"
-                                                    <c:if
-                                                        test="${fn:contains(permissions,5)}">checked</c:if>
-                                                    <c:if
-                                                        test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-              <label for="inlineRadio2"></label>
-            </span>
-          </span>
-        </div>
+       
 
         <div class="edit-user-list-widget">
           <span class="checkbox checkbox-inline"><input
@@ -455,11 +428,29 @@
       setStudySettingByRole(role);
     }
     </c:if>
+
+    <c:if test="${actionPage eq 'ADD_PAGE'}">
+    $('.edit-user-list-widget').hide();
+ 	 $('.blue-md-f').hide();
+ 	 $('.pull-right').hide();
+    </c:if>
+
+    <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
+    if($('#roleId').find('option:selected').text() == 'Superadmin' ){
+    $('.edit-user-list-widget').hide();
+ 	 $('.blue-md-f').hide();
+ 	 $('.pull-right').hide();
+    }
+    </c:if>
+
+    
     
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       setStudySettingByRole(element);
     });
+
+   
 
     var countCall = 0;
     $(window).on('load', function () {
@@ -709,6 +700,8 @@
       }
     });
 
+    
+
     $('#resendLinkId').on('click', function () {
       var form = document.createElement('form');
       form.method = 'post';
@@ -883,5 +876,20 @@
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");
   });
+
+  $('#roleId').on('change', function () {
+      var element = $(this).find('option:selected').text();
+      if(element == "Study Admin"){ 
+      	 $('.edit-user-list-widget').show();
+      	 $('.blue-md-f').show();
+      	 $('.pull-right').show();
+          } else{
+        	  $('.edit-user-list-widget').hide();
+           	 $('.blue-md-f').hide();
+           	 $('.pull-right').hide();
+              }
+    });
+  
+  
 </script>
 
