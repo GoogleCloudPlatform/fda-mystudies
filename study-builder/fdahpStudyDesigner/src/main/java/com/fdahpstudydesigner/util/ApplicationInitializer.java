@@ -24,7 +24,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
   @Override
   public void onStartup(ServletContext servletContext) throws ServletException {
     File[] defaultImageFiles =
-        new File(servletContext.getRealPath("/") + "/images/defaultimage/").listFiles();
+        new File(servletContext.getRealPath("/") + "/images/study/").listFiles();
     uplaodImage(defaultImageFiles);
   }
 
