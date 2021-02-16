@@ -6,6 +6,10 @@
 	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
 	    text-transform: inherit; !important
 		}
+		
+	.help-block ul {
+      width: max-content !important;
+    }
 </style>
 <div class="changeContent">
   <form:form
@@ -31,7 +35,7 @@
         </span>
         <span
             class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-            title="This must be a human-readable activity identifier and unique across all activities of the study.Note that this field cannot be edited once the study is Launched."></span>
+            title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."></span>
       </div>
       <div class="add_notify_option">
         <div class="form-group shortTitleClass">
@@ -1898,6 +1902,10 @@
       $(this).parent().find(".help-block").empty();
       $('.statShortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
     });
+    $('#shortTitleId').on('keyup', function () {
+        $(this).parent().find(".help-block").empty();
+        $('.shortTitleClass').parent().removeClass("has-danger").removeClass("has-error");
+    });
     $('#static1, #static2, #static3').blur(function () {
       validateShortTitleStatId('', this, function (val) {
       });
@@ -2324,14 +2332,13 @@
       if (charCode == 16)
         isShift = false;
       if (!isShift && $(this).val()) {
-        var regularExpression = /^[A-Za-z0-9*()_+|:.-]*$/;
+        var regularExpression = /^[a-z0-9_-]*$/;
         if (!regularExpression.test($(this).val())) {
-          var newVal = $(this).val().replace(/[^A-Za-z0-9\*\(\)_+|:.\-]/g, '');
+          var newVal = $(this).val().replace(/[^a-z0-9_-]/g, '');
           e.preventDefault();
           $(this).val(newVal);
-          $(this).parent().addClass("has-danger has-error");
           $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "The characters like (< >) are not allowed."));
+              "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."));
         }
       }
     });
