@@ -12,7 +12,7 @@
 * Refined automated deployment process including GKE cluster upgrade
 * Bug fixes and UI refinements
 * Additional code improvements
-  <br>The full list of bugs and features addressed in this release can be viewed [`here`](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/5)
+<br>The full list of bugs and features addressed in this release can be viewed [`here`](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/5)
 
 # Release 2.0.1
 * Simplified semi-automated deployment
