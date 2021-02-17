@@ -32,9 +32,9 @@ To deploy the [`Study builder`](/study-builder/) manually:
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/)
 1. Optional. Customize branding by updating text and images
 	-    Update user-facing text as desired, for example in [`termsAndCondition.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/view/termsAndCondition.jsp), [`copyright.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/templates/copyright.jsp) and [`privacypolicy.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/view/privacypolicy.jsp)
-	-	 Update the landing page logo as desired replacing the image [`logo_landing_welcome.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_landing_welcome.png) (keep the same file name)
-	- 	 Update the inner screens logo as desired replacing the image [`logo_innerScreens.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_innerScreens.png) (keep the same file name)
-	-    Update the favicon logo as desired replacing the image [`FAV_Icon.png`](fdahpStudyDesigner/src/main/webapp/images/icons/FAV_Icon.png) (keep the same file name)
+	-	 Replace landing page image [`logo_landing_welcome.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_landing_welcome.png) (do not change filename)
+	- 	 Replace subpage image [`logo_innerScreens.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_innerScreens.png) (do not change filename)
+	-    Replace favicon image [`FAV_Icon.png`](fdahpStudyDesigner/src/main/webapp/images/icons/FAV_Icon.png) (do not change filename)
 1. Deploy the `Study builder` container to the VM
     -    Create the Docker image using `sudo mvn -B package -Pprod com.google.cloud.tools:jib-maven-plugin:2.5.2:dockerBuild -f fdahpStudyDesigner/pom.xml -Dimage=study-builder-image` (you may need to [install Docker](https://docs.docker.com/engine/install/debian/) and Maven, for example `sudo apt install maven`)
     -    Update the Docker environment file [`variables.env`](variables.env) with values to configure the [`application.properties`](fdahpStudyDesigner/src/main/resources/application.properties) file for your deployment
