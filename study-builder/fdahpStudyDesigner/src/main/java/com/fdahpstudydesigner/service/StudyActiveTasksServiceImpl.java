@@ -322,9 +322,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
         if (activeTaskBo.getScheduleType() != null) {
           addActiveTaskeBo.setScheduleType(activeTaskBo.getScheduleType());
         }
-        if (activeTaskBo.getAnchorDateId() != null) {
-          addActiveTaskeBo.setAnchorDateId(activeTaskBo.getAnchorDateId());
-        }
+        addActiveTaskeBo.setAnchorDateId(activeTaskBo.getAnchorDateId());
         if ((activeTaskBo.getFrequency() != null)
             && !activeTaskBo
                 .getFrequency()
