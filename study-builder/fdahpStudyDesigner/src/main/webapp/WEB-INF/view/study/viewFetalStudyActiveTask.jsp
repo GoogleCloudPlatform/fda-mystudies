@@ -28,7 +28,7 @@
       </span>
       <span class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
-            title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."></span>
+            title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."></span>
     </div>
     <div class="add_notify_option">
       <div class="form-group shortTitleClass">
@@ -1107,7 +1107,7 @@
                        list.setAttribute("class","list-unstyled");
                        list.setAttribute("style","white-space:nowrap");
                        var li = document.createElement('li');
-                       li.textContent = "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus).";
+                       li.textContent = "Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and -(minus).";
                    	   list.appendChild(li);
                    	   validationactivity.appendChild(list);
                       }
