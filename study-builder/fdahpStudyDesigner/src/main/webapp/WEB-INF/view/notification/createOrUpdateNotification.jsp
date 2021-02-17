@@ -75,7 +75,7 @@
               <label for="inlineRadio1">Schedule this notification
               <span
                data-toggle="tooltip" data-placement="top"
-               title="The notification will get fired at the selected date and time as per server time zone."
+               title="Notifications are delivered to mobile app users at the selected date and time in accordance with the server time zone."
                class="filled-tooltip"></span>
               </label>
             </span>
