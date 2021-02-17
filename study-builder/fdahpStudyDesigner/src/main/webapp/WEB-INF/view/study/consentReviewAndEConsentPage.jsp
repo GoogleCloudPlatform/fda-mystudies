@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- ============================================================== -->
@@ -32,19 +31,19 @@
       <div class="right-content-head" style="z-index: 999;">
         <div class="text-right">
           <div class="black-md-f text-uppercase dis-line pull-left line34">
-            ???????????
+            同意書の設定とレビュー
             <c:set var="isLive">${_S}isLive</c:set>
               ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn"
-                    onclick="goToBackPage(this);">?????
+                    onclick="goToBackPage(this);">キャンセル
             </button>
           </div>
           <div class="dis-line form-group mb-none mr-sm">
-            <button type="button" class="btn btn-default gray-btn" id="saveId">????</button>
+            <button type="button" class="btn btn-default gray-btn" id="saveId">一時保存</button>
           </div>
           <div class="dis-line form-group mb-none">
-            <button type="button" class="btn btn-primary blue-btn" id="doneId">??
+            <button type="button" class="btn btn-primary blue-btn" id="doneId">完了
             </button>
           </div>
         </div>
@@ -55,15 +54,15 @@
         <ul class="nav nav-tabs review-tabs">
           <li class="shareData active">
             <a data-toggle="tab"
-               href="#menu1">?????????
+               href="#menu1">データの利用と共有
             </a>
           </li>
           <li class="consentReview">
-            <a data-toggle="tab" href="#menu2">????????
+            <a data-toggle="tab" href="#menu2">同意書のレビュー
             </a>
           </li>
           <li class="econsentForm">
-            <a data-toggle="tab" href="#menu3">?????????
+            <a data-toggle="tab" href="#menu3">電子同意書フォーム
             </a>
           </li>
         </ul>
@@ -72,7 +71,7 @@
                  value="${consentBo.version}">
           <div id="menu1" class="tab-pane fade in active">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm"> ????????????????????????? ?????????????????????????????????????????????????
+              <div class="gray-xs-f mb-sm"> この治験のデータ共有許可ステップを有効にしますか？ （これにより、被験者は自分のデータをサードパーティと共有することを許可するかどうかを選択できます）
               </div>
               <div class="col-md-12 pl-none">
                 <div class="form-group custom-form">
@@ -96,8 +95,8 @@
                   id="rootContainer">
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    ??????
-                    <small>(250????)</small>
+                    画面タイトル
+                    <small>(250文字まで)</small>
                     <span
                         class="requiredStar">*
                     </span>
@@ -112,12 +111,12 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    ??
-                    <small>(500????)</small>
+                    説明
+                    <small>(500文字まで)</small>
                     <span
                         class="requiredStar">*
                     </span>
-                    E.g. &lt;????&gt; ?????????????????????????????????????????????????????????????????????????????????
+                    E.g. &lt;実施機関&gt; とそのパートナーは、研究への参加からあなたの治験データを受け取ります。研究のためにデータを他の当事者とより広く共有することを許可して頂けるか意思を示してください。
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
@@ -129,8 +128,8 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    ????? 1: E.g. ?????? &lt;????&gt; ???????????????????????
-                    <small>(250????)</small>
+                    オプション 1: E.g. 私のデータは &lt;実施機関&gt; と世界中の資格のある研究者に共有してください。
+                    <small>(250文字まで)</small>
                     <span
                         class="requiredStar">*
                     </span>
@@ -144,8 +143,8 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    ????? 2: E.g. ?????? &lt;????&gt; ????????????????
-                    <small>(500????)</small>
+                    オプション 2: E.g. 私のデータは &lt;実施機関&gt; とそのパートナのみに共有します。
+                    <small>(500文字まで)</small>
                     <span
                         class="requiredStar">*
                     </span>
@@ -159,7 +158,7 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    ?????????????????????
+                    「詳細」セクションで表示できる説明テキスト
                     <span class="requiredStar">*</span>
                   </div>
                   <div class="form-group">
@@ -172,7 +171,7 @@
                   <a class="preview__text" href="javascript:void()"
                      data-toggle="modal" onclick="previewDataSharing();"><img
                       class="mr-xs" src="../images/icons/eye-icn.png" alt="">
-                    <span>????????</span>
+                    <span>プレビューを見る</span>
                   </a>
                 </div>
               </div>
@@ -183,7 +182,7 @@
           </div>
           <div id="menu2" class="tab-pane fade">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm">Select the type of consent document you wish to use:
+              <div class="gray-xs-f mb-sm">同意書の生成についてタイプを選択してください:
               </div>
               <div class="form-group mb-none">
                 <div id="consentDocTypeDivId">
@@ -192,14 +191,14 @@
                       name="consentDocType" required
                       data-error="Please choose consent document type"
                     ${consentBo.consentDocType=='Auto'?'checked':''}> <label
-                      for="inlineRadio1">Auto-created consent document</label>
+                      for="inlineRadio1">同意書の自動生成</label>
                   </span>
                   <span class="radio radio-inline"><input type="radio"
                                                           id="inlineRadio2" value="New"
                                                           name="consentDocType" required
                                                           data-error="Please choose consent document type"
                     ${consentBo.consentDocType=='New'?'checked':''}> <label
-                      for="inlineRadio2">Custom</label>
+                      for="inlineRadio2">カスタム</label>
                   </span>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -207,27 +206,21 @@
             </div>
             <div class="italic-txt">
               <div id="autoCreateHelpTextDiv" style="display: block;">
-                <small class="inst">This is a preview of the auto-created 
-                consent document generated on the mobile app by concatenating
-                 content from consent sections (long descriptions only). 
-                 You could either use this or choose to have a custom consent document 
-                 for the study. Note that the signed consent PDF for each 
-                 participant will also have their first name, last name, signature and 
-                 date of consent, as captured on the app.
+                <small class="inst">これは同意項目設定のコンテンツを連結し自動生成した同意書のプレビューです。
+                この同意書は被験者がモバイルアプリにて参照します。これを使用するか、治験用のカスタム同意文書を
+                選択することができます。なお、最終的には同意書は、被験者の署名、姓名、同意日も含まれたPDFファイルになります。
                 </small>
               </div>
               <div id="newDocumentHelpTextDiv" style="display: none;">
-                <small class="inst">Choose this option if you wish to provide separate 
-                content for the consent document instead of using the auto-created one. 
-                Enter the content you wish to use here. Note that the signed consent PDF 
-                for each participant will also have their first name, last name, 
-                signature and date of consent, as captured on the app.
+                <small class="inst">自動作成されたものを使用する代わりに、同意文書に個別のコンテンツを提供する場合は、
+                このオプションを選択します。使用したいコンテンツをここに入力してください。
+                なお、最終的には同意書は、被験者の署名、姓名、同意日も含まれたPDFファイルになります。
                 </small>
               </div>
             </div>
             <div class="mt-xlg">
               <div class="blue-lg-f text-uppercase">
-                CONSENT DOCUMENT
+                同意書
                 <span id="requiredStarId" class="requiredStar">*</span>
               </div>
               <div class="mt-lg">
@@ -258,21 +251,18 @@
             </div>
           </div>
           <div id="menu3" class="tab-pane fade">
-            <div class="mt-xlg text-weight-semibold">The mobile app
-              captures the following from the user as part of the e-Consent
-              process for the study in the app:
+            <div class="mt-xlg text-weight-semibold">モバイルアプリは、リモート治験のための電子同意プロセスの一部として、ユーザーから以下をキャプチャします:
             </div>
             <div class="mt-lg">
               <ul class="list-style-image">
-                <li>Explicit confirmation of consent document review and
-                  agreement
-                  <small>(250 characters max)</small>
+                <li>同意文書のレビューと同意の明示的な確認
+                  <small>(250文字まで)</small>
                   <span
                       class="requiredStar">*
                   </span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      title="Text message shown to the prospect participant on the app, to confirm Review of and Agreement to the Consent Document."></span>
+                      title="同意文書のレビューと同意を確認するために、アプリで見込みの被験者に表示されるテキストメッセージ"></span>
                   <div class="form-group mt-sm mb-none">
                     <input type="text" class="form-control" placeholder=""
                            required name="aggrementOfTheConsent"
@@ -282,10 +272,9 @@
                   </div>
                 </li>
 
-                <li>First Name</li>
-                <li>Last Name</li>
-                <li>E-signature</li>
-                <li>Date and Time of providing Consent</li>
+                <li>姓名</li>
+                <li>電子サイン</li>
+                <li>同意日</li>
               </ul>
             </div>
           </div>
@@ -327,7 +316,7 @@
                     </div>
                     <div id="learnMoreId" class="pp__learnmore">
                       <a href="javascript:void(0)" data-toggle="modal"
-                         onclick="previewLearnMore();">??
+                         onclick="previewLearnMore();">詳細
                       </a>
                     </div>
                     <div id="mainOverviewPanel" class="pp__ul mt-xlg">
@@ -483,24 +472,23 @@
             var alertType = "";
             if (retainTxt != null && retainTxt != '' && typeof retainTxt != 'undefined') {
               if (retainTxt == 'Yes') {
-                alertType = "retained";
+                alertType = "保持する";
               } else if (retainTxt == 'No') {
-                alertType = "deleted";
+                alertType = "削除する";
               } else {
-                alertType = "retained or deleted as per participant choice";
+                alertType = "参加者の選択に従って保持または削除する";
               }
-              message = "You have a setting that needs study data to be " + alertType
-                  + " if the participant withdraws from the study. Please ensure you have worded Consent Terms in accordance with this. Click OK to proceed with completing this section or Cancel if you wish to make changes.";
+              message = "被験者が研究から脱退した場合に研究データを [" + alertType + " ] 設定になっています。これが同意書に表現されていることを確認してください。「完了」を押して完了するか、変更する場合は「キャンセル」を押してください。";
             }
             bootbox.confirm({
               closeButton: false,
               message: message,
               buttons: {
                 'cancel': {
-                  label: 'Cancel',
+                  label: 'キャンセル',
                 },
                 'confirm': {
-                  label: 'OK',
+                  label: '完了',
                 },
               },
               callback: function (result) {
