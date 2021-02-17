@@ -92,7 +92,7 @@ $(document)
           }
 
           $('input[type = text] , textarea')
-              .keyup(
+              .change(
                   function (e) {
                     var wrappedString = $(this).val()
                         .toLowerCase();
@@ -120,7 +120,7 @@ $(document)
                   });
           $('input[type = text][custAttType != cust]')
               .on(
-                  'keyup',
+                  'change',
                   function (e) {
                     var evt = (e) ? e : window.event;
                     var charCode = (evt.which) ? evt.which
@@ -157,7 +157,7 @@ $(document)
           });
           $('input[type = text][custAttType = cust]')
               .on(
-                  'keyup',
+                  'change',
                   function (e) {
                     var evt = (e) ? e : window.event;
                     var charCode = (evt.which) ? evt.which
@@ -190,7 +190,7 @@ $(document)
                   });
 
           $('div[role = textbox]')
-              .keyup(
+              .change(
                   function (e) {
                     var wrappedString = $(this).text();
                     if (wrappedString.indexOf('<script>') !== -1

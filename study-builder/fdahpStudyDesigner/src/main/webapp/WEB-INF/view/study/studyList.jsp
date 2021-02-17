@@ -21,7 +21,7 @@
         <th id="">治験名
           <span class="sort"></span>
         </th>
-        <th id="">変えゴリ
+        <th id="">カテゴリ
           <span class="sort"></span>
         </th>
         <th id="">管理者
@@ -55,7 +55,7 @@
             <span class="sprites_icon preview-g mr-lg viewStudyClass" isLive=""
                   studyId="${study.id}"
                   permission="view" data-toggle="tooltip" data-placement="top"
-                  title="View"></span>
+                  title="参照"></span>
             <span
                 class="${(not empty study.liveStudyId)?((study.flag)?'edit-inc-draft mr-md':'edit-inc mr-md'):'edit-inc-draft mr-md'}
                         addEditStudyClass 
@@ -67,13 +67,13 @@
 							  cursor-none
 						</c:when>
 					</c:choose>" data-toggle="tooltip" data-placement="top"
-                title="${(not empty study.liveStudyId)?((study.flag)?'Draft Version':'Edit'):'Draft Version'}"
+                title="${(not empty study.liveStudyId)?((study.flag)?'Draft Version':'編集'):'Draft Version'}"
                 studyId="${study.id}"></span>
             <c:if test="${not empty study.liveStudyId}">
               <span class="eye-inc viewStudyClass mr-lg" isLive="Yes"
                     studyId="${study.liveStudyId}"
                     permission="view" data-toggle="tooltip" data-placement="top"
-                    title="Last Published Version"></span>
+                    title="公開している最新Ver"></span>
             </c:if>
           </td>
         </tr>

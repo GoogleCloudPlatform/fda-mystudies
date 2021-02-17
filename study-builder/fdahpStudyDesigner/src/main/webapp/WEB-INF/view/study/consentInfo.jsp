@@ -29,7 +29,7 @@
           <span class="pr-sm cur-pointer" onclick="goToBackPage(this);">
             <img src="../images/icons/back-b.png" alt=""/>
           </span>
-          <c:if test="${empty consentInfoBo.id}"> Add Consent Section</c:if>
+          <c:if test="${empty consentInfoBo.id}"> ???????</c:if>
           <c:if
               test="${not empty consentInfoBo.id && actionPage eq 'addEdit'}">Edit Consent Section</c:if>
           <c:if test="${not empty consentInfoBo.id && actionPage eq 'view'}">View Consent Section
@@ -39,18 +39,18 @@
         </div>
         <div class="dis-line form-group mb-none">
           <button type="button" class="btn btn-default gray-btn"
-                  onclick="goToBackPage(this);">Cancel
+                  onclick="goToBackPage(this);">?????
           </button>
         </div>
         <div class="dis-line form-group mb-none">
           <button type="button"
                   class="btn btn-default gray-btn ConsentButtonHide ml-sm mr-sm"
-                  onclick="saveConsentInfo(this);">Save
+                  onclick="saveConsentInfo(this);">?????
           </button>
         </div>
         <div class="dis-line form-group mb-none">
           <button type="button"
-                  class="btn btn-primary blue-btn ConsentButtonHide" id="doneId">Done
+                  class="btn btn-primary blue-btn ConsentButtonHide" id="doneId">??
           </button>
         </div>
       </div>
@@ -59,35 +59,35 @@
     <!-- Start body tab section -->
     <div class="right-content-body">
       <div class="gray-xs-f mb-xs">
-        Consent Section Type
+        ??????
         <span class="requiredStar">*</span>
       </div>
       <div class="mt-sm form-group">
         <span class="radio radio-info radio-inline p-45"><input
             type="radio" id="inlineRadio1" value="ResearchKit/ResearchStack"
-            name="consentItemType" required data-error="Please choose type"
+            name="consentItemType" required data-error="???????????""
           ${empty consentInfoBo.consentItemType  || consentInfoBo.consentItemType=='ResearchKit/ResearchStack' ?'checked':''}>
-          <label for="inlineRadio1">Default Options</label>
+          <label for="inlineRadio1">????????</label>
         </span>
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="Custom"
                                                      name="consentItemType" required
-                                                     data-error="Please choose type"
+                                                     data-error="???????????"
           ${consentInfoBo.consentItemType=='Custom'?'checked':''}> <label
-            for="inlineRadio2">Create Custom</label>
+            for="inlineRadio2">????</label>
         </span>
         <div class="help-block with-errors red-txt"></div>
       </div>
       <div id="titleContainer">
         <div class="gray-xs-f mb-xs">
-          Topic
+          ?????????
           <span class="requiredStar">*</span>
         </div>
         <div class="col-md-5 p-none form-group elaborateClass consentTitle">
           <select class="selectpicker" id="consentItemTitleId"
                   name="consentItemTitleId" required
-                  data-error="Please choose one title">
-            <option value="">Select</option>
+                  data-error="1?????????">
+            <option value="">????????</option>
             <c:forEach items="${consentMasterInfoList}" var="consentMaster">
               <option value="${consentMaster.id}"
                 ${consentInfoBo.consentItemTitleId eq consentMaster.id  ? 'selected' : ''}>${consentMaster.title}</option>
@@ -106,8 +106,8 @@
                 style="display: none;">${consentInfoBo.elaborated}</textarea>
       <div id="displayTitleId">
         <div class="gray-xs-f mb-xs">
-          Title
-          <small>(75 characters max)</small>
+          ????
+          <small>(75????)</small>
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group">
@@ -119,8 +119,8 @@
       </div>
       <div>
         <div class="gray-xs-f mb-xs">
-          Brief Summary
-          <small>(500 characters max)</small>
+          ??
+          <small>(500????)</small>
           <span
               class="requiredStar">*
           </span>
@@ -135,7 +135,7 @@
       <div class="clearfix"></div>
       <div>
         <div class="gray-xs-f mb-xs">
-          Long Description (appears in a 'Learn more' section, and also in the study's consent document if you choose to use the auto-created one)
+          ????? (?????? '?????' ???????????????????????????????????????????)
           <span
               class="requiredStar">*
           </span>
@@ -149,11 +149,11 @@
       <div class="clearfix"></div>
       <div>
         <div class="gray-xs-f mb-xs">
-          Show as a visual step?
+          ?????????????????
           <span class="requiredStar">*</span>
           <span
               class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-              title="Choose Yes if you wish this section to appear as a standalone Visual Step in the app prior to the full Consent Document. A Visual Step screen shows the section Title, and the Brief Summary with a link to the elaborated version of the content."></span>
+              title="?????????????????????????????????????????????????????????[YES]??????? ???????????????????????????????????????????????????????????"></span>
         </div>
         <div class="form-group visualStepDiv">
           <span class="radio radio-info radio-inline p-45"><input

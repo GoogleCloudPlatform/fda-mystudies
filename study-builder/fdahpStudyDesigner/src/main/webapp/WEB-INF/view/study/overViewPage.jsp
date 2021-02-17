@@ -128,14 +128,12 @@
                       <span id="" class="blue-link removeUrl elaborateHide">X
                         <a
                             href="javascript:void(0)"
-                            class="blue-link txt-decoration-underline pl-xs">Remove
-                          背景画像
+                            class="blue-link txt-decoration-underline pl-xs">背景画像を削除
                         </a>
                       </span>
                       <div class="form-group mb-none mt-sm">
                         <button id="" type="button"
-                                class="btn btn-default gray-btn uploadImgbtn">Upload
-                          背景画像
+                                class="btn btn-default gray-btn uploadImgbtn">画像アップロード
                         </button>
                         <input id="1" class="dis-none uploadImg" data-imageId='1'
                                type="file" name="multipartFiles"
@@ -239,15 +237,13 @@
                               class="blue-link removeUrl elaborateHide">X
                           <a
                               href="javascript:void(0)"
-                              class="blue-link txt-decoration-underline pl-xs">Remove
-                            背景画像
+                              class="blue-link txt-decoration-underline pl-xs">背景画像を削除
                           </a>
                         </span>
                         <div class="form-group mb-none mt-sm"
                              style="vertical-align: bottom;">
                           <button id="" type="button"
-                                  class="btn btn-default gray-btn uploadImgbtn">Upload
-                            Image
+                                  class="btn btn-default gray-btn uploadImgbtn">画像アップロード
                           </button>
                           <input id="" class="dis-none uploadImg"
                                  data-imageId='${spbSt.count}' type="file"

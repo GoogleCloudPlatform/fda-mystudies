@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -30,25 +30,25 @@
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
-      <div class="black-md-f text-uppercase dis-line pull-left line34">Consent Sections
+      <div class="black-md-f text-uppercase dis-line pull-left line34">同意項目
 
         <c:set var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''}
         <span>${not empty  sessionScope[isLive]?studyBo.studyVersionBo.consentLVersion:''}</span>
       </div>
       <div class="dis-line form-group mb-none mr-sm">
-        <button type="button" class="btn btn-default gray-btn cancelBut">Cancel</button>
+        <button type="button" class="btn btn-default gray-btn cancelBut">キャンセル</button>
       </div>
       <div class="dis-line form-group mb-none">
         <c:if test="${empty permission}">
           <span class="tool-tip" data-toggle="tooltip" data-placement="bottom" id="helpNote"
               <c:if
-                  test="${fn:length(consentInfoList) eq 0 }"> title="Please ensure you add one or more Consent Sections before attempting to mark this section as Complete." </c:if>
+                  test="${fn:length(consentInfoList) eq 0 }"> title="完了するには1つ以上の同意項目の追加が必要になります。" </c:if>
               <c:if
-                  test="${!markAsComplete}"> title="Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete." </c:if> >
+                  test="${!markAsComplete}"> title="このページの完了をする前に、リストの各項目が全て完了になっている必要があります。" </c:if> >
             <button type="button" class="btn btn-primary blue-btn" id="markAsCompleteBtnId"
                     onclick="markAsCompleted();"
                     <c:if
-                        test="${fn:length(consentInfoList) eq 0 || !markAsComplete}">disabled</c:if>  >Mark as Completed
+                        test="${fn:length(consentInfoList) eq 0 || !markAsComplete}">disabled</c:if>  >完了
             </button>
           </span>
         </c:if>
@@ -65,14 +65,13 @@
             <th id="">
               <span class="marL10">#</span>
             </th>
-            <th id="">Consent Title</th>
-            <th id="">visual step</th>
+            <th id="">項目名</th>
+            <th id="">ビジュアルステップ表示</th>
             <th id="">
               <div class="dis-line form-group mb-none">
                 <c:if test="${empty permission}">
                   <button type="button" class="btn btn-primary blue-btn" onclick="addConsentPage();">
-                    Add
-                    Consent Section
+                    同意項目の追加
                   </button>
                 </c:if>
               </div>
@@ -88,14 +87,14 @@
               <td>
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
-                      title="View" onclick="viewConsentInfo(${consentInfo.id});"></span>
+                      title="参照" onclick="viewConsentInfo(${consentInfo.id});"></span>
                 <span
                     class="${consentInfo.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
-                    data-toggle="tooltip" data-placement="top" title="Edit"
+                    data-toggle="tooltip" data-placement="top" title="編集"
                     onclick="editConsentInfo(${consentInfo.id});"></span>
                 <span
                     class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
-                    data-toggle="tooltip" data-placement="top" title="Delete"
+                    data-toggle="tooltip" data-placement="top" title="削除"
                     onclick="deleteConsentInfo(${consentInfo.id});"></span>
               </td>
             </tr>
@@ -140,7 +139,7 @@
       "filter": false,
       rowReorder: reorder,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "レコードはまだ登録されていません。",
       },
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
       "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -337,7 +336,7 @@
     } else {
       $('#consent_list').DataTable().draw();
       $('#helpNote').attr('data-original-title',
-          'Please ensure you add one or more Consent Sections before attempting to mark this section as Complete.');
+          '完了をする前に1つ以上の同意項目を追加してください。');
     }
   }
 
@@ -352,7 +351,7 @@
     if (!table.data().count()) {
 
       $(".tool-tip").attr("title",
-          "Please ensure individual list items are marked Done, before marking the section as Complete");
+          "このページの完了をする前に、リストの各項目が全て完了になっている必要があります。");
       $('#markAsCompleteBtnId').prop('disabled', true);
       $('[data-toggle="tooltip"]').tooltip();
     } else {

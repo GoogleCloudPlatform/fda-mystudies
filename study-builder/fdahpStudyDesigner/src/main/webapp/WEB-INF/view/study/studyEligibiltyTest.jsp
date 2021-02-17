@@ -97,11 +97,11 @@
             <select class="selectpicker elaborateClass" required title="Select"
                     name="responseYesOption"
                     id="resYesOptId" onchange="chkValidChoosedOption()">
-              <option value="true" ${eligibilityTest.responseYesOption ? 'selected':''}>Pass
+              <option value="true" ${eligibilityTest.responseYesOption ? 'selected':''}>正解
               </option>
               <option
                   value="false" ${not empty eligibilityTest.responseYesOption && not eligibilityTest.responseYesOption ? 'selected':''}>
-                Fail
+                不正解
               </option>
             </select>
             <div class="help-block with-errors red-txt"></div>
@@ -278,7 +278,7 @@
     let resNoOptVal = $('#resNoOptId').val();
 
     if (resYesOptVal == 'false' && resNoOptVal == 'false') {
-      showErrMsg("Both answer options cannot have Fail attribute");
+      showErrMsg("２つの回答が不正解にすることはできません。");
       $("#resYesOptId").parents(".form-group").addClass("has-error has-danger");
       $("#resNoOptId").parents(".form-group").addClass("has-error has-danger");
       return false;

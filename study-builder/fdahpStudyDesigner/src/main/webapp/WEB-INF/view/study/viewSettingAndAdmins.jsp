@@ -70,7 +70,7 @@
               <c:if test="${fn:contains(studyBo.platform,'I')}">checked</c:if>
               <c:if
                   test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I')}">disabled</c:if>
-              data-error="Please check these box if you want to proceed."
+              data-error="続行する場合は、これらのチェックボックスをオンにしてください"
               required> <label for="inlineCheckbox1"> iOS </label>
           </span>
           <span class="checkbox checkbox-inline"><input
@@ -79,7 +79,7 @@
               <c:if test="${fn:contains(studyBo.platform,'A')}">checked</c:if>
               <c:if
                   test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A')}">disabled</c:if>
-              data-error="Please check these box if you want to proceed."
+              data-error="続行する場合は、これらのチェックボックスをオンにしてください"
               required> <label for="inlineCheckbox2"> Android </label>
           </span>
           <div class="help-block with-errors red-txt"></div>
@@ -318,7 +318,7 @@
                     <span
                         class="sprites_icon copy delete <c:if test="${not empty permission || !fn:contains(permissions,5)}"> cursor-none </c:if>"
                         onclick="removeUser(${perm.userId})" data-toggle="tooltip"
-                        data-placement="top" title="Delete"></span>
+                        data-placement="top" title="削除"></span>
                   </td>
                 </tr>
               </c:forEach>
@@ -427,23 +427,15 @@
             <ul class="no-disc">
               <li><strong>1. Platform Support: </strong><br/>
                 <ul class="no-disc">
-                  <li>Note that once the study is Launched, platform support
-                    cannot be revoked. However, adding support for a platform not
-                    previously selected will still be possible.
-                  </li>
+                  <li>治験が開始されると、プラットフォームのサポートを取り消すことはできないことに注意してください。ただし、以前に選択されていないプラットフォームのサポートを追加することは引き続き可能です。 </li>
                 </ul>
               </li>
               <li>&nbsp;</li>
               <li><strong>2. Feature Support on iOS and Android:</strong><br/>
 
                 <ul class="no-disc">
-                  <li>Given below is a list of features currently NOT
-                    available for Android as compared to iOS. Please note the same
-                    in your creation of study questionnaires and active tasks.
-                  </li>
-                  <li>i. Activetasks: Activetask with type Tower Of Hanoi,
-                    Spatial Span Memory
-                  </li>
+                  <li>以下に示すのは、iOSと比較してAndroidで現在利用できない機能のリストです。治験アクティビティの作成でも同じことに注意してください。 </li>
+                  <li>i. Activetasks: Activetask with type Tower Of Hanoi, Spatial Span Memory </li>
                 </ul>
               </li>
 
@@ -462,7 +454,7 @@
     <c:if test="${user eq 'logout_login_user'}">
     bootbox.alert({
       closeButton: false,
-      message: 'Your user account details have been updated. Please sign in again to continue using the portal.',
+      message: 'あなたのアカウント情報が変更されたか、またはセッションが切れました。再度ログインをし直してください。',
       callback: function (result) {
         var a = document.createElement('a');
         a.href = "/studybuilder/sessionOut.do";
@@ -544,7 +536,7 @@
           } else {
             bootbox.alert({
               closeButton: false,
-              message: 'Please select one of the admin as a project lead',
+              message: '管理者の中からプロジェクトリーダーを１人選んでください。',
             });
           }
         } else {
@@ -668,16 +660,15 @@
           retainParticipant = 'Participant Choice';
         bootbox.confirm({
           closeButton: false,
-          message: 'You have selected "' + retainParticipant
-              + '" for the retention of participant response data when they leave a study.'
-              + ' Your Consent content must be worded to convey the same.'
-              + ' Click OK to proceed with completing this section or Cancel if you wish to make changes.',
+          message: '被験者が治験を離れるときのデータ保持に対して "' + retainParticipant
+              + '" が選択されました。データの保持、利用について同意項目にて伝える必要があります。'
+              + ' 問題がない場合は "完了" を押して次へ進んでください。変更する場合は "キャンセル" を押してください。',
           buttons: {
             'cancel': {
-              label: 'Cancel',
+              label: 'キャンセル',
             },
             'confirm': {
-              label: 'OK',
+              label: '完了',
             },
           },
           callback: function (result) {
@@ -731,7 +722,7 @@
     if (userListTableRowCount == 0) {
       bootbox.alert({
         closeButton: false,
-        message: 'There are currently no other admin users available to add to this study.',
+        message: '現在、この治験に登録できる管理ユーザーがいません。',
       });
     } else {
       $('#settingId').hide();
@@ -743,7 +734,7 @@
   function cancelAddAdmin() {
     bootbox.confirm({
       closeButton: false,
-      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      message: 'ページを離れると、保存されていない変更はすべて失われます。続行してもよろしいですか？',
       buttons: {
         'cancel': {
           label: 'Cancel',
