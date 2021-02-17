@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -30,22 +30,22 @@
     <!--  Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
-        <div class="black-md-f text-uppercase dis-line pull-left line34">COMPREHENSION TEST</div>
+        <div class="black-md-f text-uppercase dis-line pull-left line34">理解度テスト</div>
         <div class="dis-line form-group mb-none mr-sm">
-          <button type="button" class="btn btn-default gray-btn cancelBut">Cancel</button>
+          <button type="button" class="btn btn-default gray-btn cancelBut">キャンセル</button>
         </div>
         <c:if test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm TestQuestionButtonHide">
-            <button type="button" class="btn btn-default gray-btn" id="saveId">Save</button>
+            <button type="button" class="btn btn-default gray-btn" id="saveId">下書き保存</button>
           </div>
           <div class="dis-line form-group mb-none">
             <span class="tool-tip" data-toggle="tooltip" data-placement="bottom" id="helpNote"
                 <c:if
-                    test="${!markAsComplete && consentBo.needComprehensionTest eq 'Yes'}"> title="Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete." </c:if> >
+                    test="${!markAsComplete && consentBo.needComprehensionTest eq 'Yes'}"> title="このページを完了にするためには、リストにある全ての項目を完了にする必要があります。" </c:if> >
               <button type="button" class="btn btn-primary blue-btn" id="markAsCompleteBtnId"
                       <c:if
                           test="${!markAsComplete && consentBo.needComprehensionTest eq 'Yes'}">disabled</c:if>
-                      onclick="markAsCompleted();">Mark as Completed
+                      onclick="markAsCompleted();">完了
               </button>
             </span>
           </div>
@@ -55,11 +55,11 @@
     <!--  End  top tab section-->
     <div class="right-content-head">
       <div class="mb-xlg" id="displayTitleId">
-        <div class="gray-xs-f mb-xs">Add a comprehension test?
+        <div class="gray-xs-f mb-xs">理解度テストを設定しますか？
           <span>
             <span
                data-toggle="tooltip" data-placement="top"
-               title="This will present a set of questions to the participant to gauge their understanding of the study based on their review of the consent sections."
+               title="これにより、参加者に一連の質問が提示され、同意セクションのレビューに基づいて調査の理解度が評価されます。"
                class="filled-tooltip"></span>
             </span>
           <span class="ct_panel"
@@ -93,12 +93,12 @@
               <th id="">
                 <span class="marL10">#</span>
               </th>
-              <th id="">Question</th>
+              <th id="">設問</th>
               <th id="">
                 <c:if test="${empty permission}">
                   <div class="dis-line form-group mb-none">
                     <button type="button" class="btn btn-primary blue-btn" id="addQuestionId"
-                            onclick="addComphernsionQuestionPage();">Add Question
+                            onclick="addComphernsionQuestionPage();">設問を追加
                     </button>
                   </div>
                 </c:if>
@@ -116,7 +116,7 @@
                 <td>
                   <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                         data-placement="top"
-                        title="View"
+                        title="参照"
                         onclick="viewComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="${comprehensionTestQuestion.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
@@ -132,7 +132,7 @@
       </div>
 
       <div class="mt-xlg" id="displayTitleId">
-        <div class="gray-xs-f mb-xs">Minimum score needed to pass</div>
+        <div class="gray-xs-f mb-xs">テストをパスするための必要なスコア</div>
         <div class="form-group col-md-5 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
                  name="comprehensionTestMinimumScore"
@@ -180,7 +180,7 @@
         if (markAsComplete == "false") {
           $("#markAsCompleteBtnId").attr("disabled", true);
           $("#helpNote").attr('data-original-title',
-              'Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete.');
+              'このページを完了にするためには、リストにある全ての項目を完了にする必要があります。');
           $('[data-toggle="tooltip"]').tooltip();
         }
         if (document.getElementById("addQuestionId") != null && document.getElementById(
@@ -212,7 +212,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "レコードはまだ登録されておりません。",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1]}],
@@ -297,7 +297,7 @@
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The value should not be more than no of questions or zero"));
+            "この数字は1以上かつ上記リスト数以下にしてください。"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -16,7 +16,7 @@
           <span class="pr-sm cur-pointer"
                 onclick="goToBackPage(this);"><img
               src="../images/icons/back-b.png" alt=""/></span>
-          <c:if test="${empty comprehensionQuestionBo.id}">Add Comprehension Test Question</c:if>
+          <c:if test="${empty comprehensionQuestionBo.id}">設問の追加</c:if>
           <c:if
               test="${not empty comprehensionQuestionBo.id && actionPage eq 'addEdit'}">Edit Comprehension Test Question</c:if>
           <c:if
@@ -26,17 +26,17 @@
         </div>
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">
-            Cancel
+            キャンセル
           </button>
         </div>
         <div class="dis-line form-group mb-none mr-sm ">
           <button type="button" class="btn btn-default gray-btn TestQuestionButtonHide" id="saveId">
-            Save
+            下書き保存
           </button>
         </div>
         <div class="dis-line form-group mb-none">
           <button type="button" class="btn btn-primary blue-btn TestQuestionButtonHide" id="doneId">
-            Done
+            完了
           </button>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <input type="hidden" id="studyId" name="studyId" value="${studyId}">
       </c:if>
       <div>
-        <div class="gray-xs-f mb-xs mt-md">Question Text (1 to 300 characters)
+        <div class="gray-xs-f mb-xs mt-md">設問の説明 (1文字以上 300文字まで)
           <span
               class="requiredStar">*
           </span>
@@ -70,14 +70,14 @@
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) eq 0}">
             <div class="col-md-12 p-none">
               <div class='col-md-6 pl-none'>
-                <div class="gray-xs-f mb-xs">Answer Options (1 to 150 characters)
+                <div class="gray-xs-f mb-xs">問題文と答え (1文字以上 150文字まで)
                   <span
                       class="requiredStar">*
                   </span>
                 </div>
               </div>
               <div class='col-md-3'>
-                <div class="gray-xs-f mb-xs">Is this a 'correct' answer?
+                <div class="gray-xs-f mb-xs">これは正解でよろしいですか？
                   <span class="requiredStar">*</span>
                   <span>
                     <span
@@ -168,7 +168,7 @@
                 </div>
               </div>
               <div class='col-md-2'>
-                <div class="gray-xs-f mb-xs">Correct Answer
+                <div class="gray-xs-f mb-xs">答え
                   <span class="requiredStar">*</span>
                 </div>
               </div>
@@ -225,7 +225,7 @@
       <div class="clearfix"></div>
 
       <div>
-      <div class="gray-xs-f mb-sm">Consider the question to be correctly answered if the participant responds with
+      <div class="gray-xs-f mb-sm">この設問をパスするための正解数は
           <span
               class="requiredStar">*
           </span>
@@ -234,12 +234,12 @@
           <span class="radio radio-info radio-inline p-45">
             <input type="radio" id="inlineRadio1" value="false"
                    name="structureOfCorrectAns" ${!comprehensionQuestionBo.structureOfCorrectAns ? 'checked' : ''}>
-             <label for="inlineRadio1">any of the answer options marked 'correct' above</label>
+             <label for="inlineRadio1">1つ以上の解答が正解していること</label>
           </span>
           <span class="radio radio-inline p-45">
             <input type="radio" id="inlineRadio2" value="true"
                    name="structureOfCorrectAns" ${empty comprehensionQuestionBo.structureOfCorrectAns || comprehensionQuestionBo.structureOfCorrectAns ? 'checked' : ''}>
-            <label for="inlineRadio2">all the answer options marked 'correct' above</label>
+            <label for="inlineRadio2">すべての解答が正解することが必要</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -340,13 +340,13 @@
     $(item).prop('disabled', true);
     bootbox.confirm({
       closeButton: false,
-      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      message: '未保存の編集があります。保存をしないと編集内容が削除されてしまいます。本当にこのページを離れますか？',
       buttons: {
         'cancel': {
-          label: 'Cancel',
+          label: 'キャンセル',
         },
         'confirm': {
-          label: 'OK',
+          label: 'はい',
         },
       },
       callback: function (result) {

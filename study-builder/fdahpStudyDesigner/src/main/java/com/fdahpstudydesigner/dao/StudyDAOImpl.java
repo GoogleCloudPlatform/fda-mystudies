@@ -2237,7 +2237,7 @@ public class StudyDAOImpl implements StudyDAO {
                   (String)
                       session
                           .createQuery(
-                              "SELECT  u.firstName from StudyPermissionBO s , UserBO u where s.studyId=:id"
+                              "SELECT  concat(u.lastName ,' ' ,u.firstName) from StudyPermissionBO s , UserBO u where s.studyId=:id"
                                   + " and s.userId=u.userId and s.projectLead=1")
                           .setParameter("id", bean.getId())
                           .setMaxResults(1)

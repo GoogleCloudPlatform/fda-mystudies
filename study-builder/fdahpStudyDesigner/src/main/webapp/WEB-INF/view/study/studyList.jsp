@@ -67,7 +67,7 @@
 							  cursor-none
 						</c:when>
 					</c:choose>" data-toggle="tooltip" data-placement="top"
-                title="${(not empty study.liveStudyId)?((study.flag)?'Draft Version':'編集'):'Draft Version'}"
+                title="${(not empty study.liveStudyId)?((study.flag)?'下書き保存中':'編集'):'下書き保存中'}"
                 studyId="${study.id}"></span>
             <c:if test="${not empty study.liveStudyId}">
               <span class="eye-inc viewStudyClass mr-lg" isLive="Yes"

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -29,7 +28,7 @@
           <span class="pr-sm cur-pointer" onclick="goToBackPage(this);">
             <img src="../images/icons/back-b.png" alt=""/>
           </span>
-          <c:if test="${empty consentInfoBo.id}"> ???????</c:if>
+          <c:if test="${empty consentInfoBo.id}"> 同意項目の追加</c:if>
           <c:if
               test="${not empty consentInfoBo.id && actionPage eq 'addEdit'}">Edit Consent Section</c:if>
           <c:if test="${not empty consentInfoBo.id && actionPage eq 'view'}">View Consent Section
@@ -39,18 +38,18 @@
         </div>
         <div class="dis-line form-group mb-none">
           <button type="button" class="btn btn-default gray-btn"
-                  onclick="goToBackPage(this);">?????
+                  onclick="goToBackPage(this);">キャンセル
           </button>
         </div>
         <div class="dis-line form-group mb-none">
           <button type="button"
                   class="btn btn-default gray-btn ConsentButtonHide ml-sm mr-sm"
-                  onclick="saveConsentInfo(this);">?????
+                  onclick="saveConsentInfo(this);">下書き保存
           </button>
         </div>
         <div class="dis-line form-group mb-none">
           <button type="button"
-                  class="btn btn-primary blue-btn ConsentButtonHide" id="doneId">??
+                  class="btn btn-primary blue-btn ConsentButtonHide" id="doneId">完了
           </button>
         </div>
       </div>
@@ -59,35 +58,35 @@
     <!-- Start body tab section -->
     <div class="right-content-body">
       <div class="gray-xs-f mb-xs">
-        ??????
+        項目のタイプ
         <span class="requiredStar">*</span>
       </div>
       <div class="mt-sm form-group">
         <span class="radio radio-info radio-inline p-45"><input
             type="radio" id="inlineRadio1" value="ResearchKit/ResearchStack"
-            name="consentItemType" required data-error="???????????""
+            name="consentItemType" required data-error="項目を選択してください""
           ${empty consentInfoBo.consentItemType  || consentInfoBo.consentItemType=='ResearchKit/ResearchStack' ?'checked':''}>
-          <label for="inlineRadio1">????????</label>
+          <label for="inlineRadio1">テンプレート項目</label>
         </span>
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="Custom"
                                                      name="consentItemType" required
-                                                     data-error="???????????"
+                                                     data-error="項目を選択してください"
           ${consentInfoBo.consentItemType=='Custom'?'checked':''}> <label
-            for="inlineRadio2">????</label>
+            for="inlineRadio2">カスタム</label>
         </span>
         <div class="help-block with-errors red-txt"></div>
       </div>
       <div id="titleContainer">
         <div class="gray-xs-f mb-xs">
-          ?????????
+          同意項目のトピック
           <span class="requiredStar">*</span>
         </div>
         <div class="col-md-5 p-none form-group elaborateClass consentTitle">
           <select class="selectpicker" id="consentItemTitleId"
                   name="consentItemTitleId" required
-                  data-error="1?????????">
-            <option value="">????????</option>
+                  data-error="1つ選択してください">
+            <option value="">選択してください</option>
             <c:forEach items="${consentMasterInfoList}" var="consentMaster">
               <option value="${consentMaster.id}"
                 ${consentInfoBo.consentItemTitleId eq consentMaster.id  ? 'selected' : ''}>${consentMaster.title}</option>
@@ -106,8 +105,8 @@
                 style="display: none;">${consentInfoBo.elaborated}</textarea>
       <div id="displayTitleId">
         <div class="gray-xs-f mb-xs">
-          ????
-          <small>(75????)</small>
+          タイトル
+          <small>(75文字まで)</small>
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group">
@@ -119,8 +118,8 @@
       </div>
       <div>
         <div class="gray-xs-f mb-xs">
-          ??
-          <small>(500????)</small>
+          概要
+          <small>(500文字まで)</small>
           <span
               class="requiredStar">*
           </span>
@@ -135,7 +134,7 @@
       <div class="clearfix"></div>
       <div>
         <div class="gray-xs-f mb-xs">
-          ????? (?????? '?????' ???????????????????????????????????????????)
+          詳細な説明 (同意画面にて '詳細をみる' リンクにて表示します。また、同意書の自動作成を選択した場合、同意文書にも記載されます。)
           <span
               class="requiredStar">*
           </span>
@@ -149,11 +148,11 @@
       <div class="clearfix"></div>
       <div>
         <div class="gray-xs-f mb-xs">
-          ?????????????????
+          ビジュアルステップで表示しますか？
           <span class="requiredStar">*</span>
           <span
               class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-              title="?????????????????????????????????????????????????????????[YES]??????? ???????????????????????????????????????????????????????????"></span>
+              title="治験への参加における同意文書の確認・サインの前にアプリで簡易的なビジュアルステップとしてこの項目を表示する場合は、[YES]を選択します。 ビジュアルステップ画面には、同意項目のタイトルと、コンテンツの詳細バージョンへのリンクを含む簡単な概要が表示されます。"></span>
         </div>
         <div class="form-group visualStepDiv">
           <span class="radio radio-info radio-inline p-45"><input

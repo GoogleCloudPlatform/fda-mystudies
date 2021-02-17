@@ -32,20 +32,19 @@
       <div class="right-content-head" style="z-index: 999;">
         <div class="text-right">
           <div class="black-md-f text-uppercase dis-line pull-left line34">
-            Review and E-Consent Steps
+            ???????????
             <c:set var="isLive">${_S}isLive</c:set>
               ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn"
-                    onclick="goToBackPage(this);">Cancel
+                    onclick="goToBackPage(this);">?????
             </button>
           </div>
           <div class="dis-line form-group mb-none mr-sm">
-            <button type="button" class="btn btn-default gray-btn" id="saveId">Save</button>
+            <button type="button" class="btn btn-default gray-btn" id="saveId">????</button>
           </div>
           <div class="dis-line form-group mb-none">
-            <button type="button" class="btn btn-primary blue-btn" id="doneId">Mark
-              as Completed
+            <button type="button" class="btn btn-primary blue-btn" id="doneId">??
             </button>
           </div>
         </div>
@@ -56,17 +55,15 @@
         <ul class="nav nav-tabs review-tabs">
           <li class="shareData active">
             <a data-toggle="tab"
-               href="#menu1">Data-sharing permission
+               href="#menu1">?????????
             </a>
           </li>
           <li class="consentReview">
-            <a data-toggle="tab" href="#menu2">Consent
-              Document for Review
+            <a data-toggle="tab" href="#menu2">????????
             </a>
           </li>
           <li class="econsentForm">
-            <a data-toggle="tab" href="#menu3">E-Consent
-              Form
+            <a data-toggle="tab" href="#menu3">?????????
             </a>
           </li>
         </ul>
@@ -75,9 +72,7 @@
                  value="${consentBo.version}">
           <div id="menu1" class="tab-pane fade in active">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm">Enable data-sharing permission
-                step for this study? (This will let participants choose whether
-                they want to allow their data to be shared with 3rd parties)
+              <div class="gray-xs-f mb-sm"> ????????????????????????? ?????????????????????????????????????????????????
               </div>
               <div class="col-md-12 pl-none">
                 <div class="form-group custom-form">
@@ -101,8 +96,8 @@
                   id="rootContainer">
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Screen Title
-                    <small>(250 characters max)</small>
+                    ??????
+                    <small>(250????)</small>
                     <span
                         class="requiredStar">*
                     </span>
@@ -117,15 +112,12 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Brief description
-                    <small>(500 characters max)</small>
+                    ??
+                    <small>(500????)</small>
                     <span
                         class="requiredStar">*
                     </span>
-                    E.g. &lt;Institution&gt; and
-                    its partners will receive your study data from your
-                    participation in the study. Please indicate if you permit to
-                    share your data more broadly to other parties for research.
+                    E.g. &lt;????&gt; ?????????????????????????????????????????????????????????????????????????????????
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
@@ -137,9 +129,8 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Option 1: Share my data with &lt;institution&gt; and qualified
-                    researchers worldwide.
-                    <small>(250 characters max)</small>
+                    ????? 1: E.g. ?????? &lt;????&gt; ???????????????????????
+                    <small>(250????)</small>
                     <span
                         class="requiredStar">*
                     </span>
@@ -153,9 +144,8 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Option 2: Only share my data with &lt;institution and its
-                    partners&gt;
-                    <small>(500 characters max)</small>
+                    ????? 2: E.g. ?????? &lt;????&gt; ????????????????
+                    <small>(500????)</small>
                     <span
                         class="requiredStar">*
                     </span>
@@ -169,8 +159,7 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Explanatory text that can be provided in a 'Learn More'
-                    section
+                    ?????????????????????
                     <span class="requiredStar">*</span>
                   </div>
                   <div class="form-group">
@@ -183,7 +172,7 @@
                   <a class="preview__text" href="javascript:void()"
                      data-toggle="modal" onclick="previewDataSharing();"><img
                       class="mr-xs" src="../images/icons/eye-icn.png" alt="">
-                    <span>See Screen Preview</span>
+                    <span>????????</span>
                   </a>
                 </div>
               </div>
@@ -338,7 +327,7 @@
                     </div>
                     <div id="learnMoreId" class="pp__learnmore">
                       <a href="javascript:void(0)" data-toggle="modal"
-                         onclick="previewLearnMore();">Learn more
+                         onclick="previewLearnMore();">??
                       </a>
                     </div>
                     <div id="mainOverviewPanel" class="pp__ul mt-xlg">

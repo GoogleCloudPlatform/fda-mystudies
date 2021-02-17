@@ -129,13 +129,13 @@ $(document)
                       isShift = false;
                     if (!isShift && $(this).val()) {
                       // var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
-                      var regularExpression = /^[ \u30a0-\u30ff\u3040-\u309f\u3005-\u3006\u30e0-\u9fcfA-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
+                      var regularExpression = /^[ \u3041-\u3093\u30A1-\u30F6ヽヾゝゞ々ー。、「」（）\u4E00-\u9FFFA-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
                       if (!regularExpression.test($(this)
                           .val())) {
                         var newVal = $(this)
                             .val()
                             .replace(
-                                /[^ \u30a0-\u30ff\u3040-\u309f\u3005-\u3006\u30e0-\u9fcfA-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,
+                                /[^ \u3041-\u3093\u30A1-\u30F6ヽヾゝゞ々ー。、「」（）\u4E00-\u9FFFA-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,
                                 '');
                         e.preventDefault();
                         $(this).val(newVal);
@@ -148,7 +148,7 @@ $(document)
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
                             //.text("Special characters such as #^}{ are not allowed."));
-                            .text("次の特殊文字は入力出来ません。 #^}{ "));
+                            .text("入力出来ない文字を削除しました"));
                       }
                     }
                   });
