@@ -10,26 +10,36 @@ package com.fdahpstudydesigner.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.log4j.Logger;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
+  private static Logger logger = Logger.getLogger(ApplicationInitializer.class);
+
   @Override
   public void onStartup(ServletContext servletContext) throws ServletException {
     File[] defaultImageFiles =
         new File(servletContext.getRealPath("/") + "/images/study/").listFiles();
-    uplaodImage(defaultImageFiles);
+    try {
+      uplaodImage(defaultImageFiles);
+    } catch (IOException e) {
+      logger.error("Study Default Image upload On Startup failed - onStartup()", e);
+    }
   }
 
-  public void uplaodImage(File[] defaultImagefiles) {
+  public void uplaodImage(File[] defaultImagefiles) throws IOException {
     MultipartFile multipartFile = null;
+    InputStream input = null;
+    OutputStream os = null;
     for (int i = 0; i < defaultImagefiles.length; i++) {
       DiskFileItem fileItem =
           new DiskFileItem(
@@ -40,8 +50,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
               (int) defaultImagefiles[i].length(),
               defaultImagefiles[i].getParentFile());
       try {
-        InputStream input = new FileInputStream(defaultImagefiles[i]);
-        OutputStream os = fileItem.getOutputStream();
+        input = new FileInputStream(defaultImagefiles[i]);
+        os = fileItem.getOutputStream();
         int ret = input.read();
         while (ret != -1) {
           os.write(ret);
@@ -49,7 +59,14 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         }
         os.flush();
       } catch (Exception ex) {
-        ex.printStackTrace();
+        logger.error("Upload Study Default image failed - uplaodImage()", ex);
+      } finally {
+        if (input != null) {
+          input.close();
+        }
+        if (os != null) {
+          os.close();
+        }
       }
       multipartFile = new CommonsMultipartFile(fileItem);
       FdahpStudyDesignerUtil.saveDefaultImageToCloudStorage(
