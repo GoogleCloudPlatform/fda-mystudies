@@ -171,7 +171,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
                 builder.setMessage(message);
                 builder.setPositiveButton(
-                    context.getResources().getString(R.string.proceed_caps),
+                    context.getResources().getString(R.string.yes),
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
@@ -180,7 +180,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                     });
 
                 builder.setNegativeButton(
-                    context.getResources().getString(R.string.cancel_caps),
+                    context.getResources().getString(R.string.cancel),
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
