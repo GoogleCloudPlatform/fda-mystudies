@@ -2192,8 +2192,8 @@ public class StudyQuestionnaireController {
         if (questionnairesStepsBo != null) {
 
           QuestionsBo qb = questionnairesStepsBo.getQuestionsBo();
-          logger.info("Question Text    ---> " + qb.getQuestion());
-          logger.info("Description Text ---> " + qb.getDescription());
+          logger.warn("Question Text    ---> " + qb.getQuestion());
+          logger.warn("Description Text ---> " + qb.getDescription());
 
 
 
@@ -2507,6 +2507,14 @@ public class StudyQuestionnaireController {
           }
           if ((questionnairesStepsBo.getQuestionsBo() != null)
               && (questionnairesStepsBo.getQuestionsBo().getResponseType() != null)) {
+
+            logger.warn("\n======================");
+            logger.warn("Question Text    ---> " + questionnairesStepsBo.getQuestionsBo().getQuestion());
+            logger.warn("Description Text ---> " + questionnairesStepsBo.getQuestionsBo().getDescription());
+            logger.warn("======================\n");
+
+
+
             if (questionnairesStepsBo.getQuestionsBo().getResponseType() == 5) {
               if ((questionnairesStepsBo.getQuestionResponseSubTypeList() != null)
                   && !questionnairesStepsBo.getQuestionResponseSubTypeList().isEmpty()) {
