@@ -183,10 +183,7 @@ public class UsersController {
       SessionObject userSession =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       if (null != userSession) {
-        String manageUsers =
-            FdahpStudyDesignerUtil.isEmpty(request.getParameter("manageUsers"))
-                ? ""
-                : request.getParameter("manageUsers");
+
         String manageNotifications =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("manageNotifications"))
                 ? ""
@@ -223,7 +220,6 @@ public class UsersController {
 
         if (userBO.getRoleId().equals(1)) {
           permissions = FdahpStudyDesignerConstants.SUPER_ADMIN_PERMISSIONS;
-          permissionValues = "1,1";
         } else {
           if (!"".equals(manageNotifications)) {
             if ("0".equals(manageNotifications)) {

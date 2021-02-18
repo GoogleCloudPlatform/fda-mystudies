@@ -10,6 +10,10 @@
   pointer-events: none;
   cursor: default;
 }
+
+.filter-option {
+  text-transform: inherit !important;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -203,6 +207,7 @@
             <div class="blue-md-f mt-lg mb-md">
               Role
               <span class="requiredStar"> *</span>
+              <span data-toggle="tooltip" data-placement="top" title="" class="filled-tooltip" data-original-title="Superadmin users have application-wide permissions. They can manage users of the Study Builder and in addition, can manage app-level notifications and studies as well. Non-superadmins or 'study admins' will have permissions-based access to specific sections and studies only." aria-describedby="tooltip739612"></span>
             </div>
             <div class="form-group">
               <select id="roleId"
@@ -246,7 +251,7 @@
 
         <div class="clearfix"></div>
         <!-- Assign Permissions -->
-        <div class="blue-md-f text-uppercase mt-lg">Assigned Permissions</div>
+        <div class="blue-md-f text-uppercase mt-lg perm-assign">Assigned Permissions</div>
         <div class="pull-right mb-xs">
           <span class="gray-xs-f">View only</span>
           <span
@@ -431,14 +436,14 @@
 
     <c:if test="${actionPage eq 'ADD_PAGE'}">
     $('.edit-user-list-widget').hide();
- 	 $('.blue-md-f').hide();
+ 	 $('.perm-assign').hide();
  	 $('.pull-right').hide();
     </c:if>
 
     <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
     if($('#roleId').find('option:selected').text() == 'Superadmin' ){
     $('.edit-user-list-widget').hide();
- 	 $('.blue-md-f').hide();
+ 	 $('.perm-assign').hide();
  	 $('.pull-right').hide();
     }
     </c:if>
@@ -879,13 +884,13 @@
 
   $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
-      if(element == "Study Admin"){ 
+      if(element == "Study admin"){ 
       	 $('.edit-user-list-widget').show();
-      	 $('.blue-md-f').show();
+      	 $('.perm-assign').show();
       	 $('.pull-right').show();
           } else{
         	  $('.edit-user-list-widget').hide();
-           	 $('.blue-md-f').hide();
+           	 $('.perm-assign').hide();
            	 $('.pull-right').hide();
               }
     });
