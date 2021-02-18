@@ -693,7 +693,9 @@ public class SurveyActivitiesListAdapter
           }
           CustomActivitiesDailyDialogClass c =
                   new CustomActivitiesDailyDialogClass(
-                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this);
+                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this,status
+                          .get(holder.getAdapterPosition()),currentRunStatusForActivities
+                          .get(holder.getAdapterPosition()));
           c.show();
         }
       });
@@ -714,6 +716,25 @@ public class SurveyActivitiesListAdapter
             holder.itemlayout.setBackgroundColor(Color.parseColor("#c6ccd0"));
             holder.box1.setAlpha(.5f);
             holder.box2.setAlpha(.5f);
+
+            if (currentRunStatusForActivities.get(position).getCurrentRunId() <= currentRunStatusForActivities.get(position).getTotalRun()) {
+              holder.run.setText(
+                      context.getResources().getString(R.string.run)
+                              + ": "
+                              + (currentRunStatusForActivities.get(position).getCurrentRunId() + 1)
+                              + "/"
+                              + currentRunStatusForActivities.get(position).getTotalRun()
+                              + ", "
+                              + currentRunStatusForActivities.get(position).getCompletedRun()
+                              + " "
+                              + context.getResources().getString(R.string.done2)
+                              + ", "
+                              + currentRunStatusForActivities.get(position).getMissedRun()
+                              + " "
+                              + context.getResources().getString(R.string.missed));
+              holder.process.setText(R.string.start);
+              bgShape.setColor(context.getResources().getColor(R.color.colorPrimary));
+            }
           } else {
             holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
             holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));
