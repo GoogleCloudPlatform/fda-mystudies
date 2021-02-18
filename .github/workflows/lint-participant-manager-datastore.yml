@@ -1,3 +1,4 @@
+# This file is used for adding styleCheck for participant manager and participant manager datastore
 name: lint-participant-manager-datastore
 
 on:
