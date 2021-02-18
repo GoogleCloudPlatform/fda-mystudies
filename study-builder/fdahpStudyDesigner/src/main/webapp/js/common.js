@@ -184,7 +184,7 @@ $(document)
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
                             //.text("The characters like (< >) are not allowed."));
-                            .text("半角英数字を入力して下さい。また次の記号は入力出来ません。"));
+                            .text("半角英数字を入力して下さい。また次の記号は入力出来ません。(< >)"));
                       }
                     }
                   });

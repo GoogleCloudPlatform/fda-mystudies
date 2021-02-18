@@ -213,12 +213,11 @@
           <div class="mt-lg" id="stepContainer">
             <div
                 class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
-                onclick="getQuestionnaireStep('Instruction');">導入ステップの追加
+                onclick="getQuestionnaireStep('Instruction');">説明ステップの追加
             </div>
             <div
                 class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
-                onclick="getQuestionnaireStep('Question');">質問の追加
-              Step
+                onclick="getQuestionnaireStep('Question');">質問ステップの追加
             </div>
             <div
                 class="add-steps-btn skyblue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"

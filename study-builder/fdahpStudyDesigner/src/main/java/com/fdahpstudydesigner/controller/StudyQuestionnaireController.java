@@ -2190,6 +2190,13 @@ public class StudyQuestionnaireController {
                     .getSession()
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         if (questionnairesStepsBo != null) {
+
+          QuestionsBo qb = questionnairesStepsBo.getQuestionsBo();
+          logger.info("Question Text    ---> " + qb.getQuestion());
+          logger.info("Description Text ---> " + qb.getDescription());
+
+
+
           if (questionnairesStepsBo.getStepId() != null) {
             questionnairesStepsBo.setModifiedBy(sesObj.getUserId());
             questionnairesStepsBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
