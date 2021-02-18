@@ -58,7 +58,7 @@
           </span>
           <span class="ml-xs sprites_v3 filled-tooltip"
                 data-toggle="tooltip"
-                title="A human readable step identifier and must be unique across all steps of the questionnaire. Note that this field cannot be edited once the study is Launched."></span>
+                title="このタイトルはこの治験に属する全てのアクティビティ中で一意なものにしてください。また、この項目は治験が公開されると編集できなくなります。"></span>
         </div>
         <div class="form-group">
           <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
@@ -73,11 +73,11 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="gray-xs-f mb-xs">Step Type</div>
-        <div>Instruction Step</div>
+        <div class="gray-xs-f mb-xs">ステップタイプ</div>
+        <div>説明ステップ</div>
       </div>
       <div class="clearfix"></div>
-      <div class="gray-xs-f mb-xs">Title (250 characters max)
+      <div class="gray-xs-f mb-xs">タイトル (250文字まで)
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
@@ -88,7 +88,7 @@
       </div>
       <div class="clearfix"></div>
 
-      <div class="gray-xs-f mb-xs">Instruction Text (1 to 500 characters)
+      <div class="gray-xs-f mb-xs">説明文 (1文字以上、500文字まで)
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
@@ -306,13 +306,13 @@
     <c:if test="${actionTypeForQuestionPage ne 'view'}">
     bootbox.confirm({
       closeButton: false,
-      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      message: '未保存の編集があります。ページを離れると編集内容が失われてしまいます。よろしいですか？',
       buttons: {
         'cancel': {
-          label: 'Cancel',
+          label: 'キャンセル',
         },
         'confirm': {
-          label: 'OK',
+          label: 'はい',
         },
       },
       callback: function (result) {

@@ -551,7 +551,7 @@
                              value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
-                             placeholder="Select Time"/>
+                             placeholder="時刻"/>
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
@@ -600,8 +600,7 @@
                   name="questionnairesFrequenciesBo.isStudyLifeTime" value="true"
                 ${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime ?'checked':''}
                   required ${(questionnaireBo.shortTitleDuplicate>
-                  0)?'disabled' : ''}> <label for="isStudyLifeTime"> Study
-                Lifetime </label>
+                  0)?'disabled' : ''}> <label for="isStudyLifeTime"> Study Lifetime </label>
               </span>
               <div class="mt-md form-group regularClass">
                 <span
@@ -839,7 +838,7 @@
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
                       <input disabled id="time0" type="text"
                              name="questionnairesFrequenciesList[0].frequencyTime" required
-                             class="form-control clock dailyClock" placeholder="Time"
+                             class="form-control clock dailyClock" placeholder="時刻"
                              onclick='timep(this.id);'/>
                       <span
                           class='help-block with-errors red-txt'></span>
@@ -1047,7 +1046,7 @@
                   </div>
                 </div>
                 <div class="dis_inlinetop p-none">
-                  <span class="gray-xs-f">Time
+                  <span class="gray-xs-f">時刻
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip"
@@ -1126,7 +1125,7 @@
               <div class="black-xs-f">次回の実施のタイミングまで</div>
             </div>
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Lifetime of the questionnaire
+              <div class="gray-xs-f mb-xs">アンケートの有効期限
               </div>
               <div class="black-xs-f" id="weekLifeTimeEnd">${questionnaireBo.studyLifetimeStart}
                 - ${questionnaireBo.studyLifetimeEnd}</div>
@@ -1308,13 +1307,12 @@
               <div class="dis_inlinetop">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <span class="gray-xs-f">No. of times to repeat the
-                    questionnaire
+                  <span class="gray-xs-f">繰り返しの数
                     <span class="requiredStar">*</span>
                   </span>
                   <br/> <input id="monthsAnchor" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of Times" required
+                               name="repeatQuestionnaire" placeholder="繰り返し数" required
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -1326,12 +1324,12 @@
             <!-- Anchordate End -->
 
             <div class="mt-md col-md-12 p-none">
-              <div class="gray-xs-f mb-xs">End Date
+              <div class="gray-xs-f mb-xs">終了日
                 <span
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
+                    title="この日時はサーバーのタイムゾーンに基づいています">
                 </span>
               </div>
               <div class="black-xs-f"
@@ -1368,13 +1366,13 @@
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="manually all mt-lg dis-none">
             <div class="gray-xs-f mb-sm">
-              Select time period
+              期間を指定
               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
                   data-placement="bottom"
-                  title="All date/time selections are based on server timezone.">
+                  title="この日時はサーバーのタイムゾーンに基づいています">
               </span>
             </div>
             <div class="manuallyContainer">
@@ -1411,7 +1409,7 @@
                     <input id="customTime0" type="text" count='0'
                            class="form-control clock cusTime"
                            name="questionnaireCustomScheduleBo[0].frequencyTime"
-                           placeholder="Time" onclick='timep(this.id);' disabled required/>
+                           placeholder="時刻" onclick='timep(this.id);' disabled required/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
                   <span class="addbtn addBtnDis align-span-center mr-md"
@@ -1470,7 +1468,7 @@
                              class="form-control clock cusTime ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                              value="${questionnaireCustomScheduleBo.frequencyTime}"
-                             placeholder="Time" onclick='timep(this.id);' required/>
+                             placeholder="時刻" onclick='timep(this.id);' required/>
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
@@ -1496,7 +1494,7 @@
                   <span
                       class="mb-sm pr-md">
                     <span class="light-txt opacity06">
-                      Anchor Date
+                      基準日に
                     </span>
                   </span>
                   <span><select
@@ -1525,11 +1523,11 @@
                   </span>
                   <span class="mb-sm pr-md">
                     <span
-                        class="light-txt opacity06"> days
+                        class="light-txt opacity06"> した日
                       <span
-                          style="padding-right: 5px; padding-left: 5px">to
+                          style="padding-right: 5px; padding-left: 5px">から
                       </span>
-                      Anchor Date
+                      基準日に
                     </span>
                   </span>
                   <span><select
@@ -1558,7 +1556,7 @@
                   </span>
                   <span class="mb-sm pr-md">
                     <span
-                        class="light-txt opacity06"> days
+                        class="light-txt opacity06"> 日まで
                     </span>
                   </span>
                   <span
@@ -1567,7 +1565,7 @@
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyTime"
                                                           value="${questionnaireCustomScheduleBo.frequencyTime}"
-                                                          placeholder="Time" required/>
+                                                          placeholder="時刻" required/>
                     <span
                         class='help-block with-errors red-txt'></span>
                   </span>
@@ -1670,7 +1668,7 @@
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                         value="${questionnaireCustomScheduleBo.frequencyTime}"
-                        placeholder="Time" required/>
+                        placeholder="時刻" required/>
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
@@ -1689,9 +1687,8 @@
             <!-- anchordate end -->
 
             <div class="mt-md">
-              <div class="gray-xs-f mb-xs">Default Lifetime of each run</div>
-              <div class="black-xs-f">As defined by the start and end
-                times selected above
+              <div class="gray-xs-f mb-xs">アンケートの有効期限</div>
+              <div class="black-xs-f">上で選択した開始時間と終了時間になります
               </div>
             </div>
           </div>
