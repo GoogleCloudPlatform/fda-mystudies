@@ -180,14 +180,14 @@
           <input type="hidden" id="actionTypeForQuestionPage"
                  name="actionTypeForQuestionPage">
           <div class="gray-xs-f mb-xs">
-            ショートタイトル、またはキー文字列 (1文字以上 50文字まで)
+            ショートタイトル、またはキー文字列 (半角英数字 1文字以上 50文字まで)
             <span
                 class="requiredStar">*
             </span>
             <span
                 class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                 title="このタイトルはこの治験に属する全てのアクティビティ中で一意なものにしてください。また、この項目は治験が公開されると編集できなくなります。"></span>
-          </div>また、
+          </div>
           <div class="form-group col-md-5 p-none">
             <input autofocus="autofocus" type="text" custAttType="cust"
                    class="form-control" name="shortTitle" id="shortTitleId"
@@ -335,7 +335,7 @@
       <!-- End Content-->
       <!-- Schedule-->
       <div id="schedule" class="tab-pane fade mt-lg">
-        <div class="gray-xs-f mb-sm">Schedule Type</div>
+        <div class="gray-xs-f mb-sm">スケジュール種別</div>
         <div class="pb-lg ">
           <span class="radio radio-info radio-inline p-40"><input
               type="radio" id="schedule1" class="typeofschedule"
@@ -343,7 +343,7 @@
             ${empty questionnaireBo.scheduleType  || questionnaireBo.scheduleType=='Regular' ?'checked':''}
             ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
             <c:if test="${empty anchorTypeList || fn:length(anchorTypeList) le 1}">'disabled'</c:if>>
-            <label for="schedule1">Regular</label>
+            <label for="schedule1">レギューラー</label>
           </span>
           <span id="anchorspanId" class="tool-tip" data-toggle="tooltip"
                 data-html="true" data-placement="top"
@@ -358,8 +358,7 @@
             ${questionnaireBo.scheduleType=='AnchorDate' ?'checked':''}
             ${questionnaireBo.shortTitleDuplicate > 0?'disabled' : ''}
                                                          <c:if
-                                                             test="${empty anchorTypeList}">disabled</c:if>> <label
-                for="schedule2">Anchor date based</label>
+                                                             test="${empty anchorTypeList}">disabled</c:if>> <label for="schedule2">基準日起点</label>
             </span>
           </span>
         </div>
@@ -368,14 +367,14 @@
                    method="post" role="form" data-toggle="validator">
           <div class="anchortypeclass" style="display: none;">
             <c:if test="${fn:length(anchorTypeList) gt 0}">
-              <div class="gray-xs-f mb-sm">Select Anchor Date Type</div>
+              <div class="gray-xs-f mb-sm">基準日の種類を選択してください</div>
               <div class="clearfix"></div>
               <div class="col-md-5 col-lg-5 p-none">
                 <div class="form-group">
                   <select id="anchorDateId"
                           class="selectpicker ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                           required name="anchorDateId">
-                    <option value=''>Select</option>
+                    <option value=''>選択してください</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
                       <option value="${anchorTypeInfo.id}"
                         ${questionnaireBo.anchorDateId eq anchorTypeInfo.id ? 'selected' : ''}>${anchorTypeInfo.name}</option>
@@ -389,14 +388,14 @@
           </div>
         </form:form>
         <!-- Ancor date type -->
-        <div class="gray-xs-f mb-sm">Questionnaire Scheduling Options</div>
+        <div class="gray-xs-f mb-sm">スケジュール間隔</div>
         <div class="pb-lg b-bor">
           <span class="radio radio-info radio-inline p-40"><input
               type="radio" id="inlineRadio1" class="schedule"
               frequencytype="oneTime" value="One time" name="frequency"
           ${empty questionnaireBo.frequency  || questionnaireBo.frequency=='One time' ?'checked':''}
           ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}>
-            <label for="inlineRadio1">One Time</label>
+            <label for="inlineRadio1">1回のみ</label>
           </span>
           <span class="radio radio-inline p-40"><input type="radio"
                                                        id="inlineRadio2" class="schedule"
@@ -405,7 +404,7 @@
           ${questionnaireBo.frequency=='Daily' ?'checked':''}
           ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
           ${isAnchorQuestionnaire?'disabled':''}> <label
-              for="inlineRadio2">Daily</label>
+              for="inlineRadio2">日次</label>
           </span>
           <span class="radio radio-inline p-40"><input type="radio"
                                                        id="inlineRadio3" class="schedule"
@@ -414,7 +413,7 @@
           ${questionnaireBo.frequency=='Weekly' ?'checked':''}
           ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
           ${isAnchorQuestionnaire?'disabled':''}> <label
-              for="inlineRadio3">Weekly</label>
+              for="inlineRadio3">週次</label>
           </span>
           <span class="radio radio-inline p-40"><input type="radio"
                                                        id="inlineRadio4" class="schedule"
@@ -423,7 +422,7 @@
           ${questionnaireBo.frequency=='Monthly' ?'checked':''}
           ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
           ${isAnchorQuestionnaire?'disabled':''}> <label
-              for="inlineRadio4">Monthly</label>
+              for="inlineRadio4">月次</label>
           </span>
           <span class="radio radio-inline p-40"><input type="radio"
                                                        id="inlineRadio5" class="schedule"
@@ -433,7 +432,7 @@
           ${questionnaireBo.frequency=='Manually Schedule' ?'checked':''}
           ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
           ${isAnchorQuestionnaire?'disabled':''}> <label
-              for="inlineRadio5">Custom Schedule</label>
+              for="inlineRadio5">カスタム</label>
           </span>
         </div>
         <!-- One Time Section-->
@@ -711,14 +710,14 @@
               <div class="dailyStartCls col-md-3 pl-none">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <span class="gray-xs-f">Start date
+                  <span class="gray-xs-f">開始日
                     <span
                         class="requiredStar">*
                     </span>
                   </span>
                   <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-placement="bottom" id="helpNote"
-                        title="All date/time selections are based on server timezone.">
+                        title="この日付はサーバーのタイムゾーンに基づいています">
                   </span>
                   <br/> <input id="startDate"
                                type="text"
@@ -736,7 +735,7 @@
                   <div>
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <span class="gray-xs-f">Start date
+                      <span class="gray-xs-f">開始日
                         <span
                             class="requiredStar">*
                         </span>
@@ -746,8 +745,7 @@
                             title="All date/time selections are based on server timezone."></span>
 
                       <br/>
-                      <span class="pr-md">Anchor
-                        Date
+                      <span class="pr-md">基準日から
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -778,7 +776,7 @@
                       </span>
                       <span class="mb-sm pr-md">
                         <span
-                            class="light-txt opacity06"> days
+                            class="light-txt opacity06"> 日
                         </span>
                       </span>
                     </span>
@@ -789,8 +787,7 @@
               <div class="col-md-6 pr-none">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <span class="gray-xs-f">No. of times to repeat the
-                    questionnaire
+                  <span class="gray-xs-f">繰り返しの数
                     <span class="requiredStar">*</span>
 
                   </span>
@@ -808,11 +805,11 @@
             </div>
 
             <div class="mt-md">
-              <div class="gray-xs-f mb-xs">End Date
+              <div class="gray-xs-f mb-xs">終了日
                 <span class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
                       data-placement="bottom" id="helpNote"
-                      title="All date/time selections are based on server timezone.">
+                      title="この日付はサーバーのタイムゾーンに基づいています">
                 </span>
               </div>
               <div class="black-xs-f"
@@ -825,13 +822,13 @@
 
             <div class="mt-md">
               <div class="gray-xs-f mb-sm">
-                Time(s) of the day for daily occurrence
+                実施する時刻
                 <span
                     class="requiredStar">*
                 </span>
                 <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       data-placement="bottom" id="helpNote"
-                      title="All date/time selections are based on server timezone.">
+                      title="この時刻はサーバーのタイムゾーンに基づいています">
                 </span>
               </div>
               <div class="dailyContainer">
@@ -889,11 +886,11 @@
 
 
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Lifetime of each run</div>
-              <div class="black-xs-f">Until the next run comes up</div>
+              <div class="gray-xs-f mb-xs">実施の有効期限</div>
+              <div class="black-xs-f">次の実施のタイミングまで</div>
             </div>
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Lifetime of the questionnaire
+              <div class="gray-xs-f mb-xs">アンケートの有効期限
               </div>
               <div class="black-xs-f" id="lifeTimeId">${questionnaireBo.studyLifetimeStart}
                 - ${questionnaireBo.studyLifetimeEnd}</div>
@@ -918,7 +915,7 @@
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="week all mt-lg dis-none">
             <div id="weekDaysId" class="weeklyCls">
-              <span class="gray-xs-f">Day/Time (of the week)
+              <span class="gray-xs-f">曜日と時刻
                 <span
                     class="requiredStar">*
                 </span>
@@ -926,7 +923,7 @@
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
+                    title="この日時はサーバーのタイムゾーンに基づいています">
                 </span>
                 <br/>
                 <span
@@ -934,27 +931,27 @@
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
                                          name="dayOfTheWeek" required>
-                    <option value=''>Select</option>
+                    <option value=''>選択してください</option>
                     <option value='Sunday'
-                      ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
+                      ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>日曜日
                     </option>
                     <option value='Monday'
-                      ${questionnaireBo.dayOfTheWeek eq 'Monday' ?'selected':''}>Monday
+                      ${questionnaireBo.dayOfTheWeek eq 'Monday' ?'selected':''}>月曜日
                     </option>
                     <option value='Tuesday'
-                      ${questionnaireBo.dayOfTheWeek eq 'Tuesday' ?'selected':''}>Tuesday
+                      ${questionnaireBo.dayOfTheWeek eq 'Tuesday' ?'selected':''}>火曜日
                     </option>
                     <option value='Wednesday'
-                      ${questionnaireBo.dayOfTheWeek eq 'Wednesday' ?'selected':''}>Wednesday
+                      ${questionnaireBo.dayOfTheWeek eq 'Wednesday' ?'selected':''}>水曜日
                     </option>
                     <option value='Thursday'
-                      ${questionnaireBo.dayOfTheWeek eq 'Thursday' ?'selected':''}>Thursday
+                      ${questionnaireBo.dayOfTheWeek eq 'Thursday' ?'selected':''}>木曜日
                     </option>
                     <option value='Friday'
-                      ${questionnaireBo.dayOfTheWeek eq 'Friday' ?'selected':''}>Friday
+                      ${questionnaireBo.dayOfTheWeek eq 'Friday' ?'selected':''}>金曜日
                     </option>
                     <option value='Saturday'
-                      ${questionnaireBo.dayOfTheWeek eq 'Saturday' ?'selected':''}>Saturday
+                      ${questionnaireBo.dayOfTheWeek eq 'Saturday' ?'selected':''}>土曜日
                     </option>
                   </select>
                     <span class='help-block with-errors red-txt'></span>
@@ -975,7 +972,7 @@
               <div class="weeklyStartCls col-md-3 pl-none">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <span class="gray-xs-f">Start date
+                  <span class="gray-xs-f">開始日
                     <span
                         class="requiredStar">*
                     </span>
@@ -983,7 +980,7 @@
                         class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
                         data-placement="bottom"
-                        title="All date/time selections are based on server timezone.">
+                        title="この日時はサーバーのタイムゾーンに基づいています">
                     </span>
                   </span>
                   <br/> <input
@@ -1003,7 +1000,7 @@
                   <div>
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <span class="gray-xs-f">Start date
+                      <span class="gray-xs-f">開始日
                         <span
                             class="requiredStar">*
                         </span>
@@ -1011,12 +1008,11 @@
                             class="ml-xs sprites_v3 filled-tooltip"
                             data-toggle="tooltip"
                             data-placement="bottom"
-                            title="All date/time selections are based on server timezone.">
+                            title="この日時はサーバーのタイムゾーンに基づいています">
                         </span>
                       </span>
                       <br/>
-                      <span class="pr-md">Anchor
-                        Date
+                      <span class="pr-md">基準日から
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -1044,7 +1040,7 @@
                       </span>
                       <span class="mb-sm pr-md">
                         <span
-                            class="light-txt opacity06"> days
+                            class="light-txt opacity06"> 日
                         </span>
                       </span>
                     </span>
@@ -1057,7 +1053,7 @@
                         class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
                         data-placement="bottom"
-                        title="All date/time selections are based on server timezone.">
+                        title="この日時はサーバーのタイムゾーンに基づいています">
                     </span>
                     <br/></span>
                   <span
@@ -1074,8 +1070,7 @@
                 <div class="dis_inlinetop">
                   <span
                       class="form-group m-none dis-inline vertical-align-middle pr-md">
-                    <span class="gray-xs-f">No. of times to repeat the
-                      questionnaire
+                    <span class="gray-xs-f">繰り返しの数
                       <span class="requiredStar">*</span>
                     </span>
                     <br/> <input id="weeksAnchor" type="text"
@@ -1084,7 +1079,7 @@
                                  value="${questionnaireBo.repeatQuestionnaire}" required
                                  onkeypress="return isNumber(event, this)"
                                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                 data-pattern-error="Please enter valid number."
+                                 data-pattern-error="正しい数字を入力してください"
                                  maxlength="3"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
@@ -1096,8 +1091,7 @@
               <div class="col-md-5 p-none weeklyRegular">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <span class="gray-xs-f">No. of times to repeat the
-                    questionnaire
+                  <span class="gray-xs-f">繰り返しの数
                     <span class="requiredStar">*</span>
                   </span>
                   <br/> <input id="weeks" type="text"
@@ -1106,19 +1100,19 @@
                                value="${questionnaireBo.repeatQuestionnaire}" required
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="正しい数字を入力してください" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
               <div class="clearfix"></div>
             </div>
             <div class="mt-md">
-              <div class="gray-xs-f mb-xs">End Date
+              <div class="gray-xs-f mb-xs">終了日
                 <span
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
+                    title="この日時はサーバーのタイムゾーンに基づいています">
                 </span>
               </div>
               <div class="black-xs-f"
@@ -1128,8 +1122,8 @@
                      value="${questionnaireBo.studyLifetimeEnd}">
             </div>
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Lifetime of each run</div>
-              <div class="black-xs-f">Until the next run comes up</div>
+              <div class="gray-xs-f mb-xs">実施の有効期限</div>
+              <div class="black-xs-f">次回の実施のタイミングまで</div>
             </div>
             <div class="mt-lg">
               <div class="gray-xs-f mb-xs">Lifetime of the questionnaire
@@ -1158,7 +1152,7 @@
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="month all mt-lg dis-none">
             <div id="monthlyDateId">
-              <span class="gray-xs-f">Select Date/Time (of the month)
+              <span class="gray-xs-f">毎月実行する日時
                 <span
                     class="requiredStar">*
                 </span>
@@ -1166,7 +1160,7 @@
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="All date/time selections are based on server timezone.">
+                    title="この日時はサーバーのタイムゾーンに基づいています">
                 </span>
               </span>
               <br/>
@@ -1190,14 +1184,12 @@
                 <span class='help-block with-errors red-txt'></span>
               </span>
               <div
-                  class="gray-xs-f mt-xs mb-lg italic-txt text-weight-light monthlyStartCls">If
-                the selected date is not available in a month, the last day of
-                the month will be used instead
+                  class="gray-xs-f mt-xs mb-lg italic-txt text-weight-light monthlyStartCls">選択した日付が1か月で利用できない場合は、代わりにその月の最終日が使用されます
               </div>
               <div class="monthlyStartCls dis_inlinetop p-none">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <span class="gray-xs-f">Start date
+                  <span class="gray-xs-f">開始日
                     <span
                         class="requiredStar">*
                     </span>
@@ -1205,7 +1197,7 @@
                         class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
                         data-placement="bottom"
-                        title="All date/time selections are based on server timezone.">
+                        title="この日時はサーバーのタイムゾーンに基づいています">
                     </span>
                   </span>
                   <br/> <input id="pickStartDate"
@@ -1222,13 +1214,12 @@
               <div class="dis_inlinetop p-none monthlyRegular">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <span class="gray-xs-f">No. of times to repeat the
-                    questionnaire
+                  <span class="gray-xs-f">繰り返しの数
                     <span class="requiredStar">*</span>
                   </span>
                   <br/> <input id="months" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of Times" required
+                               name="repeatQuestionnaire" placeholder="繰り返し数" required
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -1244,7 +1235,7 @@
                   <div>
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <span class="gray-xs-f">Start date
+                      <span class="gray-xs-f">開始日
                         <span
                             class="requiredStar">*
                         </span>
@@ -1252,12 +1243,11 @@
                             class="ml-xs sprites_v3 filled-tooltip"
                             data-toggle="tooltip"
                             data-placement="bottom"
-                            title="All date/time selections are based on server timezone.">
+                            title="この日時はサーバーのタイムゾーンに基づいています">
                         </span>
                       </span>
                       <br/>
-                      <span class="pr-md">Anchor
-                        Date
+                      <span class="pr-md">基準日から
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -1285,7 +1275,7 @@
                       </span>
                       <span class="mb-sm pr-md">
                         <span
-                            class="light-txt opacity06">days
+                            class="light-txt opacity06">日
                         </span>
                       </span>
                     </span>
@@ -1295,7 +1285,7 @@
 
 
               <div class="dis_inlinetop p-none">
-                <span class="gray-xs-f">Time
+                <span class="gray-xs-f">時刻
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip"
@@ -1309,7 +1299,7 @@
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
                   <input id="selectMonthlyTimeAnchor" type="text"
                          class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                         required onclick="timep(this.id)" placeholder="Time"
+                         required onclick="timep(this.id)" placeholder="時刻"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1351,11 +1341,11 @@
                      value="${questionnaireBo.studyLifetimeEnd}">
             </div>
             <div class="mt-lg col-md-12 p-none">
-              <div class="gray-xs-f mb-xs">Lifetime of each run</div>
-              <div class="black-xs-f">Until the next run comes up</div>
+              <div class="gray-xs-f mb-xs">実施の有効期限</div>
+              <div class="black-xs-f">次回の実施のタイミングまで</div>
             </div>
             <div class="mt-lg col-md-12 p-none">
-              <div class="gray-xs-f mb-xs">Lifetime of the questionnaire
+              <div class="gray-xs-f mb-xs">アンケートの有効期限
               </div>
               <div class="black-xs-f" id="monthLifeTimeDate">${questionnaireBo.studyLifetimeStart}
                 - ${questionnaireBo.studyLifetimeEnd}</div>

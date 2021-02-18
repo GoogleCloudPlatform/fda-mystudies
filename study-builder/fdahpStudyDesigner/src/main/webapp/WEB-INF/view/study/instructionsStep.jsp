@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -17,26 +17,26 @@
               class="mr-xs cur-pointer"
               onclick="goToBackPage(this);"><img
               src="../images/icons/back-b.png" alt=""/></span>
-          <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Instruction Step</c:if>
-          <c:if test="${actionTypeForQuestionPage == 'view'}">View Instruction Step <c:set
+          <c:if test="${actionTypeForQuestionPage == 'edit'}">説明ステップの編集</c:if>
+          <c:if test="${actionTypeForQuestionPage == 'view'}">説明ステップの参照 <c:set
               var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
           </c:if>
-          <c:if test="${actionTypeForQuestionPage == 'add'}">Add Instruction Step</c:if>
+          <c:if test="${actionTypeForQuestionPage == 'add'}">説明ステップの追加</c:if>
         </div>
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">
-            Cancel
+            キャンセル
           </button>
         </div>
         <c:if test="${actionTypeForQuestionPage ne 'view'}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn" id="saveId"
                     onclick="saveIns(this);">
-              Save
+              下書き保存
             </button>
           </div>
           <div class="dis-line form-group mb-none">
-            <button type="button" class="btn btn-primary blue-btn" id="doneId">Done</button>
+            <button type="button" class="btn btn-primary blue-btn" id="doneId">完了</button>
           </div>
         </c:if>
       </div>
@@ -52,7 +52,7 @@
       <input type="hidden" name="questionnairesStepsBo.stepId" id="stepId"
              value="${instructionsBo.questionnairesStepsBo.stepId}">
       <div class="col-md-6 pl-none">
-        <div class="gray-xs-f mb-xs">Step Short Title or Key (15 characters max)
+        <div class="gray-xs-f mb-xs">ショートタイトル、またはキー文字列 (半角英数字 15文字まで)
           <span
               class="requiredStar">*
           </span>
