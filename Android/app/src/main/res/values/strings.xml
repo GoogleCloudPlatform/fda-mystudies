@@ -56,7 +56,7 @@
     <string name="next">Next</string>
     <string name="setup_passcode">Create passcode</string>
     <string name="sign_in">SIGN IN</string>
-    <string name="sign_in_btn">Sign In</string>
+    <string name="sign_in_btn">Sign in</string>
     <string name="usr_pwd">with username and\n password</string>
     <string name="email">Email</string>
     <string name="new_password">New password</string>
