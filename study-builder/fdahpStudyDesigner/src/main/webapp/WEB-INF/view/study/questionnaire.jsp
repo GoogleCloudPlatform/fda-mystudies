@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-         pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -93,9 +92,9 @@
       <div class="black-md-f text-uppercase dis-line pull-left line34">
         <span class="pr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png" class="pr-md" alt=""/></span>
-        <c:if test="${actionType eq 'add'}">Add Questionnaire</c:if>
-        <c:if test="${actionType eq 'edit'}">Edit Questionnaire</c:if>
-        <c:if test="${actionType eq 'view'}">View Questionnaire <c:set
+        <c:if test="${actionType eq 'add'}">アンケートの追加</c:if>
+        <c:if test="${actionType eq 'edit'}">アンケートの編集</c:if>
+        <c:if test="${actionType eq 'view'}">アンケートの参照 <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?questionnaireBo.questionnarieVersion:''}
         </c:if>
 
@@ -103,7 +102,7 @@
       </div>
       <div class="dis-line form-group mb-none mr-sm">
         <button type="button" class="btn btn-default gray-btn"
-                onclick="goToBackPage(this);">Cancel
+                onclick="goToBackPage(this);">キャンセル
         </button>
       </div>
       <c:if test="${actionType ne 'view'}">
@@ -111,12 +110,12 @@
           <c:choose>
             <c:when test="${not empty questionnaireBo.id}">
               <button type="button" class="btn btn-default gray-btn"
-                      id="saveId">Save
+                      id="saveId">下書き保存
               </button>
             </c:when>
             <c:otherwise>
               <button type="button" class="btn btn-default gray-btn"
-                      id="saveId">Next
+                      id="saveId">次へ
               </button>
             </c:otherwise>
           </c:choose>
@@ -125,14 +124,14 @@
           <span class="tool-tip" data-toggle="tooltip"
                 data-placement="bottom" id="helpNote"
               <c:if
-                  test="${empty questionnaireBo.id}"> title="Please click on Next to continue." </c:if>
+                  test="${empty questionnaireBo.id}"> title="「次へ」ボタンを押して次のステップへ進んでください" </c:if>
               <c:if
-                  test="${fn:length(qTreeMap) eq 0 }"> title="Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete." </c:if>
+                  test="${fn:length(qTreeMap) eq 0 }"> title="このセクションを完了する前に、1つ以上のアンケートを登録してください。" </c:if>
               <c:if
-                  test="${!isDone }"> title="Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete." </c:if>>
+                  test="${!isDone }"> title="このセクションを完了するまえに、このリストのアンケートの編集を完了にしてください。" </c:if>>
             <button type="button" class="btn btn-primary blue-btn" id="doneId"
                     <c:if
-                        test="${fn:length(qTreeMap) eq 0 || !isDone }">disabled</c:if>>Done
+                        test="${fn:length(qTreeMap) eq 0 || !isDone }">disabled</c:if>>完了
             </button>
           </span>
         </div>
@@ -146,12 +145,12 @@
     <ul class="nav nav-tabs review-tabs" id="tabContainer">
       <li class="contentqusClass active">
         <a data-toggle="tab"
-           href="#contentTab">Content
+           href="#contentTab">コンテンツ
         </a>
       </li>
       <li class="scheduleQusClass">
         <a data-toggle="tab"
-           href="#schedule">Schedule
+           href="#schedule">スケジュール
         </a>
       </li>
     </ul>
@@ -181,14 +180,14 @@
           <input type="hidden" id="actionTypeForQuestionPage"
                  name="actionTypeForQuestionPage">
           <div class="gray-xs-f mb-xs">
-            Activity Short Title or Key (1 to 50 characters)
+            ショートタイトル、またはキー文字列 (1文字以上 50文字まで)
             <span
                 class="requiredStar">*
             </span>
             <span
                 class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                title="A human readable step identifier and must be unique across all activities of the study.Note that this field cannot be edited once the study is Launched."></span>
-          </div>
+                title="このタイトルはこの治験に属する全てのアクティビティ中で一意なものにしてください。また、この項目は治験が公開されると編集できなくなります。"></span>
+          </div>また、
           <div class="form-group col-md-5 p-none">
             <input autofocus="autofocus" type="text" custAttType="cust"
                    class="form-control" name="shortTitle" id="shortTitleId"
@@ -202,7 +201,7 @@
           </div>
           <div class="clearfix"></div>
           <div class="gray-xs-f mb-xs">
-            Title (300 characters max)
+            タイトル (300文字まで)
             <span class="requiredStar">*</span>
           </div>
           <div class="form-group">
@@ -214,17 +213,16 @@
           <div class="mt-lg" id="stepContainer">
             <div
                 class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
-                onclick="getQuestionnaireStep('Instruction');">Add
-              Instruction Step
+                onclick="getQuestionnaireStep('Instruction');">導入ステップの追加
             </div>
             <div
                 class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
-                onclick="getQuestionnaireStep('Question');">Add Question
+                onclick="getQuestionnaireStep('Question');">質問の追加
               Step
             </div>
             <div
                 class="add-steps-btn skyblue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
-                onclick="getQuestionnaireStep('Form');">Add Form Step
+                onclick="getQuestionnaireStep('Form');">フォームステップの追加
             </div>
             <span class=" sprites_v3 filled-tooltip" id="infoIconId"></span>
             <div class="pull-right mt-xs">
@@ -2028,7 +2026,7 @@
       "filter": false,
       rowReorder: reorder,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "レコードはまだ登録されていません",
       },
       "columnDefs": [
         {orderable: false, targets: [0, 1, 2, 3]},
@@ -4010,13 +4008,13 @@
     <c:if test="${actionType ne 'view'}">
     bootbox.confirm({
       closeButton: false,
-      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      message: '未保存の編集があります。ページを離れると編集内容が失われてしまいます。よろしいですか？',
       buttons: {
         'cancel': {
-          label: 'Cancel',
+          label: 'キャンセル',
         },
         'confirm': {
-          label: 'OK',
+          label: 'はい',
         },
       },
       callback: function (result) {

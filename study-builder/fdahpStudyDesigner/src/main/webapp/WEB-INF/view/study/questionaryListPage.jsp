@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -20,10 +20,10 @@
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
-      <div class="black-md-f text-uppercase dis-line pull-left line34">QUESTIONNAIRES</div>
+      <div class="black-md-f text-uppercase dis-line pull-left line34">調査アンケート</div>
 
       <div class="dis-line form-group mb-none">
-        <button type="button" class="btn btn-default gray-btn cancelBut">Cancel</button>
+        <button type="button" class="btn btn-default gray-btn cancelBut">キャンセル</button>
       </div>
 
       <c:if test="${empty permission}">
@@ -34,7 +34,7 @@
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsCompleteBtnId"
                     onclick="markAsCompleted();" <c:if
-                test="${!markAsComplete}"> disabled </c:if> >Mark as Completed
+                test="${!markAsComplete}"> disabled </c:if> >完了
             </button>
           </span>
         </div>
@@ -51,10 +51,10 @@
         <thead>
           <tr>
             <th style="display: none;" id=""></th>
-            <th id="">TITLE
+            <th id="">タイトル
               <span class="sort"></span>
             </th>
-            <th id="">Schedule Type
+            <th id="">スケジュールタイプ
               <span class="sort"></span>
             </th>
             <th id="">
@@ -62,7 +62,7 @@
                 <div class="dis-line form-group mb-none">
                   <button type="button" class="btn btn-primary blue-btn"
                           onclick="addQuestionnaires();">
-                    Add Questionnaire
+                    アンケート追加
                   </button>
                 </div>
               </c:if>
@@ -81,19 +81,19 @@
               <td style="width:200px !important;">
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
-                      title="View"
+                      title="参照"
                       onclick="viewQuestionnaires(${questionnaryInfo.id});"></span>
                 <span
                     class="${questionnaryInfo.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
-                    data-toggle="tooltip" data-placement="top" title="Edit"
+                    data-toggle="tooltip" data-placement="top" title="編集"
                     onclick="editQuestionnaires(${questionnaryInfo.id});"></span>
                 <span
                     class="sprites_icon copy  mr-lg<c:if test="${not empty permission}"> cursor-none </c:if>"
-                    data-toggle="tooltip" data-placement="top" title="Copy"
+                    data-toggle="tooltip" data-placement="top" title="コピー"
                     onclick="copyQuestionnaire(${questionnaryInfo.id});"></span>
                 <span
                     class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
-                    data-toggle="tooltip" data-placement="top" title="Delete"
+                    data-toggle="tooltip" data-placement="top" title="削除"
                     onclick="deleteQuestionnaire(${questionnaryInfo.id});"></span>
               </td>
             </tr>
@@ -128,7 +128,7 @@
         {"bSortable": true}
       ],
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "レコードはまだ登録されていません",
       },
       "order": [[0, "desc"]],
       "info": false,
@@ -184,7 +184,7 @@
   function deleteQuestionnaire(questionnaireId) {
     var studyId = $("#studyId").val();
     bootbox.confirm({
-      message: "Are you sure you want to delete this questionnaire item? This item will no longer appear on the mobile app or admin portal. Response data already gathered against this item, if any, will still be available on the response database.",
+      message: "このアンケートを削除してよろしいですか？アンケートを削除するとモバイルアプリに表示されなくなります。すでに解答されたデータは削除されません。",
       buttons: {
         confirm: {
           label: 'Yes',

@@ -243,11 +243,11 @@
             </div>
             <div class="mt-xlg dis-inline" id="autoCreateDivId01"
                  style="display: block;">
-              <div class="sign">Participant's First Name</div>
-              <div class="sign">Last Name</div>
-              <div class="sign">Signature</div>
-              <div class="sign">Date</div>
-              <div class="sign">Time</div>
+              <div class="sign">被験者の姓</div>
+              <div class="sign">名</div>
+              <div class="sign">電子サイン</div>
+              <div class="sign">日付</div>
+              <div class="sign">時刻</div>
             </div>
           </div>
           <div id="menu3" class="tab-pane fade">
@@ -478,7 +478,7 @@
               } else {
                 alertType = "参加者の選択に従って保持または削除する";
               }
-              message = "被験者が研究から脱退した場合に研究データを [" + alertType + " ] 設定になっています。これが同意書に表現されていることを確認してください。「完了」を押して完了するか、変更する場合は「キャンセル」を押してください。";
+              message = "被験者が研究から脱退した場合に研究データを [ " + alertType + " ] 設定になっています。これが同意書に表現されていることを確認してください。「完了」を押して完了するか、変更する場合は「キャンセル」を押してください。";
             }
             bootbox.confirm({
               closeButton: false,
