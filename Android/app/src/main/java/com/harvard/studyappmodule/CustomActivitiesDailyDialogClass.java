@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.harvard.R;
+import com.harvard.studyappmodule.surveyscheduler.model.ActivityStatus;
 import java.util.ArrayList;
 
 public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnClickListener {
@@ -40,19 +41,23 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
   private ArrayList<String> scheduledTime;
   private boolean isClickableItem;
   private DialogClick dialogClick;
+  private String status;
+  private ActivityStatus activityStatus;
 
   CustomActivitiesDailyDialogClass(
           Context context,
           ArrayList<String> scheduledTime,
           int selectedTime,
           boolean isClickableItem,
-          DialogClick dialogClick) {
+          DialogClick dialogClick, String status, ActivityStatus activityStatus) {
     super(context);
     this.context = context;
     this.scheduledTime = scheduledTime;
     this.selectedTime = selectedTime;
     this.isClickableItem = isClickableItem;
     this.dialogClick = dialogClick;
+    this.status = status;
+    this.activityStatus = activityStatus;
   }
 
   @Override
@@ -67,6 +72,13 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
     RelativeLayout closeBtnLayout = (RelativeLayout) findViewById(R.id.mCloseBtnLayout);
     closeBtnLayout.setOnClickListener(this);
     LinearLayout l = (LinearLayout) findViewById(R.id.lin_layout_hours);
+    if (status
+            .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
+            && (activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED)
+            || activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)
+            || activityStatus.getCurrentRunId() == 0)) {
+      selectedTime++;
+    }
     for (int i = 0; i < scheduledTime.size(); i++) {
       TextView textDynamic = new TextView(getContext());
       textDynamic.setLayoutParams(
