@@ -1,5 +1,5 @@
 <!--
- Copyright 2020 Google LLC
+ Copyright 2020-2021 Google LLC
  Use of this source code is governed by an MIT-style
  license that can be found in the LICENSE file or at
  https://opensource.org/licenses/MIT.
@@ -30,11 +30,11 @@ To deploy the [`Study builder`](/study-builder/) manually:
 1. [Create](https://cloud.google.com/compute/docs/instances/create-start-instance) a Compute Engine VM instance with a [static IP](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-internal-ip-address) and read/write [access scopes](https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam) for Cloud Storage (make sure your VM’s [GCE service account](https://cloud.google.com/compute/docs/access/service-accounts#default_service_account) has the [`Storage Object Admin`](https://cloud.google.com/storage/docs/access-control/iam-roles) role for the bucket you created during `Study datastore` deployment)
 1. Verify that your VM instance has the `Stackdriver Logging API` write [access scope](https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam) (on by default) and that your VM’s [service account](https://cloud.google.com/compute/docs/access/service-accounts#default_service_account) has the [`Logs Writer`](https://cloud.google.com/logging/docs/access-control) role (off by default)
 1. Check out the latest code from the [FDA MyStudies repository](https://github.com/GoogleCloudPlatform/fda-mystudies/)
-1. Update user-facing text as desired, for example in [termsAndCondition.jsp](fdahpStudyDesigner/src/main/webapp/WEB-INF/view/termsAndCondition.jsp), [copyright.jsp](fdahpStudyDesigner/src/main/webapp/WEB-INF/templates/copyright.jsp) and [privacypolicy.jsp](fdahpStudyDesigner/src/main/webapp/WEB-INF/view/privacypolicy.jsp)
-1. Update the organization name as desired for org.name in the [application.properties](fdahpStudyDesigner/src/main/resources/application.properties) file
-1. Update the landing page logo as desired replacing the image [logo_landing_welcome.png](fdahpStudyDesigner/src/main/webapp/images/logo/logo_landing_welcome.png) (ensure you keep the same file name)
-1. Update the inner screens logo as desired replacing the image [logo_innerScreens.png](fdahpStudyDesigner/src/main/webapp/images/logo/logo_innerScreens.png) (ensure you keep the same file name)
-1. Update the favicon logo as desired replacing the image [FAV_Icon.png](fdahpStudyDesigner/src/main/webapp/images/icons/FAV_Icon.png) (ensure you keep the same file name)
+1. Optional. Customize branding by updating text and images
+	-    Update user-facing text as desired, for example in [`termsAndCondition.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/view/termsAndCondition.jsp), [`copyright.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/templates/copyright.jsp) and [`privacypolicy.jsp`](fdahpStudyDesigner/src/main/webapp/WEB-INF/view/privacypolicy.jsp)
+	-	 Replace landing page image [`logo_landing_welcome.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_landing_welcome.png) (do not change filename)
+	- 	 Replace subpage image [`logo_innerScreens.png`](fdahpStudyDesigner/src/main/webapp/images/logo/logo_innerScreens.png) (do not change filename)
+	-    Replace favicon image [`FAV_Icon.png`](fdahpStudyDesigner/src/main/webapp/images/icons/FAV_Icon.png) (do not change filename)
 1. Deploy the `Study builder` container to the VM
     -    Create the Docker image using `sudo mvn -B package -Pprod com.google.cloud.tools:jib-maven-plugin:2.5.2:dockerBuild -f fdahpStudyDesigner/pom.xml -Dimage=study-builder-image` (you may need to [install Docker](https://docs.docker.com/engine/install/debian/) and Maven, for example `sudo apt install maven`)
     -    Update the Docker environment file [`variables.env`](variables.env) with values to configure the [`application.properties`](fdahpStudyDesigner/src/main/resources/application.properties) file for your deployment
