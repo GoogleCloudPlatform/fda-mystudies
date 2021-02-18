@@ -147,10 +147,7 @@ class DBHandler: NSObject {
       } else {
 
         try? realm.write({
-          dbStudy?.category = study.category
           dbStudy?.name = study.name
-          dbStudy?.sponserName = study.sponserName
-          dbStudy?.tagLine = study.description
           dbStudy?.logoURL = study.logoURL
           dbStudy?.startDate = study.startDate
           dbStudy?.endEnd = study.endEnd
@@ -166,7 +163,6 @@ class DBHandler: NSObject {
             dbStudy?.joiningDate = studyStatus.joiningDate
             dbStudy?.completion = studyStatus.completion
             dbStudy?.adherence = studyStatus.adherence
-            dbStudy?.bookmarked = studyStatus.bookmarked
           }
           if dbStudy?.participatedStatus
             == UserStudyStatus.StudyStatus.enrolled
@@ -197,10 +193,7 @@ class DBHandler: NSObject {
 
     let dbStudy = DBStudy()
     dbStudy.studyId = study.studyId
-    dbStudy.category = study.category
     dbStudy.name = study.name
-    dbStudy.sponserName = study.sponserName
-    dbStudy.tagLine = study.description
     dbStudy.version = study.version
     dbStudy.updatedVersion = study.version
     dbStudy.logoURL = study.logoURL
@@ -218,7 +211,6 @@ class DBHandler: NSObject {
       dbStudy.joiningDate = userStudyStatus.joiningDate
       dbStudy.completion = userStudyStatus.completion
       dbStudy.adherence = userStudyStatus.adherence
-      dbStudy.bookmarked = userStudyStatus.bookmarked
     }
     dbStudy.withdrawalConfigrationMessage = study.withdrawalConfigration?.message
     dbStudy.withdrawalConfigrationType = study.withdrawalConfigration?.type?.rawValue
@@ -240,10 +232,7 @@ class DBHandler: NSObject {
 
       let study = Study()
       study.studyId = dbStudy.studyId
-      study.category = dbStudy.category
       study.name = dbStudy.name
-      study.sponserName = dbStudy.sponserName
-      study.description = dbStudy.tagLine
       study.version = dbStudy.version
       study.newVersion = dbStudy.updatedVersion
       study.logoURL = dbStudy.logoURL
@@ -266,7 +255,6 @@ class DBHandler: NSObject {
       participatedStatus.status = UserStudyStatus.StudyStatus(
         rawValue: dbStudy.participatedStatus
       )!
-      participatedStatus.bookmarked = dbStudy.bookmarked
       participatedStatus.studyId = dbStudy.studyId
       participatedStatus.participantId = dbStudy.participatedId
       participatedStatus.siteID = dbStudy.siteID ?? ""
@@ -866,6 +854,13 @@ class DBHandler: NSObject {
     Schedule().getRunsForActivity(
       activity: activity,
       handler: { (runs) in
+        if !runs.isEmpty
+          && dbActivity.frequencyType == Frequency.oneTime.rawValue
+        {
+          try? realm.write {
+            realm.delete(dbActivity.activityRuns)
+          }
+        }
         let dbActivityRuns = List<DBActivityRun>()
         for activityRun in runs {
           let dbActivityRun = DBActivityRun(

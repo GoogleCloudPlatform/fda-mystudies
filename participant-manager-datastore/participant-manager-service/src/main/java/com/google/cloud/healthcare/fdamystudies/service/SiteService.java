@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface SiteService {
 
-  public SiteResponse addSite(SiteRequest siteRequest);
+  public SiteResponse addSite(SiteRequest siteRequest, AuditLogEventRequest auditRequest);
 
   public ParticipantRegistryResponse getParticipants(
       String userId,

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -56,9 +57,6 @@ import org.hibernate.annotations.Type;
 public class UserBO implements Serializable {
 
   private static final long serialVersionUID = 135353554543L;
-
-  @Column(name = "access_code")
-  private String accessCode;
 
   @Column(name = "accountNonExpired", length = 1)
   private boolean accountNonExpired;
@@ -144,10 +142,6 @@ public class UserBO implements Serializable {
 
   @Column(name = "access_level")
   private String accessLevel;
-
-  public String getAccessCode() {
-    return accessCode;
-  }
 
   public Integer getCreatedBy() {
     return createdBy;
@@ -251,10 +245,6 @@ public class UserBO implements Serializable {
 
   public boolean isForceLogout() {
     return forceLogout;
-  }
-
-  public void setAccessCode(String accessCode) {
-    this.accessCode = accessCode;
   }
 
   public void setAccountNonExpired(boolean accountNonExpired) {

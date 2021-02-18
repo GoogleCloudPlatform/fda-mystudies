@@ -78,10 +78,10 @@
     <div class="right-content-body pt-none pl-none pr-none">
       <ul class="nav nav-tabs review-tabs gray-bg" id="formTabConstiner">
         <li class="stepLevel active">
-          <a data-toggle="tab" href="#sla">Step-level Attributes</a>
+          <a data-toggle="tab" href="#sla">Step-level attributes</a>
         </li>
         <li class="formLevel">
-          <a data-toggle="tab" href="#fla">Form-level Attributes</a>
+          <a data-toggle="tab" href="#fla">Form-level attributes</a>
         </li>
       </ul>
       <div class="tab-content pl-xlg pr-xlg">
@@ -102,7 +102,7 @@
         <div id="sla" class="tab-pane fade in active mt-xlg">
           <div class="row">
             <div class="col-md-6 pl-none">
-              <div class="gray-xs-f mb-xs">Step title or Key (1 to 15 characters)
+              <div class="gray-xs-f mb-xs">Step title or key (1 to 15 characters)
                 <span
                     class="requiredStar">*
                 </span>
@@ -122,12 +122,12 @@
               </div>
             </div>
             <div class="col-md-6">
-              <div class="gray-xs-f mb-xs">Step Type</div>
-              <div>Form Step</div>
+              <div class="gray-xs-f mb-xs">Step type</div>
+              <div>Form step</div>
             </div>
             <div class="clearfix"></div>
             <div>
-              <div class="gray-xs-f mb-xs">Is this a Skippable Step?
+              <div class="gray-xs-f mb-xs">Is this a skippable step?
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                     title="If marked as Yes, it means the user can skip the entire step meaning no responses are captured from this form step. If marked No, it means the user cannot skip the step and has to answer at least one of the questions to proceed."></span>
@@ -148,7 +148,7 @@
             <div class="clearfix"></div>
             <c:if test="${questionnaireBo.branching}">
               <div class="col-md-4 col-lg-3 p-none mt-md">
-                <div class="gray-xs-f mb-xs">Default Destination Step
+                <div class="gray-xs-f mb-xs">Default destination step
                   <span
                       class="requiredStar">*
                   </span>
@@ -194,7 +194,7 @@
             </div>
           </div>
           <div>
-            <div class="gray-xs-f mb-xs mt-md">Repeatable Form Button text (1 to 30 characters)
+            <div class="gray-xs-f mb-xs mt-md">Repeatable form button text (1 to 30 characters)
             </div>
             <div class="gray-xs-f mb-xs">
               <small>Enter text the user should see and tap on, to repeat
@@ -222,7 +222,7 @@
               <div class="dis-line form-group mb-md pull-right">
                 <button type="button"
                         class="btn btn-primary  blue-btn hideButtonOnView <c:if test="${empty questionnairesStepsBo.stepId}"> cursor-none </c:if>"
-                        onclick="addNewQuestion('');" id="addQuestionId">Add New Question
+                        onclick="addNewQuestion('');" id="addQuestionId">Add new question
                 </button>
               </div>
             </div>
@@ -293,7 +293,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     <c:if test="${actionTypeForQuestionPage == 'view'}">
     $('#formStepId input[type="text"]').prop('disabled', true);
     $('#formStepId input[type="radio"]').prop('disabled', true);
@@ -442,7 +442,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
@@ -670,6 +670,7 @@
 
   function deletQuestion(formId, questionId) {
     var questionnairesId = $("#questionnairesId").val();
+    var stepShortTitle = $("#preShortTitleId").val();
     bootbox.confirm({
       message: "Are you sure you want to delete this question item? This item will no longer appear on the mobile app or admin portal. Response data already gathered against this item, if any, will still be available on the response database.",
       buttons: {
@@ -692,6 +693,7 @@
                 formId: formId,
                 questionId: questionId,
                 questionnairesId: questionnairesId,
+                stepShortTitle: stepShortTitle,
                 "${_csrf.parameterName}": "${_csrf.token}",
               },
               success: function deleteConsentInfo(data) {

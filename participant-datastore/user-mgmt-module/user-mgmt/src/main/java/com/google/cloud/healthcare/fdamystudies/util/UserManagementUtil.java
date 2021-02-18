@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -50,12 +51,15 @@ public class UserManagementUtil {
   @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
 
   public UpdateEmailStatusResponse updateUserInfoInAuthServer(
-      UpdateEmailStatusRequest updateEmailStatusRequest, String userId) {
+      UpdateEmailStatusRequest updateEmailStatusRequest,
+      String userId,
+      AuditLogEventRequest auditRequest) {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     HttpEntity<UpdateEmailStatusRequest> request =
         new HttpEntity<>(updateEmailStatusRequest, headers);
@@ -104,7 +108,11 @@ public class UserManagementUtil {
   }
 
   public String withdrawParticipantFromStudy(
-      String participantId, String studyId, String delete, AuditLogEventRequest auditRequest) {
+      String participantId,
+      String studyId,
+      String studyVersion,
+      String delete,
+      AuditLogEventRequest auditRequest) {
     logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
@@ -113,8 +121,8 @@ public class UserManagementUtil {
 
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.APPLICATION_ID, null);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     request = new HttpEntity<>(null, headers);
 
@@ -122,6 +130,8 @@ public class UserManagementUtil {
         appConfig.getWithdrawStudyUrl()
             + "?studyId="
             + studyId
+            + "&studyVersion="
+            + studyVersion
             + "&participantId="
             + participantId
             + "&deleteResponses="

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -50,6 +50,8 @@ public final class Constants {
   public static final String SITE_ID_VALUE = "siteId";
 
   public static final String STUDY_ID_VALUE = "ASignature01";
+
+  public static final String STUDY_VERSION = "3.2";
 
   public static final String STUDY_COLLECTION_NAME_VALUE = "ASignature01-RESPONSES";
 

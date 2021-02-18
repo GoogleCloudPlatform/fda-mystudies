@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
  * or at https://opensource.org/licenses/MIT.
@@ -8,7 +8,6 @@
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
@@ -181,7 +180,6 @@ public class LoginControllerTest extends BaseMockIT {
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.ADD_PASSWORD.getPath())
-            .param("accessCode", "ja67Ll")
             .param("password", "Password@1234")
             .param("securityToken", "N8K7zYrc0F")
             .param("_csrf", "")
@@ -197,62 +195,6 @@ public class LoginControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
     verifyAuditEventCall(PASSWORD_RESET_SUCCEEDED);
-  }
-
-  @Test
-  public void shouldNotAddPasswordForInvalidAccessCode() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-
-    UserBO userBO = new UserBO();
-    userBO.setFirstName("updated_first_name");
-    userBO.setLastName("updated_last_name");
-    userBO.setPhoneNumber("654665146432");
-
-    MockHttpServletRequestBuilder requestBuilder =
-        post(PathMappingUri.ADD_PASSWORD.getPath())
-            .param("accessCode", "jf47Ll")
-            .param("password", "Password@1234")
-            .param("securityToken", "N8K7zYrc0F")
-            .param("_csrf", "")
-            .headers(headers)
-            .sessionAttrs(getSessionAttributes());
-
-    addParams(requestBuilder, userBO);
-    mockMvc
-        .perform(requestBuilder)
-        .andDo(print())
-        .andExpect(status().isFound())
-        .andExpect(view().name("redirect:createPassword.do?securityToken=N8K7zYrc0F"));
-
-    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE);
-  }
-
-  @Test
-  public void shouldNotAddPasswordForInvalidAccessCodeWithXSS() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-
-    UserBO userBO = new UserBO();
-    userBO.setFirstName("<scrpt>alert('xss')</script><p>updated_first_name</p>");
-    userBO.setLastName("updated_last_name");
-    userBO.setPhoneNumber("654665146432");
-
-    MockHttpServletRequestBuilder requestBuilder =
-        post(PathMappingUri.ADD_PASSWORD.getPath())
-            .param("accessCode", "jf47Ll")
-            .param("password", "password@1234")
-            .param("securityToken", "N8K7zYrc0F")
-            .param("_csrf", "")
-            .headers(headers)
-            .sessionAttrs(getSessionAttributes());
-
-    addParams(requestBuilder, userBO);
-    mockMvc
-        .perform(requestBuilder)
-        .andDo(print())
-        .andExpect(status().isFound())
-        .andExpect(view().name("redirect:createPassword.do?securityToken=N8K7zYrc0F"));
-
-    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE);
   }
 
   public HashMap<String, Object> getSession() {

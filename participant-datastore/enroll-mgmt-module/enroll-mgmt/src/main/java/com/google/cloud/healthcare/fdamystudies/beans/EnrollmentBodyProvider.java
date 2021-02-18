@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -17,6 +17,6 @@ import lombok.ToString;
 @ToString
 public class EnrollmentBodyProvider {
   private String tokenIdentifier;
-
   private String customStudyId;
+  private String studyVersion;
 }

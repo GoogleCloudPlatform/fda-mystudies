@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -239,11 +240,20 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
             }
           }
         });
+
+    password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!password.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
+            password.setError(getResources().getString(R.string.password_validation));
+          }
+        }
+      }
+    });
   }
 
   private void callRegisterUserWebService() {
-    String passwordPattern =
-        "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
     if (password.getText().toString().isEmpty()
         && email.getText().toString().isEmpty()
         && confirmPassword.getText().toString().isEmpty()) {
@@ -260,13 +270,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     } else if (password.getText().toString().isEmpty()) {
       Toast.makeText(context, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (!password.getText().toString().matches(passwordPattern)) {
-      SetDialogHelper.setNeutralDialog(
-          context,
-          getResources().getString(R.string.password_validation),
-          false,
-          context.getResources().getString(R.string.ok),
-          context.getResources().getString(R.string.app_name));
+    } else if (!password.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
+      password.setError(getResources().getString(R.string.password_validation));
     } else if (checkPasswordContainsEmailID(
         email.getText().toString(), password.getText().toString())) {
       Toast.makeText(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -12,7 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementE
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -20,6 +19,7 @@ import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.storage.StorageException;
 import java.util.Collections;
 import java.util.List;
@@ -85,15 +85,19 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
         consentStudyResponseBean.getConsent().setContent(studyConsent.getPdf());
       }
 
-      if (studyConsent.getPdfStorage() == 1) {
-        String path = studyConsent.getPdfPath();
-
-        downloadConsentDocument(path, consentStudyResponseBean, userId, auditRequest);
-      }
       consentStudyResponseBean.getConsent().setType("application/pdf");
       participantStudiesEntity = userConsentManagementDao.getParticipantStudies(studyId, userId);
       if (participantStudiesEntity != null) {
         consentStudyResponseBean.setSharing(participantStudiesEntity.getSharing());
+        if (studyConsent.getPdfStorage() == 1) {
+          String path = studyConsent.getPdfPath();
+
+          if (participantStudiesEntity.getParticipantId() != null) {
+            auditRequest.setParticipantId(participantStudiesEntity.getParticipantId());
+          }
+
+          downloadConsentDocument(path, consentStudyResponseBean, userId, auditRequest);
+        }
       }
     }
 
@@ -122,8 +126,8 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
   @Override
   @Transactional(readOnly = true)
-  public StudyInfoBean getStudyInfoId(String customStudyId) {
-    return userConsentManagementDao.getStudyInfoId(customStudyId);
+  public StudyEntity getStudyInfo(String customStudyId) {
+    return userConsentManagementDao.getStudyInfo(customStudyId);
   }
 
   @Override

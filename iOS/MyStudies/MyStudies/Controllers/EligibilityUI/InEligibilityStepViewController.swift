@@ -62,6 +62,6 @@ class InEligibilityStepViewController: ORKStepViewController {
 
   // MARK: - Actions
   @IBAction func buttonActionDone(sender: UIButton?) {
-    self.goForward()
+    self.taskViewController?.dismiss(animated: true, completion: nil)
   }
 }

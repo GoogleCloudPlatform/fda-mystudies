@@ -52,18 +52,15 @@ class StudyHomeViewController: UIViewController {
 
   @IBOutlet var pageControlView: UIPageControl?
   @IBOutlet var buttonBack: UIButton!
-  @IBOutlet var buttonStar: UIButton!
   @IBOutlet var buttonJoinStudy: UIButton?
-  @IBOutlet var visitWebsiteButtonLeadingConstraint: NSLayoutConstraint?
-  @IBOutlet var visitWebsiteButtonTrailingConstraint: NSLayoutConstraint?
   @IBOutlet var buttonVisitWebsite: UIButton?
   @IBOutlet var buttonViewConsent: UIButton?
   @IBOutlet var viewBottombarBg: UIView?
   @IBOutlet var viewSeperater: UIView?
+  @IBOutlet var viewBottombarTopBg: UIView?
+  @IBOutlet var bottomStackView: UIStackView?
 
   // MARK: - Properties
-
-  private lazy var isStudyBookMarked = false
 
   private lazy var isGettingJoiningDate = false
   weak var delegate: StudyHomeViewDontrollerDelegate?
@@ -97,14 +94,6 @@ class StudyHomeViewController: UIViewController {
     )
 
     navigationController?.setNavigationBarHidden(true, animated: true)
-
-    if User.currentUser.userType == UserType.anonymousUser {
-      buttonStar.isHidden = true
-    } else {
-      if User.currentUser.isStudyBookmarked(studyId: (Study.currentStudy?.studyId)!) {
-        buttonStar.isSelected = true
-      }
-    }
 
     // ConsentToken will be used in case of ineligibility
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
@@ -140,11 +129,9 @@ class StudyHomeViewController: UIViewController {
       // if website link is nil
 
       buttonVisitWebsite?.isHidden = true
-      visitWebsiteButtonLeadingConstraint?.constant = UIScreen.main.bounds.size.width / 2 - 13
       viewSeperater?.isHidden = true
     } else {
       buttonVisitWebsite?.isHidden = false
-      visitWebsiteButtonLeadingConstraint?.constant = 0
       viewSeperater?.isHidden = false
     }
 
@@ -154,7 +141,6 @@ class StudyHomeViewController: UIViewController {
         someObject: Study.currentStudy?.overview.websiteLink as AnyObject?
       ) {
         buttonVisitWebsite?.isHidden = false
-        visitWebsiteButtonLeadingConstraint?.constant = -184
         view.layoutIfNeeded()
         buttonVisitWebsite?.layoutIfNeeded()
 
@@ -211,8 +197,14 @@ class StudyHomeViewController: UIViewController {
   fileprivate func configureStandaloneUI() {
     // Standalone App Settings
     if Utilities.isStandaloneApp() {
-      buttonStar.isHidden = true
       buttonBack.isHidden = true
+      buttonViewConsent?.isHidden = true
+      viewSeperater?.isHidden = true
+      let websiteLink = Study.currentStudy?.overview.websiteLink ?? ""
+      if websiteLink.isEmpty {
+        viewBottombarBg?.isHidden = true
+        viewBottombarTopBg?.isHidden = true
+      }
       if loadViewFrom == .home,
         let currentUser = User.currentUser.userType,
         currentUser == .loggedInUser
@@ -234,7 +226,6 @@ class StudyHomeViewController: UIViewController {
       self.pageControlView?.isHidden = true
     }
     if Utilities.isStandaloneApp() {
-      self.buttonStar.isHidden = true
       if let currentUser = User.currentUser.userType,
         currentUser == .anonymousUser
       {
@@ -604,12 +595,6 @@ class StudyHomeViewController: UIViewController {
             )
           }
         }
-      case .upcoming:
-        UIUtilities.showAlertWithTitleAndMessage(
-          title: "",
-          message: NSLocalizedString(kMessageForStudyUpcomingState, comment: "")
-            as NSString
-        )
       case .paused:
         UIUtilities.showAlertWithTitleAndMessage(
           title: "",
@@ -631,24 +616,6 @@ class StudyHomeViewController: UIViewController {
     } else {
       _ = navigationController?.popViewController(animated: true)
     }
-  }
-
-  @IBAction func starButtonAction(_ sender: Any) {
-    let button = (sender as? UIButton)!
-    var userStudyStatus: UserStudyStatus!
-    let study = Study.currentStudy
-    let user = User.currentUser
-    if button.isSelected {
-      button.isSelected = false
-      userStudyStatus = user.removeBookbarkStudy(studyId: (study?.studyId)!)
-
-    } else {
-      button.isSelected = true
-      userStudyStatus = user.bookmarkStudy(studyId: (study?.studyId)!)
-    }
-
-    isStudyBookMarked = true
-    EnrollServices().updateStudyBookmarkStatus(studyStatus: userStudyStatus, delegate: self)
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
@@ -725,7 +692,6 @@ class StudyHomeViewController: UIViewController {
         unHideSubViews()
         if Utilities.isStandaloneApp() {
           buttonBack.isHidden = true
-          buttonStar.isHidden = true
         }
       }
 
@@ -866,7 +832,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
     }
 
     if requestName as String == EnrollmentMethods.updateStudyState.method.methodName {
-      if isStudyBookMarked || isUpdatingIneligibility {
+      if isUpdatingIneligibility {
         removeProgressIndicator()
 
         if isUpdatingIneligibility {
@@ -1010,6 +976,29 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     return true
   }
 
+  /// This method updates the study status to DB and Server.
+  /// - Parameter status: `UserStudyStatus.StudyStatus` to be updated.
+  fileprivate func updateStudyStatus(status: UserStudyStatus.StudyStatus) {
+
+    guard let currentStudy = Study.currentStudy,
+      let studyID = currentStudy.studyId
+    else { return }
+
+    let currentUserStudyStatus = User.currentUser.updateStudyStatus(
+      studyId: studyID,
+      status: status
+    )
+
+    Study.currentStudy?.userParticipateState = currentUserStudyStatus
+
+    DBHandler.updateStudyParticipationStatus(study: currentStudy)
+
+    EnrollServices().updateUserParticipatedStatus(
+      studyStauts: currentUserStudyStatus,
+      delegate: self
+    )
+  }
+
   public func taskViewController(
     _ taskViewController: ORKTaskViewController,
     didFinishWith reason: ORKTaskViewControllerFinishReason,
@@ -1072,21 +1061,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
             })
 
           if results! {
-            let currentUserStudyStatus = User.currentUser.updateStudyStatus(
-              studyId: (Study.currentStudy?.studyId)!,
-              status: .yetToEnroll
-            )
-
-            Study.currentStudy?.userParticipateState = currentUserStudyStatus
-
-            DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
-
             isUpdatingIneligibility = true
-
-            EnrollServices().updateUserParticipatedStatus(
-              studyStauts: currentUserStudyStatus,
-              delegate: self
-            )
+            updateStudyStatus(status: .yetToEnroll)
           }
         }
       }
@@ -1117,7 +1093,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       {
         // Removing the dummy result:Currentstep result which not presented yet
         activityBuilder?.actvityResult?.result?.removeLast()
-      } else {}
+      } else {
+      }
     }
 
     // For Verified Step , Completion Step, Visual Step, Review Step, Share Pdf Step
@@ -1133,8 +1110,17 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       || stepIndentifer == kComprehensionInstructionStepIdentifier
     {
 
+      if stepIndentifer == kInEligibilityStep {
+        self.isUpdatingIneligibility = true
+        self.updateStudyStatus(status: .notEligible)
+      }
+
       if stepIndentifer == kEligibilityVerifiedScreen {
         stepViewController.continueButtonTitle = kContinueButtonTitle
+        isUpdatingIneligibility = true
+        // Update study state to yetToEnroll in case it's
+        // notEligible or any other status.
+        updateStudyStatus(status: .yetToEnroll)
       }
 
       if stepIndentifer == kVisualStepId {
@@ -1177,7 +1163,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       if consentSignatureResult?.didTapOnViewPdf == false {
         // Directly moving to completion step by skipping Intermediate PDF viewer screen
         stepViewController.goForward()
-      } else {}
+      } else {
+      }
 
     } else {
       // Back button is enabled
@@ -1317,25 +1304,13 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
         .identifier
 
       if lastStepResultIdentifier == kInEligibilityStep {
-        let currentUserStudyStatus = User.currentUser.updateStudyStatus(
-          studyId: (Study.currentStudy?.studyId)!,
-          status: .notEligible
-        )
-
-        Study.currentStudy?.userParticipateState = currentUserStudyStatus
-
-        DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
 
         unHideSubViews()
         dismiss(
           animated: true,
-          completion: {
+          completion: { [unowned self] in
             self.isUpdatingIneligibility = true
-
-            EnrollServices().updateUserParticipatedStatus(
-              studyStauts: currentUserStudyStatus,
-              delegate: self
-            )
+            self.updateStudyStatus(status: .notEligible)
           }
         )
         return nil

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -8,9 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_CREATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_ADDED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.RESEND_INVITATION;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_RECORD_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMAIL_VALUE;
@@ -242,8 +246,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -282,8 +286,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     verifyTokenIntrospectRequest();
   }
@@ -343,8 +347,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -387,8 +391,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -433,8 +437,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED);
+    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -448,13 +452,14 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldUpdateSuperAdminUser() throws Exception {
+  public void shouldUpdateAndLogoutAdminUser() throws Exception {
     // Step 1: Creating a non super admin
     adminforUpdate = testDataHelper.createNonSuperAdmin();
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
     UserRequest userRequest = newUserRequestForUpdate();
     userRequest.setId(adminforUpdate.getId());
     mockMvc
@@ -481,6 +486,14 @@ public class UserControllerTest extends BaseMockIT {
     assertStudyPermissionDetailsForSuperAdmin(adminforUpdate.getId());
     assertSitePermissionDetailsForSuperAdmin(adminforUpdate.getId());
 
+    // verify external API call
+    verify(
+        1,
+        postRequestedFor(
+            urlEqualTo(
+                String.format(
+                    "/auth-server/users/%s",
+                    "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQh" + "/logout"))));
     verifyTokenIntrospectRequest();
   }
 
@@ -491,7 +504,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.set(USER_ID_HEADER, adminforUpdate.getId());
 
     UserRequest userRequest = newUserRequestForUpdate();
     userRequest.setSuperAdmin(false);
@@ -499,7 +512,7 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setId(adminforUpdate.getId());
     mockMvc
         .perform(
-            put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())
+            put(ApiEndpoint.UPDATE_USER.getPath(), adminforUpdate.getId())
                 .content(asJsonString(userRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -509,7 +522,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.userId", notNullValue()));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setUserId(adminforUpdate.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
@@ -899,7 +912,7 @@ public class UserControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
-            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+            jsonPath("$.error_description").value(ErrorCode.ADMIN_NOT_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
@@ -1051,7 +1064,7 @@ public class UserControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
-            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+            jsonPath("$.error_description").value(ErrorCode.ADMIN_NOT_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
@@ -1111,6 +1124,13 @@ public class UserControllerTest extends BaseMockIT {
     assertTrue(
         new Timestamp(Instant.now().toEpochMilli()).before(userReg.getSecurityCodeExpireDate()));
     assertNotNull(userReg.getSecurityCode());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userReg.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(RESEND_INVITATION.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, RESEND_INVITATION);
   }
 
   @Test
@@ -1127,7 +1147,7 @@ public class UserControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
-            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+            jsonPath("$.error_description").value(ErrorCode.ADMIN_NOT_FOUND.getDescription()));
   }
 
   @Test

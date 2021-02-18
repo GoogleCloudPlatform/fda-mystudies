@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020-2021 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
@@ -5,8 +13,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_BY_USER;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_FIRST_NAME;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_LAST_NAME;
@@ -250,6 +262,14 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertEquals("mockito_updated_last_name", userRegAdminEntity.getLastName());
 
     verifyTokenIntrospectRequest();
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(ACCOUNT_UPDATE_BY_USER.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, ACCOUNT_UPDATE_BY_USER);
   }
 
   @Test
@@ -434,6 +454,14 @@ public class UserProfileControllerTest extends BaseMockIT {
         putRequestedFor(urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
 
     verifyTokenIntrospectRequest();
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(user.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_DEACTIVATED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_DEACTIVATED);
   }
 
   @Test
@@ -469,6 +497,14 @@ public class UserProfileControllerTest extends BaseMockIT {
         putRequestedFor(urlEqualTo(String.format("/auth-server/users/%s", ADMIN_AUTH_ID_VALUE))));
 
     verifyTokenIntrospectRequest();
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(user.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_REACTIVATED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_REACTIVATED);
   }
 
   @Test
@@ -554,6 +590,14 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message").value(MessageCode.INVITATION_DELETED_SUCCESSFULLY.getMessage()))
         .andReturn();
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_DELETED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_DELETED);
   }
 
   @Test

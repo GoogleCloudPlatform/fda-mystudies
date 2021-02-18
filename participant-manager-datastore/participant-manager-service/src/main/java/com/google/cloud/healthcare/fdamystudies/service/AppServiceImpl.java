@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -109,7 +109,10 @@ public class AppServiceImpl implements AppService {
         appRepository.findAppsByUserId(
             userId, limit, offset, StringUtils.defaultString(searchTerm));
     if (CollectionUtils.isEmpty(appStudyInfoList)) {
-      throw new ErrorCodeException(ErrorCode.NO_APPS_FOUND);
+      return new AppResponse(
+          MessageCode.GET_APPS_SUCCESS,
+          new ArrayList<>(),
+          optUserRegAdminEntity.get().isSuperAdmin());
     }
 
     List<String> appIds =
@@ -528,7 +531,7 @@ public class AppServiceImpl implements AppService {
             app.getAppName());
     appParticipantsResponse.getParticipants().addAll(participants);
 
-    auditRequest.setAppId(appId);
+    auditRequest.setAppId(app.getAppId());
     auditRequest.setUserId(adminId);
     participantManagerHelper.logEvent(APP_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
     return appParticipantsResponse;

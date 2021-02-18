@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -102,7 +102,7 @@ public class LocationServiceImpl implements LocationService {
     LocationEntity created = locationRepository.saveAndFlush(location);
 
     auditRequest.setUserId(adminUser.getId());
-    Map<String, String> map = Collections.singletonMap("location_id", created.getId());
+    Map<String, String> map = Collections.singletonMap("location_id", created.getCustomId());
 
     participantManagerHelper.logEvent(NEW_LOCATION_ADDED, auditRequest, map);
 
@@ -141,7 +141,7 @@ public class LocationServiceImpl implements LocationService {
         LocationMapper.toLocationDetailsResponse(locationEntity, messageCode);
 
     auditRequest.setUserId(locationRequest.getUserId());
-    Map<String, String> map = Collections.singletonMap("location_id", locationEntity.getId());
+    Map<String, String> map = Collections.singletonMap("location_id", locationEntity.getCustomId());
 
     if (messageCode == MessageCode.REACTIVE_SUCCESS) {
       participantManagerHelper.logEvent(LOCATION_ACTIVATED, auditRequest, map);

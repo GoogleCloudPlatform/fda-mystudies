@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -289,6 +290,12 @@ public interface StudyMetaDataConstants {
   public static final String FDA_SMD_NOTIFICATION_TITLE = "fda.smd.notification.title";
   public static final String FDA_SMD_MAIL_TITLE = "fda.smd.email.title";
   public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
+  public static final String STUDY_PAGE2_DEFAULT_IMAGE = "study.page2.defaultImage";
+  public static final String STUDY_DEFAULT_IMAGE = "study.defaultImage";
+
+  public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
+      "study.basicInformation.defaultImage";
+
   public static final String FDA_SMD_RESOURCE_PDF_PATH = "fda.smd.resource.pdfPath";
   public static final String FDA_SMD_QUESTIONNAIRE_IMAGE = "fda.smd.questionnaire.image";
   public static final String FDA_SMD_STUDY_PAGE_PATH = "fda.smd.study.pagePath";
@@ -300,7 +307,9 @@ public interface StudyMetaDataConstants {
   public static final String ANCHOR_TYPE_ACTIVITYRESPONSE = "ActivityResponse";
   public static final String SCHEDULETYPE_REGULAR = "Regular";
   public static final String SCHEDULETYPE_ANCHORDATE = "AnchorDate";
-  
-  public static final String ELIGIBILITY_TEXT = "Answer these questions to determine your eligibility for the study";
-  public static final String COMPREHENSION_TEXT = "Take this comprehension test to assess your understanding of the study:";
+
+  public static final String ELIGIBILITY_TEXT =
+      "Answer these questions to determine your eligibility for the study";
+  public static final String COMPREHENSION_TEXT =
+      "Take this comprehension test to assess your understanding of the study:";
 }

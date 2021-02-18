@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -15,8 +15,10 @@
 
 package com.harvard;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
@@ -34,7 +36,12 @@ public class WebViewActivity extends AppCompatActivity {
 
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     String webData = getIntent().getStringExtra("consent");
-    webView.loadData(webData, "text/html; charset=utf-8", "UTF-8");
+    if (Build.VERSION.SDK_INT >= 24) {
+      webView.loadData(
+              Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+    } else {
+      webView.loadData(Html.fromHtml((webData)).toString(), "text/html", "UTF-8");
+    }
     RelativeLayout backBtn = (RelativeLayout) findViewById(R.id.backBtn);
     backBtn.setOnClickListener(
         new View.OnClickListener() {

@@ -52,7 +52,7 @@
         <input type="hidden" id="studyId" name="studyId" value="${studyId}">
       </c:if>
       <div>
-        <div class="gray-xs-f mb-xs mt-md">Question Text (1 to 300 characters)
+        <div class="gray-xs-f mb-xs mt-md">Question (300 characters max)
           <span
               class="requiredStar">*
           </span>
@@ -70,7 +70,7 @@
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) eq 0}">
             <div class="col-md-12 p-none">
               <div class='col-md-6 pl-none'>
-                <div class="gray-xs-f mb-xs">Answer Options (1 to 150 characters)
+                <div class="gray-xs-f mb-xs">Answer options (150 characters max)
                   <span
                       class="requiredStar">*
                   </span>
@@ -161,7 +161,7 @@
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) gt 0}">
             <div class="col-md-12 p-none">
               <div class='col-md-6 pl-none'>
-                <div class="gray-xs-f mb-xs">Answer Options (1 to 150 characters)
+                <div class="gray-xs-f mb-xs">Answer options (150 characters max)
                   <span
                       class="requiredStar">*
                   </span>
@@ -225,7 +225,7 @@
       <div class="clearfix"></div>
 
       <div>
-      <div class="gray-xs-f mb-sm">Consider the question to be correctly answered if the participant responds with
+      <div class="gray-xs-f mb-sm">The question can be considered correctly answered if the app user responds with
           <span
               class="requiredStar">*
           </span>
@@ -251,6 +251,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     <c:if test="${actionPage eq 'view'}">
     $('#comprehensionFormId input,textarea,select').prop('disabled', true);
     $('.TestQuestionButtonHide').hide();
@@ -270,10 +271,16 @@
       $(".right-content-body").parents("form").validator();
       saveComrehensionTestQuestion();
     });
+    
     if ($('.ans-opts').length > 2) {
       $(".remBtnDis").removeClass("hide");
+      $(".remBtnDis").css("pointer-events", "auto");
     } else {
       $(".remBtnDis").addClass("hide");
+      $(".remBtnDis").css("pointer-events", "none");
+    }
+    if (${actionPage == 'view'}) {
+  	  $('.ans-opts').find(".remBtnDis").css("pointer-events", "none");
     }
   });
   var ansCount = $(".ans-opts").length;
@@ -320,18 +327,26 @@
     }
     $('.selectpicker').selectpicker('refresh');
     $('#' + ansCount).find('input:first').focus();
+    if ($('.ans-opts').length > 2) {
+        $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
+    } else {
+        $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
+    }
   }
 
   function removeAns(param) {
     $(param).parents(".ans-opts").remove();
     $(".ans-opts").parents("form").validator("destroy");
     $(".ans-opts").parents("form").validator();
+    
     if ($('.ans-opts').length > 2) {
-      $(".remBtnDis").removeClass("hide");
-
+        $(".remBtnDis").removeClass("hide");
+        $(".remBtnDis").css("pointer-events", "auto");
     } else {
-      $(".remBtnDis").addClass("hide");
-
+        $(".remBtnDis").addClass("hide");
+        $(".remBtnDis").css("pointer-events", "none");
     }
   }
 
@@ -450,7 +465,7 @@
     } else {
       $('#alertMsg').show();
       $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-          "Please select at least one correct answer as yes.");
+          "Please mark at least one of the answer options as the correct answer.");
       setTimeout(hideDisplayMessage, 3000);
       return false;
     }

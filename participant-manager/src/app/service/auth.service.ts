@@ -5,7 +5,7 @@ import {User} from '../entity/user';
 import {EntityService} from './entity.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {AccessToken} from '../entity/access-token';
-import {environment} from 'src/environments/environment';
+import {environment} from '@environment';
 import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
 import getPkce from 'oauth-pkce';
@@ -46,7 +46,6 @@ export class AuthService {
       .set('code_challenge_method', 'S256')
       .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
       .set('correlationId', sessionStorage.getItem('correlationId') || '')
-      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.authServerRedirectUrl)
       .set('state', uuidv4())
       .set('source', this.source)

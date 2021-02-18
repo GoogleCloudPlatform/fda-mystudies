@@ -1,5 +1,5 @@
 <!--
- Copyright 2020 Google LLC
+ Copyright 2020-2021 Google LLC
  Use of this source code is governed by an MIT-style
  license that can be found in the LICENSE file or at
  https://opensource.org/licenses/MIT.
@@ -23,7 +23,6 @@ Deployment instructions | [`/deployment/README.md`](/deployment/README.md)
 `Response datastore` setup | [`/response-datastore/README.md`](/response-datastore/README.md)
 `Android` configuration and installation | [`/Android/README.md`](/Android/README.md)
 `iOS` configuration and installation  | [`/iOS/README.md`](/iOS/README.md)
-Kubernetes guide | [`/deployment/kubernetes/README.md`](/deployment/kubernetes/README.md)
 <!-- TODO Auth overview | [`/documentation/auth.md`](/documentation/auth.md) -->
 
 <!-- TODO Add the following rows to the table after Deployment but before Hydra
@@ -32,6 +31,8 @@ Study builder user guide | [`/documentation/study-builder-user-guide.md`](/docum
 Mobile application user guide | [`/documentation/mobile-user-guide.md`](/documentation/mobile-user-guide.md)
 
 -->
+
+To receive release notifications and other important announcements related to the repository, subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/).
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>

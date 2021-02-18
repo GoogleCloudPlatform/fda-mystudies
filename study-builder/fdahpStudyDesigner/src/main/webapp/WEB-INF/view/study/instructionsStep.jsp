@@ -52,7 +52,7 @@
       <input type="hidden" name="questionnairesStepsBo.stepId" id="stepId"
              value="${instructionsBo.questionnairesStepsBo.stepId}">
       <div class="col-md-6 pl-none">
-        <div class="gray-xs-f mb-xs">Step Short Title or Key (15 characters max)
+        <div class="gray-xs-f mb-xs">Step short title or key (15 characters max)
           <span
               class="requiredStar">*
           </span>
@@ -73,8 +73,8 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="gray-xs-f mb-xs">Step Type</div>
-        <div>Instruction Step</div>
+        <div class="gray-xs-f mb-xs">Step type</div>
+        <div>Instruction step</div>
       </div>
       <div class="clearfix"></div>
       <div class="gray-xs-f mb-xs">Title (250 characters max)
@@ -88,11 +88,11 @@
       </div>
       <div class="clearfix"></div>
 
-      <div class="gray-xs-f mb-xs">Instruction Text (1 to 500 characters)
+      <div class="gray-xs-f mb-xs">Instruction text
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
-        <textarea class="form-control" rows="5" id="instructionText" name="instructionText"
+        <textarea class="form-control" rows="5" id="summernote" name="instructionText"
                   required
                   maxlength="500">${instructionsBo.instructionText}</textarea>
         <div class="help-block with-errors red-txt"></div>
@@ -100,7 +100,7 @@
       <div class="clearfix"></div>
       <c:if test="${questionnaireBo.branching}">
         <div class="col-md-4 col-lg-3 p-none">
-          <div class="gray-xs-f mb-xs">Default Destination Step
+          <div class="gray-xs-f mb-xs">Default destination step
             <span class="requiredStar">*</span>
             <span
                 class="ml-xs sprites_v3 filled-tooltip"></span>
@@ -129,9 +129,10 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     <c:if test="${actionTypeForQuestionPage == 'view'}">
     $('#basicInfoFormId input,textarea ').prop('disabled', true);
+    $( '#summernote').summernote('disable');
     $('#basicInfoFormId select').addClass('linkDis');
     $('.selectpicker').selectpicker('refresh');
     </c:if>
@@ -142,13 +143,45 @@
       validateShortTitle('', function (val) {
       });
     });
+    $("#summernote").blur(function () {
+    	validatesummernote();
+      });
+  //summernote editor initialization
+    $('#summernote')
+        .summernote(
+            {
+              placeholder: '',
+              tabsize: 2,
+              height: 200,
+              toolbar: [
+                [
+                  'font',
+                  ['bold', 'italic']],
+                [
+                  'para',
+                  ['paragraph',
+                    'ul', 'ol']],
+                ['font', ['underline']],
+                ['insert', ['link']],
+                ['hr'],
+                ['clear'],
+                ['cut'],
+                ['undo'],
+                ['redo'],
+                ['fontname',
+                  ['fontname']],
+                ['fontsize',
+                  ['fontsize']],]
+
+            });
     $('[data-toggle="tooltip"]').tooltip();
     $("#doneId").click(function () {
-      $("#doneId").attr("disabled", true);
-      validateShortTitle('', function (val) {
+      //$("#doneId").attr("disabled", true);
+      validatesummernote();
+           validateShortTitle('', function (val) {
         if (val) {
           $('#shortTitleId').prop('disabled', false);
-          if (isFromValid("#basicInfoFormId")) {
+          if (isFromValid("#basicInfoFormId") && validatesummernote()) {
             document.basicInfoFormId.submit();
           } else {
             $("#doneId").attr("disabled", false);
@@ -157,6 +190,7 @@
         } else {
           $("#doneId").attr("disabled", false);
         }
+        
       });
     });
   });
@@ -164,16 +198,51 @@
   function saveIns() {
     $("body").addClass("loading");
     $("#saveId").attr("disabled", true);
+    validatesummernote();
     validateShortTitle('', function (val) {
-      if (val) {
+      if (val && validatesummernote()) {
         saveInstruction();
       } else {
         $("#saveId").attr("disabled", false);
         $("body").removeClass("loading");
       }
+      
     });
   }
-
+  function validatesummernote(){
+	  var richTextVal = $('#summernote').val();
+	  if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+  	  var richText=$('#summernote').summernote('code');
+  	  var escaped = $('#summernote').text(richText).html();
+    	  $('#summernote').val(escaped);
+     }
+		 if ($('#summernote').summernote(
+	     'code') === '<br>' || $('#summernote').summernote(
+	     'code') === '' || $('#summernote').summernote('code') === '<p><br></p>') {
+	   $('#summernote').attr(
+	       'required', true);
+	   $('#summernote')
+	       .parent()
+	       .addClass(
+	           'has-error has-danger')
+	       .find(".help-block")
+	       .empty()
+	       .append(
+	           '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+	   return false;
+	 } else {
+	   $('#summernote').attr(
+	       'required', false);
+	   $('#summernote').parent()
+	       .removeClass(
+	           "has-danger")
+	       .removeClass(
+	           "has-error");
+	   $('#summernote').parent().find(
+	       ".help-block").html("");
+	   return true;
+	 }
+	}
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var questionnaireId = $("#questionnaireId").val();
@@ -229,7 +298,7 @@
     var instruction_id = $("#id").val();
     var questionnaire_id = $("#questionnaireId").val();
     var instruction_title = $("#instructionTitle").val();
-    var instruction_text = $("#instructionText").val();
+    var instruction_text = $("#summernote").val();
 
     var shortTitle = $("#shortTitleId").val();
     var destinationStep = $("#destinationStepId").val();

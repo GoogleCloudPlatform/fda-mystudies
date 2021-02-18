@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -19,17 +19,20 @@ import java.util.List;
 
 public interface StudyStateService {
 
-  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user);
+  public List<ParticipantStudyEntity> getParticipantStudiesList(
+      UserDetailsEntity user, List<StudiesBean> studiesBeenList);
 
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
       List<ParticipantStudyEntity> existParticipantStudies,
-      String userId,
-      AuditLogEventRequest auditRequest);
+      AuditLogEventRequest auditRequest,
+      UserDetailsEntity user);
 
   public List<StudyStateBean> getStudiesState(String userId)
       throws javax.transaction.SystemException;
 
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete);
+      String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest);
+
+  public String getSiteId(String userId, String token);
 }

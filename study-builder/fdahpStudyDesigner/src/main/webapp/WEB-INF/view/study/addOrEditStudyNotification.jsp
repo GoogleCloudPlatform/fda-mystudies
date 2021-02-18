@@ -72,7 +72,7 @@
       </c:if>
 
       <div class="pl-none mt-none">
-        <div class="gray-xs-f mb-xs">Notification Text (250 characters max)
+        <div class="gray-xs-f mb-xs">Notification text (250 characters max)
           <span
               class="requiredStar">*
           </span>
@@ -94,7 +94,7 @@
                    <c:if
                        test="${notificationBO.notificationScheduleType eq 'notImmediate'}">checked</c:if>
                    <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
-            <label for="inlineRadio1">Schedule a date / time</label>
+            <label for="inlineRadio1">Schedule this notification</label>
           </span>
           <span class="radio radio-inline">
             <input type="radio" id="inlineRadio2" value="immediate" name="currentDateTime"
@@ -102,7 +102,7 @@
                        test="${notificationBO.notificationScheduleType eq 'immediate'}">checked</c:if>
                    <c:if test="${studyBo.status ne 'Active'}">disabled</c:if>>
             <label for="inlineRadio2" data-toggle="tooltip" data-placement="top"
-                   title="This option will be available once the study is launched.">Send Immediately</label>
+                   title="This option will be available once the study is launched.">Send immediately</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
           <c:if test="${not empty notificationHistoryNoDateTime}">
@@ -117,7 +117,7 @@
       </div>
 
       <div class="add_notify_option mandatoryForStudyNotification">
-        <div class="gray-xs-f mb-xs">Select Date
+        <div class="gray-xs-f mb-xs">Select date
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group date">
@@ -142,7 +142,9 @@
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
-
+ <div class="form-group mr-sm" style="white-space: normal; margin-top: -9px;">
+For studies that are already launched, notifications get scheduled for delivery upon marking the Notifications section as complete, not requiring an explicit 'Publish updates' action.
+ </div>
     </div>
   </form:form>
   <!--  End body tab section -->
@@ -163,6 +165,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     var appId = '${appId}';
     $(".menuNav li").removeClass('active');
     $(".eigthNotification").addClass('active');

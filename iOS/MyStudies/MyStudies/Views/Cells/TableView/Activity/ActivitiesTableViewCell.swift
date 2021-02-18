@@ -37,10 +37,17 @@ class ActivitiesTableViewCell: UITableViewCell {
   @IBOutlet var labelRunStatus: UILabel?
   @IBOutlet var buttonMoreSchedules: UIButton?
   @IBOutlet var buttonMoreSchedulesBottomLine: UIView?
+  @IBOutlet var disabledView: UIView!
 
   weak var delegate: ActivitiesCellDelegate?
   var currentActivity: Activity! = nil
   var availabilityStatus: ActivityAvailabilityStatus = .current
+
+  override func prepareForReuse() {
+    self.disabledView.isHidden = true
+    selectionStyle = .default
+    super.prepareForReuse()
+  }
 
   /// Change the cell background color.
   override func setSelected(_ selected: Bool, animated: Bool) {
@@ -59,7 +66,25 @@ class ActivitiesTableViewCell: UITableViewCell {
       labelStatus?.backgroundColor = color
     }
   }
-  
+
+  /// Updates the cell selection state.
+  private func updateSelfSelectionState() {
+    // Disable selection for past and upcoming activities.
+    if availabilityStatus == .past
+      || availabilityStatus == .upcoming
+    {
+      selectionStyle = .none
+    } else if let status = currentActivity.userParticipationStatus,
+      status.status == .abandoned || status.status == .completed
+    {
+      selectionStyle = .none
+      disabledView.isHidden = false
+    } else {
+      selectionStyle = .default
+      disabledView.isHidden = true
+    }
+  }
+
   /// Update cell UI
   /// - Parameters:
   ///   - activity:  Access the value from Activity class.
@@ -95,6 +120,8 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     // update activity run details as compelted and missed
     self.updateUserRunStatus(activity: activity)
+
+    updateSelfSelectionState()
 
     if availablityStatus == .past {
 
@@ -210,9 +237,11 @@ class ActivitiesTableViewCell: UITableViewCell {
 
     switch frequency {
     case .oneTime:
-      setActivityTimingsForOneTime(startDate: startDate,
-                                   endDate: endDate,
-                                   activity: activity)
+      setActivityTimingsForOneTime(
+        startDate: startDate,
+        endDate: endDate,
+        activity: activity
+      )
 
     case .daily:
       var runStartTimingsList: [String] = []
@@ -255,7 +284,10 @@ class ActivitiesTableViewCell: UITableViewCell {
     case .scheduled:
       var runStartDate: Date?
       var runEndDate: Date?
-      if activity.currentRun != nil {
+      if let firstRun = activity.activityRuns.first {
+        runStartDate = firstRun.startDate
+        runEndDate = firstRun.endDate
+      } else if activity.currentRun != nil {
         runStartDate = activity.currentRun.startDate
         runEndDate = activity.currentRun.endDate
       } else {
@@ -282,10 +314,12 @@ class ActivitiesTableViewCell: UITableViewCell {
       }
     }
   }
-  
-  private func setActivityTimingsForOneTime(startDate: Date?,
-                                            endDate: Date?,
-                                            activity: Activity) {
+
+  private func setActivityTimingsForOneTime(
+    startDate: Date?,
+    endDate: Date?,
+    activity: Activity
+  ) {
     var startDateString = ""
     if let startDate = startDate {
       startDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: startDate)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -20,5 +20,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EmailIdVerificationForm {
   @NotBlank private String code;
-  private String emailId;
+  @NotBlank private String emailId;
 }

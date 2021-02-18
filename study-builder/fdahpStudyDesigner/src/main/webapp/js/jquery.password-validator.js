@@ -5,7 +5,9 @@
  *
  *  Made by Myke Cameron
  *  Under MIT License
+ * Copyright 2020-2021 Google LLC
  */
+ 
 this["JST"] = this["JST"] || {};
 
 this["JST"]["input_wrapper"] = function (obj) {
@@ -99,7 +101,7 @@ this["JST"]["row"] = function (obj) {
             validate : function (password) {
                 return password.match(/[!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]/) != null;
             },
-            message : "<span style='border-bottom: 0px;'>a special character<br><span style='font-size:12px;color:#a94442;'>! &quot; # $ %&amp; ' () * + , - . : ; &lt; =&gt; ? @ [ \] ^ _ ` {} | ~</span><span>"
+            message : "<span style='border-bottom: 0px;'>a special character<span>"
         },
         length : {
             validate : function (password, settings) {

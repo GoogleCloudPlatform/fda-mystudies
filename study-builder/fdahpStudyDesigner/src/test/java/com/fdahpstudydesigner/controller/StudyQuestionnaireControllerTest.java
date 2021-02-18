@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -37,6 +37,8 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
                 .headers(headers)
                 .param("formId", "58")
                 .param("questionId", "85199")
+                .param("stepShortTitle", "short title")
+                .param("questionnairesId", "1")
                 .sessionAttr(CUSTOM_STUDY_ID_ATTR_NAME, "OpenStudy003")
                 .sessionAttrs(getSessionAttributes()))
         .andDo(print())
@@ -53,8 +55,8 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
         .perform(
             post(PathMappingUri.DELETE_QUESTIONNAIRES.getPath())
                 .headers(headers)
-                .param("studyId", "58")
-                .param("questionnaireId", "1")
+                .param("studyId", "678574")
+                .param("questionnaireId", "3")
                 .sessionAttr(CUSTOM_STUDY_ID_ATTR_NAME, "OpenStudy002")
                 .sessionAttrs(getSessionAttributes()))
         .andDo(print())

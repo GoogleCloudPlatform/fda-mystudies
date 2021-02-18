@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -37,7 +37,7 @@ import org.hibernate.annotations.GenericGenerator;
     name = "participant_study_info",
     uniqueConstraints = {
       @UniqueConstraint(
-          columnNames = {"user_details_id", "study_info_id"},
+          columnNames = {"user_details_id", "study_info_id", "site_id"},
           name = "participant_study_info_user_details_id_study_info_id__uidx")
     },
     indexes = {
@@ -103,5 +103,10 @@ public class ParticipantStudyEntity implements Serializable {
   @Transient
   public String getUserDetailsId() {
     return userDetails != null ? userDetails.getId() : StringUtils.EMPTY;
+  }
+
+  @Transient
+  public String getStudyId() {
+    return study != null ? study.getCustomId() : StringUtils.EMPTY;
   }
 }

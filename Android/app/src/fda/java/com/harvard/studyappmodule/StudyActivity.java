@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -243,11 +243,6 @@ public class StudyActivity extends AppCompatActivity
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StudyActivity.this,
-                              getString(R.string.bookmark),
-                              "" + studyListArrayList.get(i).isBookmarked());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StudyActivity.this,
                               getString(R.string.status),
                               "" + studyListArrayList.get(i).getStatus());
                       AppController.getHelperSharedPreference()
@@ -303,7 +298,6 @@ public class StudyActivity extends AppCompatActivity
                       Intent intent = new Intent(getApplicationContext(), StudyInfoActivity.class);
                       intent.putExtra("studyId", studyListArrayList.get(i).getStudyId());
                       intent.putExtra("title", studyListArrayList.get(i).getTitle());
-                      intent.putExtra("bookmark", studyListArrayList.get(i).isBookmarked());
                       intent.putExtra("status", studyListArrayList.get(i).getStatus());
                       intent.putExtra("studyStatus", studyListArrayList.get(i).getStudyStatus());
                       intent.putExtra("position", "" + i);
@@ -357,11 +351,6 @@ public class StudyActivity extends AppCompatActivity
                               StudyActivity.this,
                               getString(R.string.title),
                               "" + studyListArrayList.get(i).getTitle());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StudyActivity.this,
-                              getString(R.string.bookmark),
-                              "" + studyListArrayList.get(i).isBookmarked());
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StudyActivity.this,
@@ -1184,7 +1173,7 @@ public class StudyActivity extends AppCompatActivity
           NotificationManagerCompat.from(StudyActivity.this);
       notificationManager.cancelAll();
       Toast.makeText(StudyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
-      loadstudylist();
+      AppController.signout(StudyActivity.this);
     }
 
     @Override

@@ -1,0 +1,28 @@
+# This file is used for adding styleCheck for participant manager and participant manager datastore
+name: lint-participant-manager-datastore
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'participant-manager-datastore/participant-manager-service/**'
+      - '.github/workflows/lint-participant-manager-datastore.yml'
+jobs:
+  checkstyle_job:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: /participant-manager-datastore/participant-manager-service
+    name: Checkstyle job
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run check style
+      uses: nikitasavinov/checkstyle-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: 'github-pr-review'
+        level: error
+        workdir: ./participant-manager-datastore/participant-manager-service
+        tool_name: participant-manager-datastore Checks

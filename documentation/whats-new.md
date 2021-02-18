@@ -1,9 +1,24 @@
 <!--
- Copyright 2020 Google LLC
+ Copyright 2020-2021 Google LLC
  Use of this source code is governed by an MIT-style
  license that can be found in the LICENSE file or at
  https://opensource.org/licenses/MIT.
 -->
+
+> Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
+
+# Release 2.0.2
+* Minor enhancements to Study Builder, Participant Manager, Auth Server and mobile apps
+* Refined automated deployment process including GKE cluster upgrade
+* Bug fixes and UI refinements
+* Additional code improvements
+* The full list of bugs and features addressed in this release can be viewed [`here`](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/5?closed=1)
+
+# Release 2.0.1
+* Simplified semi-automated deployment
+* Published an updated [deployment guide](/deployment/README.md)
+* Fixed an issue that was causing flaky build tests in some environments
+* Fixed an issue that was preventing a database setup script from running during deployment 
 
 # Release 2.0.0
 ## What’s changed?
@@ -69,4 +84,4 @@ The overall goals, compliance principles and functionality of this FDA MyStudies
 *   Fixed stability and usability bugs throughout the applications and platform
 
 ***
-<p align="center">Copyright 2020 Google LLC</p>
+<p align="center">Copyright 2020-2021 Google LLC</p>

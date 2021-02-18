@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.webservicemodule.apihelper;
@@ -19,10 +20,11 @@ import android.os.Build;
 import android.util.Base64;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
-import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -65,6 +67,13 @@ public class HttpRequest {
   private static String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
   private static String APPLICATION_JSON = "application/json";
   private static String APP_NAME_KEY = "appName";
+  private static String SOURCE_KEY = "source";
+  private static String SOURCE_VALUE = "MOBILE APPS";
+  private static String MOBILE_PLATFORM_KEY = "mobilePlatform";
+  private static String MOBILE_PLATFORM_VALUE = "ANDROID";
+  private static String CORRELATION_ID_KEY = "correlationId";
+  private static String APP_VERSION_KEY = "appVersion";
+  private static String USER_ID_KEY = "userId";
 
   /**
    * To make a Get request.
@@ -186,6 +195,11 @@ public class HttpRequest {
         httppost.addHeader(CONTENT_TYPE_KEY, APPLICATION_JSON);
         httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
         httppost.addHeader(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
+        httppost.addHeader(SOURCE_KEY, SOURCE_VALUE);
+        httppost.addHeader(MOBILE_PLATFORM_KEY, MOBILE_PLATFORM_VALUE);
+        httppost.addHeader(CORRELATION_ID_KEY, FdaApplication.getRandomString());
+        httppost.addHeader(APP_VERSION_KEY, BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE);
+        httppost.addHeader(USER_ID_KEY, SharedPreferenceHelper.readPreference(FdaApplication.getInstance(), FdaApplication.getInstance().getString(R.string.userid), ""));
 
         StringEntity params1 = new StringEntity(jsonObject.toString());
         httppost.setEntity(params1);
@@ -287,6 +301,11 @@ public class HttpRequest {
       conn.setRequestProperty(CONTENT_TYPE_KEY, APPLICATION_JSON);
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
       conn.setRequestProperty(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
+      conn.setRequestProperty(SOURCE_KEY, SOURCE_VALUE);
+      conn.setRequestProperty(MOBILE_PLATFORM_KEY, MOBILE_PLATFORM_VALUE);
+      conn.setRequestProperty(CORRELATION_ID_KEY, FdaApplication.getRandomString());
+      conn.setRequestProperty(APP_VERSION_KEY, BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE);
+      conn.setRequestProperty(USER_ID_KEY, SharedPreferenceHelper.readPreference(FdaApplication.getInstance(), FdaApplication.getInstance().getString(R.string.userid), ""));
 
       if (serverType.equalsIgnoreCase(SERVER_TYPE_STUDY_DATASTORE)) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);

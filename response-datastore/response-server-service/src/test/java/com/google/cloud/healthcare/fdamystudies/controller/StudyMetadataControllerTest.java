@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -91,6 +91,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(studyMetadataBeanRequest.getStudyId());
+    auditRequest.setStudyVersion("1.0");
     auditRequest.setAppId(studyMetadataBeanRequest.getAppId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();

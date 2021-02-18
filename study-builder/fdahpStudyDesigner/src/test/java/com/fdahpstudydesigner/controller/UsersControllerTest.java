@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020-2021 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
@@ -210,7 +218,6 @@ public class UsersControllerTest extends BaseMockIT {
     userBo.setFirstName("new_user_first_name");
     userBo.setLastName("new_user_last_name");
     userBo.setPhoneNumber("654665146432");
-    userBo.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())

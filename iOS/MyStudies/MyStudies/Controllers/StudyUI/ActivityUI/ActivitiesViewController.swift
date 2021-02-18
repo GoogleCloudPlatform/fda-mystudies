@@ -27,8 +27,7 @@ let kActivities = "activities"
 let kActivityUnwindToStudyListIdentifier = "unwindeToStudyListIdentier"
 let kActivityAbondonedAlertMessage =
   """
-  You missed the previous run of this activity. Please wait till the next run becomes available. \
-  Run timings are given on the Activities list screen.
+  It is not yet time to take the next run of this activity.
   """
 
 enum ActivityAvailabilityStatus: Int {
@@ -332,7 +331,12 @@ class ActivitiesViewController: UIViewController {
       todayDate = todayDate.addingTimeInterval(TimeInterval(difference!))
     }
 
-    if activity.startDate != nil && activity.endDate != nil {
+    if let status = activity.userParticipationStatus,
+      status.status == .completed,
+      activity.activityRuns.count == activity.currentRunId
+    {
+      return .past
+    } else if activity.startDate != nil && activity.endDate != nil {
 
       let startDateResult = (activity.startDate?.compare(todayDate))! as ComparisonResult
       let endDateResult = (activity.endDate?.compare(todayDate))! as ComparisonResult
@@ -842,12 +846,6 @@ extension ActivitiesViewController: UITableViewDataSource {
       // Cell Data Setup
       cell.backgroundColor = UIColor.clear
       let availabilityStatus = ActivityAvailabilityStatus(rawValue: indexPath.section)
-      // Disable selection for past and upcoming activities.
-      if availabilityStatus == .past || availabilityStatus == .upcoming {
-        cell.isUserInteractionEnabled = false
-      } else {
-        cell.isUserInteractionEnabled = true
-      }
       let activity = activities[indexPath.row]
 
       // check for scheduled frequency
@@ -861,6 +859,7 @@ extension ActivitiesViewController: UITableViewDataSource {
           as? ActivitiesTableViewCell)!
         cell.delegate = self
       }
+
       // Set Cell data
       cell.populateCellDataWithActivity(
         activity: activity,
@@ -916,12 +915,17 @@ extension ActivitiesViewController: UITableViewDelegate {
             )
             self.updateActivityStatusToInProgress()
             self.selectedIndexPath = indexPath
+          } else if activity.currentRunId <= activity.totalRuns {
+            // Run not yet available.
+            self.view.makeToast(
+              NSLocalizedString(kActivityAbondonedAlertMessage, comment: "")
+            )
           }
         }
       } else if activity.userParticipationStatus?.status == .abandoned {
         // Run not available.
-        UIUtilities.showAlertWithMessage(
-          alertMessage: NSLocalizedString(kActivityAbondonedAlertMessage, comment: "")
+        self.view.makeToast(
+          NSLocalizedString(kActivityAbondonedAlertMessage, comment: "")
         )
       }
 
@@ -1259,7 +1263,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
                 // Create the stats for FetalKick
                 if let result = fetalKickResult {
 
-                  let value = Float(result.duration)
+                  let value = Float(result.duration) / 60.0
                   let kickcount = Float(result.totalKickCount)
                   let dict = ActivityBuilder.currentActivityBuilder.activity?
                     .steps?.first!
@@ -1517,14 +1521,12 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
 
-    if let result = taskViewController.result.stepResult(forStepIdentifier: step.identifier) {
-      self.managedResult[step.identifier] = result
-    }
-
     if let step = step as? QuestionStep,
       step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false
     {
-
+      if let result = taskViewController.result.stepResult(forStepIdentifier: step.identifier) {
+        self.managedResult[step.identifier] = result
+      }
       var textChoiceQuestionController: TextChoiceQuestionController
 
       var result = taskViewController.result.result(forIdentifier: step.identifier)
@@ -1542,6 +1544,10 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
       }
 
       return textChoiceQuestionController
+    }
+
+    if let step = step as? CustomInstructionStep {
+      return CustomInstructionStepViewController(step: step)
     }
 
     let storyboard = UIStoryboard.init(name: "FetalKickCounter", bundle: nil)

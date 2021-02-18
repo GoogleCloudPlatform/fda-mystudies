@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,6 +24,7 @@
 
 package com.fdahpstudydesigner.dao;
 
+import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -113,7 +115,7 @@ public class UsersDAOImpl implements UsersDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public String addOrUpdateUserDetails(
+  public UserIdAccessLevelInfo addOrUpdateUserDetails(
       UserBO userBO, String permissions, String selectedStudies, String permissionValues) {
     logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Starts");
     Session session = null;
@@ -126,15 +128,19 @@ public class UsersDAOImpl implements UsersDAO {
     String[] selectedStudy = null;
     String[] permissionValue = null;
     boolean updateFlag = false;
+    UserIdAccessLevelInfo userIdAccessLevelInfo = null;
 
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+      userIdAccessLevelInfo = new UserIdAccessLevelInfo();
       if (null == userBO.getUserId()) {
         userId = (Integer) session.save(userBO);
+        userIdAccessLevelInfo.setUserId(userId);
       } else {
         session.update(userBO);
         userId = userBO.getUserId();
+        userIdAccessLevelInfo.setUserId(userId);
         updateFlag = true;
       }
 
@@ -155,6 +161,7 @@ public class UsersDAOImpl implements UsersDAO {
         userBO2.setPermissionList(permissionSet);
         userBO2.setAccessLevel(FdahpStudyDesignerUtil.getUserAccessLevel(permissionSet));
         session.update(userBO2);
+        userIdAccessLevelInfo.setAccessLevel(userBO2.getAccessLevel());
       } else {
         userBO2.setPermissionList(null);
         session.update(userBO2);
@@ -215,7 +222,9 @@ public class UsersDAOImpl implements UsersDAO {
       }
     }
     logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Ends");
-    return msg;
+    if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+      return userIdAccessLevelInfo;
+    } else return null;
   }
 
   @Override

@@ -27,7 +27,7 @@
           <button type="button"
                   class="btn btn-primary blue-btn markCompleted <c:if test="${not empty notificationSavedList}">linkDis</c:if>"
                   onclick="markAsCompleted();"
-          >Mark as Completed
+          >Mark as completed
           </button>
         </div>
       </c:if>
@@ -49,7 +49,7 @@
                   <button type="button"
                           class="btn btn-primary blue-btn hideButtonIfPaused studyNotificationDetails">
                     Add
-                    Notification
+                    notification
                   </button>
                 </div>
               </c:if>
@@ -60,8 +60,7 @@
           <c:forEach items="${notificationList}" var="studyNotification">
             <tr id="${studyNotification.notificationId}">
               <td width="60%">
-                <div class="dis-ellipsis"
-                     title="${fn:escapeXml(studyNotification.notificationText)}">${fn:escapeXml(studyNotification.notificationText)}</div>
+                <div class="dis-ellipsis">${fn:escapeXml(studyNotification.notificationText)}</div>
               </td>
               <td class="wid20">${studyNotification.checkNotificationSendingStatus}</td>
               <td class="wid20 text-right">
@@ -121,6 +120,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li").removeClass('active');
     $(".eigthNotification").addClass('active');
@@ -150,7 +150,7 @@
       "lengthChange": false,
       "searching": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
     });
 

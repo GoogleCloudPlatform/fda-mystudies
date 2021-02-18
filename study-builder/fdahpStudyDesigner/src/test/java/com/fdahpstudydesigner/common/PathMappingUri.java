@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -78,7 +78,9 @@ public enum PathMappingUri {
 
   SAVE_CONSENT_REVIEW_AND_ECONSENT_INFO("/adminStudies/saveConsentReviewAndEConsentInfo.do"),
 
-  STUDY_LIST("/adminStudies/studyList.do");
+  STUDY_LIST("/adminStudies/studyList.do"),
+
+  VIEW_BASIC_INFO("/adminStudies/viewBasicInfo.do");
 
   private final String path;
 

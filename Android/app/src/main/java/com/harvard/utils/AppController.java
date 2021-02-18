@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.utils;
@@ -72,6 +73,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Random;
+import java.util.regex.Pattern;
+
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -93,6 +96,15 @@ public class AppController {
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
   public static String loginCallback = "login_callback";
+
+  public static final String STARTING_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
+  public static final String ENDDING_TAGS = "</\\w+>";
+  public static final String SELFCLOSINGS_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/>";
+  public static final String HTML_ENTITIES = "&[a-zA-Z][a-zA-Z0-9]+;";
+  public static final Pattern html_Pattern = Pattern
+          .compile("(" + STARTING_TAGS + ".*" + ENDDING_TAGS + ")|(" + SELFCLOSINGS_TAGS + ")|(" + HTML_ENTITIES + ")", Pattern.DOTALL);
+  public static String PASSWORD_PATTERN =
+          "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
     if (sharedPreferenceHelper == null) {
@@ -159,7 +171,7 @@ public class AppController {
     notificationManager.cancelAll();
 
     if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
-      Intent intent = new Intent(context, StudyActivity.class);
+      Intent intent = new Intent(context, GatewayActivity.class);
       ComponentName cn = intent.getComponent();
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
       context.startActivity(mainIntent);
@@ -220,6 +232,16 @@ public class AppController {
       } else {
         return retTypeface;
       }
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    return retTypeface;
+  }
+
+  public static Typeface getHelveticaTypeface(Context context) {
+    Typeface retTypeface = null;
+    try {
+      retTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/HLM.ttf");
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -896,6 +918,49 @@ public class AppController {
     }
   }
 
+  public static void signout(Context context) {
+    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
+    settings.edit().clear().apply();
+    // delete passcode from keystore
+    String pass = AppController.refreshKeys("passcode");
+    if (pass != null) {
+      AppController.deleteKey("passcode_" + pass);
+    }
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = getRealmobj(context);
+    dbServiceSubscriber.deleteDb(context);
+    try {
+      NotificationModuleSubscriber notificationModuleSubscriber =
+              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+      notificationModuleSubscriber.cancleActivityLocalNotification(context);
+      notificationModuleSubscriber.cancleResourcesLocalNotification(context);
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    NotificationModuleSubscriber notificationModuleSubscriber =
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+    notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
+    dbServiceSubscriber.closeRealmObj(realm);
+
+    // clear notifications from notification tray
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+    notificationManager.cancelAll();
+
+    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
+      Intent intent = new Intent(context, GatewayActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    } else {
+      Intent intent = new Intent(context, StandaloneActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    }
+  }
+
   public static String getHashedValue(String valueToHash) {
     String generatedHash = null;
     try {
@@ -931,5 +996,19 @@ public class AppController {
 
   public static String getSourceKey(Resource resource) {
     return resource.getAvailability().getSourceKey();
+  }
+
+  public static String verifyHtmlInput(String input) {
+    String formattedText;
+    if (html_Pattern.matcher(input).find()) {
+      formattedText = input;
+    } else {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append("<p>");
+      stringBuilder.append(input);
+      stringBuilder.append("</p>");
+      formattedText =  stringBuilder.toString();
+    }
+    return formattedText;
   }
 }

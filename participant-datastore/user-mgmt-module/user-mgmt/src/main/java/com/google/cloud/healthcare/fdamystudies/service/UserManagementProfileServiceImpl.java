@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -35,8 +35,10 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
@@ -72,6 +74,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Autowired private EmailService emailService;
 
   @Autowired private AppRepository appRepository;
+
+  @Autowired private StudyRepository studyRepository;
 
   @Autowired UserDetailsRepository userDetailsRepository;
 
@@ -273,12 +277,19 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         auditRequest.setParticipantId(studyBean.getParticipantId());
         auditRequest.setUserId(userId);
 
-        retVal =
-            userManagementUtil.withdrawParticipantFromStudy(
-                studyBean.getParticipantId(),
-                studyBean.getStudyId(),
-                studyBean.getDelete(),
-                auditRequest);
+        Optional<StudyEntity> optStudyEntity =
+            studyRepository.findByCustomStudyId(studyBean.getStudyId());
+
+        if (optStudyEntity.isPresent()) {
+          auditRequest.setStudyVersion(String.valueOf(optStudyEntity.get().getVersion()));
+          retVal =
+              userManagementUtil.withdrawParticipantFromStudy(
+                  studyBean.getParticipantId(),
+                  studyBean.getStudyId(),
+                  String.valueOf(optStudyEntity.get().getVersion()),
+                  studyBean.getDelete(),
+                  auditRequest);
+        }
 
         if (Boolean.valueOf(studyReqBean.getDelete())) {
 

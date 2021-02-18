@@ -1,3 +1,10 @@
+/*
+ * Copyright 2020-2021 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -17,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
+import org.springframework.http.HttpHeaders;
 
 public final class AuditEventMapper {
 
@@ -37,6 +45,28 @@ public final class AuditEventMapper {
   private static final String SOURCE = "source";
 
   private static final String COOKIE_PREFIX = "mystudies_";
+
+  public static void addAuditEventHeaderParams(
+      HttpHeaders headers, AuditLogEventRequest auditRequest) {
+    if (!headers.containsKey(USER_ID)) {
+      headers.set(USER_ID, auditRequest.getUserId());
+    }
+    if (!headers.containsKey(APP_VERSION)) {
+      headers.set(APP_VERSION, auditRequest.getAppVersion());
+    }
+    if (!headers.containsKey(SOURCE)) {
+      headers.set(SOURCE, auditRequest.getSource());
+    }
+    if (!headers.containsKey(CORRELATION_ID)) {
+      headers.set(CORRELATION_ID, auditRequest.getCorrelationId());
+    }
+    if (!headers.containsKey(MOBILE_PLATFORM)) {
+      headers.set(MOBILE_PLATFORM, auditRequest.getMobilePlatform());
+    }
+    if (!headers.containsKey(APP_ID)) {
+      headers.set(APP_ID, auditRequest.getAppId());
+    }
+  }
 
   public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request) {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();

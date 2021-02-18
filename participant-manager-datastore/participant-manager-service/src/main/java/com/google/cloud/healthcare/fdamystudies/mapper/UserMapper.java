@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -54,8 +54,7 @@ public final class UserMapper {
     admin.setSuperAdmin(userRequest.isSuperAdmin());
     admin.setSecurityCode(IdGenerator.id());
     admin.setSecurityCodeExpireDate(
-        new Timestamp(
-            Instant.now().plus(securityCodeExpireTime, ChronoUnit.MINUTES).toEpochMilli()));
+        new Timestamp(Instant.now().plus(securityCodeExpireTime, ChronoUnit.HOURS).toEpochMilli()));
     Integer manageLocation =
         userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
     admin.setLocationPermission(manageLocation);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -139,6 +140,7 @@ public class EnrollmentManagementUtil {
       String applicationId,
       String hashedTokenValue,
       String studyId,
+      Float studyVersion,
       AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentManagementUtil getParticipantId() - starts ");
     HttpHeaders headers = null;
@@ -150,11 +152,14 @@ public class EnrollmentManagementUtil {
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("applicationId", applicationId);
       headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
+      AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
+
       bodyProvider = new EnrollmentBodyProvider();
       bodyProvider.setTokenIdentifier(hashedTokenValue);
       bodyProvider.setCustomStudyId(studyId);
+      bodyProvider.setStudyVersion(String.valueOf(studyVersion));
+
       requestBody = new HttpEntity<>(bodyProvider, headers);
       responseEntity =
           restTemplate.postForEntity(appConfig.getAddParticipantId(), requestBody, String.class);
@@ -175,7 +180,12 @@ public class EnrollmentManagementUtil {
     return participantId;
   }
 
-  public String withDrawParticipantFromStudy(String participantId, String studyId, boolean delete) {
+  public String withDrawParticipantFromStudy(
+      String participantId,
+      Float studyVersion,
+      String studyId,
+      boolean delete,
+      AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
@@ -183,8 +193,8 @@ public class EnrollmentManagementUtil {
 
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.APPLICATION_ID, null);
     headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     request = new HttpEntity<>(null, headers);
 
@@ -192,6 +202,8 @@ public class EnrollmentManagementUtil {
         appConfig.getWithdrawStudyUrl()
             + "?studyId="
             + studyId
+            + "&studyVersion="
+            + String.valueOf(studyVersion)
             + "&participantId="
             + participantId
             + "&deleteResponses="

@@ -17,8 +17,8 @@
 
     <style>
       .terms__logo .main__container {
-        padding-top: 9px;
-        padding-bottom: 9px;
+        padding-top: 15px;
+        padding-bottom: 14px;
         margin-bottom: 30px;
         line-height: 0;
       }

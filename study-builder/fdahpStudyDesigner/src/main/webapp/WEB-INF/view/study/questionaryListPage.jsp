@@ -34,7 +34,7 @@
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsCompleteBtnId"
                     onclick="markAsCompleted();" <c:if
-                test="${!markAsComplete}"> disabled </c:if> >Mark as Completed
+                test="${!markAsComplete}"> disabled </c:if> >Mark as completed
             </button>
           </span>
         </div>
@@ -62,7 +62,7 @@
                 <div class="dis-line form-group mb-none">
                   <button type="button" class="btn btn-primary blue-btn"
                           onclick="addQuestionnaires();">
-                    Add Questionnaire
+                    Add questionnaire
                   </button>
                 </div>
               </c:if>
@@ -116,6 +116,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li.active").removeClass('active');
     $(".sixthQuestionnaires").addClass('active');
@@ -128,7 +129,7 @@
         {"bSortable": true}
       ],
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "order": [[0, "desc"]],
       "info": false,
@@ -267,12 +268,12 @@
           datarow.push(' ');
         } else {
           datarow.push(
-              '<div class="dis-ellipsis pr-100" title="obj.title">' + DOMPurify.sanitize(obj.title) + '</div>');
+              '<div class="dis-ellipsis pr-100" title='+DOMPurify.sanitize(obj.title)+'>' + DOMPurify.sanitize(obj.title) + '</div>');
         }
         if (typeof obj.frequency === "undefined" && typeof obj.frequency === "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push(obj.frequency);
+          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom Schedule' : obj.frequency);
         }
         var actionDiv = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewQuestionnaires("
             + parseInt(obj.id) + ");'></span>";

@@ -623,7 +623,14 @@ template "project_apps" {
       binary_authorization = {
         admission_whitelist_patterns = [{
           name_pattern = "gcr.io/cloudsql-docker/*"
-        }]
+          },
+          {
+          name_pattern = "gcr.io/gke-release/istio/*" 
+          },
+          {
+          name_pattern = "docker.io/prom/*"
+            }
+          ]
       }
       # DNS sets up nameservers to connect to the GKE clusters.
       dns_zones = [{
@@ -940,6 +947,7 @@ data "google_container_cluster" "gke_cluster" {
 }
 
 provider "kubernetes" {
+  version                = "1.13.3"
   load_config_file       = false
   token                  = data.google_client_config.default.access_token
   host                   = data.google_container_cluster.gke_cluster.endpoint

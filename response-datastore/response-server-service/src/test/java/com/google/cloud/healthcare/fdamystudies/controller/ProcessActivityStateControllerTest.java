@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -82,6 +82,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId("RT3");
+    auditRequest.setStudyVersion("NA");
     auditRequest.setParticipantId("567");
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -211,6 +212,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(studyId);
+    auditRequest.setStudyVersion("NA");
     auditRequest.setParticipantId(participantId);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();

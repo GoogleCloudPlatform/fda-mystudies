@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,9 @@ public class CommonServiceImpl implements CommonService {
   public UserDetailsEntity getUserInfoDetails(String userId) {
     logger.info("CommonServiceImpl getUserInfoDetails() - Starts ");
     UserDetailsEntity userDetailsEntity = null;
-    if (!StringUtils.isEmpty(userId)) {
-      userDetailsEntity = commonDao.getUserInfoDetails(userId);
-    }
+
+    userDetailsEntity = commonDao.getUserInfoDetails(userId);
+
     logger.info("CommonServiceImpl getUserInfoDetails() - Ends ");
     return userDetailsEntity;
   }

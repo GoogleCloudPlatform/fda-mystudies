@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -33,6 +34,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_U
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.EDITED_USER_ID;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
@@ -91,7 +93,7 @@ public class UsersServiceImpl implements UsersService {
         StudyBuilderAuditEvent auditLogEvent =
             userStatus == 1 ? USER_RECORD_DEACTIVATED : USER_ACCOUNT_RE_ACTIVATED;
         Map<String, String> values = new HashMap<>();
-        values.put(EDITED_USER_ID, String.valueOf(userSession.getUserId()));
+        values.put(EDITED_USER_ID, String.valueOf(userId));
         auditLogHelper.logEvent(auditLogEvent, auditRequest, values);
         keyValueForSubject = new HashMap<String, String>();
         if ((superAdminEmailList != null) && !superAdminEmailList.isEmpty()) {
@@ -221,12 +223,13 @@ public class UsersServiceImpl implements UsersService {
           userBO2.setForceLogout(true);
         }
       }
-      msg =
+      UserIdAccessLevelInfo userIdAccessLevelInfo =
           usersDAO.addOrUpdateUserDetails(userBO2, permissions, selectedStudies, permissionValues);
-      if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+      if (userIdAccessLevelInfo != null) {
         if (addFlag) {
-          values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
-          values.put(StudyBuilderConstants.ACCESS_LEVEL, userBO.getAccessLevel());
+          values.put(
+              StudyBuilderConstants.USER_ID, String.valueOf(userIdAccessLevelInfo.getUserId()));
+          values.put(StudyBuilderConstants.ACCESS_LEVEL, userIdAccessLevelInfo.getAccessLevel());
           msg =
               loginService.sendPasswordResetLinkToMail(
                   request, userBO2.getUserEmail(), "", "USER", auditRequest);
@@ -238,8 +241,12 @@ public class UsersServiceImpl implements UsersService {
           }
         }
         if (!addFlag) {
-          values.put(StudyBuilderConstants.EDITED_USER_ID, String.valueOf(userSession.getUserId()));
-          values.put(StudyBuilderConstants.EDITED_USER_ACCESS_LEVEL, userSession.getAccessLevel());
+          values.put(
+              StudyBuilderConstants.EDITED_USER_ID,
+              String.valueOf(userIdAccessLevelInfo.getUserId()));
+          values.put(
+              StudyBuilderConstants.EDITED_USER_ACCESS_LEVEL,
+              userIdAccessLevelInfo.getAccessLevel());
           auditLogEvents.add(USER_RECORD_UPDATED);
 
           if (emailIdChange) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -12,8 +12,9 @@ import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValida
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_NAME_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_VERSION_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_APP_VERSION_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_DESCRIPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
@@ -154,6 +155,7 @@ public class LoginController {
     String loginChallenge = cookieHelper.getCookieValue(request, LOGIN_CHALLENGE_COOKIE);
     String mobilePlatform = cookieHelper.getCookieValue(request, MOBILE_PLATFORM_COOKIE);
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
+    String appName = cookieHelper.getCookieValue(request, APP_NAME_COOKIE);
 
     boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source);
     if (!attrsAdded) {
@@ -181,6 +183,7 @@ public class LoginController {
     user.setEmail(loginRequest.getEmail());
     user.setPassword(loginRequest.getPassword());
     user.setAppId(appId);
+    user.setAppName(appName);
 
     AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
 
@@ -246,9 +249,10 @@ public class LoginController {
         qsParams,
         APP_ID_COOKIE,
         CORRELATION_ID_COOKIE,
-        CLIENT_APP_VERSION_COOKIE,
+        APP_VERSION_COOKIE,
         MOBILE_PLATFORM_COOKIE,
-        SOURCE_COOKIE);
+        SOURCE_COOKIE,
+        APP_NAME_COOKIE);
 
     String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
     String source = qsParams.getFirst(SOURCE);

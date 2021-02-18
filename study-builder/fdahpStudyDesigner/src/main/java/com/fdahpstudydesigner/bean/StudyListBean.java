@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -38,6 +39,7 @@ public class StudyListBean {
   private String researchSponsor;
   private String status;
   private boolean viewPermission;
+  private String appId;
 
   public StudyListBean(Integer id, String customStudyId, String name, boolean viewPermission) {
     super();
@@ -57,7 +59,8 @@ public class StudyListBean {
       String createdLastName,
       boolean viewPermission,
       String status,
-      String createdOn) {
+      String createdOn,
+      String appid) {
     super();
     this.id = id;
     this.customStudyId = customStudyId;
@@ -69,6 +72,15 @@ public class StudyListBean {
     this.viewPermission = viewPermission;
     this.status = status;
     this.createdOn = createdOn;
+    this.appId = appid;
+  }
+
+  public String getAppId() {
+    return appId;
+  }
+
+  public void setAppId(String appId) {
+    this.appId = appId;
   }
 
   public String getCategory() {

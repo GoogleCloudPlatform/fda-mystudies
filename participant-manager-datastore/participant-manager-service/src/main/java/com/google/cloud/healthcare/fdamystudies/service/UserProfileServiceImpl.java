@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -8,9 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_BY_USER;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REACTIVATED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthUserRequest;
@@ -27,15 +31,19 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserProfileMapper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -98,6 +106,8 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findBySecurityCode(securityCode);
 
     if (!optUserRegAdminUser.isPresent()) {
+      participantManagerHelper.logEvent(
+          USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION, auditRequest);
       throw new ErrorCodeException(ErrorCode.SECURITY_CODE_EXPIRED);
     }
 
@@ -119,7 +129,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
   @Override
   @Transactional
-  public UserProfileResponse updateUserProfile(UserProfileRequest userProfileRequest) {
+  public UserProfileResponse updateUserProfile(
+      UserProfileRequest userProfileRequest, AuditLogEventRequest auditRequest) {
     logger.entry("begin updateUserProfile()");
 
     Optional<UserRegAdminEntity> optUserRegAdminUser =
@@ -136,6 +147,9 @@ public class UserProfileServiceImpl implements UserProfileService {
     adminUser.setFirstName(userProfileRequest.getFirstName());
     adminUser.setLastName(userProfileRequest.getLastName());
     userRegAdminRepository.saveAndFlush(adminUser);
+
+    auditRequest.setUserId(adminUser.getId());
+    participantManagerHelper.logEvent(ACCOUNT_UPDATE_BY_USER, auditRequest);
 
     logger.exit(MessageCode.PROFILE_UPDATE_SUCCESS);
     return new UserProfileResponse(MessageCode.PROFILE_UPDATE_SUCCESS);
@@ -157,7 +171,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     // Bad request and errors handled in RestResponseErrorHandler class
-    UserResponse authRegistrationResponse = registerUserInAuthServer(setUpAccountRequest);
+    UserResponse authRegistrationResponse =
+        registerUserInAuthServer(setUpAccountRequest, auditRequest);
 
     UserRegAdminEntity userRegAdminUser = optUsers.get();
     userRegAdminUser.setUrAdminAuthId(authRegistrationResponse.getUserId());
@@ -182,7 +197,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     return setUpAccountResponse;
   }
 
-  private UserResponse registerUserInAuthServer(SetUpAccountRequest setUpAccountRequest) {
+  private UserResponse registerUserInAuthServer(
+      SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest) {
     logger.entry("registerUserInAuthServer()");
 
     AuthUserRequest userRequest =
@@ -194,6 +210,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     HttpEntity<AuthUserRequest> requestEntity = new HttpEntity<>(userRequest, headers);
 
@@ -206,7 +223,8 @@ public class UserProfileServiceImpl implements UserProfileService {
   }
 
   @Override
-  public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest) {
+  public PatchUserResponse updateUserAccountStatus(
+      PatchUserRequest statusRequest, AuditLogEventRequest auditRequest) {
     logger.entry("updateUserAccountStatus()");
 
     Optional<UserRegAdminEntity> optSuperAdmin =
@@ -228,7 +246,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     UserRegAdminEntity user = optUser.get();
     if (StringUtils.isNotEmpty(user.getUrAdminAuthId())) {
-      updateUserAccountStatusInAuthServer(user.getUrAdminAuthId(), statusRequest.getStatus());
+      updateUserAccountStatusInAuthServer(
+          user.getUrAdminAuthId(), statusRequest.getStatus(), auditRequest);
     }
 
     user.setStatus(statusRequest.getStatus());
@@ -239,16 +258,25 @@ public class UserProfileServiceImpl implements UserProfileService {
             ? MessageCode.REACTIVATE_USER_SUCCESS
             : MessageCode.DEACTIVATE_USER_SUCCESS);
 
+    auditRequest.setUserId(statusRequest.getSignedInUserId());
+
+    Map<String, String> map = Collections.singletonMap("edited_user_id", user.getId());
+    ParticipantManagerEvent participantManagerEvent =
+        user.getStatus() == UserStatus.ACTIVE.getValue() ? USER_REACTIVATED : USER_DEACTIVATED;
+    participantManagerHelper.logEvent(participantManagerEvent, auditRequest, map);
+
     logger.exit(messageCode);
     return new PatchUserResponse(messageCode);
   }
 
-  private void updateUserAccountStatusInAuthServer(String authUserId, Integer status) {
+  private void updateUserAccountStatusInAuthServer(
+      String authUserId, Integer status, AuditLogEventRequest auditRequest) {
     logger.entry("updateUserAccountStatusInAuthServer()");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     UpdateEmailStatusRequest emailStatusRequest = new UpdateEmailStatusRequest();
     UserStatus userStatus = UserStatus.fromValue(status);
@@ -280,7 +308,8 @@ public class UserProfileServiceImpl implements UserProfileService {
   }
 
   @Override
-  public void deleteInvitation(String signedInUserId, String userId) {
+  public void deleteInvitation(
+      String signedInUserId, String userId, AuditLogEventRequest auditRequest) {
     logger.entry("deleteInvitation()");
 
     Optional<UserRegAdminEntity> optSuperAdmin = userRegAdminRepository.findById(signedInUserId);
@@ -299,6 +328,11 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     userRegAdminRepository.delete(user);
+
+    auditRequest.setUserId(user.getId());
+
+    Map<String, String> map = Collections.singletonMap("new_user_id", user.getId());
+    participantManagerHelper.logEvent(USER_DELETED, auditRequest, map);
 
     logger.exit("Sucessfully deleted invitation");
   }

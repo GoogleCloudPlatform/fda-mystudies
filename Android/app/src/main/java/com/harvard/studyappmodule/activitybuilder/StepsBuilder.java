@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule.activitybuilder;
@@ -32,6 +33,7 @@ import com.harvard.studyappmodule.custom.question.DateAnswerformatCustom;
 import com.harvard.studyappmodule.custom.question.DecimalUnitAnswerFormat;
 import com.harvard.studyappmodule.custom.question.EmailAnswerFormatCustom;
 import com.harvard.studyappmodule.custom.question.HeightAnswerFormat;
+import com.harvard.studyappmodule.custom.question.InstructionStepCustom;
 import com.harvard.studyappmodule.custom.question.IntegerUnitAnswerFormat;
 import com.harvard.studyappmodule.custom.question.LocationAnswerFormat;
 import com.harvard.studyappmodule.custom.question.MultiChoiceImageAnswerFormat;
@@ -52,6 +54,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import org.researchstack.backbone.answerformat.BooleanAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.step.InstructionStep;
@@ -621,12 +625,11 @@ public class StepsBuilder {
           formstep.setOptional(activityobj.getSteps().get(i).isSkippable());
           steps.add(formstep);
         } else if (activityQuestionStep.get(i).getType().equalsIgnoreCase("instruction")) {
-          InstructionStep instructionStep =
-                  new InstructionStep(
-                          activityQuestionStep.get(i).getKey(),
-                          activityQuestionStep.get(i).getTitle(),
-                          Html.escapeHtml(
-                                  activityQuestionStep.get(i).getText().replaceAll("(\r\n|\n)", "<br />")));
+          InstructionStepCustom instructionStep =
+              new InstructionStepCustom(
+                  activityQuestionStep.get(i).getKey(),
+                  activityQuestionStep.get(i).getTitle(),
+                  AppController.verifyHtmlInput(activityQuestionStep.get(i).getText()));
           instructionStep.setOptional(activityQuestionStep.get(i).isSkippable());
           if (branching) {
             instructionStep.setStepTitle(R.string.notxt);
@@ -1036,4 +1039,6 @@ public class StepsBuilder {
     }
     return formquesteps;
   }
+
+
 }

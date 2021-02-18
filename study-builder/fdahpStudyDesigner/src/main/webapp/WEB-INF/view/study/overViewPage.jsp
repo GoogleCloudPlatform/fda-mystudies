@@ -33,7 +33,7 @@
 
           <div class="dis-line form-group mb-none">
             <button type="button" class="btn btn-primary blue-btn submitEle"
-                    id="completedId" actType="completed">Mark as Completed
+                    id="completedId" actType="completed">Mark as completed
             </button>
           </div>
         </c:if>
@@ -49,7 +49,7 @@
 
       <div>
         <div class="gray-xs-f mb-xs">
-          Study Video URL (if available)
+          Study video URL (if available)
           <small>(300 characters max)</small>
         </div>
         <div class="form-group">
@@ -67,18 +67,18 @@
       <div class="overview_section">
         <div class="panel-group overview-panel" id="accordion">
           <div class="black-md-f mb-md">
-            Study Overview Pages
+            Study overview pages
             <span>
               <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="right"
                     data-html="true"
                     title=""
                     data-original-title="
-	                 	<p class='text-left'>These pages are meant for the introductory, 'Quick Overview' section of your study in the mobile app. It is intended to help users get a quick snapshot summary of what the study is about and how it may benefit them and others.</p>
-						<p class='text-left'>Each page has an image, title and about 180-200 characters of description allowed. Given below are some suggested topics you can touch upon in these pages (remember to key in lines that can best describe your study in a way that people will be able to relate to and understand):</p>	
-						<div class='text-left'>o Study Purpose and Goals</div>
-						<div class='text-left'>o Target Audience</div>
-						<div class='text-left'>o Usage of Participant Data</div>
+	                 	<p class='text-left'>These pages are meant to provide app users with an introductory overview of the study.</p>
+						<p class='text-left'>Each page comprises of an image, a title and a description. Given below are some suggested topics for content on these pages:</p>	
+						<div class='text-left'>o Study purpose and goals</div>
+						<div class='text-left'>o Target audience</div>
+						<div class='text-left'>o Data usage</div>
 						<div class='text-left'>o Benefits / Why one must participate?</div>
 	                 "></span>
             </span>
@@ -109,19 +109,23 @@
               </div>
               <div id="collapse1" class="panel-collapse collapse in">
                 <div class="panel-body pt-none">
-
+				<div>
                   <div class="gray-xs-f mb-sm">
                     Image
                     <span>
                       <span class="filled-tooltip"
                             data-toggle="tooltip" data-placement="top" data-html="true"
                             title=""
-                            data-original-title=" JPEG / PNG <br> Recommended Size: 750x1334 pixels"></span>
-                    </span>
-                    <span class="requiredStar"> *</span>
-                  </div>
-                  <div>
-                    <div class="thumb">
+                            data-original-title="The default image shown below will be used for the study overview screens in the mobile app. You can over-ride it by uploading an alternate image in JPG or PNG format. The image must have a size of 750x1334 pixels."></span>
+                    </span>                    
+                  </div>              
+                  <div class="thumb" style="display: inline-block;width:77px !important">
+                        <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                                onerror="this.src='/studybuilder/images/dummy-img.jpg';"
+                            class="wid100" alt=""/>
+                    </div>                
+                  <div style="display: inline-block;">    
+                    <div class="thumb" style="width:77px !important">
                       <img src="/studybuilder/images/dummy-img.jpg"
                            class="wid100" alt=""/>
                     </div>
@@ -136,17 +140,32 @@
                       <div class="form-group mb-none mt-sm">
                         <button id="" type="button"
                                 class="btn btn-default gray-btn uploadImgbtn">Upload
-                          Image
                         </button>
                         <input id="1" class="dis-none uploadImg" data-imageId='1'
                                type="file" name="multipartFiles"
-                               accept=".png, .jpg, .jpeg" onchange="readURL(this);"
-                               required data-error="Please select an image."> <input
+                               accept=".png, .jpg, .jpeg" onchange="readURL(this);"> <input
                           type="hidden" class="imagePathCls" name="imagePath"/>
                         <div class="help-block with-errors red-txt wid180"></div>
                       </div>
+                      
                     </div>
                   </div>
+                  </div>
+                  
+                  <div class="mt-lg" style="margin-top:1px !important;  font-size:10px; ;display:inline-block">
+                    <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important">
+                     Default image                     
+                    </div>
+                    </div>
+                     &nbsp; 
+                      &nbsp; 
+                       &nbsp;
+                    
+                    <div class="mt-lg" style="margin-top:1px !important; margin-left:-6px; font-size:10px ;display:inline-block">
+                    <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important">
+                     Alternate image                     
+                    </div>
+                    </div>
 
                   <div class="mt-xlg">
                     <div class="gray-xs-f mb-xs">
@@ -225,11 +244,26 @@
                               data-toggle="tooltip" data-placement="top"
                               data-html="true"
                               title="" src="/studybuilder/images/icons/tooltip.png"
-                              data-original-title="<span class='font24'>.</span></span> JPEG/PNG<br><span class='font24'>.</span> Recommended Size: <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels"></span>
-                        <span class="requiredStar"> *</span>
+                              data-original-title="<span class='font24'></span></span>The default image shown below will be used for the study overview screens in the mobile app. You can over-ride it by uploading an alternate image in JPG or PNG format. The image must have a size of <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels."></span>
                     </div>
-                    <div>
-                      <div class="thumb">
+                      <div class="thumb" style="display: inline-block;width:77px !important">
+                       <c:choose>
+                       <c:when test="${spbSt.count==1}">
+                        <img
+                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                            onerror="this.src='/studybuilder/images/dummy-img.jpg';"
+                            class="wid100" alt=""/>
+                            </c:when>
+                            <c:otherwise>
+                             <img
+                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/>"
+                            onerror="this.src='/studybuilder/images/dummy-img.jpg';"
+                            class="wid100" alt=""/>
+                            </c:otherwise>
+                            </c:choose>
+                    </div>
+                    <div style="display: inline-block">
+                      <div class="thumb" style="display: inline-block;width:77px !important">
                         <img
                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studypages/${fn:escapeXml(studyPageBo.imagePath)}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
@@ -244,18 +278,16 @@
                             Image
                           </a>
                         </span>
-                        <div class="form-group mb-none mt-sm"
-                             style="vertical-align: bottom;">
+                        <div class="form-group mb-none"
+                             style="vertical-align: bottom;margin-top:16px !important">
                           <button id="" type="button"
                                   class="btn btn-default gray-btn uploadImgbtn">Upload
-                            Image
                           </button>
                           <input id="" class="dis-none uploadImg"
                                  data-imageId='${spbSt.count}' type="file"
                                  name="multipartFiles" accept=".png, .jpg, .jpeg"
                                  onchange="readURL(this);"
-                                 <c:if test="${empty studyPageBo.imagePath}">required</c:if>
-                                 data-error="Please select an image."> <input
+                                 /> <input
                             type="hidden" class="imagePathCls" name="imagePath"
                             value="${studyPageBo.imagePath}"/>
                           <div class="help-block with-errors red-txt wid180"></div>
@@ -263,6 +295,20 @@
                       </div>
                     </div>
                   </div>
+                   <div class="mt-lg" style="margin-top:1px !important;  font-size:10px; display:inline-block">
+                    <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important">
+                     Default image                     
+                    </div>
+                    </div>
+                     &nbsp; 
+                      &nbsp; 
+                       &nbsp; 
+                      
+                   <div class="mt-lg" style="margin-top:1px !important; margin-left:-3px; font-size:10px ;display:inline-block">
+                    <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important">
+                     Alternate image                     
+                    </div>
+                    </div>
                   <div class="mt-lg">
                     <div class="gray-xs-f mb-xs">
                       Title
@@ -322,7 +368,7 @@
 <script>
 
   $(document).ready(function () {
-
+	$('.studyClass').addClass("active");
     <c:if test="${user eq 'logout_login_user'}">
     bootbox.alert({
       closeButton: false,
@@ -366,7 +412,6 @@
       $(this).css("visibility", "hidden");
       $(this).parent().parent().find(".thumb img").attr("src",
           "/studybuilder/images/dummy-img.jpg");
-      $(this).parent().parent().find(".uploadImg").val('').attr('required', 'required');
       $(this).parent().parent().find(".imagePathCls").val('');
     });
 
@@ -425,19 +470,21 @@
           "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
           "<div class=panel-body  pt-none>" +
           "<div>" +
-          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24>.</span></span> JPEG/PNG<br><span class=font24>.</span> Recommended Size: 750x570 pixels'></span><span class='requiredStar'> *</span> </div>"
+          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24></span></span> The default image shown below will be used for the study overview screens in the mobile app. You can over-ride it by uploading an alternate image in JPG or PNG format. The image must have a size of 750x570 pixels.'></span> </div>"
           +
           "<div>" +
-          "<div class=thumb><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
+          "<div class=thumb style='display: inline-block;width:77px !important'><img src=<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/> class=wid100></div>" +
+          "<div style='display: inline-block'>" +
+          "<div class=thumb style='width:77px !important'><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
           "<div class=dis-inline>" +
           "<span class='blue-link removeUrl elaborateHide' id='hideRemoveUrl" + count
           + "'>X<a href='javascript:void(0)' class='blue-link pl-xs txt-decoration-underline'>Remove Image</a></span>"
           +
           "<div class='form-group mb-none mt-sm'>" +
-          "<button class='btn btn-default gray-btn uploadImgbtn' type=button>Upload Image</button>"
+          "<button class='btn btn-default gray-btn uploadImgbtn'style='vertical-align: bottom; margin-top:6px !important' type=button>Upload</button>"
           +
           "<input class='dis-none uploadImg' data-imageId='" + count
-          + "' accept='.png, .jpg, .jpeg' name='multipartFiles' onchange=readURL(this) type=file required data-error='Please select an image.'>"
+          + "' accept='.png, .jpg, .jpeg' name='multipartFiles' onchange=readURL(this) type=file>"
           +
           "<input type='hidden' class='imagePathCls' name='imagePath' /><div class='help-block with-errors red-txt wid180'></div>"
           +
@@ -445,6 +492,11 @@
           "</div>" +
           "</div>" +
           "</div>" +
+          "<div class='mt-lg' style='margin-top:1px !important;  font-size:10px; display:inline-block'>"+
+          " <div class='gray-xs-f' style='font-size:12px !important;font-weight:500 !important ; color:#4a5054 !important'> Default image</div></div> &nbsp; &nbsp; &nbsp;"+
+          " <div class='mt-lg' style='margin-top:1px !important; margin-left:-7px; font-size:10px ;display:inline-block'><div class='gray-xs-f'  style='font-size:12px !important;font-weight:500 !important ; color:#4a5054 !important'>"+
+           "Alternate image </div></div> "
+           +
           "<div class=mt-lg>" +
           "<div class='gray-xs-f mb-xs'>Title <small>(50 characters max) </small><span class='requiredStar'>*</span></div>"
           +
@@ -511,9 +563,7 @@
             'input[name="imagePath"]').val();
         if (file || thumbnailImageId) {
           $(this).find('input[type=file]').removeAttr('required');
-        } else {
-          formValid = false;
-        }
+        } 
       });
       if ((!isFromValid($(this).parents('form')))) {
         if (!($(this).parents('body').find('.panel-collapse.in').find('.has-error:first').length

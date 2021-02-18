@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -12,6 +12,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACC
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.REGISTRATION_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_ACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION;
 
@@ -99,6 +100,7 @@ public class VerifyEmailIdController {
           ResponseUtil.prepareBadRequestResponse(response, AppConstants.EMAIL_NOT_EXISTS);
       return new ResponseEntity<>(responseBean, HttpStatus.BAD_REQUEST);
     }
+    auditRequest.setUserId(participantDetails.getId());
     boolean verifyEmailCodeResponse =
         userDetailsService.verifyCode(verificationForm.getCode().trim(), participantDetails);
 
@@ -117,7 +119,7 @@ public class VerifyEmailIdController {
       return new ResponseEntity<>(respBean, HttpStatus.BAD_REQUEST);
     }
 
-    String tempRegId = userDetailsService.updateStatus(participantDetails);
+    String tempRegId = userDetailsService.updateStatus(participantDetails, auditRequest);
 
     AuditLogEvent auditEvent =
         StringUtils.isNotEmpty(tempRegId) ? USER_ACCOUNT_ACTIVATED : ACCOUNT_ACTIVATION_FAILED;
@@ -133,6 +135,7 @@ public class VerifyEmailIdController {
         new VerifyEmailIdResponse(respBean.getCode(), respBean.getMessage(), true, tempRegId);
 
     userMgmntAuditHelper.logEvent(USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION, auditRequest);
+    userMgmntAuditHelper.logEvent(REGISTRATION_SUCCEEDED, auditRequest);
 
     return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.OK);
   }

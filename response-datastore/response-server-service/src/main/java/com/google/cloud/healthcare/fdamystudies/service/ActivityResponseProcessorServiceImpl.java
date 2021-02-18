@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -68,6 +68,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       ActivityResponseBean questionnaireActivityResponseBean,
       AuditLogEventRequest auditRequest)
       throws Exception {
+    logger.debug(
+        "ActivityResponseProcessorServiceImpl saveActivityResponseDataForParticipant() - starts ");
     if (activityMetadataBeanFromWcp == null) {
       throw new ProcessResponseException("QuestionnaireActivityStructureBean is null.");
     }
@@ -101,7 +103,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       map.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
       map.put(ACTIVITY_ID, activityMetadataBeanFromWcp.getMetadata().getActivityId());
       map.put(ACTIVITY_VERSION, activityMetadataBeanFromWcp.getMetadata().getVersion());
-      map.put(RUN_ID, activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
+      map.put(RUN_ID, questionnaireActivityResponseBean.getMetadata().getActivityRunId());
       responseServerAuditLogHelper.logEvent(
           ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA, auditRequest, map);
       String rawResponseData = null;
@@ -123,12 +125,14 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       map.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
       map.put(ACTIVITY_ID, activityMetadataBeanFromWcp.getMetadata().getActivityId());
       map.put(ACTIVITY_VERSION, activityMetadataBeanFromWcp.getMetadata().getVersion());
-      map.put(RUN_ID, activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
+      map.put(RUN_ID, questionnaireActivityResponseBean.getMetadata().getActivityRunId());
       responseServerAuditLogHelper.logEvent(
           ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED, auditRequest, map);
       throw new ProcessResponseException(
           "The activity ID in the response does not match activity ID in the metadata provided.");
     }
+    logger.debug(
+        "ActivityResponseProcessorServiceImpl saveActivityResponseDataForParticipant() - ends ");
   }
 
   @Override
@@ -357,7 +361,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   private void saveActivityResponseData(
       ActivityResponseBean questionnaireActivityResponseBean, String rawResponseData)
       throws Exception {
-
+    logger.debug("ActivityResponseProcessorServiceImpl saveActivityResponseData() - starts ");
     // Add Timestamp to bean
     questionnaireActivityResponseBean.setCreatedTimestamp(
         String.valueOf(System.currentTimeMillis()));
@@ -384,13 +388,13 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     String studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
 
     String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
-    logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
+    logger.debug("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
     responsesDao.saveActivityResponseData(
         studyId,
         studyCollectionName,
         AppConstants.ACTIVITIES_COLLECTION_NAME,
         dataToStoreActivityResults);
-    logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
+    logger.debug("ActivityResponseProcessorServiceImpl saveActivityResponseData() - ends ");
   }
 
   private Map<String, Object> getMapForParticipantCollection(

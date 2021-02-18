@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -1955,9 +1956,15 @@ public class SurveyActivitiesFragment extends Fragment
             if (!activitiesArrayList.get(i).getState().equalsIgnoreCase("deleted")) {
               if (starttime != null) {
                 if (AppController.isWithinRange(starttime, endtime)) {
-                  currentactivityList.add(activitiesArrayList.get(i));
-                  currentActivityStatus.add(activityStatus);
-                  currentStatus.add(STATUS_CURRENT);
+                  if (activityStatus.getCurrentRunId() == activityStatus.getTotalRun() && activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
+                    completedactivityList.add(activitiesArrayList.get(i));
+                    completedActivityStatus.add(activityStatus);
+                    completedStatus.add(STATUS_COMPLETED);
+                  } else {
+                    currentactivityList.add(activitiesArrayList.get(i));
+                    currentActivityStatus.add(activityStatus);
+                    currentStatus.add(STATUS_CURRENT);
+                  }
                 } else if (AppController.checkafter(starttime)) {
                   upcomingactivityList.add(activitiesArrayList.get(i));
                   upcomingActivityStatus.add(activityStatus);
@@ -2344,16 +2351,6 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
-          SetDialogHelper.setNeutralDialog(
-              context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete2),
-              false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
         } else if (missed > 0) {
           SetDialogHelper.setNeutralDialog(
               context,
@@ -2382,16 +2379,6 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
-          SetDialogHelper.setNeutralDialog(
-              context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete2),
-              false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
         } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
@@ -2489,8 +2476,12 @@ public class SurveyActivitiesFragment extends Fragment
 
     JSONArray studieslist = new JSONArray();
     JSONObject studiestatus = new JSONObject();
+
+    Studies studies = dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
     try {
       studiestatus.put("studyId", ((SurveyActivity) context).getStudyId());
+      studiestatus.put("siteId", studies.getSiteId());
+      studiestatus.put("participantId", studies.getParticipantId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
 
@@ -2897,7 +2888,6 @@ public class SurveyActivitiesFragment extends Fragment
       activityStatus.put("activityState", IN_PROGRESS);
       activityStatus.put("activityId", activityId);
       activityStatus.put("activityRunId", "" + activityRunId);
-      activityStatus.put("bookmarked", "false");
       activityStatus.put("activityVersion", activityVersion);
 
       activityRun.put("total", activityStatusData.getTotalRun());

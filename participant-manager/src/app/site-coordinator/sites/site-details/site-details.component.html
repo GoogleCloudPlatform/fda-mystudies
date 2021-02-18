@@ -16,7 +16,7 @@
             </div>
             <div class="pl-1">
               <div class="mb-xs">
-                Site Participant Registry
+                Site participant registry
                 <span
                   [ngClass]="
                     siteParticipants.participantRegistryDetail.siteStatus === 1
@@ -50,6 +50,24 @@
                     {{
                       siteParticipants.participantRegistryDetail.customStudyId
                     }}
+                    -
+                    <span
+                      [ngClass]="{
+                        active_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Active,
+                        paused_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Paused,
+                        deactivated_text:
+                          siteParticipants.participantRegistryDetail
+                            .studyStatus === studyStatus.Deactivated
+                      }"
+                    >
+                      {{
+                        siteParticipants.participantRegistryDetail.studyStatus
+                      }}
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ siteParticipants.participantRegistryDetail.studyName }}
@@ -87,7 +105,7 @@
                     class="dropbtn btn banner__primary__btn mr-sm tnsb"
                     (click)="toggleParticipant($event)"
                   >
-                    Add Participants
+                    Add participants
                     <i class="fa fa-caret-down arrow_clr__white"></i>
                   </button>
                   <div
@@ -100,7 +118,7 @@
                           class="primary__btn font__bold"
                           (click)="openModal(addEmail)"
                         >
-                          Add Email
+                          Add email
                         </button>
                       </div>
                       <div>
@@ -108,7 +126,7 @@
                           class="primary__btn font__bold"
                           (click)="openModal(importEmaillist)"
                         >
-                          Import Email List
+                          Import email list
                         </button>
                       </div>
                     </div>
@@ -116,10 +134,10 @@
                       <a
                         download="Email_Import_Template"
                         target="_blank"
-                        href="/assets/Email_Import_Template.xlsx"
+                        href="assets/Email_Import_Template.xlsx"
                         class="p-none"
                       >
-                        <div class="download__text">Download Template</div>
+                        <div class="download__text">Download template</div>
                       </a>
                     </div>
                   </div>
@@ -143,8 +161,8 @@
                 >
                   {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
-                      ? "Decommission Site for Study"
-                      : "Activate Site for Study"
+                      ? "Decommission site for study"
+                      : "Activate site for study"
                   }}
                 </button>
               </div>
@@ -177,7 +195,7 @@
                 class="dropbtn btn banner__primary__btn mr-sm font12"
                 (click)="toggleParticipant($event)"
               >
-                Add Participants
+                Add participants
                 <i class="fa fa-caret-down arrow_clr__white"></i>
               </button>
               <div
@@ -190,7 +208,7 @@
                       class="primary__btn font__bold"
                       (click)="openModal(addEmail)"
                     >
-                      Add Email
+                      Add email
                     </button>
                   </div>
                   <div>
@@ -198,7 +216,7 @@
                       class="primary__btn font__bold"
                       (click)="openModal(importEmaillist)"
                     >
-                      Import Email List
+                      Import email list
                     </button>
                   </div>
                 </div>
@@ -206,10 +224,10 @@
                   <a
                     download="Email_Import_Template"
                     target="_blank"
-                    href="/assets/Email_Import_Template.xlsx"
+                    href="assets/Email_Import_Template.xlsx"
                     class="p-none"
                   >
-                    <div class="download__text">Download Template</div>
+                    <div class="download__text">Download template</div>
                   </a>
                 </div>
               </div>
@@ -233,8 +251,8 @@
             >
               {{
                 siteParticipants.participantRegistryDetail.siteStatus === 1
-                  ? "Decommission Site for Study"
-                  : "Activate Site for Study"
+                  ? "Decommission site for study"
+                  : "Activate site for study"
               }}
             </button>
           </div>
@@ -460,7 +478,7 @@
                   class="sort__by__text mobile__view mr-sm"
                   style="background: transparent"
                 >
-                  Sort By:
+                  Sort by:
                 </span>
                 <th>
                   <span
@@ -488,32 +506,32 @@
                     ></label>
                   </span>
                   <mfDefaultSorter by="email">
-                    Participant Email
+                    Participant email
                   </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="onboardingStatus">
-                    Onboarding Status
+                    Onboarding status
                   </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.Invited">
                   <mfDefaultSorter by="invitedDate">
-                    Last Invited On
+                    Last invited on
                   </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.Disabled">
                   <mfDefaultSorter by="disabledDate">
-                    Date Disabled
+                    Date disabled
                   </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab != onBoardingStatus.New">
                   <mfDefaultSorter by="enrollmentStatus">
-                    Enrollment Status
+                    Enrollment status
                   </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="enrollmentDate">
-                    Enrollment Date
+                    Enrollment date
                   </mfDefaultSorter>
                 </th>
               </tr>

@@ -5,13 +5,22 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<style>
+    #user_list tr td {
+    padding-left: 20px !important;
+}
+#user_list tr th {
+    padding-left: 20px !important;
+}
+</style>
+
 <div
     class="col-xs-12 col-sm-12 col-md-12 col-lg-12 grayeef2f5-bg p-none">
   <div>
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none mb-md">
 
-      <div class="black-lg-f" style="margin-top: 0px">Manage Users</div>
+      <div class="black-lg-f" style="margin-top: 0px">Manage users</div>
 
       <div class="dis-inline" style="margin-top: 8px">
         <form class="navbar-form" role="search">
@@ -37,7 +46,7 @@
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
             <button type="button"
                     class="btn btn-primary blue-btn addOrEditUser"
-                    style="margin-top: 12px;">Add User
+                    style="margin-top: 12px;">Add user
             </button>
           </c:if>
         </div>
@@ -61,7 +70,7 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
   <div class="white-bg">
     <div>
-      <table id="user_list" class="table tbl_rightalign tbl">
+      <table id="user_list" class="table wid100 tbl">
         <thead>
           <tr>
             <th id="">Name
@@ -73,7 +82,7 @@
             <th id="">ROLE
               <span class="sort"></span>
             </th>
-            <th id="">Actions</th>
+            <th id="" class="text-right" style="padding-right: 3% !important;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -89,7 +98,7 @@
                 <div class="dis-ellipsis" title="${user.userEmail}">${user.userEmail}</div>
               </td>
               <td>${user.roleName}</td>
-              <td>
+              <td class="text-right" style="padding-right: 3% !important;">
                 <span class="sprites_icon preview-g mr-lg viewUser"
                       userId="${user.userId}" data-toggle="tooltip"
                       data-placement="top" title="View"></span>
@@ -104,13 +113,13 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title="Status: Invitation Sent, Account Activation Pending"</c:if>
+                                                 test="${empty user.userPassword}">title=Account status: Invitation sent, pending activation"</c:if>
                                              <c:if
-                                                 test="${user.emailChanged}">title="Status: Pending Verification"</c:if>
+                                                 test="${user.emailChanged}">title="Account status: Pending Verification"</c:if>
                                              <c:if
-                                                 test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Status: Active"</c:if>
+                                                 test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Account status: Active"</c:if>
                                              <c:if
-                                                 test="${!user.emailChanged && not empty user.userPassword &&  not user.enabled}">title="Status: Deactivated"</c:if>>
+                                                 test="${!user.emailChanged && not empty user.userPassword &&  not user.enabled}">title="Account status: Deactivated"</c:if>>
                     <input type="checkbox" class="switch-input"
                            value="${user.enabled ? 1 : 0}" id="${user.userId}"
                            <c:if test="${user.enabled}">checked</c:if>
@@ -233,7 +242,7 @@
       ],
       "lengthChange": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       "pageLength": 15
     });

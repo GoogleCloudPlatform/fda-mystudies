@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -79,6 +79,8 @@ public class ParticipantIdControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(APPLICATION_ID_VALUE);
+    auditRequest.setParticipantId(participantId);
+    auditRequest.setStudyId(STUDY_ID);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PARTICIPANT_ID_GENERATED.getEventCode(), auditRequest);
@@ -89,6 +91,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
   @Test
   void shouldReturnBadRequestForMissingApplicationId() throws Exception {
     HttpHeaders headers = TestUtils.newCommonHeaders();
+    headers.remove("appId");
     mockMvc
         .perform(
             post(ApiEndpoint.ADD_PARTICIPANT.getPath())

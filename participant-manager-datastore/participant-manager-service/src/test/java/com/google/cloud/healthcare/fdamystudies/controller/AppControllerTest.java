@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -337,8 +337,8 @@ public class AppControllerTest extends BaseMockIT {
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.error_description").value(ErrorCode.NO_APPS_FOUND.getDescription()));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isEmpty());
 
     verifyTokenIntrospectRequest();
   }

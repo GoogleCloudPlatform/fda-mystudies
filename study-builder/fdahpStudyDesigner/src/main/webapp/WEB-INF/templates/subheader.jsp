@@ -19,12 +19,21 @@
   <div class="md-container">
     <div class="col-sm-12 col-md-12 col-lg-12 p-none mb-md">
       <div class="black-lg-f">
-        Manage Studies
+        Configure and manage studies
       </div>
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
         <div class="dis-line pull-right ml-md mt-xs">
           <div class="form-group mb-none">
-            <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create Study
+          <p class="black-lg-f ml-lg deactivated_lable">
+       				 Show deactivated studies
+     		 </p>
+          <label class="switch deactivate_switch mr-md" data-toggle="tooltip" id="lab" data-placement="top">
+                    <input type="checkbox" class="switch-input deactivate_switch-input"
+                            value="checked"  id="deactivatedBtn" onchange="showActivatedStudies(status)"/>
+                    <span class="switch-label deactivate_switch-label" data-on="Off" data-off="On"></span>
+                    <span class="switch-handle deactivate_switch-handle"></span>
+                  </label>
+            <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create study
             </button>
           </div>
         </div>
@@ -73,12 +82,7 @@
 
     var actionSucMsg = '${actionSucMsg}';
     if (actionSucMsg) {
-      bootbox.alert({
-        message: actionSucMsg,
-        className: 'green-txt',
-        closeButton: false
-
-      });
+    	showSucMsg(actionSucMsg);
     }
   });
 

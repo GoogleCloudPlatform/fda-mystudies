@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -67,18 +67,16 @@ public class CommonDaoImpl implements CommonDao {
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
 
-    if (!StringUtils.isEmpty(email)) {
-      userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
-      userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
-      predicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.EMAIL), email);
-      predicates[1] =
-          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.APPLICATION_ID), appId);
-      userDetailsBoCriteria.select(userDetailsBoRoot).where(predicates);
-      userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
-      if (!userDetailsBoList.isEmpty()) {
-        userDetails = userDetailsBoList.get(0);
-        userDetailsId = userDetails.getId();
-      }
+    userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
+    userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
+    predicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.EMAIL), email);
+    predicates[1] =
+        criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.APPLICATION_ID), appId);
+    userDetailsBoCriteria.select(userDetailsBoRoot).where(predicates);
+    userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
+    if (!userDetailsBoList.isEmpty()) {
+      userDetails = userDetailsBoList.get(0);
+      userDetailsId = userDetails.getId();
     }
 
     if (!StringUtils.isEmpty(userId)) {

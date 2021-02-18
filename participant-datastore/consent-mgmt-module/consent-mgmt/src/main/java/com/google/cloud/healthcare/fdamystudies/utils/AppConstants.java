@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -21,5 +21,5 @@ public class AppConstants {
   public static final String EMAIL = "email";
   public static final String SDF_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-  public static final String STATUS_COMPLETED = "complete";
+  public static final String STATUS_COMPLETED = "completed";
 }

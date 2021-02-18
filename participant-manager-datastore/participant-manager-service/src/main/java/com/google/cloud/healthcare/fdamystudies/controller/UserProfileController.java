@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -80,10 +80,11 @@ public class UserProfileController {
       @PathVariable String userId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userProfileRequest.setUserId(userId);
     UserProfileResponse userProfileResponse =
-        userProfileService.updateUserProfile(userProfileRequest);
+        userProfileService.updateUserProfile(userProfileRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, userProfileResponse.getHttpStatusCode()));
     return ResponseEntity.status(userProfileResponse.getHttpStatusCode()).body(userProfileResponse);
@@ -116,10 +117,12 @@ public class UserProfileController {
       @Valid @RequestBody PatchUserRequest userRequest,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userRequest.setUserId(userId);
     userRequest.setSignedInUserId(signedInUserId);
-    PatchUserResponse deactivateResponse = userProfileService.updateUserAccountStatus(userRequest);
+    PatchUserResponse deactivateResponse =
+        userProfileService.updateUserAccountStatus(userRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, deactivateResponse.getHttpStatusCode()));
     return ResponseEntity.status(deactivateResponse.getHttpStatusCode()).body(deactivateResponse);
@@ -131,8 +134,9 @@ public class UserProfileController {
       @PathVariable String userId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    userProfileService.deleteInvitation(signedInUserId, userId);
+    userProfileService.deleteInvitation(signedInUserId, userId, auditRequest);
 
     logger.exit("Sucessfully deleted invitation");
     return ResponseEntity.status(HttpStatus.OK).body(MessageCode.INVITATION_DELETED_SUCCESSFULLY);

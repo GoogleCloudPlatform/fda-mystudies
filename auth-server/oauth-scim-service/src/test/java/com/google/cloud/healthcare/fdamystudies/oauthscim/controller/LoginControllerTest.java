@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -19,6 +19,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCKED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_NAME_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
@@ -40,6 +41,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
@@ -649,6 +651,7 @@ public class LoginControllerTest extends BaseMockIT {
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     Cookie sourceCookie =
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
+    Cookie appNameCookie = new Cookie(APP_NAME_COOKIE, "App Name_BTCDEV001");
 
     HttpHeaders headers = getCommonHeaders();
     headers.add("userId", userEntity.getUserId());
@@ -661,7 +664,12 @@ public class LoginControllerTest extends BaseMockIT {
                   .contextPath(getContextPath())
                   .params(requestParams)
                   .headers(headers)
-                  .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
+                  .cookie(
+                      appIdCookie,
+                      loginChallenge,
+                      mobilePlatformCookie,
+                      sourceCookie,
+                      appNameCookie))
           .andDo(print())
           .andExpect(view().name(LOGIN_VIEW_NAME));
 
@@ -674,6 +682,7 @@ public class LoginControllerTest extends BaseMockIT {
 
       if (loginAttempts == MAX_LOGIN_ATTEMPTS) {
         verifyAuditEventCall(ACCOUNT_LOCKED);
+        verifyAuditEventCall(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
       }
       // Reset Audit Event calls
       clearAuditRequests();
@@ -688,11 +697,9 @@ public class LoginControllerTest extends BaseMockIT {
     String subject = getMailAccountLockedSubject();
     String body =
         String.join(
-            "<br/>",
-            "This is to inform you that, as a security measure, your user account has "
-                + "been temporarily locked",
-            " for a period of 15 minutes, due to multiple consecutive failed "
-                + "sign-in attempts with incorrect password.");
+            "This is to inform you that, as a security measure, your admin user "
+                + "account for the MyStudies Participant Manager portal "
+                + "has been temporarily locked");
 
     MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);

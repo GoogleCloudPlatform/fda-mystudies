@@ -45,7 +45,7 @@
               <button type="button" class="btn btn-primary blue-btn" id="markAsCompleteBtnId"
                       <c:if
                           test="${!markAsComplete && consentBo.needComprehensionTest eq 'Yes'}">disabled</c:if>
-                      onclick="markAsCompleted();">Mark as Completed
+                      onclick="markAsCompleted();">Mark as completed
               </button>
             </span>
           </div>
@@ -59,12 +59,11 @@
           <span>
             <span
                data-toggle="tooltip" data-placement="top"
-               title="This will present a set of questions to the participant to gauge their understanding of the study based on their review of the consent sections."
+               title="This will present a set of questions to the app user to gauge their understanding of the study based on their review of the consent sections."
                class="filled-tooltip"></span>
             </span>
           <span class="ct_panel"
                 id="addHelpNote">
-            <small>(Please save to continue)</small>
           </span>
         </div>
         <div class="form-group col-md-5 p-none">
@@ -84,25 +83,31 @@
     </div>
     <!--  Start body tab section -->
     <div
-        class="right-content-body pt-none pb-none <c:if test="${empty consentBo.needComprehensionTest || consentBo.needComprehensionTest eq 'No'}">ct_panel</c:if>"
+        class="pt-none pb-none<c:if test="${empty consentBo.needComprehensionTest || consentBo.needComprehensionTest eq 'No'}">ct_panel</c:if>"
         id="mainContainer">
-      <div>
+        <div class="right-content-head">
+        <div class="text-right">
+          <div class="black-md-f dis-line pull-left line34">Comprehension test questions
+          </div>
+          <div class="dis-line form-group mb-none mr-sm">
+            <c:if test="${empty permission}">
+              <button type="button" class="btn btn-primary blue-btn"
+                      id="addQuestionId"
+                            onclick="addComphernsionQuestionPage();">+ Add question
+              </button>
+            </c:if>
+          </div>
+        </div>
+      </div>
+      <div class="right-content-body">
         <table id="comprehension_list" class="display bor-none" cellspacing="0" width="100%">
           <thead>
             <tr>
               <th id="">
                 <span class="marL10">#</span>
               </th>
-              <th id="">Question</th>
-              <th id="">
-                <c:if test="${empty permission}">
-                  <div class="dis-line form-group mb-none">
-                    <button type="button" class="btn btn-primary blue-btn" id="addQuestionId"
-                            onclick="addComphernsionQuestionPage();">Add Question
-                    </button>
-                  </div>
-                </c:if>
-              </th>
+              <th id="">Questions</th>
+              <th id="">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -131,13 +136,13 @@
         </table>
       </div>
 
-      <div class="mt-xlg" id="displayTitleId">
-        <div class="gray-xs-f mb-xs">Minimum score needed to pass</div>
+      <div class="right-content-body mt-xlg" id="displayTitleId">
+        <div class="gray-xs-f mb-xs">Minimum score needed to pass the test</div>
         <div class="form-group col-md-5 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
                  name="comprehensionTestMinimumScore"
                  value="${consentBo.comprehensionTestMinimumScore}"
-                 maxlength="3" onkeypress="return isNumber(event)">
+                 maxlength="3" onkeypress="return isNumber(event)"  Style="width:250px">
           <div class="help-block with-errors red-txt"></div>
         </div>
         <input type="hidden" name="consentId" id="consentId" value="${consentBo.id}"/>
@@ -162,6 +167,7 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
     $("#createStudyId").show();
@@ -212,7 +218,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "You haven't created any content yet.",
+        "zeroRecords": "No content created yet.",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1]}],
@@ -297,7 +303,7 @@
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The value should not be more than no of questions or zero"));
+            "The score should be less than or equal to the number of questions and greater than 0."));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");
@@ -443,7 +449,7 @@
 
       if (!table.data().count()) {
         $('#alertMsg').show();
-        $("#alertMsg").removeClass('s-box').addClass('e-box').text("Add atleast one question !");
+        $("#alertMsg").removeClass('s-box').addClass('e-box').text("Add at least one question");
         setTimeout(hideDisplayMessage, 4000);
       } else if (isFromValid("#comprehensionInfoForm")) {
         saveConsent("Done");
@@ -493,7 +499,7 @@
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The value should not be more than no of questions or zero"));
+            "The score should be less than or equal to the number of questions and greater than 0."));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");

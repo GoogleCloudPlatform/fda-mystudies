@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -101,7 +101,9 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
 
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
     activeTaskBo.setTaskTypeId(123);
+    activeTaskBo.setStudyId(678578);
     activeTaskBo.setActiveTaskFrequenciesBo(null);
+    activeTaskBo.setShortTitle("ActiveTaskShortTitle");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT.getPath())
@@ -190,6 +192,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     activeTaskBo.setTaskTypeId(123);
     activeTaskBo.setStudyId(678574);
     activeTaskBo.setActiveTaskFrequenciesBo(null);
+    activeTaskBo.setShortTitle("ActiveTaskShortTitle");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT.getPath())
@@ -239,7 +242,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     sessionAttributes.put(
-        STUDY_SESSION_COUNT_VALUE + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, "6785");
+        STUDY_SESSION_COUNT_VALUE + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, "678592");
 
     mockMvc
         .perform(

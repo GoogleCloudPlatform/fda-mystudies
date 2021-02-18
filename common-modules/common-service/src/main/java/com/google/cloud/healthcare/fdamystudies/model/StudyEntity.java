@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -102,6 +102,7 @@ public class StudyEntity implements Serializable {
   @Column(name = "modified_by", length = LARGE_LENGTH)
   private String modifiedBy;
 
+  @Column(name = "version")
   private Float version;
 
   @Column(length = XS_LENGTH)

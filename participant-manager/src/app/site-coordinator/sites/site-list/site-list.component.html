@@ -3,7 +3,7 @@
     <ng-container *ngIf="study$ | async as studies">
       <div>
         <div
-          *ngFor="let study of studies.studies"
+          *ngFor="let study of studiesDisplay"
           class="bg__white cards box__shadow-cmn ml-none mr-none studies_row"
         >
           <div class="flex__ flex__row">
@@ -16,6 +16,16 @@
               <div class="row">
                 <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                   {{ study.name }}
+                  <div
+                    [ngClass]="{
+                      active_bg: study.studyStatus === studyStatus.Active,
+                      paused_bg: study.studyStatus === studyStatus.Paused,
+                      deactivated_bg:
+                        study.studyStatus === studyStatus.Deactivated
+                    }"
+                  >
+                    {{ study.studyStatus }}
+                  </div>
                 </div>
                 <div
                   class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
@@ -25,7 +35,7 @@
                       {{ study.sites.length | i18nPlural: messageMapping }}
                     </span>
                     <span *ngIf="study.type === studyTypes.Open">
-                      Open Study
+                      Open study
                     </span>
                   </div>
 
@@ -61,7 +71,7 @@
                           *ngIf="study.type === studyTypes.Open"
                           class="sites_row font14 no_st_en"
                         >
-                          Enrollment Registry
+                          Enrollment registry
                         </span>
                       </div>
                       <div class="col-xs-12 col-md-4 p-none lh__6">
@@ -115,7 +125,7 @@
                   class="primary__btn add__site btn__container"
                   (click)="openAddSiteModal(template, study)"
                 >
-                  + Add Site
+                  + Add site
                 </button>
               </div>
             </div>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -42,4 +42,6 @@ public class UserRequest {
 
   /** Refer UserAccountStatus enum for values. */
   @NotNull private Integer status;
+
+  private String appName;
 }

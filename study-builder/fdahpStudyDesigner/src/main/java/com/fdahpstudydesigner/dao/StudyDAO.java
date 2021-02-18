@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
@@ -39,7 +39,6 @@ import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
-import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
 import java.util.List;
@@ -78,10 +77,6 @@ public interface StudyDAO {
       Session session, Transaction transaction, String studyId, String customStudyId);
 
   public int eligibilityTestOrderCount(Integer eligibilityId);
-
-  public List<UserBO> getActiveNonAddedUserList(Integer studyId, Integer userId);
-
-  public List<StudyPermissionBO> getAddedUserListToStudy(Integer studyId, Integer userId);
 
   public List<StudyBo> getAllStudyList();
 
@@ -180,12 +175,7 @@ public interface StudyDAO {
   public String saveOrUpdateStudyEligibilty(
       EligibilityBo eligibilityBo, SessionObject sesObj, String customStudyId);
 
-  public String saveOrUpdateStudySettings(
-      StudyBo studyBo,
-      SessionObject sesObj,
-      String userIds,
-      String permissions,
-      String projectLead);
+  public String saveOrUpdateStudySettings(StudyBo studyBo, SessionObject sesObj);
 
   public String saveResourceNotification(NotificationBO notificationBO, boolean notiFlag);
 
@@ -220,4 +210,6 @@ public interface StudyDAO {
   public String getStudyCategory(Integer id);
 
   public Integer getEligibilityType(Integer studyId);
+
+  public boolean validateStudyActions(String studyId);
 }

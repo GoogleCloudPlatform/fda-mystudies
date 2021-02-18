@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2020-2021 Google LLC
 #
 # Use of this source code is governed by an MIT-style
 # license that can be found in the LICENSE file or at
@@ -71,7 +71,7 @@ spec:
             - name: STUDY_DATASTORE_URL
               value: "http://study-datastore-np:50000/study-datastore"
             - name: PARTICIPANT_ENROLL_DATASTORE_URL
-              value: "http://participant-enroll-datastore:50000/participant-enroll-datastore"
+              value: "http://participant-enroll-datastore-np:50000/participant-enroll-datastore"
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-admin-np:50000"
             - name: SCIM_AUTH_URL

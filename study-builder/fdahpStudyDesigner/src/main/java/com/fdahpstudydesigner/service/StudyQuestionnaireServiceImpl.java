@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,6 +24,7 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
@@ -124,13 +126,17 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
 
   @Override
   public String deleteFromStepQuestion(
-      Integer formId, Integer questionId, SessionObject sessionObject, String customStudyId) {
+      Integer formId,
+      Integer questionId,
+      SessionObject sessionObject,
+      String customStudyId,
+      AuditLogEventRequest auditRequest) {
     logger.info("StudyQuestionnaireServiceImpl - deleteFromStepQuestion - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
           studyQuestionnaireDAO.deleteFromStepQuestion(
-              formId, questionId, sessionObject, customStudyId);
+              formId, questionId, sessionObject, customStudyId, auditRequest);
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - deleteFromStepQuestion - Error", e);
     }
@@ -1091,5 +1097,17 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
   public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId) {
     logger.info("StudyQuestionnaireServiceImpl - isAnchorDateExistByQuestionnaire - Starts");
     return studyQuestionnaireDAO.isAnchorDateExistByQuestionnaire(questionnaireId);
+  }
+
+  @Override
+  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId) {
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireById - Starts");
+    return studyQuestionnaireDAO.getQuestionnaireById(questionnaireId);
+  }
+
+  @Override
+  public QuestionsBo getQuestionById(Integer questionId) {
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionById - Starts");
+    return studyQuestionnaireDAO.getQuestionById(questionId);
   }
 }

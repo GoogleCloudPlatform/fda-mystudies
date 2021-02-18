@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -132,11 +133,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                             AppController.getHelperSharedPreference()
                                 .writePreference(
                                     context,
-                                    context.getString(R.string.bookmark),
-                                    "" + studyListArrayList.get(i).isBookmarked());
-                            AppController.getHelperSharedPreference()
-                                .writePreference(
-                                    context,
                                     context.getString(R.string.status),
                                     "" + studyListArrayList.get(i).getStatus());
                             AppController.getHelperSharedPreference()
@@ -195,7 +191,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                                     context.getApplicationContext(), StudyInfoActivity.class);
                             intent.putExtra("studyId", studyListArrayList.get(i).getStudyId());
                             intent.putExtra("title", studyListArrayList.get(i).getTitle());
-                            intent.putExtra("bookmark", studyListArrayList.get(i).isBookmarked());
                             intent.putExtra("status", studyListArrayList.get(i).getStatus());
                             intent.putExtra(
                                 "studyStatus", studyListArrayList.get(i).getStudyStatus());
@@ -259,11 +254,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                                     context,
                                     context.getString(R.string.title),
                                     "" + studyListArrayList.get(i).getTitle());
-                            AppController.getHelperSharedPreference()
-                                .writePreference(
-                                    context,
-                                    context.getString(R.string.bookmark),
-                                    "" + studyListArrayList.get(i).isBookmarked());
                             AppController.getHelperSharedPreference()
                                 .writePreference(
                                     context,

@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -114,7 +115,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   public static final String WITHDRAWN = "withdrawn";
 
   private static final String ACTIVE = "active";
-  public static final String UPCOMING = "upcoming";
   public static final String PAUSED = "paused";
   private static final String CLOSED = "closed";
 
@@ -214,7 +214,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     ArrayList<StudyList> activeInprogress = new ArrayList<>();
     ArrayList<StudyList> activeYetToJoin = new ArrayList<>();
     ArrayList<StudyList> activeOthers = new ArrayList<>();
-    ArrayList<StudyList> upComing = new ArrayList<>();
     ArrayList<StudyList> paused = new ArrayList<>();
     ArrayList<StudyList> closed = new ArrayList<>();
     ArrayList<StudyList> others = new ArrayList<>();
@@ -222,7 +221,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeYetToJoinCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeOthersCompletionAdherenceCalc = new ArrayList<>();
-    ArrayList<CompletionAdherence> upComingCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> pausedCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> closedCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> othersCompletionAdherenceCalc = new ArrayList<>();
@@ -291,13 +289,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         } catch (Exception e) {
           Logger.log(e);
         }
-      } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(UPCOMING)) {
-        upComing.add(studyListArrayList.get(i));
-        try {
-          upComingCompletionAdherenceCalc.add(completionAdherenceCalcSort);
-        } catch (Exception e) {
-          Logger.log(e);
-        }
       } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(PAUSED)) {
         paused.add(studyListArrayList.get(i));
         try {
@@ -350,13 +341,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       }
 
       try {
-        studyListArrayList =
-            dbServiceSubscriber.updateStudyList(studyListArrayList, upComing, realm);
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-
-      try {
         studyListArrayList = dbServiceSubscriber.updateStudyList(studyListArrayList, paused, realm);
       } catch (Exception e) {
         Logger.log(e);
@@ -393,12 +377,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
       try {
         studyListArrayList.addAll(activeOthers);
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-
-      try {
-        studyListArrayList.addAll(upComing);
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -446,12 +424,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     }
 
     try {
-      completionAdherenceCalcs.addAll(upComingCompletionAdherenceCalc);
-    } catch (Exception e) {
-      Logger.log(e);
-    }
-
-    try {
       completionAdherenceCalcs.addAll(pausedCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
@@ -483,11 +455,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     activeOthers = null;
     activeOthersCompletionAdherenceCalc.clear();
     activeOthersCompletionAdherenceCalc = null;
-
-    upComing.clear();
-    upComing = null;
-    upComingCompletionAdherenceCalc.clear();
-    upComingCompletionAdherenceCalc = null;
 
     paused.clear();
     paused = null;
@@ -555,19 +522,12 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     try {
       JSONObject jsonObj = new JSONObject(jsonObjectString);
 
-      boolean bookmarked = false;
-      if (jsonObj.getBoolean("bookmarked")) {
-        bookmarked = true;
-      }
       JSONObject studyStatus = jsonObj.getJSONObject("studyStatus");
       if (studyStatus.getBoolean("active")) {
         temp1.add("active");
       }
       if (studyStatus.getBoolean("paused")) {
         temp1.add("paused");
-      }
-      if (studyStatus.getBoolean("upcoming")) {
-        temp1.add("upcoming");
       }
       if (studyStatus.getBoolean("closed")) {
         temp1.add("closed");
@@ -589,44 +549,12 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (participationStatus.getBoolean("notEligible")) {
         temp2.add(StudyFragment.NOT_ELIGIBLE);
       }
-      JSONObject categories = jsonObj.getJSONObject("categories");
-      ArrayList<String> temp3 = new ArrayList<>();
-      if (categories.getBoolean("biologicsSafety")) {
-        temp3.add("Biologics Safety");
-      }
-      if (categories.getBoolean("clinicalTrials")) {
-        temp3.add("Clinical Trials");
-      }
-      if (categories.getBoolean("cosmeticsSafety")) {
-        temp3.add("Cosmetics Safety");
-      }
-      if (categories.getBoolean("drugSafety")) {
-        temp3.add("Drug Safety");
-      }
-      if (categories.getBoolean("foodSafety")) {
-        temp3.add("Food Safety");
-      }
-      if (categories.getBoolean("medicalDeviceSafety")) {
-        temp3.add("Medical Device Safety");
-      }
-      if (categories.getBoolean("observationalStudies")) {
-        temp3.add("Observational Studies");
-      }
-      if (categories.getBoolean("publicHealth")) {
-        temp3.add("Public Health");
-      }
-      if (categories.getBoolean("radiationEmittingProducts")) {
-        temp3.add("Radiation-Emitting Products");
-      }
-      if (categories.getBoolean("tobaccoUse")) {
-        temp3.add("Tobacco Use");
-      }
       // to avoid duplicate list
       if (filteredStudyList.size() > 0) {
         filteredStudyList.clear();
       }
       filteredStudyList =
-          fiterMatchingStudyList(filteredStudyList, temp1, temp2, temp3, bookmarked);
+          fiterMatchingStudyList(filteredStudyList, temp1, temp2);
       if (filteredStudyList.size() == 0) {
         Toast.makeText(
                 context,
@@ -691,33 +619,18 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
     ArrayList<String> temp1 = new ArrayList<>();
     temp1.add("active");
-    temp1.add("upcoming");
 
     ArrayList<String> temp2 = new ArrayList<>();
     temp2.add(StudyFragment.IN_PROGRESS);
     temp2.add(StudyFragment.YET_TO_JOIN);
 
-    ArrayList<String> temp3 = new ArrayList<>();
-    temp3.add("Biologics Safety");
-    temp3.add("Clinical Trials");
-    temp3.add("Cosmetics Safety");
-    temp3.add("Drug Safety");
-    temp3.add("Food Safety");
-    temp3.add("Medical Device Safety");
-    temp3.add("Observational Studies");
-    temp3.add("Public Health");
-    temp3.add("Radiation-Emitting Products");
-    temp3.add("Tobacco Use");
-    boolean bookmarked = false;
-    return fiterMatchingStudyList(filteredStudyList, temp1, temp2, temp3, bookmarked);
+    return fiterMatchingStudyList(filteredStudyList, temp1, temp2);
   }
 
   private RealmList<StudyList> fiterMatchingStudyList(
       RealmList<StudyList> studyList,
       ArrayList<String> list1,
-      ArrayList<String> list2,
-      ArrayList<String> list3,
-      boolean bookmarked) {
+      ArrayList<String> list2) {
     try {
       try {
         if (filteredCompletionAdherenceCalcs.size() > 0) {
@@ -735,13 +648,9 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
           for (int i = 0; studyListArrayList.size() > i; i++) {
             for (int j = 0; list1.size() > j; j++) {
               if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(list1.get(j))) {
-                for (int l = 0; list3.size() > l; l++) {
-                  if (studyListArrayList.get(i).getCategory().equalsIgnoreCase(list3.get(l))) {
-                    studyList.add(studyListArrayList.get(i));
-                    filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
-                    break;
-                  }
-                }
+                studyList.add(studyListArrayList.get(i));
+                filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
+                break;
               }
             }
           }
@@ -750,48 +659,13 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         // list2 is mandatory // logged User
         if (studyListArrayList.size() > 0) {
           for (int i = 0; studyListArrayList.size() > i; i++) {
-            // check only in bookmarked study list
-            if (bookmarked) {
-              if (studyListArrayList.get(i).isBookmarked()) {
-                for (int j = 0; list1.size() > j; j++) {
-                  if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(list1.get(j))) {
-                    for (int k = 0; list2.size() > k; k++) {
-                      if (studyListArrayList
-                          .get(i)
-                          .getStudyStatus()
-                          .equalsIgnoreCase(list2.get(k))) {
-                        for (int l = 0; list3.size() > l; l++) {
-                          if (studyListArrayList
-                              .get(i)
-                              .getCategory()
-                              .equalsIgnoreCase(list3.get(l))) {
-                            studyList.add(studyListArrayList.get(i));
-                            filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
-                            break;
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            } else {
-              // not bookmarked
-              for (int j = 0; list1.size() > j; j++) {
-                if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(list1.get(j))) {
-                  for (int k = 0; list2.size() > k; k++) {
-                    if (studyListArrayList.get(i).getStudyStatus().equalsIgnoreCase(list2.get(k))) {
-                      for (int l = 0; list3.size() > l; l++) {
-                        if (studyListArrayList
-                            .get(i)
-                            .getCategory()
-                            .equalsIgnoreCase(list3.get(l))) {
-                          studyList.add(studyListArrayList.get(i));
-                          filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
-                          break;
-                        }
-                      }
-                    }
+            for (int j = 0; list1.size() > j; j++) {
+              if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(list1.get(j))) {
+                for (int k = 0; list2.size() > k; k++) {
+                  if (studyListArrayList.get(i).getStudyStatus().equalsIgnoreCase(list2.get(k))) {
+                    studyList.add(studyListArrayList.get(i));
+                    filteredCompletionAdherenceCalcs.add(completionAdherenceCalcs.get(i));
+                    break;
                   }
                 }
               }
@@ -920,9 +794,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
                   .get(i)
                   .getStudyId()
                   .equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
-                studyListArrayList
-                    .get(j)
-                    .setBookmarked(userPreferenceStudies.get(i).isBookmarked());
                 studyListArrayList.get(j).setStudyStatus(userPreferenceStudies.get(i).getStatus());
               }
               // update study completed status
@@ -943,18 +814,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (loginData != null && loginData.getMessage().equalsIgnoreCase("success")) {
         Toast.makeText(context, R.string.update_success, Toast.LENGTH_SHORT).show();
 
-        realm.beginTransaction();
-        if (searchResultList.size() > 0) {
-          // searchlist
-          int pos = getFilterdArrayListPosition(lastUpdatedStudyId);
-          copyOfFilteredStudyList().get(pos).setBookmarked(lastUpdatedBookMark);
-        } else {
-          // study or filtered list
-          copyOfFilteredStudyList().get(lastUpdatedPosition).setBookmarked(lastUpdatedBookMark);
-        }
-        realm.commitTransaction();
         dbServiceSubscriber.updateStudyPreferenceToDb(
-            context, lastUpdatedStudyId, lastUpdatedBookMark, lastUpdatedStatusStatus);
+            context, lastUpdatedStudyId, lastUpdatedStatusStatus);
         studyListAdapter.notifyItemChanged(lastUpdatedPosition);
         /// delete offline row
         dbServiceSubscriber.deleteOfflineDataRow(context, deleteIndexNumberDb);
@@ -1307,19 +1168,9 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     } else {
       // offline handling
       if (responseCode == UPDATE_PREFERENCES) {
-        realm.beginTransaction();
-        if (searchResultList.size() > 0) {
-          // searchlist
-          int pos = getFilterdArrayListPosition(lastUpdatedStudyId);
-          copyOfFilteredStudyList().get(pos).setBookmarked(lastUpdatedBookMark);
-        } else {
-          // study or filtered list
-          copyOfFilteredStudyList().get(lastUpdatedPosition).setBookmarked(lastUpdatedBookMark);
-        }
 
-        realm.commitTransaction();
         dbServiceSubscriber.updateStudyPreferenceToDb(
-            context, lastUpdatedStudyId, lastUpdatedBookMark, lastUpdatedStatusStatus);
+            context, lastUpdatedStudyId, lastUpdatedStatusStatus);
         studyListAdapter.notifyItemChanged(lastUpdatedPosition);
       } else {
         emptyListMessage.setVisibility(View.GONE);
@@ -1361,7 +1212,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     JSONObject studies = new JSONObject();
     try {
       studies.put("studyId", studyId);
-      studies.put("bookmarked", b);
     } catch (JSONException e) {
       Logger.log(e);
     }

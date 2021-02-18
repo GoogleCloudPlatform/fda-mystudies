@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.storagemodule;
@@ -408,7 +409,6 @@ public class DbServiceSubscriber {
   public void updateStudyPreferenceToDb(
           Context context,
           String lastUpdatedStudyId,
-          boolean lastUpdatedBookMark,
           String lastUpdatedStatusStatus) {
     realm = AppController.getRealmobj(context);
     Studies studies = realm.where(Studies.class).equalTo("studyId", lastUpdatedStudyId).findFirst();
@@ -416,7 +416,6 @@ public class DbServiceSubscriber {
     if (studies == null) {
       studies = new Studies();
       studies.setStudyId(lastUpdatedStudyId);
-      studies.setBookmarked(lastUpdatedBookMark);
       studies.setStatus(lastUpdatedStatusStatus);
 
       StudyData studyData = getStudyPreferencesListFromDB(realm);
@@ -425,7 +424,6 @@ public class DbServiceSubscriber {
       }
       studyData.getStudies().add(studies);
     } else {
-      studies.setBookmarked(lastUpdatedBookMark);
       studies.setStatus(lastUpdatedStatusStatus);
     }
 
@@ -911,7 +909,6 @@ public class DbServiceSubscriber {
     } else {
       Studies studies1 = new Studies();
       studies1.setStudyId(studyId);
-      studies1.setBookmarked(false);
       studies1.setStatus(status);
       studies1.setVersion(version);
       studies1.setEnrolledDate(enrolleddate);
@@ -935,7 +932,6 @@ public class DbServiceSubscriber {
     } else {
       Studies studies1 = new Studies();
       studies1.setStudyId(studyId);
-      studies1.setBookmarked(false);
       studies1.setVersion(version);
       StudyData studyData = getStudyPreferencesListFromDB(realm);
       studyData.getStudies().add(studies1);
@@ -1014,7 +1010,6 @@ public class DbServiceSubscriber {
       activities1.setActivityId(activityId);
       activities1.setActivityRunId("" + runId);
       activities1.setActivityVersion(activityVersion);
-      activities1.setBookmarked("false");
       activityRunPreference.setTotal(totalRun);
       activityRunPreference.setCompleted(completedRun);
       activityRunPreference.setMissed(missedRun);
@@ -1152,7 +1147,6 @@ public class DbServiceSubscriber {
                     .get(i)
                     .getStudyId()
                     .equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
-              studyListArrayList.get(j).setBookmarked(userPreferenceStudies.get(i).isBookmarked());
               studyListArrayList.get(j).setStudyStatus(userPreferenceStudies.get(i).getStatus());
             }
           }

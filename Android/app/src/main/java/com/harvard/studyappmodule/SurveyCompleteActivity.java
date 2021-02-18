@@ -612,7 +612,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
       activityStatus.put("activityId", activityId[1]);
       activityStatus.put(
           "activityRunId", "" + getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0));
-      activityStatus.put("bookmarked", "false");
       activityStatus.put(
           "activityVersion",
           "" + getIntent().getStringExtra(CustomSurveyViewTaskActivity.ACTIVITY_VERSION));
@@ -1195,8 +1194,12 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
     JSONArray studieslist = new JSONArray();
     JSONObject studiestatus = new JSONObject();
+    Studies studies = dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), realm);
+
     try {
       studiestatus.put("studyId", getIntent().getStringExtra(STUDYID));
+      studiestatus.put("siteId", studies.getSiteId());
+      studiestatus.put("participantId", studies.getParticipantId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
 

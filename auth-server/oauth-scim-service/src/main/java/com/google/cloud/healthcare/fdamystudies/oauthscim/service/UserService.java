@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -27,7 +27,7 @@ public interface UserService {
   public UserResponse createUser(UserRequest userRequest);
 
   public ResetPasswordResponse resetPassword(
-      ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest)
+      ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest, String appName)
       throws JsonProcessingException;
 
   public ChangePasswordResponse changePassword(

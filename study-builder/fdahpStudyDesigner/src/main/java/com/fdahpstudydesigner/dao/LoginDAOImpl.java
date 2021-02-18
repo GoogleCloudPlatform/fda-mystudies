@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
@@ -430,7 +430,7 @@ public class LoginDAOImpl implements LoginDAO {
           Map<String, String> values = new HashMap<>();
           values.put(LOCK_TIME, String.valueOf(USER_LOCK_DURATION));
           values.put(FAILED_ATTEMPT, String.valueOf(MAX_ATTEMPTS));
-          auditRequest.setUserId(userEmailId);
+          auditRequest.setUserId(userBO.getUserId().toString());
           auditRequest.setUserAccessLevel(userBO.getAccessLevel());
           auditRequest.setSource(ACCOUNT_LOCKED.getSource().getValue());
           auditRequest.setDestination(ACCOUNT_LOCKED.getDestination().getValue());

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -125,6 +126,9 @@ public class StudyActiveTasksController {
         map.addAttribute("_S", sessionStudyCount);
         auditRequest.setStudyId(customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+          StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+          auditRequest.setStudyVersion(studyBo.getVersion().toString());
+          auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
           request
               .getSession()
@@ -500,7 +504,13 @@ public class StudyActiveTasksController {
             request
                 .getSession()
                 .setAttribute(sessionStudyCount + "activeTaskInfoId", activeTaskInfoId.toString());
-            values.put("activetask_id", activeTaskBo.getTaskTypeId().toString());
+            auditRequest.setStudyId(customStudyId);
+            StudyBo studyBo =
+                studyService.getStudyById(
+                    addActiveTaskBo.getStudyId().toString(), sesObj.getUserId());
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
+            values.put("activetask_id", activeTaskBo.getShortTitle());
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -68,9 +68,9 @@ public class SiteController {
       @Valid @RequestBody SiteRequest siteRequest,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
-
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     siteRequest.setUserId(userId);
-    SiteResponse siteResponse = siteService.addSite(siteRequest);
+    SiteResponse siteResponse = siteService.addSite(siteRequest, auditRequest);
 
     logger.exit(
         String.format(

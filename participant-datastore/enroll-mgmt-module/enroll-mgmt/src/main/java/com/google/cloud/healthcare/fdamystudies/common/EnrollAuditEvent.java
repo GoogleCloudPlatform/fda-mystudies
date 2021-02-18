@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -97,7 +97,10 @@ public enum EnrollAuditEvent implements AuditLogEvent {
       PARTICIPANT_ENROLL_DATASTORE,
       null,
       "Attempt to read app user's study participation status for 1 or more studies, failed.",
-      "READ_OPERATION_FAILED_FOR_STUDY_INFO");
+      "READ_OPERATION_FAILED_FOR_STUDY_INFO"),
+
+  USER_ENROLLED_INTO_STUDY(
+      MOBILE_APPS, PARTICIPANT_ENROLL_DATASTORE, null, null, "USER_ENROLLED_INTO_STUDY");
 
   private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -24,12 +24,6 @@ public enum ConsentManagementEnum implements AuditLogEvent {
       "Informed consent provided by app user for the study (consent version: ${consent_version}, "
           + "data-sharing consent: ${data_sharing_consent}).",
       "INFORMED_CONSENT_PROVIDED_FOR_STUDY"),
-
-  USER_ENROLLED_INTO_STUDY(
-      MOBILE_APPS, PARTICIPANT_CONSENT_DATASTORE, null, null, "USER_ENROLLED_INTO_STUDY"),
-
-  STUDY_ENROLLMENT_FAILED(
-      MOBILE_APPS, PARTICIPANT_CONSENT_DATASTORE, null, null, "STUDY_ENROLLMENT_FAILED"),
 
   READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT(
       MOBILE_APPS,

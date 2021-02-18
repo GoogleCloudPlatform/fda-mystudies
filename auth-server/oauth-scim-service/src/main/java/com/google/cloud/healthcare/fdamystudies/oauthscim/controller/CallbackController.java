@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -85,7 +85,9 @@ public class CallbackController {
 
     String redirectUrl = null;
     if (StringUtils.equals(
-        accountStatus, String.valueOf(UserAccountStatus.PASSWORD_RESET.getStatus()))) {
+            accountStatus, String.valueOf(UserAccountStatus.PASSWORD_RESET.getStatus()))
+        || StringUtils.equals(
+            accountStatus, String.valueOf(UserAccountStatus.ACCOUNT_LOCKED.getStatus()))) {
       Optional<UserEntity> optUserEntity = userService.findByUserId(userId);
       if (optUserEntity.isPresent()) {
         UserEntity user = optUserEntity.get();

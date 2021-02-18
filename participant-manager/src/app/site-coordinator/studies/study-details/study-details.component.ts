@@ -10,6 +10,7 @@ import {
   StudyType,
   OnboardingStatus,
   EnrollmentStatus,
+  Status,
 } from 'src/app/shared/enums';
 import {Permission} from 'src/app/shared/permission-enums';
 import {TemplateRef} from '@angular/core';
@@ -29,6 +30,8 @@ export class StudyDetailsComponent
   onboardingStatus = OnboardingStatus;
   enrollmentStatus = EnrollmentStatus;
   permission = Permission;
+  studyStatus = Status;
+
   // pagination
   limit = 10;
   currentPage = 0;
@@ -49,7 +52,7 @@ export class StudyDetailsComponent
 
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder(
-      'Search by Site ID or Participant Email',
+      'Search by site ID or participant email',
     );
 
     this.subs.add(
@@ -77,7 +80,7 @@ export class StudyDetailsComponent
           studyDetails.participantRegistryDetail.studyType === StudyType.Open
         ) {
           this.sharedService.updateSearchPlaceHolder(
-            'Search Participant Email',
+            'Search participant email',
           );
         }
         return studyDetails;

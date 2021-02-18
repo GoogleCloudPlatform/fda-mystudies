@@ -12,7 +12,7 @@
               </a>
             </div>
             <div class="pl-1">
-              <div class="mb-xs">App User Registry</div>
+              <div class="mb-xs">App user registry</div>
               <div>
                 <div class="pr-xlg flex__justify__space-between">
                   <div class="banner__label mr-xs">
@@ -52,36 +52,36 @@
                 class="sort__by__text mobile__view mr-sm"
                 style="background: transparent"
               >
-                Sort By:
+                Sort by:
               </span>
               <th>
-                <mfDefaultSorter by="_email">App User Email</mfDefaultSorter>
+                <mfDefaultSorter by="_email">App user email</mfDefaultSorter>
               </th>
               <th>
                 <mfDefaultSorter by="_registrationDate">
-                  App Registration Date
+                  App registration date
                 </mfDefaultSorter>
               </th>
               <th>
                 <mfDefaultSorter by="_registrationStatus">
-                  App Account Status
+                  App account status
                 </mfDefaultSorter>
               </th>
-              <th>Associated Study Enrollments</th>
+              <th>Associated study enrollments</th>
             </tr>
           </thead>
           <tbody class="custom__tbody">
             <tr *ngFor="let applists of mf.data">
               <td [routerLink]="['/coordinator/participant', applists.id]">
-                <span class="tbl__td__label">Participant Email:</span>
+                <span class="tbl__td__label">Participant email:</span>
                 <span>{{ applists.email }}</span>
               </td>
               <td>
-                <span class="tbl__td__label">App Registration Date:</span>
+                <span class="tbl__td__label">App registration date:</span>
                 {{ applists.registrationDate }}
               </td>
               <td>
-                <span class="tbl__td__label">App Account Status:</span>
+                <span class="tbl__td__label">App account status:</span>
                 <div
                   [ngClass]="{
                     'txt__green':
@@ -134,11 +134,18 @@
 
 <ng-template #appEnrollList>
   <div #appsListData class="modal-body modal__body">
-    <button type="button" class="close pad__15__20" (click)="modalRef.hide()">
+    <button
+      type="button"
+      class="close custm_close_modal"
+      (click)="modalRef.hide()"
+    >
       &times;
     </button>
 
-    <ul class="app__level__pop__list mt-3">
+    <ul
+      class="app__level__pop__list mt-3 mb-3 pr-4"
+      [ngClass]="{custom_scroll: enrolledStudies.length > 2}"
+    >
       <li *ngFor="let applists of enrolledStudies">
         <div class="blue__text__md text-uppercase">
           {{ applists.customStudyId }}
@@ -160,7 +167,7 @@
                 *ngIf="applists.studyType === studyTypes.Open"
                 class="blue__text__md blue__link cursor__none"
               >
-                NA(Open Study)
+                NA(Open study)
               </span>
             </div>
             <div>
@@ -168,14 +175,14 @@
                 class="row flex-wrap-unset flex__justify__space-between line_height_normal"
               >
                 <div class="col-xs-6 col-md-6 p-none">
-                  <span class="text-grey__sm">Date of Enrollment:</span>
+                  <span class="text-grey__sm">Date of enrollment:</span>
                   <span class="text__date__sm">
                     {{ sitelists.enrollmentDate }}
                   </span>
                 </div>
 
                 <div class="col-xs-6 col-md-6 p-none">
-                  <span class="text-grey__sm">Date of Withdrawal:</span>
+                  <span class="text-grey__sm">Date of withdrawal:</span>
                   <span class="text__date__sm">
                     {{ sitelists.withdrawlDate }}
                   </span>

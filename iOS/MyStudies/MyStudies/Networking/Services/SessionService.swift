@@ -9,6 +9,31 @@ import Foundation
 
 class SessionService {
 
+  /// A Struct represents the Audit data for services.
+  struct Audit {
+    enum JSONKey {
+      static let correlationID = "correlationId"
+      static let appID = "appId"
+      static let platform = "mobilePlatform"
+      static let source = "source"
+      static let appVersion = "appVersion"
+      static let userID = "userId"
+      static let appName = "appName"
+    }
+
+    static var headers: StringDictionary {
+      return [
+        JSONKey.correlationID: SessionService.correlationID,
+        JSONKey.appID: AppConfiguration.appID,
+        JSONKey.platform: Utilities.currentDevicePlatform(),
+        JSONKey.source: "MOBILE APPS",
+        JSONKey.appVersion: Utilities.getAppVersion(),
+        JSONKey.userID: User.currentUser.userId ?? "",
+        JSONKey.appName: Utilities.appName(),
+      ]
+    }
+  }
+
   private init() {}
 
   private static var currentSession: SessionService?

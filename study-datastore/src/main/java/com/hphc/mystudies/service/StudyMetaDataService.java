@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -20,6 +21,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package com.hphc.mystudies.service;
 
 import com.hphc.mystudies.bean.ActiveTaskActivityMetaDataResponse;
@@ -31,9 +33,11 @@ import com.hphc.mystudies.bean.EligibilityConsentResponse;
 import com.hphc.mystudies.bean.EnrollmentTokenResponse;
 import com.hphc.mystudies.bean.ErrorResponse;
 import com.hphc.mystudies.bean.GatewayInfoResponse;
+import com.hphc.mystudies.bean.InfoBean;
 import com.hphc.mystudies.bean.NotificationsResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.bean.ResourcesResponse;
+import com.hphc.mystudies.bean.StudyBean;
 import com.hphc.mystudies.bean.StudyDashboardResponse;
 import com.hphc.mystudies.bean.StudyInfoResponse;
 import com.hphc.mystudies.bean.StudyResponse;
@@ -48,6 +52,7 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import java.util.HashMap;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -130,6 +135,21 @@ public class StudyMetaDataService {
           return Response.status(Response.Status.NOT_FOUND)
               .entity(StudyMetaDataConstants.NO_RECORD)
               .build();
+        } else {
+          List<StudyBean> studyBeanInfo = studyResponse.getStudies();
+
+          if (!studyBeanInfo.isEmpty()) {
+            for (StudyBean studyBeanObject : studyBeanInfo) {
+              String logo = studyBeanObject.getLogo();
+              if (logo == null || logo.isEmpty()) {
+                studyBeanObject.setLogo(
+                    propMap.get("fda.imgDisplaydPath")
+                        + propMap.get("cloud.bucket.name")
+                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                        + propMap.get(StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE));
+              }
+            }
+          }
         }
       } else {
         return Response.status(Response.Status.BAD_REQUEST)
@@ -361,6 +381,30 @@ public class StudyMetaDataService {
             .entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)
             .build();
       }
+
+      List<InfoBean> infoBeans = studyInfoResponse.getInfo();
+
+      int count = 0;
+
+      for (InfoBean infoBean : infoBeans) {
+        if (infoBean.getImage() == null || infoBean.getImage().equals("")) {
+          if (count == 0) {
+            infoBean.setImage(
+                propMap.get("fda.imgDisplaydPath")
+                    + propMap.get("cloud.bucket.name")
+                    + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE));
+          } else {
+            infoBean.setImage(
+                propMap.get("fda.imgDisplaydPath")
+                    + propMap.get("cloud.bucket.name")
+                    + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE));
+          }
+        }
+        count++;
+      }
+
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataService - studyInfo() :: ERROR", e);
       StudyMetaDataUtil.getFailureResponse(

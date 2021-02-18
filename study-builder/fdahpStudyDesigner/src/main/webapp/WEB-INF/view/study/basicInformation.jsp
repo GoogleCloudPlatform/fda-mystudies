@@ -6,6 +6,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
+<style>
+.uploadImg{
+margin-top:16px !important;
+}
+</style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -41,7 +46,7 @@
             <button type="button" class="btn btn-primary blue-btn actBut"
                     id="completedId"
                     <c:if test="${not studyBo.viewPermission }">disabled</c:if>>Mark
-              as Completed
+              as completed
             </button>
           </div>
         </c:if>
@@ -61,6 +66,11 @@
             <span
                 class="requiredStar"> *
             </span>
+            <span class="filled-tooltip"
+                    data-toggle="tooltip" data-placement="top"
+                    data-html="true"
+                    title="<span class='font24 text-weight-light pull-left'></span> A unique human-readable platform-wide identifier for the study">
+            </span>
           </div>
           <div class="form-group customStudyClass">
             <input type="text" custAttType="cust" autofocus="autofocus"
@@ -74,24 +84,6 @@
           </div>
         </div>
         <div class="col-md-6 pr-none">
-          <div class="gray-xs-f mb-xs">
-            Study Name
-            <small>(50 characters max)</small>
-            <span
-                class="requiredStar"> *
-            </span>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="name"
-                   id="customStudyName" value="${fn:escapeXml(studyBo.name)}"
-                   maxlength="50" required/>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-      </div>
-      <!-- phase2a-sp1 -->
-      <div class="col-md-12 p-none">
-        <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
             App ID
             <small>(15 characters max)</small>
@@ -115,21 +107,43 @@
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
+      </div>
+      <!-- phase2a-sp1 -->
+      <div class="col-md-12 p-none">
+        <div class="col-md-6 pl-none">
+          <div class="gray-xs-f mb-xs">
+            Study name
+            <small>(50 characters max)</small>
+            <span
+                class="requiredStar"> *
+            </span>
+            <span class="filled-tooltip"
+                    data-toggle="tooltip" data-placement="top"
+                    data-html="true"
+                    title="<span class='font24 text-weight-light pull-left'></span> A short study name for display in the mobile app">
+            </span>
+          </div>
+          <div class="form-group">
+             <input type="text" class="form-control" name="name"
+                   id="customStudyName" value="${fn:escapeXml(studyBo.name)}"
+                   maxlength="50" required/>
+            <div class="help-block with-errors red-txt"></div>
+          </div>
+        </div>
 
         <div class="col-md-6 pr-none">
           <div class="gray-xs-f mb-xs">
-            Study Category
-            <span class="requiredStar"> *</span>
-          </div>
+            Study website
+            <small>(100
+              characters max)
+            </small>   
+           </div>
           <div class="form-group">
-            <select
-                class="selectpicker aq-select aq-select-form elaborateClass"
-                id="category" name="category" required title="Select">
-              <c:forEach items="${categoryList}" var="category">
-                <option value="${category.id}"
-                  ${studyBo.category eq category.id ?'selected':''}>${category.value}</option>
-              </c:forEach>
-            </select>
+            <input type="text" class="form-control" id="studyWebsiteId"
+                   name="studyWebsite" value="${studyBo.studyWebsite}"
+                   pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
+                   title="Include http://" maxlength="100"
+                   data-pattern-error="Please enter a valid URL"/>
             <div class="help-block with-errors red-txt"></div>
           </div> 
         </div>
@@ -138,7 +152,7 @@
 
       <div class="col-md-12 p-none">
         <div class="gray-xs-f mb-xs">
-          Descriptive Study Name
+          Descriptive study name
           <small>(150 characters max)</small>
           <span
               class="requiredStar"> *
@@ -151,125 +165,17 @@
         </div>
       </div>
 
-      <div class="col-md-12 p-none">
-        <div class="col-md-6 pl-none">
-          <div class="gray-xs-f mb-xs">
-            Research Sponsor
-            <small>(100 characters max)</small>
-            <span
-                class="requiredStar"> *
-            </span>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="researchSponsor"
-                   value="${studyBo.researchSponsor}" maxlength="100" required/>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="gray-xs-f mb-xs">
-            Tentative Duration
-            <small>(3 numbers max)</small>
-            <span
-                class="requiredStar"> *
-            </span>
-          </div>
-          <div class="form-group col-md-4 p-none mr-md">
-            <input type="text" class="form-control" name="tentativeDuration"
-                   value="${studyBo.tentativeDuration}" maxlength="3" required
-                   pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                   data-pattern-error="Please enter valid number."/>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-          <div class="form-group col-md-4 p-none">
-            <select class="selectpicker elaborateClass" required
-                    title="Select" name="tentativeDurationWeekmonth">
-              <option value="Days"
-                ${studyBo.tentativeDurationWeekmonth eq 'Days'?'selected':''}>Days
-              </option>
-              <option value="Weeks"
-                ${studyBo.tentativeDurationWeekmonth eq 'Weeks'?'selected':''}>Weeks
-              </option>
-              <option value="Months"
-                ${studyBo.tentativeDurationWeekmonth eq 'Months'?'selected':''}>Months
-              </option>
-              <option value="Years"
-                ${studyBo.tentativeDurationWeekmonth eq 'Years'?'selected':''}>Years
-              </option>
-            </select>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-      </div> 
       
       <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-xs">
-          Study Tagline
-          <small>(100 characters max)</small>
-          <span
-              class="requiredStar"> *
-          </span>
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" name="studyTagLine"
-                 value="${fn:escapeXml(studyBo.studyTagLine)}" maxlength="100"
-                 required/>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-      </div>
-
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-xs">
-          Description
-          <span class="requiredStar"> *</span>
-        </div>
-        <div class="form-group">
-          <textarea class="form-control" id="summernote" name="description"
-                    required>${studyBo.description}</textarea>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-      </div>
-      <div class="col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
-            Study Website
-            <span>(e.g: http://www.google.com)</span>
-            <small>(100
-              characters max)
-            </small>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" id="studyWebsiteId"
-                   name="studyWebsite" value="${studyBo.studyWebsite}"
-                   pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
-                   title="Include http://" maxlength="100"
-                   data-pattern-error="Please enter a valid URL"/>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-        <div class="col-md-6 pr-none">
-          <div class="gray-xs-f mb-xs">
-            Email Address (for participant feedback)
-            <small>(100
-              characters max)
-            </small>
+            Study type
             <span class="requiredStar"> *</span>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="inboxEmailAddress"
-                   value="${studyBo.inboxEmailAddress}" required maxlength="100"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                   autocomplete="off" data-pattern-error="Email address is invalid"/>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-12 p-none mb-xxlg">
-        <div class="col-md-6 pl-none">
-          <div class="gray-xs-f mb-xs">
-            Study Type
-            <span class="requiredStar"> *</span>
+            <span class="filled-tooltip"
+                    data-toggle="tooltip" data-placement="top"
+                    data-html="true"
+                    title="<span class='font24 text-weight-light pull-left'></span> Specify if the study should be part of a 'gateway' app that can house multiple other studies or a 'standalone' app that has just this study. The app ID entered above should belong to an app that matches the selected type.">
+            </span>
           </div>
           <div class="form-group">
             <span class="radio radio-info radio-inline p-45"><input
@@ -295,22 +201,44 @@
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-        <div class="col-md-6 pr-none thumbImageDIv">
+        <div class="col-md-6 pr-none">
+          <div class="gray-xs-f mb-xs">
+            Support email (for participants)
+            <small>(100
+              characters max)
+            </small>
+            <span class="requiredStar"> *</span>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="inboxEmailAddress"
+                   value="${studyBo.inboxEmailAddress}" required maxlength="100"
+                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                   autocomplete="off" data-pattern-error="Email address is invalid"/>
+            <div class="help-block with-errors red-txt"></div>
+          </div>
+        </div>
+      </div>
+		<div class="col-md-12 p-none mb-xxlg">
+          <div class="col-md-6 pr-none thumbImageDIv" style="margin-left:-13px">
           <div class="gray-xs-f mb-sm">
-            Study Thumbnail Image
-            <span>
-              <span class="filled-tooltip"
+            Study thumbnail image
+            <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="top"
                     data-html="true"
-                    title="<span class='font24 text-weight-light pull-left'></span> JPEG / PNG<br><span class='font20'></span> Recommended Size: 225x225 pixels"/>
+                    title="<span class='font24 text-weight-light pull-left'></span> The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of 225x225 pixels.">
             </span>
-            </span>
-            <span class="requiredStar thumbDivClass"
-                  style="color: red; display: none"> *
-            </span>
-          </div>
-          <div>
-            <div class="thumb">
+      </div>
+          
+          <div class="thumb" style="display:inline-block; width:77px !important;">
+                        <img
+                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.basicInformation.defaultImage')"/>"
+                            class="wid100" alt=""/>
+
+            </div>
+            
+            
+          <div style="display:inline-block">
+            <div class="thumb alternate" style=" width:77px !important;"> 
               <img
                   <c:if
                        test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${studyBo.thumbnailImage}"
@@ -320,7 +248,7 @@
                   onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                   class="wid100" alt=""/>
             </div>
-            <div class="dis-inline ">
+            <div class="dis-inline">
               <span id="removeUrl" class="blue-link elaborateHide">X
                 <a
                     href="javascript:void(0)"
@@ -328,10 +256,10 @@
                   Image
                 </a>
               </span>
-              <div class="form-group mb-none mt-sm">
+              <div class="form-group mb-none mt-sm uploadImg">
                 <button id="uploadImgbtn" type="button"
                         class="btn btn-default gray-btn imageButtonDis">Upload
-                  Image
+					   
                 </button>
                 <span>
                   <span
@@ -339,13 +267,26 @@
                 </span>
                 <input
                     id="uploadImg" class="dis-none" type="file" name="file"
-                    accept=".png, .jpg, .jpeg" onchange="readURL(this);" required>
+                    accept=".png, .jpg, .jpeg" onchange="readURL(this);">
                 <input type="hidden" value="${studyBo.thumbnailImage}"
                        id="thumbnailImageId" name="thumbnailImage"/>
 
               </div>
+              
+              
             </div>
           </div>
+         
+           <div class="mt-lg" style="margin-top:-5px !important;  font-size:10px; ">
+                    <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important; display:inline-block">
+                     Default image                     
+            </div>
+             &nbsp; &nbsp; &nbsp;&nbsp;
+            <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important; display:inline-block">
+                     Alternate image                     
+            </div>
+            </div>
+                    
         </div>
       </div>
     </div>
@@ -358,6 +299,7 @@
   $(document)
       .ready(
           function () {
+        	$('.studyClass').addClass("active");
             $('#removeUrl').css("visibility", "hidden");
             var file = $('#uploadImg').val();
             var thumbnailImageId = $('#thumbnailImageId').val();
@@ -431,7 +373,7 @@
             $("#removeUrl")
                 .click(
                     function () {
-                      $(".thumb img")
+                      $(".thumb.alternate img")
                           .attr("src",
                               "/studybuilder/images/dummy-img.jpg");
                       $('#uploadImg').val('');
@@ -448,10 +390,7 @@
                             .css("visibility",
                                 "visible");
                       } else {
-                        $("#uploadImg").attr(
-                            'required', 'required');
-                        resetValidation($("#uploadImg")
-                            .parents('form'));
+                        
                         $('#removeUrl').css(
                             "visibility", "hidden");
                       }
@@ -538,8 +477,7 @@
                                               var thumbnailImageId = $(
                                                   '#thumbnailImageId')
                                                   .val();
-                                              if (file
-                                                  || thumbnailImageId) {
+                                              
                                                 $(
                                                     "#uploadImg")
                                                     .parent()
@@ -599,7 +537,7 @@
                                                         }
                                                       }
                                                     });
-                                              }
+                                              
                                             }
                                           }
                                         });
@@ -676,11 +614,14 @@
                       && typeof type != 'undefined'
                       && type == 'GT') {
                     var file = $('#uploadImg').val();
+                    var image=$('.thumb.alternate img').attr("src");
                     var thumbnailImageId = $(
                         '#thumbnailImageId').val();
                     if (file || thumbnailImageId) {
+                        if(!image.includes("dummy")){
                       $('#removeUrl').css("visibility",
                           "visible");
+                        }
                       $("#uploadImg").parent().find(
                           ".help-block").empty();
                     }
@@ -858,8 +799,15 @@
       var reader = new FileReader();
 
       reader.onload = function (e) {
-        $('.thumb img').attr('src', e.target.result).width(66).height(
-            66);
+    	  var image = new Image();
+    	    image.src = e.target.result;
+    	    image.onload = function() {
+    	        // access image size here 
+    	        if(this.width ==225 && this.height==225 ){
+    	        	 $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
+         	                66);
+        	       }
+    	    };
       };
 
       reader.readAsDataURL(input.files[0]);
@@ -890,7 +838,7 @@
                       .empty()
                       .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                           "Please upload image as per provided guidelines."));
-                  $(".thumb img")
+                  $(".thumb.alternate img")
                       .attr("src",
                           "/studybuilder/images/dummy-img.jpg");
                   $('#uploadImg, #thumbnailImageId').val('');
@@ -904,8 +852,7 @@
                   resetValidation($("#uploadImg").parents(
                       'form'));
                 } else {
-                  $("#uploadImg")
-                      .attr('required', 'required');
+                  
                   resetValidation($("#uploadImg").parents(
                       'form'));
                 }
@@ -918,7 +865,7 @@
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         "Please upload image as per provided guidelines."));
                 $('#removeUrl').css("visibility", "hidden");
-                $(".thumb img").attr("src",
+                $(".thumb.alternate img").attr("src",
                     "/studybuilder/images/dummy-img.jpg");
                 $('#uploadImg, #thumbnailImageId').val('');
                 var file = $('#uploadImg').val();
@@ -929,8 +876,7 @@
                   resetValidation($("#uploadImg").parents(
                       'form'));
                 } else {
-                  $("#uploadImg")
-                      .attr('required', 'required');
+                  
                   resetValidation($("#uploadImg").parents(
                       'form'));
                 }
@@ -942,10 +888,11 @@
     var file = $('#uploadImg').val();
     var thumbnailImageId = $('#thumbnailImageId').val();
     if (file || thumbnailImageId) {
+    	$('#thumbnailImageId').val("");
       $("#uploadImg").removeAttr('required');
       resetValidation($("#uploadImg").parents('form'));
     } else {
-      $("#uploadImg").attr('required', 'required');
+      
       resetValidation($("#uploadImg").parents('form'));
     }
   });
@@ -1007,14 +954,14 @@
     if (rejoinRadioVal == 'GT') {
       $('.thumbDivClass').show();
       $('.thumbImageDIv').show();
-      $('#uploadImg').attr('required', 'required');
+      
       var file = $('#uploadImg').val();
       var thumbnailImageId = $('#thumbnailImageId').val();
       if (file || thumbnailImageId) {
         $("#uploadImg").removeAttr('required');
         resetValidation($("#uploadImg").parents('form'));
       } else {
-        $("#uploadImg").attr('required', 'required');
+      
         resetValidation($("#uploadImg").parents('form'));
       }
     } else {

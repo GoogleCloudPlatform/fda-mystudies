@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ParticipantInfoBean {
-  private String studyId = "";
-  private String participantId = "";
-  private String enrolledDate = "";
+  private String studyId;
+  private String participantId;
+  private String enrolledDate;
 }

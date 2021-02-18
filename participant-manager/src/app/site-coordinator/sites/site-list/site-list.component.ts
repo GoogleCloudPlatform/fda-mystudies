@@ -10,6 +10,7 @@ import {SearchService} from 'src/app/shared/search.service';
 import {Permission} from 'src/app/shared/permission-enums';
 import {Status, StudyType} from 'src/app/shared/enums';
 import {SearchParameterService} from 'src/app/service/search-parameter.service';
+import {ViewportScroller} from '@angular/common';
 const limit = 10;
 @Component({
   selector: 'app-site-list',
@@ -19,6 +20,7 @@ const limit = 10;
 export class SiteListComponent implements OnInit {
   study$: Observable<StudyResponse> = of();
   manageStudiesBackup = {} as StudyResponse;
+  studiesDisplay: Study[] = [];
   study = {} as Study;
   permission = Permission;
   studyTypes = StudyType;
@@ -26,9 +28,9 @@ export class SiteListComponent implements OnInit {
   searchValue = '';
   loadMoreEnabled = false;
   messageMapping: {[k: string]: string} = {
-    '=0': 'No Sites',
-    '=1': 'One Site',
-    'other': '# Sites',
+    '=0': 'No sites',
+    '=1': 'One site',
+    'other': '# sites',
   };
   constructor(
     private readonly studiesService: StudiesService,
@@ -36,9 +38,13 @@ export class SiteListComponent implements OnInit {
     private modalRef: BsModalRef,
     private readonly sharedService: SearchService,
     private readonly searchParameter: SearchParameterService,
-  ) {}
+    private readonly viewportScroller: ViewportScroller,
+  ) {
+    this.viewportScroller.setHistoryScrollRestoration('manual');
+  }
 
   ngOnInit(): void {
+    this.viewportScroller.setHistoryScrollRestoration('manual');
     this.searchParameter.setSearchParameter('');
     this.searchParameter.searchParam$.subscribe((updatedParameter) => {
       this.manageStudiesBackup = {} as StudyResponse;
@@ -47,7 +53,7 @@ export class SiteListComponent implements OnInit {
     });
 
     this.sharedService.updateSearchPlaceHolder(
-      'Search by Site or Study ID or Name',
+      'Search by site or study ID or name',
     );
   }
   closeModal(): void {
@@ -60,7 +66,10 @@ export class SiteListComponent implements OnInit {
       this.studiesService.getStudiesWithSites(limit, 0, this.searchValue),
     ).pipe(
       map(([manageStudies]) => {
+        const studies = [];
         this.manageStudiesBackup = {...manageStudies};
+        studies.push(...manageStudies.studies);
+        this.studiesDisplay = studies;
         this.loadMoreEnabled =
           (this.manageStudiesBackup.studies.length % limit === 0
             ? true
@@ -88,22 +97,21 @@ export class SiteListComponent implements OnInit {
   }
 
   loadMoreSites(): void {
+    console.log(this.viewportScroller.getScrollPosition());
     const offset = this.manageStudiesBackup.studies.length;
-
-    this.study$ = combineLatest(
-      this.studiesService.getStudiesWithSites(limit, offset, this.searchValue),
-    ).pipe(
-      map(([manageStudies]) => {
+    this.studiesService
+      .getStudiesWithSites(limit, offset, this.searchValue)
+      .subscribe((manageStudies) => {
         const studies = [];
         studies.push(...this.manageStudiesBackup.studies);
         studies.push(...manageStudies.studies);
+        this.studiesDisplay = studies;
         this.manageStudiesBackup.studies = studies;
         this.loadMoreEnabled =
-          this.manageStudiesBackup.studies.length % limit === 0 ? true : false;
-
-        return this.manageStudiesBackup;
-      }),
-    );
+          (this.manageStudiesBackup.studies.length % limit === 0
+            ? true
+            : false) && manageStudies.studies.length > 0;
+      });
   }
   cancel(): void {
     this.modalRef.hide();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -31,13 +31,6 @@ public enum StudyBuilderAuditEvent {
 
   PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT(
       STUDY_DATASTORE, STUDY_DATASTORE, null, null, "PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT"),
-
-  NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE(
-      STUDY_BUILDER,
-      STUDY_DATASTORE,
-      null,
-      "Account activation failed for new user due to invalid access code (user ID - ${new_user_id}).",
-      "NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE"),
 
   ACCOUNT_DETAILS_VIEWED(
       STUDY_BUILDER,
@@ -151,6 +144,13 @@ public enum StudyBuilderAuditEvent {
       null,
       "Notification saved/updated (notification ID - ${notification_id}).",
       "STUDY_NOTIFICATION_SAVED_OR_UPDATED"),
+
+  STUDY_NOTIFICATION_REPLICATED_FOR_RESEND(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Notification replicated for resend, by user. Existing notification ID : '${old_notification_id}', new notification ID : '${new_notification_id}'.",
+      "STUDY_NOTIFICATION_REPLICATED_FOR_RESEND"),
 
   STUDY_NOTIFICATION_MARKED_COMPLETE(
       STUDY_BUILDER,
@@ -459,7 +459,7 @@ public enum StudyBuilderAuditEvent {
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
-      "User account locked for ${lock_time} due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
+      "User account locked for ${lock_time} minutes due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
       "ACCOUNT_LOCKED"),
 
   PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT(

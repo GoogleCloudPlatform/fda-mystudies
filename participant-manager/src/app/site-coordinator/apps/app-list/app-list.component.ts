@@ -16,16 +16,17 @@ const limit = 10;
 export class AppListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   manageApp$: Observable<ManageApps> = of();
+  appList: App[] = [];
   manageAppsBackup = {} as ManageApps;
   appUsersMessageMapping: {[k: string]: string} = {
-    '=0': 'No App Users',
-    '=1': 'One App User',
-    'other': '# App Users',
+    '=0': 'No app users',
+    '=1': 'One app user',
+    'other': '# app users',
   };
   studiesMessageMapping: {[k: string]: string} = {
-    '=0': 'No Studies',
-    '=1': 'One Study',
-    'other': '# Studies',
+    '=0': 'No studies',
+    '=1': 'One study',
+    'other': '# studies',
   };
   loadMoreEnabled = true;
 
@@ -45,7 +46,7 @@ export class AppListComponent implements OnInit {
       this.searchValue = updatedParameter;
       this.getApps();
     });
-    this.sharedService.updateSearchPlaceHolder('Search by App ID or Name');
+    this.sharedService.updateSearchPlaceHolder('Search by app ID or name');
   }
   getApps(): void {
     this.manageApp$ = combineLatest(
@@ -54,12 +55,10 @@ export class AppListComponent implements OnInit {
     ).pipe(
       map(([manageApps]) => {
         this.manageAppsBackup = {...manageApps};
-
-        if (!manageApps.superAdmin && manageApps.studyPermissionCount < 2) {
-          this.toastr.error(
-            'This view displays app-wise enrollment if you manage multiple studies.',
-          );
-        }
+        const app = [];
+        this.manageAppsBackup = {...manageApps};
+        app.push(...manageApps.apps);
+        this.appList = app;
         this.loadMoreEnabled =
           (this.manageAppsBackup.apps.length % limit === 0 ? true : false) &&
           manageApps.apps.length > 0;
@@ -90,17 +89,15 @@ export class AppListComponent implements OnInit {
     );
   }
 
-  loadMoreSites() {
+  loadMoreSites(): void {
     const offset = this.manageAppsBackup.apps.length;
-    this.manageApp$ = combineLatest(
-      this.appService.getUserApps(limit, offset, this.searchValue),
-      this.query$,
-    ).pipe(
-      map(([manageApps]) => {
+    this.appService
+      .getUserApps(limit, offset, this.searchValue)
+      .subscribe((manageApps) => {
         const apps = [];
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         apps.push(...this.manageAppsBackup.apps);
         apps.push(...manageApps.apps);
+        this.appList = apps;
         this.manageAppsBackup.apps = apps;
         if (!manageApps.superAdmin && manageApps.studyPermissionCount < 2) {
           this.toastr.error(
@@ -108,9 +105,8 @@ export class AppListComponent implements OnInit {
           );
         }
         this.loadMoreEnabled =
-          this.manageAppsBackup.apps.length % limit === 0 ? true : false;
-        return this.manageAppsBackup;
-      }),
-    );
+          (this.manageAppsBackup.apps.length % limit === 0 ? true : false) &&
+          manageApps.apps.length > 0;
+      });
   }
 }

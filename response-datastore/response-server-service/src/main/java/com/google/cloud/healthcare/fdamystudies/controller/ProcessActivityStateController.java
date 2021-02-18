@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -88,6 +88,7 @@ public class ProcessActivityStateController {
           participantActivityStateResponseService.getParticipantActivities(studyId, participantId);
 
       auditRequest.setStudyId(studyId);
+      auditRequest.setStudyVersion("NA");
       auditRequest.setParticipantId(participantId);
       responseServerAuditLogHelper.logEvent(
           READ_OPERATION_FOR_ACTIVITY_STATE_INFO_SUCCEEDED, auditRequest);
@@ -118,7 +119,9 @@ public class ProcessActivityStateController {
         participantActivityStateResponseService.saveParticipantActivities(activityStateRequestBean);
         SuccessResponseBean srBean = new SuccessResponseBean();
         srBean.setMessage(AppConstants.SUCCESS_MSG);
+
         auditRequest.setStudyId(activityStateRequestBean.getStudyId());
+        auditRequest.setStudyVersion("NA");
         auditRequest.setParticipantId(activityStateRequestBean.getParticipantId());
         for (ParticipantActivityBean activity : activityStateRequestBean.getActivity()) {
           Map<String, String> map = new HashedMap<>();

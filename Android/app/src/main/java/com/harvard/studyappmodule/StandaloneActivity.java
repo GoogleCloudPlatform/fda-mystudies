@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -94,7 +95,6 @@ public class StandaloneActivity extends AppCompatActivity
   private static final String YET_TO_JOIN = "yetToEnroll";
   private static final String IN_PROGRESS = "enrolled";
   private static final String ACTIVE = "active";
-  private static final String UPCOMING = "upcoming";
   private static final String PAUSED = "paused";
   private static final String CLOSED = "closed";
   private String eligibilityType = "";
@@ -271,11 +271,6 @@ public class StandaloneActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .writePreference(
                 StandaloneActivity.this,
-                getString(R.string.bookmark),
-                "" + studyListArrayList.get(0).isBookmarked());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                StandaloneActivity.this,
                 getString(R.string.status),
                 "" + studyListArrayList.get(0).getStatus());
         if (!studies.getStudies().isEmpty()) {
@@ -315,9 +310,6 @@ public class StandaloneActivity extends AppCompatActivity
                   .get(i)
                   .getStudyId()
                   .equalsIgnoreCase(studyListArrayList.get(j).getStudyId())) {
-                studyListArrayList
-                    .get(j)
-                    .setBookmarked(userPreferenceStudies.get(i).isBookmarked());
                 studyListArrayList.get(j).setStudyStatus(userPreferenceStudies.get(i).getStatus());
                 userAlreadyJoined = true;
 
@@ -336,7 +328,6 @@ public class StandaloneActivity extends AppCompatActivity
                   intent.putExtra("flow", getIntent().getStringExtra("flow"));
                   intent.putExtra("studyId", studyListArrayList.get(j).getStudyId());
                   intent.putExtra("title", studyListArrayList.get(j).getTitle());
-                  intent.putExtra("bookmark", studyListArrayList.get(j).isBookmarked());
                   intent.putExtra("status", studyListArrayList.get(j).getStatus());
                   intent.putExtra("studyStatus", studyListArrayList.get(j).getStudyStatus());
                   intent.putExtra("position", "0");
@@ -353,14 +344,12 @@ public class StandaloneActivity extends AppCompatActivity
           }
           if (!userAlreadyJoined && !studyListArrayList.isEmpty()) {
 
-            studyListArrayList.get(0).setBookmarked(false);
             studyListArrayList.get(0).setStudyStatus(YET_TO_JOIN);
 
             Intent intent = new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
             intent.putExtra("flow", getIntent().getStringExtra("flow"));
             intent.putExtra("studyId", studyListArrayList.get(0).getStudyId());
             intent.putExtra("title", studyListArrayList.get(0).getTitle());
-            intent.putExtra("bookmark", studyListArrayList.get(0).isBookmarked());
             intent.putExtra("status", studyListArrayList.get(0).getStatus());
             intent.putExtra("studyStatus", studyListArrayList.get(0).getStudyStatus());
             intent.putExtra("position", "0");
@@ -496,7 +485,6 @@ public class StandaloneActivity extends AppCompatActivity
           intent.putExtra("flow", getIntent().getStringExtra("flow"));
           intent.putExtra("studyId", studyListArrayList.get(0).getStudyId());
           intent.putExtra("title", studyListArrayList.get(0).getTitle());
-          intent.putExtra("bookmark", studyListArrayList.get(0).isBookmarked());
           intent.putExtra("status", studyListArrayList.get(0).getStatus());
           intent.putExtra("studyStatus", studyListArrayList.get(0).getStudyStatus());
           intent.putExtra("position", "0");
@@ -549,11 +537,6 @@ public class StandaloneActivity extends AppCompatActivity
                               StandaloneActivity.this,
                               getString(R.string.title),
                               "" + studyListArrayList.get(i).getTitle());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StandaloneActivity.this,
-                              getString(R.string.bookmark),
-                              "" + studyListArrayList.get(i).isBookmarked());
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StandaloneActivity.this,
@@ -620,7 +603,6 @@ public class StandaloneActivity extends AppCompatActivity
                       intent.putExtra("flow", getIntent().getStringExtra("flow"));
                       intent.putExtra("studyId", studyListArrayList.get(i).getStudyId());
                       intent.putExtra("title", studyListArrayList.get(i).getTitle());
-                      intent.putExtra("bookmark", studyListArrayList.get(i).isBookmarked());
                       intent.putExtra("status", studyListArrayList.get(i).getStatus());
                       intent.putExtra("studyStatus", studyListArrayList.get(i).getStudyStatus());
                       intent.putExtra("position", "" + i);
@@ -666,11 +648,6 @@ public class StandaloneActivity extends AppCompatActivity
                               StandaloneActivity.this,
                               getString(R.string.title),
                               "" + studyListArrayList.get(i).getTitle());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StandaloneActivity.this,
-                              getString(R.string.bookmark),
-                              "" + studyListArrayList.get(i).isBookmarked());
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StandaloneActivity.this,
@@ -1072,7 +1049,6 @@ public class StandaloneActivity extends AppCompatActivity
     ArrayList<StudyList> activeInprogress = new ArrayList<>();
     ArrayList<StudyList> activeYetToJoin = new ArrayList<>();
     ArrayList<StudyList> activeOthers = new ArrayList<>();
-    ArrayList<StudyList> upComing = new ArrayList<>();
     ArrayList<StudyList> paused = new ArrayList<>();
     ArrayList<StudyList> closed = new ArrayList<>();
     ArrayList<StudyList> others = new ArrayList<>();
@@ -1080,7 +1056,6 @@ public class StandaloneActivity extends AppCompatActivity
     ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeYetToJoinCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeOthersCompletionAdherenceCalc = new ArrayList<>();
-    ArrayList<CompletionAdherence> upComingCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> pausedCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> closedCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> othersCompletionAdherenceCalc = new ArrayList<>();
@@ -1149,13 +1124,6 @@ public class StandaloneActivity extends AppCompatActivity
         } catch (Exception e) {
           Logger.log(e);
         }
-      } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(UPCOMING)) {
-        upComing.add(studyListArrayList.get(i));
-        try {
-          upComingCompletionAdherenceCalc.add(completionAdherenceCalcSort);
-        } catch (Exception e) {
-          Logger.log(e);
-        }
       } else if (studyListArrayList.get(i).getStatus().equalsIgnoreCase(PAUSED)) {
         paused.add(studyListArrayList.get(i));
         try {
@@ -1208,13 +1176,6 @@ public class StandaloneActivity extends AppCompatActivity
       }
 
       try {
-        studyListArrayList =
-            dbServiceSubscriber.updateStudyList(studyListArrayList, upComing, realm);
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-
-      try {
         studyListArrayList = dbServiceSubscriber.updateStudyList(studyListArrayList, paused, realm);
       } catch (Exception e) {
         Logger.log(e);
@@ -1251,12 +1212,6 @@ public class StandaloneActivity extends AppCompatActivity
 
       try {
         studyListArrayList.addAll(activeOthers);
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-
-      try {
-        studyListArrayList.addAll(upComing);
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -1304,12 +1259,6 @@ public class StandaloneActivity extends AppCompatActivity
     }
 
     try {
-      completionAdherenceCalcs.addAll(upComingCompletionAdherenceCalc);
-    } catch (Exception e) {
-      Logger.log(e);
-    }
-
-    try {
       completionAdherenceCalcs.addAll(pausedCompletionAdherenceCalc);
     } catch (Exception e) {
       Logger.log(e);
@@ -1342,11 +1291,6 @@ public class StandaloneActivity extends AppCompatActivity
     activeOthersCompletionAdherenceCalc.clear();
     activeOthersCompletionAdherenceCalc = null;
 
-    upComing.clear();
-    upComing = null;
-    upComingCompletionAdherenceCalc.clear();
-    upComingCompletionAdherenceCalc = null;
-
     paused.clear();
     paused = null;
     pausedCompletionAdherenceCalc.clear();
@@ -1371,7 +1315,7 @@ public class StandaloneActivity extends AppCompatActivity
     super.onDestroy();
   }
 
-  private void addClearTopFlag(Intent intent){
+  private void addClearTopFlag(Intent intent) {
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
   }

@@ -2,10 +2,13 @@
   <div id="desktop-menu">
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
-        <a href="#" class="navbar-brand">
+        <a
+          [routerLink]="disableButton ? [] : ['/coordinator']"
+          class="navbar-brand"
+        >
           <img
             class="mr-sm width__auto"
-            src="assets/images/landing-logo.png"
+            src="assets/images/branding/landing-logo.png"
             alt="main logo"
           />
         </a>
@@ -31,7 +34,7 @@
                   type="text"
                   class="form-control"
                   id="email"
-                  placeholder="Enter Email"
+                  placeholder="Enter email"
                   formControlName="email"
                   readonly
                 />
@@ -41,12 +44,12 @@
           <div class="row">
             <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
               <div class="form-group">
-                <label for="fname">First Name</label>
+                <label for="fname" class="txt_style_unset">First name</label>
                 <input
                   type="text"
                   class="form-control"
                   id="fname"
-                  placeholder="Enter First Name"
+                  placeholder="Enter first name"
                   formControlName="firstName"
                 />
                 <div
@@ -67,12 +70,12 @@
             </div>
             <div class="col-xs-12 col-md-6 p-none">
               <div class="form-group">
-                <label for="lname">Last Name</label>
+                <label for="lname" class="txt_style_unset">Last name</label>
                 <input
                   type="text"
                   class="form-control"
                   id="lname"
-                  placeholder="Enter Last Name"
+                  placeholder="Enter last name"
                   formControlName="lastName"
                 />
                 <div
@@ -94,7 +97,7 @@
           </div>
         </div>
       </section>
-      <h2 class="subheader__title mb-sm">Create Password</h2>
+      <h2 class="subheader__title mb-sm">Create password</h2>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="row">
           <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
@@ -119,7 +122,7 @@
                   *ngIf="f.password.errors?.validPassword"
                 >
                   Your password must be at least 8 characters long and contain
-                  lower case, upper case, numeric and special characters
+                  lower case, upper case, numeric and special characters.
                 </span>
                 <span
                   class="help-block with-errors error__msg"
@@ -132,7 +135,9 @@
           </div>
           <div class="col-xs-12 col-md-6 p-none">
             <div class="form-group">
-              <label for="confirmPassword">Confirm Password</label>
+              <label for="confirmPassword" class="txt_style_unset">
+                Confirm password
+              </label>
               <input
                 type="password"
                 class="form-control"
@@ -170,7 +175,7 @@
             type="submit"
             name="save"
             class="btn bt__add mr-sm"
-            [disabled]="!setupAccountForm.valid"
+            [disabled]="!setupAccountForm.valid || disableButton"
           >
             Submit
           </button>
@@ -179,6 +184,7 @@
             name="cancel"
             type="button"
             class="btn bt__cancel"
+            [disabled]="disableButton"
           >
             Cancel
           </button>

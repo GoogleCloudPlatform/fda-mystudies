@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -23,12 +23,15 @@ public interface UserProfileService {
   public UserProfileResponse findUserProfileBySecurityCode(
       String securityCode, AuditLogEventRequest auditRequest);
 
-  public UserProfileResponse updateUserProfile(UserProfileRequest userProfileRequest);
+  public UserProfileResponse updateUserProfile(
+      UserProfileRequest userProfileRequest, AuditLogEventRequest auditRequest);
 
   public SetUpAccountResponse saveUser(
       SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest);
 
-  public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest);
+  public PatchUserResponse updateUserAccountStatus(
+      PatchUserRequest statusRequest, AuditLogEventRequest auditRequest);
 
-  public void deleteInvitation(String signedInUserId, String userId);
+  public void deleteInvitation(
+      String signedInUserId, String userId, AuditLogEventRequest auditRequest);
 }

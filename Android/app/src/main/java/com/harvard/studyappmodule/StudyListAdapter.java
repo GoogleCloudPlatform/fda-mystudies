@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,12 +11,16 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.v7.widget.AppCompatImageView;
@@ -30,6 +34,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
@@ -79,17 +85,17 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   class Holder extends RecyclerView.ViewHolder {
 
     RelativeLayout container;
+    RelativeLayout progresslayout;
     AppCompatImageView stateIcon;
+    AppCompatImageView defaultthumbnail;
     AppCompatTextView state;
     AppCompatImageView statusImg;
     AppCompatImageView studyImg;
     AppCompatTextView imgTitle;
-    AppCompatImageView statusImgRight;
     AppCompatTextView status;
     AppCompatTextView studyTitle;
     AppCompatTextView studyTitleLatin;
     AppCompatTextView sponser;
-    AppCompatTextView completion;
     AppCompatTextView completionVal;
     AppCompatTextView adherence;
     AppCompatTextView adherenceVal;
@@ -99,17 +105,17 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     Holder(View itemView) {
       super(itemView);
       container = (RelativeLayout) itemView.findViewById(R.id.container);
+      progresslayout = (RelativeLayout) itemView.findViewById(R.id.progresslayout);
       stateIcon = (AppCompatImageView) itemView.findViewById(R.id.stateIcon);
       studyImg = (AppCompatImageView) itemView.findViewById(R.id.studyImg);
+      defaultthumbnail = (AppCompatImageView) itemView.findViewById(R.id.defaultthumbnail);
       imgTitle = (AppCompatTextView) itemView.findViewById(R.id.mImgTitle);
       state = (AppCompatTextView) itemView.findViewById(R.id.state);
       statusImg = (AppCompatImageView) itemView.findViewById(R.id.statusImg);
-      statusImgRight = (AppCompatImageView) itemView.findViewById(R.id.statusImgRight);
       status = (AppCompatTextView) itemView.findViewById(R.id.status);
       studyTitle = (AppCompatTextView) itemView.findViewById(R.id.study_title);
       studyTitleLatin = (AppCompatTextView) itemView.findViewById(R.id.study_title_latin);
       sponser = (AppCompatTextView) itemView.findViewById(R.id.sponser);
-      completion = (AppCompatTextView) itemView.findViewById(R.id.completion);
       completionVal = (AppCompatTextView) itemView.findViewById(R.id.completion_val);
       adherence = (AppCompatTextView) itemView.findViewById(R.id.adherence);
       adherenceVal = (AppCompatTextView) itemView.findViewById(R.id.adherence_val);
@@ -121,12 +127,11 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     private void setFont() {
       try {
         imgTitle.setTypeface(AppController.getTypeface(context, "medium"));
-        state.setTypeface(AppController.getTypeface(context, "medium"));
-        status.setTypeface(AppController.getTypeface(context, "bold"));
-        studyTitle.setTypeface(AppController.getTypeface(context, "medium"));
+        state.setTypeface(AppController.getHelveticaTypeface(context));
+        status.setTypeface(AppController.getHelveticaTypeface(context));
+        studyTitle.setTypeface(AppController.getHelveticaTypeface(context), Typeface.BOLD);
         studyTitleLatin.setTypeface(AppController.getTypeface(context, "regular"));
         sponser.setTypeface(AppController.getTypeface(context, "regular"));
-        completion.setTypeface(AppController.getTypeface(context, "regular"));
         completionVal.setTypeface(AppController.getTypeface(context, "bold"));
         adherence.setTypeface(AppController.getTypeface(context, "regular"));
         adherenceVal.setTypeface(AppController.getTypeface(context, "bold"));
@@ -145,10 +150,8 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       holder.status.setVisibility(View.VISIBLE);
       holder.statusImg.setVisibility(View.VISIBLE);
       holder.completionVal.setVisibility(View.VISIBLE);
-      holder.completion.setVisibility(View.VISIBLE);
       holder.adherenceVal.setVisibility(View.VISIBLE);
       holder.adherence.setVisibility(View.VISIBLE);
-      holder.statusImgRight.setVisibility(View.VISIBLE);
       holder.progressBar1.setVisibility(View.VISIBLE);
       holder.progressBar2.setVisibility(View.VISIBLE);
 
@@ -194,14 +197,11 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
         holder.status.setText(R.string.yet_to_join);
       }
 
-      if (items.get(position).isBookmarked()) {
-        holder.statusImgRight.setImageResource(R.drawable.star_yellow);
+      if (items.get(position).getStudyStatus().equalsIgnoreCase(StudyFragment.IN_PROGRESS)
+              || items.get(position).getStudyStatus().equalsIgnoreCase(StudyFragment.COMPLETED)) {
+        holder.progresslayout.setVisibility(View.VISIBLE);
       } else {
-        holder.statusImgRight.setImageResource(R.drawable.star_grey);
-      }
-
-      if (items.get(position).getStatus().equalsIgnoreCase("closed")) {
-        holder.statusImgRight.setVisibility(View.GONE);
+        holder.progresslayout.setVisibility(View.GONE);
       }
 
       if (completionAdherenceCalcs.size() > 0) {
@@ -229,20 +229,16 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       holder.status.setVisibility(View.GONE);
       holder.statusImg.setVisibility(View.GONE);
       holder.completionVal.setVisibility(View.GONE);
-      holder.completion.setVisibility(View.GONE);
       holder.adherenceVal.setVisibility(View.GONE);
       holder.adherence.setVisibility(View.GONE);
-      holder.statusImgRight.setVisibility(View.GONE);
       holder.progressBar1.setVisibility(View.GONE);
       holder.progressBar2.setVisibility(View.GONE);
     }
 
-    holder.state.setText(items.get(position).getStatus().toUpperCase());
+    holder.state.setText(items.get(position).getStatus());
     GradientDrawable bgShape = (GradientDrawable) holder.stateIcon.getBackground();
     if (items.get(position).getStatus().equalsIgnoreCase("active")) {
       bgShape.setColor(context.getResources().getColor(R.color.bullet_green_color));
-    } else if (items.get(position).getStatus().equalsIgnoreCase("upcoming")) {
-      bgShape.setColor(context.getResources().getColor(R.color.colorPrimary));
     } else if (items.get(position).getStatus().equalsIgnoreCase("closed")) {
       bgShape.setColor(context.getResources().getColor(R.color.red));
     } else if (items.get(position).getStatus().equalsIgnoreCase("paused")) {
@@ -250,11 +246,22 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
     }
 
     Glide.with(context)
-        .load(items.get(position).getLogo())
-        .thumbnail(0.5f)
-        .crossFade()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .into(holder.studyImg);
+            .load(items.get(position).getLogo())
+            .asBitmap()
+            .thumbnail(0.5f)
+            .crossFade()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(new SimpleTarget<Bitmap>(200, 200) {
+              @Override
+              public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                holder.defaultthumbnail.setVisibility(View.VISIBLE);
+              }
+
+              @Override
+              public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                holder.studyImg.setImageBitmap(resource);
+              }
+            });
 
     holder.studyTitle.setText(items.get(position).getTitle());
     holder.studyTitleLatin.setText(Html.fromHtml(items.get(position).getTagline()));
@@ -288,11 +295,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                         context,
                         context.getString(R.string.title),
                         "" + items.get(holder.getAdapterPosition()).getTitle());
-                AppController.getHelperSharedPreference()
-                    .writePreference(
-                        context,
-                        context.getString(R.string.bookmark),
-                        "" + items.get(holder.getAdapterPosition()).isBookmarked());
                 AppController.getHelperSharedPreference()
                     .writePreference(
                         context,
@@ -347,7 +349,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                     new Intent(context.getApplicationContext(), StudyInfoActivity.class);
                 intent.putExtra("studyId", items.get(holder.getAdapterPosition()).getStudyId());
                 intent.putExtra("title", items.get(holder.getAdapterPosition()).getTitle());
-                intent.putExtra("bookmark", items.get(holder.getAdapterPosition()).isBookmarked());
                 intent.putExtra("status", items.get(holder.getAdapterPosition()).getStatus());
                 intent.putExtra(
                     "studyStatus", items.get(holder.getAdapterPosition()).getStudyStatus());
@@ -359,26 +360,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                     "rejoin", "" + items.get(holder.getAdapterPosition()).getSetting().getRejoin());
                 ((StudyActivity) context).startActivityForResult(intent, 100);
               }
-            }
-          }
-        });
-
-    holder.statusImgRight.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            if (items.get(holder.getAdapterPosition()).isBookmarked()) {
-              studyFragment.updatebookmark(
-                  false,
-                  holder.getAdapterPosition(),
-                  items.get(holder.getAdapterPosition()).getStudyId(),
-                  items.get(holder.getAdapterPosition()).getStudyStatus());
-            } else {
-              studyFragment.updatebookmark(
-                  true,
-                  holder.getAdapterPosition(),
-                  items.get(holder.getAdapterPosition()).getStudyId(),
-                  items.get(holder.getAdapterPosition()).getStudyStatus());
             }
           }
         });

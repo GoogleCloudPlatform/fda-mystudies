@@ -1,6 +1,7 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC Permission is hereby granted, free of charge, to any person obtaining a
+ * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"), to deal in the
  * Software without restriction, including without limitation the rights to use, copy, modify,
  * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
@@ -60,7 +61,6 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
   @Override
   public Authentication authenticate(Authentication authentication) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    UserBO userBO = null;
     final Integer MAX_ATTEMPTS = Integer.valueOf(propMap.get("max.login.attempts"));
     final Integer USER_LOCK_DURATION =
         Integer.valueOf(propMap.get("user.lock.duration.in.minutes"));
@@ -72,13 +72,14 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
     String username = (String) authentication.getPrincipal();
 
     try {
-      if (StringUtils.isNotEmpty(username)) {
-        userBO = loginDAO.getValidUserByEmail(username.toLowerCase());
-        if (userBO == null) {
-          auditRequest.setSource(SIGNIN_FAILED_UNREGISTERED_USER.getSource().getValue());
-          auditRequest.setDestination(SIGNIN_FAILED_UNREGISTERED_USER.getDestination().getValue());
-          auditLogEventHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
-        }
+      UserBO userBO =
+          StringUtils.isNotEmpty(username)
+              ? loginDAO.getValidUserByEmail(username.toLowerCase())
+              : null;
+      if (userBO == null) {
+        auditRequest.setSource(SIGNIN_FAILED_UNREGISTERED_USER.getSource().getValue());
+        auditRequest.setDestination(SIGNIN_FAILED_UNREGISTERED_USER.getDestination().getValue());
+        auditLogEventHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
       }
 
       UserAttemptsBo userAttempts =
@@ -118,7 +119,9 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
 
       if (userBO != null) {
-        auditRequest.setUserId(userBO.getUserEmail());
+        userBO.setUserLastLoginDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+        loginDAO.updateUser(userBO);
+        auditRequest.setUserId(userBO.getUserId().toString());
         auditRequest.setUserAccessLevel(userBO.getAccessLevel());
       }
       auditRequest.setSource(SIGNIN_SUCCEEDED.getSource().getValue());

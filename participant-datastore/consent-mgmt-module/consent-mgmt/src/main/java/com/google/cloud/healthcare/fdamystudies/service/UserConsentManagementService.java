@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -9,10 +9,10 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
 
 public interface UserConsentManagementService {
@@ -28,7 +28,7 @@ public interface UserConsentManagementService {
   public ConsentStudyResponseBean getStudyConsentDetails(
       String userId, String studyId, String consentVersion, AuditLogEventRequest auditRequest);
 
-  public StudyInfoBean getStudyInfoId(String customStudyId);
+  public StudyEntity getStudyInfo(String customStudyId);
 
   public String getUserDetailsId(String userId);
 }

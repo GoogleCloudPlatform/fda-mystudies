@@ -63,6 +63,12 @@
     <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
+    
+    <style>
+		.hover_text_white { color:#fff !important;}
+		.hover_text_white:hover { color:#fff !important;}
+		.hover_text_white:focus { color:#fff !important;}
+	</style>
 
   </head>
   <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
@@ -86,7 +92,7 @@
           <div class="lg-space-txt">
             Study Builder
           </div>
-          <div class="ll__border__bottom"></div>
+          <div class="ll__border__bottom mb-xs"></div>
           <c:url value='/j_spring_security_check' var="fdaLink"/>
           <input type="hidden" id="fdaLink" value="${fdaLink}">
           <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
@@ -94,7 +100,7 @@
                      autocomplete="off">
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
-            <div class="login pt-xlg">
+            <div class="login pt-lg">
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
                        data-pattern-error="Email address is invalid"
@@ -116,7 +122,7 @@
               </div>
               <div class="pb-md pt-xs">
                 <a id="forgot_pwd"
-                   class="gray-link white__text"
+                   class="gray-link white__text hover_text_white"
                    href="javascript:void(0)">Forgot password?
                 </a>
               </div>
@@ -137,6 +143,7 @@
                        maxlength="100"
                        placeholder="Email address"
                        data-pattern-error="Email address is invalid" required maxlength="100"
+                       data-error="Please complete this field"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -144,7 +151,7 @@
                 <button type="submit" class="btn lg-btn" id="log-btn">SUBMIT</button>
               </div>
               <div class="pt-xs">
-                <a id="login" class="gray-link white__text" href="javascript:void(0)">Back to sign in
+                <a id="login" class="gray-link white__text hover_text_white" href="javascript:void(0)">Back to sign in
                 </a>
               </div>
             </div>

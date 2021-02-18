@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -52,7 +52,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
   @Override
-  public boolean studyExists(@NotNull String studyId) {
+  public StudyEntity getStudyDetails(String studyId) {
     logger.info("EnrollmentTokenDaoImpl studyExists() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
@@ -72,17 +72,16 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     if (!studyInfoList.isEmpty()) {
       studyEntity = studyInfoList.get(0);
     }
-    if (studyEntity != null) {
+    /*if (studyEntity != null) {
       isStudyExist = true;
-    }
+    }*/
 
     logger.info("EnrollmentTokenDaoImpl studyExists() - Ends ");
-    return isStudyExist;
+    return studyEntity;
   }
 
   @Override
-  public boolean isValidStudyToken(
-      @NotNull String token, @NotNull String studyId, @NotNull String email) {
+  public boolean isValidStudyToken(@NotNull String token, String studyId, @NotNull String email) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
     ParticipantRegistrySiteEntity participantRegistrySite = null;
     Session session = this.sessionFactory.getCurrentSession();
@@ -118,7 +117,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue) {
+  public boolean hasParticipant(String studyId, @NotNull String tokenValue) {
     logger.info("EnrollmentTokenDaoImpl hasParticipant() - Started ");
     List<Object[]> participantList = null;
     Session session = this.sessionFactory.getCurrentSession();
@@ -140,7 +139,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   }
 
   @Override
-  public boolean enrollmentTokenRequired(@NotNull String studyId) {
+  public boolean enrollmentTokenRequired(String studyId) {
     logger.info("EnrollmentTokenDaoImpl enrollmentTokenRequired() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyEntityCriteria = null;
@@ -171,7 +170,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   @SuppressWarnings("unchecked")
   @Override
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String studyId,
+      String studyId,
       String tokenValue,
       UserDetailsEntity userDetail,
       boolean isTokenRequired,

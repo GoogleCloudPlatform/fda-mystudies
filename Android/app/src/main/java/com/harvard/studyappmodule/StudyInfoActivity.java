@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -88,9 +89,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private static final int JOIN_ACTION_SIGIN = 100;
   private static final int GET_PREFERENCES = 101;
   private RelativeLayout backBtn;
-  private RelativeLayout rightBtn;
-  private AppCompatImageView bookmarkimage;
-  private boolean bookmarked = false;
   private String studyId = "";
   private String status = "";
   private String studyStatus = "";
@@ -131,7 +129,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       studyStatus = getIntent().getStringExtra("studyStatus");
       position = getIntent().getStringExtra("position");
       title = getIntent().getStringExtra("title");
-      bookmarked = getIntent().getBooleanExtra("bookmark", false);
       enroll = getIntent().getStringExtra("enroll");
       rejoin = getIntent().getStringExtra("rejoin");
       aboutThisStudy = getIntent().getBooleanExtra("about_this_study", false);
@@ -139,39 +136,20 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       Logger.log(e);
     }
 
-    if (AppController.getHelperSharedPreference()
-        .readPreference(this, getResources().getString(R.string.userid), "")
-        .equalsIgnoreCase("")) {
-      bookmarkimage.setVisibility(View.GONE);
-      rightBtn.setClickable(false);
-    }
-    if (bookmarked) {
-      bookmarkimage.setImageResource(R.drawable.star_yellow_big);
-    } else {
-      bookmarkimage.setImageResource(R.drawable.star_grey_big);
-    }
     AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
     callGetStudyInfoWebservice();
 
-    if (status.equalsIgnoreCase(getString(R.string.upcoming))
-        || status.equalsIgnoreCase(getString(R.string.closed))) {
+    if (status.equalsIgnoreCase(getString(R.string.closed))) {
       joinButton.setVisibility(View.GONE);
     }
 
-    if (status.equalsIgnoreCase(getString(R.string.closed))) {
-      bookmarkimage.setVisibility(View.GONE);
-    }
-
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-      bookmarkimage.setVisibility(View.GONE);
       backBtn.setVisibility(View.VISIBLE);
     }
   }
 
   private void initializeXmlId() {
     backBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    rightBtn = (RelativeLayout) findViewById(R.id.rightBtn);
-    bookmarkimage = (AppCompatImageView) findViewById(R.id.imageViewRight);
     joinButton = (AppCompatTextView) findViewById(R.id.joinButton);
     visitWebsiteButton = (AppCompatTextView) findViewById(R.id.mVisitWebsiteButton);
     learnMoreButton = (AppCompatTextView) findViewById(R.id.mLernMoreButton);
@@ -194,18 +172,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           @Override
           public void onClick(View view) {
             backClicked();
-          }
-        });
-
-    rightBtn.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            if (bookmarked) {
-              updatebookmark(false);
-            } else {
-              updatebookmark(true);
-            }
           }
         });
 
@@ -326,7 +292,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     } else {
       Intent intent = new Intent();
       intent.putExtra("position", position);
-      intent.putExtra("bookmark", bookmarked);
       intent.putExtra("status", status);
       intent.putExtra("studyId", studyId);
       intent.putExtra("action", "refresh");
@@ -336,9 +301,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   }
 
   private void joinStudy() {
-    if (status.equalsIgnoreCase(StudyFragment.UPCOMING)) {
-      Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-    } else if (enroll.equalsIgnoreCase("false")) {
+    if (enroll.equalsIgnoreCase("false")) {
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
     } else if (status.equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -368,6 +331,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 studyId,
                 eligibilityConsent.getEligibility(),
                 title,
+                "",
                 "",
                 "test",
                 "join");
@@ -590,6 +554,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                   eligibilityConsent.getEligibility(),
                   title,
                   data.getStringExtra("enrollId"),
+                  data.getStringExtra("siteId"),
                   "combined",
                   "join");
           startActivity(intent);
@@ -667,15 +632,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       LoginData loginData = (LoginData) response;
       AppController.getHelperProgressDialog().dismissDialog();
       if (loginData != null) {
-        if (bookmarked) {
-          bookmarkimage.setImageResource(R.drawable.star_grey_big);
-          bookmarked = false;
-        } else {
-          bookmarkimage.setImageResource(R.drawable.star_yellow_big);
-          bookmarked = true;
-        }
 
-        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, bookmarked, studyStatus);
+        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, studyStatus);
         /// delete offline row
         dbServiceSubscriber.deleteOfflineDataRow(this, deleteIndexNumberDb);
       }
@@ -704,9 +662,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
         userPreferenceStudies = studies.getStudies();
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, realm);
-        if (studyList.getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
-          Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-        } else if (!studyList.getSetting().isEnrolling()) {
+        if (!studyList.getSetting().isEnrolling()) {
           Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
         } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
           Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -776,13 +732,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       learnMoreButton.setClickable(true);
     }
 
-    if (status.equalsIgnoreCase(getString(R.string.upcoming))
-        || status.equalsIgnoreCase(getString(R.string.closed))) {
-      joinButton.setVisibility(View.GONE);
-    }
-
     if (status.equalsIgnoreCase(getString(R.string.closed))) {
-      bookmarkimage.setVisibility(View.GONE);
+      joinButton.setVisibility(View.GONE);
     }
   }
 
@@ -794,14 +745,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     } else {
       // offline update
       if (responseCode == UPDATE_PREFERENCES) {
-        if (bookmarked) {
-          bookmarkimage.setImageResource(R.drawable.star_grey_big);
-          bookmarked = false;
-        } else {
-          bookmarkimage.setImageResource(R.drawable.star_yellow_big);
-          bookmarked = true;
-        }
-        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, bookmarked, studyStatus);
+        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, studyStatus);
       }
       studyHome = dbServiceSubscriber.getStudyInfoListFromDB(studyId, realm);
       if (studyHome != null) {
@@ -858,7 +802,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     JSONObject studies = new JSONObject();
     try {
       studies.put("studyId", studyId);
-      studies.put("bookmarked", b);
     } catch (JSONException e) {
       Logger.log(e);
     }

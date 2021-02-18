@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -21,7 +21,6 @@ public class ParticipantServiceImpl implements ParticipantService {
   @Override
   public String saveParticipant(ParticipantInfoEntity participantBo)
       throws ProcessResponseException {
-    System.out.println("ParticipantServiceImpl saveParticipant starts");
     return participantDao.saveParticipant(participantBo);
   }
 

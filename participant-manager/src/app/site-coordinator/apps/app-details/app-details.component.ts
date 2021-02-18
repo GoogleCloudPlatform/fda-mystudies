@@ -50,7 +50,7 @@ export class AppDetailsComponent
   }
 
   ngOnInit(): void {
-    this.sharedService.updateSearchPlaceHolder('Search Participant Email');
+    this.sharedService.updateSearchPlaceHolder('Search participant email');
     this.subs.add(
       this.route.params.subscribe((params) => {
         if (params.appId) {

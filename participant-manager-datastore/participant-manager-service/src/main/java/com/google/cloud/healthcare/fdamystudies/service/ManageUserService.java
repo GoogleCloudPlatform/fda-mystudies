@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -32,7 +32,8 @@ public interface ManageUserService {
       String orderByCondition,
       String searchTerm);
 
-  public AdminUserResponse sendInvitation(String userId, String superAdminUserId);
+  public AdminUserResponse sendInvitation(
+      String userId, String superAdminUserId, AuditLogEventRequest auditRequest);
 
   public void sendUserEmail();
 }
