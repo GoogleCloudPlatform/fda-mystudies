@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -43,7 +43,7 @@
 }
 
 body {
-  font-family: "Muli", sans-serif;
+  font-family: "Muli", sans-serif !important;
 }
 
 a, a:hover {
@@ -345,7 +345,7 @@ body#body-container {
   background: var(--aqua-gray) !important;
   color: var(--space-gray);
   font-size: 100%;
-  font-family: "Muli", sans-serif;
+  font-family: "Muli", sans-serif !important;
   font-weight: 600;
 }
 
@@ -512,7 +512,7 @@ body#body-container {
 .loading_text {
   color: var(--space-gray);
   font-size: 14px;
-  font-family: Muli, sans-serif;
+  font-family: Muli, sans-serif !important;
   font-weight: 600;
   text-align: center;
   margin-top: 80%;

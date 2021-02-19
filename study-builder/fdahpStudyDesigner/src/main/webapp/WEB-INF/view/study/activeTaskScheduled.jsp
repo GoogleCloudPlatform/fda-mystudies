@@ -47,10 +47,10 @@
     pointer-events: none;
   }
    
-  .display_inl_tbl { display: inline-table !important; } 
+
  
 </style>
-<div class="gray-xs-f mb-sm">Active Task Schedule Type</div>
+<div class="gray-xs-f mb-sm">Active task schedule type</div>
 <div class="pb-lg ">
   <span class="radio radio-info radio-inline p-40">
     <input type="radio" id="schedule1" class="typeofschedule" scheduletype="Regular"
@@ -73,7 +73,7 @@
            data-toggle="validator">
   <div class="anchortypeclass" style="display:none;">
     <c:if test="${fn:length(anchorTypeList) gt 0}">
-      <div class="gray-xs-f mb-sm">Select Anchor Date Type</div>
+      <div class="gray-xs-f mb-sm">Select anchor date type</div>
       <div class="clearfix"></div>
       <div class="col-md-5 col-lg-5 p-none">
         <div class="form-group">
@@ -94,7 +94,7 @@
   </div>
 </form:form>
 <!-- Ancor date type -->
-<div class="gray-xs-f mb-sm">Active Task Scheduling Options</div>
+<div class="gray-xs-f mb-sm">Active task scheduling options</div>
 <div class="pb-lg b-bor">
   <span class="radio radio-info radio-inline p-40">
     <input type="radio" id="oneTimeRadio1" class="schedule" frequencytype="oneTime"
@@ -121,7 +121,7 @@
     <input type="radio" id="manuallyRadio5" class="schedule" frequencytype="manually"
            value="Manually Schedule"
            name="frequency" ${activeTaskBo.frequency=='Manually Schedule' ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}>
-    <label for="manuallyRadio5">Custom Schedule</label>
+    <label for="manuallyRadio5">Custom schedule</label>
   </span>
 </div>
 <!-- One time Section-->
@@ -144,7 +144,8 @@
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           data-toggle="tooltip"
           data-placement="bottom"
-          title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+          title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
       </span>
     </div>
     <div class="mt-sm">
@@ -163,7 +164,7 @@
         <!-- Anchordate start-->
         <div class="mt-none resetDate">
           <div>
-            <span class="pr-md">Anchor Date</span>
+            <span class="pr-md">Anchor date</span>
             <span>
               <select
                   class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -211,7 +212,7 @@
                      name="activeTaskFrequenciesBo.frequencyTime"
                      value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"  <c:if
                   test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if>
-                     placeholder="Select Time"/>
+                     placeholder="Select time"/>
               <span class='help-block with-errors red-txt'></span>
             </span>
           </div>
@@ -222,7 +223,7 @@
         <span class="form-group m-none dis-inline vertical-align-middle pr-md">
           <input id="chooseDate" type="text"
                  class="mt-sm form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="activeTaskFrequenciesBo.frequencyDate" placeholder="Choose Date"
+                 name="activeTaskFrequenciesBo.frequencyDate" placeholder="Choose date"
                  value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}" required <c:if
               test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
           <span class='help-block with-errors red-txt'></span>
@@ -233,7 +234,7 @@
                  name="activeTaskFrequenciesBo.frequencyTime"
                  value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}" required <c:if
               test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if>
-                 placeholder="Select Time"/>
+                 placeholder="Select time"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -248,7 +249,7 @@
         <input type="checkbox" id="isStudyLifeTime" name="activeTaskFrequenciesBo.isStudyLifeTime"
                value="true" ${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}
                required="required">
-        <label for="isStudyLifeTime"> Study Lifetime</label>
+        <label for="isStudyLifeTime"> Study lifetime</label>
       </span>
       <div class="mt-md form-group regularClass">
         <span class="form-group m-none dis-inline vertical-align-middle pr-md">
@@ -258,13 +259,13 @@
                 type="text"
                 class="form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                 name="activeTaskLifetimeEnd"
-                placeholder="Choose End Date"
+                placeholder="Choose end date"
                 required <c:if
                 test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                 value=""/></c:when>
             <c:otherwise><input id="chooseEndDate" type="text"
                                 class="form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                                name="activeTaskLifetimeEnd" placeholder="Choose End Date"
+                                name="activeTaskLifetimeEnd" placeholder="Choose end date"
                                 required <c:if
                 test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                                 value="${activeTaskBo.activeTaskLifetimeEnd}"/></c:otherwise>
@@ -279,7 +280,7 @@
         <!-- Anchordate start-->
         <div class="mt-none resetDate">
           <div>
-            <span class="pr-md">Anchor Date</span>
+            <span class="pr-md">Anchor date</span>
             <span>
               <select
                   class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -350,12 +351,13 @@
             <span class="requiredStar"> *</span>
             <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                   data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed."></span>
+                  title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time."></span>
           </span>
           <br/>
           <input id="startDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 placeholder="Choose Date" required name="activeTaskLifetimeStart"
+                 placeholder="Choose date" required name="activeTaskLifetimeStart"
                  value="${activeTaskBo.activeTaskLifetimeStart}"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -369,7 +371,7 @@
                 <span class="requiredStar">*</span>
               </span>
               <br/>
-              <span class="pr-md">Anchor Date</span>
+              <span class="pr-md">Anchor date</span>
               <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -413,7 +415,7 @@
           <br/>
           <input id="days" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of Times" required
+                 name="repeatActiveTask" placeholder="No of times" required
                  value="${activeTaskBo.repeatActiveTask}"
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -424,11 +426,12 @@
       <div class="clearfix"></div>
     </div>
     <div class="mt-md">
-      <div class="gray-xs-f mb-xs">End Date
+      <div class="gray-xs-f mb-xs">End date
         <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
               data-toggle="tooltip"
               data-placement="bottom"
-              title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+              title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -442,7 +445,8 @@
         <span class="requiredStar"> *</span>
         <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip" data-toggle="tooltip"
               data-placement="bottom" id="helpNote"
-              title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed."></span>
+              title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time."></span>
       </div>
       <div class="dailyContainer">
         <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) eq 0}">
@@ -518,7 +522,8 @@
             class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
         </span>
       </span>
       <br/>
@@ -566,14 +571,15 @@
                 class="ml-xs sprites_v3 filled-tooltip"
                 data-toggle="tooltip"
                 data-placement="bottom"
-                title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
             </span>
           </span>
           <br/>
           <input id="startWeeklyDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  required
-                 name="activeTaskLifetimeStart" placeholder="Choose Date"
+                 name="activeTaskLifetimeStart" placeholder="Choose date"
                  value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -587,7 +593,7 @@
                 <span class="requiredStar">*</span>
               </span>
               <br/>
-              <span class="pr-md">Anchor Date</span>
+              <span class="pr-md">Anchor date</span>
               <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -638,7 +644,7 @@
             <br/>
             <input id="weeksAnchor" type="text"
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   name="repeatActiveTask" placeholder="No of Times"
+                   name="repeatActiveTask" placeholder="No of times"
                    value="${activeTaskBo.repeatActiveTask}" required
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -659,7 +665,7 @@
           <br/>
           <input id="weeks" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of Times"
+                 name="repeatActiveTask" placeholder="No of times"
                  value="${activeTaskBo.repeatActiveTask}" required
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -670,12 +676,13 @@
       <div class="clearfix"></div>
     </div>
     <div class="mt-md">
-      <div class="gray-xs-f mb-xs">End Date
+      <div class="gray-xs-f mb-xs">End date
         <span
             class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -709,7 +716,7 @@
   <input type="hidden" name="type" id="type" value="schedule">
   <div class="month all mt-lg dis-none">
     <div id="monthlyDateId">
-      <span class="gray-xs-f">Select Date/Time (of the month)
+      <span class="gray-xs-f">Select date/time (of the month)
         <span
             class="requiredStar"> *
         </span>
@@ -717,7 +724,8 @@
             class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
         </span>
       </span>
       <br/>
@@ -726,7 +734,7 @@
           <input id="startDateMonthly" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  required
-                 placeholder="Choose Date" name="activeTaskFrequenciesBo.frequencyDate"
+                 placeholder="Choose date" name="activeTaskFrequenciesBo.frequencyDate"
                  value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -754,13 +762,14 @@
                 class="ml-xs sprites_v3 filled-tooltip"
                 data-toggle="tooltip"
                 data-placement="bottom"
-                title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
             </span>
           </span>
           <br/>
           <input id="pickStartDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 placeholder="Choose Start Date" required name="activeTaskLifetimeStart"
+                 placeholder="Choose start date" required name="activeTaskLifetimeStart"
                  value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -776,7 +785,7 @@
                 </span>
               </span>
               <br/>
-              <span class="pr-md">Anchor Date</span>
+              <span class="pr-md">Anchor date</span>
               <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
@@ -831,7 +840,7 @@
             <br/>
             <input id="monthsAnchor" type="text"
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   name="repeatActiveTask" placeholder="No of Times" required
+                   name="repeatActiveTask" placeholder="No of times" required
                    value="${activeTaskBo.repeatActiveTask}"
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -853,7 +862,7 @@
           <br/>
           <input id="months" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of Times" required
+                 name="repeatActiveTask" placeholder="No of times" required
                  value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number." maxlength="3"/>
@@ -863,12 +872,13 @@
       <div class="clearfix"></div>
     </div>
     <div class="mt-md col-md-12 p-none">
-      <div class="gray-xs-f mb-xs">End Date
+      <div class="gray-xs-f mb-xs">End date
         <span
             class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -905,21 +915,22 @@
         <div class="manually-option mb-md form-group" id="0">
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
-                  <span class="display_inl_tbl">
+                 
                   <div class="gray-xs-f mb-sm">Select a date range
                     <span class="requiredStar"> *</span>
                     <span
                        class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                        data-toggle="tooltip"
                        data-placement="bottom"
-                       title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                       title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                      </span>
                   </div>
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="StartDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusStrDate"
                    name="activeTaskCustomScheduleBo[0].frequencyStartDate" value=""
-                   placeholder="Start Date"
+                   placeholder="Start date"
                    onclick='customStartDate(this.id,0);' required/>
             <span class='help-block with-errors red-txt'></span>
           </span>
@@ -929,22 +940,11 @@
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="EndDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusEndDate"
-                   name="activeTaskCustomScheduleBo[0].frequencyEndDate" placeholder="End Date"
+                   name="activeTaskCustomScheduleBo[0].frequencyEndDate" placeholder="End date"
                    onclick='customEndDate(this.id,0);' required/>
             <span class='help-block with-errors red-txt'></span>
             </span>            
-             </span>
-            <span class="display_inl_tbl">
-            <div class="gray-xs-f mb-sm">Select a time
-                <span class="requiredStar"> *</span>
-           <span
-          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-          data-toggle="tooltip"
-          data-placement="bottom"
-          title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-      </span>
-    </div>
-         
+           
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="customTime0" type="text" count='0' class="form-control clock cusTime"
                    name="activeTaskCustomScheduleBo[0].frequencyTime" placeholder="Time"
@@ -953,7 +953,7 @@
             <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
-          </span>
+          
         </div>
       </c:if>
       <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) gt 0}">
@@ -971,7 +971,7 @@
               <input id="StartDate${customVar.index}" type="text" count='${customVar.index}'
                      class="form-control calendar cusStrDate ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyStartDate"
-                     value="${activeTaskCustomScheduleBo.frequencyStartDate}" placeholder="Start Date"
+                     value="${activeTaskCustomScheduleBo.frequencyStartDate}" placeholder="Start date"
                      onclick='customStartDate(this.id,${customVar.index});' required/>
               <span class='help-block with-errors red-txt'></span>
             </span>
@@ -982,7 +982,7 @@
               <input id="EndDate${customVar.index}" type="text" count='${customVar.index}'
                      class="form-control calendar cusEndDate ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndDate"
-                     value="${activeTaskCustomScheduleBo.frequencyEndDate}" placeholder="End Date"
+                     value="${activeTaskCustomScheduleBo.frequencyEndDate}" placeholder="End date"
                      onclick='customEndDate(this.id,${customVar.index});' required/>
               <span class='help-block with-errors red-txt'></span>
             </span>
@@ -1011,7 +1011,7 @@
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
                  
-                  <span class="display_inl_tbl">
+                 
                           <div class="gray-xs-f">
               Select a date range
               <span class="requiredStar">*</span>
@@ -1019,13 +1019,14 @@
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                   data-toggle="tooltip"
                   data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                  title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
               </span>
             </div>
             
           <span class="mb-sm pr-md">
             <span class="light-txt opacity06">
-              Anchor Date
+              Anchor date
             </span>
           </span>
           <span>
@@ -1090,18 +1091,8 @@
             </span>
           </span>
           
-               </span>
-                 <span class="display_inl_tbl">
-                          <div class="gray-xs-f mb-xs">
-              Select a time
-              <span class="requiredStar">*</span>
-              <span
-                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-              </span>
-            </div>
+              
+                
             
           <span class="form-group  dis-inline vertical-align-middle pr-md"
                 style="margin-bottom: -13px"><input id="manualTime0"
@@ -1115,7 +1106,7 @@
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
                 onclick="addDateAnchor();">+
           </span>
-          </span>
+          
         </div>
       </c:if>
       <c:if
@@ -1132,7 +1123,7 @@
                    id="activeTaskId" value="${activeTaskCustomScheduleBo.activeTaskId}">
             <span class="mb-sm pr-md">
               <span
-                  class="light-txt opacity06"> Anchor Date
+                  class="light-txt opacity06"> Anchor date
               </span>
             </span>
             <span>
@@ -1250,21 +1241,102 @@
     $('[data-toggle="tooltip"]').tooltip();
 
     if ($("#schedule2").prop("checked")) {
-      $("#weekDaysId").hide();
-      $(".weeklyRegular").hide();
-      $("#monthlyDateId").hide();
-      $(".monthlyRegular").hide();
-      $("#activeMonthlyRegular").hide();
-      localStorage.setItem("IsActiveAnchorDateSelected", "true");
-      localStorage.setItem("IsActiveRegularSelected", "false");
+    	 var schedule_opts = $("input[name='frequency']:checked").val();
+    	 
+    	  $("#weekDaysId").hide();
+        $("#weekDaysId").find('input:text').removeAttr('required', true);
+        $(".weeklyRegular").hide();
+        $(".weeklyRegular").removeAttr('required');
+
+        $("#monthlyDateId").hide();
+        $("#monthlyDateId").find('input:text').removeAttr('required', true);
+        $(".monthlyRegular").hide();
+        $(".monthlyRegular").removeAttr('required');
+
+        $("#activeMonthlyRegular").hide();
+        $("#months").removeAttr('required');
+
+        localStorage.setItem("IsActiveAnchorDateSelected", "true");
+        localStorage.setItem("IsActiveRegularSelected", "false");
+
+        if (schedule_opts == 'One time') {
+          $(".onetimeanchorClass").show();
+          $(".onetimeanchorClass").find('input:text').attr('required', true);
+        }
+        if (schedule_opts == 'Daily') {
+          $(".dailyanchorDiv").show();
+          $(".dailyanchorDiv").find('input:text').attr('required', true);
+        }
+        if (schedule_opts == 'Weekly') {
+          $(".weeklyanchorDiv").show();
+          $(".weeklyanchorDiv").find('input:text').attr('required', true);
+        }
+        if (schedule_opts == 'Monthly') {
+          $(".monthlyanchorDiv").show();
+          $(".monthlyanchorDiv").find('input:text').attr('required', true);
+        }
+        if (schedule_opts == 'Manually Schedule') {
+          $(".manuallyAnchorContainer").show();
+          $(".manuallyAnchorContainer").find('input:text').attr('required', true);
+        }
+        $('.regularClass').hide();
+        $('.regularClass').find('input:text').removeAttr('required');
+        $('.anchortypeclass').show();
+        $('.anchortypeclass').find('input:select').attr('required', true);
+        $('.selectpicker').selectpicker('refresh');
+        $('.dailyStartCls').hide();
+        $('.dailyStartCls').find('input:text').removeAttr('required');
+        $('.weeklyStartCls').hide();
+        $('.weeklyStartCls').find('input:text,select').removeAttr('required');
+        $('.monthlyStartCls').hide();
+        $('.monthlyStartCls').find('input:text').removeAttr('required');
+        $(".manuallyContainer").hide();
+        $(".manuallyContainer").find('input:text').removeAttr('required');
+        $(".Selectedtooltip").hide();
     } else {
-      $("#weekDaysId").show();
-      $(".weeklyRegular").show();
-      $("#monthlyDateId").show();
-      $(".monthlyRegular").show();
-      $("#activeMonthlyRegular").show();
-      localStorage.setItem("IsActiveAnchorDateSelected", "false");
-      localStorage.setItem("IsActiveRegularSelected", "true");
+    	  localStorage.setItem("IsActiveAnchorDateSelected", "false");
+        localStorage.setItem("IsActiveRegularSelected", "true");
+
+        $("#weekDaysId").show();
+        $("#weekDaysId").attr('required', true);
+
+        $(".weeklyRegular").show();
+        $(".weeklyRegular").attr('required');
+
+        $("#monthlyDateId").show();
+        $("#monthlyDateId").attr('required', true);
+
+        $("#activeMonthlyRegular").show();
+        $("#months").attr('required', true);
+
+        $(".onetimeanchorClass").hide();
+        $('.onetimeanchorClass').find('input:text').removeAttr('required');
+        $('.regularClass').show();
+        $('.regularClass').find('input:text').attr('required', true);
+
+        $('.dailyStartCls').show();
+        $('.dailyStartCls').find('input:text').attr('required', true);
+        $(".dailyanchorDiv").hide();
+        $(".dailyanchorDiv").find('input:text').removeAttr('required', true);
+
+        $('.weeklyStartCls').show();
+        $('.weeklyStartCls').find('input:text,select').attr('required', true);
+        $(".weeklyanchorDiv").hide();
+        $(".weeklyanchorDiv").find('input:text').removeAttr('required', true);
+
+        $('.monthlyStartCls').show();
+        $('.monthlyStartCls').find('input:text').attr('required', true);
+        $(".monthlyanchorDiv").hide();
+        $(".monthlyanchorDiv").find('input:text').removeAttr('required', true);
+
+        $('.manuallyContainer').show();
+        $('.manuallyContainer').find('input:text').attr('required', true);
+        $(".manuallyAnchorContainer").hide();
+        $(".manuallyAnchorContainer").find('input:text').removeAttr('required', true);
+        $('.anchortypeclass').hide();
+        $('.anchortypeclass').removeAttr('required');
+        $("#anchorDateId").val("");
+        $(".Selectedtooltip").show();
     }
 
     $(".typeofschedule").change(function () {
@@ -1287,6 +1359,8 @@
 
         $("#monthlyDateId").hide();
         $("#monthlyDateId").find('input:text').removeAttr('required', true);
+        $(".monthlyRegular").hide();
+        $(".monthlyRegular").removeAttr('required');
 
         $("#activeMonthlyRegular").hide();
         $("#months").removeAttr('required');
@@ -1342,6 +1416,9 @@
         $("#monthlyDateId").show();
         $("#monthlyDateId").attr('required', true);
 
+        $(".monthlyRegular").show();
+        $(".monthlyRegular").attr('required', true);
+        
         $("#activeMonthlyRegular").show();
         $("#months").attr('required', true);
 
@@ -1693,7 +1770,7 @@
           var test =thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").find("ul").length;
           if(test === 0){
           	thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
-              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not yet added."));
+              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not been added already."));
           }
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty();
@@ -2119,7 +2196,7 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start Date' onclick='customStartDate(this.id,"
+        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start date' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -2129,7 +2206,7 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End Date' onclick='customEndDate(this.id,"
+        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End date' onclick='customEndDate(this.id,"
         + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -3085,7 +3162,7 @@
     customAnchorCount = $('.manually-anchor-option').length;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount
         + "'>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor Date </span></span>"
+        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
         + "<span><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
@@ -3098,7 +3175,7 @@
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor Date </span></span>"
+        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].yDaysSign' id='ySign" + customAnchorCount + "'>"

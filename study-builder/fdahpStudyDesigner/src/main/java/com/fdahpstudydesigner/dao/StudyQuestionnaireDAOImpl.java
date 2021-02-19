@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -1232,6 +1232,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .equalsIgnoreCase(FdahpStudyDesignerConstants.FORM_STEP)) {
             eventEnum = STUDY_FORM_STEP_DELETED;
           }
+
+          auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
       } else {
@@ -1301,7 +1303,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
       // Reset destination steps in Questionnaire Ends
 
-      auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();

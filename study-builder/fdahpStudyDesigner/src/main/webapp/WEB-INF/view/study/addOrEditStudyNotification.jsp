@@ -102,7 +102,7 @@
                        test="${notificationBO.notificationScheduleType eq 'immediate'}">checked</c:if>
                    <c:if test="${studyBo.status ne 'Active'}">disabled</c:if>>
             <label for="inlineRadio2" data-toggle="tooltip" data-placement="top"
-                   title="This option will be available once the study is launched.">Send Immediately</label>
+                   title="This option will be available once the study is launched.">Send immediately</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
           <c:if test="${not empty notificationHistoryNoDateTime}">
@@ -117,7 +117,7 @@
       </div>
 
       <div class="add_notify_option mandatoryForStudyNotification">
-        <div class="gray-xs-f mb-xs">Select Date
+        <div class="gray-xs-f mb-xs">Select date
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group date">
@@ -143,7 +143,7 @@
         </div>
       </div>
  <div class="form-group mr-sm" style="white-space: normal; margin-top: -9px;">
- For studies that are live, notifications get published for scheduled delivery to participants as soon as you mark the Notifications section complete.
+For studies that are already launched, notifications get scheduled for delivery upon marking the Notifications section as complete, not requiring an explicit 'Publish updates' action.
  </div>
     </div>
   </form:form>

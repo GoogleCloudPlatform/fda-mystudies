@@ -834,7 +834,7 @@ footer ul li:last-child a {
 }
 
 .fa__plus__minus[aria-expanded="true"] {
-  background-image: url("/assets/svgs/minus.svg");
+  background-image: url("assets/svgs/minus.svg");
   background-repeat: no-repeat;
   display: block;
   background-position: 98%;
@@ -843,7 +843,7 @@ footer ul li:last-child a {
 }
 
 .fa__plus__minus[aria-expanded="false"] {
-  background-image: url("/assets/svgs/plus.svg");
+  background-image: url("assets/svgs/plus.svg");
   background-repeat: no-repeat;
   display: block;
   background-position: 98%;
@@ -1509,6 +1509,9 @@ select {
   }
 }
 
+.table_row_hover_shadow tr {
+  position: relative;
+}
 .table_row_hover_shadow tr:hover {
   box-shadow: 1px 1px 6px 1px #ccd7e2;
   cursor: pointer;

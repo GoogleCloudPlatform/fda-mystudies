@@ -13,7 +13,7 @@ import {ImportParticipantEmailResponse} from '../shared/import-participants';
 export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   @Output() cancel = new EventEmitter();
   @Output()
-  import: EventEmitter<ImportParticipantEmailResponse> = new EventEmitter<ImportParticipantEmailResponse>();
+  import = new EventEmitter<ImportParticipantEmailResponse>();
   @Input() siteId = '';
   fileName = '';
   file?: File;
@@ -66,9 +66,9 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
                 ) +
                 ` emails failed to import.</br>` +
                 `Reason for import failure for these could be one of the following:<br/>
-                1.Email not in proper format <br/>
-                2.Email already exists in the site <br/>
-                3.Invitation enabled for the same email in another site within the same study <br/>
+                1. Email not in proper format <br/>
+                2. Email already exists in the site <br/>
+                3. Invitation enabled for the same email in another site within the same study <br/>
                 `,
             );
           } else if (getMessage(successResponse.code)) {

@@ -34,7 +34,7 @@
                </c:when>
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Launch
-          Study
+          study
         </button>
         <div class="form-group mr-sm" style="white-space: normal; margin-top:4px;">
        This action publishes the study to the mobile app making it live and open to enrollment.  
@@ -62,7 +62,7 @@
                </c:when>
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Publish
-          Updates
+          updates
         </button>
         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
         This action publishes updates to a study that is live. All sections need to be marked complete in order to publish updates to the study. Note that updates to the Notifications section are published immediately upon marking the section complete and do not need the use of this action.
