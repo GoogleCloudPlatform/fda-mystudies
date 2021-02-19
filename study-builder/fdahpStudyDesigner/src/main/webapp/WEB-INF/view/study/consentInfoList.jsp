@@ -209,11 +209,11 @@
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       }
@@ -274,11 +274,11 @@
                     "Unable to delete consent");
                 $('#alertMsg').show();
               }
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             },
             error: function (xhr, status, error) {
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             }
           });
         }
