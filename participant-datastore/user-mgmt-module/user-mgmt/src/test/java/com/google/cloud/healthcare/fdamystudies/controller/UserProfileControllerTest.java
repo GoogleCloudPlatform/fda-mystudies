@@ -362,6 +362,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void resendConfirmationBadRequest() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
+    headers.add("appName", "AppName_BTCDEV001");
 
     // without email
     mockMvc
@@ -399,6 +400,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Test
   public void resendConfirmationSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
+    headers.add("appName", "AppName_BTCDEV001");
 
     mockMvc
         .perform(
