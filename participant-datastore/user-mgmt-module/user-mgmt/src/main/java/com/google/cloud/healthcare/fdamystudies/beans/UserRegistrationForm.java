@@ -55,6 +55,7 @@ public class UserRegistrationForm {
   private boolean tempPassword;
   private LocalDateTime tempPasswordDate;
   private String appId;
+  private String appName;
 
   public UserRegistrationForm(String userId, String emailId, String password) {
     super();
