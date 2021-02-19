@@ -8,7 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
+import com.google.cloud.GcpLaunchStage.Beta;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
-public class AppConfig extends CommonModuleConfiguration {}
+public class AppConfig extends CommonModuleConfiguration {
+
+  @Beta
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+}
