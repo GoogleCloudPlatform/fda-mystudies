@@ -225,7 +225,7 @@
       <div class="clearfix"></div>
 
       <div>
-      <div class="gray-xs-f mb-sm">Consider the question to be correctly answered if the app user responds with
+      <div class="gray-xs-f mb-sm">The question can be considered correctly answered if the app user responds with
           <span
               class="requiredStar">*
           </span>
