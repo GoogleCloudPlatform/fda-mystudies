@@ -180,7 +180,7 @@
           <input type="hidden" id="actionTypeForQuestionPage"
                  name="actionTypeForQuestionPage">
           <div class="gray-xs-f mb-xs">
-            ショートタイトル、またはキー文字列 (半角英数字 1文字以上 50文字まで)
+            ショートタイトル、またはキー文字列 (半角英数字 1文字以上 50文字以下)
             <span
                 class="requiredStar">*
             </span>
@@ -467,13 +467,13 @@
                  value="${not empty questionnaireBo.studyId ? questionnaireBo.studyId : studyBo.id}">
           <div class="oneTime all mt-lg">
             <div class="gray-xs-f mb-sm">
-              Date/Time of launch (pick one)
+              有効期限開始日(どちらか選んでください)
               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
                   data-placement="bottom"
-                  title="All date/time selections are based on server timezone.">
+                  title="この日時はサーバーのタイムゾーンに基づいています">
               </span>
             </div>
             <div class="mt-sm">
@@ -485,16 +485,15 @@
                        name="questionnairesFrequenciesBo.isLaunchStudy" value="true"
                   ${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy ?'checked':''}
                        required ${(questionnaireBo.shortTitleDuplicate>
-                    0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
-                  with study</label>
+                    0)?'disabled' : ''}> <label for="isLaunchStudy"> 治験開始日</label>
               </span>
               <div class="onetimeanchorClass mt-sm" style="display: none">
                 <!-- Anchordate start -->
-                <div class="opacity06">OR</div>
+                <div class="opacity06">または</div>
                 <!-- Anchordate start-->
                 <div class="mt-none resetDate">
                   <div>
-                    <span class="pr-md">Anchor Date</span>
+                    <span class="pr-md">基準日から</span>
                     <span><select
                         class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                         name="questionnairesFrequenciesBo.xDaysSign"
@@ -540,7 +539,7 @@
                     </span>
                     <span class="mb-sm pr-md">
                       <span
-                          class="light-txt opacity06"> days
+                          class="light-txt opacity06"> 日目
                       </span>
                     </span>
                     <span
@@ -590,8 +589,7 @@
               </div>
             </div>
             <div class="gray-xs-f mb-sm mt-md">
-              Lifetime of the run/questionnaire (choose between Study Lifetime
-              and custom end date)
+              アンケートの有効期限 (治験の有効期限かクスタム日付を選んでください)
               <span class="requiredStar">*</span>
             </div>
             <div class="mt-sm">
@@ -741,7 +739,7 @@
                       </span>
                       <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                             data-placement="bottom" id="helpNote"
-                            title="All date/time selections are based on server timezone."></span>
+                            title="この日時はサーバーのタイムゾーンに基づいています"></span>
 
                       <br/>
                       <span class="pr-md">基準日から
@@ -1290,7 +1288,7 @@
                       class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
                       data-placement="bottom"
-                      title="All date/time selections are based on server timezone.">
+                      title="この日時はサーバーのタイムゾーンに基づいています">
                   </span>
                 </span>
                 <br/>

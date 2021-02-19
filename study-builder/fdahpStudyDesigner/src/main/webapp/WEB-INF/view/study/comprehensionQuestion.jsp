@@ -52,7 +52,7 @@
         <input type="hidden" id="studyId" name="studyId" value="${studyId}">
       </c:if>
       <div>
-        <div class="gray-xs-f mb-xs mt-md">設問の説明 (1文字以上 300文字まで)
+        <div class="gray-xs-f mb-xs mt-md">設問の説明 (1文字以上 300文字以下)
           <span
               class="requiredStar">*
           </span>
@@ -70,7 +70,7 @@
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) eq 0}">
             <div class="col-md-12 p-none">
               <div class='col-md-6 pl-none'>
-                <div class="gray-xs-f mb-xs">問題文と答え (1文字以上 150文字まで)
+                <div class="gray-xs-f mb-xs">問題文と答え (1文字以上 150文字以下)
                   <span
                       class="requiredStar">*
                   </span>

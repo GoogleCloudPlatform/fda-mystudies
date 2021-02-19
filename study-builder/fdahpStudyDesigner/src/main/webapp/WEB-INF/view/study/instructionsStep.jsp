@@ -73,7 +73,7 @@
         </div>
       </div>
       <div class="col-md-6">
-        <div class="gray-xs-f mb-xs">ステップタイプ</div>
+        <div class="gray-xs-f mb-xs">現在のステップ</div>
         <div>説明ステップ</div>
       </div>
       <div class="clearfix"></div>
@@ -88,7 +88,7 @@
       </div>
       <div class="clearfix"></div>
 
-      <div class="gray-xs-f mb-xs">説明文 (1文字以上、500文字まで)
+      <div class="gray-xs-f mb-xs">説明文 (1文字以上、500文字以下)
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
