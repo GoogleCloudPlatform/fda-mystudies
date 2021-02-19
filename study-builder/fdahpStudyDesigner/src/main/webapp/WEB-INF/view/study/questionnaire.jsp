@@ -567,7 +567,7 @@
                   <input id="chooseDate" type="text"
                          class="mt-sm form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                          name="questionnairesFrequenciesBo.frequencyDate"
-                         placeholder="Choose Date"
+                         placeholder="毎月実行する日にち"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"
                          required
                       <c:if
@@ -583,7 +583,7 @@
                          required
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
-                         placeholder="Select Time"/>
+                         placeholder="時刻"/>
                   <span
                       class='help-block with-errors red-txt'></span>
                 </span>
@@ -610,7 +610,7 @@
                         test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}">
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                             name="studyLifetimeEnd" placeholder="Choose End Date"
+                             name="studyLifetimeEnd" placeholder="終了日"
                              required
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
@@ -619,7 +619,7 @@
                     <c:otherwise>
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                             name="studyLifetimeEnd" placeholder="Choose End Date"
+                             name="studyLifetimeEnd" placeholder="終了日"
                              required
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
@@ -721,7 +721,7 @@
                   <br/> <input id="startDate"
                                type="text"
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               placeholder="Choose Date" name="studyLifetimeStart"
+                               placeholder="日付" name="studyLifetimeStart"
                                value="${questionnaireBo.studyLifetimeStart}"/>
                   <span
                       class='help-block with-errors red-txt'></span>
@@ -792,7 +792,7 @@
                   </span>
                   <br/> <input id="days" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of Times" required
+                               name="repeatQuestionnaire" placeholder="繰り返し数" required
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -961,7 +961,7 @@
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="selectWeeklyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required onclick="timep(this.id)" placeholder="時刻"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1059,7 +1059,7 @@
                       class="form-group m-none dis-inline vertical-align-middle pr-md">
                     <input id="selectWeeklyTimeAnchor" type="text"
                            class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                           required onclick="timep(this.id)" placeholder="Time"
+                           required onclick="timep(this.id)" placeholder="時刻"
                            name="questionnairesFrequenciesBo.frequencyTime"
                            value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                     <span class='help-block with-errors red-txt'></span>
@@ -1074,7 +1074,7 @@
                     </span>
                     <br/> <input id="weeksAnchor" type="text"
                                  class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                 name="repeatQuestionnaire" placeholder="No of Times"
+                                 name="repeatQuestionnaire" placeholder="繰り返し数"
                                  value="${questionnaireBo.repeatQuestionnaire}" required
                                  onkeypress="return isNumber(event, this)"
                                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -1095,7 +1095,7 @@
                   </span>
                   <br/> <input id="weeks" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of Times"
+                               name="repeatQuestionnaire" placeholder="繰り返し数"
                                value="${questionnaireBo.repeatQuestionnaire}" required
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -1167,7 +1167,7 @@
                   class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
                 <span class=""><input id="startDateMonthly" type="text"
                                       class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                      required placeholder="Choose Date"
+                                      required placeholder="日付"
                                       name="questionnairesFrequenciesBo.frequencyDate"
                                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1177,7 +1177,7 @@
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="selectMonthlyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required onclick="timep(this.id)" placeholder="時刻"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1202,7 +1202,7 @@
                   <br/> <input id="pickStartDate"
                                type="text"
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               placeholder="Choose Start Date" required
+                               placeholder="開始日" required
                                name="studyLifetimeStart"
                                value="${questionnaireBo.studyLifetimeStart}"
                                readonly="readonly"/>
@@ -1387,7 +1387,7 @@
                     <input id="StartDate0" type="text" count='0'
                            class="form-control calendar customCalnder cusStrDate"
                            name="questionnaireCustomScheduleBo[0].frequencyStartDate"
-                           value="" placeholder="Start Date"
+                           value="" placeholder="開始日"
                            onclick='customStartDate(this.id,0);' required/>
                     <span
                         class='help-block with-errors red-txt'></span>
@@ -1400,7 +1400,7 @@
                     <input id="EndDate0" type="text" count='0'
                            class="form-control calendar customCalnder cusEndDate"
                            name="questionnaireCustomScheduleBo[0].frequencyEndDate"
-                           placeholder="End Date" onclick='customEndDate(this.id,0);'
+                           placeholder="終了日" onclick='customEndDate(this.id,0);'
                            required/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
@@ -1442,7 +1442,7 @@
                              class="form-control calendar cusStrDate ${questionnaireCustomScheduleBo.used?'cursor-none' : ''} "
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartDate"
                              value="${questionnaireCustomScheduleBo.frequencyStartDate}"
-                             placeholder="Start Date"
+                             placeholder="開始日"
                              onclick='customStartDate(this.id,${customVar.index});'
                              required/>
                       <span class='help-block with-errors red-txt'></span>
@@ -1457,7 +1457,7 @@
                              class="form-control calendar cusEndDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndDate"
                              value="${questionnaireCustomScheduleBo.frequencyEndDate}"
-                             placeholder="End Date"
+                             placeholder="終了日"
                              onclick='customEndDate(this.id,${customVar.index});' required/>
                       <span class='help-block with-errors red-txt'></span>
                     </span>
@@ -2909,7 +2909,7 @@
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
         "  <input id='time" + count + "' type='text' required name='questionnairesFrequenciesList["
         + count
-        + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>"
+        + "].frequencyTime' placeholder='時刻' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>"
         +
         "<span class='help-block with-errors red-txt'></span>" +
         " </span>" +
@@ -2951,7 +2951,7 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
         + "' required name='questionnaireCustomScheduleBo[" + customCount
-        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start Date' onclick='customStartDate(this.id,"
+        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='開始日' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -2961,14 +2961,14 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
         + "' required name='questionnaireCustomScheduleBo[" + customCount
-        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End Date' onclick='customEndDate(this.id,"
+        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='終了日' onclick='customEndDate(this.id,"
         + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
         + "' required name='questionnaireCustomScheduleBo[" + customCount
-        + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
+        + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='時刻' onclick='timep(this.id);' disabled/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
