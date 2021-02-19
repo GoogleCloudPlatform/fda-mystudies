@@ -68,9 +68,11 @@ public class OAuthController {
 
   @ApiOperation(
       notes =
-          "Refer [The OAuth 2.0 Token Endpoint](https://www.ory.sh/hydra/docs/reference/api/#the-oauth-20-token-endpoint) for request and response details ",
+          "Refer [The OAuth 2.0 Token Endpoint](https://www.ory.sh/hydra/docs/reference/api/#the-oauth-20-token-endpoint)"
+              + " for request and response details ",
       value =
-          "Get access token and refresh token based on grant type. Refer ORY Hydra REST API documentation for request and response details")
+          "Get access token and refresh token based on grant type. "
+              + "Refer ORY Hydra REST API documentation for request and response details")
   @PostMapping(
       value = "/oauth2/token",
       produces = MediaType.APPLICATION_JSON_VALUE,
