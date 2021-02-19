@@ -11,8 +11,7 @@ import {Permission} from 'src/app/shared/permission-enums';
 import {Status, StudyType} from 'src/app/shared/enums';
 import {SearchParameterService} from 'src/app/service/search-parameter.service';
 import {ViewportScroller} from '@angular/common';
-import { SitesModule } from '../sites.module';
-var b : any;
+
 const limit = 10;
 @Component({
   selector: 'app-site-list',
@@ -58,13 +57,12 @@ export class SiteListComponent implements OnInit {
       'Search by site or study ID or name',
     );
   }
-  closeModal(event:Site): void {
+  closeModal(event: Site): void {
     this.study.sites.push(event);
-    this.study.sites.sort((site1, site2):number =>{
-      if(site1.name !==undefined && site2.name !== undefined)
-      {
-        if(site1.name.toLowerCase() < site2.name.toLowerCase()) return -1;
-        if(site1.name.toLowerCase() > site2.name.toLowerCase()) return 1;
+    this.study.sites.sort((site1, site2): number => {
+      if (site1.name !== undefined && site2.name !== undefined) {
+        if (site1.name.toLowerCase() < site2.name.toLowerCase()) return -1;
+        if (site1.name.toLowerCase() > site2.name.toLowerCase()) return 1;
       }
       return 0;
     });
