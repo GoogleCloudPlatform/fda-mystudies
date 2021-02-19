@@ -5063,7 +5063,7 @@ public class StudyController {
                 && notification
                     .getNotificationScheduleType()
                     .equals(FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE)) {
-              notification.setCheckNotificationSendingStatus("Not sent");
+              notification.setCheckNotificationSendingStatus("Scheduled");
             } else if (!notification.isNotificationSent()
                 && notification
                     .getNotificationScheduleType()
