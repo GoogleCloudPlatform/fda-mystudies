@@ -25,7 +25,6 @@ package com.fdahpstudydesigner.service;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATION_FAILED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_SENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_RE_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_DEACTIVATED;
@@ -237,8 +236,6 @@ public class UsersServiceImpl implements UsersService {
           auditLogEvents.add(NEW_USER_CREATED);
           if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
             auditLogEvents.add(NEW_USER_INVITATION_EMAIL_SENT);
-          } else {
-            auditLogEvents.add(NEW_USER_INVITATION_EMAIL_FAILED);
           }
         }
         if (!addFlag) {

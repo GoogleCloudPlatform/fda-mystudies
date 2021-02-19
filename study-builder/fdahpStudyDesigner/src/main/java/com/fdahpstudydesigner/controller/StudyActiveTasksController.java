@@ -26,6 +26,8 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_ACTIVE_TASK_CREATED;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ADD;
 
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
@@ -36,6 +38,7 @@ import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.StatisticImageListBo;
 import com.fdahpstudydesigner.bo.StudyBo;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.StudyActiveTasksService;
@@ -517,10 +520,12 @@ public class StudyActiveTasksController {
                   .getSession()
                   .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully.");
               return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
-
             } else {
-              auditLogEventHelper.logEvent(
-                  STUDY_ACTIVE_TASK_SAVED_OR_UPDATED, auditRequest, values);
+              StudyBuilderAuditEvent event =
+                  ADD.equalsIgnoreCase(activeTaskBo.getActionPage())
+                      ? STUDY_NEW_ACTIVE_TASK_CREATED
+                      : STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
+              auditLogEventHelper.logEvent(event, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(

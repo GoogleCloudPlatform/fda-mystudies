@@ -11,10 +11,10 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_RESENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_RE_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_UPDATED;
@@ -134,9 +134,7 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
-    // H2 database doesn't support Column "BINARY". Expect LoginDAOImpl throws
-    // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found;
-    verifyAuditEventCall(PASSWORD_HELP_EMAIL_FAILED);
+    verifyAuditEventCall(NEW_USER_INVITATION_RESENT);
   }
 
   @Test

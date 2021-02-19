@@ -244,7 +244,6 @@ public class LoginController {
               : "";
       message = loginService.sendPasswordResetLinkToMail(request, email, "", "", auditRequest);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
-        auditRequest.setUserId(request.getParameter("email"));
         request.getSession().setAttribute("sucMsg", propMap.get("user.forgot.success.msg"));
       } else {
         request.getSession().setAttribute("errMsg", message);

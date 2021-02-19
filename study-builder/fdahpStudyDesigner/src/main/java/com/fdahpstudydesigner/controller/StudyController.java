@@ -2218,7 +2218,6 @@ public class StudyController {
                 sesObj,
                 customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
-          // STUDY_QUESTIONNAIRES_SECTION_MARKED_COMPLETE
           StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           if (studyBo != null) {
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
@@ -3462,7 +3461,7 @@ public class StudyController {
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                       propMap.get(FdahpStudyDesignerConstants.SAVE_STUDY_SUCCESS_MESSAGE));
             } else {
-              auditLogEventHelper.logEvent(STUDY_RESOURCE_SAVED_OR_UPDATED, auditRequest, values);
+              auditLogEventHelper.logEvent(STUDY_RESOURCE_MARKED_COMPLETED, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(

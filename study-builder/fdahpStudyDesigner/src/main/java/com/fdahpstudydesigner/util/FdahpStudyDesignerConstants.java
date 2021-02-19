@@ -449,6 +449,8 @@ public class FdahpStudyDesignerConstants {
   public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
       "study.basicInformation.defaultImage";
 
+  public static final String ADD = "add";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
