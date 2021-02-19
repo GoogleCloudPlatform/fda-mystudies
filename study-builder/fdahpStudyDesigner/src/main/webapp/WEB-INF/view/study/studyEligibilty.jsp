@@ -221,7 +221,10 @@
             $('.viewIcon, .editIcon, .deleteIcon').addClass('cursor-none');
             </c:if>
 
-           
+            if(chkDone){
+                    $("#doneBut").attr("disabled", false);
+                    $('#spancomId').removeAttr('data-original-title');
+            }
             
             if (!chkDone && eligibilityMechanism != "1") {
               $('#doneBut').prop('disabled', true);
@@ -485,8 +488,7 @@
 
                       emVal = $("input[name='eligibilityMechanism']:checked").val();
                       if (emVal != "1") {
-                        if ($('#consent_list tbody tr').length == 1
-                                && $('#consent_list tbody tr td').length == 1) {
+                        if (eligibilityTestSize == 0) {
                           $("#doneBut").attr("disabled", true);
                           $('#spancomId').attr('data-original-title',
                               'Please add 1 or more questions to the test');
@@ -570,10 +572,7 @@
                               $('#doneBut').prop(
                                   'disabled',
                                   true);
-                            }else if(chkDone){
-                                $("#doneBut").attr("disabled", false);
-                                $('#spancomId').removeAttr('data-original-title');
-                              }
+                            }
                           } else {
                             $("#alertMsg")
                                 .removeClass(
@@ -606,7 +605,6 @@
 
   function reloadEligibiltyTestDataTable(eligibiltyTestList) {
     $('#consent_list').DataTable().clear();
-    chkDone=true;
     if (eligibiltyTestList != null && eligibiltyTestList.length > 0) {
       $
           .each(
@@ -626,9 +624,6 @@
                   datarow
                       .push("<span class='dis-ellipsis' title='" + DOMPurify.sanitize(obj.question) + "'>"
                           + DOMPurify.sanitize(obj.question) + "</span>");
-                }
-                if(!DOMPurify.sanitize(obj.status)){
-                    chkDone=false;
                 }
                 var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="View" etId="'
                     + parseInt(obj.id) + '"></span> '

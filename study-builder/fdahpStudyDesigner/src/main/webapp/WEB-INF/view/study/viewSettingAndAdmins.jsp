@@ -251,10 +251,6 @@
     $('.radcls').prop('disabled', true);
     </c:if>
     $("#completedId").on('click', function (e) {
-
-      if ($('.checkbox input:checked').length == 0) {
-  	    $("input").attr("required", true);
-      }
       var rowCount = 0;
       if (isFromValid("#settingfoFormId")) {
         rowCount = $('.leadCls').length;
@@ -318,7 +314,11 @@
             $('#completedId').removeAttr('disabled');
             bootbox.alert(errorMessage);
           } else {
-            submitButton(buttonText);
+      	    if ($('.checkbox input:checked').length == 0) {
+      	      $("input").attr("required", true);
+      	    } else {
+      	      submitButton(buttonText);
+      	    }
           }
         },
         error: function status(data, status) {
@@ -330,7 +330,11 @@
         global: false
       });
     } else {
+      if ($('.checkbox input:checked').length == 0) {
+          $("input").attr("required", true);
+      } else {
         submitButton(buttonText);
+      }
     }
   }
   function submitButton(buttonText) {

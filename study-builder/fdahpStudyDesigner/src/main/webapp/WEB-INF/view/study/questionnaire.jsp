@@ -63,11 +63,10 @@
   /* error box css start here  */
   .help-block ul {
     width: 150px;
-   /* font-size: 10 px !important; */
+  // font-size: 10 px !important;
   }
  /* error box css end here  */
   
-   
 </style>
 
 <script type="text/javascript">
@@ -1363,7 +1362,6 @@
                          name="questionnaireCustomScheduleBo[0].questionnairesId"
                          id="questionnairesId" value="${questionnaireBo.id}">
                           
-                        
                           <div class="gray-xs-f mb-sm">
                        Select a date range and a start and end time for each run of the activity
                          <span class="requiredStar">*</span>
@@ -1396,7 +1394,6 @@
                            required/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
-                 
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="customTime0" type="text" count='0'
@@ -1417,7 +1414,7 @@
                     items="${questionnaireBo.questionnaireCustomScheduleBo}"
                     var="questionnaireCustomScheduleBo" varStatus="customVar">
                   <div class="manually-option mb-md form-group"
-                       id="RegDate${customVar.index}">
+                       id="${customVar.index}">
                     <input type="hidden"
                            name="questionnaireCustomScheduleBo[${customVar.index}].id"
                            id="id" value="${questionnaireCustomScheduleBo.id}">
@@ -1466,9 +1463,9 @@
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
-                    <span id="AddButton"
-                          class="addbtn addBtnDis align-span-center mr-md cursor-display"
-                          onclick="addDate();">+
+                    <span
+                        class="addbtn addBtnDis align-span-center mr-md cursor-display"
+                        onclick="addDate();">+
                     </span>
                     <span id="delete"
                           class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
@@ -1567,7 +1564,7 @@
                         class="light-txt opacity06"> days
                     </span>
                   </span>
-                  
+                
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md"
                       style="margin-bottom: -13px"><input id="manualTime0"
@@ -1591,7 +1588,7 @@
                     items="${questionnaireBo.questionnaireCustomScheduleBo}"
                     var="questionnaireCustomScheduleBo" varStatus="customVar">
                   <div class="manually-anchor-option mb-md form-group"
-                       id="AnchorDate${customVar.index}">
+                       id="${customVar.index}">
                     <input type="hidden"
                            name="questionnaireCustomScheduleBo[${customVar.index}].id"
                            id="id" value="${questionnaireCustomScheduleBo.id}">
@@ -1843,20 +1840,19 @@
         $(".monthlyRegular").show();
       }
     })
-
-    if ($('.dailyTimeDiv').length == 1) {
-   	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
-     }
-   
-    if($('.manually-option').length == 1){
-   	  $('.manually-option').find(".delete").css("visibility", "hidden");
-     }
-
-    if($('.manually-anchor-option').length == 1){
-  	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
-    }
-
     
+     if ($('.dailyTimeDiv').length == 1) {
+    	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
+      }
+    
+     if($('.manually-option').length == 1){
+    	  $('.manually-option').find(".delete").css("visibility", "hidden");
+      }
+
+     if($('.manually-anchor-option').length == 1){
+   	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+     }
+
     $(".typeofschedule").change(function () {
 
       var scheduletype = $(this).attr('scheduletype');
@@ -1924,30 +1920,11 @@
         $('.weeklyStartCls').find('input:text,select').removeAttr('required');
         $('.monthlyStartCls').hide();
         $('.monthlyStartCls').find('input:text').removeAttr('required');
-        
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
-
-        var j = 0;
-        for (j = customCount; j > 0; j--) {
-          var xdays = $("#xdays" + j).val();
-          
-          if(xdays == '') {
-            document.getElementById('manualTime0').value = '';
-        	  
-            $("#AnchorDate" + j ).hide();
-            $("#AnchorDate" + j ).find('input:text').removeAttr('required', true);
-
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
       } else {
-          
+
         localStorage.setItem("IsAnchorDateSelected", "false");
         localStorage.setItem("IsRegularSelected", "true");
 
@@ -1955,7 +1932,7 @@
         $('.onetimeanchorClass').find('input:text').removeAttr('required');
         $('.regularClass').show();
         $('.regularClass').find('input:text').attr('required', true);
-        
+
         $('.dailyStartCls').show();
         $('.dailyStartCls').find('input:text').attr('required', true);
         $(".dailyanchorDiv").hide();
@@ -1982,7 +1959,7 @@
 
         $(".monthlyanchorDiv").hide();
         $(".monthlyanchorDiv").find('input:text').removeAttr('required', true);
-        
+
         $('.manuallyContainer').show();
         $('.manuallyContainer').find('input:text').attr('required', true);
         $(".manuallyAnchorContainer").hide();
@@ -1992,26 +1969,9 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
 
-        var i = 0;
-        for (i = customCount-1; i > 0; i--) {
-          var RegStartDate = $("#StartDate" + i).val();
-        	
-          if(RegStartDate == '') {
-        	document.getElementById('customTime0').value = '';
-        	$("#customTime0").attr("disabled", true);
-          
-            $("#RegDate" + i ).hide();
-            $("#RegDate" + i ).find('input:text').removeAttr('required', true);
 
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
-        
 	        var startDate = $("#startDate").val();
+	  
 	        if(startDate!=''){
 	            var days = $("#days").val();
 	            var endDate = ''
@@ -2963,6 +2923,7 @@
         var id = $(this).attr("id");
         var timeId = '#time' + id;
         $(timeId).data("DateTimePicker").minDate(false);
+       
         if (dt) {
           if (dt != today) {
             $(timeId).data("DateTimePicker").minDate(false);
@@ -3011,7 +2972,7 @@
   }
 
   function addTime() {
-	$('.dailyTimeDiv').find(".delete ").css("visibility", "visible");
+		  $('.dailyTimeDiv').find(".delete ").css("visibility", "visible");
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
@@ -3040,6 +3001,7 @@
     $('#time' + count).keydown(function (event) {
       event.preventDefault();
     });
+      	
   }
 
   function removeTime(param) {
@@ -3049,19 +3011,17 @@
     if ($('.time-opts').length > 1) {
       $(".remBtnDis").removeClass("hide");
     } else if ($('.dailyTimeDiv').length == 1  ) {
-      	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
-    } else {
+   	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
+    } 
+    else {
       $(".remBtnDis").addClass("hide");
     }
   }
 
   function addDate() {
-	$('.manually-option').find(".delete").css("visibility", "visible");
-    customCount = parseInt(customCount) + 1;
-    
-    $("#AddButton").hide();
-    $("#AddButton").attr('required', false);
-    var newDateCon = "<div class='manually-option mb-md form-group' id='RegDate" + customCount + "'>"
+	  $('.manually-option').find(".delete").css("visibility", "visible");
+    customCount = customCount + 1;
+    var newDateCon = "<div class='manually-option mb-md form-group' id='" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
         + "' required name='questionnaireCustomScheduleBo[" + customCount
@@ -3111,7 +3071,7 @@
     if ($('.manually-option').length > 1) {
       $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
     } else if ( $('.manually-option').length == 1 ) {
-   	 $('.manually-option').find(".delete").css("visibility", "hidden");
+    	 $('.manually-option').find(".delete").css("visibility", "hidden");
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
@@ -3283,7 +3243,6 @@
       if (id != null && id != '' && typeof id != 'undefined') {
         questionnaireFrequencey.questionnairesId = id;
       }
-
       if (scheduletype == 'AnchorDate') {
         var onetimeXSign = $('#onetimeXSign').val();
         var onetimeXSignVal = $('#onetimexdaysId').val();
@@ -3342,7 +3301,7 @@
         $('.manually-anchor-option').each(function () {
           var questionnaireCustomFrequencey = new Object();
           questionnaireCustomFrequencey.questionnairesId = id;
-          var id = $(this).attr("id").replace('AnchorDate','');
+          var id = $(this).attr("id");
           var xSign = $('#xSign' + id).val();
           var xSignVal = $('#xdays' + id).val();
           var ySign = $('#ySign' + id).val();
@@ -3383,8 +3342,7 @@
         $('.manually-option').each(function () {
           var questionnaireCustomFrequencey = new Object();
           questionnaireCustomFrequencey.questionnairesId = id;
-          var id = $(this).attr("id").replace('RegDate','');
-          
+          var id = $(this).attr("id");
           var startdate = $("#StartDate" + id).val();
           var enddate = $("#EndDate" + id).val();
           var time = $("#customTime" + id).val();
@@ -3437,7 +3395,7 @@
       var count = 0;
       $('.time-opts').each(function () {
         var questionnaireFrequencey = new Object();
-        var id = $(this).attr("id").replace('AnchorDate','');
+        var id = $(this).attr("id");
 
         var frequence_time = $('#time' + id).val();
 
@@ -4352,9 +4310,9 @@
   }
 
   function addDateAnchor() {
-	$('.manually-anchor-option').find(".delete").css("visibility", "visible");
+	  $('.manually-anchor-option').find(".delete").css("visibility", "visible");
     customAnchorCount = parseInt($('.manually-anchor-option').length);
-    var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
+    var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectXSign' count='"
@@ -4418,7 +4376,7 @@
     if ($('.manually-anchor-option').length > 1) {
       $('.manuallyAnchorContainer').find(".remBtnDis").removeClass("hide");
     } else if ($('.manually-anchor-option').length == 1  ) {
-  	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+    	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
@@ -4434,7 +4392,7 @@
       }
       if (frequency_text == 'Manually Schedule') {
         $('.manually-anchor-option').each(function () {
-          var id = $(this).attr("id").replace('AnchorDate','');
+          var id = $(this).attr("id");
           $("#xSign" + id).children('option').remove();
           $("#ySign" + id).children('option').remove();
           $("#xSign" + id).append("<option value='0' selected>+</option>");
@@ -4465,7 +4423,7 @@
       }
       if (frequency_text == 'Manually Schedule') {
         $('.manually-anchor-option').each(function () {
-          var id = $(this).attr("id").replace('AnchorDate','');
+          var id = $(this).attr("id");
           $("#xSign" + id).children('option').remove();
           $("#ySign" + id).children('option').remove();
           $("#xSign" + id).append(
@@ -4498,14 +4456,14 @@
     jQuery(document).on("keyup", ".xdays", function () {
 
       var xday = $(this).val()
-      var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
-      var parent_id = parseInt(parentId);
+      var parent_id = $(this).parent().parent().attr("id");
       var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
       var xdayValue = parseInt(xsign + "" + xday);
       var yday = $("#ydays" + parent_id).val();
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
-      
+
+
       if (parent_id === "0") {
 
         if (ydayValue !== "") {
@@ -4526,15 +4484,12 @@
         }
 
       } else {
-        var pre_parent_id = $("#AnchorDate" + parent_id).prev().attr("id");
-        if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
-          pre_parent_id = pre_parent_id.replace('AnchorDate','');
-        }
-        var pre_parent = parseInt(pre_parent_id);
+
+        var pre_parent = $("#" + parent_id).prev().attr("id");
         var pyday = $("#ydays" + pre_parent).val();
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
-        
+
         if (xdayValue <= pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
@@ -4579,14 +4534,14 @@
 
     jQuery(document).on("keyup", ".ydays", function () {
 
-      var parent_id = $(this).parent().parent().attr("id").replace('AnchorDate','');
+      var parent_id = $(this).parent().parent().attr("id");
       var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
       var xday = $("#xdays" + parent_id).val();
       var xdayValue = parseInt(xsign + "" + xday);
       var yday = $("#ydays" + parent_id).val();
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
-      
+
       if (ydayValue <= xdayValue) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");
@@ -4617,6 +4572,7 @@
     jQuery(document).on("change", ".sign-box select", function () {
       var parent_id = $(this).attr("count");
       var signValue = $("#xSign" + parent_id).val();
+
       var xsign = signValue === "0" ? "+" : "-";
       var xday = $("#xdays" + parent_id).val();
       var xdayValue = parseInt(xsign + "" + xday);
@@ -4641,7 +4597,7 @@
       }
 
       if ($('.manually-anchor-option').length > 1) {
-        var pre_parent = $("#" + parent_id).prev().attr("id").replace('AnchorDate','');
+        var pre_parent = $("#" + parent_id).prev().attr("id");
         var pyday = $("#ydays" + pre_parent).val();
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);

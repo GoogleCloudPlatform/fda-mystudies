@@ -168,7 +168,6 @@
 </form:form>
 <!-- End right Content here -->
 <script type="text/javascript">
-var markAsComplete = "${markAsComplete}"
   $(document).ready(function () {
 	var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
    if(mainContainerDivision==true){
@@ -191,14 +190,10 @@ var markAsComplete = "${markAsComplete}"
         $("#comprehensionTestMinimumScore, #minScoreText").hide();
         $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
         $("#mainContainer").show();
-        if ($('#comprehension_list tbody tr').length == 1
-                && $('#comprehension_list tbody tr td').length == 1) {
        $("#markAsCompleteBtnId").attr("disabled", true);
        $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
-        }
-     
+        var markAsComplete = "${markAsComplete}"
         if (markAsComplete == "false") {
-          $("#markAsCompleteBtnId").attr("disabled", true);
           $("#helpNote").attr('data-original-title',
               'Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete.');
           $('[data-toggle="tooltip"]').tooltip();
@@ -395,14 +390,6 @@ var markAsComplete = "${markAsComplete}"
         var message = data.message;
         if (message == "SUCCESS") {
           reloadComprehensionQuestionDataTable(data.comprehensionTestQuestionList);
-          if ($('#comprehension_list tbody tr').length == 1
-                  && $('#comprehension_list tbody tr td').length == 1) {
-        	  $("#markAsCompleteBtnId").attr("disabled", true);
-              $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
-          }else if(markAsComplete == "true" ){
-        	        $("#markAsCompleteBtnId").attr("disabled", false);
-        	        $('#helpNote').removeAttr('data-original-title');
-        	      }
         }
       },
       error: function status(data, status) {
@@ -434,7 +421,6 @@ var markAsComplete = "${markAsComplete}"
   }
 
   function reloadComprehensionQuestionDataTable(comprehensionTestQuestionList) {
-	  markAsComplete="true";
     $('#comprehension_list').DataTable().clear();
     if (typeof comprehensionTestQuestionList != 'undefined' && comprehensionTestQuestionList != null
         && comprehensionTestQuestionList.length > 0) {
@@ -468,7 +454,6 @@ var markAsComplete = "${markAsComplete}"
                    + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
                    + parseInt(obj.id) + ");'>"
                    + "</span>";
-        	    markAsComplete="false";
             }
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);

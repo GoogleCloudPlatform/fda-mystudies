@@ -43,6 +43,7 @@ public interface UsersService {
       HttpServletRequest request,
       UserBO userBO,
       String permissions,
+      List<Integer> permissionList,
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,

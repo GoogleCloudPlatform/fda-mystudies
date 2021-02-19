@@ -9,15 +9,7 @@ import {SetUpAccountService} from 'src/app/auth/shared/set-up-account.service';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {AuthService} from 'src/app/service/auth.service';
 import {SetUpResponse} from '../shared/set-up-account';
-import {
-  mustMatch,
-  newPasswordValidator,
-  passwordValidator,
-} from 'src/app/_helper/validator';
-import {
-  GenericErrorCode,
-  getGenericMessage,
-} from 'src/app/shared/generic.error.codes.enum';
+import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
 
 @Component({
   selector: 'app-set-up-account',
@@ -33,17 +25,6 @@ export class SetUpAccountComponent
   setupAccountForm: FormGroup;
   passCriteria = '';
   disableButton = false;
-  passwordMeterLow = '.25';
-  passwordMeterHigh = '.75';
-  passwordMeterValue = '.2';
-  passwordMeterOptimum = '.8';
-  meterStatus = '';
-  submitted = false;
-  fieldTextType = false;
-  serviceName = '';
-  consecutiveCharacter = '';
-  passwordLength = '';
-  userName = '';
   constructor(
     private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,
@@ -79,17 +60,9 @@ export class SetUpAccountComponent
         ],
       },
       {
-        validator: [
-          mustMatch('password', 'confirmPassword'),
-          newPasswordValidator('firstName', 'lastName', 'password'),
-        ],
+        validator: [mustMatch('password', 'confirmPassword')],
       },
     );
-    this.onChange();
-  }
-
-  toggleFieldTextType() {
-    this.fieldTextType = !this.fieldTextType;
   }
 
   get f() {
@@ -102,12 +75,6 @@ export class SetUpAccountComponent
         this.getPreStoredDetails();
       }),
     );
-    this.serviceName = getGenericMessage('EC_0083' as GenericErrorCode);
-    this.consecutiveCharacter = getGenericMessage(
-      'EC_0081' as GenericErrorCode,
-    );
-    this.passwordLength = getGenericMessage('EC_0084' as GenericErrorCode);
-    this.userName = getGenericMessage('EC_0082' as GenericErrorCode);
   }
 
   getPreStoredDetails(): void {
@@ -137,44 +104,5 @@ export class SetUpAccountComponent
           }, 1000);
         }),
     );
-  }
-
-  onChange(): void {
-    this.setupAccountForm.valueChanges.subscribe(() => {
-      const secretkeylenth = String(
-        this.setupAccountForm.controls['password'].value,
-      );
-
-      if (
-        secretkeylenth.length <= 8 ||
-        this.setupAccountForm.controls['password'].errors
-      ) {
-        this.passwordMeterLow = '.25';
-        this.passwordMeterHigh = '.75';
-        this.passwordMeterValue = '.2';
-        this.passwordMeterOptimum = '.8';
-        console.log('weak');
-        this.meterStatus = 'Weak';
-      } else if (secretkeylenth.length >= 8 && secretkeylenth.length <= 16) {
-        this.passwordMeterLow = '.25';
-        this.passwordMeterHigh = '.75';
-        this.passwordMeterValue = '.5';
-        this.passwordMeterOptimum = '.15';
-        console.log('fair');
-        this.meterStatus = 'Fair';
-      } else if (secretkeylenth.length > 16 && secretkeylenth.length <= 32) {
-        this.passwordMeterLow = '.10';
-        this.passwordMeterHigh = '1';
-        this.passwordMeterValue = '.7';
-        this.passwordMeterOptimum = '.15';
-        this.meterStatus = 'Good';
-      } else if (secretkeylenth.length > 32) {
-        this.passwordMeterLow = '.10';
-        this.passwordMeterHigh = '1';
-        this.passwordMeterValue = '1';
-        this.passwordMeterOptimum = '.20';
-        this.meterStatus = 'Strong';
-      }
-    });
   }
 }

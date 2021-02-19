@@ -468,7 +468,7 @@
             isvalid = maxLenLearnMoreEditor();
           }
           isFromValid("#consentReviewFormId");
-          if ($('.custom-form').find('.list-unstyled').length < 1 && isvalid) {
+          if ($('.custom-form').find('.has-error.has-danger').length < 1 && isvalid) {
         	  var consentDocumentType = $('input[name="consentDocType"]:checked').val();
               if (consentDocumentType == "Auto") {
                 saveConsentReviewAndEConsentInfo("doneId");
@@ -814,7 +814,7 @@
   function maxLenLearnMoreEditor() {
     var isValid = true;
     var value = $('#learnMoreTextId').summernote('code');
-    if (value != '<p><br></p>' && value != "") {
+    if (value != '<p><br></p>') {
       if (value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 70000) {
         if (isValid) {
           isValid = false;

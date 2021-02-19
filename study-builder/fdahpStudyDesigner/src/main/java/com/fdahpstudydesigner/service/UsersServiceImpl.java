@@ -161,6 +161,7 @@ public class UsersServiceImpl implements UsersService {
       HttpServletRequest request,
       UserBO userBO,
       String permissions,
+      List<Integer> permissionList,
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,
@@ -169,10 +170,19 @@ public class UsersServiceImpl implements UsersService {
     UserBO userBO2 = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
     boolean addFlag = false;
+    String activity = "";
+    String activityDetail = "";
     List<StudyBuilderAuditEvent> auditLogEvents = new LinkedList<>();
     Map<String, String> values = new HashMap<>();
     boolean emailIdChange = false;
+    List<String> superAdminEmailList = null;
+    Map<String, String> keyValueForSubject = null;
+    String dynamicContent = "";
+    UserBO adminFullNameIfSizeOne = null;
     UserBO userBO3 = null;
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    int passwordResetLinkExpirationInDay =
+        Integer.parseInt(propMap.get("password.resetLink.expiration.in.hour"));
 
     try {
       if (null == userBO.getUserId()) {
@@ -252,7 +262,52 @@ public class UsersServiceImpl implements UsersService {
           }
         }
         auditLogHelper.logEvent(auditLogEvents, auditRequest, values);
-
+        superAdminEmailList = usersDAO.getSuperAdminList();
+        if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)
+            && (superAdminEmailList != null)
+            && !superAdminEmailList.isEmpty()) {
+          keyValueForSubject = new HashMap<String, String>();
+          if (superAdminEmailList.size() == 1) {
+            for (String email : superAdminEmailList) {
+              adminFullNameIfSizeOne = usersDAO.getSuperAdminNameByEmailId(email);
+              keyValueForSubject.put("$admin", adminFullNameIfSizeOne.getFirstName());
+            }
+          } else {
+            keyValueForSubject.put("$admin", "Admin");
+          }
+          keyValueForSubject.put("$userEmail", userBO.getUserEmail());
+          keyValueForSubject.put(
+              "$sessionAdminFullName",
+              userSession.getFirstName() + " " + userSession.getLastName());
+          keyValueForSubject.put("$orgName", propMap.get("orgName"));
+          keyValueForSubject.put(
+              "$passwordResetLinkExpirationInDay",
+              String.valueOf(passwordResetLinkExpirationInDay));
+          if (addFlag) {
+            dynamicContent =
+                FdahpStudyDesignerUtil.genarateEmailContent(
+                    "mailForAdminUserCreateContent", keyValueForSubject);
+            EmailNotification.sendEmailNotification(
+                "mailForAdminUserCreateSubject", dynamicContent, null, superAdminEmailList, null);
+          } else {
+            String status = "";
+            if (FdahpStudyDesignerUtil.isEmpty(userBO2.getUserPassword())) {
+              status = "Pending Activation";
+            } else {
+              if (userBO2.isEnabled()) {
+                status = "Active";
+              } else {
+                status = "Deactivated";
+              }
+            }
+            keyValueForSubject.put("$userStatus", status);
+            dynamicContent =
+                FdahpStudyDesignerUtil.genarateEmailContent(
+                    "mailForAdminUserUpdateContent", keyValueForSubject);
+            EmailNotification.sendEmailNotification(
+                "mailForAdminUserUpdateSubject", dynamicContent, null, superAdminEmailList, null);
+          }
+        }
       } else {
         auditLogHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
       }

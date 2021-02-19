@@ -9,10 +9,6 @@ import {ChangePassword} from '../shared/profile.model';
 import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {HeaderDisplayService} from 'src/app/service/header-display.service';
-import {
-  GenericErrorCode,
-  getGenericMessage,
-} from 'src/app/shared/generic.error.codes.enum';
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -33,11 +29,6 @@ export class ChangePasswordComponent
   passwordMeterOptimum = '.8';
   meterStatus = '';
   submitted = false;
-  fieldTextType = false;
-  serviceName = '';
-  consecutiveCharacter = '';
-  passwordLength = '';
-  userName = '';
 
   constructor(
     private readonly fb: FormBuilder,
@@ -63,10 +54,6 @@ export class ChangePasswordComponent
     );
     this.onChange();
   }
-  toggleFieldTextType() {
-    this.fieldTextType = !this.fieldTextType;
-  }
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   passCriteria = '';
   get ressetPassword() {
     return this.resetPasswordForm.controls;
@@ -86,12 +73,6 @@ special characters.`);
     this.displayHeader.showHeaders$.subscribe((visible) => {
       this.hideClickable = visible;
     });
-    this.serviceName = getGenericMessage('EC_0083' as GenericErrorCode);
-    this.consecutiveCharacter = getGenericMessage(
-      'EC_0081' as GenericErrorCode,
-    );
-    this.passwordLength = getGenericMessage('EC_0084' as GenericErrorCode);
-    this.userName = getGenericMessage('EC_0082' as GenericErrorCode);
   }
   changePassword(): void {
     if (!this.resetPasswordForm.valid) return;
@@ -118,26 +99,26 @@ special characters.`);
   }
   onChange(): void {
     this.resetPasswordForm.valueChanges.subscribe(() => {
+      // if (typeof val.phoneNumber === 'string') {
+      //   // const maskedVal = this.currencyMask.transform(val.amount);
+      //   // if (val.amount ) {
+      //   //   this.registerForm.patchValue({amount: maskedVal});
+      //   // }
+      // }
       const secretkeylenth = String(
         this.resetPasswordForm.controls['newPassword'].value,
       );
-
-      if (
-        secretkeylenth.length <= 8 ||
-        this.resetPasswordForm.controls['newPassword'].errors
-      ) {
+      if (this.resetPasswordForm.controls['newPassword'].errors) {
         this.passwordMeterLow = '.25';
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.2';
         this.passwordMeterOptimum = '.8';
-        console.log('weak');
         this.meterStatus = 'Weak';
       } else if (secretkeylenth.length >= 8 && secretkeylenth.length <= 16) {
         this.passwordMeterLow = '.25';
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.5';
         this.passwordMeterOptimum = '.15';
-        console.log('fair');
         this.meterStatus = 'Fair';
       } else if (secretkeylenth.length > 16 && secretkeylenth.length <= 32) {
         this.passwordMeterLow = '.10';
