@@ -167,6 +167,10 @@
 <!-- End right Content here -->
 <script type="text/javascript">
   $(document).ready(function () {
+	  var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
+	  if(mainContainerDivision==true){
+			var mainContainerDivision = $('#mainContainer').hide();		   
+		 }
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
@@ -422,13 +426,26 @@
         } else {
           datarow.push("<div class='dis-ellipsis'>" + DOMPurify.sanitize(obj.questionText) + "</div>");
         }
-        var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
+        var actions = "";
+        var actions='';
+        var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');
+        if( obj.status===true){
+         actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
             + parseInt(obj.id) + ");'></span>"
-            + "<span class='sprites_icon edit-g mr-lg' onclick='editComprehensionQuestion(" + parseInt(obj.id)
+            + "<span class='sprites_icon mr-lg edit-inc' onclick='editComprehensionQuestion(" + parseInt(obj.id)
             + ");'>"
             + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
             + parseInt(obj.id) + ");'>"
             + "</span>";
+        }else{
+    	    actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
+               + parseInt(obj.id) + ");'></span>"
+               + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' onclick='editComprehensionQuestion(" + parseInt(obj.id)
+               + ");'>"
+               + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
+               + parseInt(obj.id) + ");'>"
+               + "</span>";
+        }
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);
       });
