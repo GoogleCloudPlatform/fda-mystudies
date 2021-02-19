@@ -251,7 +251,7 @@
         $(".studyListId").unbind();
         </c:if>
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
-        $(".userListId").addClass('cursor-none');
+        $(".userListId").addClass('hide');
         $(".userListId").unbind();
         </c:if>
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
