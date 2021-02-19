@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -73,20 +74,20 @@
       </div>
       <div class="dis-line form-group mb-none mr-sm">
         <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">
-          Cancel
+          キャンセル
         </button>
       </div>
       <c:if test="${actionTypeForQuestionPage ne 'view'}">
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn questionStepSaveDoneButtonHide"
                   id="saveId">
-            Save
+            下書き保存
           </button>
         </div>
         <div class="dis-line form-group mb-none">
           <button type="button" class="btn btn-primary blue-btn questionStepSaveDoneButtonHide"
                   id="doneId">
-            Done
+            完了
           </button>
         </div>
       </c:if>
@@ -621,7 +622,7 @@
         <div id="responseTypeDivId">
           <div id="scaleType" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Scale Type
+              <div class="gray-xs-f mb-xs">スケールタイプ
                 <span class="requiredStar">*</span>
               </div>
               <div class="form-group">
@@ -644,7 +645,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">最小値
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -661,7 +662,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">最大値
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -681,7 +682,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Description for minimum value (1 to 50 characters)
+                  <div class="gray-xs-f mb-xs">最小値の説明 (1文字以上 50文字以下)
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control"
@@ -694,7 +695,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Description for maximum value (1 to 50 characters)
+                  <div class="gray-xs-f mb-xs">最大値の説明 (1文字以上 50文字以下)
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control"
