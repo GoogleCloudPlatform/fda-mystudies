@@ -2345,7 +2345,7 @@
 
     var activeTask = new Object();
     var anchorDateId = $("#anchorDateId option:selected").val();
-    if (anchorDateId != null && anchorDateId != '' && typeof anchorDateId != 'undefined') {
+    if (anchorDateId != null && typeof anchorDateId != 'undefined') {
       activeTask.anchorDateId = anchorDateId;
     }
     if (id != null && id != '' && typeof id != 'undefined') {
