@@ -651,6 +651,7 @@
       $('#spancomId').attr('data-original-title',
           'Please add 1 or more questions to the test');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function initActions() {
