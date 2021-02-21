@@ -711,11 +711,11 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Step Size
+                  <div class="gray-xs-f mb-xs">ステップサイズ
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter the desired size to be applied to each step in the scale. Note that this value determines the step count or  number of steps in the scale. You will be prompted to enter a different step size if the scale cannot be divided into equal steps. Or if the value you entered results in a step count <1 or >13."></span>
+                        title="(最大値 - 最小値) / ステップ数 が 整数 かつ 1 から 13 になる数字を入力する必要があります。"></span>
                   </div>
                   <div class="form-group">
                     <c:if
@@ -734,10 +734,10 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Number of Steps
+                  <div class="gray-xs-f mb-xs">ステップ数(1 から 13 までになる必要があります。)
                     <span class="requiredStar">*</span>
                     <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                          title="This represents the number of steps the scale is divided into."></span>
+                          title="スケールが分割される数。1から13までの数にする必要があります。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired" id="scaleStepId"
@@ -752,13 +752,13 @@
             <div class="row mb-xs">
               <div class="col-md-6  pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Default value (slider position)
+                  <div class="gray-xs-f mb-xs">デフォルト値 (スライダーポジション)
                     <span
                         class="requiredStar">*
                     </span>
                     <span class="ml-xs sprites_v3 filled-tooltip"
                           data-toggle="tooltip"
-                          title="Enter an integer number to indicate the desired default step position for the slider in the scale.  Ensure it is in the range (0,  Numer of  Steps). For example, if you have 6 steps,  0 indicates the minimum value, 1 indicates the first step and so on. 6 indicates the maximum value."></span>
+                          title="整数を入力して、スケール内のスライダーのデフォルトのステップ位置を示します。 範囲（0、ステップ数）内にあることを確認してください。たとえば、6つのステップがある場合、0は最小値を示し、1は最初のステップを示します。 6は最大値を示します。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
@@ -774,11 +774,11 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Minimum Value
+                  <div class="gray-xs-f mb-xs">最小値の画像
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the minimum value.JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="最小値を示す画像をアップロードしてください。形式は JPEG / PNG <br> 画像サイズ: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(画像の選択したサイズのアスペクト比を維持します)"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -815,11 +815,11 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Maximum Value
+                  <div class="gray-xs-f mb-xs">最大値の画像
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the maximum value.JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="最大値を示す画像をアップロードしてください。形式は JPEG / PNG <br> 画像サイズ: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(画像の選択したサイズのアスペクト比を維持します)"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -4143,12 +4143,12 @@
               if (parseInt(stepsCount) < 1) {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter  a smaller step size."));
-              } else {
+                    "(最大値 - 最小値) / ステップ数 が 1以上になる数字を入力してください。"));
+    } else {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter a larger step size."));
-              }
+                    "(最大値 - 最小値) / ステップ数 が 13以下になる数字を入力してください。"));
+    }
 
             }
           } else {
@@ -4158,7 +4158,7 @@
             $("#displayStepsCount").parent().find(".help-block").empty();
             $("#displayStepsCount").parent().find(".help-block").append(
           		$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "(Max-Min) value should be exactly divisisble by the step size."));
+                      "最大値と最小値 の差(Max - Min) を割り切れる数を入力してください。"));
           }
         }
       });
@@ -4177,7 +4177,7 @@
             $("#scaleDefaultValueId").parent().find(".help-block").empty();
             $("#scaleDefaultValueId").parent().find(".help-block").append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter an integer from 0 to number of steps"));
+                "0 から ステップ数 までの整数を入力してください。"));
           }
         } else {
           if (value != '') {
@@ -5449,13 +5449,13 @@
       <c:if test="${actionTypeForQuestionPage ne 'view'}">
       bootbox.confirm({
         closeButton: false,
-        message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+        message: '未保存の編集があります。保存をしないと編集内容が削除されてしまいます。本当にこのページを離れますか？',
         buttons: {
           'cancel': {
-            label: 'Cancel',
+            label: 'キャンセル',
           },
           'confirm': {
-            label: 'OK',
+            label: 'はい',
           },
         },
         callback: function (result) {
