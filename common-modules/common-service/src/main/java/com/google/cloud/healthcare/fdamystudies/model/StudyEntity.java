@@ -125,7 +125,7 @@ public class StudyEntity implements Serializable {
   private String logoImageUrl;
 
   @ToString.Exclude
-  @Column(name = "contactEmail", length = EMAIL_LENGTH)
+  @Column(name = "contact_email", length = EMAIL_LENGTH)
   private String contactEmail;
 
   @OneToMany(
