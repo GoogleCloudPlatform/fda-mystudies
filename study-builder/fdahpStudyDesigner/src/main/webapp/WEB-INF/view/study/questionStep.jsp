@@ -349,10 +349,10 @@
             <span class="checkbox checkbox-inline">
               <input type="checkbox" id="allowHealthKit" name="questionsBo.allowHealthKit"
                      value="Yes" ${questionnairesStepsBo.questionsBo.allowHealthKit eq 'Yes' ? 'checked':''}>
-              <label for="allowHealthKit"> Allow participant to optionally use HealthKit to provide answer
+              <label for="allowHealthKit"> ユーザーがオプションでiOSアプリ「ヘルスケア」を使用して回答を提供できるようにする
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="If you check this box, participants who are using the app on an iOS device will be presented with an option to provide data from Health as the answer to this question. Participants are allowed to edit  the answer before submitting it."></span>
+                    title="このチェックボックスをオンにすると、iOSでアプリを使用しているユーザーに、この質問への回答として アプリ「ヘルスケア」からデータを提供するオプションが表示されます。参加者は回答を送信する前に編集できます。"></span>
               </label>
             </span>
           </div>
@@ -789,7 +789,7 @@
                             class="imageChoiceWidth" alt=""/>
                       </div>
                       <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.minImage}">
-                        <div class="textLabelscaleMinImagePathId">アップロード</div>
+                        <div class="textLabelscaleMinImagePathId">Upload</div>
                       </c:if>
                       <c:if
                           test="${not empty questionnairesStepsBo.questionReponseTypeBo.minImage}">
@@ -830,7 +830,7 @@
                             class="imageChoiceWidth" alt=""/>
                       </div>
                       <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.maxImage}">
-                        <div class="textLabelscaleMaxImagePathId">アップロード</div>
+                        <div class="textLabelscaleMaxImagePathId">Upload</div>
                       </c:if>
                       <c:if
                           test="${not empty questionnairesStepsBo.questionReponseTypeBo.maxImage}">
@@ -987,7 +987,7 @@
                             class="imageChoiceWidth" alt=""/>
                       </div>
                       <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.minImage}">
-                        <div class="textLabelcontinuesScaleMinImagePathId">アップロード</div>
+                        <div class="textLabelcontinuesScaleMinImagePathId">Upload</div>
                       </c:if>
                       <c:if
                           test="${not empty questionnairesStepsBo.questionReponseTypeBo.minImage}">
@@ -1029,7 +1029,7 @@
                             class="imageChoiceWidth" alt=""/>
                       </div>
                       <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.maxImage}">
-                        <div class="textLabelcontinuesScaleMaxImagePathId">アップロード</div>
+                        <div class="textLabelcontinuesScaleMaxImagePathId">Upload</div>
                       </c:if>
                       <c:if
                           test="${not empty questionnairesStepsBo.questionReponseTypeBo.maxImage}">
@@ -1337,22 +1337,22 @@
           </div>
           <div id="Numeric" style="display: none;">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Style
+              <div class="gray-xs-f mb-xs">数値の形式
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="Choose the kind of numeric input needed"></span>
+                    title="数値のタイプを選択してください"></span>
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
                   <input type="radio" class="NumericRequired" id="styleDecimal" value="Decimal"
                          name="questionReponseTypeBo.style"  ${questionnairesStepsBo.questionReponseTypeBo.style eq 'Decimal' ? 'checked':''} >
-                  <label for="styleDecimal">Decimal</label>
+                  <label for="styleDecimal">少数点数 (Decimal)</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" class="NumericRequired" id="styleInteger" value="Integer"
                          name="questionReponseTypeBo.style" ${questionnairesStepsBo.questionReponseTypeBo.style eq 'Integer' ? 'checked':''} >
-                  <label for="styleInteger">Integer</label>
+                  <label for="styleInteger">整数 (Integer)</label>
                 </span>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -1361,10 +1361,10 @@
             <div class="row">
               <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Units (1 to 15 characters)
+                  <div class="gray-xs-f mb-xs">単位 (1以上 15文字以下)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter the applicable units for the numeric input"></span>
+                        title="入力する数値の単位"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" name="questionReponseTypeBo.unit"
@@ -1376,10 +1376,10 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 30 characters)
+                  <div class="gray-xs-f mb-xs">プレースホルダー (1文字以上 30文字以下)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Provide an input hint to the user"></span>
+                        title="入力テキストボックスに表示されるテキストを入力してください"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" id="numericPlaceholderId"
@@ -1393,10 +1393,10 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">最小値
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter minimum value allowed"></span>
+                        title="許容する最小値"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" name="questionReponseTypeBo.minValue"
@@ -1409,10 +1409,10 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">最大値
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter maximum value allowed"></span>
+                        title="許容する最大値"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" name="questionReponseTypeBo.maxValue"
@@ -2017,7 +2017,7 @@
           </div>
           <div id="TextChoice" style="display: none;">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Selection Style
+              <div class="gray-xs-f mb-xs">選択形式
                 <span class="requiredStar">*</span>
               </div>
               <div>
@@ -2025,24 +2025,24 @@
                   <input type="radio" class="TextChoiceRequired" id="singleSelect" value="Single"
                          name="questionReponseTypeBo.selectionStyle"  ${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
-                  <label for="singleSelect">Single Select</label>
+                  <label for="singleSelect">シングルセレクト</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" class="TextChoiceRequired" id="multipleSelect"
                          value="Multiple"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
-                  <label for="multipleSelect">Multiple Select</label>
+                  <label for="multipleSelect">マルチセレクト</label>
                 </span>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
             <div class="clearfix"></div>
-            <div class="gray-choice-f mb-xs mt-md">Text Choices
+            <div class="gray-choice-f mb-xs mt-md">選択肢のテキスト
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
-                  title="Enter text choices in the order you want them to appear. You can enter a display text and description, an associated  value to be captured if that choice is selected and mark the choice as exclusive, meaning once it is selected, all other options get deselected and vice-versa. You can also select a destination step for each choice that is exclusive, if you have branching enabled for the questionnaire."></span>
+                  title="表示する順序でテキスト選択肢を入力します。表示テキストと説明、その選択肢が選択された場合にキャプチャされる値を入力してください。また、マルチセレクトの場合、その選択肢を排他的としてマークすることができます。マルチセレクトで排他的選択肢が選択されると、他のすべてのオプションが選択解除されまる(その逆も可能です)。アンケートが分岐を有効にしている場合は、排他的な選択肢ごとに宛先ステップを選択することもできます。"></span>
             </div>
 
             <div class="TextChoiceContainer">
@@ -2085,7 +2085,7 @@
                         </div>
                       </div>
                       <div class="col-md-2 pl-none">
-                        <div class="gray-xs-f mb-xs">Mark as exclusive ?
+                        <div class="gray-xs-f mb-xs">排他的選択肢にしますか？
                           <span
                               class="requiredStar">*
                           </span>
@@ -2353,7 +2353,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs">説明 (1文字以上 150文字以下)</div>
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[1].description"
@@ -2381,13 +2381,13 @@
               <div class="checkbox checkbox-inline">
                 <input type="checkbox" name="questionReponseTypeBo.otherType"
                        id="textchoiceOtherId" ${not empty questionnairesStepsBo.questionReponseTypeBo.otherType ? 'checked':''}>
-                <label for="textchoiceOtherId"> Include 'Other' as an option ? </label>
+                <label for="textchoiceOtherId"> 'その他'項目を設けますか？ </label>
               </div>
               <div class="textchoiceOtherCls" style="display: none;">
                 <!-- Section Start  -->
                 <div class="mt-xlg">
                   <div class="col-md-3 pl-none">
-                    <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                    <div class="gray-xs-f mb-xs">表示テキスト (1文字以上 100文字以下)
                       <span
                           class="requiredStar">*
                       </span>
@@ -2401,7 +2401,7 @@
                     </div>
                   </div>
                   <div class="col-md-3 pl-none">
-                    <div class="gray-xs-f mb-xs">Value (1 to 100 characters)
+                    <div class="gray-xs-f mb-xs">選択値 (1文字以上 100文字以下)
                       <span
                           class="requiredStar">*
                       </span>
@@ -2415,7 +2415,7 @@
                     </div>
                   </div>
                   <div class="col-md-2 pl-none">
-                    <div class="gray-xs-f mb-xs">Mark as exclusive ?
+                    <div class="gray-xs-f mb-xs">排他的選択肢にしますか？
                       <span
                           class="requiredStar">*
                       </span>
@@ -2481,24 +2481,24 @@
                 <div class="mt-lg">
                   <div>
                     <span
-                        class="gray-xs-f mb-xs pr-md">Include text field to specify 'Other' ?
+                        class="gray-xs-f mb-xs pr-md">'Other'というラベルを変更しますか ?
                     </span>
                     <span class="radio radio-info radio-inline pr-md">
                       <input type="radio" class="otherIncludeTextCls" id="otherYes" value="Yes"
                              name="questionReponseTypeBo.otherIncludeText" ${questionnairesStepsBo.questionReponseTypeBo.otherIncludeText=='Yes' ?'checked':''}>
-                      <label for="otherYes">Yes</label>
+                      <label for="otherYes">はい</label>
                     </span>
                     <span class="radio radio-inline">
                       <input type="radio" class="otherIncludeTextCls" id="otherNo" value="No"
                              name="questionReponseTypeBo.otherIncludeText" ${empty questionnairesStepsBo.questionReponseTypeBo.otherIncludeText  || questionnairesStepsBo.questionReponseTypeBo.otherIncludeText=='No' ?'checked':''}>
-                      <label for="otherNo">No</label>
+                      <label for="otherNo">いいえ</label>
                     </span>
                   </div>
                 </div>
                 <div class="OtherOptionCls" style="display:none;">
                   <div class="clearfix"></div>
                   <div class="col-md-6 p-none mt-md">
-                    <div class="gray-xs-f mb-xs pr-md">Place holder text for the text field</div>
+                    <div class="gray-xs-f mb-xs pr-md">変更するテキスト</div>
                     <div class="form-group">
                       <input type="text" class="form-control"
                              name="questionReponseTypeBo.otherPlaceholderText" id=""
@@ -2509,7 +2509,7 @@
                   <div class="clearfix"></div>
                   <div class="mt-lg">
                     <div>
-                      <span class="gray-xs-f mb-xs pr-md">Is this field mandatory for the participant to fill in ?
+                      <span class="gray-xs-f mb-xs pr-md">この項目は必須入力にしますか？
                       </span>
                       <span class="radio radio-info radio-inline pr-md">
                         <input type="radio" class="" id="pYes" value="Yes"
@@ -2718,7 +2718,7 @@
                           </div>
                           <c:if
                               test="${empty questionnairesStepsBo.questionResponseSubTypeList[0].image}">
-                            <div class="textLabelimagePathId0">アップロード</div>
+                            <div class="textLabelimagePathId0">Upload</div>
                           </c:if>
                           <c:if
                               test="${not empty questionnairesStepsBo.questionResponseSubTypeList[0].image}">
@@ -2747,7 +2747,7 @@
                           </div>
                           <c:if
                               test="${empty questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage}">
-                            <div class="textLabelselectImagePathId0">アップロード</div>
+                            <div class="textLabelselectImagePathId0">Upload</div>
                           </c:if>
                           <c:if
                               test="${not empty questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage}">
@@ -2828,7 +2828,7 @@
                           </div>
                           <c:if
                               test="${empty questionnairesStepsBo.questionResponseSubTypeList[1].image}">
-                            <div class="textLabelimagePathId1">アップロード</div>
+                            <div class="textLabelimagePathId1">Upload</div>
                           </c:if>
                           <c:if
                               test="${not empty questionnairesStepsBo.questionResponseSubTypeList[1].image}">
@@ -2857,7 +2857,7 @@
                           </div>
                           <c:if
                               test="${empty questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage}">
-                            <div class="textLabelselectImagePathId1">アップロード</div>
+                            <div class="textLabelselectImagePathId1">Upload</div>
                           </c:if>
                           <c:if
                               test="${not empty questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage}">
@@ -2941,7 +2941,7 @@
                       <input type="checkbox" id="formulaBasedLogicId" value="Yes"
                              name="questionReponseTypeBo.formulaBasedLogic" ${questionnairesStepsBo.questionReponseTypeBo.formulaBasedLogic eq 'Yes' ? 'checked':''}>
                       <label for="formulaBasedLogicId">
-                        <span class="tealtxt-md">Use formula-based conditional branching logic</span>
+                        <span class="tealtxt-md">条件付き分岐を利用する</span>
                         <span
                             class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" title=""
                             data-original-title="Enter the applicable units for the numeric input"></span>
@@ -2957,7 +2957,7 @@
                   <div class="col-md-12 p-none">
                     <ul class="pl_18">
                       <li class="display__flex__base">
-                        <span class="col-md-3 p-none">V1 = True の場合, 分岐先ステップ&nbsp;&nbsp;&nbsp;=</span>
+                        <span class="col-md-3 p-none">V1 = True の場合, 分岐先ステップは </span>
                         <input type="hidden" name="questionResponseSubTypeList[0].value"
                                value="true" id="conditionDestinationValueId0">
                         <div class="form-group sm-selection col-md-4 p-none">
@@ -2980,7 +2980,7 @@
                         </div>
                       </li>
                       <li class="display__flex__base">
-                        <span class="col-md-3 p-none">V1 = False の場合, 分岐先ステップ &nbsp;&nbsp;&nbsp;=</span>
+                        <span class="col-md-3 p-none">V1 = False の場合, 分岐先ステップは </span>
                         <input type="hidden" name="questionResponseSubTypeList[1].value"
                                value="false" id="conditionDestinationValueId1">
                         <div class="form-group sm-selection col-md-4 p-none">
@@ -3007,10 +3007,10 @@
                   <div class="col-xs-12 p-none numeric__form">
                     <div class="numeric__header">
                       <span>
-                        <span class="tealtxt-md">Formula:</span>
+                        <span class="tealtxt-md">計算式:</span>
                         <b
                             class="formula"> -NA- </b></span>
-                      <span data-toggle="modal" id="trailId">Trial</span>
+                      <span data-toggle="modal" id="trailId">シミュレート</span>
                       <input type="hidden" name="questionReponseTypeBo.conditionFormula"
                              id="conditionFormulaId"
                              value="${questionnairesStepsBo.questionReponseTypeBo.conditionFormula}">
@@ -3018,10 +3018,10 @@
                     <div class="numeric__container mb-sm">
                       <div class="numeric__loop">
                         <div class="numeric__define gray__t pb-sm">
-                          Define Function
+                          条件式
                         </div>
                         <div class="numeric__define_input gray__t pb-sm">
-                          Define Inputs
+                          比較項目
                         </div>
                         <!-- Numeric section -->
                         <div class="numeric__section mt-md" id="rootId1">
@@ -3065,7 +3065,7 @@
 
                           <div class="numeric__define_input gray__t">
                             <div class="numeric__row display__flex__base-webkit" id="2">
-                              <span>V2 =</span>
+                              <span>V2(左辺) =</span>
                               <div class="form-group sm-selection">
                                 <select class="selectpicker conditionalBranchingRequired"
                                         name="questionConditionBranchBoList[0].questionConditionBranchBos[0].inputType"
@@ -3074,15 +3074,15 @@
                                   <option value="" selected>Select</option>
                                   <option
                                       value="C" ${questionnairesStepsBo.questionConditionBranchBoList[0].questionConditionBranchBos[0].inputType eq 'C' ? 'selected' :''}>
-                                    Constant
+                                    定数
                                   </option>
                                   <option
                                       value="F" ${questionnairesStepsBo.questionConditionBranchBoList[0].questionConditionBranchBos[0].inputType eq 'F' ? 'selected' :''}>
-                                    Function
+                                    計算式
                                   </option>
                                   <option
                                       value="RDE" ${questionnairesStepsBo.questionConditionBranchBoList[0].questionConditionBranchBos[0].inputType eq 'RDE' ? 'selected' :''}>
-                                    Response Data Element (x)
+                                    入力値(x)
                                   </option>
                                 </select>
                                 <div class="mt-sm black-xs-f italic-txt red-txt"
@@ -3109,7 +3109,7 @@
                               </div>
                             </div>
                             <div class="numeric__row display__flex__base-webkit" id="3">
-                              <span>V3 =</span>
+                              <span>V3(右辺) =</span>
                               <div class="form-group sm-selection">
                                 <select class="selectpicker conditionalBranchingRequired"
                                         name="questionConditionBranchBoList[0].questionConditionBranchBos[1].inputType"
@@ -3118,15 +3118,15 @@
                                   <option value="" selected>Select</option>
                                   <option
                                       value="C" ${questionnairesStepsBo.questionConditionBranchBoList[0].questionConditionBranchBos[1].inputType eq 'C' ? 'selected' :''}>
-                                    Constant
+                                    定数
                                   </option>
                                   <option
                                       value="F" ${questionnairesStepsBo.questionConditionBranchBoList[0].questionConditionBranchBos[1].inputType eq 'F' ? 'selected' :''}>
-                                    Function
+                                    計算式
                                   </option>
                                   <option
                                       value="RDE" ${questionnairesStepsBo.questionConditionBranchBoList[0].questionConditionBranchBos[1].inputType eq 'RDE' ? 'selected' :''}>
-                                    Response Data Element (x)
+                                    入力値(x)
                                   </option>
                                 </select>
                                 <div class="mt-sm black-xs-f italic-txt red-txt"
@@ -3243,15 +3243,15 @@
                                         </option>
                                         <option
                                             value="C" ${questionConditionsSubBranchBo.inputType eq 'C' ? 'selected' :''}>
-                                          Constant
+                                          定数
                                         </option>
                                         <option
                                             value="F" ${questionConditionsSubBranchBo.inputType eq 'F' ? 'selected' :''}>
-                                          Function
+                                          計算式
                                         </option>
                                         <option
                                             value="RDE" ${questionConditionsSubBranchBo.inputType eq 'RDE' ? 'selected' :''}>
-                                          Response Data Element (x)
+                                          入力値(x)
                                         </option>
                                       </select>
                                       <div class="mt-sm black-xs-f italic-txt red-txt"
@@ -3354,38 +3354,38 @@
             </button>
           </div>
           <div class="modal-body trial_body">
-            <div class="trial_title">Try your formula</div>
+            <div class="trial_title">計算式のシミュレート</div>
             <div class="trial_section1">
-              <span class="tealfont">Your Formula :</span>
+              <span class="tealfont">作成した計算式 :</span>
               <span class="tryFormula"> -NA-</span>
             </div>
             <input type="hidden" name="lhs" id="lhsId">
             <input type="hidden" name="rhs" id="rhsId">
             <input type="hidden" name="operator" id="operatorId">
             <div class="trial_section2">
-              <span class="tealfont">Provide Input :</span>
+              <span class="tealfont">入力値 :</span>
               <span> x =</span>
               <span class="form-group"><input type="text" id="trailInputId"
                                               class="form-control ml-sm"
                                               onkeypress="return isNumberKey(event)"
                                               maxlength="8"/></span>
               <span>
-                <button type="button" id="formulaSubmitId">Submit</button>
+                <button type="button" id="formulaSubmitId">実行</button>
               </span>
             </div>
             <div class="trial_section3">
-              <span class="tealfont">Output :</span>
+              <span class="tealfont">結果 :</span>
               <div>
                 <div>
-                  <span>LHS Value:</span>
+                  <span>左辺の値:</span>
                   <span id="lhsValueId"></span>
                 </div>
                 <div>
-                  <span>RHS Value:</span>
+                  <span>右辺の値:</span>
                   <span id="rhsValueId"></span>
                 </div>
                 <div>
-                  <span>Boolean Output:</span>
+                  <span>V1の結果:</span>
                   <span class="" id="outputId"></span>
                 </div>
               </div>
@@ -4557,7 +4557,7 @@
         if (validateResponseDataElement()) {
           $('#myModal').modal('show');
         } else {
-          bootbox.alert("Please add atleast one response data element in conditional formula.");
+          bootbox.alert("計算式を作成してください");
         }
       });
       $('#formulaSubmitId').on('click', function () {
@@ -4600,7 +4600,7 @@
                       && typeof formulaResponseJsonObject.statusMessage != 'undefined') {
                     bootbox.alert(formulaResponseJsonObject.statusMessage);
                   } else {
-                    bootbox.alert("Please create a valid formula");
+                    bootbox.alert("正しい計算式を作成してください");
                   }
 
                 }
@@ -5774,7 +5774,7 @@
           "   <div class='form-group'>" +
           "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>" +
           "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
-          "         <div class='textLabelimagePathId" + imageCount + "'>アップロード</div>" +
+          "         <div class='textLabelimagePathId" + imageCount + "'>Upload</div>" +
           "      </div>" +
           "      <input class='dis-none upload-image ImageChoiceRequired' data-imageId='"
           + imageCount + "' name='questionResponseSubTypeList[" + imageCount
@@ -5789,7 +5789,7 @@
           "   <div class='form-group'>" +
           "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>" +
           "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
-          "         <div class='textLabelselectImagePathId" + imageCount + "'>アップロード</div>" +
+          "         <div class='textLabelselectImagePathId" + imageCount + "'>Upload</div>" +
           "      </div>" +
           "      <input class='dis-none upload-image ImageChoiceRequired' data-imageId='"
           + imageCount + "' name='questionResponseSubTypeList[" + imageCount
@@ -6783,17 +6783,17 @@
         if (Number(value) >= Number(minValue) && Number(value) <= Number(maxValue)) {
           return "";
         } else {
-          return "x value should be less than maximum value and greater than minimum value";
+          return "x の値は最小値以上、最大値以下にしてください";
         }
       } else if (minValue == '' && maxValue != '') {
         if (Number(value) > Number(maxValue)) {
-          return "x value should be less than maximum value";
+          return "x の値は最大値以下にしてください";
         } else {
           return "";
         }
       } else if (minValue != '' && maxValue == '') {
         if (Number(value) < Number(minValue)) {
-          return "x value should be greater than minimum value";
+          return "x の値は最小値以上にしてください";
         } else {
           return "";
         }
