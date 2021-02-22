@@ -127,7 +127,7 @@ public class UsersControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(PathMappingUri.RESEND_ACTIVATE_DETAILS_LINK.getPath())
-                .param("userId", "15")
+                .param("userId", "1")
                 .headers(headers)
                 .sessionAttrs(getSession()))
         .andDo(print())
