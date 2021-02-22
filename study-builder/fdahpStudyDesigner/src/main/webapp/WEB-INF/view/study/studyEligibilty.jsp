@@ -640,6 +640,7 @@
       $('#spancomId').attr('data-original-title',
           'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function initActions() {
