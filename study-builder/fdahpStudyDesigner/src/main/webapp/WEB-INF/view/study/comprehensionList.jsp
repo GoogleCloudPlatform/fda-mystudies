@@ -125,9 +125,11 @@
                         onclick="viewComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="${comprehensionTestQuestion.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      data-toggle="tooltip" data-placement="top" title="Edit"
                       onclick="editComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      data-toggle="tooltip" data-placement="top" title="Delete"
                       onclick="deleteComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                 </td>
               </tr>
@@ -430,19 +432,19 @@
         var actions='';
         var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');
         if( obj.status===true){
-         actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
+         actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("
             + parseInt(obj.id) + ");'></span>"
-            + "<span class='sprites_icon mr-lg edit-inc' onclick='editComprehensionQuestion(" + parseInt(obj.id)
+            + "<span class='sprites_icon mr-lg edit-inc' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)
             + ");'>"
-            + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
+            + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("
             + parseInt(obj.id) + ");'>"
             + "</span>";
         }else{
-    	    actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
+    	    actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("
                + parseInt(obj.id) + ");'></span>"
-               + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' onclick='editComprehensionQuestion(" + parseInt(obj.id)
+               + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)
                + ");'>"
-               + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
+               + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("
                + parseInt(obj.id) + ");'>"
                + "</span>";
         }
@@ -456,6 +458,7 @@
     if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
       $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function markAsCompleted() {
