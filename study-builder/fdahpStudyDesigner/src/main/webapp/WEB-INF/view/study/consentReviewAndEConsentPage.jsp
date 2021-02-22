@@ -814,8 +814,9 @@
   function maxLenLearnMoreEditor() {
     var isValid = true;
     var value = $('#learnMoreTextId').summernote('code');
-    if (value != '<p><br></p>' && value != "") {
-      if (value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 70000) {
+    var value = value.replaceAll('<p><br></p>', '');
+    if (value != "") {
+      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 70000) {
         if (isValid) {
           isValid = false;
         }
