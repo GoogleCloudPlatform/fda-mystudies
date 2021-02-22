@@ -158,12 +158,12 @@
           <div class="clearfix"></div>
           <c:if test="${questionnaireBo.branching}">
             <div class="col-md-4 col-lg-3 p-none">
-              <div class="gray-xs-f mb-xs">Default Destination Step
+              <div class="gray-xs-f mb-xs">デフォルトの分岐先ステップ
                 <span
                     class="requiredStar">*
                 </span>
                 <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      title="The step that the user must be directed to from this step."></span>
+                      title="デフォルトの分岐先ステップを選択してください。"></span>
               </div>
               <div class="form-group">
                 <select name="destinationStep" id="destinationStepId"
@@ -175,7 +175,7 @@
                       : ${destinationStep.stepShortTitle}</option>
                   </c:forEach>
                   <option value="0" ${questionnairesStepsBo.destinationStep eq 0 ? 'selected' :''}>
-                    Completion Step
+                    終了へ
                   </option>
                 </select>
                 <div class="help-block with-errors red-txt"></div>
@@ -789,7 +789,7 @@
                             class="imageChoiceWidth" alt=""/>
                       </div>
                       <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.minImage}">
-                        <div class="textLabelscaleMinImagePathId">Upload</div>
+                        <div class="textLabelscaleMinImagePathId">アップロード</div>
                       </c:if>
                       <c:if
                           test="${not empty questionnairesStepsBo.questionReponseTypeBo.minImage}">
@@ -830,7 +830,7 @@
                             class="imageChoiceWidth" alt=""/>
                       </div>
                       <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.maxImage}">
-                        <div class="textLabelscaleMaxImagePathId">Upload</div>
+                        <div class="textLabelscaleMaxImagePathId">アップロード</div>
                       </c:if>
                       <c:if
                           test="${not empty questionnairesStepsBo.questionReponseTypeBo.maxImage}">
@@ -861,11 +861,11 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">最小値
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an integer number in the range (Min, 10000)."></span>
+                        title="10000までの値を入力してください。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ContinuousScaleRequired"
@@ -878,11 +878,11 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">最大値
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an integer number in the range (Min+1, 10000)."></span>
+                        title="Min+1 から 10000 までの値を入力してください。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ContinuousScaleRequired"
@@ -898,13 +898,13 @@
             <div class="row mb-xs">
               <div class="col-md-6  pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Default value (slider position)
+                  <div class="gray-xs-f mb-xs">デフォルト値 (スライダーポジション)
                     <span
                         class="requiredStar">*
                     </span>
                     <span class="ml-xs sprites_v3 filled-tooltip"
                           data-toggle="tooltip"
-                          title="Enter an integer between the minimum and maximum."></span>
+                          title="最小値から最大値までの値を入力してください。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ContinuousScaleRequired"
@@ -918,12 +918,12 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-4 p-none">
-                  <div class="gray-xs-f mb-xs">Max Fraction Digits
+                  <div class="gray-xs-f mb-xs">小数点以下の桁数
                     <span
                         class="requiredStar">*
                     </span>
                     <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                          title="Enter the maximum number of decimal places to be shown for the values on the scale. Note that your options  (0,1,2,3,4) are limited by the selected maximum and minimum values."></span>
+                          title="目盛りの値に表示する小数点以下の最大桁数を入力します(最大桁数4)。ただし最大数の値によって入力できる値は制限されることにご注意ください。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ContinuousScaleRequired"
@@ -941,7 +941,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Description for minimum value (1 to 50 characters)
+                  <div class="gray-xs-f mb-xs">最小値の説明 (1文字以上 50文字以下)
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control"
@@ -955,7 +955,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Description for maximum value (1 to 50 characters)
+                  <div class="gray-xs-f mb-xs">最大値の説明 (1文字以上 50文字以下)
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control"
@@ -972,11 +972,11 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Minimum Value
+                  <div class="gray-xs-f mb-xs">最小値の画像
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the minimum value.JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="最小値を示す画像をアップロードしてください。形式は JPEG / PNG <br> 画像サイズ: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(画像の選択したサイズのアスペクト比を維持します)"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -987,7 +987,7 @@
                             class="imageChoiceWidth" alt=""/>
                       </div>
                       <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.minImage}">
-                        <div class="textLabelcontinuesScaleMinImagePathId">Upload</div>
+                        <div class="textLabelcontinuesScaleMinImagePathId">アップロード</div>
                       </c:if>
                       <c:if
                           test="${not empty questionnairesStepsBo.questionReponseTypeBo.minImage}">
@@ -1014,11 +1014,11 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-6 col-lg-6 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Maximum Value
+                  <div class="gray-xs-f mb-xs">最大値の画像
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the maximum value.JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="最大値を示す画像をアップロードしてください。形式は JPEG / PNG <br> 画像サイズ: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(画像の選択したサイズのアスペクト比を維持します)"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -1029,7 +1029,7 @@
                             class="imageChoiceWidth" alt=""/>
                       </div>
                       <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.maxImage}">
-                        <div class="textLabelcontinuesScaleMaxImagePathId">Upload</div>
+                        <div class="textLabelcontinuesScaleMaxImagePathId">アップロード</div>
                       </c:if>
                       <c:if
                           test="${not empty questionnairesStepsBo.questionReponseTypeBo.maxImage}">
@@ -1572,7 +1572,7 @@
               </div>
               <c:if test="${questionnaireBo.branching}">
                 <div class="col-md-3 pl-none">
-                  <div class="gray-xs-f mb-xs">Destination Step
+                  <div class="gray-xs-f mb-xs">分岐先ステップ
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="質問に分岐が適用されている場合は、「はい」と「いいえ」の選択肢の宛先ステップを定義できます"></span>
@@ -1589,7 +1589,7 @@
                       </c:forEach>
                       <option
                           value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
-                        Completion Step
+                        終了へ
                       </option>
                     </select>
                     <div class="help-block with-errors red-txt"></div>
@@ -1630,7 +1630,7 @@
                       </c:forEach>
                       <option
                           value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
-                        Completion Step
+                        終了へ
                       </option>
                     </select>
                     <div class="help-block with-errors red-txt"></div>
@@ -1641,22 +1641,22 @@
           </div>
           <div id="ValuePicker" style="display: none;">
             <div class="mt-lg">
-              <div class="gray-choice-f mb-xs">Values for the picker
+              <div class="gray-choice-f mb-xs">ピッカーの値
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="Enter values in the order they must appear in the picker. Each row needs a display text and an associated value that gets captured if that choice is picked by the user."></span>
+                    title="ピッカーに表示する必要がある順序で値を入力します。各行には、表示テキストと、ユーザーがその選択肢を選択した場合にキャプチャされる値を入力してください。"></span>
               </div>
             </div>
             <div class="row mt-sm" id="0">
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text (1 to 20 characters)
+                <div class="gray-xs-f mb-xs">表示テキスト (1文字以上 20文字以下)
                   <span
                       class="requiredStar">*
                   </span>
                 </div>
               </div>
               <div class="col-md-4 pl-none">
-                <div class="gray-xs-f mb-xs">Value (1 to 50 characters)
+                <div class="gray-xs-f mb-xs">選択値 (1文字以上 50文字以下)
                   <span
                       class="requiredStar">*
                   </span>
@@ -1781,22 +1781,22 @@
           </div>
           <div id="TextScale" style="display: none;">
             <div class="clearfix"></div>
-            <div class="gray-choice-f mb-xs">Text Choices
+            <div class="gray-choice-f mb-xs">表示テキスト
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
-                  title="Enter text choices in the order you want them to appear on the slider. You can enter a text that will be displayed for each slider position, and an associated  value to be captured if that position is selected by the user.  You can also select a destination step for each choice, if you have branching enabled for the questionnaire. "></span>
+                  title="スライダーに表示する順序でテキストの選択肢を入力します。スライダーの位置ごとに表示されるテキストと、その位置がユーザーによって選択された場合にキャプチャされる関連値を入力できます。 質問表で分岐を有効にしている場合は、選択肢ごとに宛先ステップを選択することもできます。 "></span>
             </div>
             <div class="row">
               <div class="col-md-3 pl-none">
-                <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                <div class="gray-xs-f mb-xs">メモリに表示するテキスト (1文字以上 100文字以下)
                   <span
                       class="requiredStar">*
                   </span>
                 </div>
               </div>
               <div class="col-md-4 pl-none">
-                <div class="gray-xs-f mb-xs">Value (1 to 50 characters)
+                <div class="gray-xs-f mb-xs">選択されたときのテキスト (1文字上 50文字以下)
                   <span
                       class="requiredStar">*
                   </span>
@@ -1804,7 +1804,7 @@
               </div>
               <c:if test="${questionnaireBo.branching}">
                 <div class="col-md-2 pl-none">
-                  <div class="gray-xs-f mb-xs">Destination Step</div>
+                  <div class="gray-xs-f mb-xs">分岐先ステップ</div>
                 </div>
               </c:if>
             </div>
@@ -1857,7 +1857,7 @@
                               </c:forEach>
                               <option
                                   value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
-                                Completion Step
+                                終了へ
                               </option>
                             </select>
                             <div class="help-block with-errors red-txt"></div>
@@ -1926,7 +1926,7 @@
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
-                              Completion Step
+                              終了へ
                             </option>
                           </select>
                           <div class="help-block with-errors red-txt"></div>
@@ -1977,7 +1977,7 @@
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
-                              Completion Step
+                              終了へ
                             </option>
                           </select>
                           <div class="help-block with-errors red-txt"></div>
@@ -2000,10 +2000,10 @@
             <div class="row mt-sm">
               <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
-                  <div class="gray-xs-f mb-xs">Default slider position
+                  <div class="gray-xs-f mb-xs">デフォルトのスライダーポジション
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an integer number to indicate the desired default slider position. For example, if you have 6 choices, 5 will indicate the 5th choice."></span>
+                        title="整数を入力して、目的のデフォルトのスライダー位置を示します。たとえば、6つの選択肢がある場合、5は5番目の選択肢が表示されます。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" id="textScalePositionId"
@@ -2112,7 +2112,7 @@
                       </div>
                       <c:if test="${questionnaireBo.branching}">
                         <div class="col-md-2 pl-none">
-                          <div class="gray-xs-f mb-xs">Destination Step</div>
+                          <div class="gray-xs-f mb-xs">分岐先ステップ</div>
                           <div class="form-group">
                             <select
                                 name="questionResponseSubTypeList[${subtype.index}].destinationStepId"
@@ -2130,7 +2130,7 @@
                               </c:forEach>
                               <option
                                   value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
-                                Completion Step
+                                終了へ
                               </option>
                             </select>
                             <div class="help-block with-errors red-txt"></div>
@@ -2223,7 +2223,7 @@
                     </div>
                     <c:if test="${questionnaireBo.branching}">
                       <div class="col-md-2 pl-none">
-                        <div class="gray-xs-f mb-xs">Destination Step</div>
+                        <div class="gray-xs-f mb-xs">分岐先ステップ</div>
                         <div class="form-group">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextChoiceStepId0"
@@ -2239,7 +2239,7 @@
                             </c:forEach>
                             <option
                                 value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
-                              Completion Step
+                              終了へ
                             </option>
                           </select>
                           <div class="help-block with-errors red-txt"></div>
@@ -2328,7 +2328,7 @@
                     </div>
                     <c:if test="${questionnaireBo.branching}">
                       <div class="col-md-2 pl-none">
-                        <div class="gray-xs-f mb-xs">Destination Step</div>
+                        <div class="gray-xs-f mb-xs">分岐先ステップ</div>
                         <div class="form-group">
                           <select name="questionResponseSubTypeList[1].destinationStepId"
                                   id="destinationTextChoiceStepId1"
@@ -2344,7 +2344,7 @@
                             </c:forEach>
                             <option
                                 value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
-                              Completion Step
+                              終了へ
                             </option>
                           </select>
                           <div class="help-block with-errors red-txt"></div>
@@ -2441,7 +2441,7 @@
                   </div>
                   <c:if test="${questionnaireBo.branching}">
                     <div class="col-md-2 pl-none">
-                      <div class="gray-xs-f mb-xs">Destination Step</div>
+                      <div class="gray-xs-f mb-xs">分岐先ステップ</div>
                       <div class="form-group">
                         <select name="questionReponseTypeBo.otherDestinationStepId"
                                 id="otherDestinationTextChoiceStepId"
@@ -2457,7 +2457,7 @@
                           </c:forEach>
                           <option
                               value="0" ${questionnairesStepsBo.questionReponseTypeBo.otherDestinationStepId eq 0 ? 'selected' :''}>
-                            Completion Step
+                            終了へ
                           </option>
                         </select>
                         <div class="help-block with-errors red-txt"></div>
@@ -2532,57 +2532,54 @@
 
           <div id="ImageChoice" style="display: none;">
             <div class="mt-lg">
-              <div class="gray-choice-f mb-xs">Image Choices
+              <div class="gray-choice-f mb-xs">選択肢画像
                 <span
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
-                    title="Fill in the different image choices you wish to provide. Upload images for display and selected states and enter display text and value to be captured for each choice. Also, if you have branching enabled for your questionnaire, you can define destination steps for each choice."></span>
+                    title="選択肢となる画像をアップロードしてください。表示用の画像と選択した状態をアップロードし、選択肢ごとにキャプチャする表示テキストと値を入力します。また、アンケートで分岐を有効にしている場合は、選択肢ごとに宛先ステップを定義できます。"></span>
               </div>
             </div>
             <div class="mt-sm row">
               <div>
                 <div class="col-md-2 pl-none col-smthumb-2">
-                  <div class="gray-xs-f mb-xs">Image
+                  <div class="gray-xs-f mb-xs">画像
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="形式：JPEG / PNG <br> 画像サイズ: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(画像の選択したサイズのアスペクト比を維持します)"></span>
                   </div>
                 </div>
                 <div class="col-md-2 pl-none col-smthumb-2">
-                  <div class="gray-xs-f mb-xs">Selected Image
+                  <div class="gray-xs-f mb-xs">選択されたときの画像
                     <span
                         class="requiredStar">*
                     </span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="形式：JPEG / PNG <br> 画像サイズ: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(画像の選択したサイズのアスペクト比を維持します)"></span>
                   </div>
                 </div>
                 <div class="col-md-2 pl-none">
-                  <div class="gray-xs-f mb-xs">Display Text
+                  <div class="gray-xs-f mb-xs">表示テキスト
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        data-html="true" title="1 to 100 characters"></span>
+                        data-html="true" title="1文字以上 100文字以下"></span>
                   </div>
                 </div>
                 <div class="col-md-2 col-lg-2 pl-none">
-                  <div class="gray-xs-f mb-xs">Value
+                  <div class="gray-xs-f mb-xs">選択値
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        data-html="true" title="1 to 50 characters"></span>
+                        data-html="true" title="1文字以上 50文字以下"></span>
                   </div>
                 </div>
                 <c:if test="${questionnaireBo.branching}">
                   <div class="col-md-2 col-lg-2 pl-none">
-                    <div class="gray-xs-f mb-xs">Destination Step
-                      <span
-                          class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                          title="Fill in the different image choices you wish to provide. Upload images for display and selected states and enter display text and value to be captured for each choice. Also, if you have branching enabled for your questionnaire, you can define destination steps for each choice."></span>
+                    <div class="gray-xs-f mb-xs">分岐先ステップ
                     </div>
                   </div>
                 </c:if>
@@ -2690,7 +2687,7 @@
                               </c:forEach>
                               <option
                                   value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
-                                Completion Step
+                                終了へ
                               </option>
                             </select>
                           </div>
@@ -2721,7 +2718,7 @@
                           </div>
                           <c:if
                               test="${empty questionnairesStepsBo.questionResponseSubTypeList[0].image}">
-                            <div class="textLabelimagePathId0">Upload</div>
+                            <div class="textLabelimagePathId0">アップロード</div>
                           </c:if>
                           <c:if
                               test="${not empty questionnairesStepsBo.questionResponseSubTypeList[0].image}">
@@ -2750,7 +2747,7 @@
                           </div>
                           <c:if
                               test="${empty questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage}">
-                            <div class="textLabelselectImagePathId0">Upload</div>
+                            <div class="textLabelselectImagePathId0">アップロード</div>
                           </c:if>
                           <c:if
                               test="${not empty questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage}">
@@ -2804,7 +2801,7 @@
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
-                              Completion Step
+                              終了へ
                             </option>
                           </select>
                         </div>
@@ -2831,7 +2828,7 @@
                           </div>
                           <c:if
                               test="${empty questionnairesStepsBo.questionResponseSubTypeList[1].image}">
-                            <div class="textLabelimagePathId1">Upload</div>
+                            <div class="textLabelimagePathId1">アップロード</div>
                           </c:if>
                           <c:if
                               test="${not empty questionnairesStepsBo.questionResponseSubTypeList[1].image}">
@@ -2860,7 +2857,7 @@
                           </div>
                           <c:if
                               test="${empty questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage}">
-                            <div class="textLabelselectImagePathId1">Upload</div>
+                            <div class="textLabelselectImagePathId1">アップロード</div>
                           </c:if>
                           <c:if
                               test="${not empty questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage}">
@@ -2914,7 +2911,7 @@
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
-                              Completion Step
+                              終了へ
                             </option>
                           </select>
                         </div>
@@ -2955,12 +2952,12 @@
 
                 <div id="conditionalFormulaId">
                   <div class="col-md-12 p-none mt-lg mb-md">
-                    <div class="black-s-f">Define Formula and Destination Steps</div>
+                    <div class="black-s-f">数式と分岐先ステップ</div>
                   </div>
                   <div class="col-md-12 p-none">
                     <ul class="pl_18">
                       <li class="display__flex__base">
-                        <span class="col-md-3 p-none">If V1 = True, Destination Step &nbsp;&nbsp;&nbsp;&nbsp;=</span>
+                        <span class="col-md-3 p-none">V1 = True の場合, 分岐先ステップ&nbsp;&nbsp;&nbsp;=</span>
                         <input type="hidden" name="questionResponseSubTypeList[0].value"
                                value="true" id="conditionDestinationValueId0">
                         <div class="form-group sm-selection col-md-4 p-none">
@@ -2976,14 +2973,14 @@
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
-                              Completion Step
+                              終了へ
                             </option>
                           </select>
                           <div class="help-block with-errors red-txt"></div>
                         </div>
                       </li>
                       <li class="display__flex__base">
-                        <span class="col-md-3 p-none">If V1 = False, Destination Step &nbsp;&nbsp;&nbsp;=</span>
+                        <span class="col-md-3 p-none">V1 = False の場合, 分岐先ステップ &nbsp;&nbsp;&nbsp;=</span>
                         <input type="hidden" name="questionResponseSubTypeList[1].value"
                                value="false" id="conditionDestinationValueId1">
                         <div class="form-group sm-selection col-md-4 p-none">
@@ -2999,7 +2996,7 @@
                             </c:forEach>
                             <option
                                 value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
-                              Completion Step
+                              終了へ
                             </option>
                           </select>
                           <div class="help-block with-errors red-txt"></div>
@@ -5596,7 +5593,7 @@
         <c:forEach items="${destinationStepList}" var="destinationStep">
         newTextScale += "<option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
         </c:forEach>
-        newTextScale += "	<option value='0'>Completion Step</option>" +
+        newTextScale += "	<option value='0'>終了へ</option>" +
             "	     </select>" +
             "      <div class='help-block with-errors red-txt'></div>" +
             "   </div>" +
@@ -5709,7 +5706,7 @@
           "</div>";
       <c:if test='${questionnaireBo.branching}'>
       newTextChoice += "<div class='col-md-2 pl-none'>" +
-          "   <div class='gray-xs-f mb-xs'>Destination Step  </div>" +
+          "   <div class='gray-xs-f mb-xs'>分岐先ステップ  </div>" +
           "   <div class='form-group'>" +
           "  <select name='questionResponseSubTypeList[" + choiceCount
           + "].destinationStepId' id='destinationTextChoiceStepId" + choiceCount
@@ -5717,7 +5714,7 @@
       <c:forEach items='${destinationStepList}' var='destinationStep'>
       newTextChoice += " <option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
       </c:forEach>
-      newTextChoice += "<option value='0'>Completion Step</option>" +
+      newTextChoice += "<option value='0'>終了へ</option>" +
           "</select>" +
           "  <div class='help-block with-errors red-txt'></div>" +
           " </div>" +
@@ -5777,7 +5774,7 @@
           "   <div class='form-group'>" +
           "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>" +
           "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
-          "         <div class='textLabelimagePathId" + imageCount + "'>Upload</div>" +
+          "         <div class='textLabelimagePathId" + imageCount + "'>アップロード</div>" +
           "      </div>" +
           "      <input class='dis-none upload-image ImageChoiceRequired' data-imageId='"
           + imageCount + "' name='questionResponseSubTypeList[" + imageCount
@@ -5792,7 +5789,7 @@
           "   <div class='form-group'>" +
           "      <div class='sm-thumb-btn' onclick='openUploadWindow(this);'>" +
           "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
-          "         <div class='textLabelselectImagePathId" + imageCount + "'>Upload</div>" +
+          "         <div class='textLabelselectImagePathId" + imageCount + "'>アップロード</div>" +
           "      </div>" +
           "      <input class='dis-none upload-image ImageChoiceRequired' data-imageId='"
           + imageCount + "' name='questionResponseSubTypeList[" + imageCount
@@ -5829,7 +5826,7 @@
       <c:forEach items="${destinationStepList}" var="destinationStep">
       newImageChoice += "<option value='${destinationStep.stepId}'>Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>";
       </c:forEach>
-      newImageChoice += "<option value='0'>Completion Step</option>" +
+      newImageChoice += "<option value='0'>終了へ</option>" +
           "	     </select>" +
           "   </div>" +
           "</div>";
@@ -6038,7 +6035,7 @@
             $(item).parent().find(".help-block").empty();
             $(item).parent().find(".help-block").append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter a value in the range (0,x)."));
+                "現在の最大値に対してその値は大きすぎます。"));
           }
         } else {
           $(item).val('');
@@ -6046,7 +6043,7 @@
           $(item).parent().find(".help-block").empty();
           $(item).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please enter an minimum and maximum values "));
+              "この値の入力の前に最小値、最大値を入力してください。"));
         }
       }
     }

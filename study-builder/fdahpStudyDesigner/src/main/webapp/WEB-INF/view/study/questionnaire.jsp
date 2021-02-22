@@ -228,7 +228,7 @@
               <span class="checkbox checkbox-inline"><input
                   type="checkbox" id="branchingId" value="true" name="branching"
                 ${questionnaireBo.branching ? 'checked':''}> <label
-                  for="branchingId"> Apply Branching </label>
+                  for="branchingId"> カスタム分岐を許可 </label>
               </span>
             </div>
           </div>
