@@ -96,7 +96,8 @@ public class StudiesControllerTest extends BaseMockIT {
         Constants.APP_ID_VALUE,
         Constants.APP_NAME,
         Constants.APP_DESCRIPTION,
-        Constants.LOGO_IMAGE_URL);
+        Constants.LOGO_IMAGE_URL,
+        Constants.CONTACT_EMAIL_ID);
   }
 
   @Test

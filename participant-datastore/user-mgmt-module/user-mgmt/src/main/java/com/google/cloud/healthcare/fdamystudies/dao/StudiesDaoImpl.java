@@ -93,6 +93,7 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setModifiedBy(String.valueOf(0));
       studyInfo.setModified(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
+      studyInfo.setContactEmail(studyMetadataBean.getContactEmail());
       session.update(studyInfo);
     } else {
       List<AppPermissionEntity> appPermissionList = new ArrayList<>();
@@ -129,6 +130,7 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setCreatedBy(String.valueOf(0));
       studyInfo.setCreated(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
+      studyInfo.setContactEmail(studyMetadataBean.getContactEmail());
       String generatedStudyid = (String) session.save(studyInfo);
 
       for (AppPermissionEntity appPermission : appPermissionList) {
