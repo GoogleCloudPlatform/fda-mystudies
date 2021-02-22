@@ -40,8 +40,7 @@ public class AuditEventServiceImpl implements AuditEventService {
     logger.entry(
         String.format("begin postAuditLogEvent() for %s event", auditRequest.getEventCode()));
 
-    try {
-      Logging logging = LoggingOptions.getDefaultInstance().getService();
+    try (Logging logging = LoggingOptions.getDefaultInstance().getService()) {
 
       // The data to write to the log
       Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);

@@ -79,6 +79,15 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+       <dependency>
+        <groupId>com.google.api</groupId>
+        <artifactId>gax</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>com.google.api</groupId>
+        <artifactId>gax-grpc</artifactId>
+        <version>1.61.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
