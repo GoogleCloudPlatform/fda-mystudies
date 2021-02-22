@@ -21,7 +21,7 @@
           <a class="navbar-brand pt-none pb-none display__flex__center p-none pr-lg"
              href="javascript:void(0)"
              id="landingScreen"><img src="/studybuilder/images/logo/logo_innerScreens.png"/></a>
-          <ul class="nav navbar-nav ml-none" style="margin-left:95px !important">
+          <ul class="nav navbar-nav ml-none">
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
               <li class="studyClass">
                 <a href="javascript:void(0)" id="studySection">Studies</a>
