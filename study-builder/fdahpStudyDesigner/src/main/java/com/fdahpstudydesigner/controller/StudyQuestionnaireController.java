@@ -2399,6 +2399,7 @@ public class StudyQuestionnaireController {
     QuestionnaireBo questionnaireBo = null;
     String customStudyId = "";
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -2445,11 +2446,14 @@ public class StudyQuestionnaireController {
                         .getSession()
                         .getAttribute(
                             sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
+            StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+            auditRequest.setStudyId(customStudyId);
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
             updateQuestionnaireBo =
                 studyQuestionnaireService.saveOrUpdateQuestionnaire(
                     questionnaireBo, sesObj, customStudyId);
             if (updateQuestionnaireBo != null) {
-              // TODO:STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED
               jsonobject.put("questionnaireId", updateQuestionnaireBo.getId());
               if (updateQuestionnaireBo.getQuestionnairesFrequenciesBo() != null) {
                 jsonobject.put(
@@ -2464,6 +2468,13 @@ public class StudyQuestionnaireController {
                     sesObj,
                     customStudyId);
               }
+              Map<String, String> values = new HashMap<>();
+              values.put("questionnaire_id", updateQuestionnaireBo.getId().toString());
+              StudyBuilderAuditEvent event =
+                  questionnaireBo.getId() != null
+                      ? STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED
+                      : STUDY_NEW_QUESTIONNAIRE_CREATED;
+              auditLogEventHelper.logEvent(event, auditRequest, values);
               message = FdahpStudyDesignerConstants.SUCCESS;
             }
           }

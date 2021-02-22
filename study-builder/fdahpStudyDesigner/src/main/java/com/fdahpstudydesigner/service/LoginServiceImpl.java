@@ -24,6 +24,7 @@ package com.fdahpstudydesigner.service;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
@@ -474,6 +475,13 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 flag =
                     EmailNotification.sendEmailNotification(
                         "userRegistrationSubject", dynamicContent, email, null, null);
+
+                Map<String, String> values = new HashMap<>();
+                values.put(StudyBuilderConstants.USER_ID, String.valueOf(userdetails.getUserId()));
+                if (!flag) {
+                  auditLogEventHelper.logEvent(NEW_USER_INVITATION_EMAIL_FAILED, auditRequest);
+                }
+
               } else if ("USER_UPDATE".equals(type) && userdetails.isEnabled()) {
                 dynamicContent =
                     FdahpStudyDesignerUtil.genarateEmailContent(
@@ -607,9 +615,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "accountLockedContent", keyValueForSubject);
 
-          EmailNotification.sendEmailNotification(
-              "accountLockedSubject", dynamicContent, email, null, null);
-          auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
+          boolean response =
+              EmailNotification.sendEmailNotification(
+                  "accountLockedSubject", dynamicContent, email, null, null);
+          StudyBuilderAuditEvent auditEvent =
+              response
+                  ? PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT
+                  : PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT;
+          auditLogEventHelper.logEvent(auditEvent, auditRequest);
         }
       }
     } catch (Exception e) {

@@ -454,6 +454,8 @@ public class FdahpStudyDesignerConstants {
   public static final String CONSENT_AGREEMENT =
       "By tapping on Agree, you confirm that you have reviewed the consent document and agree to participate in the study.";
 
+  public static final String ADD = "add";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
