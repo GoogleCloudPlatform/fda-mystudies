@@ -32,7 +32,7 @@
       </span>
       <span
           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-          title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."></span>
+          title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."></span>
     </div>
     <div class="add_notify_option">
       <div class="form-group shortTitleClass">
@@ -934,7 +934,7 @@
               $(this).val(newVal);
               $(this).parent().addClass("has-danger has-error");
               $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."));
+                  "Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."));
             }
           }
         });
