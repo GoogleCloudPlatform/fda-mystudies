@@ -156,8 +156,7 @@
               <tr id="">
                 <td>${etQusAns.sequenceNo}</td>
                 <td>
-                  <span class="dis-ellipsis"
-                        title="${fn:escapeXml(etQusAns.question)}">${etQusAns.question}</span>
+                  <span class="dis-ellipsis">${etQusAns.question}</span>
                 </td>
                 <td>
                   <span class="sprites_icon preview-g mr-lg viewIcon"
@@ -640,6 +639,7 @@
       $('#spancomId').attr('data-original-title',
           'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function initActions() {
