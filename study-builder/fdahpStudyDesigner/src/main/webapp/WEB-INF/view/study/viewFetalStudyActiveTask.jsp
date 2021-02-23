@@ -9,6 +9,9 @@
     line-height: 12px;
     margin: 0px;
 }
+.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+    text-transform: inherit; !important
+	}
 </style>
 
 <div class="changeContent">

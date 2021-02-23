@@ -7,6 +7,10 @@
     .help-block ul {
       width: max-content !important;
     }
+
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+	    text-transform: inherit; !important
+		}
 </style>
 <div class="changeContent">
   <form:form
