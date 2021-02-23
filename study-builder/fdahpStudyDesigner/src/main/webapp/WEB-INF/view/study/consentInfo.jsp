@@ -565,7 +565,7 @@
         if ('${consentInfo.consentItemTitleId}' != ''
             && '${consentInfo.consentItemTitleId}' != null) {
           if ('${consentInfo.consentItemTitleId}' == selectedTitle.options[i].value
-              && '${consentInfo.consentItemTitleId}' != '${consentInfoBo.consentItemTitleId}') {
+        		  && '${consentInfo.consentItemTitleId}' != '${consentInfoBo.consentItemTitleId}' && '${consentInfo.consentItemType}' != 'Custom') {
             $(
                 "select option[value="
                 + selectedTitle.options[i].value + "]")
@@ -634,4 +634,8 @@
     }
     return isValid;
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>
