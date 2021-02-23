@@ -401,4 +401,8 @@
     document.body.appendChild(a).click();
     </c:if>
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>
