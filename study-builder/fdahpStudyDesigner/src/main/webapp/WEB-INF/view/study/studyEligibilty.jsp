@@ -393,7 +393,7 @@
                                 }
                                 setTimeout(
                                     hideDisplayMessage,
-                                    4000);
+                                    5000);
                               },
                               error: function (
                                   xhr,
@@ -408,7 +408,7 @@
                                         error);
                                 setTimeout(
                                     hideDisplayMessage,
-                                    4000);
+                                    5000);
                               }
                             });
                       }
@@ -580,7 +580,7 @@
                           }
                           setTimeout(
                               hideDisplayMessage,
-                              4000);
+                              5000);
                         },
                         error: function (xhr, status,
                                          error) {
@@ -590,7 +590,7 @@
                               .text(error);
                           setTimeout(
                               hideDisplayMessage,
-                              4000);
+                              5000);
                         }
                       });
                 }
