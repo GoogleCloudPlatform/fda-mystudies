@@ -252,7 +252,7 @@
                   $('[data-toggle="tooltip"]').tooltip();
                 } else {
                   $('#markAsComp').prop('disabled', false);
-                  $('#spanMarkAsComp').removeAttr('title');
+                  $('#spanMarkAsComp').removeAttr('data-original-title');
                 }
                 $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                     "Resource deleted successfully.");
