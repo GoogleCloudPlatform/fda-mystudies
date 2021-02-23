@@ -363,7 +363,7 @@
             <div class="clearfix"></div>
             <div>
               <div class="gray-xs-f mb-xs">Allow rollback of chart?
-                <span class="sprites_icon info"
+                <span class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
                       title="If you select Yes, the chart will be allowed for rollback until the date of enrollment into the study."></span>
               </div>
@@ -4951,4 +4951,8 @@ if(document.getElementById("singleSelect").checked==true){
       $(thisAttr).parent().find(".help-block").empty();
     }
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>

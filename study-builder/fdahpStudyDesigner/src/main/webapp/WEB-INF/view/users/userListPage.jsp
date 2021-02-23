@@ -91,11 +91,10 @@
                 <c:if test="${fn:contains(aspList.capability , 'Project Lead' )}"> plRow </c:if>
                 <c:if test="${fn:contains(aspList.capability , 'Coordinator' )}"> cRow </c:if>>
               <td>
-                <div class="dis-ellipsis"
-                     title="${fn:escapeXml(user.userFullName)}">${fn:escapeXml(user.userFullName)}</div>
+                <div class="dis-ellipsis">${fn:escapeXml(user.userFullName)}</div>
               </td>
               <td>
-                <div class="dis-ellipsis" title="${user.userEmail}">${user.userEmail}</div>
+                <div class="dis-ellipsis">${user.userEmail}</div>
               </td>
               <td>${user.roleName}</td>
               <td class="text-right" style="padding-right: 3% !important;">
@@ -113,7 +112,7 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title=Account status: Invitation sent, pending activation"</c:if>
+                                                 test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"</c:if>
                                              <c:if
                                                  test="${user.emailChanged}">title="Account status: Pending Verification"</c:if>
                                              <c:if
@@ -310,4 +309,8 @@
       }
     });
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>
