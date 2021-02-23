@@ -118,8 +118,7 @@
               <tr id="${comprehensionTestQuestion.id}">
                 <td>${comprehensionTestQuestion.sequenceNo}</td>
                 <td>
-                  <div class="dis-ellipsis"
-                       title="${fn:escapeXml(comprehensionTestQuestion.questionText)}">${fn:escapeXml(comprehensionTestQuestion.questionText)}</div>
+                  <div class="dis-ellipsis">${fn:escapeXml(comprehensionTestQuestion.questionText)}</div>
                 </td>
                 <td>
                   <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"

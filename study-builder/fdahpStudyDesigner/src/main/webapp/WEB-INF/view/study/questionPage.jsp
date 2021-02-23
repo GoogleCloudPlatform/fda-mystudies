@@ -22,7 +22,13 @@
     margin-top: 10px;
   }
   
-  .display__flex__center{
+   .questionary_page_edit {
+  margin-top: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  }
+  
+  .questionary_page {
     margin-top: 10px !important;
   }
   
@@ -30,6 +36,9 @@
   font-size:13px !important
   }
   
+  .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+   text-transform: inherit; !important
+   }
 </style>
 <script type="text/javascript">
 
@@ -360,7 +369,7 @@
             <div class="clearfix"></div>
             <div>
               <div class="gray-xs-f mb-xs">Allow rollback of chart?
-                <span class="sprites_icon info"
+                <span class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
                       title="If you select Yes, the chart will be allowed for rollback until the date of enrollment into the study."></span>
               </div>
@@ -1244,7 +1253,7 @@
           </div>
         </div>
         <div id="Timeinterval" style="display: none;">
-          <div class="row mt-sm display__flex__center">
+          <div class="row mt-sm questionary_page">
             <div class="col-md-2 pl-none">
               <div class="gray-xs-f mb-xs">Step value
                 <span class="requiredStar">*</span>
@@ -1929,7 +1938,7 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <div class="col-md-12 p-none display__flex__center">
+                    <div class="col-md-12 p-none questionary_page">
                       <div class="col-md-10 pl-none">
                         <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                         <div class="form-group">
@@ -2011,7 +2020,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-12 p-none display__flex__center">
+                  <div class="col-md-12 p-none questionary_page_edit">
                     <div class="col-md-10 pl-none">
                       <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)
                       </div>
@@ -2090,7 +2099,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-12 p-none display__flex__center">
+                  <div class="col-md-12 p-none questionary_page_edit">
                     <div class="col-md-10 pl-none">
                       <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)
                       </div>
@@ -4446,7 +4455,7 @@ if(document.getElementById("singleSelect").checked==true){
         "   </div>" +
         "</div> ";
     newTextChoice +=
-        "<div class='col-md-12 p-none display__flex__center'><div class='col-md-10 pl-none'>" +
+        "<div class='col-md-12 p-none questionary_page_edit'><div class='col-md-10 pl-none'>" +
         "   <div class='gray-xs-f mb-xs margin-des'>Description(1 to 150 characters) </div>"
         +
         "   <div class='form-group'>					     " +
@@ -4948,4 +4957,8 @@ if(document.getElementById("singleSelect").checked==true){
       $(thisAttr).parent().find(".help-block").empty();
     }
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>
