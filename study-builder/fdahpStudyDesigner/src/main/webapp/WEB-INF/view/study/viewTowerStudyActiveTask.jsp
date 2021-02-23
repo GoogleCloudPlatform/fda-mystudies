@@ -3,6 +3,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<style>
+	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+	    text-transform: inherit; !important
+		}
+</style>
 <div class="changeContent">
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}"
