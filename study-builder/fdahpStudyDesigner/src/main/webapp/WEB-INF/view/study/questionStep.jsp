@@ -38,6 +38,9 @@
     pointer-events:none;
   }
   
+  .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+   text-transform: inherit; !important
+   } 
 </style>
 <script type="text/javascript">
   function isNumber(evt) {
