@@ -10,9 +10,9 @@ import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {HeaderDisplayService} from 'src/app/service/header-display.service';
 import {
-  GenericErrorCode,
-  getGenericMessage,
-} from 'src/app/shared/generic.error.codes.enum';
+  ErrorCode,
+  getMessage as getErrorMessage,
+} from 'src/app/shared/error.codes.enum';
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -86,12 +86,9 @@ special characters.`);
     this.displayHeader.showHeaders$.subscribe((visible) => {
       this.hideClickable = visible;
     });
-    this.serviceName = getGenericMessage('EC_0083' as GenericErrorCode);
-    this.consecutiveCharacter = getGenericMessage(
-      'EC_0081' as GenericErrorCode,
-    );
-    this.passwordLength = getGenericMessage('EC_0084' as GenericErrorCode);
-    this.userName = getGenericMessage('EC_0082' as GenericErrorCode);
+  }
+  getError(err: ErrorCode): string {
+    return getErrorMessage(err);
   }
   changePassword(): void {
     if (!this.resetPasswordForm.valid) return;
@@ -122,10 +119,7 @@ special characters.`);
         this.resetPasswordForm.controls['newPassword'].value,
       );
 
-      if (
-        secretkeylenth.length <= 8 ||
-        this.resetPasswordForm.controls['newPassword'].errors
-      ) {
+      if (this.resetPasswordForm.controls['newPassword'].errors) {
         this.passwordMeterLow = '.25';
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.2';

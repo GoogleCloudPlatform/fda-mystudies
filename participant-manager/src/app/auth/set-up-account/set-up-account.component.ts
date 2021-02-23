@@ -14,10 +14,11 @@ import {
   newPasswordValidator,
   passwordValidator,
 } from 'src/app/_helper/validator';
+
 import {
-  GenericErrorCode,
-  getGenericMessage,
-} from 'src/app/shared/generic.error.codes.enum';
+  ErrorCode,
+  getMessage as getErrorMessage,
+} from 'src/app/shared/error.codes.enum';
 
 @Component({
   selector: 'app-set-up-account',
@@ -102,12 +103,10 @@ export class SetUpAccountComponent
         this.getPreStoredDetails();
       }),
     );
-    this.serviceName = getGenericMessage('EC_0083' as GenericErrorCode);
-    this.consecutiveCharacter = getGenericMessage(
-      'EC_0081' as GenericErrorCode,
-    );
-    this.passwordLength = getGenericMessage('EC_0084' as GenericErrorCode);
-    this.userName = getGenericMessage('EC_0082' as GenericErrorCode);
+  }
+
+  getError(err: ErrorCode): string {
+    return getErrorMessage(err);
   }
 
   getPreStoredDetails(): void {
@@ -145,10 +144,7 @@ export class SetUpAccountComponent
         this.setupAccountForm.controls['password'].value,
       );
 
-      if (
-        secretkeylenth.length <= 8 ||
-        this.setupAccountForm.controls['password'].errors
-      ) {
+      if (this.setupAccountForm.controls['password'].errors) {
         this.passwordMeterLow = '.25';
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.2';
