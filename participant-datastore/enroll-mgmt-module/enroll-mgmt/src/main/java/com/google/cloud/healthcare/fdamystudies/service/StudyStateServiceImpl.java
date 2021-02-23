@@ -269,11 +269,11 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Override
   @Transactional
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete, AuditLogEventRequest auditRequest) {
+      String participantId, String studyId, AuditLogEventRequest auditRequest) {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
 
-    String message = studyStateDao.withdrawFromStudy(participantId, studyId, delete);
+    String message = studyStateDao.withdrawFromStudy(participantId, studyId);
     if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
       Optional<ParticipantStudyEntity> participantStudy =
           participantStudyRepository.findByParticipantId(participantId);
@@ -295,11 +295,7 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantStudyRepository.saveAndFlush(participantStudy.get());
 
       enrollUtil.withDrawParticipantFromStudy(
-          participantId,
-          participantStudy.get().getStudy().getVersion(),
-          studyId,
-          delete,
-          auditRequest);
+          participantId, participantStudy.get().getStudy().getVersion(), studyId, auditRequest);
       respBean = new WithDrawFromStudyRespBean();
       respBean.setCode(HttpStatus.OK.value());
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
