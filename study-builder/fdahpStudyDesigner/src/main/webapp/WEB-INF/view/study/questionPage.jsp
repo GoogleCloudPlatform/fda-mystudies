@@ -36,6 +36,9 @@
   font-size:13px !important
   }
   
+  .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+   text-transform: inherit; !important
+   }
 </style>
 <script type="text/javascript">
 

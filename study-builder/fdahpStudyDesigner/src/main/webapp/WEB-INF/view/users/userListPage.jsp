@@ -281,12 +281,12 @@
               if (status == 1) {
                 showSucMsg('User successfully deactivated.');
                 $('#' + userId).val("0");
-                $('#label' + userId).attr('data-original-title', 'Status: Deactivated');
+                $('#label' + userId).attr('data-original-title', 'Account status: Deactivated');
                 $('#editIcon' + userId).addClass('cursor-none');
               } else {
                 showSucMsg('User successfully activated.');
                 $('#' + userId).val("1");
-                $('#label' + userId).attr('data-original-title', 'Status: Active');
+                $('#label' + userId).attr('data-original-title', 'Account status: Active');
                 $('#editIcon' + userId).removeClass('cursor-none');
               }
             } else {
