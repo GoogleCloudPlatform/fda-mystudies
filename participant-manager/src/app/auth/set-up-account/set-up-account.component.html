@@ -124,20 +124,16 @@
                 class="form-control"
                 id="password"
                 placeholder="Enter password"
-                formControlName="password"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text">
+                class="form-control"
+              >
                   <i
-                    class="fa"
+                  class="fa fa-fw  field-icon toggle-password"
                     [ngClass]="{
                       'fa-eye-slash': !fieldTextType,
                       'fa-eye': fieldTextType
                     }"
                     (click)="toggleFieldTextType()"
                   ></i>
-                </span>
-              </div>
 
               <div
                 class="validation-error help-block with-errors error__msg"
