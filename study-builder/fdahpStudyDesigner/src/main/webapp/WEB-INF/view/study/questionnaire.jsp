@@ -267,14 +267,12 @@
                   <td><c:choose>
                     <c:when test="${entry.value.stepType eq 'Form'}">
                       <c:forEach items="${entry.value.fromMap}" var="subentry">
-                        <div class="dis-ellipsis"
-                             title="${fn:escapeXml(subentry.value.title)}">${subentry.value.title}</div>
+                        <div class="dis-ellipsis">${subentry.value.title}</div>
                         <div class="clearfix"></div>
                       </c:forEach>
                     </c:when>
                     <c:otherwise>
-                      <div class="dis-ellipsis"
-                           title="${fn:escapeXml(entry.value.title)}">${entry.value.title}</div>
+                      <div class="dis-ellipsis">${entry.value.title}</div>
                     </c:otherwise>
                   </c:choose></td>
                   <td>
@@ -308,14 +306,16 @@
                         <span class="ellipse" onmouseenter="ellipseHover(this);"></span>
                         <div class="ellipse-hover-icon"
                              onmouseleave="ellipseUnHover(this);">
-                          <span class="sprites_icon preview-g mr-sm"
+                          <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View"
                                 onclick="viewStep(${entry.value.stepId},'${entry.value.stepType}')"></span>
                           <span
                               class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
+                              data-toggle="tooltip" data-placement="top" title="Edit"
                               <c:if
                                   test="${actionType ne 'view'}">onclick="editStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
                           <span
                               class="sprites_icon delete deleteStepButton <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
+                               data-toggle="tooltip" data-placement="top" title="Delete"
                               <c:if
                                   test="${actionType ne 'view'}">onclick="deletStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
                         </div>
@@ -1857,6 +1857,17 @@
         $(".monthlyRegular").show();
       }
     })
+    
+    if ($('.dailyTimeDiv').length == 1) {
+   	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
+     }
+   
+    if($('.manually-option').length == 1){
+   	  $('.manually-option').find(".delete").css("visibility", "hidden");
+     }
+    if($('.manually-anchor-option').length == 1){
+  	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+    }
 
     $(".typeofschedule").change(function () {
 
@@ -2199,11 +2210,11 @@
                   "Unable to reorder questionnaire");
 
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
 
@@ -3014,6 +3025,7 @@
   }
 
   function addTime() {
+	  $('.dailyTimeDiv').find(".delete ").css("visibility", "visible");
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
@@ -3050,12 +3062,15 @@
     $(".time-opts").parents("form").validator();
     if ($('.time-opts').length > 1) {
       $(".remBtnDis").removeClass("hide");
+    } else if ($('.dailyTimeDiv').length == 1  ) {
+   	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
     } else {
       $(".remBtnDis").addClass("hide");
     }
   }
 
   function addDate() {
+    $('.manually-option').find(".delete").css("visibility", "visible");
     customCount = parseInt(customCount) + 1;
     
     $("#AddButton").hide();
@@ -3109,6 +3124,8 @@
     $(".manually-option").parents("form").validator();
     if ($('.manually-option').length > 1) {
       $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
+    } else if ( $('.manually-option').length == 1 ) {
+    	 $('.manually-option').find(".delete").css("visibility", "hidden");
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
@@ -3931,11 +3948,11 @@
                   }
                   $('#alertMsg').show();
                 }
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               },
               error: function (xhr, status, error) {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               }
             });
           } else {
@@ -4003,16 +4020,16 @@
         }
         dynamicAction += '<span class="ellipse" onmouseenter="ellipseHover(this);"></span>' +
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
-            '  <span class="sprites_icon preview-g mr-sm" onclick="viewStep(' + parseInt(value.stepId)
+            '  <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View" onclick="viewStep(' + parseInt(value.stepId)
             + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         if (value.status) {
-          dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editStep('
+          dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editStep('
               + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         } else {
-          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editStep('
+          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editStep('
               + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         }
-        dynamicAction += '  <span class="sprites_icon delete deleteStepButton" onclick="deletStep('
+        dynamicAction += '  <span class="sprites_icon delete deleteStepButton" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deletStep('
             + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>' +
             '</div>' +
             '</div>';
@@ -4044,6 +4061,7 @@
       $('#helpNote').attr('data-original-title',
           'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function ellipseHover(item) {
@@ -4348,6 +4366,7 @@
   }
 
   function addDateAnchor() {
+	  $('.manually-anchor-option').find(".delete").css("visibility", "visible");
     customAnchorCount = parseInt($('.manually-anchor-option').length);
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
@@ -4412,6 +4431,8 @@
     $(".manually-anchor-option").parents("form").validator();
     if ($('.manually-anchor-option').length > 1) {
       $('.manuallyAnchorContainer').find(".remBtnDis").removeClass("hide");
+    } else if ($('.manually-anchor-option').length == 1  ) {
+    	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
@@ -4668,4 +4689,7 @@
 
   });
 
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>
