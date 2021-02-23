@@ -180,7 +180,7 @@
                   </div>
                 </div>
                 <div class="col-xs-12">
-                  <div class="mb-lg form-group">
+                  <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
                         required="required"> <label for="inlineCheckbox">
