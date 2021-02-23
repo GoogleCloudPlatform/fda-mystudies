@@ -35,7 +35,7 @@
       </div>
       <c:if test="${empty permission}">
         <div class="dis-line form-group mb-none">
-          <span class="tool-tip" data-toggle="tooltip" data-placement="bottom"
+          <span class="tool-tip" data-toggle="tooltip" data-placement="bottom" id="spanMarkAsComp"
                 <c:if
                     test="${not empty resourcesSavedList}">title="Please ensure individual list items are marked Done, before marking the section as Complete" </c:if>>
             <button type="button" class="btn btn-primary blue-btn"
@@ -241,6 +241,7 @@
                   $('[data-toggle="tooltip"]').tooltip();
                 } else {
                   $('#markAsComp').prop('disabled', false);
+                  $('#spanMarkAsComp').removeAttr('title');
                   $('[data-toggle="tooltip"]').tooltip('destroy');
                 }
                 $("#alertMsg").removeClass('e-box').addClass('s-box').text(
