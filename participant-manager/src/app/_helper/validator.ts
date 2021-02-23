@@ -59,11 +59,7 @@ export function passwordValidator(): ValidatorFn {
     let serviceNameStatus = false;
     let consecutiveSpecialCharExist = false;
     let user = JSON.parse(sessionStorage.user);
-
-    var patternCapitaletter = /[A-Z]/g;
-    var patternSmallletter = /[a-z]/g;
-    var patternSmallCapletter = /[a-zA-Z]/g;
-
+    var patternForAlphabets = /(?=.*[a-z])(?=.*[A-Z])/g;
     let consecutiveIdenticalCharacter: boolean = false;
     let consecutivewhitespaceStatus: boolean = false;
     let easyGuessingNumbersOralphanumeric = false;
@@ -138,9 +134,7 @@ export function passwordValidator(): ValidatorFn {
       commonusepasswordStatus ||
       control.value.match(/([!@#$%^&*()‘+,:;<>{}~|-])\1*/g) === null ||
       control.value.match(/([0-9])\1*/g) === null ||
-      !patternSmallCapletter.test(control.value) ||
-      !patternSmallletter.test(control.value) ||
-      !patternCapitaletter.test(control.value) ||
+      !patternForAlphabets.test(control.value) ||
       control.value.length > 64
     ) {
       return {error: true};
