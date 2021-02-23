@@ -141,9 +141,7 @@
 
               <div
                 class="validation-error help-block with-errors error__msg"
-                *ngIf="
-                  f.password.invalid && (f.password.dirty || f.password.touched)
-                "
+                *ngIf="f.password.dirty || f.password.touched"
               >
                 <div *ngIf="f.password.dirty">
                   <meter

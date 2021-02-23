@@ -1357,18 +1357,9 @@
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="manually all mt-lg dis-none">
          
-            <div class="manuallyContainer">
-              <c:if
-                  test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
-                <div class="manually-option mb-md form-group" id="0">
-                  <input type="hidden"
-                         name="questionnaireCustomScheduleBo[0].questionnairesId"
-                         id="questionnairesId" value="${questionnaireBo.id}">
-                          
-                        
-                          <div class="gray-xs-f mb-sm">
-                       Select a date range and a start and end time for each run of the activity
-                         <span class="requiredStar">*</span>
+            <div class="gray-xs-f  mb-sm">
+              Select a date range and a start and end time for each run of the activity
+              <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                   data-toggle="tooltip"
@@ -1376,6 +1367,15 @@
                   title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
               </span>
             </div>
+            
+            <div class="manuallyContainer">
+              <c:if
+                  test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
+                <div class="manually-option mb-md form-group" id="0">
+                  <input type="hidden"
+                         name="questionnaireCustomScheduleBo[0].questionnairesId"
+                         id="questionnairesId" value="${questionnaireBo.id}">
+                    
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="StartDate0" type="text" count='0'
@@ -1488,18 +1488,7 @@
                          name="questionnaireCustomScheduleBo[0].questionnairesId"
                          id="questionnairesId" value="${questionnaireBo.id}">
                          
-                          
-                          <div class="gray-xs-f">
-              Select a date range and a start and end time for each run of the activity
-              <span class="requiredStar">*</span>
-              <span
-                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-              </span>
-            </div>
-            
+                   
                   <span
                       class="mb-sm pr-md">
                     <span class="light-txt opacity06">
