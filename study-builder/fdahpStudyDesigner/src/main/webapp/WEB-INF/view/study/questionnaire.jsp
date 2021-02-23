@@ -267,14 +267,12 @@
                   <td><c:choose>
                     <c:when test="${entry.value.stepType eq 'Form'}">
                       <c:forEach items="${entry.value.fromMap}" var="subentry">
-                        <div class="dis-ellipsis"
-                             title="${fn:escapeXml(subentry.value.title)}">${subentry.value.title}</div>
+                        <div class="dis-ellipsis">${subentry.value.title}</div>
                         <div class="clearfix"></div>
                       </c:forEach>
                     </c:when>
                     <c:otherwise>
-                      <div class="dis-ellipsis"
-                           title="${fn:escapeXml(entry.value.title)}">${entry.value.title}</div>
+                      <div class="dis-ellipsis">${entry.value.title}</div>
                     </c:otherwise>
                   </c:choose></td>
                   <td>
@@ -4643,4 +4641,7 @@
 
   });
 
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>

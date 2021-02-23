@@ -237,8 +237,7 @@
                     </td>
                     <td>
                       <div>
-                        <div class="dis-ellipsis"
-                             title="${fn:escapeXml(entry.value.title)}">${entry.value.title}</div>
+                        <div class="dis-ellipsis">${entry.value.title}</div>
                       </div>
                     </td>
                     <td>
@@ -911,4 +910,8 @@
       callback(false);
     }
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>
