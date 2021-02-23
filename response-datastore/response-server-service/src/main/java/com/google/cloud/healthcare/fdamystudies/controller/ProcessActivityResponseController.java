@@ -26,7 +26,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEven
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.DATA_SHARING_CONSENT_VALUE_RETRIEVED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_ACTIVITY_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_ID_INVALID;
-import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_RESPONSE_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_RESPONSE_DATA_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_RESPONSE_DATA_SUCCEEDED;
@@ -492,7 +491,6 @@ public class ProcessActivityResponseController {
       @RequestParam(name = "studyId") String studyId,
       @RequestParam(name = "studyVersion") String studyVersion,
       @RequestParam(name = "participantId") String participantId,
-      @RequestParam(name = "deleteResponses") String deleteResponses,
       HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -513,23 +511,15 @@ public class ProcessActivityResponseController {
         auditRequest.setParticipantId(participantId);
         Map<String, String> map = new HashMap<>();
         map.put("withdrawal_timetamp", Timestamp.from(Instant.now()).toString());
-        map.put("dataretention_setting", deleteResponses);
         responseServerAuditLogHelper.logEvent(
             PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE, auditRequest, map);
-        if (!StringUtils.isBlank(deleteResponses)
-            && deleteResponses.equalsIgnoreCase(AppConstants.TRUE_STR)) {
-          activityResponseProcessorService.deleteActivityResponseDataForParticipant(
-              studyId, participantId, auditRequest);
-          responseDataUpdate = true;
 
-          responseServerAuditLogHelper.logEvent(PARTICIPANT_RESPONSE_DATA_DELETED, auditRequest);
-        } else {
-          activityResponseProcessorService.updateWithdrawalStatusForParticipant(
-              studyId, participantId);
-          responseDataUpdate = true;
+        activityResponseProcessorService.updateWithdrawalStatusForParticipant(
+            studyId, participantId);
+        responseDataUpdate = true;
 
-          responseServerAuditLogHelper.logEvent(WITHDRAWAL_INFORMATION_UPDATED, auditRequest);
-        }
+        responseServerAuditLogHelper.logEvent(WITHDRAWAL_INFORMATION_UPDATED, auditRequest);
+
         // Delete all participant activity state from the table
         participantActivityStateResponseService.deleteParticipantActivites(studyId, participantId);
         SuccessResponseBean srBean = new SuccessResponseBean();
@@ -548,9 +538,7 @@ public class ProcessActivityResponseController {
           logger.error(
               "Could not successfully withdraw for participant.\n Study Id: "
                   + studyId
-                  + "\n Particpant Id: "
-                  + " Withdrawal Action "
-                  + deleteResponses);
+                  + "\n Particpant Id");
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         } else {
           responseServerAuditLogHelper.logEvent(WITHDRAWAL_INFORMATION_UPDATE_FAILED, auditRequest);
@@ -563,9 +551,7 @@ public class ProcessActivityResponseController {
           logger.error(
               "Could not successfully withdraw for participant.\n Study Id: "
                   + studyId
-                  + "\n Particpant Id: "
-                  + " Withdrawal Action "
-                  + deleteResponses);
+                  + "\n Particpant Id");
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         }
       }

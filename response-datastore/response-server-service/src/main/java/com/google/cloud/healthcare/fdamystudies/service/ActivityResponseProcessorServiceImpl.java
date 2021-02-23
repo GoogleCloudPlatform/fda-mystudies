@@ -14,7 +14,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.AC
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.RUN_ID;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_RESPONSE_DATA_DELETION_FAILED;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
@@ -42,7 +41,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,24 +131,6 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     }
     logger.debug(
         "ActivityResponseProcessorServiceImpl saveActivityResponseDataForParticipant() - ends ");
-  }
-
-  @Override
-  public void deleteActivityResponseDataForParticipant(
-      String studyId, String participantId, AuditLogEventRequest auditRequest)
-      throws ProcessResponseException {
-    if (Strings.isBlank(studyId) || Strings.isBlank(participantId)) {
-      responseServerAuditLogHelper.logEvent(
-          PARTICIPANT_RESPONSE_DATA_DELETION_FAILED, auditRequest);
-      throw new ProcessResponseException("Required input parameter is blank or null");
-    } else {
-
-      responsesDao.deleteActivityResponseDataForParticipant(
-          AppUtil.makeStudyCollectionName(studyId),
-          studyId,
-          AppConstants.ACTIVITIES_COLLECTION_NAME,
-          participantId);
-    }
   }
 
   @Override
