@@ -518,6 +518,14 @@ body#body-container {
   margin-top: 80%;
 }
 
+.loading_text_error {
+  color: var(--space-gray);
+  font-size: 14px;
+  font-family: Muli, sans-serif !important;
+  font-weight: 600;
+  text-align: center;
+}
+
 @-webkit-keyframes loading-spinner {
   0%   { -webkit-transform: rotate(0deg);   transform: rotate(0deg); }
   100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
@@ -560,3 +568,4 @@ body#body-container {
 @media only screen and (max-width: 500px) and (min-width: 320px) {
 .mob_mt { margin-top:10px; }
 }
+
