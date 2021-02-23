@@ -23,7 +23,7 @@
     margin-top: 10px;
   }
   
-  .display__flex__center{
+  .questionary_step_edit{
     margin-top: 10px !important;
   }
   
@@ -38,6 +38,9 @@
     pointer-events:none;
   }
   
+  .bootstrap-select.btn-group .dropdown-toggle .filter-option {
+   text-transform: inherit; !important
+   } 
 </style>
 <script type="text/javascript">
   function isNumber(evt) {
@@ -1322,7 +1325,7 @@
             </div>
           </div>
           <div id="Timeinterval" style="display: none;">
-            <div class="row mt-lg display__flex__center">
+            <div class="row mt-lg questionary_step_edit">
               <div class="col-md-2 pl-none">
                 <div class="gray-xs-f mb-xs">Step value
                   <span class="requiredStar">*</span>
@@ -2484,7 +2487,7 @@
                       </div>
                     </div>
                   </c:if>
-                  <div class="col-md-12 p-none display__flex__center">
+                  <div class="col-md-12 p-none questionary_step_edit">
                     <div class="col-md-10 pl-none">
                       <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                       <div class="form-group">
@@ -5663,13 +5666,13 @@
               if (callback)
                 callback(false);
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       } else {
@@ -6629,6 +6632,11 @@
           });
         }
       }
+
+      if (value === "F") {
+    	  $('.form-group').find(".delete ").css("visibility", "hidden");
+      }
+      
       $(".numeric__loop").parent().removeClass("has-danger").removeClass("has-error");
       $(".numeric__loop").parent().find(".help-block").empty();
       $(".numeric__loop").parents("form").validator("destroy");
@@ -6876,7 +6884,7 @@
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                 "RDE (x) should be used only once.");
-            setTimeout(hideDisplayMessage, 3000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
         return isSingle;
@@ -6899,7 +6907,7 @@
           $('#alertMsg').show();
           $("#alertMsg").removeClass('s-box').addClass('e-box').text(
               "Please add atleast one response data element in conditional formula.");
-          setTimeout(hideDisplayMessage, 3000);
+          setTimeout(hideDisplayMessage, 5000);
           return false;
         }
       } else {
@@ -7197,4 +7205,8 @@
         $('.OtherOptionCls').find('input:text,select').removeAttr('required');
       }
     })
+    
+    $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+    });
   </script>
