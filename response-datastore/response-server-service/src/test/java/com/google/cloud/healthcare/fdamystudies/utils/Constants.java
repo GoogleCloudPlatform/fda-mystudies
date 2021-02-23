@@ -58,4 +58,6 @@ public final class Constants {
   public static final String SUCCESS = "SUCCESS";
 
   public static final String ACTIVITY_COLLECTION_NAME_VALUE = "Activities";
+
+  public static final String CONTACT_EMAIL_ID = "contactemail@gmail.com";
 }

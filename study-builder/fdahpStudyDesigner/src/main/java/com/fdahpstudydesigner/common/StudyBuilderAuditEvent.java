@@ -484,7 +484,21 @@ public enum StudyBuilderAuditEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       "Failed to send app/study notifications metadata.",
-      "NOTIFICATION_METADATA_SEND_OPERATION_FAILED");
+      "NOTIFICATION_METADATA_SEND_OPERATION_FAILED"),
+
+  STUDY_NEW_ACTIVE_TASK_CREATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New Active task created (activity ID - ${activetask_id}).",
+      "STUDY_NEW_ACTIVE_TASK_CREATED"),
+
+  STUDY_QUESTIONNAIRE_MARKED_COMPLETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Questionnaire marked completed (activity ID - ${questionnaire_id}).",
+      "STUDY_QUESTIONNAIRE_MARKED_COMPLETED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

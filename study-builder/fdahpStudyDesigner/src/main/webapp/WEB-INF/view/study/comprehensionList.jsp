@@ -127,9 +127,11 @@
                         onclick="viewComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="${comprehensionTestQuestion.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      data-toggle="tooltip" data-placement="top" title="Edit"
                       onclick="editComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      data-toggle="tooltip" data-placement="top" title="Delete"
                       onclick="deleteComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                 </td>
               </tr>
@@ -168,6 +170,7 @@
 </form:form>
 <!-- End right Content here -->
 <script type="text/javascript">
+var markAsComplete = "${markAsComplete}"
   $(document).ready(function () {
 	var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
    if(mainContainerDivision==true){
@@ -190,10 +193,14 @@
         $("#comprehensionTestMinimumScore, #minScoreText").hide();
         $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
         $("#mainContainer").show();
+        if ($('#comprehension_list tbody tr').length == 1
+                && $('#comprehension_list tbody tr td').length == 1) {
        $("#markAsCompleteBtnId").attr("disabled", true);
        $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
-        var markAsComplete = "${markAsComplete}"
+        }
+     
         if (markAsComplete == "false") {
+          $("#markAsCompleteBtnId").attr("disabled", true);
           $("#helpNote").attr('data-original-title',
               'Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete.');
           $('[data-toggle="tooltip"]').tooltip();
@@ -390,6 +397,14 @@
         var message = data.message;
         if (message == "SUCCESS") {
           reloadComprehensionQuestionDataTable(data.comprehensionTestQuestionList);
+          if ($('#comprehension_list tbody tr').length == 1
+                  && $('#comprehension_list tbody tr td').length == 1) {
+        	  $("#markAsCompleteBtnId").attr("disabled", true);
+              $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
+          }else if(markAsComplete == "true" ){
+        	        $("#markAsCompleteBtnId").attr("disabled", false);
+        	        $('#helpNote').removeAttr('data-original-title');
+        	      }
         }
       },
       error: function status(data, status) {
@@ -421,6 +436,7 @@
   }
 
   function reloadComprehensionQuestionDataTable(comprehensionTestQuestionList) {
+	  markAsComplete="true";
     $('#comprehension_list').DataTable().clear();
     if (typeof comprehensionTestQuestionList != 'undefined' && comprehensionTestQuestionList != null
         && comprehensionTestQuestionList.length > 0) {
@@ -439,21 +455,22 @@
         var actions='';
         var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');
         if( obj.status===true){
-         actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
+         actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("
             + parseInt(obj.id) + ");'></span>"
-            + "<span class='sprites_icon mr-lg edit-inc' onclick='editComprehensionQuestion(" + parseInt(obj.id)
+            + "<span class='sprites_icon mr-lg edit-inc' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)
             + ");'>"
-            + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
+            + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("
             + parseInt(obj.id) + ");'>"
             + "</span>";
         }else{
-        	    actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
+        	    actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("
                    + parseInt(obj.id) + ");'></span>"
-                   + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' onclick='editComprehensionQuestion(" + parseInt(obj.id)
+                   + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)
                    + ");'>"
-                   + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
+                   + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("
                    + parseInt(obj.id) + ");'>"
                    + "</span>";
+        	    markAsComplete="false";
             }
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);
@@ -467,6 +484,7 @@
     if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
       $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function markAsCompleted() {

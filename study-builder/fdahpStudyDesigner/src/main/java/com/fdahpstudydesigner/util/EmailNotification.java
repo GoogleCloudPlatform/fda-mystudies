@@ -59,8 +59,7 @@ public class EmailNotification {
       mail.setBccEmail(StringUtils.join(bccMailList, ','));
       mail.setSubject(propMap.get(subjectProprtyName));
       mail.setMessageBody(content);
-      mail.sendemail();
-      sentMail = true;
+      sentMail = mail.sendemail();
     } catch (Exception e) {
       logger.error("EmailNotification.sendEmailNotification() :: ERROR ", e);
     }
