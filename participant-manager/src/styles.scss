@@ -35,18 +35,18 @@ meter::-webkit-meter-high-value {
   font-size: 6px;
 }
 .weakPwd {
-  color: red;
-  font-size: 13px;
+  color: var(--orange-red);
+  font-size: 75%;
 }
 .fairPwd {
-  color: orange;
-  font-size: 13px;
+  color: var(--yellow);
+  font-size: 75%;
 }
 .goodPwd {
-  color: green;
-  font-size: 13px;
+  color: var(--green);
+  font-size: 75%;
 }
 .strongPwd {
-  color: green;
-  font-size: 13px;
+  color: var(--green);
+  font-size: 75%;
 }
