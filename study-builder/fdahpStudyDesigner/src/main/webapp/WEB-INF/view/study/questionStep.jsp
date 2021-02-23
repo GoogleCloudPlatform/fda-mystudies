@@ -23,7 +23,7 @@
     margin-top: 10px;
   }
   
-  .display__flex__center{
+  .questionary_step_edit{
     margin-top: 10px !important;
   }
   
@@ -1325,7 +1325,7 @@
             </div>
           </div>
           <div id="Timeinterval" style="display: none;">
-            <div class="row mt-lg display__flex__center">
+            <div class="row mt-lg questionary_step_edit">
               <div class="col-md-2 pl-none">
                 <div class="gray-xs-f mb-xs">Step value
                   <span class="requiredStar">*</span>
@@ -2487,7 +2487,7 @@
                       </div>
                     </div>
                   </c:if>
-                  <div class="col-md-12 p-none display__flex__center">
+                  <div class="col-md-12 p-none questionary_step_edit">
                     <div class="col-md-10 pl-none">
                       <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                       <div class="form-group">
