@@ -331,7 +331,7 @@
                 $('#alertMsg').show();
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Add atleast one question");
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
                 $('.formLevel a').tab('show');
               } else {
                 var repeatable = $('input[name="repeatable"]:checked').val();
@@ -359,7 +359,7 @@
                           $('#alertMsg').show();
                           $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                               "Add atleast one question");
-                          setTimeout(hideDisplayMessage, 4000);
+                          setTimeout(hideDisplayMessage, 5000);
                           $('.formLevel a').tab('show');
                         }
                       }
@@ -376,7 +376,7 @@
                       $('#alertMsg').show();
                       $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                           "Add atleast one question");
-                      setTimeout(hideDisplayMessage, 4000);
+                      setTimeout(hideDisplayMessage, 5000);
                       $('.formLevel a').tab('show');
                     }
                   }
@@ -506,11 +506,11 @@
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       }
@@ -647,13 +647,13 @@
             if (callback)
               callback(false);
           }
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         },
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
           $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         }
       });
     }
@@ -722,11 +722,11 @@
                   }
                   $('#alertMsg').show();
                 }
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               },
               error: function (xhr, status, error) {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               }
             });
           } else {

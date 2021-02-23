@@ -154,7 +154,7 @@
         if (errMsg.length > 0) {
           $("#errMsg").text(errMsg);
           $("#errMsg").show("fast");
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         }
       });
 
