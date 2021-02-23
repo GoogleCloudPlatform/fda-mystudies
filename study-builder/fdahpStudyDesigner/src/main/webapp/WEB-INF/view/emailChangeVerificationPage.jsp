@@ -150,7 +150,7 @@
           if (errMsg.length > 0) {
             $("#errMsg").text(errMsg);
             $("#errMsg").show("fast");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         }
         var sucMsg = '${sucMsg}';
@@ -159,7 +159,7 @@
             $("#sucMsg").text(sucMsg);
             $("#sucMsg").show("fast");
             $("#errMsg").hide("fast");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         }
         $("#password").passwordValidator({
