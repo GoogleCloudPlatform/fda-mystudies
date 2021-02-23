@@ -459,14 +459,14 @@
                     'e-box').text("Something went Wrong");
                 $('#alertMsg').show();
               }
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             },
             error: function (xhr, status, error) {
               $(item).prop('disabled', false);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('s-box').addClass(
                   'e-box').text("Something went Wrong");
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             }
           });
     } else {
@@ -479,7 +479,7 @@
             .empty()
             .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                 "This is a required field."));
-        setTimeout(hideDisplayMessage, 4000);
+        setTimeout(hideDisplayMessage, 5000);
       }
 
     }
@@ -565,7 +565,7 @@
         if ('${consentInfo.consentItemTitleId}' != ''
             && '${consentInfo.consentItemTitleId}' != null) {
           if ('${consentInfo.consentItemTitleId}' == selectedTitle.options[i].value
-              && '${consentInfo.consentItemTitleId}' != '${consentInfoBo.consentItemTitleId}') {
+        		  && '${consentInfo.consentItemTitleId}' != '${consentInfoBo.consentItemTitleId}' && '${consentInfo.consentItemType}' != 'Custom') {
             $(
                 "select option[value="
                 + selectedTitle.options[i].value + "]")
