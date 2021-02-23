@@ -634,4 +634,8 @@
     }
     return isValid;
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>
