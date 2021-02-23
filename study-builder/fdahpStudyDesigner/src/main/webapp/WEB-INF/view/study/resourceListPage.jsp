@@ -35,9 +35,8 @@
       </div>
       <c:if test="${empty permission}">
         <div class="dis-line form-group mb-none">
-          <span class="tool-tip" data-toggle="tooltip" data-placement="bottom"
-                <c:if
-                    test="${not empty resourcesSavedList}">title="Please ensure individual list items are marked Done, before marking the section as Complete" </c:if>>
+          <span class="tool-tip" data-toggle="tooltip" data-placement="bottom" id="spanMarkAsComp"
+          data-original-title="">
             <button type="button" class="btn btn-primary blue-btn"
                     id="markAsComp" onclick="markAsCompleted();"
                     <c:if test="${fn:length(resourcesSavedList) ne 0}">disabled</c:if>>
@@ -133,6 +132,14 @@
     } else {
       reorder = true;
     }
+  
+    var resourcesSavedListSize = ${resourcesSavedList.size()};
+    if(resourcesSavedListSize > 0){
+    	 $('#spanMarkAsComp')
+         .attr(
+             'data-original-title',
+             'Please ensure individual list items are marked Done, before marking the section as Complete');
+        }
 
     var dataTable = $('#resource_list').DataTable({
       "paging": false,
@@ -238,10 +245,14 @@
               if (status == "SUCCESS") {
                 if (resourceSaved) {
                   $('#markAsComp').prop('disabled', true);
+                  $('#spanMarkAsComp')
+                  .attr(
+                      'data-original-title',
+                      'Please ensure individual list items are marked Done, before marking the section as Complete');
                   $('[data-toggle="tooltip"]').tooltip();
                 } else {
                   $('#markAsComp').prop('disabled', false);
-                  $('[data-toggle="tooltip"]').tooltip('destroy');
+                  $('#spanMarkAsComp').removeAttr('data-original-title');
                 }
                 $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                     "Resource deleted successfully.");
