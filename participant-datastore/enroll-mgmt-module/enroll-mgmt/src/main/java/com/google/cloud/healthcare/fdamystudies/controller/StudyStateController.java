@@ -166,7 +166,6 @@ public class StudyStateController {
         studyStateService.withdrawFromStudy(
             withdrawFromStudyBean.getParticipantId(),
             withdrawFromStudyBean.getStudyId(),
-            withdrawFromStudyBean.isDelete(),
             auditRequest);
     if (respBean != null) {
       logger.info("StudyStateController withdrawFromStudy() - Ends ");
