@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -382,7 +383,7 @@
             <input type="checkbox" id="useStasticData" value="Yes"
                    name="useStasticData" ${questionsBo.useStasticData eq 'Yes' ? 'checked':''}
                    <c:if test="${questionnairesStepsBo.repeatable eq 'Yes'}">disabled</c:if>>
-            <label for="useStasticData"> Use response data for statistic on dashboard</label>
+            <label for="useStasticData"> ダッシュボードの統計に応答データを使用する</label>
           </span>
         </div>
         <div class="clearfix"></div>
