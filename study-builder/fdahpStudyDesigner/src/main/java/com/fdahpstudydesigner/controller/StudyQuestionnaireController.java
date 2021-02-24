@@ -11,6 +11,7 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_QUESTIONNAIRE_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_DELETED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_MARKED_COMPLETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_IN_FORM_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.FORM_ID;
@@ -2468,6 +2469,11 @@ public class StudyQuestionnaireController {
                       ? STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED
                       : STUDY_NEW_QUESTIONNAIRE_CREATED;
               auditLogEventHelper.logEvent(event, auditRequest, values);
+
+              if (questionnaireBo.getStatus()) {
+                auditLogEventHelper.logEvent(
+                    STUDY_QUESTIONNAIRE_MARKED_COMPLETED, auditRequest, values);
+              }
               message = FdahpStudyDesignerConstants.SUCCESS;
             }
           }

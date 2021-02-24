@@ -549,9 +549,10 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
                 auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
               }
-              if (flag) {
-                message = FdahpStudyDesignerConstants.SUCCESS;
-              }
+
+              message =
+                  flag ? FdahpStudyDesignerConstants.SUCCESS : FdahpStudyDesignerConstants.FAILURE;
+
               if ("".equals(type) && (!userdetails.isEnabled())) {
                 message = propMap.get("user.inactive.msg");
               }
