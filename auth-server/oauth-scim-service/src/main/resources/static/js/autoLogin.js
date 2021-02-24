@@ -10,4 +10,14 @@ window.onload = function() {
   window.setTimeout(function() {
     document.autoSignInForm.submit();
   }, 500);
+  
+  window.setTimeout(function() {
+  hideLoader();
+  }, 10000);
+};
+
+var hideLoader = function () {
+  $(".loading_div").fadeOut("slow");
+  $("#errorMsg").show();
+  $("#errorImg").show();
 };
