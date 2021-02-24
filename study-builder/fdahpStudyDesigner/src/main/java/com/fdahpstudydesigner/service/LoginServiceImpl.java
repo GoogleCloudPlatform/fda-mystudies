@@ -486,7 +486,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 Map<String, String> values = new HashMap<>();
                 values.put(StudyBuilderConstants.USER_ID, String.valueOf(userdetails.getUserId()));
                 if (!flag) {
-                  auditLogEventHelper.logEvent(NEW_USER_INVITATION_EMAIL_FAILED, auditRequest);
+                  auditLogEventHelper.logEvent(
+                      NEW_USER_INVITATION_EMAIL_FAILED, auditRequest, values);
                 }
 
               } else if ("USER_UPDATE".equals(type) && userdetails.isEnabled()) {

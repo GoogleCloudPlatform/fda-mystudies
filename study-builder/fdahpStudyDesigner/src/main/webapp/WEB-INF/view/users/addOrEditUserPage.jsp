@@ -92,7 +92,7 @@
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
-                    class="gray-xs-f mb-xs pl-xs"> Pending Verification
+                    class="gray-xs-f mb-xs pl-xs"> Pending verification
                 </span>
               </span>
             </div>
@@ -122,7 +122,7 @@
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"
-                    id="enforcePasswordId">Enforce Password Change
+                    id="enforcePasswordId">Enforce password change
             </button>
           </div>
         </c:if>

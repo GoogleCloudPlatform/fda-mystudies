@@ -125,15 +125,16 @@
                 id="password"
                 placeholder="Enter password"
                 class="form-control"
-              >
-                  <i
-                  class="fa fa-fw  field-icon toggle-password"
-                    [ngClass]="{
-                      'fa-eye-slash': !fieldTextType,
-                      'fa-eye': fieldTextType
-                    }"
-                    (click)="toggleFieldTextType()"
-                  ></i>
+                formControlName="password"
+              />
+              <i
+                class="fa fa-fw field-icon toggle-password"
+                [ngClass]="{
+                  'fa-eye-slash': !fieldTextType,
+                  'fa-eye': fieldTextType
+                }"
+                (click)="toggleFieldTextType()"
+              ></i>
 
               <div
                 class="validation-error help-block with-errors error__msg"
