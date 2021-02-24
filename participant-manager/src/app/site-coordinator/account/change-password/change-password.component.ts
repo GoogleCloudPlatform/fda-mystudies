@@ -125,19 +125,19 @@ special characters.`);
         this.passwordMeterValue = '.2';
         this.passwordMeterOptimum = '.8';
         this.meterStatus = 'Weak';
-      } else if (secretkeylenth.length >= 8 && secretkeylenth.length <= 16) {
+      } else if (secretkeylenth.length === 8) {
         this.passwordMeterLow = '.25';
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.5';
         this.passwordMeterOptimum = '.15';
         this.meterStatus = 'Fair';
-      } else if (secretkeylenth.length > 16 && secretkeylenth.length <= 32) {
+      } else if (secretkeylenth.length > 8 && secretkeylenth.length <= 12) {
         this.passwordMeterLow = '.10';
         this.passwordMeterHigh = '1';
         this.passwordMeterValue = '.7';
         this.passwordMeterOptimum = '.15';
         this.meterStatus = 'Good';
-      } else if (secretkeylenth.length > 32) {
+      } else if (secretkeylenth.length > 12) {
         this.passwordMeterLow = '.10';
         this.passwordMeterHigh = '1';
         this.passwordMeterValue = '1';
