@@ -1726,6 +1726,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     List<QuestionConditionBranchBo> newQuestionConditionBranchList = null;
     Session newSession = null;
     try {
+      logger.warn("questionId ---> " + questionId);
+      logger.warn("session is null ???? --> [ " + (session == null) + " ]");
       if (session == null) {
         newSession = hibernateTemplate.getSessionFactory().openSession();
       }
@@ -1733,8 +1735,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           "From QuestionConditionBranchBo QCBO where QCBO.questionId=:questionId "
               + " order by QCBO.sequenceNo ASC";
       if (newSession != null) {
+        logger.warn("AAAAAAAAAAAAAAAAAAAAAAA");
         query = newSession.createQuery(searchQuery).setInteger("questionId", questionId);
       } else {
+        logger.warn("XXXXXXXXXXXXXXXXXXXXXXX");
         query = session.createQuery(searchQuery);
       }
       questionConditionBranchList = query.list();
@@ -3165,6 +3169,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           }
         }
 
+        logger.warn("questionnaireId ---> [ " + questionnaireId + " ]");
         // Reset destination steps in Questionnaire Starts
         if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
           String searchQuery =
