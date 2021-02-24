@@ -1739,7 +1739,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       } else {
         // modified hama
         //query = session.createQuery(searchQuery);
-        query = newSession.createQuery(searchQuery).setInteger("questionId", questionId);
+        query = session.createQuery(searchQuery).setInteger("questionId", questionId);
       }
       questionConditionBranchList = query.list();
       if (session == null) {
