@@ -693,8 +693,8 @@ public class SurveyActivitiesListAdapter
           }
           CustomActivitiesDailyDialogClass c =
                   new CustomActivitiesDailyDialogClass(
-                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this,status
-                          .get(holder.getAdapterPosition()),currentRunStatusForActivities
+                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this, status
+                          .get(holder.getAdapterPosition()), currentRunStatusForActivities
                           .get(holder.getAdapterPosition()));
           c.show();
         }
