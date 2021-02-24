@@ -48,6 +48,7 @@ public class ConsentBo implements Serializable {
 
   private static final long serialVersionUID = 5564057544960167010L;
 
+  @Deprecated
   @Column(name = "aggrement_of_consent")
   private String aggrementOfTheConsent;
 

@@ -128,6 +128,7 @@ public class ConsentDto implements Serializable {
   @Column(name = "need_comprehension_test")
   private String needComprehensionTest;
 
+  @Deprecated
   @Column(name = "aggrement_of_consent")
   private String aggrementOfConsent;
 
