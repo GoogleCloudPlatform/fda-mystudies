@@ -1793,6 +1793,7 @@
   var customCount = 0;
   var frequencey = "${questionnaireBo.frequency}";
   customCount = '${customCount}';
+  customCount = '${customCount}'==='' ? '0' : '${customCount}';
   count = Number('${count}');
   var isValidManuallySchedule = true;
   var multiTimeVal = true;

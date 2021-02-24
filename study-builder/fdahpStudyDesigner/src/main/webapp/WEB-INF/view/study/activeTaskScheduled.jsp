@@ -1202,6 +1202,7 @@
 
   var frequencey = "${activeTaskBo.frequency}";
   customCount = '${customCount}';
+  customCount = '${customCount}'==='' ? '0' : '${customCount}';
   count = '${count}'
   var isValidManuallySchedule = true;
   var multiTimeVal = true;
