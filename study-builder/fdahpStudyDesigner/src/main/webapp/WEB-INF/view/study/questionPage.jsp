@@ -58,22 +58,22 @@
       <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img
           src="../images/icons/back-b.png"
           alt=""/></span>
-      <c:if test="${actionTypeForFormStep == 'edit'}">Edit Question</c:if>
-      <c:if test="${actionTypeForFormStep == 'view'}">View Question <c:set
+      <c:if test="${actionTypeForFormStep == 'edit'}">質問の編集</c:if>
+      <c:if test="${actionTypeForFormStep == 'view'}">質問の参照 <c:set
           var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
       </c:if>
-      <c:if test="${actionTypeForFormStep == 'add'}">Add Question</c:if>
+      <c:if test="${actionTypeForFormStep == 'add'}">質問の追加</c:if>
     </div>
     <div class="dis-line form-group mb-none mr-sm">
-      <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">Cancel
+      <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">キャンセル
       </button>
     </div>
     <c:if test="${actionTypeForFormStep ne 'view'}">
       <div class="dis-line form-group mb-none mr-sm">
-        <button type="button" class="btn btn-default gray-btn" id="saveId">Save</button>
+        <button type="button" class="btn btn-default gray-btn" id="saveId">下書き保存</button>
       </div>
       <div class="dis-line form-group mb-none">
-        <button type="button" class="btn btn-primary blue-btn" id="doneId">Done</button>
+        <button type="button" class="btn btn-primary blue-btn" id="doneId">完了</button>
       </div>
     </c:if>
   </div>
@@ -87,12 +87,11 @@
   <div class="right-content-body pt-none pl-none pr-none">
     <ul class="nav nav-tabs review-tabs gray-bg">
       <li class="questionLevel active">
-        <a data-toggle="tab" href="#qla">Question-level
-          Attributes
+        <a data-toggle="tab" href="#qla">Question-level Attributes
         </a>
       </li>
       <li class="responseLevel">
-        <a data-toggle="tab" href="#rla">Response-level Attributes</a>
+        <a data-toggle="tab" href="#rla">解答形式</a>
       </li>
     </ul>
     <div class="tab-content pl-xlg pr-xlg">
@@ -111,13 +110,13 @@
       <!---  Form-level Attributes --->
       <div id="qla" class="tab-pane fade active in mt-xlg">
         <div class="col-md-6 pl-none">
-          <div class="gray-xs-f mb-xs">Question Short Title or Key (1 to 15 characters)
+          <div class="gray-xs-f mb-xs">ショートID (半角英数字 1文字以上 15文字以下)
             <span
                 class="requiredStar">*
             </span>
             <span class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
-                  title="This must be a human-readable question identifier and unique across all steps of the questionnaire and across all questions belonging to various form steps.In other words, no two questions should have the same short title - whether it belongs to a question step or a form step.Note that this field cannot be edited once the study is Launched."></span>
+                  title="このタイトルはこの治験に属する全てのアクティビティ中で一意なものにしてください。また、この項目は治験が公開されると編集できなくなります。"></span>
           </div>
           <div class="form-group mb-none">
             <input type="text" custAttType="cust" class="form-control" name="shortTitle"
@@ -131,13 +130,13 @@
           </div>
         </div>
         <div class="col-md-10 p-none mt-md">
-          <div class="gray-xs-f mb-xs">Text of the question (1 to 300 characters)
+          <div class="gray-xs-f mb-xs">質問本文 (1文字以上 300文字以下)
             <span
                 class="requiredStar">*
             </span>
             <span class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
-                  title="The question you wish to ask the participant."></span>
+                  title="ユーザーへの質問を入力してください。"></span>
           </div>
           <div class="form-group">
             <input type="text" class="form-control" name="question" id="questionTextId"
@@ -148,28 +147,26 @@
         </div>
         <div class="clearfix"></div>
         <div>
-          <div class="gray-xs-f mb-xs">Is this a Skippable Question?</div>
+          <div class="gray-xs-f mb-xs">これはスキップな可能な質問ですか？</div>
           <div>
             <span class="radio radio-info radio-inline p-45">
               <input type="radio" id="skiappableYes" value="Yes"
                      name="skippable"  ${empty questionsBo.skippable  || questionsBo.skippable =='Yes' ? 'checked':''}>
-              <label for="skiappableYes">Yes</label>
+              <label for="skiappableYes">はい</label>
             </span>
             <span class="radio radio-inline">
               <input type="radio" id="skiappableNo" value="No"
                      name="skippable" ${questionsBo.skippable=='No' ?'checked':''}>
-              <label for="skiappableNo">No</label>
+              <label for="skiappableNo">いいえ</label>
             </span>
           </div>
         </div>
         <div class="mt-lg">
-          <div class="gray-xs-f">Response Type
+          <div class="gray-xs-f">解答入力のデータ型
             <span class="requiredStar">*</span>
           </div>
           <div class="gray-xs-f mb-xs">
-            <small>The type of interface needed to capture the response.
-              Note that
-              this is not editable after Study Launch.
+            <small>複数ある入力形式から1つ選んでください。また、この項目は治験が公開されると編集できなくなります。
             </small>
           </div>
           <div class="clearfix"></div>
@@ -192,13 +189,13 @@
         <div class="clearfix"></div>
         <div class="row mt-none">
           <div class="col-md-6 pl-none">
-            <div class="gray-xs-f mb-xs">Description of response type</div>
+            <div class="gray-xs-f mb-xs">データ形式の説明</div>
             <div id="responseTypeDescrption">
               - NA -
             </div>
           </div>
           <div class="col-md-6">
-            <div class="gray-xs-f mb-xs">Data Type</div>
+            <div class="gray-xs-f mb-xs">データタイプ</div>
             <div id="responseTypeDataType">- NA -</div>
           </div>
         </div>
@@ -314,18 +311,18 @@
               <input type="checkbox" id="addLineChart" name="addLineChart"
                      value="Yes" ${questionsBo.addLineChart eq 'Yes' ? 'checked':''}
                      <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}">disabled</c:if>>
-              <label for="addLineChart"> Add response data to line chart on app dashboard </label>
+              <label for="addLineChart"> アプリダッシュボードの折れ線グラフに応答データを追加する </label>
             </span>
           </div>
           <div class="clearfix"></div>
           <div id="chartContainer" style="display: none">
             <div class="col-md-6 p-none">
-              <div class="gray-xs-f mb-xs">Time range for the chart
+              <div class="gray-xs-f mb-xs">チャートの時間範囲
                 <span
                     class="requiredStar">*
                 </span>
                 <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      title="The options available here depend on the scheduling frequency set for the activity. For multiple-times-a-day and custom- scheduled activities, the chart's X axis divisions will represent runs. For the former case, the chart will display all runs for the day while for the latter, the chart will display a max of 5 runs at a time."></span>
+                      title="ここで使用できるオプションは、アンケートに設定されたスケジュール頻度によって異なります。 1日に複数回実施する場合と、カスタムスケジュールされたアクティビティの場合はグラフのX軸の分割は実行を表します。 前者の場合、チャートにはその日のすべての実行が表示され、後者の場合、チャートには一度に最大5つの実行が表示されます。"></span>
               </div>
               <div class="form-group">
                 <select class="selectpicker elaborateClass chartrequireClass"
@@ -512,11 +509,9 @@
       <!---  Form-level Attributes --->
       <div id="rla" class="tab-pane fade mt-xlg">
         <div class="col-md-4 col-lg-4 p-none">
-          <div class="gray-xs-f mb-xs">Response Type</div>
+          <div class="gray-xs-f mb-xs">解答のデータ型</div>
           <div class="gray-xs-f mb-xs">
-            <small>The type of interface needed to capture the
-              response
-            </small>
+            <small>アンケートの質問を作成する上で非常に重要な設定になります</small>
           </div>
           <div class="form-group">
             <input type="text" class="form-control" id="rlaResonseType" disabled>
@@ -525,13 +520,13 @@
         <div class="clearfix"></div>
         <div class="row mt-sm">
           <div class="col-md-6 pl-none">
-            <div class="gray-xs-f mb-xs">Description of response type</div>
+            <div class="gray-xs-f mb-xs">解答するデータ型の説明</div>
             <div id="rlaResonseTypeDescription">
               - NA -
             </div>
           </div>
           <div class="col-md-6">
-            <div class="gray-xs-f mb-xs">Data Type</div>
+            <div class="gray-xs-f mb-xs">データ型</div>
             <div id="rlaResonseDataType"> - NA -</div>
           </div>
         </div>
@@ -550,7 +545,7 @@
         <div id="responseTypeDivId">
           <div id="scaleType" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Scale Type
+              <div class="gray-xs-f mb-xs">表のタイプ
                 <span class="requiredStar">*</span>
               </div>
               <div>
@@ -573,11 +568,11 @@
             <div class="row mt-md mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Minimum Value
+                  <div class="gray-xs-f mb-xs">最小値
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an integer number in the range (Min, 10000)."></span>
+                        title="10000までの整数を入力してください"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
@@ -590,11 +585,11 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Maximum Value
+                  <div class="gray-xs-f mb-xs">最大値
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an integer number in the range (Min+1, 10000)."></span>
+                        title="(Min+1, 10000)までの整数を入力してください"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
@@ -610,7 +605,7 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Description for minimum value (1 to 50 characters)
+                  <div class="gray-xs-f mb-xs">最小値の説明 (1文字以上 50文字以下)
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control"
@@ -623,7 +618,7 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Description for maximum value (1 to 50 characters)
+                  <div class="gray-xs-f mb-xs">最大値の説明 (1文字以上 50文字以下)
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control"
@@ -639,11 +634,11 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Step Size
+                  <div class="gray-xs-f mb-xs">ステップサイズ
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter the desired size to be applied to each step in the scale. Note that this value determines the step count or  number of steps in the scale. You will be prompted to enter a different step size if the scale cannot be divided into equal steps. Or if the value you entered results in a step count <1 or >13. "></span>
+                        title="(最大値 - 最小値) / ステップ数 が 整数 かつ 1 から 13 になる数字を入力する必要があります。"></span>
                   </div>
                   <div class="form-group">
                     <c:if test="${not empty questionsBo.questionReponseTypeBo.step}">
@@ -661,13 +656,13 @@
               </div>
               <div class="col-md-6 ">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Number of Step
+                  <div class="gray-xs-f mb-xs">ステップ数(1 から 13 までになる必要があります。)
                     <span
                         class="requiredStar">*
                     </span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="This represents the number of steps the scale is divided into."></span>
+                        title="スケールが分割される数。1から13までの数にする必要があります。"></span>
                   </div>
                   <input type="text" class="form-control ScaleRequired" id="scaleStepId"
                          value="${questionsBo.questionReponseTypeBo.step}" disabled="disabled">
@@ -679,13 +674,13 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
-                  <div class="gray-xs-f mb-xs">Default value (slider position)
+                  <div class="gray-xs-f mb-xs">デフォルト値 (スライダーポジション)
                     <span
                         class="requiredStar">*
                     </span>
                     <span class="ml-xs sprites_v3 filled-tooltip"
                           data-toggle="tooltip"
-                          title="Enter an integer number to indicate the desired default step position for the slider in the scale.  Ensure it is in the range (0,  Numer of  Steps). For example, if you have 6 steps,  0 indicates the minimum value, 1 indicates the first step and so on. 6 indicates the maximum value. "></span>
+                          title="スケールが分割される数。1から13までの数にする必要があります。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
@@ -702,11 +697,11 @@
             <div class="row mb-xs">
               <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Minimum Value
+                  <div class="gray-xs-f mb-xs">最小値の画像
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the minimum value.<br>JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="最小値を示す画像をアップロードしてください。形式は JPEG / PNG <br> 画像サイズ: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(画像の選択したサイズのアスペクト比を維持します)"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -734,7 +729,7 @@
                           class="blue-link elaborateHide removeImageId <c:if test="${empty questionsBo.questionReponseTypeBo.minImage}">hide</c:if>"
                           onclick="removeImage(this);">X
                       <a href="javascript:void(0)"
-                         class="blue-link txt-decoration-underline pl-xs">Remove Image
+                         class="blue-link txt-decoration-underline pl-xs">画像削除
                       </a>
                     </span>
                     <div class="help-block with-errors red-txt"></div>
@@ -743,11 +738,11 @@
               </div>
               <div class="col-md-6">
                 <div class="col-md-8 col-lg-8 pl-none">
-                  <div class="gray-xs-f mb-xs">Image for Maximum Value
+                  <div class="gray-xs-f mb-xs">最大値の画像
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the maximum value.<br>JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="最大値を示す画像をアップロードしてください。形式は JPEG / PNG <br> 画像サイズ: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(画像の選択したサイズのアスペクト比を維持します)"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -1465,10 +1460,10 @@
         <div id="Boolean" style="display: none;">
           <div class="clearfix"></div>
           <div class="mt-lg">
-            <div class="gray-choice-f mb-xs">Choices
+            <div class="gray-choice-f mb-xs">選択肢
               <span class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
-                    title="If there is branching applied to your questionnaire, you can  define destination steps for the Yes and No choices"></span>
+                    title="アンケートで分岐を有効にしている場合は、選択肢ごとに宛先ステップを選択することもできます。"></span>
             </div>
           </div>
           <div class="row mt-xs" id="0">
@@ -1476,7 +1471,7 @@
                    name="questionResponseSubTypeList[0].responseSubTypeValueId"
                    value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].responseSubTypeValueId)}">
             <div class="col-md-3 pl-none">
-              <div class="gray-xs-f mb-xs">Display Text
+              <div class="gray-xs-f mb-xs">表示テキスト
                 <span class="requiredStar">*</span>
               </div>
               <div class="form-group">
@@ -1486,7 +1481,7 @@
               </div>
             </div>
             <div class="col-md-3 pl-none">
-              <div class="gray-xs-f mb-xs">Value
+              <div class="gray-xs-f mb-xs">値
                 <span class="requiredStar">*</span>
               </div>
               <div class="form-group">
@@ -4156,7 +4151,7 @@
     <c:if test="${actionTypeForFormStep ne 'view'}">
     bootbox.confirm({
       closeButton: false,
-      message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
+      message: '未保存の編集があります。保存をしないと編集内容が削除されてしまいます。本当にこのページを離れますか？',
       buttons: {
         'cancel': {
           label: 'Cancel',

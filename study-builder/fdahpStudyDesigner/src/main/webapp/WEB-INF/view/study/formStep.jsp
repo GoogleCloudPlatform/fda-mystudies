@@ -24,15 +24,15 @@
         <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png"
             alt=""/></span>
-        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Form Step</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'add'}">Add Form Step</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'view'}">View Form Step <c:set
+        <c:if test="${actionTypeForQuestionPage == 'edit'}">???????????</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'add'}">???????????</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'view'}">??????????? <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </c:if>
       </div>
       <div class="dis-line form-group mb-none mr-sm">
         <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">
-          Cancel
+          ?????
         </button>
       </div>
       <c:if test="${actionTypeForQuestionPage ne 'view'}">
@@ -40,12 +40,12 @@
           <c:choose>
             <c:when test="${not empty questionnairesStepsBo.stepId}">
               <button type="button" id="saveBtn" class="btn btn-default gray-btn"
-                      onclick="saveFormStep(this);">Save
+                      onclick="saveFormStep(this);">?????
               </button>
             </c:when>
             <c:otherwise>
               <button type="button" id="saveBtn" class="btn btn-default gray-btn"
-                      onclick="saveFormStep(this);">Next
+                      onclick="saveFormStep(this);">??
               </button>
             </c:otherwise>
           </c:choose>
@@ -78,10 +78,10 @@
     <div class="right-content-body pt-none pl-none pr-none">
       <ul class="nav nav-tabs review-tabs gray-bg" id="formTabConstiner">
         <li class="stepLevel active">
-          <a data-toggle="tab" href="#sla">Step-level Attributes</a>
+          <a data-toggle="tab" href="#sla">????</a>
         </li>
         <li class="formLevel">
-          <a data-toggle="tab" href="#fla">Form-level Attributes</a>
+          <a data-toggle="tab" href="#fla">???????</a>
         </li>
       </ul>
       <div class="tab-content pl-xlg pr-xlg">
@@ -102,13 +102,13 @@
         <div id="sla" class="tab-pane fade in active mt-xlg">
           <div class="row">
             <div class="col-md-6 pl-none">
-              <div class="gray-xs-f mb-xs">Step title or Key (1 to 15 characters)
+              <div class="gray-xs-f mb-xs">????ID (????? 1???? 15????)
                 <span
                     class="requiredStar">*
                 </span>
                 <span class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
-                      title="A human readable step identifier and must be unique across all steps of the questionnaire.Note that this field cannot be edited once the study is Launched."></span>
+                      title="????????????????????????????????????????????????????????????????????"></span>
               </div>
               <div class="form-group">
                 <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
@@ -122,7 +122,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <div class="gray-xs-f mb-xs">Step Type</div>
+              <div class="gray-xs-f mb-xs">???????</div>
               <div>Form Step</div>
             </div>
             <div class="clearfix"></div>
@@ -130,18 +130,18 @@
               <div class="gray-xs-f mb-xs">Is this a Skippable Step?
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="If marked as Yes, it means the user can skip the entire step meaning no responses are captured from this form step. If marked No, it means the user cannot skip the step and has to answer at least one of the questions to proceed."></span>
+                    title="??????????????????????????????????????????????????????????????????????? ??????????????????????????????????????????1??????????????????????"></span>
               </div>
               <div>
                 <span class="radio radio-info radio-inline p-45">
                   <input type="radio" id="skiappableYes" value="Yes"
                          name="skiappable"  ${empty questionnairesStepsBo.skiappable  || questionnairesStepsBo.skiappable=='Yes' ? 'checked':''}>
-                  <label for="skiappableYes">Yes</label>
+                  <label for="skiappableYes">??</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" id="skiappableNo" value="No"
                          name="skiappable" ${questionnairesStepsBo.skiappable=='No' ?'checked':''}>
-                  <label for="skiappableNo">No</label>
+                  <label for="skiappableNo">???</label>
                 </span>
               </div>
             </div>
@@ -154,7 +154,7 @@
                   </span>
                   <span class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
-                        title="The step that the user must be directed to from this step."></span>
+                        title="?????????????????"></span>
                 </div>
                 <div class="form-group">
                   <select class="selectpicker" name="destinationStep" id="destinationStepId"
@@ -179,27 +179,25 @@
         <!---  Form-level Attributes --->
         <div id="fla" class="tab-pane fade mt-xlg">
           <div>
-            <div class="gray-xs-f mb-xs">Make form repeatable?</div>
+            <div class="gray-xs-f mb-xs">?????????????????</div>
             <div>
               <span class="radio radio-info radio-inline p-45">
                 <input type="radio" id="repeatableYes" value="Yes"
                        name="repeatable"  ${questionnairesStepsBo.repeatable eq'Yes' ?'checked':''}>
-                <label for="repeatableYes">Yes</label>
+                <label for="repeatableYes">??</label>
               </span>
               <span class="radio radio-inline">
                 <input type="radio" id="repeatableNo" value="No"
                        name="repeatable" ${empty questionnairesStepsBo.repeatable || questionnairesStepsBo.repeatable eq 'No' ?'checked':''}>
-                <label for="repeatableNo">No</label>
+                <label for="repeatableNo">???</label>
               </span>
             </div>
           </div>
           <div>
-            <div class="gray-xs-f mb-xs mt-md">Repeatable Form Button text (1 to 30 characters)
+            <div class="gray-xs-f mb-xs mt-md">???????? (1???? 30????)
             </div>
             <div class="gray-xs-f mb-xs">
-              <small>Enter text the user should see and tap on, to repeat
-                the
-                form
+              <small>?????????????????????????????????????
               </small>
             </div>
             <div class="form-group mb-none col-md-4 p-none">
@@ -216,13 +214,13 @@
           <div class="clearfix"></div>
           <div class="row mt-lg" id="addQuestionContainer">
             <div class="col-md-6 p-none blue-md-f mt-xs text-uppercase">
-              Questions in the Form
+              ??????
             </div>
             <div class="col-md-6 p-none">
               <div class="dis-line form-group mb-md pull-right">
                 <button type="button"
                         class="btn btn-primary  blue-btn hideButtonOnView <c:if test="${empty questionnairesStepsBo.stepId}"> cursor-none </c:if>"
-                        onclick="addNewQuestion('');" id="addQuestionId">Add New Question
+                        onclick="addNewQuestion('');" id="addQuestionId">?????
                 </button>
               </div>
             </div>

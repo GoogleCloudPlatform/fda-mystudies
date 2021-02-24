@@ -622,7 +622,7 @@
         <div id="responseTypeDivId">
           <div id="scaleType" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">スケールタイプ
+              <div class="gray-xs-f mb-xs">表のタイプ
                 <span class="requiredStar">*</span>
               </div>
               <div class="form-group">
@@ -649,7 +649,7 @@
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an integer number in the range (Min, 10000)."></span>
+                        title="10000までの整数を入力してください"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
@@ -666,7 +666,7 @@
                     <span class="requiredStar">*</span>
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an integer number in the range (Min+1, 10000)."></span>
+                        title="(Min+1, 10000)までの整数を入力してください"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
@@ -1785,7 +1785,7 @@
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
-                  title="スライダーに表示する順序でテキストの選択肢を入力します。スライダーの位置ごとに表示されるテキストと、その位置がユーザーによって選択された場合にキャプチャされる関連値を入力できます。 質問表で分岐を有効にしている場合は、選択肢ごとに宛先ステップを選択することもできます。 "></span>
+                  title="スライダーに表示する順序でテキストの選択肢を入力します。スライダーの位置ごとに表示されるテキストと、その位置がユーザーによって選択された場合にキャプチャされる関連値を入力できます。 アンケートで分岐を有効にしている場合は、選択肢ごとに宛先ステップを選択することもできます。 "></span>
             </div>
             <div class="row">
               <div class="col-md-3 pl-none">
