@@ -910,22 +910,23 @@
   <input type="hidden" name="type" id="type" value="schedule">
   <div class="manually all mt-lg dis-none">
   
+    <div class="gray-xs-f mb-sm">Select a date range
+      <span class="requiredStar"> *</span>
+      <span
+         class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+         data-toggle="tooltip"
+         data-placement="bottom"
+         title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+           2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+       </span>
+    </div>
+                  
     <div class="manuallyContainer">
       <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) eq 0}">
         <div class="manually-option mb-md form-group" id="0">
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
                  
-                  <div class="gray-xs-f mb-sm">Select a date range
-                    <span class="requiredStar"> *</span>
-                    <span
-                       class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                       data-toggle="tooltip"
-                       data-placement="bottom"
-                       title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
-                     </span>
-                  </div>
           <span class="form-group dis-inline vertical-align-middle pr-md">
             <input id="StartDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusStrDate"
@@ -1010,20 +1011,7 @@
         <div class="manually-anchor-option mb-md form-group" id="0">
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
-                 
-                 
-                          <div class="gray-xs-f">
-              Select a date range
-              <span class="requiredStar">*</span>
-              <span
-                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
-              </span>
-            </div>
-            
+              
           <span class="mb-sm pr-md">
             <span class="light-txt opacity06">
               Anchor date
