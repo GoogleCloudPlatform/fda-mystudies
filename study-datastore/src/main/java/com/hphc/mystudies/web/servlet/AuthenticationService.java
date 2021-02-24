@@ -25,6 +25,7 @@ package com.hphc.mystudies.web.servlet;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import com.sun.jersey.core.util.Base64;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -40,6 +41,8 @@ public class AuthenticationService {
     LOGGER.info("INFO: AuthenticationService - authenticate() - Starts");
     boolean authenticationStatus = false;
     String bundleIdAndAppToken = null;
+    String bundleIdKey = "";
+    String appTokenKey = "";
     try {
       if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
         final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
@@ -49,7 +52,19 @@ public class AuthenticationService {
           final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
           final String bundleId = tokenizer.nextToken();
           final String appToken = tokenizer.nextToken();
-          if (authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)) {
+
+          for (Map.Entry<String, String> map : authPropMap.entrySet()) {
+            if (map.getValue().equals(appToken)) {
+              appTokenKey = map.getKey();
+            }
+            if (map.getValue().equals(bundleId)) {
+              bundleIdKey = map.getKey();
+            }
+          }
+
+          if (authPropMap.containsValue(bundleId)
+              && authPropMap.containsValue(appToken)
+              && isValidPlatformType(appTokenKey, bundleIdKey)) {
             authenticationStatus = true;
           }
         }
@@ -60,5 +75,16 @@ public class AuthenticationService {
     }
     LOGGER.info("INFO: AuthenticationService - authenticate() - Ends");
     return authenticationStatus;
+  }
+
+  private static boolean isValidPlatformType(String appTokenKey, String bundleIdKey) {
+
+    final StringTokenizer appTokenizer = new StringTokenizer(appTokenKey, ".");
+    final String appTokenPlatFormType = appTokenizer.nextToken();
+
+    final StringTokenizer bundleIdTokenizer = new StringTokenizer(bundleIdKey, ".");
+    final String bundleIdPlatformType = bundleIdTokenizer.nextToken();
+
+    return StringUtils.equals(appTokenPlatFormType, bundleIdPlatformType);
   }
 }
