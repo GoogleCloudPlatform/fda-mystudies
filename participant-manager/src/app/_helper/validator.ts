@@ -120,6 +120,14 @@ export function passwordValidator(): ValidatorFn {
       return {passwordlength: true};
     } else if (serviceNameStatus) {
       return {serviceNameError: true};
+    } else if (
+      commonusepasswordStatus ||
+      control.value.match(/([!@#$%^&*()‘+,:;<>{}~|-])\1*/g) === null ||
+      control.value.match(/([0-9])\1*/g) === null ||
+      !patternForAlphabets.test(control.value) ||
+      control.value.length > 64
+    ) {
+      return {error: true};
     } else if (user !== null) {
       if (
         control.value.toLowerCase().includes(user.firstName.toLowerCase()) ||
@@ -136,14 +144,6 @@ export function passwordValidator(): ValidatorFn {
         return {userNameError: true};
       }
       return null;
-    } else if (
-      commonusepasswordStatus ||
-      control.value.match(/([!@#$%^&*()‘+,:;<>{}~|-])\1*/g) === null ||
-      control.value.match(/([0-9])\1*/g) === null ||
-      !patternForAlphabets.test(control.value) ||
-      control.value.length > 64
-    ) {
-      return {error: true};
     } else {
       return null;
     }
