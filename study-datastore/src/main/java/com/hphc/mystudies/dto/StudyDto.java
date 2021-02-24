@@ -97,12 +97,15 @@ public class StudyDto implements Serializable {
   @Column(name = "enrolling_participants")
   private String enrollingParticipants;
 
+  @Deprecated
   @Column(name = "retain_participant")
   private String retainParticipant;
 
+  @Deprecated
   @Column(name = "allow_rejoin")
   private String allowRejoin;
 
+  @Deprecated
   @Column(name = "allow_rejoin_text")
   private String allowRejoinText;
 
