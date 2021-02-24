@@ -1735,11 +1735,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           "From QuestionConditionBranchBo QCBO where QCBO.questionId=:questionId "
               + " order by QCBO.sequenceNo ASC";
       if (newSession != null) {
-        logger.warn("AAAAAAAAAAAAAAAAAAAAAAA");
         query = newSession.createQuery(searchQuery).setInteger("questionId", questionId);
       } else {
-        logger.warn("XXXXXXXXXXXXXXXXXXXXXXX");
-        query = session.createQuery(searchQuery);
+        // modified hama
+        //query = session.createQuery(searchQuery);
+        query = newSession.createQuery(searchQuery).setInteger("questionId", questionId);
       }
       questionConditionBranchList = query.list();
       if (session == null) {
@@ -3175,7 +3175,15 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String searchQuery =
               "From QuestionnairesStepsBo QSBO where QSBO.questionnairesId=:questionnaireId "
                   + "and QSBO.active=1 order by QSBO.sequenceNo ASC";
-          questionnaireStepList = session.createQuery(searchQuery).list();
+
+
+          // added hama
+          query = session.createQuery(searchQuery).setInteger("questionnaireId", questionnaireId);
+
+          // modified hama
+          //questionnaireStepList = session.createQuery(searchQuery).list();
+          questionnaireStepList = query.list();
+
           if ((null != questionnaireStepList) && !questionnaireStepList.isEmpty()) {
             if (questionnaireStepList.size() == 1) {
               questionnaireStepList.get(0).setDestinationStep(0);
