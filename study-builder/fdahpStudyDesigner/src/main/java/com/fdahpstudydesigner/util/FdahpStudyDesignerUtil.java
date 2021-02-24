@@ -25,7 +25,6 @@ package com.fdahpstudydesigner.util;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
-import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
@@ -52,7 +51,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -1002,22 +1000,6 @@ public class FdahpStudyDesignerUtil {
     }
     logger.info("FdahpStudyDesignerUtil - getHashedValue() - ends");
     return generatedHash;
-  }
-
-  public static String getUserAccessLevel(Set<UserPermissions> userPermission) {
-    if (CollectionUtils.isNotEmpty(userPermission)) {
-      for (UserPermissions up : userPermission) {
-        if (FdahpStudyDesignerConstants.ROLE_SUPERADMIN_NAME.equals(up.getPermissions())) {
-          return UserAccessLevel.SUPER_ADMIN.getValue();
-        } else if (FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW_NAME.equals(
-                up.getPermissions())
-            || FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT_NAME.equals(
-                up.getPermissions())) {
-          return UserAccessLevel.STUDY_BUILDER_ADMIN.getValue();
-        }
-      }
-    }
-    return UserAccessLevel.APP_STUDY_ADMIN.getValue();
   }
 
   public static String saveImage(MultipartFile fileStream, String fileName, String underDirectory) {
