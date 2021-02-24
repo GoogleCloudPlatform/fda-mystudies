@@ -27,6 +27,22 @@ let AlphabeticCombinTemp = [
   'VWX',
   'WXY',
   'XYZ',
+  '012',
+  '123',
+  '234',
+  '345',
+  '456',
+  '567',
+  '678',
+  '789',
+  '987',
+  '876',
+  '765',
+  '654',
+  '543',
+  '432',
+  '321',
+  '210',
 ];
 let serviceName = [
   'Participant',
@@ -92,7 +108,7 @@ export function passwordValidator(): ValidatorFn {
     }
 
     if (control.value == '') {
-      return {required: true};
+      return {Valuerequired: true};
     } else if (
       consecutiveIdenticalCharacter ||
       consecutivewhitespaceStatus ||
