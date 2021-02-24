@@ -358,13 +358,13 @@
           </div>
           <div id="healthKitContainerId" style="display: none">
             <div class="col-md-4 p-none">
-              <div class="gray-xs-f mb-xs">Select a HealthKit quantity data type
+              <div class="gray-xs-f mb-xs">ヘルスケアのデータを選択してください
                 <span
                     class="requiredStar">*
                 </span>
                 <span class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip" data-html=true
-                      title="- Please select the appropriate HealthKit data type as suited to the question<br>- Please note that only the most recent value available in HealthKit would be read by the app<br>- Access to HealthKit data is subject to the user providing permissions for the app to read the data"></span>
+                      title="- 質問に適した適切なヘルスケアのデータ型を選択してください。<br>- ヘルスケアで利用可能な最新の値のみがアプリによって読み取られることに注意してください。<br>- ヘルスケアのデータへのアクセスは、ユーザーがアプリにデータを読み取るためのアクセス許可を提供することを条件とします。"></span>
               </div>
               <div class="form-group mb-xs">
                 <select class="selectpicker elaborateClass healthkitrequireClass"
@@ -1058,11 +1058,11 @@
           </div>
           <div id="Location" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Use Current Location
+              <div class="gray-xs-f mb-xs">現在位置を使用
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="Choose Yes if you wish to mark the user's current location on the map used to provide the response."></span>
+                    title="アンケートで使用されるマップ上でユーザーの現在の場所をマークする場合は、[はい]を選択します"></span>
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
@@ -1160,7 +1160,7 @@
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-none">
 
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Special Validations
+                  <div class="gray-xs-f mb-xs">特殊文字の入力チェック
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="ユーザーが入力したテキストに特別な入力チェックを定義します。ユーザーの入力がこれらの条件を満たさない場合、管理者が定義したエラーメッセージが表示され、再試行を求められます。 "></span>
@@ -1172,11 +1172,11 @@
                         <option value='' selected>Select</option>
                         <option
                             value="allow" ${questionnairesStepsBo.questionReponseTypeBo.validationCondition eq 'allow' ? 'selected' :''}>
-                          Allow
+                          許可する文字
                         </option>
                         <option
                             value="disallow" ${questionnairesStepsBo.questionReponseTypeBo.validationCondition eq 'disallow' ? 'selected' :''}>
-                          Disallow
+                          拒否する文字
                         </option>
                       </select>
                     </div>
@@ -1192,23 +1192,23 @@
                         <option value='' selected>Select</option>
                         <option
                             value="allcharacters" ${questionnairesStepsBo.questionReponseTypeBo.validationCharacters eq 'allcharacters' ? 'selected' :''}>
-                          All Characters
+                          全ての文字
                         </option>
                         <option
                             value="alphabets" ${questionnairesStepsBo.questionReponseTypeBo.validationCharacters eq 'alphabets' ? 'selected' :''}>
-                          alphabets
+                          英字
                         </option>
                         <option
                             value="numbers" ${questionnairesStepsBo.questionReponseTypeBo.validationCharacters eq 'numbers' ? 'selected' :''}>
-                          numbers
+                          数字
                         </option>
                         <option
                             value="alphabetsandnumbers" ${questionnairesStepsBo.questionReponseTypeBo.validationCharacters eq 'alphabetsandnumbers' ? 'selected' :''}>
-                          alphabets and numbers
+                          英数字
                         </option>
                         <option
                             value="specialcharacters" ${questionnairesStepsBo.questionReponseTypeBo.validationCharacters eq 'specialcharacters' ? 'selected' :''}>
-                          special characters
+                          記号
                         </option>
                       </select>
                       <div class="help-block with-errors red-txt"></div>
@@ -1255,11 +1255,11 @@
           </div>
           <div id="Height" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Measurement System
+              <div class="gray-xs-f mb-xs">測定システム
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="Select a suitable measurement system for height"></span>
+                    title="高さに適した測定システムを選択してください"></span>
               </div>
               <div>
                 <span class="radio radio-info radio-inline pr-sm">
@@ -1304,11 +1304,11 @@
           <div id="Timeinterval" style="display: none;">
             <div class="row mt-lg display__flex__center">
               <div class="col-md-2 pl-none">
-                <div class="gray-xs-f mb-xs">Step value
+                <div class="gray-xs-f mb-xs">ステップサイズ
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      title="This is the step size in the time picker, in minutes. Choose a value from the following set (1,2,3,4,5,6,10,12,15,20 & 30)."></span>
+                      title="これは、タイムピッカーのステップサイズ（分単位）です。次のセット（1,2,3,4,5,6,10,12,15,20＆30）から値を選択します。"></span>
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control TimeintervalRequired wid90"
@@ -1320,11 +1320,11 @@
                 </div>
               </div>
               <div class="col-md-2">
-                <div class="gray-xs-f mb-xs">Default Value
+                <div class="gray-xs-f mb-xs">デフォルト値
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      title="The default value to be seen by the participant on the time interval picker widget."></span>
+                      title="時間間隔ピッカーウィジェットで参加者に表示されるデフォルト値。"></span>
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control TimeintervalRequired wid90 clock"
@@ -1450,7 +1450,7 @@
               </div>
             </div>
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">許可される日付範囲を設定する
+              <div class="gray-xs-f mb-xs">選択できる日付範囲を設定する
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1781,7 +1781,7 @@
           </div>
           <div id="TextScale" style="display: none;">
             <div class="clearfix"></div>
-            <div class="gray-choice-f mb-xs">表示テキスト
+            <div class="gray-choice-f mb-xs">テキスト選択肢
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
@@ -2038,11 +2038,11 @@
               </div>
             </div>
             <div class="clearfix"></div>
-            <div class="gray-choice-f mb-xs mt-md">選択肢のテキスト
+            <div class="gray-choice-f mb-xs mt-md">テキスト選択肢
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
-                  title="表示する順序でテキスト選択肢を入力します。表示テキストと説明、その選択肢が選択された場合にキャプチャされる値を入力してください。また、マルチセレクトの場合、その選択肢を排他的としてマークすることができます。マルチセレクトで排他的選択肢が選択されると、他のすべてのオプションが選択解除されまる(その逆も可能です)。アンケートが分岐を有効にしている場合は、排他的な選択肢ごとに宛先ステップを選択することもできます。"></span>
+                  title="表示する順序でテキスト選択肢を入力します。表示テキストと説明、その選択肢が選択された場合に登録される値を入力してください。また、マルチセレクトの場合、その選択肢を排他的としてマークすることができます。マルチセレクトで排他的選択肢が選択されると、他のすべてのオプションが選択解除されまる(その逆も可能です)。アンケートが分岐を有効にしている場合は、排他的な選択肢ごとに宛先ステップを選択することもできます。"></span>
             </div>
 
             <div class="TextChoiceContainer">
@@ -2054,7 +2054,7 @@
                     <!-- Section Start -->
                     <div class="mt-xlg text-choice" id="${subtype.index}">
                       <div class="col-md-3 pl-none">
-                        <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                        <div class="gray-xs-f mb-xs">表示テキスト (1文字以上 100文字以下)
                           <span
                               class="requiredStar">*
                           </span>
@@ -2069,7 +2069,7 @@
                         </div>
                       </div>
                       <div class="col-md-3 pl-none">
-                        <div class="gray-xs-f mb-xs">Value (1 to 100 characters)
+                        <div class="gray-xs-f mb-xs">選択値 (1文字以上 100文字以下)
                           <span
                               class="requiredStar">*
                           </span>
@@ -2139,7 +2139,7 @@
                       </c:if>
                       <div class="col-md-12 p-none display__flex__">
                         <div class="col-md-10 pl-none">
-                          <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                          <div class="gray-xs-f mb-xs">説明(1文字以上 150文字以下)</div>
                           <div class="form-group">
                             <textarea class="form-control"
                                       name="questionResponseSubTypeList[${subtype.index}].description"
@@ -2166,7 +2166,7 @@
                   <!-- Section Start -->
                   <div class="mt-xlg text-choice otherOptionChecked" id="0">
                     <div class="col-md-3 pl-none">
-                      <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                      <div class="gray-xs-f mb-xs">表示テキスト (1文字以上 100文字以下)
                         <span
                             class="requiredStar">*
                         </span>
@@ -2181,7 +2181,7 @@
                       </div>
                     </div>
                     <div class="col-md-3 pl-none">
-                      <div class="gray-xs-f mb-xs">Value (1 to 100 characters)
+                      <div class="gray-xs-f mb-xs">選択値 (1文字以上 100文字以下)
                         <span
                             class="requiredStar">*
                         </span>
@@ -2196,7 +2196,7 @@
                       </div>
                     </div>
                     <div class="col-md-2 pl-none">
-                      <div class="gray-xs-f mb-xs">Mark as exclusive ?
+                      <div class="gray-xs-f mb-xs">排他的選択肢にしますか？
                         <span
                             class="requiredStar">*
                         </span>
@@ -2248,7 +2248,7 @@
                     </c:if>
                     <div class="col-md-12 p-none display__flex__">
                       <div class="col-md-10 pl-none">
-                        <div class="gray-xs-f mb-xs">Description(1 to 150 characters)</div>
+                        <div class="gray-xs-f mb-xs">説明(1文字以上 150文字以下)
                         <div class="form-group">
                           <textarea type="text" class="form-control"
                                     name="questionResponseSubTypeList[0].description"
@@ -2271,7 +2271,7 @@
                   <!-- Section Start -->
                   <div class="mt-xlg text-choice" id="1">
                     <div class="col-md-3 pl-none">
-                      <div class="gray-xs-f mb-xs">Display Text (1 to 100 characters)
+                      <div class="gray-xs-f mb-xs">表示テキスト (1文字以上 100文字以下)
                         <span
                             class="requiredStar">*
                         </span>
@@ -2286,7 +2286,7 @@
                       </div>
                     </div>
                     <div class="col-md-3 pl-none">
-                      <div class="gray-xs-f mb-xs">Value (1 to 100 characters)
+                      <div class="gray-xs-f mb-xs">選択値 (1文字以上 100文字以下)
                         <span
                             class="requiredStar">*
                         </span>
@@ -2301,7 +2301,7 @@
                       </div>
                     </div>
                     <div class="col-md-2 pl-none">
-                      <div class="gray-xs-f mb-xs">Mark as exclusive ?
+                      <div class="gray-xs-f mb-xs">排他的選択肢にしますか？
                         <span
                             class="requiredStar">*
                         </span>
