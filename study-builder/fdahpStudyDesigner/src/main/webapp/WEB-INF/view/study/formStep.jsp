@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -24,15 +24,15 @@
         <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png"
             alt=""/></span>
-        <c:if test="${actionTypeForQuestionPage == 'edit'}">???????????</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'add'}">???????????</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'view'}">??????????? <c:set
+        <c:if test="${actionTypeForQuestionPage == 'edit'}">フォームステップの編集</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'add'}">フォームステップの追加</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'view'}">フォームステップの参照 <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </c:if>
       </div>
       <div class="dis-line form-group mb-none mr-sm">
         <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">
-          ?????
+          キャンセル
         </button>
       </div>
       <c:if test="${actionTypeForQuestionPage ne 'view'}">
@@ -40,12 +40,12 @@
           <c:choose>
             <c:when test="${not empty questionnairesStepsBo.stepId}">
               <button type="button" id="saveBtn" class="btn btn-default gray-btn"
-                      onclick="saveFormStep(this);">?????
+                      onclick="saveFormStep(this);">下書き保存
               </button>
             </c:when>
             <c:otherwise>
               <button type="button" id="saveBtn" class="btn btn-default gray-btn"
-                      onclick="saveFormStep(this);">??
+                      onclick="saveFormStep(this);">次へ
               </button>
             </c:otherwise>
           </c:choose>
@@ -78,10 +78,10 @@
     <div class="right-content-body pt-none pl-none pr-none">
       <ul class="nav nav-tabs review-tabs gray-bg" id="formTabConstiner">
         <li class="stepLevel active">
-          <a data-toggle="tab" href="#sla">????</a>
+          <a data-toggle="tab" href="#sla">基本情報</a>
         </li>
         <li class="formLevel">
-          <a data-toggle="tab" href="#fla">???????</a>
+          <a data-toggle="tab" href="#fla">フォームの設定</a>
         </li>
       </ul>
       <div class="tab-content pl-xlg pr-xlg">
@@ -102,13 +102,13 @@
         <div id="sla" class="tab-pane fade in active mt-xlg">
           <div class="row">
             <div class="col-md-6 pl-none">
-              <div class="gray-xs-f mb-xs">????ID (????? 1???? 15????)
+              <div class="gray-xs-f mb-xs">ショートID (半角英数字 1文字以上 15文字以下)
                 <span
                     class="requiredStar">*
                 </span>
                 <span class="ml-xs sprites_v3 filled-tooltip"
                       data-toggle="tooltip"
-                      title="????????????????????????????????????????????????????????????????????"></span>
+                      title="このタイトルはこの治験に属する全てのアクティビティ中で一意なものにしてください。また、この項目は治験が公開されると編集できなくなります。"></span>
               </div>
               <div class="form-group">
                 <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
@@ -122,7 +122,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <div class="gray-xs-f mb-xs">???????</div>
+              <div class="gray-xs-f mb-xs">ステップタイプ</div>
               <div>Form Step</div>
             </div>
             <div class="clearfix"></div>
@@ -130,18 +130,18 @@
               <div class="gray-xs-f mb-xs">Is this a Skippable Step?
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="??????????????????????????????????????????????????????????????????????? ??????????????????????????????????????????1??????????????????????"></span>
+                    title="「はい」を選択されている場合、ユーザーはステップ全体をスキップできることを意味します。つまり、このフォームステップからの解答は登録されません。 「いいえ」を選択した場合、ユーザーはステップをスキップできず、続行するには少なくとも1つの質問に答える必要があることを意味します。"></span>
               </div>
               <div>
                 <span class="radio radio-info radio-inline p-45">
                   <input type="radio" id="skiappableYes" value="Yes"
                          name="skiappable"  ${empty questionnairesStepsBo.skiappable  || questionnairesStepsBo.skiappable=='Yes' ? 'checked':''}>
-                  <label for="skiappableYes">??</label>
+                  <label for="skiappableYes">はい</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" id="skiappableNo" value="No"
                          name="skiappable" ${questionnairesStepsBo.skiappable=='No' ?'checked':''}>
-                  <label for="skiappableNo">???</label>
+                  <label for="skiappableNo">いいえ</label>
                 </span>
               </div>
             </div>
@@ -154,7 +154,7 @@
                   </span>
                   <span class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
-                        title="?????????????????"></span>
+                        title="この次の分岐先ステップを指定します"></span>
                 </div>
                 <div class="form-group">
                   <select class="selectpicker" name="destinationStep" id="destinationStepId"
@@ -179,25 +179,25 @@
         <!---  Form-level Attributes --->
         <div id="fla" class="tab-pane fade mt-xlg">
           <div>
-            <div class="gray-xs-f mb-xs">?????????????????</div>
+            <div class="gray-xs-f mb-xs">繰り返し可能なフォームにしますか？</div>
             <div>
               <span class="radio radio-info radio-inline p-45">
                 <input type="radio" id="repeatableYes" value="Yes"
                        name="repeatable"  ${questionnairesStepsBo.repeatable eq'Yes' ?'checked':''}>
-                <label for="repeatableYes">??</label>
+                <label for="repeatableYes">はい</label>
               </span>
               <span class="radio radio-inline">
                 <input type="radio" id="repeatableNo" value="No"
                        name="repeatable" ${empty questionnairesStepsBo.repeatable || questionnairesStepsBo.repeatable eq 'No' ?'checked':''}>
-                <label for="repeatableNo">???</label>
+                <label for="repeatableNo">いいえ</label>
               </span>
             </div>
           </div>
           <div>
-            <div class="gray-xs-f mb-xs mt-md">???????? (1???? 30????)
+            <div class="gray-xs-f mb-xs mt-md">繰り返しボタン名 (1文字以上 30文字以下)
             </div>
             <div class="gray-xs-f mb-xs">
-              <small>?????????????????????????????????????
+              <small>繰り返しフォームにおいて、ユーザーに見えるボタンの表示名を入力してください
               </small>
             </div>
             <div class="form-group mb-none col-md-4 p-none">
@@ -214,13 +214,13 @@
           <div class="clearfix"></div>
           <div class="row mt-lg" id="addQuestionContainer">
             <div class="col-md-6 p-none blue-md-f mt-xs text-uppercase">
-              ??????
+              質問フォーム
             </div>
             <div class="col-md-6 p-none">
               <div class="dis-line form-group mb-md pull-right">
                 <button type="button"
                         class="btn btn-primary  blue-btn hideButtonOnView <c:if test="${empty questionnairesStepsBo.stepId}"> cursor-none </c:if>"
-                        onclick="addNewQuestion('');" id="addQuestionId">?????
+                        onclick="addNewQuestion('');" id="addQuestionId">質問の追加
                 </button>
               </div>
             </div>
