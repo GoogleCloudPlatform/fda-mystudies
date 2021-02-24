@@ -283,7 +283,7 @@
                   <c:if
                       test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}">
                          disabled</c:if>>
-                  <label for="useAnchorDateId"> Use response as anchor date </label>
+                  <label for="useAnchorDateId"> 基準日を使用する </label>
                 </span>
               </span>
               <div class="clearfix"></div>
@@ -306,9 +306,9 @@
             <c:otherwise>
               <span class="tool-tip" data-toggle="tooltip" data-html="true" data-placement="top"
                   <c:if
-                      test="${questionnaireBo.scheduleType eq 'AnchorDate'}"> title= "This option has been disabled, since this questionnaire has anchor-date based scheduling already."</c:if>
+                      test="${questionnaireBo.scheduleType eq 'AnchorDate'}"> title= "このアンケートには基準日ベースのスケジュールがすでに設定されているため、このオプションは無効になっています"</c:if>
                   <c:if
-                      test="${questionnaireBo.frequency ne 'One time' || questionnaireBo.scheduleType eq 'Regular'}"> title= "The date supplied by a participant in response to this question can be used to dictate the schedule for other questionnaires or active tasks in the study, or to determine the Period of Visibility of study resources."</c:if>
+                      test="${questionnaireBo.frequency ne 'One time' || questionnaireBo.scheduleType eq 'Regular'}"> title= "この質問に回答して参加者から提供された日付を使用して、調査の他のアンケートまたはアクティブなタスクのスケジュールを決定したり、調査リソースの可視期間を決定したりできます。"</c:if>
               >
                 <span class="checkbox checkbox-inline">
 
@@ -1085,10 +1085,10 @@
             <div class="row mt-lg">
               <div class="col-md-6 pl-none">
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 40 characters)
+                  <div class="gray-xs-f mb-xs">プレースホルダー (1文字以上 40文字以下)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an input hint to the user"></span>
+                        title="入力テキストボックスの背景に表示するヒントを入力してください"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="1-40 characters"
@@ -1102,22 +1102,22 @@
           </div>
           <div id="Text" style="display: none">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Allow Multiple Lines?
+              <div class="gray-xs-f mb-xs">複数行の入力を許可しかすか？
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="Choose Yes if you need the user to enter large text in a text area."></span>
+                    title="ユーザーに多くのテキストの入力を求める場合は、「はい」を選択します"></span>
               </div>
               <div>
                 <span class="radio radio-info radio-inline p-45">
                   <input type="radio" class="TextRequired" id="multipleLinesYes" value="true"
                          name="questionReponseTypeBo.multipleLines"  ${questionnairesStepsBo.questionReponseTypeBo.multipleLines ? 'checked':''} >
-                  <label for="multipleLinesYes">Yes</label>
+                  <label for="multipleLinesYes">はい</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" class="TextRequired" id="multipleLinesNo" value="false"
                          name="questionReponseTypeBo.multipleLines" ${empty questionnairesStepsBo.questionReponseTypeBo.multipleLines || !questionnairesStepsBo.questionReponseTypeBo.multipleLines ? 'checked':''} >
-                  <label for="multipleLinesNo">No</label>
+                  <label for="multipleLinesNo">いいえ</label>
                 </span>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -1126,10 +1126,10 @@
             <div class="row mt-md">
               <div class="col-md-6 pl-none">
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder (1 to 50 characters)
+                  <div class="gray-xs-f mb-xs">プレースホルダー (1文字以上 50文字以下)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an input hint to the user"></span>
+                        title="テキストボックスの背景に表示するヒントを入力してください"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="1-50 characters"
@@ -1141,10 +1141,10 @@
               </div>
               <div class="col-md-4">
                 <div class="col-md-6 col-lg-4 p-none">
-                  <div class="gray-xs-f mb-xs">Max Length
+                  <div class="gray-xs-f mb-xs">最大文字数
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Enter an integer for the maximum length of text allowed. If left empty, there will be no max limit applied."></span>
+                        title="入力できる最大文字数を設定します。空にした場合は入力文字数の制限はなくなります。"></span>
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control" name="questionReponseTypeBo.maxLength"
@@ -1163,7 +1163,7 @@
                   <div class="gray-xs-f mb-xs">Special Validations
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                        title="Define any special case rules you wish to be applied for the participant-entered text. If the participant's input does not meet these conditions, an admin-defined error message will be shown asking them to retry. "></span>
+                        title="ユーザーが入力したテキストに特別な入力チェックを定義します。ユーザーの入力がこれらの条件を満たさない場合、管理者が定義したエラーメッセージが表示され、再試行を求められます。 "></span>
                   </div>
                   <div class="col-md-3 pl-none">
                     <div class="form-group">
@@ -1228,7 +1228,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                     <span class="ml-xs sprites_v3 filled-tooltip float__left" data-toggle="tooltip"
-                          title="Enter text strings separated by the | symbol. E.g. AB | O Note that each of the strings will be individually checked for occurrence in the user input and allowed or disallowed based on how you have defined the rule. "></span>
+                          title="特別に入力チェックしたい文字列を|で区切って設定します。 E.g. AB | XYZ 各文字列は、ユーザー入力での出現が個別にチェックされ、ルールの定義方法に基づいて許可または禁止されることに注意してください。 "></span>
                   </div>
                 </div>
               </div>
@@ -1236,10 +1236,10 @@
             <div class="clearfix"></div>
             <div class="row">
               <div class="col-md-6 p-none">
-                <div class="gray-xs-f mb-xs">Invalid Message (1 to 200 characters)
+                <div class="gray-xs-f mb-xs">エラーメッセージ (1文字以上 200文字以下)
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                      title="Enter text to be presented to the user when invalid input is received."></span>
+                      title="入力チェックでエラーになった場合のエラーメッセージを入力してください"></span>
                 </div>
                 <div class="form-group">
                   <textarea
@@ -1286,7 +1286,7 @@
             <div class="row mt-md">
               <div class="col-md-6 pl-none">
                 <div class="col-md-12 col-lg-12 p-none">
-                  <div class="gray-xs-f mb-xs">Placeholder Text (1 to 20 characters)
+                  <div class="gray-xs-f mb-xs">プレースホルダー (1文字以上 20文字以下)
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         title="Enter an input hint to the user"></span>
@@ -1427,7 +1427,7 @@
           </div>
           <div id="Date" style="display: none;">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Style
+              <div class="gray-xs-f mb-xs">日付のタイプ
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
@@ -1438,23 +1438,23 @@
                   <input type="radio" class="DateRequired DateStyleRequired" id="date"
                          value="Date"
                          name="questionReponseTypeBo.style"  ${questionnairesStepsBo.questionReponseTypeBo.style eq 'Date' ? 'checked':''} >
-                  <label for="date">Date</label>
+                  <label for="date">日付 (Date)</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" class="DateRequired DateStyleRequired" id="dateTime"
                          value="Date-Time"
                          name="questionReponseTypeBo.style" ${questionnairesStepsBo.questionReponseTypeBo.style eq 'Date-Time' ? 'checked':''} >
-                  <label for="dateTime">Date-Time</label>
+                  <label for="dateTime">日時 (Date-Time)</label>
                 </span>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
             <div class="mt-lg">
-              <div class="gray-xs-f mb-xs">Set allowed date range
+              <div class="gray-xs-f mb-xs">許可される日付範囲を設定する
                 <span class="requiredStar">*</span>
                 <span
                     class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                    title="Participants will be allowed to choose a date from the date range you set here. The option 'Until current date' includes the current date as well.Date or date/time will apply as per your selection in the previous field."></span>
+                    title="ユーザーは、ここで設定した日付範囲から日付を選択できます。[現在の日付まで]オプションには、現在の日付も含まれます。日付または日付/時刻は、前のフィールドでの選択に従って適用されます。"></span>
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
@@ -1462,20 +1462,20 @@
                          id="untilCurrentDateId"
                          value="Until current date"
                          name="questionReponseTypeBo.selectionStyle"  ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Until current date' ? 'checked':''} >
-                  <label for="untilCurrentDateId">Until current date</label>
+                  <label for="untilCurrentDateId">現在の日付まで</label>
                 </span>
                 <span class="radio radio-info radio-inline p-45">
                   <input type="radio" class="DateRequired DateRangeRequired"
                          id="afterCurrentDateId"
                          value="After current date"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'After current date' ? 'checked':''} >
-                  <label for="afterCurrentDateId">After current date</label>
+                  <label for="afterCurrentDateId">現在の日付以降</label>
                 </span>
                 <span class="radio radio-inline">
                   <input type="radio" class="DateRequired DateRangeRequired" id="customDateId"
                          value="Custom"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Custom' ? 'checked':''} >
-                  <label for="customDateId">Custom</label>
+                  <label for="customDateId">カスタム</label>
                 </span>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -1487,10 +1487,10 @@
               <div class="row">
                 <div class="col-md-6 pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Minimum Date
+                    <div class="gray-xs-f mb-xs">最小日付
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                          title="Enter minimum date allowed."></span>
+                          title="選択が可能な最小の日付を入力してください"></span>
                     </div>
                     <div class="form-group">
                       <input type="text" class="form-control" name="questionReponseTypeBo.minDate"
@@ -1504,10 +1504,10 @@
               <div class="row">
                 <div class="col-md-6  pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Maximum Date
+                    <div class="gray-xs-f mb-xs">最大日付
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                          title="Enter maximum date allowed"></span>
+                          title="選択が可能な最大の日付を入力してください"></span>
                     </div>
                     <div class="form-group">
                       <input type="text" class="form-control" name="questionReponseTypeBo.maxDate"
@@ -1521,10 +1521,10 @@
               <div class="row">
                 <div class="col-md-6  pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
-                    <div class="gray-xs-f mb-xs">Default Date
+                    <div class="gray-xs-f mb-xs">デフォルトの日付
                       <span
                           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                          title="Enter default date to be shown as selected"></span>
+                          title="日付を選択する際に初期選択されている日付を入力してください"></span>
                     </div>
                     <div class="form-group">
                       <input type="text" class="form-control"
@@ -3065,7 +3065,7 @@
 
                           <div class="numeric__define_input gray__t">
                             <div class="numeric__row display__flex__base-webkit" id="2">
-                              <span>V2(左辺) =</span>
+                              <span>V2 =</span>
                               <div class="form-group sm-selection">
                                 <select class="selectpicker conditionalBranchingRequired"
                                         name="questionConditionBranchBoList[0].questionConditionBranchBos[0].inputType"
@@ -3109,7 +3109,7 @@
                               </div>
                             </div>
                             <div class="numeric__row display__flex__base-webkit" id="3">
-                              <span>V3(右辺) =</span>
+                              <span>V3 =</span>
                               <div class="form-group sm-selection">
                                 <select class="selectpicker conditionalBranchingRequired"
                                         name="questionConditionBranchBoList[0].questionConditionBranchBos[1].inputType"
