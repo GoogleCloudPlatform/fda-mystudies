@@ -180,20 +180,6 @@ public enum ResponseServerEvent implements AuditLogEvent {
           + " activity responses.",
       "WITHDRAWAL_INFORMATION_UPDATE_FAILED"),
 
-  PARTICIPANT_RESPONSE_DATA_DELETED(
-      RESPONSE_DATASTORE,
-      RESPONSE_DATASTORE,
-      null,
-      "All response data belonging to participant deleted.",
-      "PARTICIPANT_RESPONSE_DATA_DELETED"),
-
-  PARTICIPANT_RESPONSE_DATA_DELETION_FAILED(
-      RESPONSE_DATASTORE,
-      RESPONSE_DATASTORE,
-      null,
-      "1 or more of the participant's response datasets failed to get deleted.",
-      "PARTICIPANT_RESPONSE_DATA_DELETION_FAILED"),
-
   ACTIVITY_STATE_SAVED_OR_UPDATED_AFTER_RESPONSE_SUBMISSION(
       RESPONSE_DATASTORE,
       RESPONSE_DATASTORE,
@@ -222,8 +208,7 @@ public enum ResponseServerEvent implements AuditLogEvent {
       RESPONSE_DATASTORE,
       null,
       "Information about participant's withdrawal from study received"
-          + " as withdrawal timestamp '${withdrawal_timetamp}' and "
-          + "data-retention setting '${dataretention_setting}'.",
+          + " as withdrawal timestamp '${withdrawal_timetamp}'.",
       "PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE"),
 
   ACTIVITY_STATE_SAVED_OR_UPDATED(

@@ -212,7 +212,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
-	  $('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="tooltip"]').tooltip();
     $('#rowId').parent().removeClass('white-bg');
     $("#notification").addClass("active");
 
@@ -443,4 +443,8 @@
     }
     return valid;
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>
