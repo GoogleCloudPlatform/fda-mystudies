@@ -120,18 +120,22 @@ export function passwordValidator(): ValidatorFn {
       return {passwordlength: true};
     } else if (serviceNameStatus) {
       return {serviceNameError: true};
-    } else if (
-      (!user &&
-        control.value.toLowerCase().includes(user.firstName.toLowerCase())) ||
-      control.value.toLowerCase().includes(user.lastName.toLowerCase()) ||
-      control.value
-        .toLowerCase()
-        .includes(user.firstName.toLowerCase() + user.lastName.toLowerCase()) ||
-      control.value
-        .toLowerCase()
-        .includes(user.lastName.toLowerCase() + user.firstName.toLowerCase())
-    ) {
-      return {userNameError: true};
+    } else if (user !== null) {
+      if (
+        control.value.toLowerCase().includes(user.firstName.toLowerCase()) ||
+        control.value.toLowerCase().includes(user.lastName.toLowerCase()) ||
+        control.value
+          .toLowerCase()
+          .includes(
+            user.firstName.toLowerCase() + user.lastName.toLowerCase(),
+          ) ||
+        control.value
+          .toLowerCase()
+          .includes(user.lastName.toLowerCase() + user.firstName.toLowerCase())
+      ) {
+        return {userNameError: true};
+      }
+      return null;
     } else if (
       commonusepasswordStatus ||
       control.value.match(/([!@#$%^&*()‘+,:;<>{}~|-])\1*/g) === null ||
