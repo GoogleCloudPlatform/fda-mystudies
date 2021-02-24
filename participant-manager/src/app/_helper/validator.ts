@@ -27,22 +27,6 @@ let AlphabeticCombinTemp = [
   'VWX',
   'WXY',
   'XYZ',
-  '012',
-  '123',
-  '234',
-  '345',
-  '456',
-  '567',
-  '678',
-  '789',
-  '987',
-  '876',
-  '765',
-  '654',
-  '543',
-  '432',
-  '321',
-  '210',
 ];
 let serviceName = [
   'Participant',
@@ -58,7 +42,8 @@ export function passwordValidator(): ValidatorFn {
     let commonusepasswordStatus = false;
     let serviceNameStatus = false;
     let consecutiveSpecialCharExist = false;
-    let user = JSON.parse(sessionStorage.user);
+    let user = JSON.parse(sessionStorage.user || 'null');
+
     var patternForAlphabets = /(?=.*[a-z])(?=.*[A-Z])/g;
     let consecutiveIdenticalCharacter: boolean = false;
     let consecutivewhitespaceStatus: boolean = false;
@@ -107,7 +92,7 @@ export function passwordValidator(): ValidatorFn {
     }
 
     if (control.value == '') {
-      return {Valuerequired: true};
+      return {required: true};
     } else if (
       consecutiveIdenticalCharacter ||
       consecutivewhitespaceStatus ||
@@ -120,7 +105,8 @@ export function passwordValidator(): ValidatorFn {
     } else if (serviceNameStatus) {
       return {serviceNameError: true};
     } else if (
-      control.value.toLowerCase().includes(user.firstName.toLowerCase()) ||
+      (!user &&
+        control.value.toLowerCase().includes(user.firstName.toLowerCase())) ||
       control.value.toLowerCase().includes(user.lastName.toLowerCase()) ||
       control.value
         .toLowerCase()

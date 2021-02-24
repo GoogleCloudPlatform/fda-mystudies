@@ -124,14 +124,12 @@ special characters.`);
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.2';
         this.passwordMeterOptimum = '.8';
-        console.log('weak');
         this.meterStatus = 'Weak';
       } else if (secretkeylenth.length >= 8 && secretkeylenth.length <= 16) {
         this.passwordMeterLow = '.25';
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.5';
         this.passwordMeterOptimum = '.15';
-        console.log('fair');
         this.meterStatus = 'Fair';
       } else if (secretkeylenth.length > 16 && secretkeylenth.length <= 32) {
         this.passwordMeterLow = '.10';
