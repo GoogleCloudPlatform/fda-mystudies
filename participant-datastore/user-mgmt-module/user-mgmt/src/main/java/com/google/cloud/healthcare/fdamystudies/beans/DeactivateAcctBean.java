@@ -20,5 +20,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeactivateAcctBean {
-  private List<StudyReqBean> deleteData;
+  private List<StudyReqBean> studyData;
 }

@@ -203,11 +203,11 @@
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent.");
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       }
@@ -252,11 +252,11 @@
                     "Unable to delete resource.");
                 $('#alertMsg').show();
               }
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             },
             error: function (xhr, status, error) {
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             }
           });
         }
@@ -304,16 +304,16 @@
           } else {
             datarow.push(obj.title);
           }
-          var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewResourceInfo("
+          var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewResourceInfo("
               + parseInt(obj.id) + ");'></span>";
           if (obj.status) {
-            actions += "<span class='sprites_icon edit-g mr-lg' onclick='editResourceInfo(" + parseInt(obj.id)
+            actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo(" + parseInt(obj.id)
                 + ");'></span>"
           } else {
-            actions += "<span class='sprites_icon edit-inc-draft mr-lg' onclick='editResourceInfo("
+            actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo("
                 + parseInt(obj.id) + ");'></span>";
           }
-          actions += "<span class='sprites_icon copy delete' onclick='deleteResourceInfo(" + parseInt(obj.id)
+          actions += "<span class='sprites_icon copy delete'  data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteResourceInfo(" + parseInt(obj.id)
               + ");'></span>";
           datarow.push(actions);
           $('#resource_list').DataTable().row.add(datarow);
@@ -331,6 +331,7 @@
     } else {
       $('#resource_list').DataTable().draw();
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function addStudyProtocol(studyProResId) {

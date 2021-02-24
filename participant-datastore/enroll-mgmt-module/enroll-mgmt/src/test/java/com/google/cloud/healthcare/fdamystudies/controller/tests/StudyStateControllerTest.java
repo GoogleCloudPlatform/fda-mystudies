@@ -245,8 +245,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
     String requestJson =
-        getWithDrawJson(
-            Constants.PARTICIPANT_ID, Constants.STUDY_ID_OF_PARTICIPANT, Constants.DELETE);
+        getWithDrawJson(Constants.PARTICIPANT_ID, Constants.STUDY_ID_OF_PARTICIPANT);
 
     mockMvc
         .perform(
@@ -292,7 +291,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    String requestJson = getWithDrawJson("", Constants.STUDY_ID_OF_PARTICIPANT, Constants.DELETE);
+    String requestJson = getWithDrawJson("", Constants.STUDY_ID_OF_PARTICIPANT);
 
     mockMvc
         .perform(
@@ -306,7 +305,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
 
     // empty study Id
-    requestJson = getWithDrawJson(Constants.PARTICIPANT_ID, "", Constants.DELETE);
+    requestJson = getWithDrawJson(Constants.PARTICIPANT_ID, "");
 
     mockMvc
         .perform(
@@ -320,8 +319,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest(2);
 
     // study Id not exists
-    requestJson =
-        getWithDrawJson(Constants.PARTICIPANT_ID, Constants.STUDYID_NOT_EXIST, Constants.DELETE);
+    requestJson = getWithDrawJson(Constants.PARTICIPANT_ID, Constants.STUDYID_NOT_EXIST);
 
     mockMvc
         .perform(
@@ -344,10 +342,9 @@ public class StudyStateControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest(3);
   }
 
-  private String getWithDrawJson(String participatId, String studyId, boolean delete)
+  private String getWithDrawJson(String participatId, String studyId)
       throws JsonProcessingException {
-    WithdrawFromStudyBean withdrawFromStudyBean =
-        new WithdrawFromStudyBean(participatId, studyId, delete);
+    WithdrawFromStudyBean withdrawFromStudyBean = new WithdrawFromStudyBean(participatId, studyId);
     return getObjectMapper().writeValueAsString(withdrawFromStudyBean);
   }
 
