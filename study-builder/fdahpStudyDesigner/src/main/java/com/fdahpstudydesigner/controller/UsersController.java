@@ -351,19 +351,24 @@ public class UsersController {
             auditLogEventHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS, auditRequest);
             emails = usersService.getActiveUserEmailIds();
             if ((emails != null) && !emails.isEmpty()) {
-              boolean allSent = false;
+              int failedCount = 0;
+              int successCount = 0;
               for (String email : emails) {
                 String sent =
                     loginService.sendPasswordResetLinkToMail(
                         request, email, "", "enforcePasswordChange", auditRequest);
                 if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
-                  allSent = true;
+                  successCount++;
+                } else {
+                  failedCount++;
                 }
               }
-              if (allSent) {
+              if (successCount == emails.size()) {
                 auditLogEventHelper.logEvent(
                     PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT, auditRequest);
-              } else {
+              }
+
+              if (failedCount > 0) {
                 auditLogEventHelper.logEvent(
                     PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED, auditRequest);
               }
@@ -514,7 +519,6 @@ public class UsersController {
                 auditLogEventHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
               } else {
                 values.put("viewed_user_id", userId);
-                System.out.println("******* USER_RECORD_VIEWED captured *******");
                 auditLogEventHelper.logEvent(USER_RECORD_VIEWED, auditRequest, values);
               }
             }
