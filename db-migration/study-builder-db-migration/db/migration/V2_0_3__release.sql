@@ -35,3 +35,9 @@ WHERE display_name = 'Number of Games';
 
 UPDATE active_task_master_attribute SET display_name = 'Number of failures' 
 WHERE display_name = 'Number of Failures';
+
+UPDATE roles SET role_name = 'Superadmin' 
+WHERE role_name = 'Project Lead';
+
+UPDATE roles SET role_name = 'Study admin' 
+WHERE role_name = 'Coordinator';

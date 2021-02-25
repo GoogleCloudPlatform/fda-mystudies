@@ -376,7 +376,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.message", is(ErrorCodes.UNKNOWN_TOKEN.getValue())));
+        .andExpect(jsonPath("$.message", is(ErrorCodes.INVALID_TOKEN.getValue())));
 
     verifyTokenIntrospectRequest();
   }

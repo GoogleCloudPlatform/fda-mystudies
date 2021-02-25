@@ -44,6 +44,9 @@ export class SiteDetailsComponent
   studyStatus = Status;
   enrollmentStatus = EnrollmentStatus;
   invitedYetToEnrollCount = 0;
+  userIdsBackup: string[] = [];
+  activeTabForDisabled = '';
+
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -90,12 +93,21 @@ export class SiteDetailsComponent
 
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants.map(
           (participant) => {
-            const result = this.newlyImportedParticipants.filter(
-              (newlyVreatedEmails) =>
-                newlyVreatedEmails.email === participant.email,
-            );
-            if (result.length > 0) {
-              participant.newlyCreatedUser = true;
+            if (this.activeTabForDisabled === OnboardingStatus.Disabled) {
+              const resultFromDisabled = this.userIds.filter(
+                (idsFromDisabled) => idsFromDisabled === participant.id,
+              );
+              if (resultFromDisabled.length > 0) {
+                participant.newlyCreatedUser = true;
+              }
+            } else {
+              const result = this.newlyImportedParticipants.filter(
+                (newlyVreatedEmails) =>
+                  newlyVreatedEmails.email === participant.email,
+              );
+              if (result.length > 0) {
+                participant.newlyCreatedUser = true;
+              }
             }
             return participant;
           },
@@ -129,9 +141,14 @@ export class SiteDetailsComponent
       tab === OnboardingStatus.New || tab === OnboardingStatus.Invited
         ? 'Disable invitation'
         : 'Enable invitation';
+    this.activeTabForDisabled = this.activeTab;
     this.activeTab = tab;
     this.toggleDisplay = false;
+    this.userIdsBackup = this.userIds;
     this.userIds = [];
+    if (this.activeTabForDisabled === OnboardingStatus.Disabled) {
+      this.userIds = this.userIdsBackup;
+    }
     this.fetchSiteParticipant(tab);
   }
 

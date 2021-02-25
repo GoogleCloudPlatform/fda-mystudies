@@ -997,8 +997,14 @@ public class SiteServiceImpl implements SiteService {
             CollectionUtils.emptyIfNull(
                 participantRegistrySiteEntities
                     .stream()
-                    .distinct()
+                    .filter(
+                        participant ->
+                            !participant
+                                    .getOnboardingStatus()
+                                    .equals(OnboardingStatus.DISABLED.getCode())
+                                || participant.getSite().equals(siteEntity))
                     .map(ParticipantRegistrySiteEntity::getEmail)
+                    .distinct()
                     .collect(Collectors.toList()));
 
     List<String> newEmails =
@@ -1462,7 +1468,7 @@ public class SiteServiceImpl implements SiteService {
       templateArgs.put("study name", optStudy.get().getName());
       templateArgs.put("App Name", optStudy.get().getApp().getAppName());
       templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
-      templateArgs.put("contact email address", appPropertyConfig.getContactEmail());
+      templateArgs.put("contact email address", optStudy.get().getContactEmail());
       EmailRequest emailRequest =
           new EmailRequest(
               appPropertyConfig.getFromEmail(),
