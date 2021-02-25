@@ -1,4 +1,4 @@
-import { ApiResponse } from "src/app/entity/api.response.model";
+import {ApiResponse} from 'src/app/entity/api.response.model';
 
 export interface Site {
   edit?: number;
@@ -13,7 +13,7 @@ export interface UpdateTargetEnrollmentRequest {
   targetEnrollment: number;
 }
 
-export interface SiteResponse extends ApiResponse{
-  siteId : string;
-  siteName : string;
+export interface SiteResponse extends ApiResponse {
+  siteId: string;
+  siteName: string;
 }

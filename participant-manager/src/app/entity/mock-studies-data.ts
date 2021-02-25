@@ -4,11 +4,13 @@ import {
 } from '../site-coordinator/studies/shared/study.model';
 import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
-import {SiteResponse, UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
+import {
+  SiteResponse,
+  UpdateTargetEnrollmentRequest,
+} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
 import {EnrollmentStatus, Status, StudyType} from '../shared/enums';
 import {Permission} from '../shared/permission-enums';
-import { Site } from '../site-coordinator/user/shared/app-details';
 
 export const expectedSitesList = {
   studies: [
