@@ -1,6 +1,15 @@
+/*
+ * Copyright 2020-2021 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.fdahpstudydesigner.controller;
 
 import java.beans.PropertyEditorSupport;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,7 +25,7 @@ public class CleanPropertyAdvice {
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
       String safe = Jsoup.clean(text, Whitelist.simpleText());
-      setValue(safe);
+      setValue(StringEscapeUtils.unescapeHtml4(safe));
     }
   }
 
