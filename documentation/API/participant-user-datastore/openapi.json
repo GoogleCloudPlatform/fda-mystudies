@@ -339,7 +339,7 @@
     "/studies/sendNotification" : {
       "post" : {
         "tags" : [ "Studies" ],
-        "summary" : "Send Notification",
+        "summary" : "Sends notifications to users",
         "operationId" : "SendNotificationUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "*/*" ],
@@ -384,7 +384,7 @@
     "/studies/studymetadata" : {
       "post" : {
         "tags" : [ "Studies" ],
-        "summary" : "Add or update studymetadata",
+        "summary" : "Add or update metadata details of the study",
         "operationId" : "addUpdateStudyMetadataUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "*/*" ],
