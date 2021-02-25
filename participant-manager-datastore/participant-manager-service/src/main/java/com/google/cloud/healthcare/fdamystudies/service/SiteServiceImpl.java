@@ -997,8 +997,14 @@ public class SiteServiceImpl implements SiteService {
             CollectionUtils.emptyIfNull(
                 participantRegistrySiteEntities
                     .stream()
-                    .distinct()
+                    .filter(
+                        participant ->
+                            !participant
+                                    .getOnboardingStatus()
+                                    .equals(OnboardingStatus.DISABLED.getCode())
+                                || participant.getSite().equals(siteEntity))
                     .map(ParticipantRegistrySiteEntity::getEmail)
+                    .distinct()
                     .collect(Collectors.toList()));
 
     List<String> newEmails =

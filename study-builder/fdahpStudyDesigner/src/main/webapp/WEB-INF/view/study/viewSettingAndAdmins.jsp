@@ -24,10 +24,7 @@
     <input type="hidden" id="userIds" name="userIds">
     <input type="hidden" id="permissions" name="permissions">
     <input type="hidden" id="projectLead" name="projectLead">
-    <input type="hidden" id="inlineRadio3" value="Yes"
-			name="retainParticipant">
-		<input type="hidden" class="rejoin_radio" id="inlineRadio6"
-			value="Yes" name="allowRejoin">
+    
     <!-- Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
@@ -74,7 +71,7 @@
               name="platform" value="I"
               <c:if test="${fn:contains(studyBo.platform,'I')}">checked</c:if>
               <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I')}">disabled</c:if>
+                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if>
               data-error="Please check these box if you want to proceed."
               > <label for="inlineCheckbox1"> iOS </label>
           </span>
@@ -83,7 +80,7 @@
               name="platform" value="A"
               <c:if test="${fn:contains(studyBo.platform,'A')}">checked</c:if>
               <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A')}">disabled</c:if>
+                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if>
               data-error="Please check these box if you want to proceed."
               > <label for="inlineCheckbox2"> Android </label>
           </span>
@@ -244,10 +241,7 @@
     });
     $(".menuNav li.active").removeClass('active');
     $(".menuNav li.second").addClass('active');
-    checkRadioRequired();
-    $(".rejoin_radio").click(function () {
-      checkRadioRequired();
-    })
+  
     <c:if test="${(not empty permission) || (sessionObject.role eq 'Org-level Admin')}">
     $('#settingfoFormId input,textarea,select').prop('disabled', true);
     $('#settingfoFormId').find('.elaborateClass').addClass('linkDis');
@@ -256,6 +250,10 @@
     $('.radcls').prop('disabled', true);
     </c:if>
     $("#completedId").on('click', function (e) {
+      if ($('.checkbox input:checked').length == 0) {
+    	    $("input").attr("required", true);
+      }
+      
       var rowCount = 0;
       if (isFromValid("#settingfoFormId")) {
         rowCount = $('.leadCls').length;
@@ -278,49 +276,14 @@
     $("#saveId").click(function () {
       platformTypeValidation('save');
     });
-    var allowRejoin = '${studyBo.allowRejoin}';
-    if (allowRejoin != "") {
-      if (allowRejoin == 'Yes') {
-        $('.rejointextclassYes').show();
-        $('#rejoin_comment_no').empty();
-        $('.rejointextclassNo').hide();
-      } else {
-        $('.rejointextclassNo').show();
-        $('.rejointextclassYes').hide();
-        $('#rejoin_comment_yes').empty();
-      }
-    }
+   
     $("[data-toggle=tooltip]").tooltip();
     $("#infoIconId").hover(function () {
       $('#myModal').modal('show');
     });
   });
-  function checkRadioRequired() {
-    var rejoinRadioVal = $('input[name=allowRejoin]:checked').val();
-    if (rejoinRadioVal == 'Yes') {
-      $('.rejointextclassYes').show();
-      $('#rejoin_comment_yes').attr("required", "required");
-      $('#rejoin_comment_no').removeAttr("required");
-      $('.rejointextclassNo').hide();
-    } else {
-      $('.rejointextclassNo').show();
-      $('#rejoin_comment_no').attr("required", "required");
-      $('#rejoin_comment_yes').removeAttr("required");
-      $('.rejointextclassYes').hide();
-    }
-  }
-  function setAllowRejoinText() {
-    var allowRejoin = $('input[name=allowRejoin]:checked').val();
-    if (allowRejoin) {
-      if (allowRejoin == 'Yes') {
-        $('#rejoin_comment_yes').attr("name", "allowRejoinText");
-        $('#rejoin_comment_no').removeAttr("name", "allowRejoinText");
-      } else {
-        $('#rejoin_comment_no').attr("name", "allowRejoinText");
-        $('#rejoin_comment_yes').removeAttr("name", "allowRejoinText");
-      }
-    }
-  }
+  
+  
   function platformTypeValidation(buttonText) {
     var platformNames = '';
     $("input:checkbox[name=platform]:checked").each(function () {
@@ -353,11 +316,7 @@
             $('#completedId').removeAttr('disabled');
             bootbox.alert(errorMessage);
           } else {
-            if ($('.checkbox input:checked').length == 0) {
-              $("input").attr("required", true);
-            } else {
               submitButton(buttonText);
-            }
           }
         },
         error: function status(data, status) {
@@ -369,16 +328,10 @@
         global: false
       });
     } else {
-      if ($('.checkbox input:checked').length == 0) {
-        $("input").attr("required", true);
-      } else {
         submitButton(buttonText);
-      }
     }
   }
   function submitButton(buttonText) {
-    setAllowRejoinText();
-    admins() //Pradyumn
     var isAnchorForEnrollmentDraft = '${isAnchorForEnrollmentDraft}';
     if (buttonText === 'save') {
       $('#settingfoFormId').validator('destroy');
@@ -386,41 +339,10 @@
       $("#buttonText").val('save');
       $("#settingfoFormId").submit();
     } else {
-      var retainParticipant = $('input[name=retainParticipant]:checked').val();
-      var enrollmentdateAsAnchordate = $('input[name=enrollmentdateAsAnchordate]:checked').val();
-      if (retainParticipant) {
-        if (retainParticipant == 'All')
-          retainParticipant = 'Participant Choice';
-        bootbox.confirm({
-          closeButton: false,
-          message: 'You have selected "' + retainParticipant
-              + '" for the retention of participant response data when they leave a study.'
-              + ' Your Consent content must be worded to convey the same.'
-              + ' Click OK to proceed with completing this section or Cancel if you wish to make changes.',
-          buttons: {
-            'cancel': {
-              label: 'Cancel',
-            },
-            'confirm': {
-              label: 'OK',
-            },
-          },
-          callback: function (result) {
-            if (result) {
-              //phase2a anchor
-              showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate);
-              //phase 2a anchor
-            } else {
-              $('#completedId').removeAttr('disabled');
-            }
-          }
-        });
-      } else {
         $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
         $("#buttonText").val('completed');
         $("#settingfoFormId").submit();
       }
-    }
   }
   function admins() {
     var userIds = "";

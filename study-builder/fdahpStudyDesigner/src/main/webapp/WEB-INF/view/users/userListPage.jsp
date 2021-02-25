@@ -12,6 +12,10 @@
 #user_list tr th {
     padding-left: 20px !important;
 }
+
+.filter-option {
+  text-transform: inherit !important;
+}
 </style>
 
 <div
@@ -82,7 +86,7 @@
             <th id="">ROLE
               <span class="sort"></span>
             </th>
-            <th id="" class="text-right" style="padding-right: 3% !important;">Actions</th>
+            <th id="">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -91,14 +95,13 @@
                 <c:if test="${fn:contains(aspList.capability , 'Project Lead' )}"> plRow </c:if>
                 <c:if test="${fn:contains(aspList.capability , 'Coordinator' )}"> cRow </c:if>>
               <td>
-                <div class="dis-ellipsis"
-                     title="${fn:escapeXml(user.userFullName)}">${fn:escapeXml(user.userFullName)}</div>
+                <div class="dis-ellipsis">${fn:escapeXml(user.userFullName)}</div>
               </td>
               <td>
-                <div class="dis-ellipsis" title="${user.userEmail}">${user.userEmail}</div>
+                <div class="dis-ellipsis">${user.userEmail}</div>
               </td>
               <td>${user.roleName}</td>
-              <td class="text-right" style="padding-right: 3% !important;">
+              <td>
                 <span class="sprites_icon preview-g mr-lg viewUser"
                       userId="${user.userId}" data-toggle="tooltip"
                       data-placement="top" title="View"></span>
@@ -113,7 +116,7 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title=Account status: Invitation sent, pending activation"</c:if>
+                                                 test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"</c:if>
                                              <c:if
                                                  test="${user.emailChanged}">title="Account status: Pending Verification"</c:if>
                                              <c:if
@@ -282,12 +285,12 @@
               if (status == 1) {
                 showSucMsg('User successfully deactivated.');
                 $('#' + userId).val("0");
-                $('#label' + userId).attr('data-original-title', 'Status: Deactivated');
+                $('#label' + userId).attr('data-original-title', 'Account status: Deactivated');
                 $('#editIcon' + userId).addClass('cursor-none');
               } else {
                 showSucMsg('User successfully activated.');
                 $('#' + userId).val("1");
-                $('#label' + userId).attr('data-original-title', 'Status: Active');
+                $('#label' + userId).attr('data-original-title', 'Account status: Active');
                 $('#editIcon' + userId).removeClass('cursor-none');
               }
             } else {
@@ -310,4 +313,8 @@
       }
     });
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>

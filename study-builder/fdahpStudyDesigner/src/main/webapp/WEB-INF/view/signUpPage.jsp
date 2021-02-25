@@ -174,13 +174,13 @@
                     <input type="password" class="input-field wow_input"
                            id="cfnPassword" name="" maxlength="64"
                            data-match="#password"
-                           data-match-error="Whoops, these don't match"
+                           data-match-error="Passwords do not match"
                            placeholder="Confirm password*" required autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
                 <div class="col-xs-12">
-                  <div class="mb-lg form-group">
+                  <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
                         required="required"> <label for="inlineCheckbox">
@@ -306,14 +306,14 @@
           if (errMsg.length > 0) {
             $("#errMsg").text(errMsg);
             $("#errMsg").show("fast");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
           var sucMsg = '${sucMsg}';
           if (sucMsg.length > 0) {
             $("#sucMsg").text(sucMsg);
             $("#sucMsg").show("fast");
             $("#errMsg").hide("fast");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
 
