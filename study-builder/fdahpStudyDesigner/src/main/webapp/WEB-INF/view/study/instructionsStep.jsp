@@ -351,13 +351,13 @@
             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             $('#alertMsg').show();
           }
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         },
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
           $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         }
       });
     } else {
@@ -401,4 +401,8 @@
     document.body.appendChild(a).click();
     </c:if>
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>

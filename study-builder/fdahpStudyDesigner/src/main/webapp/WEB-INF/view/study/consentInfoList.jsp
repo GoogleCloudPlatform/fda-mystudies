@@ -209,11 +209,11 @@
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       }
@@ -274,11 +274,11 @@
                     "Unable to delete consent");
                 $('#alertMsg').show();
               }
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             },
             error: function (xhr, status, error) {
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             }
           });
         }
@@ -329,16 +329,16 @@
         } else {
           datarow.push(obj.visualStep);
         }
-        var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewConsentInfo("
+        var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewConsentInfo("
             + parseInt(obj.id) + ");'></span>";
         if (obj.status) {
-          actions += "<span class='sprites_icon edit-g mr-lg' onclick='editConsentInfo(" + parseInt(obj.id)
+          actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo(" + parseInt(obj.id)
               + ");'></span>"
         } else {
-          actions += "<span class='sprites_icon edit-inc-draft mr-lg' onclick='editConsentInfo("
+          actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo("
               + parseInt(obj.id) + ");'></span>";
         }
-        actions += "<span class='sprites_icon copy delete' onclick='deleteConsentInfo(" + parseInt(obj.id)
+        actions += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteConsentInfo(" + parseInt(obj.id)
             + ");'></span>";
         datarow.push(actions);
         $('#consent_list').DataTable().row.add(datarow);
@@ -353,6 +353,7 @@
       $('#helpNote').attr('data-original-title',
           'Please ensure you add one or more Consent Sections before attempting to mark this section as Complete.');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function addConsentPage() {
