@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -70,4 +70,5 @@ public final class Constants {
   public static final String STUDY_INFO_ID = "2";
   public static final String STUDY_ID_1 = "study-1";
   public static final String USER_EMAIL = "cdash93@gmail.com";
+  public static final String CONTACT_EMAIL_ID = "contactemail@gmail.com";
 }

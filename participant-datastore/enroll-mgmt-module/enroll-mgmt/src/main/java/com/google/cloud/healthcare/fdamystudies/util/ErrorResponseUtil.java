@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -110,11 +110,10 @@ public class ErrorResponseUtil {
     ERROR_REQUIRED("StudyId is required"),
     STUDYID_NOT_EXIST("StudyId does not exist"),
     TOKEN_ALREADY_USE("Token already in use"),
-    INVALID_TOKEN("Invalid Token"),
-    UNKNOWN_TOKEN("Unknown token"),
+    INVALID_TOKEN("Sorry, this token is invalid. Please enter a valid token to continue."),
     UNAUTHORIZED_CLIENT("Unauthorized client"),
     UNAUTHORIZED("Unauthorized"),
-    INTERNAL_SERER_ERROR("Internal Serer Error"),
+    INTERNAL_SERVER_ERROR("Internal Server Error"),
     TOKEN_REQUIRED("Token is required");
 
     private final String value;
