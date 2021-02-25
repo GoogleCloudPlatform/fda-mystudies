@@ -14,16 +14,18 @@ import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import org.apache.commons.text.WordUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.format.support.FormattingConversionService;
+import org.springframework.validation.Validator;
+import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -41,9 +43,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerConfig extends WebMvcConfigurationSupport {
-
-  @Value("${component.name:}")
-  private Optional<String> componentName;
 
   @Bean
   public Docket api() {
@@ -86,8 +85,8 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
   private ApiInfo apiInfo() {
     return new ApiInfo(
-        "Api Documentation",
-        WordUtils.capitalizeFully(componentName.get()),
+        ApiInfo.DEFAULT.getTitle(),
+        null,
         ApiInfo.DEFAULT.getVersion(),
         null,
         ApiInfo.DEFAULT_CONTACT,
@@ -116,5 +115,19 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
     registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
     registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/");
+  }
+
+  @Override
+  @Bean
+  public RequestMappingHandlerAdapter requestMappingHandlerAdapter(
+      @Qualifier("mvcContentNegotiationManager")
+          ContentNegotiationManager contentNegotiationManager,
+      @Qualifier("mvcConversionService") FormattingConversionService conversionService,
+      @Qualifier("mvcValidator") Validator validator) {
+    RequestMappingHandlerAdapter adapter =
+        super.requestMappingHandlerAdapter(contentNegotiationManager, conversionService, validator);
+    // prevent Spring MVC @ModelAttribute variables from appearing in URL
+    adapter.setIgnoreDefaultModelOnRedirect(true);
+    return adapter;
   }
 }
