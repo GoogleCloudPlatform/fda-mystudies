@@ -780,7 +780,7 @@ $(document)
                                         "fast");
                                 setTimeout(
                                     hideDisplayMessage,
-                                    4000);
+                                    5000);
                                 $('#password')
                                     .attr(
                                         "type",
