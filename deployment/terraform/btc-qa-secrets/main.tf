@@ -34,6 +34,7 @@ locals {
     "participant_enroll_datastore",
     "participant_user_datastore",
     "participant_manager_datastore",
+    "auth-server-db-migration",
   ]
 }
 
