@@ -50,7 +50,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "Verify Email", value = "Verify Email")
+@Api(
+    tags = "Verify Email",
+    value = "Verify Email",
+    description = "Operation pertaining to verify email in user management service")
 @RestController
 public class VerifyEmailIdController {
 
