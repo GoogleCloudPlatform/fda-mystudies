@@ -99,3 +99,10 @@ input[type="checkbox"]:checked + label::before {
 .arrow_clr__white {
   color: var(--white);
 }
+
+.chk_box_hidden:before {
+  visibility: hidden;
+}
+.chk_box_hidden2:before {
+  display: none;
+}
