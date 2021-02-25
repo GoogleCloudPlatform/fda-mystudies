@@ -218,7 +218,6 @@
     <string name="need_help">Need help? Contact us.</string>
     <string name="press_back_to_exit">Press the \'back\' button to exit</string>
     <string name="study_not_available">Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join.</string>
-    <string name="cannot_rejoin_study">Sorry, this study currently does not allow previously enrolled participants to rejoin after they have withdrawn. Please check back later or explore other studies.</string>
     <string name="study_paused">This study has been temporarily paused. Please check back later.</string>
     <string name="study_Joined_paused">The study has been temporarily paused. You can participate in activities once it is resumed. Please check back later.</string>
     <string name="study_no_enroll">Sorry, enrollment for this study has been closed for now. Please check back later or explore other studies you could join.</string>
@@ -286,7 +285,6 @@
     <string name="studyStatus">studyStatus</string>
     <string name="position">position</string>
     <string name="enroll">enroll</string>
-    <string name="rejoin">rejoin</string>
     <string name="studyVersion">studyVersion</string>
     <string name="studyNotAvailable">This study is not available.</string>
     <string name="login_to_continue">Please sign in to view details.</string>

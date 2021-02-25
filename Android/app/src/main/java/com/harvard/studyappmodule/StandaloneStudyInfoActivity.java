@@ -358,11 +358,6 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .writePreference(
                 StandaloneStudyInfoActivity.this,
-                getString(R.string.rejoin),
-                "" + study.getStudies().get(0).getSetting().getRejoin());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                StandaloneStudyInfoActivity.this,
                 getString(R.string.studyVersion),
                 "" + study.getStudies().get(0).getStudyVersion());
 
@@ -373,10 +368,6 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
           } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
             Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
-          } else if (!studyList.getSetting().getRejoin()
-              && studyList.getStudyStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
-            Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT)
-                .show();
           } else {
             new CallConsentMetaData(false).execute();
           }
@@ -582,9 +573,6 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
     } else if (study.getStudies().get(0).getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
-    } else if (!study.getStudies().get(0).getSetting().getRejoin()
-        && study.getStudies().get(0).getStudyStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
-      Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT).show();
     } else {
       if (eligibilityConsent.getEligibility().getType().equalsIgnoreCase("token")) {
         Intent intent =
