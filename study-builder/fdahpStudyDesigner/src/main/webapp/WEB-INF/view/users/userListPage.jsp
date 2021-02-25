@@ -12,6 +12,10 @@
 #user_list tr th {
     padding-left: 20px !important;
 }
+
+.filter-option {
+  text-transform: inherit !important;
+}
 </style>
 
 <div
