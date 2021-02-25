@@ -1,42 +1,27 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
 import com.fdahpstudydesigner.bo.RoleBO;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -159,7 +144,7 @@ public class UsersDAOImpl implements UsersDAO {
                     .setParameterList("permissions", permissionList)
                     .list());
         userBO2.setPermissionList(permissionSet);
-        userBO2.setAccessLevel(FdahpStudyDesignerUtil.getUserAccessLevel(permissionSet));
+        userBO2.setAccessLevel(userBO2.getRoleId().equals(1) ? "SUPERADMIN" : "STUDY ADMIN");
         session.update(userBO2);
         userIdAccessLevelInfo.setAccessLevel(userBO2.getAccessLevel());
       } else {
@@ -175,12 +160,14 @@ public class UsersDAOImpl implements UsersDAO {
         query.executeUpdate();
       }
 
-      if (!"".equals(selectedStudies) && !"".equals(permissionValues)) {
+      // Study admin flow
+      if (!"".equals(selectedStudies)
+          && !"".equals(permissionValues)
+          && userBO2.getRoleId().equals(2)) {
         selectedStudy = selectedStudies.split(",");
         permissionValue = permissionValues.split(",");
         List<String> selectedStudiesList = Arrays.asList(selectedStudies.split(","));
         if (updateFlag) {
-
           query =
               session
                   .createSQLQuery(
@@ -189,7 +176,6 @@ public class UsersDAOImpl implements UsersDAO {
                   .setParameter("userId", userId);
           query.executeUpdate();
         }
-
         for (int i = 0; i < selectedStudy.length; i++) {
           query =
               session
@@ -208,6 +194,35 @@ public class UsersDAOImpl implements UsersDAO {
             studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
             studyPermissionBO.setUserId(userId);
             session.save(studyPermissionBO);
+          }
+        }
+      } else if (userBO2.getRoleId().equals(1)) {
+        // Superadmin flow
+        query =
+            session.createQuery(
+                " FROM StudyBo SBO WHERE SBO.version = 0 AND SBO.status <> :deActivateStatus");
+        query.setParameter("deActivateStatus", FdahpStudyDesignerConstants.STUDY_DEACTIVATED);
+        List<StudyBo> studyBOList = query.list();
+        if (CollectionUtils.isNotEmpty(studyBOList)) {
+          for (int i = 0; i < studyBOList.size(); i++) {
+            query =
+                session
+                    .createQuery(
+                        " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
+                            + " AND UBO.userId=:userId")
+                    .setParameter("userId", userId)
+                    .setParameter("studyId", studyBOList.get(i).getId());
+            studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
+            if (null != studyPermissionBO) {
+              studyPermissionBO.setViewPermission(true);
+              session.update(studyPermissionBO);
+            } else {
+              studyPermissionBO = new StudyPermissionBO();
+              studyPermissionBO.setStudyId(studyBOList.get(i).getId());
+              studyPermissionBO.setViewPermission(true);
+              studyPermissionBO.setUserId(userId);
+              session.save(studyPermissionBO);
+            }
           }
         }
       }
@@ -438,10 +453,7 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
-                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id and u.user_id "
-                  + "not in (select upm.user_id from user_permission_mapping upm where "
-                  + "upm.permission_id = (select up.permission_id from user_permissions up "
-                  + "where up.permissions ='ROLE_SUPERADMIN')) ORDER BY u.user_id DESC ");
+                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id  ORDER BY u.user_id DESC ");
       objList = query.list();
       if ((null != objList) && !objList.isEmpty()) {
         userList = new ArrayList<>();
