@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -96,7 +96,8 @@ public class StudiesControllerTest extends BaseMockIT {
         Constants.APP_ID_VALUE,
         Constants.APP_NAME,
         Constants.APP_DESCRIPTION,
-        Constants.LOGO_IMAGE_URL);
+        Constants.LOGO_IMAGE_URL,
+        Constants.CONTACT_EMAIL_ID);
   }
 
   @Test
