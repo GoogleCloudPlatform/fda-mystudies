@@ -175,6 +175,7 @@ public class UserProfileController {
       @RequestHeader("appId") String appId,
       @Valid @RequestBody ResetPasswordBean resetPasswordBean,
       @Context HttpServletResponse response,
+      @RequestHeader String appName,
       HttpServletRequest request)
       throws Exception {
     logger.info("UserProfileController resendConfirmation() - Starts ");
@@ -205,7 +206,10 @@ public class UserProfileController {
           if (updParticipantDetails != null) {
             EmailResponse emailResponse =
                 userManagementProfService.resendConfirmationthroughEmail(
-                    appId, participantDetails.getEmailCode(), participantDetails.getEmail());
+                    appId,
+                    participantDetails.getEmailCode(),
+                    participantDetails.getEmail(),
+                    appName);
             if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
                 .getMessage()
                 .equals(emailResponse.getMessage())) {
