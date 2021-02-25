@@ -35,7 +35,16 @@ public class StudyDetailsBean {
       appId = "",
       appName = "",
       appDescription = "",
-      logoImageUrl = "";
+      logoImageUrl = "",
+      contactEmail = "";
+
+  public String getContactEmail() {
+    return contactEmail;
+  }
+
+  public void setContactEmail(String contactEmail) {
+    this.contactEmail = contactEmail;
+  }
 
   public String getStudyId() {
     return studyId;

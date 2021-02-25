@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -93,6 +93,7 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setModifiedBy(String.valueOf(0));
       studyInfo.setModified(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
+      studyInfo.setContactEmail(studyMetadataBean.getContactEmail());
       session.update(studyInfo);
     } else {
       List<AppPermissionEntity> appPermissionList = new ArrayList<>();
@@ -129,6 +130,7 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setCreatedBy(String.valueOf(0));
       studyInfo.setCreated(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
+      studyInfo.setContactEmail(studyMetadataBean.getContactEmail());
       String generatedStudyid = (String) session.save(studyInfo);
 
       for (AppPermissionEntity appPermission : appPermissionList) {
