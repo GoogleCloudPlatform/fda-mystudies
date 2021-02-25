@@ -479,6 +479,7 @@
     <string name="refreshToken">refreshToken</string>
     <string name="activetaskremindertxt">Reminder: The fetal kick recording activity is in progress. Please update the app with the count of the kicks or movements you experience in this period.. </string>
     <string name="notificatinturnoffnotification">Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activities in a timely manner.</string>
+    <string name="consentConfirmation">By tapping on Agree, you confirm that you have reviewed the consent document and agree to participate in the study.</string>
     <string name="app_standalone">Standalone</string>
     <string name="app_gateway">Gateway</string>
     <string name="otherValuetxt">Please fill out the text field too</string>
