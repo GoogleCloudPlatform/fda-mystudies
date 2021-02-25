@@ -24,6 +24,7 @@ package com.fdahpstudydesigner.service;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
@@ -480,6 +481,13 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 flag =
                     EmailNotification.sendEmailNotification(
                         "userRegistrationSubject", dynamicContent, email, null, null);
+
+                Map<String, String> values = new HashMap<>();
+                values.put(StudyBuilderConstants.USER_ID, String.valueOf(userdetails.getUserId()));
+                if (!flag) {
+                  auditLogEventHelper.logEvent(
+                      NEW_USER_INVITATION_EMAIL_FAILED, auditRequest, values);
+                }
               } else if ("USER_UPDATE".equals(type) && userdetails.isEnabled()) {
                 dynamicContent =
                     FdahpStudyDesignerUtil.genarateEmailContent(
