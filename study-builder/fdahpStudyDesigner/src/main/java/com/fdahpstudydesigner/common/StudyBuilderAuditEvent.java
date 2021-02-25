@@ -335,7 +335,7 @@ public enum StudyBuilderAuditEvent {
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
-      "Settings section marked complete with enrollment setting '${enrollment_setting}', re-join setting '${rejoin_setting}' and data-retention setting '${dataretention_setting}'. ",
+      "Settings section marked complete with enrollment setting '${enrollment_setting}'.",
       "STUDY_SETTINGS_MARKED_COMPLETE"),
 
   STUDY_DEACTIVATED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_DEACTIVATED"),

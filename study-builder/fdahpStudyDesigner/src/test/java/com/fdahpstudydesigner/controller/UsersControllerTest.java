@@ -182,6 +182,7 @@ public class UsersControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     UserBO userBo = new UserBO();
     userBo.setUserEmail("superunittest@grr.la");
+    userBo.setRoleId(1);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())
@@ -216,6 +217,7 @@ public class UsersControllerTest extends BaseMockIT {
     userBo.setFirstName("new_user_first_name");
     userBo.setLastName("new_user_last_name");
     userBo.setPhoneNumber("654665146432");
+    userBo.setRoleId(1);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())

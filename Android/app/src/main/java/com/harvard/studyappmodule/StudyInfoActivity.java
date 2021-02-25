@@ -95,7 +95,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private String position = "";
   private String title = "";
   private String enroll = "";
-  private String rejoin = "";
   private AppCompatTextView joinButton;
   private StudyHome studyHome;
   private ConsentDocumentData consentDocumentData;
@@ -130,7 +129,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       position = getIntent().getStringExtra("position");
       title = getIntent().getStringExtra("title");
       enroll = getIntent().getStringExtra("enroll");
-      rejoin = getIntent().getStringExtra("rejoin");
       aboutThisStudy = getIntent().getBooleanExtra("about_this_study", false);
     } catch (Exception e) {
       Logger.log(e);
@@ -219,10 +217,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                   getIntent().getStringExtra("enroll"));
               SharedPreferenceHelper.writePreference(
                   StudyInfoActivity.this,
-                  "login_studyinfo_rejoin",
-                  getIntent().getStringExtra("rejoin"));
-              SharedPreferenceHelper.writePreference(
-                  StudyInfoActivity.this,
                   "login_studyinfo_about_this_study",
                   "" + getIntent().getBooleanExtra("about_this_study", false));
 
@@ -305,9 +299,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
     } else if (status.equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
-    } else if (rejoin.equalsIgnoreCase("false")
-        && studyStatus.equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
-      Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT).show();
     } else {
       if (eligibilityConsent.getEligibility().getType().equalsIgnoreCase("token")) {
         Intent intent = new Intent(StudyInfoActivity.this, EligibilityEnrollmentActivity.class);
@@ -666,9 +657,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
         } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
           Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
-        } else if (!studyList.getSetting().getRejoin()
-            && studyList.getStudyStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
-          Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT).show();
         } else {
           new CallConsentMetaData(false).execute();
         }

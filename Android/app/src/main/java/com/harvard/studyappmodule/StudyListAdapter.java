@@ -318,11 +318,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                 AppController.getHelperSharedPreference()
                     .writePreference(
                         context,
-                        context.getString(R.string.rejoin),
-                        "" + items.get(holder.getAdapterPosition()).getSetting().getRejoin());
-                AppController.getHelperSharedPreference()
-                    .writePreference(
-                        context,
                         context.getString(R.string.studyVersion),
                         "" + items.get(holder.getAdapterPosition()).getStudyVersion());
               } catch (Exception e) {
@@ -356,8 +351,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                 intent.putExtra(
                     "enroll",
                     "" + items.get(holder.getAdapterPosition()).getSetting().isEnrolling());
-                intent.putExtra(
-                    "rejoin", "" + items.get(holder.getAdapterPosition()).getSetting().getRejoin());
                 ((StudyActivity) context).startActivityForResult(intent, 100);
               }
             }

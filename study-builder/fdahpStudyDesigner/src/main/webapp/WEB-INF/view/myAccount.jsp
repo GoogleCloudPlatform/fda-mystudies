@@ -204,7 +204,7 @@
               <div class="col-md-6 p-none">
                 <div class="form-group">
                   <input type="password" class="input-field wow_input emptyField" maxlength="64"
-                         data-minlength="8" data-match-error="Whoops, these don't match"
+                         data-minlength="8" data-match-error="Passwords do not match"
                          id="conpassword" data-match="#password"
                          tabindex="3" required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
