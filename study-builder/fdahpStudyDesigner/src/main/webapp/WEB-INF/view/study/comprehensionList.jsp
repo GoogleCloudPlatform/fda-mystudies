@@ -127,9 +127,11 @@
                         onclick="viewComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="${comprehensionTestQuestion.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      data-toggle="tooltip" data-placement="top" title="Edit"
                       onclick="editComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      data-toggle="tooltip" data-placement="top" title="Delete"
                       onclick="deleteComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                 </td>
               </tr>
@@ -170,6 +172,10 @@
 <script type="text/javascript">
 var markAsComplete = "${markAsComplete}"
   $(document).ready(function () {
+	  var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
+	  if(mainContainerDivision==true){
+			var mainContainerDivision = $('#mainContainer').hide();		   
+		 }
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
@@ -445,6 +451,7 @@ var markAsComplete = "${markAsComplete}"
         } else {
           datarow.push("<div class='dis-ellipsis'>" + DOMPurify.sanitize(obj.questionText) + "</div>");
         }
+        
         var actions='';	
         var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');	
         if( obj.status===true){	
@@ -465,6 +472,7 @@ var markAsComplete = "${markAsComplete}"
                    + "</span>";	
         	    markAsComplete="false";	
             }
+
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);
       });
@@ -477,6 +485,7 @@ var markAsComplete = "${markAsComplete}"
     if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
       $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function markAsCompleted() {
