@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -50,12 +50,13 @@ public class UserRegistrationController {
   public ResponseEntity<UserRegistrationResponse> registerUser(
       @Valid @RequestBody UserRegistrationForm user,
       @RequestHeader("appId") String appId,
+      @RequestHeader String appName,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     user.setAppId(appId);
-
+    user.setAppName(appName);
     UserRegistrationResponse userRegistrationResponse =
         userRegistrationService.register(user, auditRequest);
 

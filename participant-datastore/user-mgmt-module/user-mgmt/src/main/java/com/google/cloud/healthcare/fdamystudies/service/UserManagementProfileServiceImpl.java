@@ -315,7 +315,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Transactional()
   @Override
   public EmailResponse resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId) {
+      String applicationId, String securityToken, String emailId, String appName) {
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Starts");
     AppEntity appPropertiesDetails = null;
 
@@ -338,9 +338,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       subject = appPropertiesDetails.getRegEmailSub();
     }
 
-    if (appPropertiesDetails != null) {
-      templateArgs.put("appName", appPropertiesDetails.getAppName());
-    }
+    templateArgs.put("appName", appName);
     // TODO(#496): replace with actual study's org name.
     templateArgs.put("orgName", appConfig.getOrgName());
     templateArgs.put("contactEmail", appConfig.getContactEmail());

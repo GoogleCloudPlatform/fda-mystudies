@@ -74,9 +74,11 @@
                          test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
               <label for="inlineRadio1">Schedule this notification
               <span
-               data-toggle="tooltip" data-placement="top"
-               title="Notifications are delivered to mobile app users at the selected date and time in accordance with the server time zone."
-               class="filled-tooltip"></span>
+               <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
+          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}."></span>
               </label>
             </span>
             <span class="radio radio-inline">
