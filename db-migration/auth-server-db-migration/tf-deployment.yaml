@@ -1,0 +1,51 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-server-db-migration
+  labels:
+    app: auth-server-db-migration
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth-server
+  template:
+    metadata:
+      labels:
+        app: auth-server-db-migration
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: auth-server-db-migration
+          image: gcr.io/btc-qa-apps/auth-server-db-migration:latest       
+          ports:
+          - containerPort: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ["/cloud_sql_proxy",
+                    "-instances=btc-qa-data:us-east1:mystudies=tcp:3306",
+                    "-credential_file=/secrets/gcloud_key/key.json"]
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: auth-server-gke-sa-gcloud-key
