@@ -6651,7 +6651,7 @@ public class StudyDAOImpl implements StudyDAO {
 
         } else {
           if (StringUtils.isNotEmpty(customStudyId)) {
-            searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
+            searchQuery = " From StudyBo WHERE appId=:appId and customStudyId=:customStudyId ";
             studyBos =
                 session
                     .createQuery(searchQuery)
