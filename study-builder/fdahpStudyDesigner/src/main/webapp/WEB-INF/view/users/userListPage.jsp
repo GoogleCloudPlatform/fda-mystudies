@@ -86,7 +86,7 @@
             <th id="">ROLE
               <span class="sort"></span>
             </th>
-            <th id="" class="text-right" style="padding-right: 3% !important;">Actions</th>
+            <th id="">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -101,7 +101,7 @@
                 <div class="dis-ellipsis">${user.userEmail}</div>
               </td>
               <td>${user.roleName}</td>
-              <td class="text-right" style="padding-right: 3% !important;">
+              <td>
                 <span class="sprites_icon preview-g mr-lg viewUser"
                       userId="${user.userId}" data-toggle="tooltip"
                       data-placement="top" title="View"></span>
