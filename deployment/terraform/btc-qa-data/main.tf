@@ -35,6 +35,7 @@ locals {
     "participant-user-datastore",
     "participant-manager-datastore",
     "hydra",
+    "auth-server-db-migration"
   ]
 }
 
