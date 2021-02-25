@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import java.beans.Transient;
 import java.io.Serializable;
@@ -122,6 +123,10 @@ public class StudyEntity implements Serializable {
 
   @Column(name = "logo_image_url", length = LARGE_LENGTH)
   private String logoImageUrl;
+
+  @ToString.Exclude
+  @Column(name = "contact_email", length = EMAIL_LENGTH)
+  private String contactEmail;
 
   @OneToMany(
       cascade = CascadeType.ALL,
