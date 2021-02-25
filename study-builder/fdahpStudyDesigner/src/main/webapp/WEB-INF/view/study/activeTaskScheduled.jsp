@@ -1214,6 +1214,7 @@
 
   var frequencey = "${activeTaskBo.frequency}";
   customCount = '${customCount}';
+  customCount = '${customCount}'==='' ? '0' : '${customCount}';
   count = '${count}'
   var isValidManuallySchedule = true;
   var multiTimeVal = true;
@@ -2391,7 +2392,7 @@
 
     var activeTask = new Object();
     var anchorDateId = $("#anchorDateId option:selected").val();
-    if (anchorDateId != null && anchorDateId != '' && typeof anchorDateId != 'undefined') {
+    if (anchorDateId != null && typeof anchorDateId != 'undefined') {
       activeTask.anchorDateId = anchorDateId;
     }
     if (id != null && id != '' && typeof id != 'undefined') {
