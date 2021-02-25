@@ -237,8 +237,7 @@
                     </td>
                     <td>
                       <div>
-                        <div class="dis-ellipsis"
-                             title="${fn:escapeXml(entry.value.title)}">${entry.value.title}</div>
+                        <div class="dis-ellipsis">${entry.value.title}</div>
                       </div>
                     </td>
                     <td>
@@ -265,14 +264,16 @@
                           <span class="ellipse" onmouseenter="ellipseHover(this);"></span>
                           <div class="ellipse-hover-icon"
                                onmouseleave="ellipseUnHover(this);">
-                            <span class="sprites_icon preview-g mr-sm"
+                            <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View"
                                   onclick="viewQuestion(${entry.value.questionInstructionId});"></span>
                             <span
                                 class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionTypeForQuestionPage eq 'view'}"> cursor-none-without-event </c:if>"
+                                data-toggle="tooltip" data-placement="top" title="Edit"
                                 <c:if
                                     test="${actionTypeForQuestionPage ne 'view'}">onclick="editQuestion(${entry.value.questionInstructionId});"</c:if>></span>
                             <span
                                 class="sprites_icon delete <c:if test="${actionTypeForQuestionPage eq 'view'}"> cursor-none-without-event </c:if>"
+                                 data-toggle="tooltip" data-placement="top" title="Delete"
                                 <c:if
                                     test="${actionTypeForQuestionPage ne 'view'}">onclick="deletQuestion(${entry.value.stepId},${entry.value.questionInstructionId})"</c:if>></span>
                           </div>
@@ -330,7 +331,7 @@
                 $('#alertMsg').show();
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Add atleast one question");
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
                 $('.formLevel a').tab('show');
               } else {
                 var repeatable = $('input[name="repeatable"]:checked').val();
@@ -358,7 +359,7 @@
                           $('#alertMsg').show();
                           $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                               "Add atleast one question");
-                          setTimeout(hideDisplayMessage, 4000);
+                          setTimeout(hideDisplayMessage, 5000);
                           $('.formLevel a').tab('show');
                         }
                       }
@@ -375,7 +376,7 @@
                       $('#alertMsg').show();
                       $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                           "Add atleast one question");
-                      setTimeout(hideDisplayMessage, 4000);
+                      setTimeout(hideDisplayMessage, 5000);
                       $('.formLevel a').tab('show');
                     }
                   }
@@ -505,11 +506,11 @@
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       }
@@ -646,13 +647,13 @@
             if (callback)
               callback(false);
           }
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         },
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
           $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         }
       });
     }
@@ -721,11 +722,11 @@
                   }
                   $('#alertMsg').show();
                 }
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               },
               error: function (xhr, status, error) {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               }
             });
           } else {
@@ -765,15 +766,15 @@
         }
         dynamicAction += '<span class="ellipse" onmouseenter="ellipseHover(this);"></span>' +
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
-            '  <span class="sprites_icon preview-g mr-sm"></span>';
+            '  <span class="sprites_icon preview-g mr-sm"  data-toggle="tooltip" data-placement="top" title="View"></span>';
         if (value.status) {
-          dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editQuestion('
+          dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion('
               + parseInt(value.questionInstructionId) + ');"></span>';
         } else {
-          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editQuestion('
+          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion('
               + parseInt(value.questionInstructionId) + ');"></span>';
         }
-        dynamicAction += '<span class="sprites_icon delete" onclick="deletQuestion(' + parseInt(value.stepId)
+        dynamicAction += '<span class="sprites_icon delete" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deletQuestion(' + parseInt(value.stepId)
             + ',' + parseInt(value.questionInstructionId) + ')"></span>' +
             '</div>' +
             '</div></div>';
@@ -792,6 +793,7 @@
       $('#helpNote').attr('data-original-title',
           'Please ensure you add one or more questions to this Form Step before attempting this action.');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function goToBackPage(item) {
@@ -911,4 +913,8 @@
       callback(false);
     }
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>

@@ -13,8 +13,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETED;
@@ -276,7 +274,7 @@ public class UserProfileControllerTest extends BaseMockIT {
       studyRepository.saveAndFlush(studyEntity);
     }
 
-    StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID, Constants.TRUE);
+    StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID);
     List<StudyReqBean> list = new ArrayList<StudyReqBean>();
     list.add(studyReqBean);
     DeactivateAcctBean acctBean = new DeactivateAcctBean(list);
@@ -316,7 +314,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         postRequestedFor(
             urlEqualTo(
                 "/response-datastore/participant/withdraw?studyId=studyId1&studyVersion=3.6"
-                    + "&participantId=4&deleteResponses=true")));
+                    + "&participantId=4")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);
@@ -326,16 +324,9 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(USER_DELETED.getEventCode(), auditRequest);
-    auditEventMap.put(PARTICIPANT_DATA_DELETED.getEventCode(), auditRequest);
-    auditEventMap.put(DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL.getEventCode(), auditRequest);
     auditEventMap.put(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE.getEventCode(), auditRequest);
 
-    verifyAuditEventCall(
-        auditEventMap,
-        USER_DELETED,
-        PARTICIPANT_DATA_DELETED,
-        DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL,
-        WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE);
+    verifyAuditEventCall(auditEventMap, USER_DELETED, WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE);
   }
 
   @Test
@@ -362,6 +353,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void resendConfirmationBadRequest() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
+    headers.add("appName", "AppName_BTCDEV001");
 
     // without email
     mockMvc
@@ -399,6 +391,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Test
   public void resendConfirmationSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
+    headers.add("appName", "AppName_BTCDEV001");
 
     mockMvc
         .perform(

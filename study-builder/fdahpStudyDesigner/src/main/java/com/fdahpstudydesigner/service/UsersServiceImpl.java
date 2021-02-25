@@ -1,25 +1,9 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.service;
@@ -163,7 +147,6 @@ public class UsersServiceImpl implements UsersService {
       HttpServletRequest request,
       UserBO userBO,
       String permissions,
-      List<Integer> permissionList,
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,
@@ -172,17 +155,10 @@ public class UsersServiceImpl implements UsersService {
     UserBO userBO2 = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
     boolean addFlag = false;
-    String activity = "";
-    String activityDetail = "";
     List<StudyBuilderAuditEvent> auditLogEvents = new LinkedList<>();
     Map<String, String> values = new HashMap<>();
     boolean emailIdChange = false;
-    List<String> superAdminEmailList = null;
-    Map<String, String> keyValueForSubject = null;
-    String dynamicContent = "";
-    UserBO adminFullNameIfSizeOne = null;
     UserBO userBO3 = null;
-    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
 
     try {
       if (null == userBO.getUserId()) {
@@ -264,49 +240,7 @@ public class UsersServiceImpl implements UsersService {
           }
         }
         auditLogHelper.logEvent(auditLogEvents, auditRequest, values);
-        superAdminEmailList = usersDAO.getSuperAdminList();
-        if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)
-            && (superAdminEmailList != null)
-            && !superAdminEmailList.isEmpty()) {
-          keyValueForSubject = new HashMap<String, String>();
-          if (superAdminEmailList.size() == 1) {
-            for (String email : superAdminEmailList) {
-              adminFullNameIfSizeOne = usersDAO.getSuperAdminNameByEmailId(email);
-              keyValueForSubject.put("$admin", adminFullNameIfSizeOne.getFirstName());
-            }
-          } else {
-            keyValueForSubject.put("$admin", "Admin");
-          }
-          keyValueForSubject.put("$userEmail", userBO.getUserEmail());
-          keyValueForSubject.put(
-              "$sessionAdminFullName",
-              userSession.getFirstName() + " " + userSession.getLastName());
-          keyValueForSubject.put("$orgName", propMap.get("orgName"));
-          if (addFlag) {
-            dynamicContent =
-                FdahpStudyDesignerUtil.genarateEmailContent(
-                    "mailForAdminUserCreateContent", keyValueForSubject);
-            EmailNotification.sendEmailNotification(
-                "mailForAdminUserCreateSubject", dynamicContent, null, superAdminEmailList, null);
-          } else {
-            String status = "";
-            if (FdahpStudyDesignerUtil.isEmpty(userBO2.getUserPassword())) {
-              status = "Pending Activation";
-            } else {
-              if (userBO2.isEnabled()) {
-                status = "Active";
-              } else {
-                status = "Deactivated";
-              }
-            }
-            keyValueForSubject.put("$userStatus", status);
-            dynamicContent =
-                FdahpStudyDesignerUtil.genarateEmailContent(
-                    "mailForAdminUserUpdateContent", keyValueForSubject);
-            EmailNotification.sendEmailNotification(
-                "mailForAdminUserUpdateSubject", dynamicContent, null, superAdminEmailList, null);
-          }
-        }
+
       } else {
         auditLogHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
       }

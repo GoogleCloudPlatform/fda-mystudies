@@ -267,14 +267,12 @@
                   <td><c:choose>
                     <c:when test="${entry.value.stepType eq 'Form'}">
                       <c:forEach items="${entry.value.fromMap}" var="subentry">
-                        <div class="dis-ellipsis"
-                             title="${fn:escapeXml(subentry.value.title)}">${subentry.value.title}</div>
+                        <div class="dis-ellipsis">${subentry.value.title}</div>
                         <div class="clearfix"></div>
                       </c:forEach>
                     </c:when>
                     <c:otherwise>
-                      <div class="dis-ellipsis"
-                           title="${fn:escapeXml(entry.value.title)}">${entry.value.title}</div>
+                      <div class="dis-ellipsis">${entry.value.title}</div>
                     </c:otherwise>
                   </c:choose></td>
                   <td>
@@ -308,14 +306,16 @@
                         <span class="ellipse" onmouseenter="ellipseHover(this);"></span>
                         <div class="ellipse-hover-icon"
                              onmouseleave="ellipseUnHover(this);">
-                          <span class="sprites_icon preview-g mr-sm"
+                          <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View"
                                 onclick="viewStep(${entry.value.stepId},'${entry.value.stepType}')"></span>
                           <span
                               class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
+                              data-toggle="tooltip" data-placement="top" title="Edit"
                               <c:if
                                   test="${actionType ne 'view'}">onclick="editStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
                           <span
                               class="sprites_icon delete deleteStepButton <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
+                               data-toggle="tooltip" data-placement="top" title="Delete"
                               <c:if
                                   test="${actionType ne 'view'}">onclick="deletStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
                         </div>
@@ -1367,18 +1367,9 @@
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="manually all mt-lg dis-none">
          
-            <div class="manuallyContainer">
-              <c:if
-                  test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
-                <div class="manually-option mb-md form-group" id="0">
-                  <input type="hidden"
-                         name="questionnaireCustomScheduleBo[0].questionnairesId"
-                         id="questionnairesId" value="${questionnaireBo.id}">
-                          
-                        
-                          <div class="gray-xs-f mb-sm">
-                        Select a date range
-                         <span class="requiredStar">*</span>
+            <div class="gray-xs-f mb-sm">
+              Select a date range
+               <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                   data-toggle="tooltip"
@@ -1387,6 +1378,14 @@
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
               </span>
             </div>
+            <div class="manuallyContainer">
+              <c:if
+                  test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
+                <div class="manually-option mb-md form-group" id="0">
+                  <input type="hidden"
+                         name="questionnaireCustomScheduleBo[0].questionnairesId"
+                         id="questionnairesId" value="${questionnaireBo.id}">
+                          
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="StartDate0" type="text" count='0'
@@ -1430,7 +1429,7 @@
                     items="${questionnaireBo.questionnaireCustomScheduleBo}"
                     var="questionnaireCustomScheduleBo" varStatus="customVar">
                   <div class="manually-option mb-md form-group"
-                       id="${customVar.index}">
+                       id="RegDate${customVar.index}">
                     <input type="hidden"
                            name="questionnaireCustomScheduleBo[${customVar.index}].id"
                            id="id" value="${questionnaireCustomScheduleBo.id}">
@@ -1479,9 +1478,9 @@
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
-                    <span
-                        class="addbtn addBtnDis align-span-center mr-md cursor-display"
-                        onclick="addDate();">+
+                    <span id="AddButton"
+                          class="addbtn addBtnDis align-span-center mr-md cursor-display"
+                          onclick="addDate();">+
                     </span>
                     <span id="delete"
                           class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
@@ -1498,20 +1497,7 @@
                   <input type="hidden"
                          name="questionnaireCustomScheduleBo[0].questionnairesId"
                          id="questionnairesId" value="${questionnaireBo.id}">
-                         
-                          
-                          <div class="gray-xs-f">
-              Select a date range
-              <span class="requiredStar">*</span>
-              <span
-                  class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
-              </span>
-            </div>
-            
+                      
                   <span
                       class="mb-sm pr-md">
                     <span class="light-txt opacity06">
@@ -1605,7 +1591,7 @@
                     items="${questionnaireBo.questionnaireCustomScheduleBo}"
                     var="questionnaireCustomScheduleBo" varStatus="customVar">
                   <div class="manually-anchor-option mb-md form-group"
-                       id="${customVar.index}">
+                       id="AnchorDate${customVar.index}">
                     <input type="hidden"
                            name="questionnaireCustomScheduleBo[${customVar.index}].id"
                            id="id" value="${questionnaireCustomScheduleBo.id}">
@@ -1816,6 +1802,7 @@
   var customCount = 0;
   var frequencey = "${questionnaireBo.frequency}";
   customCount = '${customCount}';
+  customCount = '${customCount}'==='' ? '0' : '${customCount}';
   count = Number('${count}');
   var isValidManuallySchedule = true;
   var multiTimeVal = true;
@@ -1857,6 +1844,17 @@
         $(".monthlyRegular").show();
       }
     })
+    
+    if ($('.dailyTimeDiv').length == 1) {
+   	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
+     }
+   
+    if($('.manually-option').length == 1){
+   	  $('.manually-option').find(".delete").css("visibility", "hidden");
+     }
+    if($('.manually-anchor-option').length == 1){
+  	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+    }
 
     $(".typeofschedule").change(function () {
 
@@ -1930,6 +1928,25 @@
         $(".Selectedtooltip").hide();
       } else {
 
+        var j = 0;
+        for (j = customCount; j > 0; j--) {
+          var xdays = $("#xdays" + j).val();
+          
+          if(xdays == '') {
+            document.getElementById('manualTime0').value = '';
+        	  
+            $("#AnchorDate" + j ).hide();
+            $("#AnchorDate" + j ).find('input:text').removeAttr('required', true);
+
+            $("#AddButton").show();
+            $("#AddButton").attr('required', true);
+          } else {
+            $("#AddButton").hide();
+            $("#AddButton").attr('required', false);
+          }
+        }
+      } else {
+          
         localStorage.setItem("IsAnchorDateSelected", "false");
         localStorage.setItem("IsRegularSelected", "true");
 
@@ -1974,7 +1991,25 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
 
+        var i = 0;
+        for (i = customCount-1; i > 0; i--) {
+          var RegStartDate = $("#StartDate" + i).val();
+        	
+          if(RegStartDate == '') {
+        	document.getElementById('customTime0').value = '';
+        	$("#customTime0").attr("disabled", true);
+          
+            $("#RegDate" + i ).hide();
+            $("#RegDate" + i ).find('input:text').removeAttr('required', true);
 
+            $("#AddButton").show();
+            $("#AddButton").attr('required', true);
+          } else {
+            $("#AddButton").hide();
+            $("#AddButton").attr('required', false);
+          }
+        }
+        
 	        var startDate = $("#startDate").val();
 	  
 	        if(startDate!=''){
@@ -2162,11 +2197,11 @@
                   "Unable to reorder questionnaire");
 
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
 
@@ -2977,6 +3012,7 @@
   }
 
   function addTime() {
+	  $('.dailyTimeDiv').find(".delete ").css("visibility", "visible");
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
@@ -3013,14 +3049,20 @@
     $(".time-opts").parents("form").validator();
     if ($('.time-opts').length > 1) {
       $(".remBtnDis").removeClass("hide");
+    } else if ($('.dailyTimeDiv').length == 1  ) {
+   	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
     } else {
       $(".remBtnDis").addClass("hide");
     }
   }
 
   function addDate() {
-    customCount = customCount + 1;
-    var newDateCon = "<div class='manually-option mb-md form-group' id='" + customCount + "'>"
+    $('.manually-option').find(".delete").css("visibility", "visible");
+    customCount = parseInt(customCount) + 1;
+    
+    $("#AddButton").hide();
+    $("#AddButton").attr('required', false);
+    var newDateCon = "<div class='manually-option mb-md form-group' id='RegDate" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
         + "' required name='questionnaireCustomScheduleBo[" + customCount
@@ -3069,6 +3111,8 @@
     $(".manually-option").parents("form").validator();
     if ($('.manually-option').length > 1) {
       $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
+    } else if ( $('.manually-option').length == 1 ) {
+    	 $('.manually-option').find(".delete").css("visibility", "hidden");
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
@@ -3298,7 +3342,7 @@
         $('.manually-anchor-option').each(function () {
           var questionnaireCustomFrequencey = new Object();
           questionnaireCustomFrequencey.questionnairesId = id;
-          var id = $(this).attr("id");
+          var id = $(this).attr("id").replace('AnchorDate','');
           var xSign = $('#xSign' + id).val();
           var xSignVal = $('#xdays' + id).val();
           var ySign = $('#ySign' + id).val();
@@ -3339,7 +3383,8 @@
         $('.manually-option').each(function () {
           var questionnaireCustomFrequencey = new Object();
           questionnaireCustomFrequencey.questionnairesId = id;
-          var id = $(this).attr("id");
+          var id = $(this).attr("id").replace('RegDate','');
+          
           var startdate = $("#StartDate" + id).val();
           var enddate = $("#EndDate" + id).val();
           var time = $("#customTime" + id).val();
@@ -3392,7 +3437,7 @@
       var count = 0;
       $('.time-opts').each(function () {
         var questionnaireFrequencey = new Object();
-        var id = $(this).attr("id");
+        var id = $(this).attr("id").replace('AnchorDate','');
 
         var frequence_time = $('#time' + id).val();
 
@@ -3890,11 +3935,11 @@
                   }
                   $('#alertMsg').show();
                 }
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               },
               error: function (xhr, status, error) {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               }
             });
           } else {
@@ -3962,16 +4007,16 @@
         }
         dynamicAction += '<span class="ellipse" onmouseenter="ellipseHover(this);"></span>' +
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
-            '  <span class="sprites_icon preview-g mr-sm" onclick="viewStep(' + parseInt(value.stepId)
+            '  <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View" onclick="viewStep(' + parseInt(value.stepId)
             + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         if (value.status) {
-          dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editStep('
+          dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editStep('
               + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         } else {
-          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editStep('
+          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editStep('
               + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         }
-        dynamicAction += '  <span class="sprites_icon delete deleteStepButton" onclick="deletStep('
+        dynamicAction += '  <span class="sprites_icon delete deleteStepButton" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deletStep('
             + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>' +
             '</div>' +
             '</div>';
@@ -4003,6 +4048,7 @@
       $('#helpNote').attr('data-original-title',
           'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function ellipseHover(item) {
@@ -4307,8 +4353,9 @@
   }
 
   function addDateAnchor() {
+	  $('.manually-anchor-option').find(".delete").css("visibility", "visible");
     customAnchorCount = parseInt($('.manually-anchor-option').length);
-    var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount
+    var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectXSign' count='"
@@ -4371,6 +4418,8 @@
     $(".manually-anchor-option").parents("form").validator();
     if ($('.manually-anchor-option').length > 1) {
       $('.manuallyAnchorContainer').find(".remBtnDis").removeClass("hide");
+    } else if ($('.manually-anchor-option').length == 1  ) {
+    	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
@@ -4386,7 +4435,7 @@
       }
       if (frequency_text == 'Manually Schedule') {
         $('.manually-anchor-option').each(function () {
-          var id = $(this).attr("id");
+          var id = $(this).attr("id").replace('AnchorDate','');
           $("#xSign" + id).children('option').remove();
           $("#ySign" + id).children('option').remove();
           $("#xSign" + id).append("<option value='0' selected>+</option>");
@@ -4417,7 +4466,7 @@
       }
       if (frequency_text == 'Manually Schedule') {
         $('.manually-anchor-option').each(function () {
-          var id = $(this).attr("id");
+          var id = $(this).attr("id").replace('AnchorDate','');
           $("#xSign" + id).children('option').remove();
           $("#ySign" + id).children('option').remove();
           $("#xSign" + id).append(
@@ -4450,7 +4499,8 @@
     jQuery(document).on("keyup", ".xdays", function () {
 
       var xday = $(this).val()
-      var parent_id = $(this).parent().parent().attr("id");
+      var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
+      var parent_id = parseInt(parentId);
       var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
       var xdayValue = parseInt(xsign + "" + xday);
       var yday = $("#ydays" + parent_id).val();
@@ -4478,8 +4528,11 @@
         }
 
       } else {
-
-        var pre_parent = $("#" + parent_id).prev().attr("id");
+        var pre_parent_id = $("#AnchorDate" + parent_id).prev().attr("id");
+        if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
+          pre_parent_id = pre_parent_id.replace('AnchorDate','');
+        }
+        var pre_parent = parseInt(pre_parent_id);
         var pyday = $("#ydays" + pre_parent).val();
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
@@ -4528,7 +4581,7 @@
 
     jQuery(document).on("keyup", ".ydays", function () {
 
-      var parent_id = $(this).parent().parent().attr("id");
+      var parent_id = $(this).parent().parent().attr("id").replace('AnchorDate','');
       var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
       var xday = $("#xdays" + parent_id).val();
       var xdayValue = parseInt(xsign + "" + xday);
@@ -4591,7 +4644,7 @@
       }
 
       if ($('.manually-anchor-option').length > 1) {
-        var pre_parent = $("#" + parent_id).prev().attr("id");
+        var pre_parent = $("#" + parent_id).prev().attr("id").replace('AnchorDate','');
         var pyday = $("#ydays" + pre_parent).val();
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
@@ -4623,4 +4676,7 @@
 
   });
 
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>

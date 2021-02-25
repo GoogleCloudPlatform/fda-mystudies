@@ -91,10 +91,13 @@
           </div>
           <div class="dis-line form-group mb-none mr-sm">
             <c:if test="${empty permission}">
+             <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"	
+                  data-placement="bottom" data-original-title="">
               <button type="button" class="btn btn-primary blue-btn"
                       id="addQuestionId"
                             onclick="addComphernsionQuestionPage();">+ Add question
               </button>
+              </span>
             </c:if>
           </div>
         </div>
@@ -115,8 +118,7 @@
               <tr id="${comprehensionTestQuestion.id}">
                 <td>${comprehensionTestQuestion.sequenceNo}</td>
                 <td>
-                  <div class="dis-ellipsis"
-                       title="${fn:escapeXml(comprehensionTestQuestion.questionText)}">${fn:escapeXml(comprehensionTestQuestion.questionText)}</div>
+                  <div class="dis-ellipsis">${fn:escapeXml(comprehensionTestQuestion.questionText)}</div>
                 </td>
                 <td>
                   <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
@@ -125,9 +127,11 @@
                         onclick="viewComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="${comprehensionTestQuestion.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      data-toggle="tooltip" data-placement="top" title="Edit"
                       onclick="editComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                   <span
                       class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
+                      data-toggle="tooltip" data-placement="top" title="Delete"
                       onclick="deleteComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
                 </td>
               </tr>
@@ -137,7 +141,7 @@
       </div>
 
       <div class="right-content-body mt-xlg" id="displayTitleId">
-        <div class="gray-xs-f mb-xs">Minimum score needed to pass the test</div>
+        <div class="gray-xs-f mb-xs" id="minScoreText">Minimum score needed to pass the test</div>
         <div class="form-group col-md-5 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
                  name="comprehensionTestMinimumScore"
@@ -166,7 +170,12 @@
 </form:form>
 <!-- End right Content here -->
 <script type="text/javascript">
+var markAsComplete = "${markAsComplete}"
   $(document).ready(function () {
+	  var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
+	  if(mainContainerDivision==true){
+			var mainContainerDivision = $('#mainContainer').hide();		   
+		 }
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
@@ -180,9 +189,15 @@
       var val = $(this).val();
       $("#addQuestionId").attr("disabled", true);
       if (val == "Yes") {
-
-        $("#mainContainer").show();
-        var markAsComplete = "${markAsComplete}"
+    	  $("#saveId").html("Next");	
+          $("#comprehensionTestMinimumScore, #minScoreText").hide();	
+          $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');	
+          $("#mainContainer").show();	
+          if ($('#comprehension_list tbody tr').length == 1	
+                  && $('#comprehension_list tbody tr td').length == 1) {	
+         $("#markAsCompleteBtnId").attr("disabled", true);	
+         $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');	
+        }
         if (markAsComplete == "false") {
           $("#markAsCompleteBtnId").attr("disabled", true);
           $("#helpNote").attr('data-original-title',
@@ -194,7 +209,7 @@
           $("#addHelpNote").show();
         }
       } else {
-
+    	$("#saveId").html("Save");
         $("#comprehensionTestMinimumScore").val('');
         $("#mainContainer").hide();
         $("#addHelpNote").hide();
@@ -205,6 +220,11 @@
         }
       }
     });
+    var needComprehensionTestTxt = $('input[name="needComprehensionTest"]:checked').val();	
+    if (needComprehensionTestTxt == "Yes" && ${comprehensionTestQuestionList.size()} == 0) {	
+        $("#markAsCompleteBtnId").attr("disabled", true);	
+        $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');	
+    }
     var viewPermission = "${permission}";
 
     var reorder = true;
@@ -278,11 +298,11 @@
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       }
@@ -351,11 +371,11 @@
                     "Unable to delete Question");
                 $('#alertMsg').show();
               }
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             },
             error: function (xhr, status, error) {
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-              setTimeout(hideDisplayMessage, 4000);
+              setTimeout(hideDisplayMessage, 5000);
             }
           });
         }
@@ -376,6 +396,14 @@
         var message = data.message;
         if (message == "SUCCESS") {
           reloadComprehensionQuestionDataTable(data.comprehensionTestQuestionList);
+          if ($('#comprehension_list tbody tr').length == 1	
+                  && $('#comprehension_list tbody tr td').length == 1) {	
+        	  $("#markAsCompleteBtnId").attr("disabled", true);	
+              $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');	
+          }else if(markAsComplete == "true" ){	
+        	        $("#markAsCompleteBtnId").attr("disabled", false);	
+        	        $('#helpNote').removeAttr('data-original-title');	
+          }
         }
       },
       error: function status(data, status) {
@@ -408,6 +436,7 @@
 
   function reloadComprehensionQuestionDataTable(comprehensionTestQuestionList) {
     $('#comprehension_list').DataTable().clear();
+    markAsComplete="true";
     if (typeof comprehensionTestQuestionList != 'undefined' && comprehensionTestQuestionList != null
         && comprehensionTestQuestionList.length > 0) {
       $.each(comprehensionTestQuestionList, function (i, obj) {
@@ -422,23 +451,41 @@
         } else {
           datarow.push("<div class='dis-ellipsis'>" + DOMPurify.sanitize(obj.questionText) + "</div>");
         }
-        var actions = "<span class='sprites_icon preview-g mr-lg' onclick='viewComprehensionQuestion("
-            + parseInt(obj.id) + ");'></span>"
-            + "<span class='sprites_icon edit-g mr-lg' onclick='editComprehensionQuestion(" + parseInt(obj.id)
-            + ");'>"
-            + "</span><span class='sprites_icon copy delete' onclick='deleteComprehensionQuestion("
-            + parseInt(obj.id) + ");'>"
-            + "</span>";
+        
+        var actions='';	
+        var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');	
+        if( obj.status===true){	
+         actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("	
+            + parseInt(obj.id) + ");'></span>"	
+            + "<span class='sprites_icon mr-lg edit-inc' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)	
+            + ");'>"	
+            + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("	
+            + parseInt(obj.id) + ");'>"	
+            + "</span>";	
+        }else{	
+        	    actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("	
+                   + parseInt(obj.id) + ");'></span>"	
+                   + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)	
+                   + ");'>"	
+                   + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("	
+                   + parseInt(obj.id) + ");'>"	
+                   + "</span>";	
+        	    markAsComplete="false";	
+            }
+
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);
       });
       $('#comprehension_list').DataTable().draw();
     } else {
       $('#comprehension_list').DataTable().draw();
+      $("#markAsCompleteBtnId").attr("disabled", true);	
+      $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
     }
     if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
       $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function markAsCompleted() {
@@ -450,7 +497,7 @@
       if (!table.data().count()) {
         $('#alertMsg').show();
         $("#alertMsg").removeClass('s-box').addClass('e-box').text("Add at least one question");
-        setTimeout(hideDisplayMessage, 4000);
+        setTimeout(hideDisplayMessage, 5000);
       } else if (isFromValid("#comprehensionInfoForm")) {
         saveConsent("Done");
       }
@@ -522,6 +569,9 @@
 
               $("#consentId").val(consentId);
               $("#addQuestionId").attr("disabled", false);
+              $("#comprehensionTestMinimumScore, #minScoreText").show();	
+              $("#spanAddQaId").removeAttr("data-original-title");	
+              $("#saveId").html("Save");
               $("#addHelpNote").hide();
               if (type != "save") {
                 document.comprehensionInfoForm.action = "/studybuilder/adminStudies/comprehensionTestMarkAsCompleted.do?_S=${param._S}";
@@ -542,13 +592,13 @@
               $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
               $('#alertMsg').show();
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("body").removeClass("loading");
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           global: false,
         });
