@@ -81,7 +81,7 @@ public class UserProfileController {
   @Value("${email.code.expire_time}")
   private long expireTime;
 
-  @ApiOperation(value = "Fetch user profile")
+  @ApiOperation(value = "Returns a response containing user profile information.")
   @GetMapping(value = "/userProfile", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUserProfile(
       @RequestHeader("userId") String userId,
@@ -114,7 +114,7 @@ public class UserProfileController {
     return new ResponseEntity<>(userProfileRespBean, HttpStatus.OK);
   }
 
-  @ApiOperation(value = "Update user profile")
+  @ApiOperation(value = "Updates the profile of the currently logged in user.")
   @PostMapping(
       value = "/updateUserProfile",
       consumes = MediaType.APPLICATION_JSON_VALUE,

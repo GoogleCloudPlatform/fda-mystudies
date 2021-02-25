@@ -53,7 +53,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(
     tags = "Verify Email",
     value = "Verify Email",
-    description = "Operations pertaining to verify email in user management service")
+    description = "Operation pertaining to verify email in user management service")
 @RestController
 public class VerifyEmailIdController {
 
@@ -67,7 +67,7 @@ public class VerifyEmailIdController {
 
   @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
 
-  @ApiOperation(value = "verify email Id")
+  @ApiOperation(value = "Email verification based on the code")
   @PostMapping("/verifyEmailId")
   public ResponseEntity<?> verifyEmailId(
       @Valid @RequestBody EmailIdVerificationForm verificationForm,

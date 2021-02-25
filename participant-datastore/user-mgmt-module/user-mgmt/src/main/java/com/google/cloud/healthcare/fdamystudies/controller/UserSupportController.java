@@ -47,7 +47,8 @@ public class UserSupportController {
 
   @Autowired UserSupportService supportService;
 
-  @ApiOperation(value = "Feedback")
+  @ApiOperation(
+      value = "Triggers sending of 'Feedback' e-mail with data submitted with the request")
   @PostMapping(
       value = "/feedback",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -76,7 +77,8 @@ public class UserSupportController {
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 
-  @ApiOperation(value = "Contact us")
+  @ApiOperation(
+      value = "Triggers sending of 'Contact Us' e-mail with data submitted with the request")
   @PostMapping(
       value = "/contactUs",
       consumes = MediaType.APPLICATION_JSON_VALUE,

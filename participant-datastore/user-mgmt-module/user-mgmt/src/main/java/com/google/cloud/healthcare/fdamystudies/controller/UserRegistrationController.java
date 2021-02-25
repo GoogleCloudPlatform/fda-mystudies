@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -46,12 +45,6 @@ public class UserRegistrationController {
 
   @Value("${email.code.expire_time}")
   private long expireTime;
-
-  @ApiOperation(value = "Provides an indication about the health of the service")
-  @GetMapping("/healthCheck")
-  public ResponseEntity<?> healthCheck() {
-    return ResponseEntity.ok("Up and Running");
-  }
 
   @ApiOperation(value = "Register the new user")
   @PostMapping("/register")
