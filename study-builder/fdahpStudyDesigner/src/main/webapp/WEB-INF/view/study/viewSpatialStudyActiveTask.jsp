@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -2339,7 +2339,7 @@
           $(this).val(newVal);
           $(this).parent().addClass("has-danger has-error");
           $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-        		  "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."));
+        		  "Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and -(minus)."));
         }
       }
     });
