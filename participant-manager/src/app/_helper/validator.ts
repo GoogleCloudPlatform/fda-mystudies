@@ -1,136 +1,35 @@
 /* eslint-disable */
 import {FormGroup, ValidatorFn, AbstractControl} from '@angular/forms';
-import {commonusePassword} from '../jsondata/datajson';
+export function emailvaliadtor(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    //  const validemail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(control.value);
+    var email_filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    const validemail = email_filter.test(control.value);
 
-let AlphabeticCombinTemp = [
-  'ABC',
-  'BCD',
-  'CDE',
-  'DEF',
-  'EFG',
-  'FGH',
-  'GHI',
-  'HIJ',
-  'IJK',
-  'JKL',
-  'KLM',
-  'LMN',
-  'MNO',
-  'NOP',
-  'OPQ',
-  'PQR',
-  'QRS',
-  'RST',
-  'STU',
-  'TUV',
-  'UVW',
-  'VWX',
-  'WXY',
-  'XYZ',
-  '012',
-  '123',
-  '234',
-  '345',
-  '456',
-  '567',
-  '678',
-  '789',
-  '987',
-  '876',
-  '765',
-  '654',
-  '543',
-  '432',
-  '321',
-  '210',
-];
-let serviceName = [
-  'Participant',
-  'Manager',
-  'ParticipantManager',
-  'ManagerParticipant',
-  'Participant-Manager',
-];
-
+    return control.value == ''
+      ? {emptyError: true}
+      : validemail
+      ? null
+      : {invalidEmailid: true};
+  };
+}
 export function passwordValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: boolean} | null => {
-    let commonlyusepassword = commonusePassword;
-    let commonusepasswordStatus = false;
-    let serviceNameStatus = false;
-    let consecutiveSpecialCharExist = false;
     let user = JSON.parse(sessionStorage.user || 'null');
-
-    var patternForAlphabets = /(?=.*[a-z])(?=.*[A-Z])/g;
-    let consecutiveIdenticalCharacter: boolean = false;
-    let consecutivewhitespaceStatus: boolean = false;
-    let easyGuessingNumbersOralphanumeric = false;
-
-    if (control.value.length >= 3) {
-      for (let i = 0; i < AlphabeticCombinTemp.length; i++) {
-        let m = AlphabeticCombinTemp[i].toLowerCase();
-        var patt = new RegExp(m);
-        var ressd = patt.test(control.value);
-        if (ressd) {
-          easyGuessingNumbersOralphanumeric = true;
-          console.log(ressd);
-          break;
-        }
-      }
-    }
-
-    let res = control.value.match(/([a-zA-Z0-9])\1*/g);
-    let consecutivewhitespacePattern = control.value.match(/[\s-]\1*/g);
-    if (consecutivewhitespacePattern != null) {
-      consecutivewhitespaceStatus = true;
-    }
-    if (res != null) {
-      res.forEach(function (value: any) {
-        if (value.length > 1) {
-          consecutiveIdenticalCharacter = true;
-        }
-      });
-    }
-
-    for (let k = 0; k < commonlyusepassword.length; k++) {
-      if (
-        control.value
-          .toLowerCase()
-          .includes(commonlyusepassword[k].toLowerCase())
-      ) {
-        commonusepasswordStatus = true;
-      }
-    }
-
-    for (let k = 0; k < serviceName.length; k++) {
-      if (control.value.toLowerCase().includes(serviceName[k].toLowerCase())) {
-        serviceNameStatus = true;
-      }
-    }
-
     if (control.value == '') {
       return {Valuerequired: true};
     } else if (
-      consecutiveIdenticalCharacter ||
-      consecutivewhitespaceStatus ||
-      consecutiveSpecialCharExist ||
-      easyGuessingNumbersOralphanumeric
+      control.value.match(/([a-zA-Z0-9])\1\1+/) !== null ||
+      control.value.match(/\\b([a-zA-Z0-9])\\1\\1+\\b/) !== null ||
+      control.value.match(/[\s-]\1*/g) !== null ||
+      control.value.match(
+        /(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|012|123|234|345|456|567|678|789)+/gi,
+      ) !== null
     ) {
       return {consecutiveCharactErrorwhitespace: true};
-    } else if (control.value.length < 8) {
-      return {passwordlength: true};
-    } else if (serviceNameStatus) {
-      return {serviceNameError: true};
     } else if (
-      commonusepasswordStatus ||
-      control.value.match(/([!@#$%^&*()‘+,:;<>{}~|-])\1*/g) === null ||
-      control.value.match(/([0-9])\1*/g) === null ||
-      !patternForAlphabets.test(control.value) ||
-      control.value.length > 64
-    ) {
-      return {error: true};
-    } else if (user !== null) {
-      if (
-        control.value.toLowerCase().includes(user.firstName.toLowerCase()) ||
+      user !== null &&
+      (control.value.toLowerCase().includes(user.firstName.toLowerCase()) ||
         control.value.toLowerCase().includes(user.lastName.toLowerCase()) ||
         control.value
           .toLowerCase()
@@ -139,11 +38,27 @@ export function passwordValidator(): ValidatorFn {
           ) ||
         control.value
           .toLowerCase()
-          .includes(user.lastName.toLowerCase() + user.firstName.toLowerCase())
-      ) {
-        return {userNameError: true};
-      }
-      return null;
+          .includes(user.lastName.toLowerCase() + user.firstName.toLowerCase()))
+    ) {
+      return {userNameError: true};
+    } else if (
+      control.value.match(
+        /(Participant|Manager|ParticipantManager|ManagerParticipant|Participant-Manager)+/gi,
+      ) !== null
+    ) {
+      return {serviceNameError: true};
+    } else if (control.value.length < 8) {
+      return {passwordlength: true};
+    } else if (
+      control.value.match(
+        /(Pasword|P@sword|Qwerty|Eagles|Bears|Giants|Cowboy|Vikings|Chelsea|Arsenal|Manchesterunited|Participantmanager|Rams|Lions|Panthers|Jaguars|Texans|GoPatriots|Winter|Minecraft|Master|Shadow|Monkey|US city name|Country name|US State name)+/gi,
+      ) !== null ||
+      control.value.match(/([!@#$%^&*()‘+,:;<>{}~|-])\1*/g) === null ||
+      control.value.match(/([0-9])\1*/g) === null ||
+      control.value.match(/(?=.*[a-z])(?=.*[A-Z])/g) === null ||
+      control.value.length > 64
+    ) {
+      return {error: true};
     } else {
       return null;
     }
