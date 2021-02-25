@@ -77,7 +77,8 @@ export class StudyDetailsComponent
     ).pipe(
       map(([studyDetails]) => {
         if (
-          studyDetails.participantRegistryDetail.studyType === StudyType.Open
+          studyDetails.participantRegistryDetail.studyType === StudyType.Open &&
+          this.searchTerm === ''
         ) {
           this.sharedService.updateSearchPlaceHolder(
             'Search participant email',
