@@ -56,13 +56,13 @@
               <c:if
                   test="${empty questionnairesStepsBo.stepId}"> title="Please click on Next to continue." </c:if>
               <c:if test="${fn:length(questionnairesStepsBo.formQuestionMap) eq 0}">
-                title="Please ensure you add one or more questions to this Form Step before attempting this action." </c:if>
+                title="1つ以上の質問を登録してください。" </c:if>
               <c:if test="${!questionnairesStepsBo.status}">
-                title="Please ensure individual list items on this page are marked Done before attempting this action." </c:if>>
+                title="このページを完了にするためには、リストの質問を全て完了にする必要があります。" </c:if>>
             <button type="button" class="btn btn-primary blue-btn" id="doneId"
                     <c:if
                         test="${fn:length(questionnairesStepsBo.formQuestionMap) eq 0 || !questionnairesStepsBo.status}">disabled</c:if>>
-              Done
+              完了
             </button>
           </span>
         </div>
