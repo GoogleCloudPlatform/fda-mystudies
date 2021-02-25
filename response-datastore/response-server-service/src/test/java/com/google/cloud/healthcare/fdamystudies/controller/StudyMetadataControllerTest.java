@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.STUDY_METADATA_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CONTACT_EMAIL_ID;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -139,6 +140,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
         APP_ID_VALUE,
         "Test App",
         "Test app for population health study",
-        LOGO_IMAGE_URL);
+        LOGO_IMAGE_URL,
+        CONTACT_EMAIL_ID);
   }
 }

@@ -12,16 +12,36 @@ template "mystudies" {
   # The following values are placeholder values, change and adjust them according to
   # your use case and organization needs.
   data = {
-    prefix           = "example"
-    env              = "dev"
-    folder_id        = "0000000000"
-    billing_account  = "XXXXXX-XXXXXX-XXXXXX"
-    domain           = "example.com"
-    default_location = "us-central1"
-    default_zone     = "a"
-    github_owner     = "GoogleCloudPlatform"
-    github_repo      = "example"
-    github_branch    = "master"
+    # Prefix that will be prepended to your project and resource names
+    # For example, "mystudies"
+    prefix           = "<PREFIX>"
+    # Environment label that will be appended to PREFIX in your project and resource names
+    # For example, "dev"
+    env              = "<ENV>"
+    # Id of the folder you are deploying into
+    # In the form of "0000000000000"
+    folder_id        = "<FOLDER_ID>"
+    # Billing account that your projects will be attached to
+    # In the form of "XXXXXX-XXXXXX-XXXXXX"
+    billing_account  = "<BILLING_ACCOUNT>"
+    # Domain that your applications URLs will belong to
+    # For example, "example.com"
+    domain           = "<DOMAIN>"
+    # Default cloud region that your resources will be created in
+    # For example, "us-central1"
+    default_location = "<LOCATION>"
+    # Default zone within that region that your resources will be created in
+    # For example, "a"
+    default_zone     = "<ZONE>"
+    # The account or organization that your cloned github repo belongs to 
+    # For example, "GoogleCloudPlatform"
+    github_owner     = "<REPO_OWNER>"
+    # The name of your cloned github repo 
+    # For example, "fda-mystudies"
+    github_repo      = "<REPO>"
+    # The branch of your cloned repo that your CICD pipelines will monitor
+    # For example, "develop"
+    github_branch    = "<REPO_BRANCH>"
     # GKE master authorized networks.
     # Comment out this block if you would like to allow connections from anywhere.
     master_authorized_networks = [

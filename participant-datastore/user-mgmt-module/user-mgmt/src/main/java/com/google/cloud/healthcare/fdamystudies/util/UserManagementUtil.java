@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -111,7 +111,6 @@ public class UserManagementUtil {
       String participantId,
       String studyId,
       String studyVersion,
-      String delete,
       AuditLogEventRequest auditRequest) {
     logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
@@ -133,9 +132,7 @@ public class UserManagementUtil {
             + "&studyVersion="
             + studyVersion
             + "&participantId="
-            + participantId
-            + "&deleteResponses="
-            + String.valueOf(delete);
+            + participantId;
 
     ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 

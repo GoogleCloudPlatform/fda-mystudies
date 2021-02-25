@@ -50,7 +50,7 @@
 <style>
  header.header {
 	 width: 100%;
-	 height: 50px;
+	 height: 60px;
 	 background-color: #fff;
 	 user-select: none;
 }
@@ -118,7 +118,7 @@ html, body {
           <img
             class="mr-sm width__auto"
            src="/studybuilder/images/logo/logo_innerScreens.png"
-            alt="main logo"
+            alt="main logo" style="margin-top: 7px; margin-left: 25px;"
           />
         </a>
         </div>
@@ -133,8 +133,8 @@ html, body {
         </span>
         <div class="custom__font_error">404</div>
         <div class="mb-4 custom_sub_font">
-		<div class="custom__font_error">Oops 403!</div>
-    	<span class="subTxt">Access is denied <br> You do not have permission to access this page!</span>
+		<div class="custom__font_error">Oops 403</div>
+    	<span class="subTxt">Access is denied <br> You do not have permission to access this page</span>
         </div>
       </div>
 </div>

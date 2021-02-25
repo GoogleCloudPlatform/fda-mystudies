@@ -5,7 +5,9 @@
  *
  *  Made by Myke Cameron
  *  Under MIT License
+ * Copyright 2020-2021 Google LLC
  */
+ 
 this["JST"] = this["JST"] || {};
 
 this["JST"]["input_wrapper"] = function (obj) {

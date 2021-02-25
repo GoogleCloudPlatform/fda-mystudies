@@ -69,13 +69,13 @@
           <div class="black-md-f mb-md">
             Study overview pages
             <span>
-              <span class="filled-tooltip"
+              <span class="filled-tooltip studytip"
                     data-toggle="tooltip" data-placement="right"
                     data-html="true"
                     title=""
                     data-original-title="
-	                 	<p class='text-left'>These pages are meant for an introductory section of your study in the mobile app. It is intended to help users get a quick summary of what the study is about and how it may benefit them and others.</p>
-						<p class='text-left'>Each page has an image, title and about 200 character-length of description allowed. Given below are some suggested topics you can touch upon in these pages:</p>	
+	                 	<p class='text-left'>These pages are meant to provide app users with an introductory overview of the study.</p>
+						<p class='text-left'>Each page comprises of an image, a title and a description. Given below are some suggested topics for content on these pages:</p>	
 						<div class='text-left'>o Study purpose and goals</div>
 						<div class='text-left'>o Target audience</div>
 						<div class='text-left'>o Data usage</div>
@@ -116,7 +116,7 @@
                       <span class="filled-tooltip"
                             data-toggle="tooltip" data-placement="top" data-html="true"
                             title=""
-                            data-original-title="The default image shown below will be used for pages of the study overview in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of 750x1334 pixels."></span>
+                            data-original-title="The default image shown below will be used for the study overview screens in the mobile app. You can over-ride it by uploading an alternate image in JPG or PNG format. The image must have a size of 750x1334 pixels."></span>
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
@@ -244,7 +244,7 @@
                               data-toggle="tooltip" data-placement="top"
                               data-html="true"
                               title="" src="/studybuilder/images/icons/tooltip.png"
-                              data-original-title="<span class='font24'></span></span>The default image shown below will be used for pages of the study overview in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels."></span>
+                              data-original-title="<span class='font24'></span></span>The default image shown below will be used for the study overview screens in the mobile app. You can over-ride it by uploading an alternate image in JPG or PNG format. The image must have a size of <c:if test='${spbSt.first}'>750x1334</c:if><c:if test='${not spbSt.first}'>750x570</c:if> pixels."></span>
                     </div>
                       <div class="thumb" style="display: inline-block;width:77px !important">
                        <c:choose>
@@ -410,6 +410,7 @@
     // Removing selected file upload image
     $(document).on("click", ".removeUrl", function () {
       $(this).css("visibility", "hidden");
+      $('.uploadImg').val('');
       $(this).parent().parent().find(".thumb img").attr("src",
           "/studybuilder/images/dummy-img.jpg");
       $(this).parent().parent().find(".imagePathCls").val('');
@@ -470,7 +471,7 @@
           "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
           "<div class=panel-body  pt-none>" +
           "<div>" +
-          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24></span></span> The default image shown below will be used for pages of the study overview in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of 750x570 pixels.'></span> </div>"
+          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24></span></span> The default image shown below will be used for the study overview screens in the mobile app. You can over-ride it by uploading an alternate image in JPG or PNG format. The image must have a size of 750x570 pixels.'></span> </div>"
           +
           "<div>" +
           "<div class=thumb style='display: inline-block;width:77px !important'><img src=<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/> class=wid100></div>" +

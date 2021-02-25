@@ -19,5 +19,4 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StudyReqBean {
   private String studyId;
-  private String delete;
 }

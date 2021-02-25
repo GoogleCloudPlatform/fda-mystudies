@@ -1,3 +1,11 @@
+ /*
+ * Copyright 2020-2021 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 /*
 
 Name: 			style.css
@@ -566,7 +574,7 @@ div.mce-edit-area {
 }
 
 .right-content-head {
-  padding: 12px 30px;
+  padding: 12px 20px;
   z-index: 999;
   position: relative;
   border-bottom: 1px solid #ddd;
@@ -2672,3 +2680,38 @@ a:focus {
   padding-left: 40px !important;
   padding-top: 30px !important;
 } 
+
+
+td span.edit-inc-draft:hover {
+    background: url(../images/icons/edit_draft_icon__hover.png) no-repeat;
+    width: 20px;
+    height: 22px;
+  	display: inline-block;
+  	cursor: pointer;
+  vertical-align: middle;
+    }
+    
+td span.edit-inc:hover {
+    background: url(../images/icons/edit_icn__hover.png) no-repeat;
+    width: 20px;
+    height: 22px;
+  	display: inline-block;
+  	cursor: pointer;
+  vertical-align: middle;
+    }
+   
+td span.eye-inc:hover {
+    background: url(../images/icons/live_icn__hover.png) no-repeat;
+    width: 20px;
+    height: 16px;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: middle;
+}
+    
+    
+.tooltip > .tooltip-inner {
+text-align: left !important;
+align-items: left !important;
+width:100%
+}

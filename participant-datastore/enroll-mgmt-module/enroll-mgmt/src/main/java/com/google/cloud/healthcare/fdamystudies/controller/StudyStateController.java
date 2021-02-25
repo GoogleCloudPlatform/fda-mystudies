@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -166,7 +166,6 @@ public class StudyStateController {
         studyStateService.withdrawFromStudy(
             withdrawFromStudyBean.getParticipantId(),
             withdrawFromStudyBean.getStudyId(),
-            withdrawFromStudyBean.isDelete(),
             auditRequest);
     if (respBean != null) {
       logger.info("StudyStateController withdrawFromStudy() - Ends ");

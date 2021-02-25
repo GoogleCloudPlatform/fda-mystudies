@@ -125,7 +125,7 @@
                 <input type="password" class="form-control input-field wow_input" id="cfnPassword"
                        name=""
                        maxlength="14" data-match="#password"
-                       data-match-error="Whoops, these don't match"
+                       data-match-error="Passwords do not match"
                        placeholder="Confirm new password"
                        required autocomplete="off"/>
                 <div class="help-block with-errors"></div>
@@ -154,7 +154,7 @@
         if (errMsg.length > 0) {
           $("#errMsg").text(errMsg);
           $("#errMsg").show("fast");
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         }
       });
 

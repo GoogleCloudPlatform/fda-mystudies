@@ -1,5 +1,5 @@
 <!-- 
-  Copyright 2020 Google LLC
+  Copyright 2020-2021 Google LLC
  
   Use of this source code is governed by an MIT-style
   license that can be found in the LICENSE file or at
@@ -24,6 +24,7 @@
   href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css"
   rel="stylesheet" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" th:src="@{/js/autoLogin.js}"></script>
 <style type="text/css">
 .child_text  { 
@@ -33,6 +34,14 @@
   text-align: center !important;
   margin-top: 100% !important;
  }
+ 
+.child_text_error  { 
+  color: #353a3e !important;
+  font-family: Muli,sans-serif !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  margin-top: 5% !important;
+}
 </style>
 </head>
 <body class="bg__aqua-gray">
@@ -52,6 +61,14 @@
         <div>
           <input type="submit" id="acceptConsent" value="Allow"
             style="display: none" />
+        </div>
+      </div>
+      <div >
+        <div id="errorImg" class="width__110" style="display: none;margin-top: 120px !important;">
+          <img th:src="@{/images/ErrorIcon.svg}" alt="error image " class="mb-md" />
+        </div>
+        <div id="errorMsg" class="loading_text_error child_text_error loading_div" style="display: none;" >
+          Something went wrong. Please try again.
         </div>
       </div>
     </div>

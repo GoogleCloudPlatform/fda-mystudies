@@ -1,10 +1,11 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCount;
@@ -119,11 +120,11 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
               + "AND ud.user_id=:userId ",
       nativeQuery = true)
   public List<String> findByStudyIdAndUserDetailId(String studyId, String userId);
-  
-          @Query(
-      value = "SELECT ps.site_id FROM participant_registry_site prs, participant_study_info ps, user_details ud "
+
+  @Query(
+      value =
+          "SELECT ps.site_id FROM participant_registry_site prs, participant_study_info ps, user_details ud "
               + "WHERE prs.id=ps.participant_registry_site_id AND ud.user_id=:userId AND upper(prs.enrollment_token)=:token ",
       nativeQuery = true)
   public String getSiteId(String userId, String token);
-  
 }

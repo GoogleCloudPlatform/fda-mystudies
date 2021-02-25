@@ -95,6 +95,13 @@
                        test="${notificationBO.notificationScheduleType eq 'notImmediate'}">checked</c:if>
                    <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
             <label for="inlineRadio1">Schedule this notification</label>
+              <span
+      <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
+          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}.">
+      </span>
           </span>
           <span class="radio radio-inline">
             <input type="radio" id="inlineRadio2" value="immediate" name="currentDateTime"
@@ -143,7 +150,7 @@
         </div>
       </div>
  <div class="form-group mr-sm" style="white-space: normal; margin-top: -9px;">
- For studies that are live, notifications get published for scheduled delivery to participants as soon as you mark the Notifications section complete.
+For studies that are already launched, notifications get scheduled for delivery upon marking the Notifications section as complete, not requiring an explicit 'Publish updates' action.
  </div>
     </div>
   </form:form>
