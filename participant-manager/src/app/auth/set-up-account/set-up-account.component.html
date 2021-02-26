@@ -120,26 +120,68 @@
             <div class="form-group">
               <label for="password">Password</label>
               <input
-                type="password"
+                [type]="fieldTextType ? 'text' : 'password'"
                 class="form-control"
                 id="password"
                 placeholder="Enter password"
+                class="form-control"
                 formControlName="password"
               />
+              <i
+                class="fa fa-fw field-icon toggle-password"
+                [ngClass]="{
+                  'fa-eye-slash': !fieldTextType,
+                  'fa-eye': fieldTextType
+                }"
+                (click)="toggleFieldTextType()"
+              ></i>
 
               <div
-                class="validation-error"
-                *ngIf="
-                  f.password.invalid && (f.password.dirty || f.password.touched)
-                "
+                class="validation-error help-block with-errors error__msg"
+                *ngIf="f.password.dirty || f.password.touched"
               >
-                <span
+                <div *ngIf="f.password.dirty">
+                  <meter
+                    low="{{ passwordMeterLow }}"
+                    optimum="{{ passwordMeterOptimum }}"
+                    high="{{ passwordMeterHigh }}"
+                    value="{{ passwordMeterValue }}"
+                  ></meter>
+                  <span
+                    [ngClass]="
+                      meterStatus == 'Weak'
+                        ? 'weakPwd'
+                        : meterStatus == 'Fair'
+                        ? 'fairPwd'
+                        : meterStatus == 'Good'
+                        ? 'goodPwd'
+                        : 'strongPwd'
+                    "
+                  >
+                    {{ meterStatus }}
+                  </span>
+                </div>
+                <div *ngIf="f.password.errors?.passwordlength">
+                  {{ getError("EC_0084") }}
+                </div>
+                <div
+                  *ngIf="f.password.errors?.consecutiveCharactErrorwhitespace"
+                >
+                  {{ getError("EC_0081") }}
+                </div>
+                <div *ngIf="f.password.errors?.userNameError">
+                  {{ getError("EC_0082") }}
+                </div>
+                <div *ngIf="f.password.errors?.serviceNameError">
+                  {{ getError("EC_0083") }}
+                </div>
+                <!-- <span
                   class="help-block with-errors error__msg"
                   *ngIf="f.password.errors?.validPassword"
                 >
                   Your password must be at least 8 characters long and contain
                   lower case, upper case, numeric and special characters.
-                </span>
+                </span> -->
                 <span
                   class="help-block with-errors error__msg"
                   *ngIf="f.password.errors?.required"
