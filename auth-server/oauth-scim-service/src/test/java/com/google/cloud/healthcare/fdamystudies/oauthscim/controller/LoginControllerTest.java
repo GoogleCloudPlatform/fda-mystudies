@@ -56,6 +56,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -298,15 +299,6 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie sourceCookie =
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
-    String forgotPasswordRedirectUrl =
-        redirectConfig.getForgotPasswordUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
-    String termsRedirectUrl =
-        redirectConfig.getTermsUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
-    String aboutRedirectUrl =
-        redirectConfig.getAboutUrl(PlatformComponent.PARTICIPANT_MANAGER.getValue());
-
     HttpHeaders headers = getCommonHeaders();
 
     MvcResult result =
@@ -320,11 +312,7 @@ public class LoginControllerTest extends BaseMockIT {
                         appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId, sourceCookie))
             .andDo(print())
             .andExpect(status().is3xxRedirection())
-            .andExpect(model().attribute(FORGOT_PASSWORD_LINK, forgotPasswordRedirectUrl))
-            .andExpect(model().attribute(SIGNUP_LINK, nullValue()))
-            .andExpect(model().attribute(PRIVACY_POLICY_LINK, nullValue()))
-            .andExpect(model().attribute(TERMS_LINK, termsRedirectUrl))
-            .andExpect(model().attribute(ABOUT_LINK, aboutRedirectUrl))
+            .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()))
             .andReturn();
 
     String accountStatus = result.getResponse().getCookie(ACCOUNT_STATUS_COOKIE).getValue();
@@ -603,15 +591,6 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie sourceCookie =
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
-    String forgotPasswordRedirectUrl =
-        redirectConfig.getForgotPasswordUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
-    String termsRedirectUrl =
-        redirectConfig.getTermsUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
-    String aboutRedirectUrl =
-        redirectConfig.getAboutUrl(PlatformComponent.PARTICIPANT_MANAGER.getValue());
-
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -620,11 +599,8 @@ public class LoginControllerTest extends BaseMockIT {
                 .headers(headers)
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
-        .andExpect(model().attribute(FORGOT_PASSWORD_LINK, forgotPasswordRedirectUrl))
-        .andExpect(model().attribute(SIGNUP_LINK, nullValue()))
-        .andExpect(model().attribute(PRIVACY_POLICY_LINK, nullValue()))
-        .andExpect(model().attribute(TERMS_LINK, termsRedirectUrl))
-        .andExpect(model().attribute(ABOUT_LINK, aboutRedirectUrl));
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()));
   }
 
   @Test
