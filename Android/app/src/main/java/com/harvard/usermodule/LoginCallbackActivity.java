@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -255,10 +255,6 @@ public class LoginCallbackActivity extends AppCompatActivity
           "enroll",
           SharedPreferenceHelper.readPreference(
               LoginCallbackActivity.this, getString(R.string.login_studyinfo_enroll), ""));
-      intent.putExtra(
-          "rejoin",
-          SharedPreferenceHelper.readPreference(
-              LoginCallbackActivity.this, getString(R.string.login_studyinfo_rejoin), ""));
       startActivity(intent);
     } else {
       if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
