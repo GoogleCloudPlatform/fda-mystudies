@@ -125,7 +125,7 @@
                 <input type="password" class="form-control input-field wow_input" id="cfnPassword"
                        name=""
                        maxlength="14" data-match="#password"
-                       data-match-error="Whoops, these don't match"
+                       data-match-error="Passwords do not match"
                        placeholder="Confirm new password"
                        required autocomplete="off"/>
                 <div class="help-block with-errors"></div>
