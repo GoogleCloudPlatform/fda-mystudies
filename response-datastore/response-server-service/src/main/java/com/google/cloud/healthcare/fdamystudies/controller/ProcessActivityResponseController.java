@@ -95,7 +95,8 @@ public class ProcessActivityResponseController {
   private static final Logger logger =
       LoggerFactory.getLogger(ProcessActivityResponseController.class);
 
-  @ApiOperation(value = "Process activity response for participant and store in cloud fire store")
+  @ApiOperation(
+      value = "Process activity response for participant and store in Google Cloud Firestore")
   @PostMapping("/participant/process-response")
   public ResponseEntity<?> processActivityResponseForParticipant(
       @RequestBody ActivityResponseBean questionnaireActivityResponseBean,
@@ -392,7 +393,7 @@ public class ProcessActivityResponseController {
     }
   }
 
-  @ApiOperation(value = "Get activity response data for participant from cloud fire store")
+  @ApiOperation(value = "Get activity response data for participant from Google Cloud Firestore")
   @GetMapping("/participant/getresponse")
   public ResponseEntity<?> getActivityResponseDataForParticipant(
       @RequestParam("appId") String applicationId,
