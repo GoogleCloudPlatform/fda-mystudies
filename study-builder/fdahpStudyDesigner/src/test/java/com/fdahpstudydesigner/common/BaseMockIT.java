@@ -23,7 +23,9 @@ import com.fdahpstudydesigner.config.HibernateTestConfig;
 import com.fdahpstudydesigner.config.WebAppTestConfig;
 import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -121,8 +123,10 @@ public class BaseMockIT {
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     logger.debug(String.format("BEGIN TEST: %s", testName.getMethodName()));
+
+    loadAppProperties();
 
     MockHttpServletRequest request = new MockHttpServletRequest();
     RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
@@ -144,6 +148,15 @@ public class BaseMockIT {
             })
         .when(mockAuditService)
         .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
+  }
+
+  private void loadAppProperties() throws IOException {
+    Map<String, String> appProperties = FdahpStudyDesignerUtil.getAppProperties();
+    appProperties.put("from.email.address", "sendmail029@gmail.com");
+    appProperties.put("from.email.password", "Password@009");
+    appProperties.put("smtp.hostname", "smtp.gmail.com");
+    appProperties.put("from.email.use_ip_whitelist", " ");
+    appProperties.put("from.email.domain", " ");
   }
 
   @After
