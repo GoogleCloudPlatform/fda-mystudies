@@ -1926,7 +1926,6 @@
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
-      } else {
 
         var j = 0;
         for (j = customCount; j > 0; j--) {
