@@ -10,11 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_SENT;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_ADDED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_USER_RECORD_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_ADMIN_ADDED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_ADMIN_INVITATION_EMAIL_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_ADMIN_INVITATION_EMAIL_SENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.RESEND_INVITATION;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_RECORD_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
@@ -142,7 +142,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       map.put(CommonConstants.NEW_USER_ID, userResponse.getUserId());
       map.put("new_user_access_level", accessLevel);
       logger.info("userId" + userResponse.getUserId());
-      participantManagerHelper.logEvent(NEW_USER_ADDED, auditRequest, map);
+      participantManagerHelper.logEvent(NEW_ADMIN_ADDED, auditRequest, map);
     }
 
     logger.exit(String.format(CommonConstants.STATUS_LOG, userResponse.getHttpStatusCode()));
@@ -451,7 +451,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       Map<String, String> map = new HashedMap<>();
       map.put(CommonConstants.EDITED_USER_ID, user.getId());
       map.put("edited_user_access_level", accessLevel);
-      participantManagerHelper.logEvent(USER_RECORD_UPDATED, auditRequest, map);
+      participantManagerHelper.logEvent(ADMIN_USER_RECORD_UPDATED, auditRequest, map);
     }
 
     logger.exit(String.format(CommonConstants.STATUS_LOG, userResponse.getHttpStatusCode()));
@@ -891,7 +891,7 @@ public class ManageUserServiceImpl implements ManageUserService {
             EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE
                     .getTemplate()
                     .equals(adminRecordToSendEmail.getEmailTemplateType())
-                ? NEW_USER_INVITATION_EMAIL_SENT
+                ? NEW_ADMIN_INVITATION_EMAIL_SENT
                 : ACCOUNT_UPDATE_EMAIL_SENT;
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
@@ -899,7 +899,7 @@ public class ManageUserServiceImpl implements ManageUserService {
             EmailTemplate.ACCOUNT_CREATED_EMAIL_TEMPLATE
                     .getTemplate()
                     .equals(adminRecordToSendEmail.getEmailTemplateType())
-                ? NEW_USER_INVITATION_EMAIL_FAILED
+                ? NEW_ADMIN_INVITATION_EMAIL_FAILED
                 : ACCOUNT_UPDATE_EMAIL_FAILED;
         userAccountEmailSchedulerTaskRepository.updateStatus(adminRecordToSendEmail.getUserId(), 0);
       }
