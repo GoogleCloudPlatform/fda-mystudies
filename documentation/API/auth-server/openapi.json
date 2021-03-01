@@ -1,0 +1,575 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Api Documentation",
+    "contact" : { },
+    "license" : {
+      "name" : "View License",
+      "url" : "https://github.com/GoogleCloudPlatform/fda-mystudies/blob/master/LICENSE.txt"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/auth-server",
+  "tags" : [ {
+    "name" : "Get Health",
+    "description" : "Provides an indication about the health of the service"
+  }, {
+    "name" : "Get Token",
+    "description" : "Get access token and refresh token based on grant type"
+  }, {
+    "name" : "Users",
+    "description" : "Operations pertaining to users in auth server"
+  } ],
+  "paths" : {
+    "/healthCheck" : {
+      "get" : {
+        "tags" : [ "Get Health" ],
+        "summary" : "Provides an indication about the health of the service",
+        "description" : "Default response codes 400 and 401 are not applicable for this operation",
+        "operationId" : "healthUsingGET",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Service is Up and Running",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/oauth2/token" : {
+      "post" : {
+        "tags" : [ "Get Token" ],
+        "summary" : "Get access token and refresh token based on grant type. Refer ORY Hydra REST API documentation for request and response details",
+        "description" : "Refer [The OAuth 2.0 Token Endpoint](https://www.ory.sh/hydra/docs/reference/api/#the-oauth-20-token-endpoint) for request and response details ",
+        "operationId" : "getTokenUsingPOST",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "paramMap",
+          "in" : "formData",
+          "description" : "paramMap",
+          "required" : true,
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/user/reset_password" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "reset the password and send an email with temporary password",
+        "operationId" : "resetPasswordUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "appName",
+          "in" : "header",
+          "description" : "appName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "resetPasswordRequest",
+          "description" : "resetPasswordRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ResetPasswordRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "create a new user",
+        "operationId" : "createUserUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "userRequest",
+          "description" : "userRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserRequest"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "$ref" : "#/definitions/UserResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{userId}" : {
+      "put" : {
+        "tags" : [ "Users" ],
+        "summary" : "update user account status",
+        "operationId" : "updateEmailStatusUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "userRequest",
+          "description" : "userRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UpdateEmailStatusRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/UpdateEmailStatusResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      },
+      "delete" : {
+        "tags" : [ "Users" ],
+        "summary" : "delete a user",
+        "operationId" : "deleteUserAccountUsingDELETE",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{userId}/change_password" : {
+      "put" : {
+        "tags" : [ "Users" ],
+        "summary" : "replace old password with new password",
+        "operationId" : "changePasswordUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "userRequest",
+          "description" : "userRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ChangePasswordRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{userId}/logout" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "revoke access token and refresh token when user gets logged out",
+        "operationId" : "logoutUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Authorization",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/UserResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "BaseResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "BaseResponse"
+    },
+    "ChangePasswordRequest" : {
+      "type" : "object",
+      "properties" : {
+        "currentPassword" : {
+          "type" : "string",
+          "minLength" : 8,
+          "maxLength" : 64
+        },
+        "newPassword" : {
+          "type" : "string",
+          "pattern" : "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ChangePasswordRequest"
+    },
+    "ResetPasswordRequest" : {
+      "type" : "object",
+      "required" : [ "appId", "email" ],
+      "properties" : {
+        "appId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 100
+        },
+        "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        }
+      },
+      "title" : "ResetPasswordRequest"
+    },
+    "UpdateEmailStatusRequest" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32",
+          "minimum" : 0.0,
+          "maximum" : 4.0,
+          "exclusiveMinimum" : false,
+          "exclusiveMaximum" : false
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UpdateEmailStatusRequest"
+    },
+    "UpdateEmailStatusResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tempRegId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UpdateEmailStatusResponse"
+    },
+    "UserRequest" : {
+      "type" : "object",
+      "required" : [ "appId", "email", "password", "status" ],
+      "properties" : {
+        "appId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 100
+        },
+        "appName" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "password" : {
+          "type" : "string",
+          "pattern" : "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "UserRequest"
+    },
+    "UserResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tempRegId" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserResponse"
+    },
+    "ValidationErrorResponse" : {
+      "type" : "object",
+      "properties" : {
+        "error_code" : {
+          "type" : "string"
+        },
+        "error_description" : {
+          "type" : "string"
+        },
+        "error_type" : {
+          "type" : "string"
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "title" : "ValidationErrorResponse"
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Violation"
+    }
+  }
+}
