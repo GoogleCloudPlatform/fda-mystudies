@@ -6648,20 +6648,20 @@ public class StudyDAOImpl implements StudyDAO {
                     .setString("studyType", FdahpStudyDesignerConstants.STUDY_TYPE_SD)
                     .list();
           }
-        } /*else {
-            if (StringUtils.isNotEmpty(customStudyId)) {
-              searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
-              studyBos =
-                  session
-                      .createQuery(searchQuery)
-                      .setString("appId", appId)
-                      .setString("customStudyId", customStudyId)
-                      .list();
-            } else {
-              searchQuery = "From StudyBo WHERE appId=:appId ";
-              studyBos = session.createQuery(searchQuery).setString("appId", appId).list();
-            }
-          }*/
+        } else {
+          if (StringUtils.isNotEmpty(customStudyId)) {
+            searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
+            studyBos =
+                session
+                    .createQuery(searchQuery)
+                    .setString("appId", appId)
+                    .setString("customStudyId", customStudyId)
+                    .list();
+          } else {
+            searchQuery = "From StudyBo WHERE appId=:appId ";
+            studyBos = session.createQuery(searchQuery).setString("appId", appId).list();
+          }
+        }
       }
 
       if ((studyBos != null) && !studyBos.isEmpty()) {
