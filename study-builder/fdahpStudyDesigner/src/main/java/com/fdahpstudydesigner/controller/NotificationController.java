@@ -260,16 +260,24 @@ public class NotificationController {
                         FdahpStudyDesignerConstants.SDF_TIME,
                         FdahpStudyDesignerConstants.DB_SDF_TIME))
                 : "");
+        notificationBO.setScheduleTimestamp(
+            FdahpStudyDesignerUtil.getTimeStamp(
+                notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
         notificationBO.setNotificationScheduleType(
             FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
       } else if (FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE.equals(currentDateTime)) {
         notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
         notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
+        notificationBO.setScheduleTimestamp(
+            FdahpStudyDesignerUtil.getTimeStamp(
+                notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
+
         notificationBO.setNotificationScheduleType(
             FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE);
       } else {
         notificationBO.setScheduleDate("");
         notificationBO.setScheduleTime("");
+        notificationBO.setScheduleTimestamp(null);
         notificationBO.setNotificationScheduleType("0");
       }
       if (null == notificationBO.getNotificationId()) {

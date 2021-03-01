@@ -27,6 +27,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
+import com.fdahpstudydesigner.bo.NotificationHistoryBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.PlatformComponent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
@@ -65,11 +66,15 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -98,6 +103,13 @@ public class FDASchedulerService {
     ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
     taskScheduler.setPoolSize(2);
     return taskScheduler;
+  }
+
+  HibernateTemplate hibernateTemplate;
+
+  @Autowired
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.hibernateTemplate = new HibernateTemplate(sessionFactory);
   }
 
   @Scheduled(cron = "0 0 0 * * ?")
@@ -161,14 +173,20 @@ public class FDASchedulerService {
     String time;
     ObjectMapper objectMapper = new ObjectMapper();
     String responseString = "";
+    List<PushNotificationBean> pushNotificationToSaveInHistory =
+        new ArrayList<PushNotificationBean>();
     try {
+
       date = FdahpStudyDesignerUtil.getCurrentDate();
       time =
           FdahpStudyDesignerUtil.privMinDateTime(
-              new SimpleDateFormat(FdahpStudyDesignerConstants.UI_SDF_TIME).format(new Date()),
-              FdahpStudyDesignerConstants.UI_SDF_TIME,
+              new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_TIME).format(new Date()),
+              FdahpStudyDesignerConstants.DB_SDF_TIME,
               1);
-      pushNotificationBeans = notificationDAO.getPushNotificationList(date, time);
+      pushNotificationBeans =
+          notificationDAO.getPushNotificationList(
+              FdahpStudyDesignerUtil.getTimeStamp(date, time).toString());
+      pushNotificationToSaveInHistory = pushNotificationBeans;
       if ((pushNotificationBeans != null) && !pushNotificationBeans.isEmpty()) {
         for (PushNotificationBean p : pushNotificationBeans) {
           if (p.getAppId() == null) {
@@ -226,6 +244,7 @@ public class FDASchedulerService {
                   response.getStatusLine().getStatusCode()));
           logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
         } else {
+          updateNotification(pushNotificationToSaveInHistory);
           logSendNotificationFailedEvent(NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
         }
       }
@@ -236,6 +255,33 @@ public class FDASchedulerService {
       logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
     }
     logger.info("FDASchedulerService - sendPushNotification - Ends");
+  }
+
+  private void updateNotification(List<PushNotificationBean> pushNotificationBeans) {
+    String sb = "";
+    Session session = hibernateTemplate.getSessionFactory().openSession();
+    Transaction trans = session.beginTransaction();
+    if ((null != pushNotificationBeans) && !pushNotificationBeans.isEmpty()) {
+      List<Integer> notificationIds = new ArrayList<>();
+      for (PushNotificationBean pushNotificationBean : pushNotificationBeans) {
+        notificationIds.add(pushNotificationBean.getNotificationId());
+        if ((pushNotificationBean.getNotificationSubType() == null)
+            || ((pushNotificationBean.getNotificationSubType() != null)
+                && !FdahpStudyDesignerConstants.RESOURCE.equals(
+                    pushNotificationBean.getNotificationSubType())
+                && !FdahpStudyDesignerConstants.STUDY_EVENT.equals(
+                    pushNotificationBean.getNotificationSubType()))) {
+          NotificationHistoryBO historyBO = new NotificationHistoryBO();
+          historyBO.setNotificationId(pushNotificationBean.getNotificationId());
+          historyBO.setNotificationSentDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+          session.save(historyBO);
+        }
+      }
+      sb =
+          "update NotificationBO NBO set NBO.notificationSent = true  where NBO.notificationId in (:notificationIds )";
+      session.createQuery(sb).setParameterList("notificationIds", notificationIds).executeUpdate();
+    }
+    trans.commit();
   }
 
   private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {
