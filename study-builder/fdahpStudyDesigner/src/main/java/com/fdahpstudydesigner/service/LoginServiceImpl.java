@@ -548,9 +548,10 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
                 auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
               }
-              if (flag) {
-                message = FdahpStudyDesignerConstants.SUCCESS;
-              }
+
+              message =
+                  flag ? FdahpStudyDesignerConstants.SUCCESS : FdahpStudyDesignerConstants.FAILURE;
+
               if ("".equals(type) && (!userdetails.isEnabled())) {
                 message = propMap.get("user.inactive.msg");
               }
@@ -621,9 +622,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "accountLockedContent", keyValueForSubject);
 
-          EmailNotification.sendEmailNotification(
-              "accountLockedSubject", dynamicContent, email, null, null);
-          auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
+          boolean response =
+              EmailNotification.sendEmailNotification(
+                  "accountLockedSubject", dynamicContent, email, null, null);
+          StudyBuilderAuditEvent auditEvent =
+              response
+                  ? PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT
+                  : PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT;
+          auditLogEventHelper.logEvent(auditEvent, auditRequest);
         }
       }
     } catch (Exception e) {
