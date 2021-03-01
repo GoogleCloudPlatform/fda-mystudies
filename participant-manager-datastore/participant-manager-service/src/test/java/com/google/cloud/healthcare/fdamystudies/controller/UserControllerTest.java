@@ -13,9 +13,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_ADDED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_USER_RECORD_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_ADMIN_ADDED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.RESEND_INVITATION;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_RECORD_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMAIL_VALUE;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -246,8 +246,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
+    auditEventMap.put(NEW_ADMIN_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_ADMIN_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -286,8 +286,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
+    auditEventMap.put(NEW_ADMIN_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_ADMIN_ADDED);
 
     verifyTokenIntrospectRequest();
   }
@@ -347,8 +347,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
+    auditEventMap.put(NEW_ADMIN_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_ADMIN_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -391,8 +391,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
+    auditEventMap.put(NEW_ADMIN_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_ADMIN_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -437,8 +437,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(NEW_USER_ADDED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_USER_ADDED);
+    auditEventMap.put(NEW_ADMIN_ADDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_ADMIN_ADDED);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -477,8 +477,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED);
+    auditEventMap.put(ADMIN_USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, ADMIN_USER_RECORD_UPDATED);
 
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), true);
@@ -525,8 +525,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(adminforUpdate.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED);
+    auditEventMap.put(ADMIN_USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, ADMIN_USER_RECORD_UPDATED);
 
     verifyTokenIntrospectRequest();
   }
@@ -589,8 +589,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED);
+    auditEventMap.put(ADMIN_USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, ADMIN_USER_RECORD_UPDATED);
 
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), false);
@@ -631,8 +631,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED);
+    auditEventMap.put(ADMIN_USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, ADMIN_USER_RECORD_UPDATED);
 
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), false);
@@ -675,8 +675,8 @@ public class UserControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED);
+    auditEventMap.put(ADMIN_USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, ADMIN_USER_RECORD_UPDATED);
 
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), false);
