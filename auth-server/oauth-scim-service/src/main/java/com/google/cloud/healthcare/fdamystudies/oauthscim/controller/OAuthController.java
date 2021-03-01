@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -68,11 +68,11 @@ public class OAuthController {
 
   @ApiOperation(
       notes =
-          "Refer [The OAuth 2.0 Token Endpoint](https://www.ory.sh/hydra/docs/reference/api/#the-oauth-20-token-endpoint)"
+          "Refer to the [The OAuth 2.0 Token Endpoint](https://www.ory.sh/hydra/docs/reference/api/#the-oauth-20-token-endpoint)"
               + " for request and response details ",
       value =
           "Get access token and refresh token based on grant type. "
-              + "Refer ORY Hydra REST API documentation for request and response details")
+              + "Refer to the ORY Hydra REST API documentation for request and response details")
   @PostMapping(
       value = "/oauth2/token",
       produces = MediaType.APPLICATION_JSON_VALUE,
