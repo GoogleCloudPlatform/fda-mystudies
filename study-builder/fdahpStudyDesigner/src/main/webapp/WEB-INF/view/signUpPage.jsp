@@ -179,7 +179,7 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-12">
+                <div class="col-xs-12 text-center">
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
