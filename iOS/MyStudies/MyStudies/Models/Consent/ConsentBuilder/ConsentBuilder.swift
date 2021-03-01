@@ -70,9 +70,9 @@ let kConsentComprehensionTestText =
 let kComprehensionInstructionStepIdentifier = "ComprehensionInstructionStep"
 
 /// Comprehension Completion Step Keys
-let kComprehensionCompletionTitle = "Great Job!"
+let kComprehensionCompletionTitle = "Great job!"
 let kComprehensionCompletionText =
-  "You answered all of the questions correctly. Tap on Next to proceed"
+  "You answered all of the questions correctly. Tap next to continue."
 let kComprehensionCompletionStepIdentifier = "ComprehensionCompletionStep"
 
 /// Consent Completion
@@ -497,6 +497,8 @@ struct ReviewConsent {
         someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject
       ) {
         reasonForConsent = dict[kConsentReviewStepReasonForConsent] as? String
+      } else {
+        reasonForConsent = kMessageconsentConfirmation
       }
     }
   }
