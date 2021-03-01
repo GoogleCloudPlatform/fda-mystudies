@@ -13,8 +13,10 @@ import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import java.io.Serializable;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -66,4 +68,10 @@ public class StudyMetadataBean implements Serializable {
 
   @Size(max = LARGE_LENGTH)
   private String logoImageUrl;
+
+  @ToString.Exclude
+  @NotBlank
+  @Size(max = EMAIL_LENGTH)
+  @Email
+  private String contactEmail;
 }
