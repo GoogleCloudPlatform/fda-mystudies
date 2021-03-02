@@ -7,7 +7,7 @@ WORKDIR /flyway
 COPY flyway.properties /flyway/conf
 
 # Add the scripts I've pushed to my project folder to the Docker image
-ADD db/migrations /flyway/sql
+ADD db/migration /flyway/sql
 
 # Execute the command migrate
 CMD [ "migrate" ]
