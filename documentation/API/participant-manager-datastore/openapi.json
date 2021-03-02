@@ -1,0 +1,3405 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Api Documentation",
+    "contact" : { },
+    "license" : {
+      "name" : "View License",
+      "url" : "https://github.com/GoogleCloudPlatform/fda-mystudies/blob/master/LICENSE.txt"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/participant-manager-datastore",
+  "tags" : [ {
+    "name" : "Apps",
+    "description" : "Operations pertaining to apps in participant manager"
+  }, {
+    "name" : "Get Consent Document",
+    "description" : "Operations pertaining to download consent document in participant manager"
+  }, {
+    "name" : "Get Health",
+    "description" : "Provides an indication about the health of the service"
+  }, {
+    "name" : "Locations",
+    "description" : "Operations pertaining to Locations in participant manager"
+  }, {
+    "name" : "Sites",
+    "description" : "Operations pertaining to Sites in participant manager"
+  }, {
+    "name" : "Studies",
+    "description" : "Operations pertaining to Studies in participant manager"
+  }, {
+    "name" : "User Profile",
+    "description" : "Operations pertaining to user profile in participant manager"
+  }, {
+    "name" : "Users",
+    "description" : "Operations pertaining to Users in participant manager"
+  } ],
+  "paths" : {
+    "/apps" : {
+      "get" : {
+        "tags" : [ "Apps" ],
+        "summary" : "Returns a list of apps based on permissions",
+        "operationId" : "getAppsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "fields",
+          "in" : "query",
+          "description" : "fields",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "default" : 10,
+          "format" : "int32"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "offset",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "searchTerm",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AppResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/apps/{appId}/participants" : {
+      "get" : {
+        "tags" : [ "Apps" ],
+        "summary" : "Returns a response of app registrants with enrolled studies and sites",
+        "operationId" : "getAppParticipantsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "appId",
+          "in" : "path",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "default" : 10,
+          "format" : "int32"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "offset",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "searchTerm",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sortBy",
+          "in" : "query",
+          "description" : "sortBy",
+          "required" : false,
+          "type" : "string",
+          "default" : "email"
+        }, {
+          "name" : "sortDirection",
+          "in" : "query",
+          "description" : "sortDirection",
+          "required" : false,
+          "type" : "string",
+          "default" : "asc"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AppParticipantsResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/consents/{consentId}/consentDocument" : {
+      "get" : {
+        "tags" : [ "Get Consent Document" ],
+        "summary" : "Returns a response of encoded base 64 consent document",
+        "operationId" : "getConsentDocumentUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "consentId",
+          "in" : "path",
+          "description" : "consentId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ConsentDocumentResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/healthCheck" : {
+      "get" : {
+        "tags" : [ "Get Health" ],
+        "summary" : "Provides an indication about the health of the service",
+        "description" : "Default response codes 400 and 401 are not applicable for this operation",
+        "operationId" : "healthUsingGET",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Service is Up and Running",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/locations" : {
+      "get" : {
+        "tags" : [ "Locations" ],
+        "summary" : "Returns a list of location details",
+        "operationId" : "getLocationsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "excludeStudyId",
+          "in" : "query",
+          "description" : "excludeStudyId",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "default" : 10,
+          "format" : "int32"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "offset",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "searchTerm",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sortBy",
+          "in" : "query",
+          "description" : "sortBy",
+          "required" : false,
+          "type" : "string",
+          "default" : "locationId"
+        }, {
+          "name" : "sortDirection",
+          "in" : "query",
+          "description" : "sortDirection",
+          "required" : false,
+          "type" : "string",
+          "default" : "asc"
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "description" : "status",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/LocationResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      },
+      "post" : {
+        "tags" : [ "Locations" ],
+        "summary" : "Valid data submitted to this resource will create a new location",
+        "operationId" : "addNewLocationUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "locationRequest",
+          "description" : "locationRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/LocationRequest"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "$ref" : "#/definitions/LocationDetailsResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/locations/{locationId}" : {
+      "get" : {
+        "tags" : [ "Locations" ],
+        "summary" : "Returns a response containing location based on location id",
+        "operationId" : "getLocationByIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "locationId",
+          "in" : "path",
+          "description" : "locationId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/LocationDetailsResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      },
+      "put" : {
+        "tags" : [ "Locations" ],
+        "summary" : "Updates existing location",
+        "operationId" : "updateLocationUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "locationId",
+          "in" : "path",
+          "description" : "locationId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "locationRequest",
+          "description" : "locationRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UpdateLocationRequest"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/LocationDetailsResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/sites" : {
+      "get" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Returns a response containing list of sites based on permission",
+        "operationId" : "getSitesUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "default" : 10,
+          "format" : "int32"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "offset",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "searchTerm",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/SiteDetailsResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      },
+      "post" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Creates a new site for a study based on permission",
+        "operationId" : "addNewSiteUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "siteRequest",
+          "description" : "siteRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SiteRequest"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/SiteResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/sites/{participantRegistrySiteId}/participant" : {
+      "get" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Returns participant details with enrollment history",
+        "operationId" : "getParticipantDetailsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "page",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "participantRegistrySiteId",
+          "in" : "path",
+          "description" : "participantRegistrySiteId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ParticipantDetailResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/sites/{siteId}/decommission" : {
+      "put" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Activate/Deactivate's site for a study",
+        "operationId" : "decomissionSiteUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "siteId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/SiteStatusResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/sites/{siteId}/participants" : {
+      "get" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Returns a list of site participants with onboarding status",
+        "operationId" : "getSiteParticipantUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "onboardingStatus",
+          "in" : "query",
+          "description" : "onboardingStatus",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "page",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "siteId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ParticipantRegistryResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      },
+      "post" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Add a new participant for a site",
+        "operationId" : "addNewParticipantUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "participant",
+          "description" : "participant",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ParticipantDetailRequest"
+          }
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "siteId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ParticipantResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/sites/{siteId}/participants/import" : {
+      "post" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Imports participants from a file",
+        "operationId" : "importParticipantsUsingPOST",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "file",
+          "in" : "formData",
+          "description" : "file",
+          "required" : true,
+          "type" : "file"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "siteId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ImportParticipantResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/sites/{siteId}/participants/invite" : {
+      "post" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Send/Resend's invitation to participants",
+        "operationId" : "inviteParticipantsUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "inviteParticipantRequest",
+          "description" : "inviteParticipantRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/InviteParticipantRequest"
+          }
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "siteId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/InviteParticipantResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/sites/{siteId}/participants/status" : {
+      "patch" : {
+        "tags" : [ "Sites" ],
+        "summary" : "Updates onbording status for a participant",
+        "operationId" : "updateOnboardingStatusUsingPATCH",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "participantStatusRequest",
+          "description" : "participantStatusRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ParticipantStatusRequest"
+          }
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "siteId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ParticipantStatusResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/studies" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Return a list study details",
+        "operationId" : "getStudiesUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "default" : 10,
+          "format" : "int32"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "offset",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "searchTerm",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/StudyResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/studies/{studyId}/participants" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Returns a response containing study participant details",
+        "operationId" : "getStudyParticipantsUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "excludeParticipantStudyStatus",
+          "in" : "query",
+          "description" : "excludeParticipantStudyStatus",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "default" : 10,
+          "format" : "int32"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "offset",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "searchTerm",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sortBy",
+          "in" : "query",
+          "description" : "sortBy",
+          "required" : false,
+          "type" : "string",
+          "default" : "email"
+        }, {
+          "name" : "sortDirection",
+          "in" : "query",
+          "description" : "sortDirection",
+          "required" : false,
+          "type" : "string",
+          "default" : "asc"
+        }, {
+          "name" : "studyId",
+          "in" : "path",
+          "description" : "studyId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ParticipantRegistryResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/studies/{studyId}/targetEnrollment" : {
+      "patch" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Updates target enrollment value for the study",
+        "operationId" : "updateTargetEnrollmentUsingPATCH",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "path",
+          "description" : "studyId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "targetEnrollmentRequest",
+          "description" : "targetEnrollmentRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UpdateTargetEnrollmentRequest"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/UpdateTargetEnrollmentResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Returns list of all admin details",
+        "operationId" : "getUsersUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "limit",
+          "required" : false,
+          "type" : "integer",
+          "default" : 10,
+          "format" : "int32"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "offset",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "searchTerm",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sortBy",
+          "in" : "query",
+          "description" : "sortBy",
+          "required" : false,
+          "type" : "string",
+          "default" : "firstName"
+        }, {
+          "name" : "sortDirection",
+          "in" : "query",
+          "description" : "sortDirection",
+          "required" : false,
+          "type" : "string",
+          "default" : "asc"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/GetUsersResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      },
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "Add new admin with permissions by sending an email",
+        "operationId" : "addNewUserSiteCoordinatorUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "user",
+          "description" : "user",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserRequest"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AdminUserResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/admin/{adminId}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Returns a response containing particular admin detail",
+        "operationId" : "getAdminDetailsAndAppsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "adminId",
+          "in" : "path",
+          "description" : "adminId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "includeUnselected",
+          "in" : "query",
+          "description" : "includeUnselected",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/GetAdminDetailsResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/securitycodes/{securityCode}" : {
+      "get" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Returns a response containing user profile by security code",
+        "operationId" : "getUserDetailsUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "securityCode",
+          "in" : "path",
+          "description" : "securityCode",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/UserProfileResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/setUpAccount" : {
+      "post" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Set up an account by activating user after registration",
+        "operationId" : "setUpAccountUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "setUpAccountRequest",
+          "description" : "setUpAccountRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SetUpAccountRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/SetUpAccountResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{adminUserId}/" : {
+      "put" : {
+        "tags" : [ "Users" ],
+        "summary" : "Updates admin with permissions by sending an email",
+        "operationId" : "updateUserSiteCoordinatorUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "adminUserId",
+          "in" : "path",
+          "description" : "adminUserId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "user",
+          "description" : "user",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserRequest"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AdminUserResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{userId}" : {
+      "get" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Returns user profile information",
+        "operationId" : "getUserProfileUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/UserProfileResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      },
+      "delete" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Delete invitation of the user",
+        "operationId" : "deleteInvitationUsingDELETE",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      },
+      "patch" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Updates user account status",
+        "operationId" : "updateUserAccountStatusUsingPATCH",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "userRequest",
+          "description" : "userRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PatchUserRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/PatchUserResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{userId}/invite" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "Resends invitation email to the admin",
+        "operationId" : "sendInvitationUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AdminUserResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{userId}/profile" : {
+      "put" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Updates user account details",
+        "operationId" : "updateUserProfileUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "userProfileRequest",
+          "description" : "userProfileRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserProfileRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/UserProfileResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "AdminUserResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "AdminUserResponse"
+    },
+    "AppDetails" : {
+      "type" : "object",
+      "properties" : {
+        "appUsersCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "customId" : {
+          "type" : "string"
+        },
+        "enrolledCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "enrollmentPercentage" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "invitedCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "permission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AppStudyResponse"
+          }
+        },
+        "studiesCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "totalSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "AppDetails"
+    },
+    "AppParticipantsResponse" : {
+      "type" : "object",
+      "properties" : {
+        "appId" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "customId" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "participants" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ParticipantDetail"
+          }
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalParticipantCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "AppParticipantsResponse"
+    },
+    "AppResponse" : {
+      "type" : "object",
+      "properties" : {
+        "apps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AppDetails"
+          }
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studyPermissionCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "superAdmin" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "AppResponse"
+    },
+    "AppSiteDetails" : {
+      "type" : "object",
+      "properties" : {
+        "customLocationId" : {
+          "type" : "string"
+        },
+        "enrollmentDate" : {
+          "type" : "string"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "participantStudyStatus" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "withdrawlDate" : {
+          "type" : "string"
+        }
+      },
+      "title" : "AppSiteDetails"
+    },
+    "AppSiteResponse" : {
+      "type" : "object",
+      "properties" : {
+        "customLocationId" : {
+          "type" : "string"
+        },
+        "locationDescription" : {
+          "type" : "string"
+        },
+        "locationId" : {
+          "type" : "string"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "AppSiteResponse"
+    },
+    "AppStudyDetails" : {
+      "type" : "object",
+      "properties" : {
+        "customStudyId" : {
+          "type" : "string"
+        },
+        "sites" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AppSiteDetails"
+          }
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "studyName" : {
+          "type" : "string"
+        },
+        "studyType" : {
+          "type" : "string"
+        }
+      },
+      "title" : "AppStudyDetails"
+    },
+    "AppStudyResponse" : {
+      "type" : "object",
+      "properties" : {
+        "customStudyId" : {
+          "type" : "string"
+        },
+        "sites" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AppSiteResponse"
+          }
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "studyName" : {
+          "type" : "string"
+        },
+        "totalSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "AppStudyResponse"
+    },
+    "BaseResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "BaseResponse"
+    },
+    "ConsentDocumentResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "content" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ConsentDocumentResponse"
+    },
+    "ConsentHistory" : {
+      "type" : "object",
+      "properties" : {
+        "consentDocumentPath" : {
+          "type" : "string"
+        },
+        "consentVersion" : {
+          "type" : "string"
+        },
+        "consentedDate" : {
+          "type" : "string"
+        },
+        "dataSharingPermissions" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ConsentHistory"
+    },
+    "Enrollment" : {
+      "type" : "object",
+      "properties" : {
+        "enrollmentDate" : {
+          "type" : "string"
+        },
+        "enrollmentStatus" : {
+          "type" : "string"
+        },
+        "participantId" : {
+          "type" : "string"
+        },
+        "withdrawalDate" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Enrollment"
+    },
+    "GetAdminDetailsResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
+        }
+      },
+      "title" : "GetAdminDetailsResponse"
+    },
+    "GetUsersResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalUsersCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "users" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/User"
+          }
+        }
+      },
+      "title" : "GetUsersResponse"
+    },
+    "ImportParticipantResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "duplicateEmails" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "invalidEmails" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "participants" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ParticipantDetail"
+          }
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "ImportParticipantResponse"
+    },
+    "InviteParticipantRequest" : {
+      "type" : "object",
+      "required" : [ "ids" ],
+      "properties" : {
+        "ids" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "InviteParticipantRequest"
+    },
+    "InviteParticipantResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "failedParticipantIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "invitedParticipantIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "InviteParticipantResponse"
+    },
+    "LocationDetails" : {
+      "type" : "object",
+      "properties" : {
+        "customId" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "locationId" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studiesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studyNames" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "LocationDetails"
+    },
+    "LocationDetailsResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "customId" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "locationId" : {
+          "type" : "string"
+        },
+        "locationPermission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studyNames" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "title" : "LocationDetailsResponse"
+    },
+    "LocationRequest" : {
+      "type" : "object",
+      "required" : [ "customId", "description", "name" ],
+      "properties" : {
+        "customId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 15
+        },
+        "description" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255
+        },
+        "name" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255
+        }
+      },
+      "title" : "LocationRequest"
+    },
+    "LocationResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "locationPermission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "locations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/LocationDetails"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalLocationsCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "LocationResponse"
+    },
+    "ParticipantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "appName" : {
+          "type" : "string"
+        },
+        "consentHistory" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ConsentHistory"
+          }
+        },
+        "customAppId" : {
+          "type" : "string"
+        },
+        "customLocationId" : {
+          "type" : "string"
+        },
+        "customStudyId" : {
+          "type" : "string"
+        },
+        "disabledDate" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "enrolledStudies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AppStudyDetails"
+          }
+        },
+        "enrollmentDate" : {
+          "type" : "string"
+        },
+        "enrollmentStatus" : {
+          "type" : "string"
+        },
+        "enrollments" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Enrollment"
+          }
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "invitationDate" : {
+          "type" : "string"
+        },
+        "invitedDate" : {
+          "type" : "string"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "newlyCreatedUser" : {
+          "type" : "boolean"
+        },
+        "onboardingStatus" : {
+          "type" : "string"
+        },
+        "participantRegistrySiteid" : {
+          "type" : "string"
+        },
+        "registrationDate" : {
+          "type" : "string"
+        },
+        "registrationStatus" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "sitePermission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "siteStatus" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studiesEnrolled" : {
+          "type" : "string"
+        },
+        "studyName" : {
+          "type" : "string"
+        },
+        "studyStatus" : {
+          "type" : "string"
+        },
+        "studyType" : {
+          "type" : "string"
+        },
+        "userDetailsId" : {
+          "type" : "string"
+        },
+        "withdrawalDate" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ParticipantDetail"
+    },
+    "ParticipantDetailRequest" : {
+      "type" : "object",
+      "required" : [ "email" ],
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "invitedDate" : {
+          "type" : "string"
+        },
+        "onboardingStatus" : {
+          "type" : "string"
+        },
+        "participantId" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ParticipantDetailRequest"
+    },
+    "ParticipantDetailResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "participantDetails" : {
+          "$ref" : "#/definitions/ParticipantDetail"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalConsentHistoryCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "ParticipantDetailResponse"
+    },
+    "ParticipantRegistryDetail" : {
+      "type" : "object",
+      "properties" : {
+        "appId" : {
+          "type" : "string"
+        },
+        "appName" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "countByStatus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "customAppId" : {
+          "type" : "string"
+        },
+        "customLocationId" : {
+          "type" : "string"
+        },
+        "customStudyId" : {
+          "type" : "string"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "locationStatus" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "openStudySitePermission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "registryParticipants" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ParticipantDetail"
+          }
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "sitePermission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "siteStatus" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "studyName" : {
+          "type" : "string"
+        },
+        "studyPermission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studyStatus" : {
+          "type" : "string"
+        },
+        "studyType" : {
+          "type" : "string"
+        },
+        "targetEnrollment" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "ParticipantRegistryDetail"
+    },
+    "ParticipantRegistryResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "participantRegistryDetail" : {
+          "$ref" : "#/definitions/ParticipantRegistryDetail"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalParticipantCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "ParticipantRegistryResponse"
+    },
+    "ParticipantResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "participantId" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "ParticipantResponse"
+    },
+    "ParticipantStatusRequest" : {
+      "type" : "object",
+      "required" : [ "ids", "status" ],
+      "properties" : {
+        "ids" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ParticipantStatusRequest"
+    },
+    "ParticipantStatusResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "ParticipantStatusResponse"
+    },
+    "PatchUserRequest" : {
+      "type" : "object",
+      "required" : [ "status" ],
+      "properties" : {
+        "signedInUserId" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "PatchUserRequest"
+    },
+    "PatchUserResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "PatchUserResponse"
+    },
+    "SetUpAccountRequest" : {
+      "type" : "object",
+      "required" : [ "email", "firstName", "lastName", "password" ],
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "firstName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "lastName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "password" : {
+          "type" : "string",
+          "minLength" : 8,
+          "maxLength" : 64,
+          "pattern" : "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$"
+        }
+      },
+      "title" : "SetUpAccountRequest"
+    },
+    "SetUpAccountResponse" : {
+      "type" : "object",
+      "properties" : {
+        "authUserId" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tempRegId" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "SetUpAccountResponse"
+    },
+    "SiteDetails" : {
+      "type" : "object",
+      "properties" : {
+        "edit" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "enrolled" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "enrollmentPercentage" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "invited" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "SiteDetails"
+    },
+    "SiteDetailsResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StudyDetails"
+          }
+        }
+      },
+      "title" : "SiteDetailsResponse"
+    },
+    "SiteRequest" : {
+      "type" : "object",
+      "required" : [ "locationId", "studyId" ],
+      "properties" : {
+        "locationId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "studyId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "SiteRequest"
+    },
+    "SiteResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "siteName" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "SiteResponse"
+    },
+    "SiteStatusResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "siteStatus" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "SiteStatusResponse"
+    },
+    "StudyDetails" : {
+      "type" : "object",
+      "properties" : {
+        "appId" : {
+          "type" : "string"
+        },
+        "appInfoId" : {
+          "type" : "string"
+        },
+        "appName" : {
+          "type" : "string"
+        },
+        "customId" : {
+          "type" : "string"
+        },
+        "enrolled" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "enrollmentPercentage" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "invited" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "logoImageUrl" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "sites" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SiteDetails"
+          }
+        },
+        "sitesCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "studyPermission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studyStatus" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        }
+      },
+      "title" : "StudyDetails"
+    },
+    "StudyResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "sitePermissionCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StudyDetails"
+          }
+        },
+        "superAdmin" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "StudyResponse"
+    },
+    "UpdateLocationRequest" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255
+        },
+        "locationId" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UpdateLocationRequest"
+    },
+    "UpdateTargetEnrollmentRequest" : {
+      "type" : "object",
+      "required" : [ "targetEnrollment" ],
+      "properties" : {
+        "studyId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "targetEnrollment" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UpdateTargetEnrollmentRequest"
+    },
+    "UpdateTargetEnrollmentResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "UpdateTargetEnrollmentResponse"
+    },
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "apps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/UserAppDetails"
+          }
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "manageLocations" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "superAdmin" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "User"
+    },
+    "UserAppDetails" : {
+      "type" : "object",
+      "properties" : {
+        "customId" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "permission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "selected" : {
+          "type" : "boolean"
+        },
+        "selectedSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "selectedStudiesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/UserStudyDetails"
+          }
+        },
+        "totalSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalStudiesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "UserAppDetails"
+    },
+    "UserAppPermissionRequest" : {
+      "type" : "object",
+      "properties" : {
+        "appUsersCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "customId" : {
+          "type" : "string"
+        },
+        "enrolledCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "enrollmentPercentage" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "invitedCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "permission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "selected" : {
+          "type" : "boolean"
+        },
+        "selectedSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "studies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/UserStudyPermissionRequest"
+          }
+        },
+        "studiesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "UserAppPermissionRequest"
+    },
+    "UserProfileRequest" : {
+      "type" : "object",
+      "required" : [ "firstName", "lastName" ],
+      "properties" : {
+        "firstName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255
+        },
+        "lastName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserProfileRequest"
+    },
+    "UserProfileResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "manageLocations" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "superAdmin" : {
+          "type" : "boolean"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserProfileResponse"
+    },
+    "UserRequest" : {
+      "type" : "object",
+      "required" : [ "email", "firstName", "lastName", "superAdmin" ],
+      "properties" : {
+        "apps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/UserAppPermissionRequest"
+          }
+        },
+        "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "firstName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "manageLocations" : {
+          "type" : "integer",
+          "format" : "int32",
+          "minimum" : 0.0,
+          "maximum" : 1.0,
+          "exclusiveMinimum" : false,
+          "exclusiveMaximum" : false
+        },
+        "signedInUserId" : {
+          "type" : "string"
+        },
+        "superAdmin" : {
+          "type" : "boolean"
+        },
+        "superAdminUserId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserRequest"
+    },
+    "UserSiteDetails" : {
+      "type" : "object",
+      "properties" : {
+        "customLocationId" : {
+          "type" : "string"
+        },
+        "locationDescription" : {
+          "type" : "string"
+        },
+        "locationId" : {
+          "type" : "string"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "permission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "selected" : {
+          "type" : "boolean"
+        },
+        "siteId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserSiteDetails"
+    },
+    "UserSitePermissionRequest" : {
+      "type" : "object",
+      "properties" : {
+        "customLocationId" : {
+          "type" : "string"
+        },
+        "locationDescription" : {
+          "type" : "string"
+        },
+        "locationId" : {
+          "type" : "string"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "permission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "selected" : {
+          "type" : "boolean"
+        },
+        "siteId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserSitePermissionRequest"
+    },
+    "UserStudyDetails" : {
+      "type" : "object",
+      "properties" : {
+        "customStudyId" : {
+          "type" : "string"
+        },
+        "permission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "selected" : {
+          "type" : "boolean"
+        },
+        "selectedSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sites" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/UserSiteDetails"
+          }
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "studyName" : {
+          "type" : "string"
+        },
+        "totalSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "UserStudyDetails"
+    },
+    "UserStudyPermissionRequest" : {
+      "type" : "object",
+      "properties" : {
+        "customStudyId" : {
+          "type" : "string"
+        },
+        "permission" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "selected" : {
+          "type" : "boolean"
+        },
+        "selectedSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sites" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/UserSitePermissionRequest"
+          }
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "studyName" : {
+          "type" : "string"
+        },
+        "totalSitesCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "UserStudyPermissionRequest"
+    },
+    "ValidationErrorResponse" : {
+      "type" : "object",
+      "properties" : {
+        "error_code" : {
+          "type" : "string"
+        },
+        "error_description" : {
+          "type" : "string"
+        },
+        "error_type" : {
+          "type" : "string"
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "title" : "ValidationErrorResponse"
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Violation"
+    }
+  }
+}
