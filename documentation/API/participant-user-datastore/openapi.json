@@ -1,0 +1,996 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Api Documentation",
+    "contact" : { },
+    "license" : {
+      "name" : "View License",
+      "url" : "https://github.com/GoogleCloudPlatform/fda-mystudies/blob/master/LICENSE.txt"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/participant-user-datastore",
+  "tags" : [ {
+    "name" : "Get Health",
+    "description" : "Provides an indication about the health of the service"
+  }, {
+    "name" : "Studies",
+    "description" : "Operations pertaining to Studies in user management service"
+  }, {
+    "name" : "Support",
+    "description" : "Operations pertaining to support in user management service"
+  }, {
+    "name" : "User Profile",
+    "description" : "Operations pertaining to user profile in user management service"
+  }, {
+    "name" : "User Registration",
+    "description" : "Operations pertaining to register the user in user management service"
+  }, {
+    "name" : "Verify Email",
+    "description" : "Operation pertaining to verify email in user management service"
+  } ],
+  "paths" : {
+    "/contactUs" : {
+      "post" : {
+        "tags" : [ "Support" ],
+        "summary" : "Triggers sending of 'Contact Us' e-mail with data submitted with the request",
+        "operationId" : "contactUsDetailsUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "appName",
+          "in" : "header",
+          "description" : "appName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "reqBean",
+          "description" : "reqBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ContactUsReqBean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/deactivate" : {
+      "delete" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Deactivate the user",
+        "operationId" : "deactivateAccountUsingDELETE",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "deactivateAcctBean",
+          "description" : "deactivateAcctBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/DeactivateAcctBean"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/feedback" : {
+      "post" : {
+        "tags" : [ "Support" ],
+        "summary" : "Triggers sending of 'Feedback' e-mail with data submitted with the request",
+        "operationId" : "feedbackDetailsUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "appName",
+          "in" : "header",
+          "description" : "appName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "reqBean",
+          "description" : "reqBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FeedbackReqBean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/healthCheck" : {
+      "get" : {
+        "tags" : [ "Get Health" ],
+        "summary" : "Provides an indication about the health of the service",
+        "description" : "Default response codes 400 and 401 are not applicable for this operation",
+        "operationId" : "healthUsingGET",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Service is Up and Running",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/register" : {
+      "post" : {
+        "tags" : [ "User Registration" ],
+        "summary" : "Register the new user",
+        "operationId" : "registerUserUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "appId",
+          "in" : "header",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "appName",
+          "in" : "header",
+          "description" : "appName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "user",
+          "description" : "user",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserRegistrationForm"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/UserRegistrationResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/resendConfirmation" : {
+      "post" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Resend confirmation to the user via email",
+        "operationId" : "resendConfirmationUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "appId",
+          "in" : "header",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "appName",
+          "in" : "header",
+          "description" : "appName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "resetPasswordBean",
+          "description" : "resetPasswordBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ResetPasswordBean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/studies/sendNotification" : {
+      "post" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Sends notifications to users",
+        "operationId" : "SendNotificationUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "notificationForm",
+          "description" : "notificationForm",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/NotificationForm"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/studies/studymetadata" : {
+      "post" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Add or update metadata details of the study",
+        "operationId" : "addUpdateStudyMetadataUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "studyMetadataBean",
+          "description" : "studyMetadataBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/StudyMetadataBean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/updateUserProfile" : {
+      "post" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Updates the profile of the currently logged in user.",
+        "operationId" : "updateUserProfileUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "user",
+          "description" : "user",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserRequestBean"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/userProfile" : {
+      "get" : {
+        "tags" : [ "User Profile" ],
+        "summary" : "Returns a response containing user profile information.",
+        "operationId" : "getUserProfileUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/verifyEmailId" : {
+      "post" : {
+        "tags" : [ "Verify Email" ],
+        "summary" : "Email verification based on the code",
+        "operationId" : "verifyEmailIdUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "appId",
+          "in" : "header",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "verificationForm",
+          "description" : "verificationForm",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EmailIdVerificationForm"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "BaseResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "BaseResponse"
+    },
+    "ContactUsReqBean" : {
+      "type" : "object",
+      "required" : [ "body", "email", "firstName", "subject" ],
+      "properties" : {
+        "appName" : {
+          "type" : "string"
+        },
+        "body" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "subject" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ContactUsReqBean"
+    },
+    "DeactivateAcctBean" : {
+      "type" : "object",
+      "properties" : {
+        "studyData" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StudyReqBean"
+          }
+        }
+      },
+      "title" : "DeactivateAcctBean"
+    },
+    "EmailIdVerificationForm" : {
+      "type" : "object",
+      "required" : [ "code", "emailId" ],
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "emailId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "EmailIdVerificationForm"
+    },
+    "FeedbackReqBean" : {
+      "type" : "object",
+      "required" : [ "body", "subject" ],
+      "properties" : {
+        "appName" : {
+          "type" : "string"
+        },
+        "body" : {
+          "type" : "string"
+        },
+        "subject" : {
+          "type" : "string"
+        }
+      },
+      "title" : "FeedbackReqBean"
+    },
+    "InfoBean" : {
+      "type" : "object",
+      "properties" : {
+        "appVersion" : {
+          "type" : "string"
+        },
+        "deviceToken" : {
+          "type" : "string"
+        },
+        "os" : {
+          "type" : "string"
+        }
+      },
+      "title" : "InfoBean"
+    },
+    "JSONArray" : {
+      "type" : "object",
+      "title" : "JSONArray"
+    },
+    "NotificationBean" : {
+      "type" : "object",
+      "properties" : {
+        "appId" : {
+          "type" : "string"
+        },
+        "customStudyId" : {
+          "type" : "string"
+        },
+        "deviceToken" : {
+          "$ref" : "#/definitions/JSONArray"
+        },
+        "deviceType" : {
+          "type" : "string"
+        },
+        "notificationId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "notificationSubType" : {
+          "type" : "string"
+        },
+        "notificationText" : {
+          "type" : "string"
+        },
+        "notificationTitle" : {
+          "type" : "string"
+        },
+        "notificationType" : {
+          "type" : "string"
+        },
+        "studyId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "NotificationBean"
+    },
+    "NotificationForm" : {
+      "type" : "object",
+      "required" : [ "notifications" ],
+      "properties" : {
+        "notifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/NotificationBean"
+          }
+        }
+      },
+      "title" : "NotificationForm"
+    },
+    "ParticipantInfoBean" : {
+      "type" : "object",
+      "properties" : {
+        "enrolledDate" : {
+          "type" : "string"
+        },
+        "participantId" : {
+          "type" : "string"
+        },
+        "studyId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ParticipantInfoBean"
+    },
+    "ProfileRespBean" : {
+      "type" : "object",
+      "properties" : {
+        "emailId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ProfileRespBean"
+    },
+    "ResetPasswordBean" : {
+      "type" : "object",
+      "required" : [ "emailId" ],
+      "properties" : {
+        "emailId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ResetPasswordBean"
+    },
+    "SettingsRespBean" : {
+      "type" : "object",
+      "properties" : {
+        "localNotifications" : {
+          "type" : "boolean"
+        },
+        "locale" : {
+          "type" : "string"
+        },
+        "passcode" : {
+          "type" : "boolean"
+        },
+        "reminderLeadTime" : {
+          "type" : "string"
+        },
+        "remoteNotifications" : {
+          "type" : "boolean"
+        },
+        "touchId" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "SettingsRespBean"
+    },
+    "StudyMetadataBean" : {
+      "type" : "object",
+      "required" : [ "appId", "appName", "contactEmail", "studyId", "studyVersion" ],
+      "properties" : {
+        "appDescription" : {
+          "type" : "string"
+        },
+        "appId" : {
+          "type" : "string"
+        },
+        "appName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "contactEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "logoImageUrl" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255
+        },
+        "studyCategory" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "studyEnrolling" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 3
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "studySponsor" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 128
+        },
+        "studyStatus" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 32
+        },
+        "studyTagline" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 128
+        },
+        "studyTitle" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "studyType" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 32
+        },
+        "studyVersion" : {
+          "type" : "string"
+        }
+      },
+      "title" : "StudyMetadataBean"
+    },
+    "StudyReqBean" : {
+      "type" : "object",
+      "properties" : {
+        "studyId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "StudyReqBean"
+    },
+    "UserRegistrationForm" : {
+      "type" : "object",
+      "required" : [ "emailId", "password" ],
+      "properties" : {
+        "appId" : {
+          "type" : "string"
+        },
+        "appName" : {
+          "type" : "string"
+        },
+        "auth" : {
+          "type" : "string"
+        },
+        "emailId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "localNotification" : {
+          "type" : "boolean"
+        },
+        "password" : {
+          "type" : "string",
+          "pattern" : "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$"
+        },
+        "reminderFlag" : {
+          "type" : "boolean"
+        },
+        "remoteNotification" : {
+          "type" : "boolean"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tempPassword" : {
+          "type" : "boolean"
+        },
+        "tempPasswordDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "touchId" : {
+          "type" : "boolean"
+        },
+        "usePassCode" : {
+          "type" : "boolean"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserRegistrationForm"
+    },
+    "UserRegistrationResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tempRegId" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserRegistrationResponse"
+    },
+    "UserRequestBean" : {
+      "type" : "object",
+      "properties" : {
+        "info" : {
+          "$ref" : "#/definitions/InfoBean"
+        },
+        "participantInfo" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ParticipantInfoBean"
+          }
+        },
+        "profile" : {
+          "$ref" : "#/definitions/ProfileRespBean"
+        },
+        "settings" : {
+          "$ref" : "#/definitions/SettingsRespBean"
+        }
+      },
+      "title" : "UserRequestBean"
+    },
+    "ValidationErrorResponse" : {
+      "type" : "object",
+      "properties" : {
+        "error_code" : {
+          "type" : "string"
+        },
+        "error_description" : {
+          "type" : "string"
+        },
+        "error_type" : {
+          "type" : "string"
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "title" : "ValidationErrorResponse"
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Violation"
+    }
+  }
+}

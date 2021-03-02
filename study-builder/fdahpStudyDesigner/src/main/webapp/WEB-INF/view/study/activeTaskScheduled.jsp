@@ -910,7 +910,7 @@
   <input type="hidden" name="type" id="type" value="schedule">
   <div class="manually all mt-lg dis-none">
   
-    <div class="gray-xs-f mb-sm">Select a date range
+    <div class="gray-xs-f mb-sm">Select a date range and a start and end time for each run of the activity
       <span class="requiredStar"> *</span>
       <span
          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"

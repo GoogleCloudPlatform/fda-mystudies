@@ -189,6 +189,8 @@ let kRetainDataOnLeaveStudy =
   You are choosing to leave the study. Please choose if your response data can be retained and used \
   for research purposes OR if your response data should be deleted.
   """
+let kResourceLeaveGatewayStudy = "Are you sure you want to leave the study?"
+let kResourceLeaveStandaloneStudy = "Are you sure you want to leave the study? This will also delete your app account."
 
 // MARK: - StudyDashboardViewController constants
 let kWelcomeTableViewCell = "welcomeCell"
@@ -221,6 +223,8 @@ let kMessageForMissingStudyId = "Unable to Enroll, Please try again later."
 
 let kMessageInvalidTokenOrIfStudyDoesNotExist =
   "Sorry, this token is invalid. Please enter a valid token to continue."
+let kMessageconsentConfirmation =
+  "By tapping on Agree, you confirm that you have reviewed the consent document and agree to participate in the study."
 
 // MARK: - StudyHomeMessages
 let kMessageForStudyUpcomingState =
