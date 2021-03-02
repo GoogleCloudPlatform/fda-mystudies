@@ -53,7 +53,6 @@ locals {
     "participant-enroll-datastore",
     "participant-user-datastore",
     "participant-manager-datastore",
-    "auth-server-db-migration",
   ]
   apps_db_names = {
     "auth-server"                   = "oauth_server_hydra"
@@ -64,7 +63,6 @@ locals {
     "participant-enroll-datastore"  = "mystudies_participant_datastore"
     "participant-user-datastore"    = "mystudies_participant_datastore"
     "participant-manager-datastore" = "mystudies_participant_datastore"
-    "auth-server-db-migration"      = "oauth_server_hydra"
   }
   service_account_ids = [
     "auth-server-gke-sa",
