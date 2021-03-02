@@ -89,7 +89,8 @@ public class SurveyActivitiesListAdapter
   }
 
   @Override
-  public void clicked(int positon) {}
+  public void clicked(int positon) {
+  }
 
   class Holder extends RecyclerView.ViewHolder {
     final RelativeLayout stateLayout;
@@ -472,23 +473,39 @@ public class SurveyActivitiesListAdapter
                                         .toString()
                                         .split("\\.")[0]);
               }
-              pos =
-                      checkCurrentTimeInBetweenDates(
-                              items
-                                      .get(position)
-                                      .getFrequency()
-                                      .getRuns()
-                                      .get(i)
-                                      .getStartTime()
-                                      .split("\\.")[0],
-                              items
-                                      .get(position)
-                                      .getFrequency()
-                                      .getRuns()
-                                      .get(i)
-                                      .getEndTime()
-                                      .split("\\.")[0],
-                              i);
+              if (i < items
+                      .get(position)
+                      .getFrequency()
+                      .getRuns().size() - 1) {
+                pos = checkCurrentTimeInBetweenDates(items
+                        .get(position)
+                        .getFrequency()
+                        .getRuns()
+                        .get(i)
+                        .getStartTime()
+                        .split("\\.")[0], items
+                        .get(position)
+                        .getFrequency()
+                        .getRuns()
+                        .get(i + 1)
+                        .getStartTime()
+                        .split("\\.")[0], i);
+              } else {
+                pos = checkCurrentTimeInBetweenDates(items
+                        .get(position)
+                        .getFrequency()
+                        .getRuns()
+                        .get(i)
+                        .getStartTime()
+                        .split("\\.")[0], items
+                        .get(position)
+                        .getFrequency()
+                        .getRuns()
+                        .get(i)
+                        .getEndTime()
+                        .split("\\.")[0], i);
+              }
+
               finalTime = startTime + " to " + endTime;
               mScheduledTime.add(finalTime);
 
@@ -547,6 +564,45 @@ public class SurveyActivitiesListAdapter
                                                   .getEndTime()
                                                   .toString()
                                                   .split("\\.")[0])));
+
+                  if ((currentRunStatusForActivities
+                          .get(position)
+                          .getStatus()
+                          .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
+                          .get(position)
+                          .getStatus()
+                          .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) && pos < items
+                          .get(position)
+                          .getFrequency()
+                          .getRuns()
+                          .size() && status
+                          .get(position)
+                          .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT) || currentRunStatusForActivities
+                          .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
+                    holder.date.setText(
+                            simpleDateFormatForOtherFreq.format(
+                                    simpleDateFormat5.parse(
+                                            items
+                                                    .get(position)
+                                                    .getFrequency()
+                                                    .getRuns()
+                                                    .get(pos + 1)
+                                                    .getStartTime()
+                                                    .toString()
+                                                    .split("\\.")[0]))
+                                    + " to "
+                                    + simpleDateFormatForOtherFreq.format(
+                                    simpleDateFormat5.parse(
+                                            items
+                                                    .get(position)
+                                                    .getFrequency()
+                                                    .getRuns()
+                                                    .get(pos + 1)
+                                                    .getEndTime()
+                                                    .toString()
+                                                    .split("\\.")[0])));
+                  }
+
                 }
 
                 if (pos > 0) {
@@ -576,6 +632,44 @@ public class SurveyActivitiesListAdapter
                             simpleDateFormatForOtherFreq.format(d1)
                                     + " to "
                                     + simpleDateFormatForOtherFreq.format(d2));
+
+                    if ((currentRunStatusForActivities
+                            .get(position)
+                            .getStatus()
+                            .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
+                            .get(position)
+                            .getStatus()
+                            .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) && pos < items
+                            .get(position)
+                            .getFrequency()
+                            .getRuns()
+                            .size() && status
+                            .get(position)
+                            .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT) || currentRunStatusForActivities
+                            .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
+                      holder.date.setText(
+                              simpleDateFormatForOtherFreq.format(
+                                      simpleDateFormat5.parse(
+                                              items
+                                                      .get(position)
+                                                      .getFrequency()
+                                                      .getRuns()
+                                                      .get(pos + 1)
+                                                      .getStartTime()
+                                                      .toString()
+                                                      .split("\\.")[0]))
+                                      + " to "
+                                      + simpleDateFormatForOtherFreq.format(
+                                      simpleDateFormat5.parse(
+                                              items
+                                                      .get(position)
+                                                      .getFrequency()
+                                                      .getRuns()
+                                                      .get(pos + 1)
+                                                      .getEndTime()
+                                                      .toString()
+                                                      .split("\\.")[0])));
+                    }
                   } catch (Exception e) {
                     Logger.log(e);
                   }
@@ -619,12 +713,12 @@ public class SurveyActivitiesListAdapter
             click = false;
             new Handler()
                     .postDelayed(
-                         new Runnable() {
-                            @Override
+                            new Runnable() {
+                              @Override
                               public void run() {
-                              click = true;
-                            }
-                          },
+                                click = true;
+                              }
+                            },
                             1500);
             if (paused) {
               Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
@@ -693,8 +787,8 @@ public class SurveyActivitiesListAdapter
           }
           CustomActivitiesDailyDialogClass c =
                   new CustomActivitiesDailyDialogClass(
-                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this,status
-                          .get(holder.getAdapterPosition()),currentRunStatusForActivities
+                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this, status
+                          .get(holder.getAdapterPosition()), currentRunStatusForActivities
                           .get(holder.getAdapterPosition()));
           c.show();
         }
