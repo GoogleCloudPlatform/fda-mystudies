@@ -21,18 +21,18 @@ import UIKit
 let kConfirmationSegueIdentifier = "confirmationSegue"
 let kHeaderDescription =
   """
-  You have chosen to delete your #APPNAME# account. \
+  You have chosen to delete your app account. \
   This will result in automatic withdrawal from the studies you were enrolled in.
   """
 
 let kHeaderDescriptionStandalone =
   """
-  You have chosen to delete your #APPNAME# account. \
+  You have chosen to delete your app account. \
   This will result in automatic withdrawal from the studies you were enrolled in.
   """
 
 let kConfirmWithdrawlSelectOptionsAlert =
-  "Please select an option between Delete Data or Retain Data for all studies."
+  "Please select a data retention preference for all studies in the list."
 let kResponseDataDeletedText = "Response data will be deleted"
 let kResponseDataRetainedText = "Response data will be retained"
 
@@ -142,12 +142,7 @@ class ConfirmationViewController: UIViewController {
         studyName: studyName,
         withdrawalConfigration: withdrawalConfigration
       )
-
-      if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.deleteData {
-        withdrawnStudy.shouldDelete = true
-      } else if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.noAction {
-        withdrawnStudy.shouldDelete = false
-      }
+      withdrawnStudy.shouldDelete = false
       studiesToWithdraw.append(withdrawnStudy)
     }
   }
