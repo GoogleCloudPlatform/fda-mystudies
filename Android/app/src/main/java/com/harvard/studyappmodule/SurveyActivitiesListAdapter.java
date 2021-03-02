@@ -711,15 +711,12 @@ public class SurveyActivitiesListAdapter
           int totalRunVal = currentRunStatusForActivities.get(position).getTotalRun();
           if (click) {
             click = false;
-            new Handler()
-                    .postDelayed(
-                            new Runnable() {
-                              @Override
-                              public void run() {
-                                click = true;
-                              }
-                            },
-                            1500);
+            new Handler().postDelayed(new Runnable() {
+              @Override
+              public void run() {
+                click = true;
+              }
+            }, 1500);
             if (paused) {
               Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
             } else {
