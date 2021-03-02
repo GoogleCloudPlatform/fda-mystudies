@@ -1,5 +1,11 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -719,11 +725,6 @@ public class StudyMetaDataDao {
                           .replaceAll("em>", "i>")
                           .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
             }
-
-            reviewBean.setReasonForConsent(
-                StringUtils.isNotEmpty(consentDto.getAggrementOfConsent())
-                    ? consentDto.getAggrementOfConsent()
-                    : StudyMetaDataConstants.REASON_FOR_CONSENT);
             consent.setReview(reviewBean);
           }
           eligibilityConsentResponse.setConsent(consent);
