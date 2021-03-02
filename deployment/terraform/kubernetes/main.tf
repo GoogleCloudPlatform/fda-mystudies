@@ -53,7 +53,7 @@ locals {
     "participant-enroll-datastore",
     "participant-user-datastore",
     "participant-manager-datastore",
-    "oauth_server_hydra",
+    "auth-server-db-migration",
   ]
   apps_db_names = {
     "auth-server"                   = "oauth_server_hydra"
@@ -76,7 +76,7 @@ locals {
     "enroll-datastore-gke-sa",
     "user-datastore-gke-sa",
     "participant-manager-gke-sa",
-    "auth-server-db-migration-gke-sa"
+    "auth-server-db-migration-gke-sa",
   ]
 }
 
