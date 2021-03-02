@@ -254,68 +254,79 @@ class ResourcesViewController: UIViewController {
     var withdrawalType = Study.currentStudy?.withdrawalConfigration?.type
 
     if withdrawalMessage == nil {
-      withdrawalMessage = "Are you sure you want to " + leaveStudy + "?"
+      withdrawalMessage = Utilities.isStandaloneApp() ? kResourceLeaveStandaloneStudy : kResourceLeaveGatewayStudy
     }
 
     if withdrawalType == nil || withdrawalType == .notAvailable {
 
       withdrawlInformationNotFound = true
       withdrawalType = .notAvailable
-      WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!,
-        delegate: self
+      noWithdrawInfoAlert(withdrawalMessage ?? "Are you sure you want to leave the study?")
+    } else {
+      UIUtilities.showAlertMessageWithTwoActionsAndHandler(
+        NSLocalizedString((leaveStudy + " ?"), comment: ""),
+        errorMessage: NSLocalizedString(withdrawalMessage!, comment: ""),
+        errorAlertActionTitle: NSLocalizedString("Cancel", comment: ""),
+        errorAlertActionTitle2: NSLocalizedString("Proceed", comment: ""),
+        viewControllerUsed: self,
+        action1: {},
+        action2: {
+          
+          switch withdrawalType! as StudyWithdrawalConfigrationType {
+          
+          case .askUser:
+            
+            UIUtilities.showAlertMessageWithThreeActionsAndHandler(
+              kImportantNoteMessage,
+              errorMessage: kRetainDataOnLeaveStudy,
+              errorAlertActionTitle: "Retain my data",
+              errorAlertActionTitle2: "Delete my data",
+              viewControllerUsed: self,
+              action1: {
+                // Retain Action
+                
+                self.shouldDeleteData = false
+                self.withdrawalFromStudy(deleteResponse: false)
+                
+              },
+              action2: {
+                
+                // Delete action
+                self.shouldDeleteData = true
+                self.withdrawalFromStudy(deleteResponse: true)
+                
+              }
+            )
+            
+          case .deleteData:
+            self.shouldDeleteData = true
+            self.withdrawalFromStudy(deleteResponse: true)
+            
+          case .noAction:
+            self.shouldDeleteData = false
+            self.withdrawalFromStudy(deleteResponse: false)
+            
+          default: break
+          }
+        }
       )
-      return
     }
 
+  }
+  
+  func noWithdrawInfoAlert(_ withdrawalMessage: String) {
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
-      NSLocalizedString((leaveStudy + " ?"), comment: ""),
-      errorMessage: NSLocalizedString(withdrawalMessage!, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("Cancel", comment: ""),
-      errorAlertActionTitle2: NSLocalizedString("Proceed", comment: ""),
+      "",
+      errorMessage: NSLocalizedString(withdrawalMessage, comment: ""),
+      errorAlertActionTitle: NSLocalizedString("Yes", comment: ""),
+      errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
       viewControllerUsed: self,
-      action1: {},
-      action2: {
-
-        switch withdrawalType! as StudyWithdrawalConfigrationType {
-
-        case .askUser:
-
-          UIUtilities.showAlertMessageWithThreeActionsAndHandler(
-            kImportantNoteMessage,
-            errorMessage: kRetainDataOnLeaveStudy,
-            errorAlertActionTitle: "Retain my data",
-            errorAlertActionTitle2: "Delete my data",
-            viewControllerUsed: self,
-            action1: {
-              // Retain Action
-
-              self.shouldDeleteData = false
-              self.withdrawalFromStudy(deleteResponse: false)
-
-            },
-            action2: {
-
-              // Delete action
-              self.shouldDeleteData = true
-              self.withdrawalFromStudy(deleteResponse: true)
-
-            }
-          )
-
-        case .deleteData:
-          self.shouldDeleteData = true
-          self.withdrawalFromStudy(deleteResponse: true)
-
-        case .noAction:
-          self.shouldDeleteData = false
-          self.withdrawalFromStudy(deleteResponse: false)
-
-        default: break
-        }
-      }
+      action1: {
+        self.shouldDeleteData = false
+        self.withdrawalFromStudy(deleteResponse: false)
+      },
+      action2: {}
     )
-
   }
 
   func navigateToStudyHome() {
@@ -535,8 +546,6 @@ class ResourcesViewController: UIViewController {
 
       self.removeProgressIndicator()
       self.withdrawlInformationNotFound = false
-      self.handleLeaveStudy()
-
     } else {
       self.checkForResourceUpdate()
     }

@@ -55,6 +55,8 @@ import com.google.cloud.healthcare.fdamystudies.service.StudyMetadataService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -76,6 +78,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "Process activity response", description = "Response activity operation performed")
 @RestController
 public class ProcessActivityResponseController {
   @Autowired private ParticipantService participantService;
@@ -92,6 +95,8 @@ public class ProcessActivityResponseController {
   private static final Logger logger =
       LoggerFactory.getLogger(ProcessActivityResponseController.class);
 
+  @ApiOperation(
+      value = "Process activity response for participant and store in Google Cloud Firestore")
   @PostMapping("/participant/process-response")
   public ResponseEntity<?> processActivityResponseForParticipant(
       @RequestBody ActivityResponseBean questionnaireActivityResponseBean,
@@ -388,6 +393,7 @@ public class ProcessActivityResponseController {
     }
   }
 
+  @ApiOperation(value = "Get activity response data for participant from Google Cloud Firestore")
   @GetMapping("/participant/getresponse")
   public ResponseEntity<?> getActivityResponseDataForParticipant(
       @RequestParam("appId") String applicationId,
@@ -485,6 +491,7 @@ public class ProcessActivityResponseController {
     }
   }
 
+  @ApiOperation(value = "Withdraw participant from study from response datastore")
   @PostMapping("/participant/withdraw")
   public ResponseEntity<?> withdrawParticipantFromStudy(
       @RequestHeader String appId,
