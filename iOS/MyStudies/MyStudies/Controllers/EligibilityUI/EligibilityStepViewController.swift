@@ -21,7 +21,6 @@ import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
 
-let kStudyWithStudyId = "Study with StudyId"
 let kTitleOK = "OK"
 
 class EligibilityStep: ORKStep {
