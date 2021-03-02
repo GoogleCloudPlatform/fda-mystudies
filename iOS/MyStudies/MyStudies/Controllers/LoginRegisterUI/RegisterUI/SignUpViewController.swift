@@ -22,7 +22,7 @@ import IQKeyboardManagerSwift
 import UIKit
 
 let kVerifyMessageFromSignUp =
-  "An email has been sent to xyz@gmail.com. Please type in the Verification Code received in the email to complete the verification step."
+  "An email has been sent to xyz@gmail.com. Please type in the verification code received in the email to complete account setup."
 
 enum SignUpLoadFrom: Int {
   case gatewayOverview
@@ -398,6 +398,7 @@ extension SignUpViewController: UITextFieldDelegate {
   func textFieldDidBeginEditing(_ textField: UITextField) {
     if textField.tag == TextFieldTags.emailId.rawValue {
       textField.keyboardType = .emailAddress
+      textField.isSecureTextEntry = false
     }
   }
 
@@ -421,6 +422,7 @@ extension SignUpViewController: UITextFieldDelegate {
         return true
       }
     } else if tag == .password || tag == .confirmPassword {
+      textField.isSecureTextEntry = true
       if finalString.count > 64 {
         return false
       } else {
@@ -445,6 +447,7 @@ extension SignUpViewController: UITextFieldDelegate {
     switch tag {
     case .emailId:
       self.user.emailId = textField.text!
+      textField.isSecureTextEntry = false
 
     case .password:
       if let password = textField.text {
@@ -455,8 +458,10 @@ extension SignUpViewController: UITextFieldDelegate {
         }
         self.user.password = password
       }
+      textField.isSecureTextEntry = true
     case .confirmPassword:
       confirmPassword = textField.text!
+      textField.isSecureTextEntry = true
     }
   }
 }
