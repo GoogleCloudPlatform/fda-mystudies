@@ -38,6 +38,8 @@ import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import com.google.cloud.storage.StorageException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,6 +65,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Consent",
+    value = "consent management",
+    description = "Operations pertaining to consent document")
 @RestController
 public class UserConsentManagementController {
 
@@ -85,6 +91,8 @@ public class UserConsentManagementController {
   private static final Logger logger =
       LoggerFactory.getLogger(UserConsentManagementController.class);
 
+  @ApiOperation(
+      value = "Update consent status and store the consent document in Google Cloud Storage (GCS)")
   @PostMapping(
       value = "/updateEligibilityConsentStatus",
       consumes = "application/json",
@@ -209,6 +217,7 @@ public class UserConsentManagementController {
     }
   }
 
+  @ApiOperation(value = "Returns a response related to consent document")
   @GetMapping(value = "/consentDocument", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getStudyConsentPdf(
       @RequestHeader("userId") String userId,

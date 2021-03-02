@@ -43,7 +43,7 @@
               test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
             <button type="button" class="btn btn-default gray-btn mr-sm"
                     id="enforcePasswordId" style="margin-top: 12px;">Enforce
-              Password Change
+              password change
             </button>
           </c:if>
           <c:if
@@ -118,7 +118,7 @@
                                              <c:if
                                                  test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"</c:if>
                                              <c:if
-                                                 test="${user.emailChanged}">title="Account status: Pending Verification"</c:if>
+                                                 test="${user.emailChanged}">title="Account status: Pending verification"</c:if>
                                              <c:if
                                                  test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Account status: Active"</c:if>
                                              <c:if

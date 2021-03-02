@@ -86,7 +86,6 @@ public class SurveyActivity extends AppCompatActivity
   private String studyStatus;
   private String position;
   private String enroll;
-  private String rejoin;
   public String activityId = "";
   public String localNotification = "";
   private LinearLayout menulayout;
@@ -167,9 +166,6 @@ public class SurveyActivity extends AppCompatActivity
       enroll =
           AppController.getHelperSharedPreference()
               .readPreference(SurveyActivity.this, getResources().getString(R.string.enroll), "");
-      rejoin =
-          AppController.getHelperSharedPreference()
-              .readPreference(SurveyActivity.this, getResources().getString(R.string.rejoin), "");
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -615,10 +611,6 @@ public class SurveyActivity extends AppCompatActivity
 
   public String getEnroll() {
     return enroll;
-  }
-
-  public String getRejoin() {
-    return rejoin;
   }
 
   @Override

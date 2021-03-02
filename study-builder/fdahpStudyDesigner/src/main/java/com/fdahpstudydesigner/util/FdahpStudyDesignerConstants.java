@@ -433,8 +433,7 @@ public class FdahpStudyDesignerConstants {
   public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
       "study.basicInformation.defaultImage";
 
-  public static final String CONSENT_AGREEMENT =
-      "By tapping on Agree, you confirm that you have reviewed the consent document and agree to participate in the study.";
+  public static final String ADD = "add";
 
   public static final String SUPER_ADMIN_PERMISSIONS =
       "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW,ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT,ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW";
