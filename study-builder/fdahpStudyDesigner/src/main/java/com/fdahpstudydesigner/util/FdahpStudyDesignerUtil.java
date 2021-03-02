@@ -74,6 +74,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FdahpStudyDesignerUtil {
 
+  private static Map<String, String> appProperties = null;
   /* Read Properties file */
   private static Logger logger = Logger.getLogger(FdahpStudyDesignerUtil.class.getName());
 
@@ -254,8 +255,12 @@ public class FdahpStudyDesignerUtil {
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public static Map<String, String> getAppProperties() {
-    HashMap hm = new HashMap<String, String>();
     logger.info("FdahpStudyDesignerUtil - getAppProperties() :: Properties Initialization");
+    if (appProperties != null && !appProperties.isEmpty()) {
+      return appProperties;
+    }
+    appProperties = new HashMap<>();
+
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
     Resource resource = null;
@@ -265,7 +270,7 @@ public class FdahpStudyDesignerUtil {
       while (keys.hasMoreElements()) {
         String key = keys.nextElement();
         String value = rb.getString(key);
-        hm.put(key, value);
+        appProperties.put(key, value);
       }
       ServletContext context = ServletContextHolder.getServletContext();
       Properties prop =
@@ -274,14 +279,14 @@ public class FdahpStudyDesignerUtil {
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();
         String value = prop.getProperty(key);
-        hm.put(key, value);
+        appProperties.put(key, value);
       }
 
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getAppProperties() - ERROR ", e);
     }
     logger.info("FdahpStudyDesignerUtil - getAppProperties() - ends");
-    return hm;
+    return appProperties;
   }
 
   public static FormulaInfoBean getConditionalFormulaResult(
