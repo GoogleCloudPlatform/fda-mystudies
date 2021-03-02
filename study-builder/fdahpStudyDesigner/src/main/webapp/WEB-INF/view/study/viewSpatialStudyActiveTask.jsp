@@ -356,7 +356,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   id="${taskMasterAttributeBo.attributeName}_stat_id" class="statisticsBlock"
                   name="taskAttributeValueBos[7].useForStatistic" value="option1">
                 <label for="${taskMasterAttributeBo.attributeName}_stat_id">Use
-                  for Statistic</label>
+                  for statistic</label>
               </span>
             </div>
             <div
@@ -547,7 +547,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   id="${taskMasterAttributeBo.attributeName}_stat_id" class="statisticsBlock"
                   name="taskAttributeValueBos[8].useForStatistic" value="option1">
                 <label for="${taskMasterAttributeBo.attributeName}_stat_id">Use
-                  for Statistic</label>
+                  for statistic</label>
               </span>
             </div>
             <div
@@ -738,7 +738,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   id="${taskMasterAttributeBo.attributeName}_stat_id" class="statisticsBlock"
                   name="taskAttributeValueBos[9].useForStatistic" value="option1">
                 <label for="${taskMasterAttributeBo.attributeName}_stat_id">Use
-                  for Statistic</label>
+                  for statistic</label>
               </span>
             </div>
             <div
