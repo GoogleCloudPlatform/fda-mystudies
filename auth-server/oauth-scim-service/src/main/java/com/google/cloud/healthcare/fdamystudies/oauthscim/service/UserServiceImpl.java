@@ -560,17 +560,16 @@ public class UserServiceImpl implements UserService {
       case ACCOUNT_LOCKED:
         if (passwordExpired) {
           auditHelper.logEvent(SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD, auditRequest);
-          throw new ErrorCodeException(ErrorCode.TEMP_PASSWORD_EXPIRED);
         }
       case PASSWORD_RESET:
         if (passwordExpired) {
           auditHelper.logEvent(SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD, auditRequest);
-          throw new ErrorCodeException(ErrorCode.TEMP_PASSWORD_EXPIRED);
         }
       default:
-        if (passwordExpired) {
+        if (passwordExpired
+            && PlatformComponent.PARTICIPANT_MANAGER.getValue().equals(userEntity.getAppId())) {
+          userEntity.setStatus(UserAccountStatus.EXPIRED.getStatus());
           auditHelper.logEvent(SIGNIN_FAILED_EXPIRED_PASSWORD, auditRequest);
-          throw new ErrorCodeException(ErrorCode.PASSWORD_EXPIRED);
         }
     }
   }
