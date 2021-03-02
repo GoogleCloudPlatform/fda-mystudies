@@ -74,7 +74,6 @@ locals {
     "enroll-datastore-gke-sa",
     "user-datastore-gke-sa",
     "participant-manager-gke-sa",
-    "auth-server-db-migration-gke-sa",
   ]
 }
 
