@@ -10,7 +10,7 @@ metadata:
   labels:
     app: auth-server-db-migration
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: auth-server-db-migration
