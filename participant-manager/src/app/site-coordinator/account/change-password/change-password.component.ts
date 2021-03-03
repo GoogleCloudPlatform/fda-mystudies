@@ -119,7 +119,13 @@ special characters.`);
         this.resetPasswordForm.controls['newPassword'].value,
       );
 
-      if (this.resetPasswordForm.controls['newPassword'].errors) {
+      if (secretkeylenth.length === 0) {
+        this.passwordMeterLow = ' ';
+        this.passwordMeterHigh = ' ';
+        this.passwordMeterValue = ' ';
+        this.passwordMeterOptimum = ' ';
+        this.meterStatus = ' ';
+      } else if (this.resetPasswordForm.controls['newPassword'].errors) {
         this.passwordMeterLow = '.25';
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.2';
