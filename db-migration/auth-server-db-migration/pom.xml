@@ -29,6 +29,11 @@
       <version>8.0.23</version>
     </dependency>
   </dependencies>
+  <dependency>
+    <groupId>com.google.cloud.sql</groupId>
+    <artifactId>mysql-socket-factory-connector-j-6</artifactId>
+    <version>1.0.2</version>
+</dependency>
 
   <build>
     <plugins>
