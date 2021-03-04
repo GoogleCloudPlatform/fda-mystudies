@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="B3S-hy-u0E">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="B3S-hy-u0E">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -15,7 +15,7 @@
         <!--Splash View Controller-->
         <scene sceneID="4El-4s-WVk">
             <objects>
-                <viewController id="rk4-Oa-hFh" customClass="SplashViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="rk4-Oa-hFh" customClass="SplashViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="t0d-0H-4KL"/>
                         <viewControllerLayoutGuide type="bottom" id="W6h-X5-dpN"/>
@@ -45,7 +45,7 @@
         <!--Web View Controller-->
         <scene sceneID="Vey-62-Ozo">
             <objects>
-                <viewController id="bUD-GQ-LvD" customClass="WebViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="bUD-GQ-LvD" customClass="WebViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FBj-mA-7t7"/>
                         <viewControllerLayoutGuide type="bottom" id="TRa-IR-i21"/>
@@ -136,7 +136,7 @@
         <!--Feed Back View Controller-->
         <scene sceneID="fD1-n2-XBl">
             <objects>
-                <viewController id="sOn-rA-FMf" customClass="FeedBackViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="sOn-rA-FMf" customClass="FeedBackViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="MZy-Jz-dDV"/>
                         <viewControllerLayoutGuide type="bottom" id="t9B-UY-CbW"/>
@@ -149,7 +149,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="702"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedbackCellFirst" rowHeight="161" id="TYA-W1-DRY" customClass="FeedBackTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedbackCellFirst" rowHeight="161" id="TYA-W1-DRY" customClass="FeedBackTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="161"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TYA-W1-DRY" id="IX6-ta-Yuf">
@@ -185,7 +185,7 @@
                                             <outlet property="labelHeadingText" destination="bzZ-kN-a6u" id="aY4-cm-rMW"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedbackCellSecond" rowHeight="328" id="4iI-8x-c3P" customClass="FeedBackTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedbackCellSecond" rowHeight="328" id="4iI-8x-c3P" customClass="FeedBackTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="189" width="414" height="328"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4iI-8x-c3P" id="Adm-Rk-s53">
@@ -224,7 +224,7 @@
                                     <constraint firstAttribute="height" constant="2" id="xs4-Ce-hB0"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yz6-7F-Utw">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yz6-7F-Utw">
                                 <rect key="frame" x="124" y="814" width="166" height="54"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                 <state key="normal" title="Submit">
@@ -273,7 +273,7 @@
         <!--Resources View Controller-->
         <scene sceneID="5MK-We-ctY">
             <objects>
-                <viewController id="Ezm-N3-Dtw" customClass="ResourcesViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Ezm-N3-Dtw" customClass="ResourcesViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ns0-nS-EFf"/>
                         <viewControllerLayoutGuide type="bottom" id="dI5-mM-eOO"/>
@@ -290,15 +290,15 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ResourcesCell" rowHeight="65" id="H9u-Gy-Te9" customClass="ResourcesTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ResourcesCell" rowHeight="65" id="H9u-Gy-Te9" customClass="ResourcesTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="H9u-Gy-Te9" id="DvL-m3-8kZ">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="65"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About the Study" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="97T-bG-ujw">
-                                                    <rect key="frame" x="31" y="25" width="124" height="20"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About the study" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="97T-bG-ujw">
+                                                    <rect key="frame" x="31" y="25" width="121" height="20"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -362,7 +362,7 @@
         <!--Study Dashboard View Controller-->
         <scene sceneID="G01-bY-YrU">
             <objects>
-                <viewController id="dBo-w9-jvv" customClass="StudyDashboardViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dBo-w9-jvv" customClass="StudyDashboardViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="agP-y2-AmD"/>
                         <viewControllerLayoutGuide type="bottom" id="iTi-kR-lA2"/>
@@ -452,7 +452,7 @@
                                 <rect key="frame" x="0.0" y="120" width="414" height="693"/>
                                 <color key="backgroundColor" red="0.84705882349999995" green="0.89019607840000003" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="welcomeCell" rowHeight="55" id="p5R-JE-yRo" customClass="StudyDashboardWelcomeTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="welcomeCell" rowHeight="55" id="p5R-JE-yRo" customClass="StudyDashboardWelcomeTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="p5R-JE-yRo" id="IXH-tR-ZCx">
@@ -492,15 +492,15 @@
                                             <outlet property="labelStatus" destination="wDc-BD-rWW" id="0Ka-Fr-xMB"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="studyActivityCell" rowHeight="160" id="x4j-QA-tJh" customClass="StudyDashboardStudyActivitiesTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="studyActivityCell" rowHeight="160" id="x4j-QA-tJh" customClass="StudyDashboardStudyActivitiesTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="110.5" width="414" height="160"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="x4j-QA-tJh" id="Swn-5Z-gQQ">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="160"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study Activities" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="IlR-p9-C3d">
-                                                    <rect key="frame" x="25" y="15" width="101" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study activities" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="IlR-p9-C3d">
+                                                    <rect key="frame" x="25" y="15" width="99" height="17"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -629,7 +629,7 @@
                                             <outlet property="labelTaskNumber" destination="MPP-ft-siq" id="6si-6s-TJX"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="percentageCell" rowHeight="70" id="UXE-hw-3eq" customClass="StudyDashboardStudyPercentageTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="percentageCell" rowHeight="70" id="UXE-hw-3eq" customClass="StudyDashboardStudyPercentageTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="270.5" width="414" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UXE-hw-3eq" id="xG2-GT-rUh">
@@ -642,14 +642,14 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study Completion" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="BUp-ZG-pOn">
-                                                    <rect key="frame" x="84" y="29" width="92" height="14"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study completion" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="BUp-ZG-pOn">
+                                                    <rect key="frame" x="84" y="29" width="89.5" height="14"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="11"/>
                                                     <color key="textColor" red="0.54901960780000003" green="0.58431372550000005" blue="0.63921568630000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ALU-N3-hc6">
-                                                    <rect key="frame" x="35" y="54" width="157.5" height="2"/>
+                                                    <rect key="frame" x="35" y="54" width="157.5" height="4"/>
                                                     <color key="progressTintColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
                                                 </progressView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Won-2E-j3L">
@@ -666,14 +666,14 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study Adherence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="RBU-G3-TIT">
-                                                    <rect key="frame" x="271.5" y="29" width="88" height="14"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study adherence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="RBU-G3-TIT">
+                                                    <rect key="frame" x="271.5" y="29" width="86.5" height="14"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="11"/>
                                                     <color key="textColor" red="0.54901960780000003" green="0.58431372550000005" blue="0.63921568630000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1nj-5K-7BW">
-                                                    <rect key="frame" x="222.5" y="54" width="157.5" height="2"/>
+                                                    <rect key="frame" x="222.5" y="54" width="157.5" height="4"/>
                                                     <color key="progressTintColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
                                                 </progressView>
                                             </subviews>
@@ -701,7 +701,7 @@
                                             <outlet property="labelStudyCompletion" destination="cLq-2v-KCG" id="lpv-aH-SMO"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivityCell" rowHeight="130" id="3XO-en-Tin" customClass="StudyDashboardActivityTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivityCell" rowHeight="130" id="3XO-en-Tin" customClass="StudyDashboardActivityTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="340.5" width="414" height="130"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3XO-en-Tin" id="L2l-PI-X3g">
@@ -718,7 +718,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ActivityCell" id="edY-Fh-kzh" customClass="StudyDashboardActivityCollectionViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ActivityCell" id="edY-Fh-kzh" customClass="StudyDashboardActivityCollectionViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="-4" width="286" height="132"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -822,14 +822,14 @@
                                             <outlet property="activityCollectionView" destination="aoN-0c-6KL" id="nPB-54-bVN"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StatisticsCell" rowHeight="210" id="HiM-EC-i4w" customClass="StudyDashboardStatisticsTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StatisticsCell" rowHeight="210" id="HiM-EC-i4w" customClass="StudyDashboardStatisticsTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="470.5" width="414" height="210"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HiM-EC-i4w" id="7uN-B9-L3k">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="210"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5K4-yU-BVN">
+                                                <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5K4-yU-BVN">
                                                     <rect key="frame" x="213.5" y="14" width="30" height="20"/>
                                                     <color key="backgroundColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
@@ -850,7 +850,7 @@
                                                         <action selector="dayWeekMonthButtonAction:" destination="HiM-EC-i4w" eventType="touchUpInside" id="AAf-y5-YY1"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePj-VU-Hso">
+                                                <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ePj-VU-Hso">
                                                     <rect key="frame" x="260.5" y="14" width="35" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="bwr-nK-jMe"/>
@@ -870,7 +870,7 @@
                                                         <action selector="dayWeekMonthButtonAction:" destination="HiM-EC-i4w" eventType="touchUpInside" id="OQa-g6-CnX"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h1o-Mh-BeP">
+                                                <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h1o-Mh-BeP">
                                                     <rect key="frame" x="311.5" y="14" width="45" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="H6i-7M-Bsu"/>
@@ -932,7 +932,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StatisticsCell" id="1vA-72-vU2" customClass="StudyDashboardStatisticsCollectionViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StatisticsCell" id="1vA-72-vU2" customClass="StudyDashboardStatisticsCollectionViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="10.5" width="125" height="110"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -1044,7 +1044,7 @@
                                             <outlet property="statisticsCollectionView" destination="KgX-3k-xWi" id="GNI-5k-Cw2"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="trendCell" rowHeight="50" id="Ed9-HL-7g8" customClass="StudyDashboardTrendsTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="trendCell" rowHeight="50" id="Ed9-HL-7g8" customClass="StudyDashboardTrendsTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="680.5" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ed9-HL-7g8" id="wqh-W8-TCn">
@@ -1114,7 +1114,7 @@
         <!--Activities View Controller-->
         <scene sceneID="tff-Q1-MY4">
             <objects>
-                <viewController id="1hl-b0-jE8" customClass="ActivitiesViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="1hl-b0-jE8" customClass="ActivitiesViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="g7o-TA-d79"/>
                         <viewControllerLayoutGuide type="bottom" id="M3u-ry-FJf"/>
@@ -1127,7 +1127,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivitiesCell" rowHeight="110" id="bhe-O3-PPP" customClass="ActivitiesTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivitiesCell" rowHeight="110" id="bhe-O3-PPP" customClass="ActivitiesTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="110"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bhe-O3-PPP" id="GIf-Xi-jVZ">
@@ -1243,7 +1243,7 @@
         <!--Study Dashboard Tabbar View Controller-->
         <scene sceneID="CTT-bZ-8sS">
             <objects>
-                <tabBarController storyboardIdentifier="StudyDashboardTabbarViewControllerIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="c0a-3v-Tk4" customClass="StudyDashboardTabbarViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="StudyDashboardTabbarViewControllerIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="c0a-3v-Tk4" customClass="StudyDashboardTabbarViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Qx8-74-pGC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1262,7 +1262,7 @@
         <!--Contact Us View Controller-->
         <scene sceneID="wTB-Fg-hdy">
             <objects>
-                <viewController id="ODM-zs-MAD" customClass="ContactUsViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ODM-zs-MAD" customClass="ContactUsViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="w1x-17-2tZ"/>
                         <viewControllerLayoutGuide type="bottom" id="tBT-D5-FRZ"/>
@@ -1304,21 +1304,21 @@
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContactUsCell" rowHeight="66" id="oVl-vm-cn7" customClass="ContactUsTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ContactUsCell" rowHeight="66" id="oVl-vm-cn7" customClass="ContactUsTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oVl-vm-cn7" id="V0B-Qc-eti">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="66"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="to9-d2-raO">
-                                                    <rect key="frame" x="30" y="16" width="88" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="to9-d2-raO">
+                                                    <rect key="frame" x="30" y="16" width="85" height="21"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="enter first name" textAlignment="right" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="deZ-Ym-GNo">
-                                                    <rect key="frame" x="147" y="14.5" width="238" height="22.5"/>
+                                                    <rect key="frame" x="144" y="14.5" width="241" height="22.5"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
@@ -1362,7 +1362,7 @@
                                     <constraint firstAttribute="height" constant="2" id="btm-0E-KWz"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PJE-uZ-G9M">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PJE-uZ-G9M">
                                 <rect key="frame" x="124" y="814" width="166" height="54"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                 <state key="normal" title="Submit">
@@ -1487,7 +1487,7 @@
         <image name="activities_blue_active" width="26" height="26"/>
         <image name="calenderIcon" width="14.5" height="15.5"/>
         <image name="dashboardActive" width="26" height="26"/>
-        <image name="filterIcon" width="19" height="22.5"/>
+        <image name="filterIcon" width="24" height="24"/>
         <image name="homeIcon" width="20" height="17.5"/>
         <image name="homeIconWhite" width="20.5" height="21.5"/>
         <image name="leftIconBlue" width="8" height="13.5"/>
