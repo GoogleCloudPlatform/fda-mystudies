@@ -66,7 +66,7 @@ let kConsentViewPdfStoryboardId = "ConsentPdfViewerStepViewControllerIdentifier"
 /// Comprehenion Instruction Step Keys
 let kConsentComprehensionTestTitle = "Comprehension"
 let kConsentComprehensionTestText =
-  "Let's do a quick and simple test of your understanding of this Study."
+  "Let's do a quick and simple test of your understanding of this study."
 let kComprehensionInstructionStepIdentifier = "ComprehensionInstructionStep"
 
 /// Comprehension Completion Step Keys
@@ -77,7 +77,7 @@ let kComprehensionCompletionStepIdentifier = "ComprehensionCompletionStep"
 
 /// Consent Completion
 let kConsentCompletionMainTitle = "Consent confirmed"
-let kConsentCompletionSubTitle = "You can now start participating in the Study"
+let kConsentCompletionSubTitle = "You can now start participating in the study"
 let kSignaturePageContentText = "I agree to participate in this research study."
 
 /// Signature Page

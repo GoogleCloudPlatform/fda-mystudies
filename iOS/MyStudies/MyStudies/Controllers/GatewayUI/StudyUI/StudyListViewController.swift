@@ -245,7 +245,7 @@ class StudyListViewController: UIViewController {
       if daysLastSeen >= 7 {  // Notification is disabled for 7 or more Days
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(Branding.productTitle, comment: "") as NSString,
-          message: NSLocalizedString(kMessageAppNotificationOffRemainder, comment: "")
+          message: kMessageAppNotificationOffStayup + kMessageAppNotificationOffRemainder
             as NSString
         )
 
