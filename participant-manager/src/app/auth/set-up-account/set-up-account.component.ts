@@ -144,7 +144,13 @@ export class SetUpAccountComponent
         this.setupAccountForm.controls['password'].value,
       );
 
-      if (this.setupAccountForm.controls['password'].errors) {
+      if (secretkeylenth.length === 0) {
+        this.passwordMeterLow = ' ';
+        this.passwordMeterHigh = ' ';
+        this.passwordMeterValue = ' ';
+        this.passwordMeterOptimum = ' ';
+        this.meterStatus = ' ';
+      } else if (this.setupAccountForm.controls['password'].errors) {
         this.passwordMeterLow = '.25';
         this.passwordMeterHigh = '.75';
         this.passwordMeterValue = '.2';

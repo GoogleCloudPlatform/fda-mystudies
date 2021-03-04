@@ -6648,10 +6648,9 @@ public class StudyDAOImpl implements StudyDAO {
                     .setString("studyType", FdahpStudyDesignerConstants.STUDY_TYPE_SD)
                     .list();
           }
-
         } else {
           if (StringUtils.isNotEmpty(customStudyId)) {
-            searchQuery = " From StudyBo WHERE appId=:appId and customStudyId=:customStudyId ";
+            searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
             studyBos =
                 session
                     .createQuery(searchQuery)

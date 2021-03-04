@@ -570,7 +570,10 @@ public class UserServiceImpl implements UserService {
       default:
         if (passwordExpired) {
           auditHelper.logEvent(SIGNIN_FAILED_EXPIRED_PASSWORD, auditRequest);
-          throw new ErrorCodeException(ErrorCode.PASSWORD_EXPIRED);
+
+          if (PlatformComponent.PARTICIPANT_MANAGER.getValue().equals(userEntity.getAppId())) {
+            userEntity.setStatus(UserAccountStatus.EXPIRED.getStatus());
+          }
         }
     }
   }
