@@ -556,11 +556,10 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               message =
                   flag ? FdahpStudyDesignerConstants.SUCCESS : FdahpStudyDesignerConstants.FAILURE;
 
-              if ("".equals(type) && (!userdetails.isEnabled())) {
-                message = propMap.get("user.inactive.msg");
-              }
-              if (StringUtils.isEmpty(userdetails.getUserPassword())) {
+              if ("".equals(type) && StringUtils.isEmpty(userdetails.getUserPassword())) {
                 message = propMap.get("user.not.found");
+              } else if ("".equals(type) && (!userdetails.isEnabled())) {
+                message = propMap.get("user.inactive.msg");
               }
             }
           }
