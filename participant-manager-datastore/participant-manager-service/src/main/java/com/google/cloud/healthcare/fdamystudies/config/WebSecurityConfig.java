@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     if (appConfig.isXsrfEnabled()) {
       http.csrf().csrfTokenRepository(this.getCsrfTokenRepository());
-      http.headers().frameOptions().sameOrigin();
+      http.headers();
     } else {
       http.csrf().disable();
     }
