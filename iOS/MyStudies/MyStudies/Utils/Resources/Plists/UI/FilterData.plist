@@ -8,7 +8,7 @@
 		<key>isHeaderAvailable</key>
 		<string>YES</string>
 		<key>headerText</key>
-		<string>Participation Status</string>
+		<string>Participation status</string>
 		<key>studyData</key>
 		<array>
 			<dict>
@@ -37,7 +37,7 @@
 			</dict>
 			<dict>
 				<key>name</key>
-				<string>Yet To enroll</string>
+				<string>Yet to enroll</string>
 				<key>isEnabled</key>
 				<true/>
 			</dict>
@@ -49,7 +49,7 @@
 		<key>isHeaderAvailable</key>
 		<string>YES</string>
 		<key>headerText</key>
-		<string>Study Status</string>
+		<string>Study status</string>
 		<key>studyData</key>
 		<array>
 			<dict>
