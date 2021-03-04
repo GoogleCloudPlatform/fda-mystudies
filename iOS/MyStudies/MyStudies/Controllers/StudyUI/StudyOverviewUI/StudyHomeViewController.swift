@@ -581,19 +581,10 @@ class StudyHomeViewController: UIViewController {
             )
           }
         } else if participatedStatus == .withdrawn {
-          // check if rejoining is allowed after withrdrawn from study
-          if currentStudy.studySettings.rejoinStudyAfterWithdrawn {
-            WCPServices().getEligibilityConsentMetadata(
-              studyId: (Study.currentStudy?.studyId)!,
-              delegate: self as NMWebServiceDelegate
-            )
-          } else {
-            UIUtilities.showAlertWithTitleAndMessage(
-              title: "",
-              message: NSLocalizedString(kMessageForStudyWithdrawnState, comment: "")
-                as NSString
-            )
-          }
+          WCPServices().getEligibilityConsentMetadata(
+            studyId: (Study.currentStudy?.studyId)!,
+            delegate: self as NMWebServiceDelegate
+          )
         }
       case .paused:
         UIUtilities.showAlertWithTitleAndMessage(
@@ -1247,9 +1238,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           let currentStatus = Study.currentStudy?.userParticipateState.status
           if currentStatus == .yetToEnroll
             || currentStatus == .notEligible
-            || (currentStatus == .withdrawn
-              && Study.currentStudy?.studySettings
-                .rejoinStudyAfterWithdrawn ?? false)
+            || currentStatus == .withdrawn
           {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 
