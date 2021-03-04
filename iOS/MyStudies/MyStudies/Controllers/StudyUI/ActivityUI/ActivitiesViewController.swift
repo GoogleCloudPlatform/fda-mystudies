@@ -27,7 +27,7 @@ let kActivities = "activities"
 let kActivityUnwindToStudyListIdentifier = "unwindeToStudyListIdentier"
 let kActivityAbondonedAlertMessage =
   """
-  It is not yet time to take the next run of this activity.
+  The next run of this activity is not available yet. Please try again later.
   """
 
 enum ActivityAvailabilityStatus: Int {
@@ -84,7 +84,7 @@ class ActivitiesViewController: UIViewController {
     self.tableView?.estimatedRowHeight = 126
     self.tableView?.rowHeight = UITableView.automaticDimension
     self.tableView?.tableFooterView = UIView()
-    self.navigationItem.title = NSLocalizedString("Study Activities", comment: "")
+    self.navigationItem.title = NSLocalizedString("Study activities", comment: "")
     self.tableView?.sectionHeaderHeight = 30
 
     self.navigationController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.gray
@@ -586,8 +586,8 @@ class ActivitiesViewController: UIViewController {
       if previousMissed < totalIncompletedRuns {
         // show alert
         let message =
-          "We noticed you missed an activity in " + (Study.currentStudy?.name!)!
-          + " today. That’s ok! We know you’re busy, but we encourage you to complete study activities before they expire."
+          "We noticed you missed an activity " + (Study.currentStudy?.name!)!
+          + " today. Your regular participation is important, we encourage you to complete study activities before they expire."
         UIUtilities.showAlertWithMessage(alertMessage: message)
       }
     }

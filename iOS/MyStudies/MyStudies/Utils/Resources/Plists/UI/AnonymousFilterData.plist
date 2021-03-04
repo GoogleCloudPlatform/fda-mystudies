@@ -8,7 +8,7 @@
 		<key>isHeaderAvailable</key>
 		<string>YES</string>
 		<key>headerText</key>
-		<string>Study Status</string>
+		<string>Study status</string>
 		<key>studyData</key>
 		<array>
 			<dict>
