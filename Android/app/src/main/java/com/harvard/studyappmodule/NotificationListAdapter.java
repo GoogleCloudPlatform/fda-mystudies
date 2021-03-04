@@ -151,11 +151,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                             AppController.getHelperSharedPreference()
                                 .writePreference(
                                     context,
-                                    context.getString(R.string.rejoin),
-                                    "" + studyListArrayList.get(i).getSetting().getRejoin());
-                            AppController.getHelperSharedPreference()
-                                .writePreference(
-                                    context,
                                     context.getString(R.string.studyVersion),
                                     "" + studyListArrayList.get(i).getStudyVersion());
                           } catch (Exception e) {
@@ -198,8 +193,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                             intent.putExtra(
                                 "enroll",
                                 "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                            intent.putExtra(
-                                "rejoin", "" + studyListArrayList.get(i).getSetting().getRejoin());
                             context.startActivity(intent);
                           }
                           isStudyAvailable = true;
@@ -272,11 +265,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                                     context,
                                     context.getString(R.string.enroll),
                                     "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                            AppController.getHelperSharedPreference()
-                                .writePreference(
-                                    context,
-                                    context.getString(R.string.rejoin),
-                                    "" + studyListArrayList.get(i).getSetting().getRejoin());
                           } catch (Exception e) {
                             Logger.log(e);
                           }

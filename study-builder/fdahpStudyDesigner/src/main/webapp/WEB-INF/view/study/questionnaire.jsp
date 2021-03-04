@@ -1368,7 +1368,7 @@
           <div class="manually all mt-lg dis-none">
          
             <div class="gray-xs-f mb-sm">
-              Select a date range
+              Select a date range and a start and end time for each run of the activity
                <span class="requiredStar">*</span>
               <span
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
@@ -1926,7 +1926,6 @@
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
-      } else {
 
         var j = 0;
         for (j = customCount; j > 0; j--) {

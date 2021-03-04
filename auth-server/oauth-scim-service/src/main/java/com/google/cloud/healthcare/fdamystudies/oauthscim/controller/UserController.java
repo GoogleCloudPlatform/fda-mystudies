@@ -28,6 +28,8 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.ext.XLogger;
@@ -42,8 +44,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Users",
+    value = "user management in auth server",
+    description = "Operations pertaining to users in auth server")
 @RestController
 public class UserController {
 
@@ -57,10 +64,12 @@ public class UserController {
 
   @Autowired private AuthScimAuditHelper auditHelper;
 
+  @ApiOperation(value = "create a new user")
   @PostMapping(
       value = "/users",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.CREATED)
   public ResponseEntity<UserResponse> createUser(
       @Valid @RequestBody UserRequest userRequest, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
@@ -70,6 +79,7 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.CREATED.value()).body(userResponse);
   }
 
+  @ApiOperation(value = "reset the password and send an email with temporary password")
   @PostMapping(
       value = "/user/reset_password",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -90,6 +100,7 @@ public class UserController {
         .body(resetPasswordResponse);
   }
 
+  @ApiOperation(value = "replace old password with new password")
   @PutMapping(
       value = "/users/{userId}/change_password",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -110,6 +121,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
+  @ApiOperation(value = "update user account status")
   @PutMapping(
       value = "/users/{userId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -132,6 +144,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
+  @ApiOperation(value = "revoke access token and refresh token when user gets logged out")
   @PostMapping(value = "/users/{userId}/logout", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserResponse> logout(
       @PathVariable String userId,
@@ -153,6 +166,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
+  @ApiOperation(value = "delete a user")
   @DeleteMapping(value = "/users/{userId}")
   public void deleteUserAccount(@PathVariable String userId, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
