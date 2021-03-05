@@ -1850,7 +1850,6 @@
 
     
     $(".typeofschedule").change(function () {
-
       var scheduletype = $(this).attr('scheduletype');
       $('#isLaunchStudy').prop('checked', false);
       $('#isStudyLifeTime').prop('checked', false);
@@ -1924,7 +1923,6 @@
         var j = 0;
         for (j = customCount; j > 0; j--) {
           var xdays = $("#xdays" + j).val();
-          
           if(xdays == '') {
             document.getElementById('manualTime0').value = '';
         	  
@@ -1934,12 +1932,12 @@
             $("#AddButton").show();
             $("#AddButton").attr('required', true);
           } else {
-            $("#AddButton").hide();
+           $("#AddButton").hide();
             $("#AddButton").attr('required', false);
           }
         }
       } else {
-          
+        $("#AddButton").show();
         localStorage.setItem("IsAnchorDateSelected", "false");
         localStorage.setItem("IsRegularSelected", "true");
 
@@ -3050,7 +3048,6 @@
   function addDate() {
 	$('.manually-option').find(".delete").css("visibility", "visible");
     customCount = parseInt(customCount) + 1;
-    
     $("#AddButton").hide();
     $("#AddButton").attr('required', false);
     var newDateCon = "<div class='manually-option mb-md form-group' id='RegDate" + customCount + "'>"
