@@ -286,7 +286,7 @@ public class SurveyActivitiesFragment extends Fragment
             mScheduledTime.add(context.getResources().getString(R.string.tasks1));
             CustomActivitiesDailyDialogClass c =
                 new CustomActivitiesDailyDialogClass(
-                    context, mScheduledTime, filterPos, true, SurveyActivitiesFragment.this);
+                    context, mScheduledTime, filterPos, true, SurveyActivitiesFragment.this, status.get(filterPos), currentRunStatusForActivities.get(filterPos));
             c.show();
           }
         });
