@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   participantManagerDatastoreUrl:
-    'http://35.222.67.4:8081/participant-manager-datastore',
+    'http://35.222.67.4:8090/participant-manager-datastore',
   baseHref: '/',
   hydraLoginUrl: 'https://35.222.67.4:9000/oauth2/auth',
   authServerUrl: 'http://35.222.67.4:8084/auth-server',
