@@ -1632,11 +1632,11 @@ meter::-webkit-meter-high-value {
   font-size: 12px;
 }
 .goodPwd {
-  color: var(--green);
+  color: var(--light-green);
   font-size: 12px;
 }
 .strongPwd {
-  color: var(--green);
+  color: var(--light-green);
   font-size: 12px;
 }
 
@@ -1645,4 +1645,11 @@ meter::-webkit-meter-high-value {
 .goodPwd,
 .strongPwd {
   font-size: 12px;
+}
+
+meter::-webkit-meter-bar {
+  background: none; /* Required to get rid of the default background property */
+  background-color: var(--aqua-gray);
+  box-shadow: none;
+  border: none;
 }
