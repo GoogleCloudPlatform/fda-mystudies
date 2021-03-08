@@ -1995,6 +1995,7 @@
 
             $("#AddButton").show();
             $("#AddButton").attr('required', true);
+       	    $('.manually-option').find(".delete").css("visibility", "hidden");
           } else {
             $("#AddButton").hide();
             $("#AddButton").attr('required', false);
@@ -3095,6 +3096,11 @@
 
   function removeDate(param) {
     $(param).parents(".manually-option").remove();
+	if($('.manually-option').length == 1){
+	    	 $('.manually-option').find(".delete").css("visibility", "hidden");
+	    	 $('#AddButton').show();
+	}
+	
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
     if ($('.manually-option').length > 1) {
@@ -3104,6 +3110,7 @@
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
+ 
     $(document).find('.cusTime').trigger('dp.change');
   }
 
