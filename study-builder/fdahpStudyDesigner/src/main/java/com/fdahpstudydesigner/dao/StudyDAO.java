@@ -213,4 +213,6 @@ public interface StudyDAO {
   public Integer getEligibilityType(Integer studyId);
 
   public boolean validateStudyActions(String studyId);
+
+  public List<ConsentBo> getConsentList(String customStudyId);
 }

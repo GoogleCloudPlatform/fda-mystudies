@@ -801,6 +801,11 @@ public class StudyServiceImpl implements StudyService {
         updateConsentBo.setComprehensionTestMinimumScore(
             consentBo.getComprehensionTestMinimumScore());
       }
+
+      if (consentBo.getEnrollAgain() != null) {
+        updateConsentBo.setEnrollAgain(consentBo.getEnrollAgain());
+      }
+
       updateConsentBo =
           studyDAO.saveOrCompleteConsentReviewDetails(updateConsentBo, sesObj, customStudyId);
     } catch (Exception e) {
@@ -1454,5 +1459,18 @@ public class StudyServiceImpl implements StudyService {
 
   public StudyBo getStudyInfo(String studyId) {
     return studyDAO.getStudy(Integer.valueOf(studyId));
+  }
+
+  @Override
+  public List<ConsentBo> getConsentList(String customStudyId) {
+    logger.info("StudyServiceImpl - getConsentList() - Starts");
+    List<ConsentBo> consentBoList = null;
+    try {
+      consentBoList = studyDAO.getConsentList(customStudyId);
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - getConsentList() - ERROR ", e);
+    }
+    logger.info("StudyServiceImpl - getConsentList() - Ends");
+    return consentBoList;
   }
 }
