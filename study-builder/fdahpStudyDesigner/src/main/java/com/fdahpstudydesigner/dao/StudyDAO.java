@@ -201,7 +201,8 @@ public interface StudyDAO {
   public String updateAnchordateForEnrollmentDate(
       StudyBo oldStudyBo, StudyBo updatedStudyBo, Session session, Transaction transaction);
 
-  public boolean validateAppId(String customStudyId, String appId, String studyType);
+  public boolean validateAppId(
+      String customStudyId, String appId, String studyType, String dbCustomStudyId);
 
   public StudyPermissionBO getStudyPermissionBO(int studyId, int userId);
 
