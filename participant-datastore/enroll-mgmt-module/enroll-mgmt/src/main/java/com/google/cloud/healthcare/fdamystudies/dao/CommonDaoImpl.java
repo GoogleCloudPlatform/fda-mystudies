@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -30,8 +29,6 @@ public class CommonDaoImpl implements CommonDao {
   private static Logger logger = LoggerFactory.getLogger(CommonDaoImpl.class);
 
   @Autowired private SessionFactory sessionFactory;
-
-  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
   public UserDetailsEntity getUserInfoDetails(String userId) {
