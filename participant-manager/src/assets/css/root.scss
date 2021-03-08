@@ -1603,7 +1603,11 @@ select {
 meter,
 progress {
   width: 100%;
-  height: 24px;
+  height: 15px;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
 }
 
 @-moz-document url-prefix() {
@@ -1652,4 +1656,22 @@ meter::-webkit-meter-bar {
   background-color: var(--aqua-gray);
   box-shadow: none;
   border: none;
+  width: 100%;
+  height: 15px;
+}
+
+meter::-moz-meter-bar {
+  height: 15px;
+}
+::-moz-meter-bar {
+  -moz-appearance: meterchunk;
+  width: 100%;
+  height: 15px;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+}
+:-moz-meter-optimum::-moz-meter-bar {
+  border-radius: 9px;
 }
