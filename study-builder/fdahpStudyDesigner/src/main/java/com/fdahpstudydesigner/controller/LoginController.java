@@ -102,22 +102,16 @@ public class LoginController {
         mv = new ModelAndView("redirect:createPassword.do?securityToken=" + securityToken);
       } else {
         if ((userBO != null) && StringUtils.isNotEmpty(userBO.getFirstName())) {
-          request
-              .getSession(false)
-              .setAttribute("sucMsg", propMap.get("user.newaccount.success.msg"));
+          sucMsg = propMap.get("user.account.setup.msg");
         } else {
-          request
-              .getSession(false)
-              .setAttribute("sucMsg", propMap.get("user.newpassword.success.msg"));
+          sucMsg = propMap.get("user.newpassword.success.msg");
         }
+        mv = new ModelAndView("redirect:sessionOut.do?sucMsg=" + sucMsg);
       }
-      if (isIntialPasswordSetUp) {
-        sucMsg = propMap.get("user.account.setup.msg");
-      }
+
     } catch (Exception e) {
       logger.error("LoginController - addPassword() - ERROR ", e);
     }
-    mv = new ModelAndView("redirect:sessionOut.do?sucMsg=" + sucMsg);
     logger.info("LoginController - addPassword() - Ends");
     return mv;
   }
