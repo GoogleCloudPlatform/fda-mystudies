@@ -1983,7 +1983,7 @@
         $(".Selectedtooltip").show();
 
         var i = 0;
-        for (i = customCount-1; i > customCount; i--) {
+        for (i = customCount-1; i > 0; i--) {
           var RegStartDate = $("#StartDate" + i).val();
         	
           if(RegStartDate == '') {
