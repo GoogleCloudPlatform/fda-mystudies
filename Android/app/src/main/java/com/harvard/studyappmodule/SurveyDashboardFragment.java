@@ -175,7 +175,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
   @Override
   public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+          LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     view = inflater.inflate(R.layout.fragment_survey_dashboard, container, false);
     dbServiceSubscriber = new DbServiceSubscriber();
@@ -193,6 +193,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     setStudyStatus();
     setParticipationStatus();
     getDashboardData();
+    nextDateLayout.setVisibility(View.INVISIBLE);
     return view;
   }
 
@@ -214,7 +215,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       if (participationStatusVal.equalsIgnoreCase(StudyFragment.COMPLETED)) {
         participationStatus.setText(R.string.completed);
         participationStatus.setTextColor(
-            context.getResources().getColor(R.color.bullet_green_color));
+                context.getResources().getColor(R.color.bullet_green_color));
       } else if (participationStatusVal.equalsIgnoreCase(StudyFragment.NOT_ELIGIBLE)) {
         participationStatus.setText(R.string.not_eligible);
         participationStatus.setTextColor(context.getResources().getColor(R.color.red));
@@ -243,17 +244,17 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     HashMap<String, String> header = new HashMap();
     String url = Urls.DASHBOARD_INFO + "?studyId=" + ((SurveyActivity) context).getStudyId();
     StudyDatastoreConfigEvent studyDatastoreConfigEvent =
-        new StudyDatastoreConfigEvent(
-            "get",
-            url,
-            DASHBOARD_INFO,
-            context,
-            DashboardData.class,
-            null,
-            header,
-            null,
-            false,
-            this);
+            new StudyDatastoreConfigEvent(
+                    "get",
+                    url,
+                    DASHBOARD_INFO,
+                    context,
+                    DashboardData.class,
+                    null,
+                    header,
+                    null,
+                    false,
+                    this);
 
     getActivityListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -290,7 +291,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     studyStatusLabel = (AppCompatTextView) view.findViewById(R.id.mStudyStatusLabel);
     studyStatus = (AppCompatTextView) view.findViewById(R.id.mStudyStatus);
     participationStatusLabel =
-        (AppCompatTextView) view.findViewById(R.id.mParticipationStatusLabel);
+            (AppCompatTextView) view.findViewById(R.id.mParticipationStatusLabel);
     participationStatus = (AppCompatTextView) view.findViewById(R.id.mParticipationStatus);
     completionText1 = (AppCompatTextView) view.findViewById(R.id.mCompletionText1);
     completionPercentage = (AppCompatTextView) view.findViewById(R.id.mCompletionPercentage);
@@ -396,254 +397,272 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
   private void bindEvents() {
     backBtn.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-              Intent intent = new Intent(context, StudyActivity.class);
-              ComponentName cn = intent.getComponent();
-              Intent mainIntent = Intent.makeRestartActivityTask(cn);
-              context.startActivity(mainIntent);
-              ((Activity) context).finish();
-            } else {
-              ((SurveyActivity) context).openDrawer();
-            }
-          }
-        });
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+                  Intent intent = new Intent(context, StudyActivity.class);
+                  ComponentName cn = intent.getComponent();
+                  Intent mainIntent = Intent.makeRestartActivityTask(cn);
+                  context.startActivity(mainIntent);
+                  ((Activity) context).finish();
+                } else {
+                  ((SurveyActivity) context).openDrawer();
+                }
+              }
+            });
 
     shareBtn.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            screenshotWritingPermission(view);
-          }
-        });
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                screenshotWritingPermission(view);
+              }
+            });
 
     dayLayout.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            if (!dateType.equalsIgnoreCase(DAY)) {
-              setDay();
-              addViewStatisticsValuesRefresh();
-            }
-          }
-        });
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                if (!dateType.equalsIgnoreCase(DAY)) {
+                  nextDateLayout.setVisibility(View.INVISIBLE);
+                  setDay();
+                  addViewStatisticsValuesRefresh();
+                }
+              }
+            });
 
     weekLayout.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            if (!dateType.equalsIgnoreCase(WEEK)) {
-              setWeek();
-              addViewStatisticsValuesRefresh();
-            }
-          }
-        });
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                if (!dateType.equalsIgnoreCase(WEEK)) {
+                  nextDateLayout.setVisibility(View.INVISIBLE);
+                  setWeek();
+                  addViewStatisticsValuesRefresh();
+                }
+              }
+            });
     monthLayout.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            try {
-              if (!dateType.equalsIgnoreCase(MONTH)) {
-                setMonth();
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                try {
+                  if (!dateType.equalsIgnoreCase(MONTH)) {
+                    nextDateLayout.setVisibility(View.INVISIBLE);
+                    setMonth();
+                    addViewStatisticsValuesRefresh();
+                  }
+                } catch (Exception e) {
+                  Logger.log(e);
+                }
+              }
+            });
+    previousDateLayout.setOnClickListener(
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                nextDateLayout.setVisibility(View.VISIBLE);
+                if (dateType.equalsIgnoreCase(DAY)) {
+                  try {
+                    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
+                    Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
+                    Date selectedEndDate = simpleDateFormat.parse(toDayVal);
+                    Calendar calendarStart = Calendar.getInstance();
+                    calendarStart.setTime(selectedStartDAte);
+                    calendarStart.add(Calendar.DATE, -1);
+                    Calendar calendarEnd = Calendar.getInstance();
+                    calendarEnd.setTime(selectedEndDate);
+                    calendarEnd.add(Calendar.DATE, -1);
+                    fromDayVal = simpleDateFormat.format(calendarStart.getTime());
+                    toDayVal = simpleDateFormat.format(calendarEnd.getTime());
+                    SimpleDateFormat dateFormatForDashboardCurrentDayOut =
+                            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                    changeDateLabel.setText(
+                            dateFormatForDashboardCurrentDayOut.format(calendarStart.getTime()));
+
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
+                } else if (dateType.equalsIgnoreCase(WEEK)) {
+                  try {
+                    SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
+                    Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
+                    Date selectedEndDate = dateFormatForApi.parse(toDayVal);
+                    Calendar calendarStart = Calendar.getInstance();
+                    calendarStart.setTime(selectedStartDAte);
+                    calendarStart.add(Calendar.DATE, -7);
+                    Calendar calendarEnd = Calendar.getInstance();
+                    calendarEnd.setTime(selectedEndDate);
+                    calendarEnd.add(Calendar.DATE, -7);
+                    fromDayVal = dateFormatForApi.format(calendarStart.getTime());
+                    toDayVal = dateFormatForApi.format(calendarEnd.getTime());
+                    SimpleDateFormat simpleDateFormat =
+                            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                    changeDateLabel.setText(
+                            simpleDateFormat.format(calendarStart.getTime())
+                                    + " - "
+                                    + simpleDateFormat.format(calendarEnd.getTime()));
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
+                } else if (dateType.equalsIgnoreCase(MONTH)) {
+                  try {
+                    SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
+                    Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
+                    Date selectedEndDate = dateFormatForApi.parse(toDayVal);
+                    Calendar calendarStart = Calendar.getInstance();
+                    calendarStart.setTime(selectedStartDAte);
+                    calendarStart.add(Calendar.MONTH, -1);
+                    Calendar calendarEnd = Calendar.getInstance();
+                    calendarEnd.setTime(selectedEndDate);
+                    calendarEnd.add(Calendar.MONTH, -1);
+                    fromDayVal = dateFormatForApi.format(calendarStart.getTime());
+                    toDayVal = dateFormatForApi.format(calendarEnd.getTime());
+                    SimpleDateFormat dateFormatForChartAndStat =
+                            AppController.getDateFormatForChartAndStat();
+                    changeDateLabel.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
+
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
+                }
                 addViewStatisticsValuesRefresh();
               }
-            } catch (Exception e) {
-              Logger.log(e);
-            }
-          }
-        });
-    previousDateLayout.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-
-            if (dateType.equalsIgnoreCase(DAY)) {
-              try {
-                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
-                Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
-                Date selectedEndDate = simpleDateFormat.parse(toDayVal);
-                Calendar calendarStart = Calendar.getInstance();
-                calendarStart.setTime(selectedStartDAte);
-                calendarStart.add(Calendar.DATE, -1);
-                Calendar calendarEnd = Calendar.getInstance();
-                calendarEnd.setTime(selectedEndDate);
-                calendarEnd.add(Calendar.DATE, -1);
-                fromDayVal = simpleDateFormat.format(calendarStart.getTime());
-                toDayVal = simpleDateFormat.format(calendarEnd.getTime());
-                SimpleDateFormat dateFormatForDashboardCurrentDayOut =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                changeDateLabel.setText(
-                    dateFormatForDashboardCurrentDayOut.format(calendarStart.getTime()));
-
-              } catch (ParseException e) {
-                Logger.log(e);
-              }
-            } else if (dateType.equalsIgnoreCase(WEEK)) {
-              try {
-                SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
-                Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
-                Date selectedEndDate = dateFormatForApi.parse(toDayVal);
-                Calendar calendarStart = Calendar.getInstance();
-                calendarStart.setTime(selectedStartDAte);
-                calendarStart.add(Calendar.DATE, -7);
-                Calendar calendarEnd = Calendar.getInstance();
-                calendarEnd.setTime(selectedEndDate);
-                calendarEnd.add(Calendar.DATE, -7);
-                fromDayVal = dateFormatForApi.format(calendarStart.getTime());
-                toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                changeDateLabel.setText(
-                    simpleDateFormat.format(calendarStart.getTime())
-                        + " - "
-                        + simpleDateFormat.format(calendarEnd.getTime()));
-              } catch (ParseException e) {
-                Logger.log(e);
-              }
-            } else if (dateType.equalsIgnoreCase(MONTH)) {
-              try {
-                SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
-                Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
-                Date selectedEndDate = dateFormatForApi.parse(toDayVal);
-                Calendar calendarStart = Calendar.getInstance();
-                calendarStart.setTime(selectedStartDAte);
-                calendarStart.add(Calendar.MONTH, -1);
-                Calendar calendarEnd = Calendar.getInstance();
-                calendarEnd.setTime(selectedEndDate);
-                calendarEnd.add(Calendar.MONTH, -1);
-                fromDayVal = dateFormatForApi.format(calendarStart.getTime());
-                toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-                SimpleDateFormat dateFormatForChartAndStat =
-                    AppController.getDateFormatForChartAndStat();
-                changeDateLabel.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
-
-              } catch (ParseException e) {
-                Logger.log(e);
-              }
-            }
-            addViewStatisticsValuesRefresh();
-          }
-        });
+            });
     nextDateLayout.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
 
-            if (dateType.equalsIgnoreCase(DAY)) {
-              try {
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
-                Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
-                Date selectedEndDate = dateFormatForApi.parse(toDayVal);
-                Calendar calendarStart = Calendar.getInstance();
-                calendarStart.setTime(selectedStartDAte);
-                calendarStart.add(Calendar.DATE, 1);
-                Calendar calendarEnd = Calendar.getInstance();
-                calendarEnd.setTime(selectedEndDate);
-                calendarEnd.add(Calendar.DATE, 1);
-                if (!calendarStart.getTime().after(new Date())) {
-                  fromDayVal = dateFormatForApi.format(calendarStart.getTime());
-                  toDayVal = dateFormatForApi.format(calendarEnd.getTime());
+                if (dateType.equalsIgnoreCase(DAY)) {
+                  try {
+                    SimpleDateFormat simpleDateFormat =
+                            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                    SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
+                    Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
+                    Date selectedEndDate = dateFormatForApi.parse(toDayVal);
+                    Calendar calendarStart = Calendar.getInstance();
+                    calendarStart.setTime(selectedStartDAte);
+                    calendarStart.add(Calendar.DATE, 1);
+                    Calendar calendarEnd = Calendar.getInstance();
+                    calendarEnd.setTime(selectedEndDate);
+                    calendarEnd.add(Calendar.DATE, 1);
+                    if (!calendarStart.getTime().after(new Date())) {
+                      fromDayVal = dateFormatForApi.format(calendarStart.getTime());
+                      toDayVal = dateFormatForApi.format(calendarEnd.getTime());
 
-                  changeDateLabel.setText(simpleDateFormat.format(calendarStart.getTime()));
-                  addViewStatisticsValuesRefresh();
-                }
-              } catch (ParseException e) {
-                Logger.log(e);
-              }
-            } else if (dateType.equalsIgnoreCase(WEEK)) {
-              try {
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
-                Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
-                Date selectedEndDate = dateFormatForApi.parse(toDayVal);
-                Calendar calendarStart = Calendar.getInstance();
-                calendarStart.setTime(selectedStartDAte);
-                calendarStart.add(Calendar.DATE, 7);
-                Calendar calendarEnd = Calendar.getInstance();
-                calendarEnd.setTime(selectedEndDate);
-                calendarEnd.add(Calendar.DATE, 7);
-                if (!calendarStart.getTime().after(new Date())) {
-                  fromDayVal = dateFormatForApi.format(calendarStart.getTime());
-                  toDayVal = dateFormatForApi.format(calendarEnd.getTime());
+                      changeDateLabel.setText(simpleDateFormat.format(calendarStart.getTime()));
+                      addViewStatisticsValuesRefresh();
 
-                  if (calendarEnd.getTime().after(new Date())) {
-                    changeDateLabel.setText(
-                        simpleDateFormat.format(calendarStart.getTime())
-                            + " - "
-                            + simpleDateFormat.format(new Date()));
-                  } else {
-                    changeDateLabel.setText(
-                        simpleDateFormat.format(calendarStart.getTime())
-                            + " - "
-                            + simpleDateFormat.format(calendarEnd.getTime()));
+                      calendarStart.add(Calendar.DATE, 1);
+                      if (calendarStart.getTime().after(new Date())) {
+                        nextDateLayout.setVisibility(View.INVISIBLE);
+                      }
+                    }
+                  } catch (ParseException e) {
+                    Logger.log(e);
                   }
-                  addViewStatisticsValuesRefresh();
-                }
-              } catch (ParseException e) {
-                Logger.log(e);
-              }
-            } else if (dateType.equalsIgnoreCase(MONTH)) {
-              try {
-                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
-                SimpleDateFormat dateFormatForChartAndStat =
-                    AppController.getDateFormatForChartAndStat();
-                Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
-                Date selectedEndDate = simpleDateFormat.parse(toDayVal);
-                Calendar calendarStart = Calendar.getInstance();
-                calendarStart.setTime(selectedStartDAte);
-                calendarStart.add(Calendar.MONTH, 1);
-                Calendar calendarEnd = Calendar.getInstance();
-                calendarEnd.setTime(selectedEndDate);
-                calendarEnd.add(Calendar.MONTH, 1);
-                if (!calendarStart.getTime().after(new Date())) {
-                  fromDayVal = simpleDateFormat.format(calendarStart.getTime());
-                  toDayVal = simpleDateFormat.format(calendarEnd.getTime());
+                } else if (dateType.equalsIgnoreCase(WEEK)) {
+                  try {
+                    SimpleDateFormat simpleDateFormat =
+                            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                    SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
+                    Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
+                    Date selectedEndDate = dateFormatForApi.parse(toDayVal);
+                    Calendar calendarStart = Calendar.getInstance();
+                    calendarStart.setTime(selectedStartDAte);
+                    calendarStart.add(Calendar.DATE, 7);
+                    Calendar calendarEnd = Calendar.getInstance();
+                    calendarEnd.setTime(selectedEndDate);
+                    calendarEnd.add(Calendar.DATE, 7);
+                    if (!calendarStart.getTime().after(new Date())) {
+                      fromDayVal = dateFormatForApi.format(calendarStart.getTime());
+                      toDayVal = dateFormatForApi.format(calendarEnd.getTime());
 
-                  changeDateLabel.setText(
-                      dateFormatForChartAndStat.format(calendarStart.getTime()));
-                  addViewStatisticsValuesRefresh();
+                      if (calendarEnd.getTime().after(new Date())) {
+                        changeDateLabel.setText(
+                                simpleDateFormat.format(calendarStart.getTime())
+                                        + " - "
+                                        + simpleDateFormat.format(new Date()));
+                      } else {
+                        changeDateLabel.setText(
+                                simpleDateFormat.format(calendarStart.getTime())
+                                        + " - "
+                                        + simpleDateFormat.format(calendarEnd.getTime()));
+                      }
+                      addViewStatisticsValuesRefresh();
+
+                      calendarStart.add(Calendar.DATE, 7);
+                      if (calendarStart.getTime().after(new Date())) {
+                        nextDateLayout.setVisibility(View.INVISIBLE);
+                      }
+                    }
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
+                } else if (dateType.equalsIgnoreCase(MONTH)) {
+                  try {
+                    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
+                    SimpleDateFormat dateFormatForChartAndStat =
+                            AppController.getDateFormatForChartAndStat();
+                    Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
+                    Date selectedEndDate = simpleDateFormat.parse(toDayVal);
+                    Calendar calendarStart = Calendar.getInstance();
+                    calendarStart.setTime(selectedStartDAte);
+                    calendarStart.add(Calendar.MONTH, 1);
+                    Calendar calendarEnd = Calendar.getInstance();
+                    calendarEnd.setTime(selectedEndDate);
+                    calendarEnd.add(Calendar.MONTH, 1);
+                    if (!calendarStart.getTime().after(new Date())) {
+                      fromDayVal = simpleDateFormat.format(calendarStart.getTime());
+                      toDayVal = simpleDateFormat.format(calendarEnd.getTime());
+
+                      changeDateLabel.setText(
+                              dateFormatForChartAndStat.format(calendarStart.getTime()));
+                      addViewStatisticsValuesRefresh();
+
+                      calendarStart.add(Calendar.MONTH, 1);
+                      if (calendarStart.getTime().after(new Date())) {
+                        nextDateLayout.setVisibility(View.INVISIBLE);
+                      }
+                    }
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
                 }
-              } catch (ParseException e) {
-                Logger.log(e);
               }
-            }
-          }
-        });
+            });
     trendLayout.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            if (dashboardData != null && dashboardData.getDashboard().getCharts().size() > 0) {
-              Intent intent = new Intent(context, ChartActivity.class);
-              intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
-              intent.putExtra("studyName", ((SurveyActivity) context).getTitle1());
-              startActivity(intent);
-            } else {
-              Toast.makeText(
-                      context,
-                      context.getResources().getString(R.string.no_charts_display),
-                      Toast.LENGTH_SHORT)
-                  .show();
-            }
-          }
-        });
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                if (dashboardData != null && dashboardData.getDashboard().getCharts().size() > 0) {
+                  Intent intent = new Intent(context, ChartActivity.class);
+                  intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
+                  intent.putExtra("studyName", ((SurveyActivity) context).getTitle1());
+                  startActivity(intent);
+                } else {
+                  Toast.makeText(
+                          context,
+                          context.getResources().getString(R.string.no_charts_display),
+                          Toast.LENGTH_SHORT)
+                          .show();
+                }
+              }
+            });
   }
 
   private void screenshotWritingPermission(View view) {
     // checking the permissions
     if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED)
-        || (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            || (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED)) {
       String[] permission =
-          new String[] {
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
-          };
+              new String[]{
+                      Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+              };
       if (!hasPermissions(permission)) {
         ActivityCompat.requestPermissions((Activity) context, permission, PERMISSION_REQUEST_CODE);
       } else {
@@ -660,7 +679,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     if (android.os.Build.VERSION.SDK_INT >= VERSION_CODES.M && permissions != null) {
       for (String permission : permissions) {
         if (ActivityCompat.checkSelfPermission(context, permission)
-            != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
           return false;
         }
       }
@@ -670,14 +689,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
   @Override
   public void onRequestPermissionsResult(
-      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+          int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (requestCode == PERMISSION_REQUEST_CODE) {
       if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
         Toast.makeText(
                 context,
                 getResources().getString(R.string.permission_enable_message_screenshot),
                 Toast.LENGTH_LONG)
-            .show();
+                .show();
       } else {
         shareFunctionality(view);
       }
@@ -722,7 +741,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
     shareIntent.setType("text/plain");
     Uri fileUri =
-        FileProvider.getUriForFile(context, getString(R.string.FileProvider_authorities), file);
+            FileProvider.getUriForFile(context, getString(R.string.FileProvider_authorities), file);
     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
     startActivity(shareIntent);
@@ -733,7 +752,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       int month = currentMonth + 1;
       String originDate = currentDay + " " + month + " " + currentYear;
       SimpleDateFormat dateFormatForDashboardCurrentDay =
-          AppController.getDateFormatForDashboardCurrentDay();
+              AppController.getDateFormatForDashboardCurrentDay();
       SimpleDateFormat formatOut = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
       SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
       Calendar calendar = Calendar.getInstance();
@@ -749,10 +768,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   private Spannable setColorSpannbleString(String str, int endVal) {
     Spannable wordtoSpan = new SpannableString(str);
     wordtoSpan.setSpan(
-        new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)),
-        0,
-        endVal,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)),
+            0,
+            endVal,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     return wordtoSpan;
   }
 
@@ -763,12 +782,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       setDay();
       for (int i = 0; i < dashboardData.getDashboard().getStatistics().size(); i++) {
         RelativeLayout activitiesLayout =
-            (RelativeLayout)
-                view.inflate(getActivity(), R.layout.content_survey_dashboard_statistics, null);
+                (RelativeLayout)
+                        view.inflate(getActivity(), R.layout.content_survey_dashboard_statistics, null);
         addViewStatisticsInitializeXmlId(activitiesLayout);
         addViewStatisticsSetFont();
         addViewStatisticsSetText(
-            dashboardData.getDashboard().getStatistics().get(i), activitiesLayout);
+                dashboardData.getDashboard().getStatistics().get(i), activitiesLayout);
         totalStaticsLayout.addView(activitiesLayout);
       }
     } else {
@@ -777,20 +796,20 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       changeDateLabel.setText(getResources().getString(R.string.date_range));
       for (int i = 0; i < 3; i++) {
         RelativeLayout activitiesLayout =
-            (RelativeLayout)
-                view.inflate(getActivity(), R.layout.content_survey_dashboard_statistics, null);
+                (RelativeLayout)
+                        view.inflate(getActivity(), R.layout.content_survey_dashboard_statistics, null);
         RelativeLayout rel = (RelativeLayout) activitiesLayout.findViewById(R.id.mRectBoxLayout);
         rel.setBackground(getResources().getDrawable(R.color.colorSecondaryBg));
         totalStaticsLayout.addView(activitiesLayout);
       }
       disableHorizontalView(middleView);
       scrollViewHor.setOnTouchListener(
-          new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-              return true;
-            }
-          });
+              new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                  return true;
+                }
+              });
       noStatsAvailable.setVisibility(View.VISIBLE);
     }
   }
@@ -815,12 +834,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       Resources res = getResources();
       final Drawable drawableRight = res.getDrawable(R.drawable.arrow2_right);
       drawableRight.setColorFilter(
-          getResources().getColor(R.color.colorSecondary), PorterDuff.Mode.SRC_ATOP);
+              getResources().getColor(R.color.colorSecondary), PorterDuff.Mode.SRC_ATOP);
       rightArrow.setBackgroundDrawable(drawableRight);
 
       final Drawable drawableLeft = res.getDrawable(R.drawable.arrow2_left);
       drawableLeft.setColorFilter(
-          getResources().getColor(R.color.colorSecondary), PorterDuff.Mode.SRC_ATOP);
+              getResources().getColor(R.color.colorSecondary), PorterDuff.Mode.SRC_ATOP);
       previousArrow.setBackgroundDrawable(drawableLeft);
 
     } catch (Exception e) {
@@ -846,8 +865,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       if (dashboardData.getDashboard().getStatistics().size() > 0) {
         for (int i = 0; i < dashboardData.getDashboard().getStatistics().size(); i++) {
           addViewStatisticsSetText(
-              dashboardData.getDashboard().getStatistics().get(i),
-              totalStaticsLayout.getChildAt(i));
+                  dashboardData.getDashboard().getStatistics().get(i),
+                  totalStaticsLayout.getChildAt(i));
         }
       } else {
         setWeekUnSelected();
@@ -855,20 +874,20 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         changeDateLabel.setText(getResources().getString(R.string.date_range));
         for (int i = 0; i < 3; i++) {
           RelativeLayout activitiesLayout =
-              (RelativeLayout)
-                  view.inflate(getActivity(), R.layout.content_survey_dashboard_statistics, null);
+                  (RelativeLayout)
+                          view.inflate(getActivity(), R.layout.content_survey_dashboard_statistics, null);
           RelativeLayout rel = (RelativeLayout) activitiesLayout.findViewById(R.id.mRectBoxLayout);
           rel.setBackground(getResources().getDrawable(R.color.colorSecondaryBg));
           totalStaticsLayout.addView(activitiesLayout);
         }
         disableHorizontalView(middleView);
         scrollViewHor.setOnTouchListener(
-            new View.OnTouchListener() {
-              @Override
-              public boolean onTouch(View v, MotionEvent event) {
-                return true;
-              }
-            });
+                new View.OnTouchListener() {
+                  @Override
+                  public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                  }
+                });
         noStatsAvailable.setVisibility(View.VISIBLE);
       }
     }
@@ -920,7 +939,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     }
 
     AppCompatTextView totalHoursSleep =
-        (AppCompatTextView) view.findViewById(R.id.mTotalHoursSleep);
+            (AppCompatTextView) view.findViewById(R.id.mTotalHoursSleep);
 
     AppCompatTextView unit = (AppCompatTextView) view.findViewById(R.id.mUnit);
     totalHoursSleep.setText(statistics.getDisplayName());
@@ -929,14 +948,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     RealmResults<StepRecordCustom> stepRecordCustomList = null;
     try {
       stepRecordCustomList =
-          dbServiceSubscriber.getResultForStat(
-              ((SurveyActivity) context).getStudyId()
-                  + "_STUDYID_"
-                  + statistics.getDataSource().getActivity().getActivityId(),
-              statistics.getDataSource().getKey(),
-              simpleDateFormat.parse(fromDayVal),
-              simpleDateFormat.parse(toDayVal),
-              realm);
+              dbServiceSubscriber.getResultForStat(
+                      ((SurveyActivity) context).getStudyId()
+                              + "_STUDYID_"
+                              + statistics.getDataSource().getActivity().getActivityId(),
+                      statistics.getDataSource().getKey(),
+                      simpleDateFormat.parse(fromDayVal),
+                      simpleDateFormat.parse(toDayVal),
+                      realm);
     } catch (ParseException e) {
       Logger.log(e);
     }
@@ -981,7 +1000,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       result = String.format("%.2f", Double.parseDouble(result));
     }
     AppCompatTextView totalHoursSleepVal =
-        (AppCompatTextView) view.findViewById(R.id.mTotalHoursSleepVal);
+            (AppCompatTextView) view.findViewById(R.id.mTotalHoursSleepVal);
     totalHoursSleepVal.setText(result);
   }
 
@@ -1027,8 +1046,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       } else {
         scrollView.setVisibility(View.VISIBLE);
         dashboardData =
-            dbServiceSubscriber.getDashboardDataFromDB(
-                ((SurveyActivity) context).getStudyId(), realm);
+                dbServiceSubscriber.getDashboardDataFromDB(
+                        ((SurveyActivity) context).getStudyId(), realm);
         if (dashboardData != null) {
           new ProcessData().execute();
         } else {
@@ -1051,8 +1070,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     protected void onPostExecute(String result) {
       SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
       completionAdherenceCalc =
-          survayScheduler.completionAndAdherenceCalculation(
-              ((SurveyActivity) context).getStudyId(), context);
+              survayScheduler.completionAndAdherenceCalculation(
+                      ((SurveyActivity) context).getStudyId(), context);
       if (completionAdherenceCalc.isNoCompletedAndMissed()) {
         completionValue.setText("-- ");
         progressBar1.setProgress(0);
@@ -1072,82 +1091,82 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       if (dashboardData != null) {
         for (int i = 0; i < dashboardData.getDashboard().getStatistics().size(); i++) {
           ResponseInfoActiveTaskModel responseInfoActiveTaskModel =
-              new ResponseInfoActiveTaskModel();
+                  new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
-              dashboardData
-                  .getDashboard()
-                  .getStatistics()
-                  .get(i)
-                  .getDataSource()
-                  .getActivity()
-                  .getActivityId())) {
+                  dashboardData
+                          .getDashboard()
+                          .getStatistics()
+                          .get(i)
+                          .getDataSource()
+                          .getActivity()
+                          .getActivityId())) {
             responseInfoActiveTaskModel.setActivityId(
-                dashboardData
-                    .getDashboard()
-                    .getStatistics()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId());
+                    dashboardData
+                            .getDashboard()
+                            .getStatistics()
+                            .get(i)
+                            .getDataSource()
+                            .getActivity()
+                            .getActivityId());
             responseInfoActiveTaskModel.setActivityVersion(
-                dashboardData
-                    .getDashboard()
-                    .getStatistics()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getVersion());
+                    dashboardData
+                            .getDashboard()
+                            .getStatistics()
+                            .get(i)
+                            .getDataSource()
+                            .getActivity()
+                            .getVersion());
             responseInfoActiveTaskModel.setKey(
-                dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
+                    dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
-                dashboardData
-                    .getDashboard()
-                    .getStatistics()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId());
+                    dashboardData
+                            .getDashboard()
+                            .getStatistics()
+                            .get(i)
+                            .getDataSource()
+                            .getActivity()
+                            .getActivityId());
           }
         }
         for (int i = 0; i < dashboardData.getDashboard().getCharts().size(); i++) {
           ResponseInfoActiveTaskModel responseInfoActiveTaskModel =
-              new ResponseInfoActiveTaskModel();
+                  new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
-              dashboardData
-                  .getDashboard()
-                  .getCharts()
-                  .get(i)
-                  .getDataSource()
-                  .getActivity()
-                  .getActivityId())) {
+                  dashboardData
+                          .getDashboard()
+                          .getCharts()
+                          .get(i)
+                          .getDataSource()
+                          .getActivity()
+                          .getActivityId())) {
             responseInfoActiveTaskModel.setActivityId(
-                dashboardData
-                    .getDashboard()
-                    .getCharts()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId());
+                    dashboardData
+                            .getDashboard()
+                            .getCharts()
+                            .get(i)
+                            .getDataSource()
+                            .getActivity()
+                            .getActivityId());
             responseInfoActiveTaskModel.setActivityVersion(
-                dashboardData
-                    .getDashboard()
-                    .getCharts()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getVersion());
+                    dashboardData
+                            .getDashboard()
+                            .getCharts()
+                            .get(i)
+                            .getDataSource()
+                            .getActivity()
+                            .getVersion());
             responseInfoActiveTaskModel.setKey(
-                dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey());
+                    dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey());
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
-                dashboardData
-                    .getDashboard()
-                    .getCharts()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId());
+                    dashboardData
+                            .getDashboard()
+                            .getCharts()
+                            .get(i)
+                            .getDataSource()
+                            .getActivity()
+                            .getActivityId());
           }
         }
       }
@@ -1159,7 +1178,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 arrayList.get(0),
                 studies.getParticipantId(),
                 0)
-            .execute();
+                .execute();
       } else {
         addViewStatisticsValues();
       }
@@ -1185,7 +1204,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     calendar1.set(Calendar.MILLISECOND, 999);
     toDayVal = dateFormatForApi.format(calendar1.getTime());
     SimpleDateFormat simpleDateFormat =
-        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
     changeDateLabel.setText(simpleDateFormat.format(calendar.getTime()));
     setColorForSelectedDayMonthYear(dayLayout);
     dateType = DAY;
@@ -1209,9 +1228,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     toDayVal = dateFormatForApi.format(calendar.getTime());
 
     SimpleDateFormat simpleDateFormat =
-        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
     String text =
-        simpleDateFormat.format(calendar.getTime()) + " - " + simpleDateFormat.format(new Date());
+            simpleDateFormat.format(calendar.getTime()) + " - " + simpleDateFormat.format(new Date());
     changeDateLabel.setText(text);
     setColorForSelectedDayMonthYear(weekLayout);
     dateType = WEEK;
@@ -1265,10 +1284,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     String queryParam = "*";
 
     ResponseData(
-        String studyId,
-        ResponseInfoActiveTaskModel responseInfoActiveTaskModel,
-        String participateId,
-        int position) {
+            String studyId,
+            ResponseInfoActiveTaskModel responseInfoActiveTaskModel,
+            String participateId,
+            int position) {
       this.studyId = studyId;
       this.responseInfoActiveTaskModel = responseInfoActiveTaskModel;
       this.participateId = participateId;
@@ -1285,38 +1304,38 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
         HashMap<String, String> header = new HashMap<>();
         header.put(
-            getString(R.string.clientToken),
-            SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
+                getString(R.string.clientToken),
+                SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
         header.put(
-            "Authorization",
-            "Bearer "
-                + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+                "Authorization",
+                "Bearer "
+                        + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
         header.put(
-            "userId",
-            SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
+                "userId",
+                SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
         Studies studies = realm.where(Studies.class).equalTo("studyId", studyId).findFirst();
         responseModel =
-            HttpRequest.getRequest(
-                Urls.PROCESSRESPONSEDATA
-                    + AppConfig.APP_ID_KEY
-                    + "="
-                    + AppConfig.APP_ID_VALUE
-                    + "&participantId="
-                    + participateId
-                    + "&tokenId="
-                    + studies.getHashedToken()
-                    + "&siteId="
-                    + studies.getSiteId()
-                    + "&studyId="
-                    + studies.getStudyId()
-                    + "&activityId="
-                    + responseInfoActiveTaskModel.getActivityId()
-                    + "&questionKey="
-                    + responseInfoActiveTaskModel.getKey()
-                    + "&activityVersion="
-                    + responseInfoActiveTaskModel.getActivityVersion(),
-                header,
-                "");
+                HttpRequest.getRequest(
+                        Urls.PROCESSRESPONSEDATA
+                                + AppConfig.APP_ID_KEY
+                                + "="
+                                + AppConfig.APP_ID_VALUE
+                                + "&participantId="
+                                + participateId
+                                + "&tokenId="
+                                + studies.getHashedToken()
+                                + "&siteId="
+                                + studies.getSiteId()
+                                + "&studyId="
+                                + studies.getStudyId()
+                                + "&activityId="
+                                + responseInfoActiveTaskModel.getActivityId()
+                                + "&questionKey="
+                                + responseInfoActiveTaskModel.getKey()
+                                + "&activityVersion="
+                                + responseInfoActiveTaskModel.getActivityVersion(),
+                        header,
+                        "");
         dbServiceSubscriber.closeRealmObj(realm);
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
@@ -1325,23 +1344,23 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         } else if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("")) {
           response = "error";
         } else if (Integer.parseInt(responseCode) >= 201
-            && Integer.parseInt(responseCode) < 300
-            && response.equalsIgnoreCase("")) {
+                && Integer.parseInt(responseCode) < 300
+                && response.equalsIgnoreCase("")) {
           response = "No data";
         } else if (Integer.parseInt(responseCode) >= 400
-            && Integer.parseInt(responseCode) < 500
-            && response.equalsIgnoreCase("http_not_ok")) {
+                && Integer.parseInt(responseCode) < 500
+                && response.equalsIgnoreCase("http_not_ok")) {
           response = "client error";
         } else if (Integer.parseInt(responseCode) >= 500
-            && Integer.parseInt(responseCode) < 600
-            && response.equalsIgnoreCase("http_not_ok")) {
+                && Integer.parseInt(responseCode) < 600
+                && response.equalsIgnoreCase("http_not_ok")) {
           response = "server error";
         } else if (response.equalsIgnoreCase("http_not_ok")) {
           response = "Unknown error";
         } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_UNAUTHORIZED) {
           response = "session expired";
         } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_OK
-            && !response.equalsIgnoreCase("")) {
+                && !response.equalsIgnoreCase("")) {
           response = response;
         } else {
           response = getString(R.string.unknown_error);
@@ -1361,13 +1380,13 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         RealmList<ActivitiesWS> activitiesWSes = activityListData.getActivities();
         for (int i = 0; i < activitiesWSes.size(); i++) {
           if (activitiesWSes
-              .get(i)
-              .getActivityId()
-              .equalsIgnoreCase(responseInfoActiveTaskModel.getActivityId())) {
+                  .get(i)
+                  .getActivityId()
+                  .equalsIgnoreCase(responseInfoActiveTaskModel.getActivityId())) {
             if (activitiesWSes.get(i).getType().equalsIgnoreCase("task")) {
               id =
-                  responseInfoActiveTaskModel.getActivityId()
-                      + responseInfoActiveTaskModel.getKey();
+                      responseInfoActiveTaskModel.getActivityId()
+                              + responseInfoActiveTaskModel.getKey();
               queryParam = "%22count%22,%22Created%22,%22duration%22";
             }
           }
@@ -1389,7 +1408,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                   context,
                   context.getResources().getString(R.string.connection_timeout),
                   Toast.LENGTH_SHORT)
-              .show();
+                  .show();
         } else if (Integer.parseInt(responseCode) == 500) {
           try {
             JSONObject jsonObject = new JSONObject(String.valueOf(responseModel.getResponseData()));
@@ -1401,7 +1420,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                         arrayList.get((position + 1)),
                         studies.getParticipantId(),
                         position + 1)
-                    .execute();
+                        .execute();
               } else {
                 addViewStatisticsValues();
                 AppController.getHelperProgressDialog().dismissDialog();
@@ -1434,10 +1453,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 try {
                   Object completedDateValMap = gson.toJson(map.get("Created"));
                   Map<String, Object> completedDateVal =
-                      gson.fromJson(String.valueOf(completedDateValMap), type);
+                          gson.fromJson(String.valueOf(completedDateValMap), type);
                   if (completedDateVal != null) {
                     completedDate =
-                        simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
+                            simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
                   }
                 } catch (JsonSyntaxException | ParseException e) {
                   Logger.log(e);
@@ -1446,7 +1465,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 try {
                   Object durationValMap = gson.toJson(map.get("duration"));
                   Map<String, Object> completedDateVal =
-                      gson.fromJson(String.valueOf(durationValMap), type);
+                          gson.fromJson(String.valueOf(durationValMap), type);
                   if (completedDateVal != null) {
                     duration = (int) Double.parseDouble("" + completedDateVal.get("value"));
                   }
@@ -1459,52 +1478,52 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                   Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
                   Object value = vauleMap.get("value");
                   if (!key.equalsIgnoreCase("container")
-                      && !key.equalsIgnoreCase("ParticipantId")
-                      && !key.equalsIgnoreCase("EntityId")
-                      && !key.equalsIgnoreCase("Modified")
-                      && !key.equalsIgnoreCase("lastIndexed")
-                      && !key.equalsIgnoreCase("ModifiedBy")
-                      && !key.equalsIgnoreCase("CreatedBy")
-                      && !key.equalsIgnoreCase("Key")
-                      && !key.equalsIgnoreCase("duration")
-                      && !key.equalsIgnoreCase(stepKey + "Id")
-                      && !key.equalsIgnoreCase("Created")) {
+                          && !key.equalsIgnoreCase("ParticipantId")
+                          && !key.equalsIgnoreCase("EntityId")
+                          && !key.equalsIgnoreCase("Modified")
+                          && !key.equalsIgnoreCase("lastIndexed")
+                          && !key.equalsIgnoreCase("ModifiedBy")
+                          && !key.equalsIgnoreCase("CreatedBy")
+                          && !key.equalsIgnoreCase("Key")
+                          && !key.equalsIgnoreCase("duration")
+                          && !key.equalsIgnoreCase(stepKey + "Id")
+                          && !key.equalsIgnoreCase("Created")) {
                     int runId =
-                        dbServiceSubscriber.getActivityRunForStatsAndCharts(
-                            responseInfoActiveTaskModel.getActivityId(),
-                            studyId,
-                            completedDate,
-                            realm);
+                            dbServiceSubscriber.getActivityRunForStatsAndCharts(
+                                    responseInfoActiveTaskModel.getActivityId(),
+                                    studyId,
+                                    completedDate,
+                                    realm);
                     if (key.equalsIgnoreCase("count")) {
                       stepRecordCustom.setStepId(stepKey);
                       stepRecordCustom.setTaskStepID(
-                          studyId
-                              + "_STUDYID_"
-                              + responseInfoActiveTaskModel.getActivityId()
-                              + "_"
-                              + runId
-                              + "_"
-                              + stepKey);
+                              studyId
+                                      + "_STUDYID_"
+                                      + responseInfoActiveTaskModel.getActivityId()
+                                      + "_"
+                                      + runId
+                                      + "_"
+                                      + stepKey);
                     } else {
                       stepRecordCustom.setStepId(key);
                       stepRecordCustom.setTaskStepID(
-                          studyId
-                              + "_STUDYID_"
-                              + responseInfoActiveTaskModel.getActivityId()
-                              + "_"
-                              + runId
-                              + "_"
-                              + key);
+                              studyId
+                                      + "_STUDYID_"
+                                      + responseInfoActiveTaskModel.getActivityId()
+                                      + "_"
+                                      + runId
+                                      + "_"
+                                      + key);
                     }
                     stepRecordCustom.setStudyId(studyId);
                     stepRecordCustom.setActivityID(
-                        studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
+                            studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
                     stepRecordCustom.setTaskId(
-                        studyId
-                            + "_STUDYID_"
-                            + responseInfoActiveTaskModel.getActivityId()
-                            + "_"
-                            + runId);
+                            studyId
+                                    + "_STUDYID_"
+                                    + responseInfoActiveTaskModel.getActivityId()
+                                    + "_"
+                                    + runId);
 
                     stepRecordCustom.setCompleted(completedDate);
                     stepRecordCustom.setStarted(completedDate);
@@ -1518,8 +1537,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                   }
                   JSONObject jsonObject2 = new JSONObject();
                   ActivitiesWS activityObj =
-                      dbServiceSubscriber.getActivityObj(
-                          responseInfoActiveTaskModel.getActivityId(), studyId, realm);
+                          dbServiceSubscriber.getActivityObj(
+                                  responseInfoActiveTaskModel.getActivityId(), studyId, realm);
                   if (activityObj.getType().equalsIgnoreCase("task")) {
                     JSONObject jsonObject3 = new JSONObject();
                     jsonObject3.put("value", value);
@@ -1547,7 +1566,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                       arrayList.get((position + 1)),
                       studies.getParticipantId(),
                       position + 1)
-                  .execute();
+                      .execute();
             } else {
               addViewStatisticsValues();
               AppController.getHelperProgressDialog().dismissDialog();
@@ -1560,7 +1579,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                       arrayList.get((position + 1)),
                       studies.getParticipantId(),
                       position + 1)
-                  .execute();
+                      .execute();
             } else {
               addViewStatisticsValues();
               AppController.getHelperProgressDialog().dismissDialog();
@@ -1573,7 +1592,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                     arrayList.get((position + 1)),
                     studies.getParticipantId(),
                     position + 1)
-                .execute();
+                    .execute();
           } else {
             addViewStatisticsValues();
             AppController.getHelperProgressDialog().dismissDialog();
