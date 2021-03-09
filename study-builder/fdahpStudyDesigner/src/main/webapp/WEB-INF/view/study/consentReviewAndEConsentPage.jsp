@@ -256,10 +256,29 @@
                 </small>
               </div>
             </div>
+            <c:if  test="${status ne 'Pre-launch'}"> 
+            <div class="pt-lg mt-xs pb-lg">
+        		<span class="checkbox checkbox-inline">
+          		<input type="checkbox" id="consentAgain" name="enrollAgain" <c:if test="${consentBo.enrollAgain eq 'true'}">checked</c:if>>	
+          		<label for="consentAgain">Enforce e-consent flow again for enrolled participants</label>
+          		</span>
+          		<span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Check this box if you want enrolled participants to undergo consent in the mobile app again with the latest version of the consent document. New participants will always see the latest version of the consent document.">
+            	</span>	
+      		</div>
+      		</c:if>
             <div class="mt-xlg">
-              <div class="blue-lg-f text-uppercase">
-                CONSENT DOCUMENT
+              <div class="blue-lg-f">
+                Consent document
+                <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
                 <span id="requiredStarId" class="requiredStar">*</span>
+                <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> The version of the consent document gets updated each time you mark this section complete and publish updates to the study.">
+            	</span>	
               </div>
               <div class="mt-lg">
                 <div class="cont_doc" id="autoCreateDivId"
@@ -634,7 +653,6 @@
       var dateTimeCB = $("#dateTimeCB").val();
       var consentDocumentContent = "";
       var consentDocType = $('input[name="consentDocType"]:checked').val();
-
       var shareDataPermissionsTxt = $('input[name="shareDataPermissions"]:checked').val();
       var title_txt = $("#titleId").val();
       var tagline_description = $("#taglineDescriptionId").val();
@@ -643,7 +661,11 @@
       var learn_more_text = $('#learnMoreTextId').summernote('code');
       learn_more_text = replaceSpecialCharacters(learn_more_text);
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-
+      var enrollAgain;
+      <c:if test="${status ne 'Pre-launch'}">
+       enrollAgain = document.getElementById("consentAgain").checked;
+      </c:if>
+      
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
         consentDocumentContent = replaceSpecialCharacters(consentDocumentContent);
@@ -702,6 +724,9 @@
       }
       if (null != allow_Permission) {
         consentInfo.allowWithoutPermission = allow_Permission;
+      }
+      if (null != enrollAgain) {
+        consentInfo.enrollAgain = enrollAgain;
       }
       var data = JSON.stringify(consentInfo);
       $.ajax({

@@ -190,7 +190,8 @@ public interface StudyService {
 
   public Boolean isAnchorDateExistForEnrollmentDraftStudy(Integer studyId, String customStudyId);
 
-  public boolean validateAppId(String customStudyId, String appId, String studyType);
+  public boolean validateAppId(
+      String customStudyId, String appId, String studyType, String dbCustomStudyId);
 
   public StudyPermissionBO findStudyPermissionBO(int studyId, int userId);
 
@@ -199,4 +200,6 @@ public interface StudyService {
   public boolean validateStudyActions(String studyId);
 
   public StudyBo getStudyInfo(String studyId);
+
+  public List<ConsentBo> getConsentList(String customStudyId);
 }
