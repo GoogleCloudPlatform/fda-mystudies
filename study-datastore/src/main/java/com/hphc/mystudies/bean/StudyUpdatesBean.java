@@ -34,6 +34,8 @@ public class StudyUpdatesBean {
 
   private String status = "";
 
+  private Boolean enrollAgain = false;
+
   public Boolean getConsent() {
     return consent;
   }
@@ -72,5 +74,13 @@ public class StudyUpdatesBean {
 
   public void setStatus(String status) {
     this.status = status;
+  }
+
+  public Boolean getEnrollAgain() {
+    return enrollAgain;
+  }
+
+  public void setEnrollAgain(Boolean enrollAgain) {
+    this.enrollAgain = enrollAgain;
   }
 }
