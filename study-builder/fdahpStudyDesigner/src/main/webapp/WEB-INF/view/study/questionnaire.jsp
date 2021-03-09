@@ -1983,7 +1983,7 @@
         $(".Selectedtooltip").show();
 
         var i = 0;
-        for (i = customCount-1; i > 0; i--) {
+        for (i = customCount-1; i > customCount; i--) {
           var RegStartDate = $("#StartDate" + i).val();
         	
           if(RegStartDate == '') {
@@ -4667,6 +4667,18 @@
 
 
     });
+    if(document.getElementById("schedule1").checked){
+		var i = 0
+	    for (i = 0; i < document.getElementsByClassName('manually-option').length; i++) {
+	       var RegStartDate = $("#StartDate" + i).val();
+	       if(RegStartDate == ''){
+	           $("#RegDate" + i ).hide();
+	           $("#AddButton").show();
+	           $("#AddButton").attr('required', true);
+	           $('.manually-option').find(".delete").css("visibility", "hidden");
+	       } 
+	    }
+	}
 
   });
 
