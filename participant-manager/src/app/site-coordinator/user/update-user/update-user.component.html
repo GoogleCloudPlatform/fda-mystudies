@@ -62,7 +62,7 @@
               name="firstName"
               #firstName="ngModel"
               required
-              pattern="^[A-Za-z0-9*()_+|:.-]*$"
+              pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
             />
             <div
               class="validation-error"
@@ -104,7 +104,7 @@
               class="form-control"
               id="lname"
               placeholder="Enter last name"
-              pattern="^[A-Za-z0-9*()_+|:.-]*$"
+              pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
             />
 
             <div
