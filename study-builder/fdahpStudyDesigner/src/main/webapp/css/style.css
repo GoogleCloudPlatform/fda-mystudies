@@ -2704,5 +2704,5 @@ td span.eye-inc:hover {
 .tooltip > .tooltip-inner {
 text-align: left !important;
 align-items: left !important;
-width:100%
+width:100px !important;
 }
