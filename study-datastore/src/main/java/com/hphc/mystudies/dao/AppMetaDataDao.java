@@ -441,8 +441,11 @@ public class AppMetaDataDao {
                     .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                     .setMaxResults(1)
                     .uniqueResult();
-        studyUpdates.setEnrollAgain(
-            consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
+
+        if (consent != null) {
+          studyUpdates.setEnrollAgain(
+              consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
+        }
 
         // get the latest version of study
         if (StringUtils.isEmpty(studyUpdates.getCurrentVersion())) {
