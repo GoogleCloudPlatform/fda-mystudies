@@ -46,8 +46,8 @@
             <c:if
                 test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
                maxlength="50" required style="white-space:normal;margin-bottom:2px;"/>              
-        <div id="activityvalidate" class="validateActiveTask help-block with-errors red-txt">
-         </div><br>
+        <div id="activityvalidate" class="validateActiveTask with-errors red-txt"></div>
+        <div class="help-block with-errors red-txt"></div>
       </div>
     </div>
   </div>

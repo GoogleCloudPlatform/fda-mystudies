@@ -19,10 +19,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
@@ -58,10 +56,6 @@ public class EnrollmentTokenController {
   private static final Logger logger = LoggerFactory.getLogger(EnrollmentTokenController.class);
 
   @Autowired EnrollmentTokenService enrollmentTokenfService;
-
-  @Autowired CommonService commonService;
-
-  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Autowired private EnrollmentManagementUtil enrollManagementUtil;
 
