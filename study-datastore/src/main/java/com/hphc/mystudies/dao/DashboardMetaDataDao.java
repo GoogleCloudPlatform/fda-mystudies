@@ -124,12 +124,16 @@ public class DashboardMetaDataDao {
             if ((activeTask.getActive() != null) && (activeTask.getActive() == 1)) {
               addToDashboardFlag = true;
             } else {
-              if (StudyMetaDataConstants.SDF_DATE
-                  .parse(activeTask.getModifiedDate())
-                  .after(
-                      StudyMetaDataConstants.SDF_DATE.parse(
-                          activeTask.getActiveTaskLifetimeStart()))) {
-                addToDashboardFlag = true;
+              if (activeTask.getModifiedDate() != null
+                  && activeTask.getActiveTaskLifetimeStart() != null
+                  && !activeTask.getActiveTaskLifetimeStart().contains("null")) {
+                if (StudyMetaDataConstants.SDF_DATE
+                    .parse(activeTask.getModifiedDate())
+                    .after(
+                        StudyMetaDataConstants.SDF_DATE.parse(
+                            activeTask.getActiveTaskLifetimeStart()))) {
+                  addToDashboardFlag = true;
+                }
               }
             }
 
