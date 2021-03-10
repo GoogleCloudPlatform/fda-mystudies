@@ -128,6 +128,9 @@ public class ConsentDto implements Serializable {
   @Column(name = "need_comprehension_test")
   private String needComprehensionTest;
 
+  @Column(name = "enroll_again")
+  private Boolean enrollAgain;
+
   public Integer getId() {
     return id;
   }
@@ -334,5 +337,13 @@ public class ConsentDto implements Serializable {
 
   public void setNeedComprehensionTest(String needComprehensionTest) {
     this.needComprehensionTest = needComprehensionTest;
+  }
+
+  public Boolean getEnrollAgain() {
+    return enrollAgain;
+  }
+
+  public void setEnrollAgain(Boolean enrollAgain) {
+    this.enrollAgain = enrollAgain;
   }
 }

@@ -1411,7 +1411,7 @@
           }
         }
       } else {
-
+    	$("#AddButton").show();
         localStorage.setItem("IsActiveAnchorDateSelected", "false");
         localStorage.setItem("IsActiveRegularSelected", "true");
 
@@ -1472,6 +1472,7 @@
 
            $("#AddButton").show();
            $("#AddButton").attr('required', true);
+           $('.manually-option').find(".delete").css("visibility", "hidden");
          } else {
            $("#AddButton").hide();
            $("#AddButton").attr('required', false);
@@ -2272,6 +2273,10 @@
 
   function removeDate(param) {
     $(param).parents(".manually-option").remove();
+	if($('.manually-option').length == 1){
+	    	 $('.manually-option').find(".delete").css("visibility", "hidden");
+	    	 $('#AddButton').show();
+	}
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
     if ($('.manually-option').length > 1) {
@@ -3513,5 +3518,16 @@
       $(".current").nextAll().remove();
 
     });
+    if(document.getElementById("schedule1").checked){
+		var i = 0
+	    for (i = 0; i < document.getElementsByClassName('manually-option').length; i++) {
+	          var RegStartDate = $("#StartDate" + i).val();
+	          if(RegStartDate == ''){
+	          $("#RegDate" + i ).hide();
+	          $("#AddButton").show();
+	          $('.manually-option').find(".delete").css("visibility", "hidden");
+	          }
+	    }
+	    }
   });
 </script>

@@ -30,6 +30,8 @@ public class ConsentDocumentBean {
 
   private String content = "";
 
+  private Boolean enrollAgain;
+
   public String getVersion() {
     return version;
   }
@@ -52,5 +54,13 @@ public class ConsentDocumentBean {
 
   public void setContent(String content) {
     this.content = content;
+  }
+
+  public Boolean getEnrollAgain() {
+    return enrollAgain;
+  }
+
+  public void setEnrollAgain(Boolean enrollAgain) {
+    this.enrollAgain = enrollAgain;
   }
 }

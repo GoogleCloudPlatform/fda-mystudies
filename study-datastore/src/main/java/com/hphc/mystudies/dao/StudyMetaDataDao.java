@@ -864,6 +864,8 @@ public class StudyMetaDataDao {
                         .replaceAll("&#34;", "'")
                         .replaceAll("em>", "i>")
                         .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+            consentDocumentBean.setEnrollAgain(
+                consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
             consentDocumentResponse.setConsent(consentDocumentBean);
           }
           consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
