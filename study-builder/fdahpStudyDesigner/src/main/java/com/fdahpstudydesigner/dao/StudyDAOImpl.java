@@ -6664,7 +6664,7 @@ public class StudyDAOImpl implements StudyDAO {
                 session
                     .createQuery(searchQuery)
                     .setString("appId", appId)
-                    .setString("customStudyId", dbCustomStudyId)
+                    .setString("dbCustomStudyId", dbCustomStudyId)
                     .list();
           } else if (StringUtils.isNotEmpty(customStudyId)) {
             searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
