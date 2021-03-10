@@ -611,7 +611,7 @@ public class SurveyActivitiesFragment extends Fragment
           dbServiceSubscriber.deleteStudyInfoFromDb(
               context, ((SurveyActivity) context).getStudyId());
         }
-        if (studyUpdate.getStudyUpdateData().isConsent()) {
+        if (studyUpdate.getStudyUpdateData().isConsent() && studyUpdate.isEnrollAgain()) {
           callConsentMetaDataWebservice();
         } else {
           StudyList studyList =
