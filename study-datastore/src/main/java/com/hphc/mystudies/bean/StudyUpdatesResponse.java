@@ -32,6 +32,8 @@ public class StudyUpdatesResponse {
 
   private String currentVersion = "";
 
+  private Boolean enrollAgain;
+
   public String getMessage() {
     return message;
   }
@@ -54,5 +56,13 @@ public class StudyUpdatesResponse {
 
   public void setCurrentVersion(String currentVersion) {
     this.currentVersion = currentVersion;
+  }
+
+  public Boolean getEnrollAgain() {
+    return enrollAgain;
+  }
+
+  public void setEnrollAgain(Boolean enrollAgain) {
+    this.enrollAgain = enrollAgain;
   }
 }

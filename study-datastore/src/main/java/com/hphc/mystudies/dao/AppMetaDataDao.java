@@ -352,16 +352,6 @@ public class AppMetaDataDao {
                 ? true
                 : false);
 
-        consent =
-            (ConsentDto)
-                session
-                    .getNamedQuery("consentDetailsByCustomStudyIdAndVersion")
-                    .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
-                    .setFloat(
-                        StudyMetaDataEnum.QF_VERSION.value(), currentVersion.getConsentVersion())
-                    .uniqueResult();
-        updates.setEnrollAgain(consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
-
         // check whether activityUpdated or not
         studyActivityStatus =
             (StudyDto)
@@ -440,6 +430,21 @@ public class AppMetaDataDao {
             break;
           default:
             break;
+        }
+
+        consent =
+            (ConsentDto)
+                session
+                    .createQuery(
+                        "from ConsentDto CDTO"
+                            + " where CDTO.customStudyId= :customStudyId ORDER BY CDTO.id DESC")
+                    .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
+                    .setMaxResults(1)
+                    .uniqueResult();
+
+        if (consent != null) {
+          studyUpdates.setEnrollAgain(
+              consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
         }
 
         // get the latest version of study
