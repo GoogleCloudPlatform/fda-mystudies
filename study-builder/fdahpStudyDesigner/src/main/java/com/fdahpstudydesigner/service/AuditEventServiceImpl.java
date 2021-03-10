@@ -8,18 +8,7 @@
 
 package com.fdahpstudydesigner.service;
 
-import static com.fdahpstudydesigner.common.JsonUtils.getObjectMapper;
-
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
-import com.google.cloud.MonitoredResource;
-import com.google.cloud.logging.LogEntry;
-import com.google.cloud.logging.Logging;
-import com.google.cloud.logging.LoggingOptions;
-import com.google.cloud.logging.Payload;
-import com.google.cloud.logging.Severity;
-import java.util.Collections;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +21,7 @@ public class AuditEventServiceImpl implements AuditEventService {
 
   @Override
   public void postAuditLogEvent(AuditLogEventRequest auditRequest) {
-    logger.debug(
+    /*logger.debug(
         String.format("begin postAuditLogEvent() for %s event", auditRequest.getEventCode()));
     try (Logging logging = LoggingOptions.getDefaultInstance().getService()) {
       JsonNode requestBody = getObjectMapper().convertValue(auditRequest, JsonNode.class);
@@ -55,6 +44,6 @@ public class AuditEventServiceImpl implements AuditEventService {
     }
 
     logger.debug(
-        String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
+        String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));*/
   }
 }
