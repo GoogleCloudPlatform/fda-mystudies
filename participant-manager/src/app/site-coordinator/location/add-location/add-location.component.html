@@ -84,7 +84,7 @@
               name="name"
               maxlength="200"
               #name="ngModel"
-              pattern="^[A-Za-z0-9*()_+|:.-]*$"
+              pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
             />
 
             <div
@@ -132,7 +132,7 @@
               name="description"
               maxlength="500"
               #description="ngModel"
-              pattern="^[A-Za-z0-9*()_+|:.-]*$"
+              pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
             />
 
             <div

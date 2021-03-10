@@ -57,7 +57,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -70,7 +70,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -83,7 +83,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -96,7 +96,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -109,7 +109,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -122,7 +122,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -135,7 +135,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -148,7 +148,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -161,7 +161,7 @@ public class ConsentBuilder {
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
               consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
 
-              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+              visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
               visualStep.setSection(consentSection);
               visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
@@ -179,7 +179,7 @@ public class ConsentBuilder {
           consentSection1.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
           consentSection1.setCustomImageName("task_img2");
 
-          visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle());
+          visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle() + "_" + i);
           visualStep.setStepTitle(R.string.notxt);
           visualStep.setSection(consentSection1);
           visualStep.setNextButtonString(context.getResources().getString(R.string.next1));
