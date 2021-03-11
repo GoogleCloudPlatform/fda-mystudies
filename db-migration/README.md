@@ -103,7 +103,7 @@ VPC without the need for Authorized networks or for configuring SSL.
    `Instance connection name`
 
    ```
-   ./cloud_sql_proxy -instances=<{PREFIX}-{ENV}-data:{REGION}:mystudies>tcp:3306
+   ./cloud_sql_proxy -instances=<{PREFIX}-{ENV}-data:{REGION}:mystudies>=tcp:3306
    ```
 
 ### Data Migration Script Execution Setup:
