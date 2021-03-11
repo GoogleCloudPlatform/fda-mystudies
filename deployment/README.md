@@ -484,6 +484,11 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
     ```bash
     gcloud auth list
     ``` 
+## Maintaining & Updating FDA MyStudies
+
+### Database Migration
+
+When updating FDA MyStudies it may be necessary to migrate the databases to support the new version. Detailed instructions can be found in the [Database Migration README](/db-migration/README.md).
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
