@@ -99,22 +99,20 @@
             <div>
               <div id="errMsg" class="error_msg">${errMsg}</div>
               <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
-              <p class="white__text">Your password has expired. You need to reset your password to
-                proceed
-                further.</p>
+              <p class="white__text">Your password has expired. Please create a new password.</p>
               <div class="mb-lg form-group">
                 <input type="password" class="form-control input-field wow_input" id="oldPassword"
                        name=""
-                       maxlength="14" data-minlength="8" placeholder="Old Password"
-                       data-error="Invalid old password." required
+                       maxlength="14" data-minlength="8" placeholder="Previous password"
+                       data-error="Invalid previous password." required
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
                 <input type="hidden" name="oldPassword" id="hideOldPass"/>
               </div>
               <div class="mb-lg form-group">
                 <input type="password" class="form-control input-field wow_input" id="password" name=""
-                       maxlength="14" data-minlength="8" placeholder="Password"
-                       data-error="Password is invalid"
+                       maxlength="14" data-minlength="8" placeholder="New password"
+                       data-error="New password is invalid"
                        required
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,14}"
                        autocomplete="off"/>

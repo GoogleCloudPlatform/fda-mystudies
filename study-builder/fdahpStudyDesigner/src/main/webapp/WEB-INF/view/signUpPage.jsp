@@ -93,6 +93,11 @@
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
 
   </head>
+  <style>
+  .arrowLeftSugg {
+    margin-left: -27px; !important;
+    }
+  </style>
   <body class="loading background__img">
     <div id="loader">
       <span></span>
