@@ -58,6 +58,10 @@
     display: inline-block;
     vertical-align: top;
   }
+  
+  .help-block ul {
+      width: max-content !important;
+    }
 
 
   /* error box css start here  */
