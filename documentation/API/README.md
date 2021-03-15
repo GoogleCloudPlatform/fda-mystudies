@@ -18,11 +18,11 @@ As mentioned above, we'll use Springfox implementation of the Swagger specificat
 *  `springfox-bean-validators`
 *  `spring-swagger-simplified`
 
-The SwaggerConfig class is added in `common-service` module to override the default response messages, provide custom information about the API and to add static resources to the ResourceHandlerRegistry object. Please refer to the [Configuration explained](https://springfox.github.io/springfox/docs/current/#configuration-explained) for more details.
+The `SwaggerConfig` class is added in `common-service` module to override the default response messages, provide custom information about the API and to add static resources to the ResourceHandlerRegistry object. Please refer to the [Configuration explained](https://springfox.github.io/springfox/docs/current/#configuration-explained) for more details.
 
 ### Springfox Annotations
 
-Springfox provides following annotations to use on Bean and Controller classes: @ApiModelProperty, @ApiParam, @ApiImplicitParam, @ApiOperation, @RequestParam, @RequestHeader. Please refer to the [Overriding descriptions via properties](https://springfox.github.io/springfox/docs/current/#overriding-descriptions-via-properties) for more details on Springfox annotations and attributes.
+Springfox provides following annotations to use on Bean and Controller classes: `@ApiModelProperty`, `@ApiParam`, `@ApiImplicitParam`, `@ApiOperation`, `@RequestParam`, `@RequestHeader`. Please refer to the [Overriding descriptions via properties](https://springfox.github.io/springfox/docs/current/#overriding-descriptions-via-properties) for more details on Springfox annotations and attributes.
 
 ### API Docs
 
@@ -37,7 +37,7 @@ To verify that Springfox is working, we can visit this URL in our browser:
 
 The result is a JSON response which is not very human readable. Swagger provides Swagger UI to visually render documentation for an API defined with Open API (Swagger) specification. 
 
-The `SwaggerGeneratorTest` class is added in auth-server, response-datastore, participant-manager-datastore, participant-consent-datastore, participant-enroll-datastore and participant-user-datastore modules to generate the openapi.docs under `/fda-mystudies/documentation/API/[service-name]/`
+The `SwaggerGeneratorTest` class is added in auth-server, response-datastore, participant-manager-datastore, participant-consent-datastore, participant-enroll-datastore and participant-user-datastore modules to generate the `openapi.docs` under `/fda-mystudies/documentation/API/[service-name]/`
 
 ### Springfox Swagger UI
 
@@ -52,5 +52,5 @@ The `springfox-swagger-ui` web jar ships with Swagger UI. To include it in a sta
 
 ### Swagger Editor
 
-The API docs are stored under `/fda-mystudies/documentation/API/[service-name]/` for offline reference. Please refer to the [Importing OpenAPI documents](https://github.com/swagger-api/swagger-editor/blob/master/docs/import.md#importing-openapi-documents) to import the openapi.json file into the [Swagger Editor](https://editor.swagger.io/).
+The API docs are stored under `/fda-mystudies/documentation/API/[service-name]/` for offline reference. Please refer to the [Importing OpenAPI documents](https://github.com/swagger-api/swagger-editor/blob/master/docs/import.md#importing-openapi-documents) to import the `openapi.json` file into the [Swagger Editor](https://editor.swagger.io/).
 
