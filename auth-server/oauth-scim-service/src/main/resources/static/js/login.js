@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -28,11 +28,8 @@ function validateField(elementId) {
   } else if (!isValid) {
 	errorDiv.innerHTML = fieldErrors[elementId].invalid;
 	errorDiv.style.display = "block";
-  } else {
-	errorDiv.innerHTML = '';
-	errorDiv.style.display = "none";
-  }
-  
+  } 
+
   return isValid;
 }
 

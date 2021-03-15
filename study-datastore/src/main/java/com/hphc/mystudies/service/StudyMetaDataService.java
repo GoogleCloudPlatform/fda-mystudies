@@ -51,7 +51,6 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -131,7 +130,6 @@ public class StudyMetaDataService {
     return gatewayInfo;
   }
 
-  @ApiModelProperty(value = "applicationId", required = true)
   @ApiOperation(value = "Get list of studies based on applicationId")
   @ApiResponses(
       value = {
