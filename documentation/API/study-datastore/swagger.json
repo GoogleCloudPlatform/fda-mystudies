@@ -1,0 +1,656 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "2.0.3",
+    "title" : "Study Meta Data",
+    "termsOfService" : "http://www.github.com/kongchen/swagger-maven-plugin",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags" : [ {
+    "name" : "Studies"
+  } ],
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/activity" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get an activity from list of activities available for a study using activity version",
+        "description" : "",
+        "operationId" : "studyActivityMetadata",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "activityId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "activityVersion",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/activityList" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get the list of activities that are available for a particular study",
+        "description" : "",
+        "operationId" : "studyActivityList",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Sorry, something went wrong. Please try again."
+          },
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/activityResponce" : {
+      "post" : {
+        "tags" : [ "Studies" ],
+        "summary" : "This API will save the activities response",
+        "description" : "",
+        "operationId" : "storeJsonResponseFile",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid resource"
+          },
+          "404" : {
+            "description" : "Details not found"
+          }
+        }
+      }
+    },
+    "/appUpdates" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get latest app updates using app version",
+        "description" : "",
+        "operationId" : "appUpdates",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "appVersion",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/consentDocument" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get the consent Document for a particular study based on the consent Version",
+        "description" : "",
+        "operationId" : "consentDocument",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "consentVersion",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "activityId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "activityVersion",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/eligibilityConsent" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get the eligibility method configured for a particular study",
+        "description" : "",
+        "operationId" : "eligibilityConsentMetadata",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/gatewayInfo" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get the platform from the provided authorization credentials and fetch based on the platform",
+        "description" : "",
+        "operationId" : "gatewayAppResourcesInfo",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        } ],
+        "responses" : {
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/healthCheck" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Provides an indication about the health of the service",
+        "description" : "Default response codes 400 and 401 are not applicable for this operation",
+        "operationId" : "healthCheck",
+        "responses" : {
+          "200" : {
+            "description" : "Service is Up and Running",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    },
+    "/notifications" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get list of notifications of a particular app using appId",
+        "description" : "",
+        "operationId" : "notifications",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "skip",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "applicationId",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/resources" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get all the resources available for a partucular study",
+        "description" : "",
+        "operationId" : "resourcesForStudy",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/study" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get basic information of study using study Id",
+        "description" : "",
+        "operationId" : "study",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/studyDashboard" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get charts and statistics data for a particular study to display in mobile app dashboard",
+        "description" : "",
+        "operationId" : "studyDashboardInfo",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/studyInfo" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get the study information for a particular study",
+        "description" : "",
+        "operationId" : "studyInfo",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/studyList" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get list of studies based on applicationId",
+        "description" : "",
+        "operationId" : "studyList",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "applicationId",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        } ],
+        "responses" : {
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/studyUpdates" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get latest study updates using study Id and study version",
+        "description" : "",
+        "operationId" : "studyUpdates",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "studyId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "studyVersion",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Sorry, something went wrong. Please try again."
+          },
+          "103" : {
+            "description" : "NODATA"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/termsPolicy" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get terms and policy details of application",
+        "description" : "",
+        "operationId" : "termsPolicy",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "103" : {
+            "description" : "No records found"
+          },
+          "104" : {
+            "description" : "UNKNOWN"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/updateAppVersion" : {
+      "post" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Update app version details like app version, OS type, custom study ID etc.",
+        "description" : "",
+        "operationId" : "updateAppVersionDetails",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/validateEnrollmentToken" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "This API will validate the Enrollment Token and return the response",
+        "description" : "",
+        "operationId" : "validateEnrollmentToken",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "102" : {
+            "description" : "Invalid input."
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/versionInfo" : {
+      "get" : {
+        "tags" : [ "Studies" ],
+        "summary" : "Get the latest app (Android and IOS) version using application ID",
+        "description" : "",
+        "operationId" : "getAppVersionInfo",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "applicationId",
+          "in" : "header",
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid resource"
+          },
+          "404" : {
+            "description" : "Details not found"
+          }
+        }
+      }
+    }
+  }
+}
