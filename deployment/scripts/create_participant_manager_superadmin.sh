@@ -71,9 +71,9 @@ VALUES
 SECURITY_CODE=`cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 64 | head -n 1 | sed 's/^.* //'`
 echo "Inserting/updating ur_admin_user record in 'mystudies_participant_datastore' database"
 echo "REPLACE INTO ur_admin_user
-  (id, created_by, email, first_name, location_permission, security_code, security_code_expire_date, status, super_admin, ur_admin_auth_id)
+  (id, created_by, email, first_name, last_name, location_permission, security_code, security_code_expire_date, status, super_admin, ur_admin_auth_id)
 VALUES
-  ('c9d30d67-0477-4a8c-8490-0fa1e0300bd0', '1', '${EMAIL}', 'Admin', 1, '${SECURITY_CODE}', '${DATE}', 1, b'1', '96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508');
+  ('c9d30d67-0477-4a8c-8490-0fa1e0300bd0', '1', '${EMAIL}', 'Admin', 'Admin', 1, '${SECURITY_CODE}', '${DATE}', 1, b'1', '96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508');
 " >> ${TMPFILE}
 
 # Upload TMPFILE to GCS.
