@@ -11,7 +11,7 @@
 This guide provides instructions for generating API docs using the Springfox implementation of the Swagger specification and using the Springfox Swagger UI or [Swagger Editor](https://editor.swagger.io/) to visually render documentation for an API defined with Open API (Swagger) specification. 
 
 ### Springfox Configuration
-As mentioned above, we'll use Springfox implementation of the Swagger specification. We've added below maven artifacts to the pom.xml in `common-service` module.
+As mentioned above, we'll use Springfox implementation of the Swagger specification. We've added below maven artifacts to the `pom.xml` in `common-service` module.
 
 *  `springfox-swagger2`
 *  `springfox-swagger-ui`
@@ -41,7 +41,7 @@ The `SwaggerGeneratorTest` class is added in auth-server, response-datastore, pa
 
 ### Springfox Swagger UI
 
-The `springfox-swagger-ui` web jar ships with Swagger UI. To include it in a standard Spring Boot application we've added this dependency to pom.xml in `common-service` module. The Swagger UI page should then be available at
+The `springfox-swagger-ui` web jar ships with Swagger UI. To include it in a standard Spring Boot application we've added this dependency to `pom.xml` in `common-service` module. The Swagger UI page should then be available at
 
 *  http[s]://[DOMAIN]/auth-server/swagger-ui.html 
 *  http[s]://[DOMAIN]/participant-manager-datastore/swagger-ui.html 
