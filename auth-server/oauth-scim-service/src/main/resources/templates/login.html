@@ -58,8 +58,7 @@
           <div class="card fat">
             <div class="card-body bg__aqua-gray">
               <form th:action="@{/login}" method="POST" id="loginForm"
-                novalidate onsubmit="return validateform();"
-                th:object="${loginRequest}">
+                novalidate th:object="${loginRequest}">
                 <div
                   class="centered__div centered__div__mobile box__shadow-cmn">
                   <div class="signin__container">
