@@ -68,7 +68,7 @@
                     style="@style/TextType1"
                     android:layout_below="@id/logo"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/gateway_welcome"
                     android:textColor="@android:color/white" />
 

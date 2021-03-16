@@ -26,6 +26,7 @@
             name="name"
             maxlength="200"
             #name="ngModel"
+            pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
           />
           <div
             class="validation-error"
@@ -45,8 +46,18 @@
             </span>
             <span
               class="help-block with-errors error__msg"
+              *ngIf="name.errors?.pattern"
+            >
+              Please use characters from the following set only: A-Z a-z 0-9
+              *()_+|:.-
+            </span>
+            <span
+              class="help-block with-errors error__msg"
               *ngIf="
-                name.errors && !name.errors.required && !name.errors.maxlength
+                name.errors &&
+                !name.errors.required &&
+                !name.errors?.pattern &&
+                !name.errors.maxlength
               "
             >
               Location name is invalid
@@ -70,6 +81,7 @@
             name="description"
             maxlength="500"
             #description="ngModel"
+            pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
           />
           <div
             class="validation-error"
@@ -91,9 +103,17 @@
             </span>
             <span
               class="help-block with-errors error__msg"
+              *ngIf="description.errors?.pattern"
+            >
+              Please use characters from the following set only: A-Z a-z 0-9
+              *()_+|:.-
+            </span>
+            <span
+              class="help-block with-errors error__msg"
               *ngIf="
                 description.errors &&
                 !description.errors.required &&
+                !description.errors.pattern &&
                 !description.errors.maxlength
               "
             >

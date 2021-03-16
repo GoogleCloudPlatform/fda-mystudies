@@ -66,18 +66,18 @@ let kConsentViewPdfStoryboardId = "ConsentPdfViewerStepViewControllerIdentifier"
 /// Comprehenion Instruction Step Keys
 let kConsentComprehensionTestTitle = "Comprehension"
 let kConsentComprehensionTestText =
-  "Let's do a quick and simple test of your understanding of this Study."
+  "Let's do a quick and simple test of your understanding of this study."
 let kComprehensionInstructionStepIdentifier = "ComprehensionInstructionStep"
 
 /// Comprehension Completion Step Keys
-let kComprehensionCompletionTitle = "Great Job!"
+let kComprehensionCompletionTitle = "Great job!"
 let kComprehensionCompletionText =
-  "You answered all of the questions correctly. Tap on Next to proceed"
+  "You answered all of the questions correctly. Tap next to continue."
 let kComprehensionCompletionStepIdentifier = "ComprehensionCompletionStep"
 
 /// Consent Completion
 let kConsentCompletionMainTitle = "Consent confirmed"
-let kConsentCompletionSubTitle = "You can now start participating in the Study"
+let kConsentCompletionSubTitle = "You can now start participating in the study"
 let kSignaturePageContentText = "I agree to participate in this research study."
 
 /// Signature Page
@@ -497,6 +497,8 @@ struct ReviewConsent {
         someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject
       ) {
         reasonForConsent = dict[kConsentReviewStepReasonForConsent] as? String
+      } else {
+        reasonForConsent = kMessageconsentConfirmation
       }
     }
   }

@@ -10,6 +10,9 @@
   pointer-events: none;
   cursor: default;
 }
+.filter-option {
+  text-transform: inherit !important;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -88,7 +91,7 @@
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
-                    class="gray-xs-f mb-xs pl-xs"> Pending Verification
+                    class="gray-xs-f mb-xs pl-xs"> Pending verification
                 </span>
               </span>
             </div>
@@ -118,7 +121,7 @@
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"
-                    id="enforcePasswordId">Enforce Password Change
+                    id="enforcePasswordId">Enforce password change
             </button>
           </div>
         </c:if>
@@ -203,6 +206,7 @@
             <div class="blue-md-f mt-lg mb-md">
               Role
               <span class="requiredStar"> *</span>
+              <span data-toggle="tooltip" data-placement="top" title="" class="filled-tooltip" data-original-title="Superadmin users have application-wide permissions. They can manage users of the Study Builder and in addition, can manage app-level notifications and studies as well. Non-superadmins or 'study admins' will have permissions-based access to specific sections and studies only." aria-describedby="tooltip739612"></span>
             </div>
             <div class="form-group">
               <select id="roleId"
@@ -246,7 +250,7 @@
 
         <div class="clearfix"></div>
         <!-- Assign Permissions -->
-        <div class="blue-md-f text-uppercase mt-lg">Assigned Permissions</div>
+        <div class="blue-md-f text-uppercase mt-lg perm-assign">Assigned Permissions</div>
         <div class="pull-right mb-xs">
           <span class="gray-xs-f">View only</span>
           <span
@@ -255,34 +259,7 @@
         </div>
         <div class="clearfix"></div>
 
-        <!-- Gray Widget-->
-        <div class="edit-user-list-widget">
-          <span class="checkbox checkbox-inline"><input
-              type="checkbox" class="chk" id="inlineCheckbox1" value="option1"
-              <c:if test="${fn:contains(permissions,7)}">checked</c:if>
-              <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox1"> Users </label>
-          </span>
-          <span class="pull-right">
-            <span
-                class="radio radio-info radio-inline p-45"><input
-                type="radio" class="musr" id="inlineRadio1" value="0"
-                name="manageUsers"
-                <c:if test="${fn:contains(permissions,7)}">checked</c:if>
-                <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-              <label for="inlineRadio1"></label>
-            </span>
-            <span class="radio radio-inline"><input type="radio"
-                                                    class="musr" id="inlineRadio2" value="1"
-                                                    name="manageUsers"
-                                                    <c:if
-                                                        test="${fn:contains(permissions,5)}">checked</c:if>
-                                                    <c:if
-                                                        test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-              <label for="inlineRadio2"></label>
-            </span>
-          </span>
-        </div>
+       
 
         <div class="edit-user-list-widget">
           <span class="checkbox checkbox-inline"><input
@@ -426,22 +403,15 @@
            id="backOrCancelBtnForm" name="backOrCancelBtnForm" method="post">
 </form:form>
 <script>
-
-
   $(document).ready(function () {
     $('#rowId').parent().removeClass('white-bg');
-
     <c:if test="${empty studyBOList && empty studyBOs}">
     $('.addHide').hide();
     </c:if>
-
     $('#users').addClass('active');
-
     $('[data-toggle="tooltip"]').tooltip();
-
     var isManageStudyChecked = $("#inlineCheckbox4").is(":checked");
     if (isManageStudyChecked) {
-
     } else {
       $('#inlineCheckbox5').val('');
       $('#inlineCheckbox5').prop('checked', false);
@@ -455,12 +425,25 @@
       setStudySettingByRole(role);
     }
     </c:if>
+    <c:if test="${actionPage eq 'ADD_PAGE'}">
+    $('.edit-user-list-widget').hide();
+ 	 $('.perm-assign').hide();
+ 	 $('.pull-right').hide();
+    </c:if>
+    <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
+    if($('#roleId').find('option:selected').text() == 'Superadmin' ){
+    $('.edit-user-list-widget').hide();
+ 	 $('.perm-assign').hide();
+ 	 $('.pull-right').hide();
+    }
+    </c:if>
+    
     
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       setStudySettingByRole(element);
     });
-
+   
     var countCall = 0;
     $(window).on('load', function () {
       countCall = 1;
@@ -477,7 +460,6 @@
             });
       });
     });
-
     if (countCall == 0) {
       $('.selStd').each(function () {
         var stdTxt = $(this).find('.stdCls').attr('stdTxt');
@@ -535,27 +517,22 @@
         $('#emailId').parent().find(".help-block").empty();
       }
     });
-
     //cancel or back click
     $('.backOrCancelBttn').on('click', function () {
       $('#backOrCancelBtnForm').submit();
     });
-
     if ($('#inlineCheckbox1').prop("checked") == false) {
       $('.musr').prop('checked', false);
       $('.musr').prop('disabled', true);
     }
-
     if ($('#inlineCheckbox3').prop("checked") == false) {
       $('.mnotf').prop('checked', false);
       $('.mnotf').prop('disabled', true);
     }
-
     if ($('#inlineCheckbox4').prop("checked") == false) {
       $('#inlineCheckbox5').prop('checked', false);
       $('#inlineCheckbox5').prop('disabled', true);
     }
-
     $('#inlineCheckbox1').on('click', function () {
       if ($(this).prop("checked") == true) {
         $('.musr').prop('disabled', false);
@@ -565,7 +542,6 @@
         $('.musr').prop('disabled', true);
       }
     });
-
     $('#inlineCheckbox3').on('click', function () {
       if ($(this).prop("checked") == true) {
         $('.mnotf').prop('disabled', false);
@@ -575,7 +551,6 @@
         $('.mnotf').prop('disabled', true);
       }
     });
-
     $('#inlineCheckbox4').on('click', function () {
       if ($(this).prop("checked") == true) {
         $(this).val(1);
@@ -596,7 +571,6 @@
         $('.changeView1').prop('disabled', true);
       }
     });
-
     $('#inlineCheckbox5').on('click', function () {
       if ($(this).prop("checked") == true) {
         $(this).val(1);
@@ -606,15 +580,12 @@
     });
     // Adding selected study items
     $(".study-addbtn").click(function () {
-
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
-
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
         if ($(this).text() == "- All items are already selected -") {
           $(this).hide();
         }
       });
-
       $('#multiple :selected').each(function (i, sel) {
         var selVal = parseInt($(sel).val());
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -636,10 +607,8 @@
             + "</span>"
             + "</span>"
             + "</div>";
-
         $('.study-selected').append(existingStudyDiv);
       });
-
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(
@@ -648,9 +617,7 @@
         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").empty().append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
       }
-
     });
-
 //Removing selected study items
     $(".removeAll").click(function () {
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
@@ -661,7 +628,6 @@
       });
       $(".study-selected-item").remove();
     });
-
     $('.addUpdate').on('click', function () {
       var email = $('#emailId').val();
       var oldEmail = $('#emailId').attr('oldVal');
@@ -708,7 +674,7 @@
         saveUser();
       }
     });
-
+    
     $('#resendLinkId').on('click', function () {
       var form = document.createElement('form');
       form.method = 'post';
@@ -717,18 +683,15 @@
       input.name = 'userId';
       input.value = '${userBO.userId}';
       form.appendChild(input);
-
       input = document.createElement('input');
       input.type = 'hidden';
       input.name = '${_csrf.parameterName}';
       input.value = '${_csrf.token}';
       form.appendChild(input);
-
       form.action = '/studybuilder/adminUsersEdit/resendActivateDetailsLink.do';
       document.body.appendChild(form);
       form.submit();
     });
-
     $('#enforcePasswordId').on('click', function () {
       bootbox.confirm({
         closeButton: false,
@@ -750,33 +713,26 @@
             input.name = 'changePassworduserId';
             input.value = '${userBO.userId}';
             form.appendChild(input);
-
             var input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'emailId';
             input.value = '${userBO.userEmail}';
             form.appendChild(input);
-
             input = document.createElement('input');
             input.type = 'hidden';
             input.name = '${_csrf.parameterName}';
             input.value = '${_csrf.token}';
             form.appendChild(input);
-
             form.action = '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
             document.body.appendChild(form);
             form.submit();
           }
         }
       })
-
     });
-
   });
-
   function del(id) {
     var atxt = $('#std' + id).children().text();
-
     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
         function () {
           var ltxt = $(this).text();
@@ -786,17 +742,13 @@
             $(this).parent().parent().show();
           }
         });
-
     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
       if ($(this).text() == "- All items are already selected -") {
         $(this).hide();
       }
     });
-
     $('#std' + id).remove();
-
   }
-
   function activateOrDeactivateUser(userId) {
     var status = $('#change' + userId).val();
     var msgPart = "";
@@ -818,7 +770,6 @@
         if (status == 'true') {
           $('#change' + userId).prop('checked', true);
           $('#userStatus').val(true);
-
         } else if (status == 'false') {
           $('#change' + userId).prop('checked', false);
           $('#userStatus').val(false);
@@ -827,7 +778,6 @@
       }
     });
   }
-
   function saveUser() {
     $('#emailId').prop('disabled', false);
     var selectedStudies = "";
@@ -857,7 +807,6 @@
       $("body").removeClass("loading");
     }
   }
-
   function setStudySettingByRole(element) {
     if (element == 'Org-level Admin') {
       $('#inlineCheckbox1').prop('checked', false);
@@ -877,7 +826,21 @@
       $('#inlineCheckbox3').attr('disabled', false);
       $('#inlineCheckbox5').attr('disabled', false);
     }
-
   }
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
+  $('#roleId').on('change', function () {
+      var element = $(this).find('option:selected').text();
+      if(element == "Study admin"){ 
+      	 $('.edit-user-list-widget').show();
+      	 $('.perm-assign').show();
+      	 $('.pull-right').show();
+          } else{
+        	  $('.edit-user-list-widget').hide();
+           	 $('.perm-assign').hide();
+           	 $('.pull-right').hide();
+              }
+    });
+  
 </script>
-

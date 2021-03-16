@@ -9,6 +9,10 @@ import {ChangePassword} from '../shared/profile.model';
 import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {HeaderDisplayService} from 'src/app/service/header-display.service';
+import {
+  ErrorCode,
+  getMessage as getErrorMessage,
+} from 'src/app/shared/error.codes.enum';
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -23,6 +27,18 @@ export class ChangePasswordComponent
   currentPasswordPlaceholder = 'Enter current password';
   currentPasswordlabel = 'Current password';
   hideClickable = true;
+  passwordMeterLow = '.25';
+  passwordMeterHigh = '.75';
+  passwordMeterValue = '.2';
+  passwordMeterOptimum = '.8';
+  meterStatus = '';
+  submitted = false;
+  fieldTextType = false;
+  serviceName = '';
+  consecutiveCharacter = '';
+  passwordLength = '';
+  userName = '';
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -45,7 +61,12 @@ export class ChangePasswordComponent
         validator: [mustMatch('newPassword', 'confirmPassword')],
       },
     );
+    this.onChange();
   }
+  toggleFieldTextType() {
+    this.fieldTextType = !this.fieldTextType;
+  }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   passCriteria = '';
   get ressetPassword() {
     return this.resetPasswordForm.controls;
@@ -66,8 +87,13 @@ special characters.`);
       this.hideClickable = visible;
     });
   }
+  getError(err: ErrorCode): string {
+    return getErrorMessage(err);
+  }
   changePassword(): void {
     if (!this.resetPasswordForm.valid) return;
+    this.submitted = true;
+
     const changePassword: ChangePassword = {
       currentPassword: String(
         this.resetPasswordForm.controls['currentPassword'].value,
@@ -84,7 +110,46 @@ special characters.`);
         void this.router.navigate(['/coordinator/studies/sites']);
       });
   }
-  cancel() {
+  cancel(): void {
     void this.router.navigate(['/coordinator/studies/sites']);
+  }
+  onChange(): void {
+    this.resetPasswordForm.valueChanges.subscribe(() => {
+      const secretkeylenth = String(
+        this.resetPasswordForm.controls['newPassword'].value,
+      );
+
+      if (secretkeylenth.length === 0) {
+        this.passwordMeterLow = ' ';
+        this.passwordMeterHigh = ' ';
+        this.passwordMeterValue = ' ';
+        this.passwordMeterOptimum = ' ';
+        this.meterStatus = ' ';
+      } else if (this.resetPasswordForm.controls['newPassword'].errors) {
+        this.passwordMeterLow = '.25';
+        this.passwordMeterHigh = '.75';
+        this.passwordMeterValue = '.2';
+        this.passwordMeterOptimum = '.8';
+        this.meterStatus = 'Weak';
+      } else if (secretkeylenth.length === 8) {
+        this.passwordMeterLow = '.25';
+        this.passwordMeterHigh = '.75';
+        this.passwordMeterValue = '.5';
+        this.passwordMeterOptimum = '.15';
+        this.meterStatus = 'Fair';
+      } else if (secretkeylenth.length > 8 && secretkeylenth.length <= 12) {
+        this.passwordMeterLow = '.10';
+        this.passwordMeterHigh = '1';
+        this.passwordMeterValue = '.7';
+        this.passwordMeterOptimum = '.15';
+        this.meterStatus = 'Good';
+      } else if (secretkeylenth.length > 12) {
+        this.passwordMeterLow = '.10';
+        this.passwordMeterHigh = '1';
+        this.passwordMeterValue = '1';
+        this.passwordMeterOptimum = '.20';
+        this.meterStatus = 'Strong';
+      }
+    });
   }
 }

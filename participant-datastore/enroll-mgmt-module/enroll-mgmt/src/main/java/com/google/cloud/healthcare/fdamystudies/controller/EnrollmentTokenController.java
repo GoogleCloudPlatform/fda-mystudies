@@ -30,6 +30,8 @@ import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorResponseUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.TokenUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -46,6 +48,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Enrollment",
+    value = "enroll management",
+    description = "Operations pertaining to enroll flow in enrollment service")
 @RestController
 public class EnrollmentTokenController {
 
@@ -63,6 +69,7 @@ public class EnrollmentTokenController {
 
   @Autowired StudyStateService studyStateService;
 
+  @ApiOperation(value = " Validates enrollment token of the participant ")
   @PostMapping(value = "/validateEnrollmentToken", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> validateEnrollmentToken(
       @RequestHeader("userId") String userId,
@@ -105,9 +112,8 @@ public class EnrollmentTokenController {
         ErrorResponseUtil.getFailureResponse(
             ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue(),
+            ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
             response);
-
         enrollAuditEventHelper.logEvent(ENROLLMENT_TOKEN_FOUND_INVALID, auditRequest);
         return null;
       }
@@ -131,6 +137,7 @@ public class EnrollmentTokenController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
+  @ApiOperation(value = "Enrolls into a study")
   @PostMapping(
       value = "/enroll",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -180,11 +187,11 @@ public class EnrollmentTokenController {
                   ErrorResponseUtil.getFailureResponse(
                       ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
                       ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                      ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue(),
+                      ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
                       response);
                   errorBean = new ErrorBean();
                   errorBean.setCode(HttpStatus.BAD_REQUEST.value());
-                  errorBean.setMessage(ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue());
+                  errorBean.setMessage(ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue());
 
                   return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                 }

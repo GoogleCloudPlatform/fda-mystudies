@@ -538,7 +538,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
       let alertVC = UIAlertController(
         title: "Answer required",
-        message: "Please provide an input for the text field too.",
+        message: "Please fill out the text field too.",
         preferredStyle: .alert
       )
 

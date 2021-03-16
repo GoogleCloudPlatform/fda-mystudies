@@ -1,24 +1,9 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Copyright 2020-2021 Google LLC
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -32,7 +17,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHAN
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_ENFORCEMENT_EMAIL_SENT;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
 
@@ -183,10 +167,7 @@ public class UsersController {
       SessionObject userSession =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       if (null != userSession) {
-        String manageUsers =
-            FdahpStudyDesignerUtil.isEmpty(request.getParameter("manageUsers"))
-                ? ""
-                : request.getParameter("manageUsers");
+
         String manageNotifications =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("manageNotifications"))
                 ? ""
@@ -220,58 +201,55 @@ public class UsersController {
           userBO.setModifiedBy(userSession.getUserId());
           userBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         }
-        if (!"".equals(manageUsers)) {
-          if ("0".equals(manageUsers)) {
-            permissions += count > 1 ? ",ROLE_MANAGE_USERS_VIEW" : "ROLE_MANAGE_USERS_VIEW";
-            count++;
-            permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW);
-          } else if ("1".equals(manageUsers)) {
-            permissions += count > 1 ? ",ROLE_MANAGE_USERS_VIEW" : "ROLE_MANAGE_USERS_VIEW";
-            count++;
-            permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW);
-            permissions += count > 1 ? ",ROLE_MANAGE_USERS_EDIT" : "ROLE_MANAGE_USERS_EDIT";
-            permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT);
-          }
-        }
-        if (!"".equals(manageNotifications)) {
-          if ("0".equals(manageNotifications)) {
-            permissions +=
-                count > 1
-                    ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW"
-                    : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW";
-            count++;
-            permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW);
-          } else if ("1".equals(manageNotifications)) {
-            permissions +=
-                count > 1
-                    ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW"
-                    : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW";
-            count++;
-            permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW);
-            permissions +=
-                count > 1
-                    ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT"
-                    : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT";
-            permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT);
-          }
-        }
-        if (!"".equals(manageStudies)) {
-          if ("1".equals(manageStudies)) {
-            permissions += count > 1 ? ",ROLE_MANAGE_STUDIES" : "ROLE_MANAGE_STUDIES";
-            count++;
-            permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_STUDIES);
-            if (!"".equals(addingNewStudy) && "1".equals(addingNewStudy)) {
+
+        // Superadmin flow
+        if (userBO.getRoleId().equals(1)) {
+          permissions = FdahpStudyDesignerConstants.SUPER_ADMIN_PERMISSIONS;
+        } else {
+          // Study admin flow
+          if (!"".equals(manageNotifications)) {
+            if ("0".equals(manageNotifications)) {
               permissions +=
-                  count > 1 ? ",ROLE_CREATE_MANAGE_STUDIES" : "ROLE_CREATE_MANAGE_STUDIES";
-              permissionList.add(FdahpStudyDesignerConstants.ROLE_CREATE_MANAGE_STUDIES);
+                  count > 1
+                      ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW"
+                      : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW";
+              count++;
+              permissionList.add(
+                  FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW);
+            } else if ("1".equals(manageNotifications)) {
+              permissions +=
+                  count > 1
+                      ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW"
+                      : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW";
+              count++;
+              permissionList.add(
+                  FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW);
+              permissions +=
+                  count > 1
+                      ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT"
+                      : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT";
+              permissionList.add(
+                  FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT);
+            }
+          }
+          if (!"".equals(manageStudies)) {
+            if ("1".equals(manageStudies)) {
+              permissions += count > 1 ? ",ROLE_MANAGE_STUDIES" : "ROLE_MANAGE_STUDIES";
+              count++;
+              permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_STUDIES);
+              if (!"".equals(addingNewStudy) && "1".equals(addingNewStudy)) {
+                permissions +=
+                    count > 1 ? ",ROLE_CREATE_MANAGE_STUDIES" : "ROLE_CREATE_MANAGE_STUDIES";
+                permissionList.add(FdahpStudyDesignerConstants.ROLE_CREATE_MANAGE_STUDIES);
+              }
+            } else {
+              selectedStudies = "";
+              permissionValues = "";
             }
           } else {
             selectedStudies = "";
             permissionValues = "";
           }
-        } else {
-          selectedStudies = "";
-          permissionValues = "";
         }
         AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
         msg =
@@ -279,7 +257,6 @@ public class UsersController {
                 request,
                 userBO,
                 permissions,
-                permissionList,
                 selectedStudies,
                 permissionValues,
                 userSession,
@@ -361,19 +338,24 @@ public class UsersController {
             auditLogEventHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS, auditRequest);
             emails = usersService.getActiveUserEmailIds();
             if ((emails != null) && !emails.isEmpty()) {
-              boolean allSent = false;
+              int failedCount = 0;
+              int successCount = 0;
               for (String email : emails) {
                 String sent =
                     loginService.sendPasswordResetLinkToMail(
                         request, email, "", "enforcePasswordChange", auditRequest);
                 if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
-                  allSent = true;
+                  successCount++;
+                } else {
+                  failedCount++;
                 }
               }
-              if (allSent) {
+              if (successCount == emails.size()) {
                 auditLogEventHelper.logEvent(
                     PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT, auditRequest);
-              } else {
+              }
+
+              if (failedCount > 0) {
                 auditLogEventHelper.logEvent(
                     PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED, auditRequest);
               }
@@ -475,7 +457,6 @@ public class UsersController {
             auditLogEventHelper.logEvent(NEW_USER_INVITATION_RESENT, auditRequest, values);
           } else {
             request.getSession().setAttribute(FdahpStudyDesignerConstants.ERR_MSG, msg);
-            auditLogEventHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
           }
         }
         mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");

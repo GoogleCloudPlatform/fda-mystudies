@@ -261,11 +261,6 @@ public class StudyActivity extends AppCompatActivity
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StudyActivity.this,
-                              getString(R.string.rejoin),
-                              "" + studyListArrayList.get(i).getSetting().getRejoin());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StudyActivity.this,
                               getString(R.string.studyVersion),
                               "" + studyListArrayList.get(i).getStudyVersion());
                     } catch (Exception e) {
@@ -303,8 +298,6 @@ public class StudyActivity extends AppCompatActivity
                       intent.putExtra("position", "" + i);
                       intent.putExtra(
                           "enroll", "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      intent.putExtra(
-                          "rejoin", "" + studyListArrayList.get(i).getSetting().getRejoin());
                       startActivity(intent);
                     }
                     isStudyAvailable = true;
@@ -369,11 +362,6 @@ public class StudyActivity extends AppCompatActivity
                               StudyActivity.this,
                               getString(R.string.enroll),
                               "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StudyActivity.this,
-                              getString(R.string.rejoin),
-                              "" + studyListArrayList.get(i).getSetting().getRejoin());
                     } catch (Exception e) {
                       Logger.log(e);
                     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -17,6 +17,8 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.AppService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.Arrays;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Apps",
+    value = "apps related api's",
+    description = "Operations pertaining to apps in participant manager")
 @RestController
 @RequestMapping("/apps")
 public class AppController {
@@ -44,6 +50,7 @@ public class AppController {
 
   private static final String BEGIN_REQUEST_LOG = "%s request";
 
+  @ApiOperation(value = "Returns a list of apps based on permissions")
   @GetMapping
   public ResponseEntity<AppResponse> getApps(
       @RequestHeader(name = USER_ID_HEADER) String userId,
@@ -71,6 +78,7 @@ public class AppController {
     return ResponseEntity.status(appResponse.getHttpStatusCode()).body(appResponse);
   }
 
+  @ApiOperation(value = "Returns a response of app registrants with enrolled studies and sites")
   @GetMapping("/{appId}/participants")
   public ResponseEntity<AppParticipantsResponse> getAppParticipants(
       @PathVariable String appId,

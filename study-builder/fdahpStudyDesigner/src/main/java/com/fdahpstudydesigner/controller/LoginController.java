@@ -73,8 +73,9 @@ public class LoginController {
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
     logger.info("LoginController - addPassword() - Starts");
     ModelAndView mv = new ModelAndView("redirect:sessionOut.do");
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    String sucMsg = "";
     try {
-      Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
       HttpSession session = request.getSession(false);
       SessionObject sesObj =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -101,15 +102,13 @@ public class LoginController {
         mv = new ModelAndView("redirect:createPassword.do?securityToken=" + securityToken);
       } else {
         if ((userBO != null) && StringUtils.isNotEmpty(userBO.getFirstName())) {
-          request
-              .getSession(false)
-              .setAttribute("sucMsg", propMap.get("user.newaccount.success.msg"));
+          sucMsg = propMap.get("user.account.setup.msg");
         } else {
-          request
-              .getSession(false)
-              .setAttribute("sucMsg", propMap.get("user.newpassword.success.msg"));
+          sucMsg = propMap.get("user.newpassword.success.msg");
         }
+        mv = new ModelAndView("redirect:sessionOut.do?sucMsg=" + sucMsg);
       }
+
     } catch (Exception e) {
       logger.error("LoginController - addPassword() - ERROR ", e);
     }
@@ -239,7 +238,6 @@ public class LoginController {
               : "";
       message = loginService.sendPasswordResetLinkToMail(request, email, "", "", auditRequest);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
-        auditRequest.setUserId(request.getParameter("email"));
         request.getSession().setAttribute("sucMsg", propMap.get("user.forgot.success.msg"));
       } else {
         request.getSession().setAttribute("errMsg", message);

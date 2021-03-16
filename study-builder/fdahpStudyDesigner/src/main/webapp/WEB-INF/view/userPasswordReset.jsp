@@ -78,7 +78,7 @@
         <div>
           <form:form id="passwordResetForm" data-toggle="validator"
                      role="form" action="addPassword.do" method="post"
-                     autocomplete="off">
+                     autocomplete="off" style="top: 20% !important;">
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${not isInactiveUser && isValidToken}">
@@ -100,7 +100,7 @@
                 <input type="password" class="input-field wow_input"
                        id="cfnPassword" tabindex="3" name="" maxlength="64"
                        data-match="#password"
-                       data-match-error="Whoops, these don't match"
+                       data-match-error="Passwords do not match"
                        placeholder="Confirm new password*" required autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -233,7 +233,7 @@
           if (errMsg.length > 0) {
             $("#errMsg").text(errMsg);
             $("#errMsg").show("fast");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         }
         var sucMsg = '${sucMsg}';
@@ -242,7 +242,7 @@
             $("#sucMsg").text(sucMsg);
             $("#sucMsg").show("fast");
             $("#errMsg").hide("fast");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         }
         $("#password").passwordValidator({

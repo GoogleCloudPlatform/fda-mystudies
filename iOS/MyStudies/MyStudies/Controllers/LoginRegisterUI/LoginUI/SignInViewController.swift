@@ -25,8 +25,8 @@ import WebKit
 
 let kVerifyMessageFromSignIn =
   """
-  Your registered email is pending verification. Please type in the Verification Code received in the email \
-  to complete this step and proceed to using the app.
+  Your account is pending verification. Please type in the verification code received in email \
+  to complete this step and use the app.
   """
 
 enum SignInLoadFrom: Int {

@@ -801,7 +801,6 @@ public class StudyServiceImpl implements StudyService {
         updateConsentBo.setComprehensionTestMinimumScore(
             consentBo.getComprehensionTestMinimumScore());
       }
-      updateConsentBo.setAggrementOfTheConsent(FdahpStudyDesignerConstants.CONSENT_AGREEMENT);
       updateConsentBo =
           studyDAO.saveOrCompleteConsentReviewDetails(updateConsentBo, sesObj, customStudyId);
     } catch (Exception e) {
@@ -1396,6 +1395,7 @@ public class StudyServiceImpl implements StudyService {
       if (studyBo != null) {
         eligibilityType = studyDAO.getEligibilityType(studyBo.getId());
         studyDetails = new StudyDetailsBean();
+        studyDetails.setContactEmail(studyBo.getInboxEmailAddress());
         studyDetails.setStudyId(studyBo.getCustomStudyId());
         studyDetails.setStudyTitle(studyBo.getName());
         studyDetails.setStudyVersion(studyBo.getVersion() + "");

@@ -380,7 +380,7 @@ class UserStudyStatus {
     var description: String {
       switch self {
       case .yetToEnroll:
-        return "Yet To enroll"
+        return "Yet to enroll"
       case .enrolled:
         return "Enrolled"
       case .completed:
@@ -396,7 +396,7 @@ class UserStudyStatus {
     var closedStudyDescription: String {
       switch self {
       case .yetToEnroll:
-        return "No participation"
+        return "No Participation"
       case .enrolled:
         return "Partial participation"
       case .completed:
@@ -508,8 +508,10 @@ class UserStudyStatus {
         kStudyId: self.studyId,
         kStudyStatus: self.status.paramValue,
       ] as [String: Any]
-    if !siteID.isEmpty {
-      studyDetail["siteId"] = siteID
+    if let siteID = siteID {
+      if !siteID.isEmpty {
+        studyDetail["siteId"] = siteID
+      }
     }
     if !id.isEmpty {
       studyDetail[kStudyParticipantId] = id
@@ -527,8 +529,10 @@ class UserStudyStatus {
         "completion": completion,
         "adherence": adherence,
       ] as [String: Any]
-    if !siteID.isEmpty {
-      studyDetail["siteId"] = siteID
+    if let siteID = siteID {
+      if !siteID.isEmpty {
+        studyDetail["siteId"] = siteID
+      }
     }
     if !id.isEmpty {
       studyDetail[kStudyParticipantId] = id

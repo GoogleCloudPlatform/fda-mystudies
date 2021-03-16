@@ -4,7 +4,10 @@ import {
 } from '../site-coordinator/studies/shared/study.model';
 import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
-import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
+import {
+  SiteResponse,
+  UpdateTargetEnrollmentRequest,
+} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
 import {EnrollmentStatus, Status, StudyType} from '../shared/enums';
 import {Permission} from '../shared/permission-enums';
@@ -200,7 +203,7 @@ export const expectedTargetEnrollment: UpdateTargetEnrollmentRequest = {
 };
 export const expectedSiteResponse = {
   message: 'New site added successfully',
-} as ApiResponse;
+} as SiteResponse;
 
 export const expectedNewSite = {
   studyId: '1',

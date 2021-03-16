@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -37,7 +37,7 @@ public interface UserManagementProfileService {
       String userId, DeactivateAcctBean deactivateBean, AuditLogEventRequest auditRequest);
 
   public EmailResponse resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId);
+      String applicationId, String securityToken, String emailId, String appName);
 
   public void processDeactivatePendingRequests();
 }

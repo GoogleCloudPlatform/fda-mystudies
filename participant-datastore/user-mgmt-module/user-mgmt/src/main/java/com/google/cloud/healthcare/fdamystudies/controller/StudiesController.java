@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -19,6 +19,8 @@ import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -33,6 +35,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Studies",
+    value = "Studies",
+    description = "Operations pertaining to Studies in user management service")
 @RestController
 @Validated
 @RequestMapping("/studies")
@@ -43,6 +49,7 @@ public class StudiesController {
 
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
+  @ApiOperation(value = "Add or update metadata details of the study")
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
       @Valid @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request) {
@@ -63,6 +70,7 @@ public class StudiesController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
+  @ApiOperation(value = "Sends notifications to users")
   @PostMapping("/sendNotification")
   public ResponseEntity<?> SendNotification(
       @Valid @RequestBody NotificationForm notificationForm, HttpServletRequest request)
