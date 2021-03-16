@@ -58,7 +58,7 @@
           <div class="card fat">
             <div class="card-body bg__aqua-gray">
               <form th:action="@{/login}" method="POST" id="loginForm"
-                onsubmit="return validateform();"
+                novalidate onsubmit="return validateform();"
                 th:object="${loginRequest}">
                 <div
                   class="centered__div centered__div__mobile box__shadow-cmn">
@@ -76,7 +76,7 @@
                       <div class="input__field">
                         <label>Email</label> <input type="email"
                           name="email" th:field="*{email}" id="email"
-                          placeholder="Enter your email" value=""
+                          placeholder="Enter your email"
                           required="required"
                           onblur="validateField('email');" />
                         <div class="err__msg" id="email_error"
@@ -88,7 +88,7 @@
                           id="password"
                           placeholder="Enter your password"
                           required="required" minlength="8"
-                          maxlength="64" value=""
+                          maxlength="64"
                           onblur="validateField('password');" />
                         <div class="err__msg" id="password_error"
                           style="display: none">Please enter valid
