@@ -47,6 +47,9 @@
     pointer-events: none;
   }
    
+   .help-block ul {
+      width: max-content !important;
+    }
 
  
 </style>
