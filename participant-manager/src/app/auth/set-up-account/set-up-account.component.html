@@ -141,12 +141,6 @@
                 *ngIf="f.password.dirty || f.password.touched"
               >
                 <div *ngIf="f.password.dirty">
-                  <meter
-                    low="{{ passwordMeterLow }}"
-                    optimum="{{ passwordMeterOptimum }}"
-                    high="{{ passwordMeterHigh }}"
-                    value="{{ passwordMeterValue }}"
-                  ></meter>
                   <span
                     [ngClass]="
                       meterStatus == 'Weak'
@@ -160,6 +154,12 @@
                   >
                     {{ meterStatus }}
                   </span>
+                  <meter
+                    low="{{ passwordMeterLow }}"
+                    optimum="{{ passwordMeterOptimum }}"
+                    high="{{ passwordMeterHigh }}"
+                    value="{{ passwordMeterValue }}"
+                  ></meter>
                 </div>
                 <div
                   class="text-left"

@@ -78,6 +78,7 @@
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           data-toggle="tooltip"
           data-placement="top"
+           data-html="true"
           title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}.">
       </span>
               </label>
