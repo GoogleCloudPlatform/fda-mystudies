@@ -36,3 +36,6 @@ function validateField(elementId) {
   return isValid;
 }
 
+function validateform() {
+  return validateField("email") && validateField("password");
+}
