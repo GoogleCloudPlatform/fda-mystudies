@@ -23,7 +23,6 @@
 package com.hphc.mystudies.util;
 
 import com.hphc.mystudies.bean.FailureResponse;
-import com.sun.jersey.core.util.Base64;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,6 +43,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.glassfish.jersey.internal.util.Base64;
 
 public class StudyMetaDataUtil {
 
@@ -249,9 +249,9 @@ public class StudyMetaDataUtil {
     return "";
   }
 
-  public static String getDecodedStringByBase64(String encodedText) {
+  public static String getDecodedStringByBase64(byte[] encodedText) {
     LOGGER.info("StudyMetaDataUtil: getDecodedStringByBase64() - Starts ");
-    if (StringUtils.isEmpty(encodedText)) {
+    if (StringUtils.isEmpty(encodedText.toString())) {
       return "";
     }
     try {
@@ -438,7 +438,8 @@ public class StudyMetaDataUtil {
     String platform = "";
     try {
       if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
-        final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
+        final byte[] encodedUserPassword =
+            authCredentials.replaceFirst("Basic" + " ", "").getBytes();
         byte[] decodedBytes = Base64.decode(encodedUserPassword);
         bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
 
@@ -640,7 +641,8 @@ public class StudyMetaDataUtil {
     String appBundleId = "";
     try {
       if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
-        final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
+        final byte[] encodedUserPassword =
+            authCredentials.replaceFirst("Basic" + " ", "").getBytes();
         byte[] decodedBytes = Base64.decode(encodedUserPassword);
         bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
         if (bundleIdAndAppToken.contains(":")) {

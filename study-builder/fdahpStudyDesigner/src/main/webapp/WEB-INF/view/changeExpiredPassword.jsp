@@ -62,6 +62,9 @@
       .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label {
         color: #fff !important;
       }
+      .arrowLeftSugg {
+        top: 153px; !important;
+      }
     </style>
   </head>
   <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
@@ -77,16 +80,19 @@
     </form>
 
     <div id="lg-container" class="lg-container">
-      <div class="logout">
+      <!-- <div class="logout">
         <div class="dis-line pull-right ml-md line34">
           <a href="/studybuilder/sessionOut.do"
              class="blue-link text-weight-normal text-uppercase">
             <span class="white__text">sign Out</span>
           </a>
         </div>
-      </div>
+      </div> -->
       <div class="logo__space">
-        <img src="../images/logo/logo_innerScreens.png" alt=""/>
+      	<a href="/studybuilder/sessionOut.do"
+             class="blue-link text-weight-normal text-uppercase">
+        	<img src="../images/logo/logo_landing_welcome.png" alt=""/>
+        </a>
       </div>
       <div class="pwdexp__container">
         <!--container-->
