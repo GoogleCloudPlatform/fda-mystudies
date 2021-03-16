@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -49,6 +50,10 @@ import com.hphc.mystudies.integration.StudyMetaDataOrchestration;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletContext;
@@ -69,6 +74,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 @Path("/")
+@Api(
+    tags = "Studies",
+    value = "Study Meta Data Services",
+    description = "Get study details for mobile app(Android and IOS)")
 public class StudyMetaDataService {
 
   private static final Logger LOGGER = Logger.getLogger(StudyMetaDataService.class);
@@ -82,6 +91,14 @@ public class StudyMetaDataService {
       new DashboardMetaDataOrchestration();
   AppMetaDataOrchestration appMetaDataOrchestration = new AppMetaDataOrchestration();
 
+  @ApiOperation(
+      value =
+          "Get the platform from the provided authorization credentials and fetch based on the platform")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -113,6 +130,12 @@ public class StudyMetaDataService {
     return gatewayInfo;
   }
 
+  @ApiOperation(value = "Get list of studies based on applicationId")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -166,6 +189,13 @@ public class StudyMetaDataService {
     return studyResponse;
   }
 
+  @ApiOperation(value = "Get the eligibility method configured for a particular study")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -221,6 +251,14 @@ public class StudyMetaDataService {
     return eligibilityConsentResponse;
   }
 
+  @ApiOperation(
+      value = "Get the consent Document for a particular study based on the consent Version")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -281,6 +319,13 @@ public class StudyMetaDataService {
     return consentDocumentResponse;
   }
 
+  @ApiOperation(value = "Get all the resources available for a partucular study")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -336,6 +381,13 @@ public class StudyMetaDataService {
     return resourcesResponse;
   }
 
+  @ApiOperation(value = "Get the study information for a particular study")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -415,6 +467,13 @@ public class StudyMetaDataService {
     return studyInfoResponse;
   }
 
+  @ApiOperation(value = "Get the list of activities that are available for a particular study")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_STUDY_ID),
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -471,6 +530,15 @@ public class StudyMetaDataService {
     return activityResponse;
   }
 
+  @ApiOperation(
+      value =
+          "Get an activity from list of activities available for a study using activity version")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -576,6 +644,15 @@ public class StudyMetaDataService {
     }
   }
 
+  @ApiOperation(
+      value =
+          "Get charts and statistics data for a particular study to display in mobile app dashboard")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -631,6 +708,12 @@ public class StudyMetaDataService {
     return studyDashboardResponse;
   }
 
+  @ApiOperation(value = "Get terms and policy details of application")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -660,6 +743,13 @@ public class StudyMetaDataService {
     return termsPolicyResponse;
   }
 
+  @ApiOperation(value = "Get list of notifications of a particular app using appId")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -704,6 +794,12 @@ public class StudyMetaDataService {
     return notificationsResponse;
   }
 
+  @ApiOperation(value = "Get latest app updates using app version")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+      })
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -740,6 +836,12 @@ public class StudyMetaDataService {
     return appUpdatesResponse;
   }
 
+  @ApiOperation(value = "Get latest study updates using study Id and study version")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_STUDY_ID),
+        @ApiResponse(code = 103, message = ErrorCodes.NO_DATA)
+      })
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -796,6 +898,10 @@ public class StudyMetaDataService {
     return studyUpdatesResponse;
   }
 
+  @ApiOperation(
+      value = "Update app version details like app version, OS type, custom study ID etc.")
+  @ApiResponses(
+      value = {@ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)})
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -876,6 +982,9 @@ public class StudyMetaDataService {
     return updateAppVersionResponse;
   }
 
+  @ApiOperation(value = "This API will validate the Enrollment Token and return the response")
+  @ApiResponses(
+      value = {@ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)})
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -924,12 +1033,22 @@ public class StudyMetaDataService {
     return enrollmentTokenResponse;
   }
 
+  @ApiOperation(
+      value = "Provides an indication about the health of the service",
+      notes = "Default response codes 400 and 401 are not applicable for this operation")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 200, message = "Service is Up and Running"),
+      })
   @GET
   @Path("healthCheck")
   public String healthCheck() {
     return "200 OK!";
   }
 
+  @ApiOperation(value = "Get basic information of study using study Id")
+  @ApiResponses(
+      value = {@ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)})
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -961,6 +1080,12 @@ public class StudyMetaDataService {
     return studyResponse;
   }
 
+  @ApiOperation(value = "Get the latest app (Android and IOS) version using application ID")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 400, message = "Invalid resource"),
+        @ApiResponse(code = 404, message = "Details not found")
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -1000,6 +1125,12 @@ public class StudyMetaDataService {
     return appVersionInfoBean;
   }
 
+  @ApiOperation(value = "This API will save the activities response")
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 400, message = "Invalid resource"),
+        @ApiResponse(code = 404, message = "Details not found")
+      })
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
