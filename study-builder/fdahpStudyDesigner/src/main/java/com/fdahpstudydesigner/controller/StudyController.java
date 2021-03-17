@@ -97,6 +97,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -3969,6 +3970,16 @@ public class StudyController {
   public ModelAndView saveOrUpdateStudyOverviewPage(
       HttpServletRequest request, StudyPageBean studyPageBean) {
     logger.info("StudyController - saveOrUpdateStudyOverviewPage - Starts");
+    if (request instanceof MultipartHttpServletRequest) {
+      MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+      Map<String, String[]> m = multipartRequest.getParameterMap();
+      for (Map.Entry<String, String[]> entry : m.entrySet()) {
+        if (entry.getKey().equals("description")) {
+          String[] descriptions = entry.getValue();
+          studyPageBean.setDescription(descriptions);
+        }
+      }
+    }
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
