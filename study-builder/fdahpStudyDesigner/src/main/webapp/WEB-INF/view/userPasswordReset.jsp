@@ -83,12 +83,11 @@
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${not isInactiveUser && isValidToken}">
               <div>
-              <p class="white__text">Please set up your new password using
-                this form.</p>
+              <p class="white__text">Create new password</p>
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input"
                        id="password" tabindex="2" maxlength="64" data-minlength="8"
-                       placeholder="Password*" required
+                       placeholder="New password*" required
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                        data-error="Password is invalid" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
