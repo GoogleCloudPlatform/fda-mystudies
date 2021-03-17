@@ -93,7 +93,7 @@
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
 	<style>
 	  .arrowLeftSugg {
-	    margin-left: -27px; !important;
+	    left: 95.5%; !important;
 	    }
 	</style>
   </head>
