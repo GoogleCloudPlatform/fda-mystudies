@@ -59,6 +59,9 @@
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
 		.hover_text_white:focus { color:#fff !important;}
+		.arrowLeftSugg {
+    			top: 82px; !important;
+    	}
 	</style>
 
   </head>
