@@ -46,9 +46,11 @@
   .tool-tip [disabled] {
     pointer-events: none;
   }
+  
+   .help-block ul {
+      width: max-content !important;
+    }
    
-
- 
 </style>
 <div class="gray-xs-f mb-sm">Active task schedule type</div>
 <div class="pb-lg ">
