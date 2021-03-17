@@ -91,13 +91,12 @@
 
     <script src="/studybuilder/js/underscore-min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
-
+	<style>
+	  .arrowLeftSugg {
+	    margin-left: -27px; !important;
+	    }
+	</style>
   </head>
-  <style>
-  .arrowLeftSugg {
-    margin-left: -27px; !important;
-    }
-  </style>
   <body class="loading background__img">
     <div id="loader">
       <span></span>
