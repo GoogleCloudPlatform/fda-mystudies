@@ -5110,7 +5110,11 @@ public class StudyController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("studyType"))
                 ? ""
                 : request.getParameter("studyType");
-        flag = studyService.validateAppId(customStudyId, appId, studyType);
+        String dbCustomStudyId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("dbCustomStudyId"))
+                ? ""
+                : request.getParameter("dbCustomStudyId");
+        flag = studyService.validateAppId(customStudyId, appId, studyType, dbCustomStudyId);
         if (flag) {
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
