@@ -2000,6 +2000,7 @@
             $("#AddButton").show();
             $("#AddButton").attr('required', true);
        	    $('.manually-option').find(".delete").css("visibility", "hidden");
+       	    $('.manually-option').find('input').val('');
           } else {
             $("#AddButton").hide();
             $("#AddButton").attr('required', false);
@@ -4671,19 +4672,6 @@
 
 
     });
-    if(document.getElementById("schedule1").checked){
-		var i = 0
-	    for (i = 0; i < document.getElementsByClassName('manually-option').length; i++) {
-	       var RegStartDate = $("#StartDate" + i).val();
-	       if(RegStartDate == ''){
-	           $("#RegDate" + i ).hide();
-	           $("#AddButton").show();
-	           $("#AddButton").attr('required', true);
-	           $('.manually-option').find(".delete").css("visibility", "hidden");
-	       } 
-	    }
-	}
-
   });
 
   $(document).on('mouseenter', '.dropdown-toggle',  function () {

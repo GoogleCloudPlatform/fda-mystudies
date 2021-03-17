@@ -31,21 +31,21 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       "Admin user account deactivated (user ID - ${edited_user_id}).",
-      "USER_DEACTIVATED"),
+      "ADMIN_DEACTIVATED"),
 
   ADMIN_REACTIVATED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
       "Admin user account re-activated (user ID - ${edited_user_id}).",
-      "USER_REACTIVATED"),
+      "ADMIN_REACTIVATED"),
 
   ADMIN_DELETED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
       "Admin user record deleted  (user ID - ${new_user_id})",
-      "USER_DELETED"),
+      "ADMIN_DELETED"),
 
   RESEND_INVITATION(
       PARTICIPANT_MANAGER,
@@ -59,7 +59,7 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       null,
-      "USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION"),
+      "ADMIN_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION"),
 
   SITE_ADDED_FOR_STUDY(
       PARTICIPANT_MANAGER,
@@ -199,7 +199,7 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       "New admin user created (user ID - ${new_user_id}, access level - ${new_user_access_level}).",
-      "NEW_USER_ADDED"),
+      "NEW_ADMIN_ADDED"),
 
   NEW_ADMIN_INVITATION_EMAIL_SENT(
       PARTICIPANT_MANAGER,
@@ -213,14 +213,14 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       "Account setup invitation email could not be sent to admin (user ID -${new_user_id}).",
-      "NEW_USER_INVITATION_EMAIL_FAILED"),
+      "NEW_ADMIN_INVITATION_EMAIL_FAILED"),
 
   ADMIN_USER_RECORD_UPDATED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
       "Admin user record updated (user id - ${edited_user_id}, access level - ${edited_user_access_level}).",
-      "USER_RECORD_UPDATED"),
+      "ADMIN_USER_RECORD_UPDATED"),
 
   ACCOUNT_UPDATE_EMAIL_SENT(
       PARTICIPANT_MANAGER,
@@ -237,7 +237,7 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       "ACCOUNT_UPDATE_EMAIL_FAILED"),
 
   ACCOUNT_UPDATE_BY_ADMIN(
-      PARTICIPANT_MANAGER, PARTICIPANT_USER_DATASTORE, null, null, "ACCOUNT_UPDATE_BY_USER"),
+      PARTICIPANT_MANAGER, PARTICIPANT_USER_DATASTORE, null, null, "ACCOUNT_UPDATE_BY_ADMIN"),
 
   SITE_PARTICIPANT_REGISTRY_VIEWED(
       PARTICIPANT_MANAGER,

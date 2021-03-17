@@ -34,10 +34,10 @@ SALT=`printf "%s" uuidgen | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* /
 HASH=`printf "%s%s" $SALT $PWD | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 if [[ "$OSTYPE" == "darwin"* ]]; then
 DATE=`date -v +30d +"%F %T"`
-TIMESTAMP=`date -v +30d +"%s.%3N"`
+TIMESTAMP=`date -v +30d +"%s%3N"`
 else # linux
 DATE=`date -d +30days +"%F %T"`
-TIMESTAMP=`date -d +30days +"%s.%3N"`
+TIMESTAMP=`date -d +30days +"%s%3N"`
 fi
 
 echo "Inserting/updating superadmin user in 'oauth_server_hydra' database"
@@ -49,8 +49,8 @@ echo "REPLACE into users (id, app_id, email, status, temp_reg_id, user_id, user_
   0,
   'bd676334dd745c6afaa6547f9736a4c4df411a3ca2c4f514070daae31008cd9d',
   '96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508',
-  '{ \"password\": { \"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\": \"${TIMESTAMP}\",
-     \"password_history\": [{\"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\":\"${TIMESTAMP}\"}]}
+  '{ \"password\": { \"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\": ${TIMESTAMP},
+     \"password_history\": [{\"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\":${TIMESTAMP}}]}
     }');
 " >> ${TMPFILE}
 
