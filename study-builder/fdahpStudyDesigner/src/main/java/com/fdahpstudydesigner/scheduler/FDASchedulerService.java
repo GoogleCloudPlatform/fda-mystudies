@@ -187,9 +187,8 @@ public class FDASchedulerService {
             }
           }
         }
-
+        List<PushNotificationBean> pushNotification = new ArrayList<PushNotificationBean>();
         for (PushNotificationBean finalPushNotificationBean : finalPushNotificationBeans) {
-          List<PushNotificationBean> pushNotification = new ArrayList<PushNotificationBean>();
           pushNotification.add(finalPushNotificationBean);
 
           JSONArray arrayToJson = new JSONArray(objectMapper.writeValueAsString(pushNotification));
@@ -224,6 +223,7 @@ public class FDASchedulerService {
             updateNotification(finalPushNotificationBean);
             logSendNotificationFailedEvent(NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
           }
+          pushNotification.clear();
         }
       }
     } catch (Exception e) {
