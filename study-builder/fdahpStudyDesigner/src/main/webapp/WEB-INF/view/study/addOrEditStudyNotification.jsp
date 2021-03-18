@@ -23,10 +23,10 @@
                id="goToNotificationListForm"><img
                 src="/studybuilder/images/icons/back-b.png" alt=""/></a>
           </span>
-          <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">Add Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'view'}">View Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'resend'}">Resend Notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'edit'}">Edit notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">Add notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'view'}">View notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'resend'}">Resend notification</c:if>
         </div>
 
         <div class="dis-line form-group mb-none">
