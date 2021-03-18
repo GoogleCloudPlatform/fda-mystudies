@@ -16,11 +16,11 @@
           <span class="pr-sm cur-pointer"
                 onclick="goToBackPage(this);"><img
               src="../images/icons/back-b.png" alt=""/></span>
-          <c:if test="${empty comprehensionQuestionBo.id}">Add Comprehension Test Question</c:if>
+          <c:if test="${empty comprehensionQuestionBo.id}">Add comprehension test question</c:if>
           <c:if
-              test="${not empty comprehensionQuestionBo.id && actionPage eq 'addEdit'}">Edit Comprehension Test Question</c:if>
+              test="${not empty comprehensionQuestionBo.id && actionPage eq 'addEdit'}">Edit comprehension test question</c:if>
           <c:if
-              test="${not empty comprehensionQuestionBo.id && actionPage eq 'view'}">View Comprehension Test Question<c:set
+              test="${not empty comprehensionQuestionBo.id && actionPage eq 'view'}">View comprehension test question<c:set
               var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
           </c:if>
         </div>

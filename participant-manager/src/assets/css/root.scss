@@ -1678,3 +1678,9 @@ meter::-moz-meter-bar {
   border-radius: 9px;
   box-shadow: none;
 }
+
+@-moz-document url-prefix() {
+  #body-container .form-item__element--select:invalid {
+    margin-left: -4px !important;
+  }
+}
