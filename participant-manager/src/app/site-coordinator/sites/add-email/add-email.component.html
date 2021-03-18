@@ -15,7 +15,7 @@
           name="email"
           #email="ngModel"
         />
-      </div>
+    
       <div *ngIf="email.invalid && (email.dirty || email.touched)">
         <span
           class="help-block with-errors error__msg"
@@ -29,6 +29,7 @@
         >
           Enter a valid email
         </span>
+          </div>
       </div>
     </div>
   </div>
