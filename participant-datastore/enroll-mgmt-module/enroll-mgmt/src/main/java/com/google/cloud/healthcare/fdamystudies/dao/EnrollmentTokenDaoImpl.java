@@ -313,7 +313,12 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
         criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
         root = criteriaQuery.from(ParticipantStudyEntity.class);
-        participantPredicates[0] = criteriaBuilder.equal(root.get("userDetails"), userDetail);
+        if (CollectionUtils.isNotEmpty(participantList)) {
+          participantPredicates[0] =
+              criteriaBuilder.equal(root.get("participantRegistrySite"), participantregistrySite);
+        } else {
+          participantPredicates[0] = criteriaBuilder.equal(root.get("userDetails"), userDetail);
+        }
         participantPredicates[1] = criteriaBuilder.equal(root.get("study"), studyEntity);
         criteriaQuery.select(root).where(participantPredicates);
         participantStudiesList = session.createQuery(criteriaQuery).getResultList();
