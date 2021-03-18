@@ -80,14 +80,6 @@
     </form>
 
     <div id="lg-container" class="lg-container">
-      <!-- <div class="logout">
-        <div class="dis-line pull-right ml-md line34">
-          <a href="/studybuilder/sessionOut.do"
-             class="blue-link text-weight-normal text-uppercase">
-            <span class="white__text">sign Out</span>
-          </a>
-        </div>
-      </div> -->
       <div class="logo__space">
       	<a href="/studybuilder/sessionOut.do"
              class="blue-link text-weight-normal text-uppercase">
