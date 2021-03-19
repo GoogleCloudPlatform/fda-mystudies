@@ -32,6 +32,8 @@ import com.google.cloud.storage.StorageOptions;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1053,5 +1055,23 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("Save Default Image to cloud storage failed", e);
     }
+  }
+
+  public static Timestamp getTimeStamp(String inputDate, String inputTime) {
+
+    String timestampInString = inputDate + " " + inputTime;
+    java.sql.Date date = null;
+    try {
+      DateFormat dateFormat =
+          new SimpleDateFormat(
+              FdahpStudyDesignerConstants.DB_SDF_DATE
+                  + " "
+                  + FdahpStudyDesignerConstants.DB_SDF_TIME);
+      date = new java.sql.Date(dateFormat.parse(timestampInString).getTime());
+    } catch (Exception e) {
+      logger.error("Exception in getTimeStamp(): " + e);
+    }
+
+    return new Timestamp(date.getTime());
   }
 }
