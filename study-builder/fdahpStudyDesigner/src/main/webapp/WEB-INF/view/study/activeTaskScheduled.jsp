@@ -47,7 +47,7 @@
     pointer-events: none;
   }
   
-   .help-block ul {
+   .help-block-txt ul {
       width: max-content !important;
     }
    
@@ -88,7 +88,7 @@
                       name="${anchorTypeInfo.name}" ${activeTaskBo.anchorDateId eq anchorTypeInfo.id ? 'selected' : ''}>${anchorTypeInfo.name}</option>
             </c:forEach>
           </select>
-          <div class="help-block with-errors red-txt"></div>
+          <div class="help-block with-errors red-txt help-block-txt"></div>
         </div>
       </div>
       <div class="clearfix"></div>
