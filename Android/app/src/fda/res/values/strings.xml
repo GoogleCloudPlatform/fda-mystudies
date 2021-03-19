@@ -30,7 +30,7 @@
     <string name="privacyurl"></string>
     <string name="view_consent">View consent</string>
     <string name="visit_website">Visit website</string>
-    <string name="join_study">Participate</string>
+    <string name="join_study">PARTICIPATE</string>
     <string name="clientToken">clientToken</string>
     <string name="account_type">&package_name;.offlineModule.auth.syncadapterexample</string>
     <string name="sync_provider">&package_name;.offlineModule.auth.syncadapterexample.provider</string>
