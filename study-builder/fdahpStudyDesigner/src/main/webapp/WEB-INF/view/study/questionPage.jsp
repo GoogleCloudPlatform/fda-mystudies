@@ -85,11 +85,11 @@
       <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img
           src="../images/icons/back-b.png"
           alt=""/></span>
-      <c:if test="${actionTypeForFormStep == 'edit'}">Edit Question</c:if>
-      <c:if test="${actionTypeForFormStep == 'view'}">View Question <c:set
+      <c:if test="${actionTypeForFormStep == 'edit'}">Edit question</c:if>
+      <c:if test="${actionTypeForFormStep == 'view'}">View question <c:set
           var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
       </c:if>
-      <c:if test="${actionTypeForFormStep == 'add'}">Add Question</c:if>
+      <c:if test="${actionTypeForFormStep == 'add'}">Add question</c:if>
     </div>
     <div class="dis-line form-group mb-none mr-sm">
       <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">Cancel
@@ -3458,6 +3458,8 @@ if(document.getElementById("singleSelect").checked==true){
       if ((file = this.files[0])) {
         img = new Image();
         img.onload = function () {
+          this.height=100;
+          this.width=100;
           var ht = this.height;
           var wds = this.width;
           if ((parseInt(ht) == parseInt(wds)) && (parseInt(ht) >= 90 && parseInt(ht) <= 120)

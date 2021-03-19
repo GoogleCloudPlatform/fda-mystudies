@@ -802,6 +802,8 @@ margin-top:16px !important;
     	  var image = new Image();
     	    image.src = e.target.result;
     	    image.onload = function() {
+    	    	this.width=225;
+    	    	this.height=225;
     	        // access image size here 
     	        if(this.width ==225 && this.height==225 ){
     	        	 $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
@@ -824,6 +826,8 @@ margin-top:16px !important;
             if ((file = this.files[0])) {
               img = new Image();
               img.onload = function () {
+            	this.width=225;
+         	    this.height=225;  
                 var ht = this.height;
                 var wds = this.width;
                 if (ht == 225 && wds == 225) {
