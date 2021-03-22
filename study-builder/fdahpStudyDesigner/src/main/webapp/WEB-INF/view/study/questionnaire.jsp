@@ -59,7 +59,7 @@
     vertical-align: top;
   }
   
-  .help-block ul {
+  .help-block-txt ul {
       width: max-content !important;
     }
 
@@ -220,7 +220,7 @@
             <div
                 class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
                 onclick="getQuestionnaireStep('Instruction');">Add
-              Instruction step
+              instruction step
             </div>
             <div
                 class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
@@ -391,7 +391,7 @@
                         ${questionnaireBo.anchorDateId eq anchorTypeInfo.id ? 'selected' : ''}>${anchorTypeInfo.name}</option>
                     </c:forEach>
                   </select>
-                  <div class="help-block with-errors red-txt"></div>
+                  <div class="help-block with-errors red-txt help-block-txt"></div>
                 </div>
               </div>
               <div class="clearfix"></div>
