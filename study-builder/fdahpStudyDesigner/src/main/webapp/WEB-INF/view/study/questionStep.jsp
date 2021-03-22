@@ -4309,7 +4309,7 @@
               } else {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter a larger step size."));
+                    "Please enter a larger step size"));
               }
 
             }
@@ -4638,7 +4638,7 @@
           $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-               "Please select a non-zero Duration value."));
+               "Please select a non-zero Duration value"));
         } else {
           durationFlag = true;
           $('#timeIntervalDefaultId').parent().find(".help-block").empty();
@@ -6201,7 +6201,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     shortTitle
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 callback(false);
               }
             },
@@ -6250,7 +6250,7 @@
                 $("#statShortNameId").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     short_title
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 if (callback)
                   callback(false);
 
@@ -7130,7 +7130,7 @@
           $(thisAttr).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               anchordateText
-              + " has already been used in the past."));
+              + " has already been used in the past"));
           callback(false);
         } else {
           $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");

@@ -534,7 +534,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
                           <input id="onetimexdaysId" type="text"
@@ -545,7 +545,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -674,7 +674,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
                           <input id="onetimeydaysId" type="text"
@@ -685,7 +685,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -779,7 +779,7 @@
                                name="questionnairesFrequenciesList[0].timePeriodFromDays"
                                value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -807,7 +807,7 @@
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1039,7 +1039,7 @@
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1079,7 +1079,7 @@
                                  value="${questionnaireBo.repeatQuestionnaire}" required
                                  onkeypress="return isNumber(event, this)"
                                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                 data-pattern-error="Please enter valid number."
+                                 data-pattern-error="Please enter valid number"
                                  maxlength="3"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
@@ -1101,7 +1101,7 @@
                                value="${questionnaireBo.repeatQuestionnaire}" required
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1227,7 +1227,7 @@
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1268,7 +1268,7 @@
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1311,7 +1311,7 @@
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1519,7 +1519,7 @@
                            name="questionnaireCustomScheduleBo[0].timePeriodFromDays"
                            value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
                            maxlength="3" required pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number."/>
+                           data-pattern-error="Please enter valid number"/>
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1553,7 +1553,7 @@
                            name="questionnaireCustomScheduleBo[0].timePeriodToDays"
                            value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                            maxlength="3" pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number." required/>
+                           data-pattern-error="Please enter valid number" required/>
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1624,7 +1624,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                              value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
                              maxlength="3" required pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number."/>
+                             data-pattern-error="Please enter valid number"/>
                       <span
                           class="help-block with-errors red-txt"></span>
                     </span>
@@ -1658,7 +1658,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodToDays"
                              value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                              maxlength="3" pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number." required/>
+                             data-pattern-error="Please enter valid number" required/>
                       <span class="help-block with-errors red-txt"></span>
                     </span>
                     <span class="mb-sm pr-md">
@@ -2972,7 +2972,7 @@
             $(timeId).parent().addClass("has-danger").addClass("has-error");
             $(timeId).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Time reset to current time. "));
+                "Time reset to current time"));
           }
         } else {
           $(timeId).data("DateTimePicker").minDate(false);
@@ -4280,13 +4280,13 @@
             $(this).parent().addClass('has-error has-danger');
             $(this).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Date reset to current date. "));
+                "Date reset to current date"));
           } else {
             $(this).data("DateTimePicker").clear();
             $(this).parent().addClass('has-error has-danger');
             $(this).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please select a valid date."));
+                "Please select a valid date"));
           }
         } else {
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4369,7 +4369,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
         + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectYSign' count='"
@@ -4382,7 +4382,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"

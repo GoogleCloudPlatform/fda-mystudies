@@ -192,7 +192,7 @@
                     <div class="form-group elaborateClass">
                       <textarea class=" form-control updateInput summernote" rows="5"
                                 id="editor1" name="description" required
-                                data-error="Please fill out this field."
+                                data-error="Please fill out this field"
                                 ></textarea>
 
                       <div class="help-block with-errors red-txt"></div>
@@ -333,7 +333,7 @@
                     <div class="form-group elaborateClass">
                       <textarea class="form-control summernote" rows="5"
                                 name="description" id="editor${spbSt.count}" required
-                                data-error="Please fill out this field."
+                                data-error="Please fill out this field"
                                 >${studyPageBo.description}</textarea>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -543,7 +543,7 @@
           +
           "<div class='form-group elaborateClass'><textarea class='summernote form-control updateInput' name='description' id='editor"
           + countId
-          + "' rows='5' required data-error='Please fill out this field.'></textarea>"
+          + "' rows='5' required data-error='Please fill out this field'></textarea>"
           +
           "<div class='help-block with-errors red-txt'></div></div>" +
           "</div>" +
@@ -739,7 +739,7 @@
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please upload image as per provided guidelines."));
+                  "Please upload image as per provided guidelines"));
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             }
           }

@@ -867,7 +867,7 @@
                        value="${taskValueAttributeBo.attributeVal}"
                        onkeypress="return isNumber(event)"
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
@@ -896,7 +896,7 @@
                        value="${taskValueAttributeBo.attributeVal}"
                        onkeypress="return isNumber(event)"
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
@@ -926,7 +926,7 @@
                        onkeypress="return isNumber(event)" required
                        value="${taskValueAttributeBo.attributeVal}"
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
@@ -2181,7 +2181,7 @@
         $("#shortTitleId").parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "This is a required field."));
+            "This is a required field"));
         showErrMsg("Please fill in all mandatory fields.");
         $('.contentClass a').tab('show');
         $("body").removeClass('loading');
@@ -2322,7 +2322,7 @@
           $(this).val(newVal);
           $(this).parent().addClass("has-danger has-error");
           $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Special characters such as #^}{ are not allowed."));
+              "Special characters such as #^}{ are not allowed"));
         }
       }
     });
@@ -2383,7 +2383,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -2437,8 +2437,8 @@
         $(thisAttr).parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             activeTaskAttIdVal
-            + " has already been used in the past."));
-        showErrMsg("Please fill in all mandatory fields.");
+            + " has already been used in the past"));
+        showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         shortTitleStatFlag = false;
         callback(false);
@@ -2475,8 +2475,8 @@
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     activeTaskAttIdVal
-                    + " has already been used in the past."));
-                showErrMsg("Please fill in all mandatory fields.");
+                    + " has already been used in the past"));
+                showErrMsg("Please fill in all mandatory fields");
                 $('.contentClass a').tab('show');
                 if (callback)
                   callback(false);
@@ -2532,9 +2532,9 @@
                   $(thisAttr).parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                       activeTaskAttIdVal
-                      + " has already been used in the past."));
+                      + " has already been used in the past"));
                   $(thisAttr).focus();
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                   shortTitleStatFlag = false;
                   callback(false);
@@ -2594,7 +2594,7 @@
               "has-error");
           $("#" + shortSatId).parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field."));
+              "Please fill out this field"));
         } else {
           $("#" + shortSatId).val('');
           $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
@@ -2604,7 +2604,7 @@
           $("#" + shortSatId).parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               shortSatIdVal
-              + " has already been used in the past."));
+              + " has already been used in the past"));
         }
       }
       callback(false);
@@ -2636,7 +2636,7 @@
                   $("#" + obj.id).parent().find(".help-block").empty().append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                       obj.idVal
-                      + " has already been used in the past."));
+                      + " has already been used in the past"));
                 }
               });
 
@@ -2687,7 +2687,7 @@
               "has-error");
           $("#" + shortSatId).parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field."));
+              "Please fill out this field"));
         } else {
           $("#" + shortSatId).val('');
           $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
@@ -2697,7 +2697,7 @@
           $("#" + shortSatId).parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               shortSatIdVal
-              + " has already been used in the past."));
+              + " has already been used in the past"));
         }
       }
       callback(false);
@@ -2744,7 +2744,7 @@
                     $("#" + obj.id).parent().find(".help-block").empty().append(
                     	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         obj.idVal
-                        + " has already been used in the past."));
+                        + " has already been used in the past"));
                   }
                 });
 

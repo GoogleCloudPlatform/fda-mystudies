@@ -231,7 +231,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },

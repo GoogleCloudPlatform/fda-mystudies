@@ -191,7 +191,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimexdaysId" type="text"
@@ -201,7 +201,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -307,7 +307,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimeydaysId" type="text"
@@ -317,7 +317,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -396,7 +396,7 @@
                        name="activeTaskFrequenciesList[0].timePeriodFromDays"
                        value="${(fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0)?activeTaskBo.activeTaskFrequenciesList[0].timePeriodFromDays:''}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -421,7 +421,7 @@
                  value="${activeTaskBo.repeatActiveTask}"
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -610,7 +610,7 @@
                        placeholder="X" name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -646,7 +646,7 @@
                    value="${activeTaskBo.repeatActiveTask}" required
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                   data-pattern-error="Please enter valid number." maxlength="3"/>
+                   data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
           </span>
         </div>
@@ -667,7 +667,7 @@
                  value="${activeTaskBo.repeatActiveTask}" required
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -801,7 +801,7 @@
                        name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -839,7 +839,7 @@
                    value="${activeTaskBo.repeatActiveTask}"
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                   data-pattern-error="Please enter valid number." maxlength="3"/>
+                   data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
           </span>
         </div>
@@ -860,7 +860,7 @@
                  name="repeatActiveTask" placeholder="No of times" required
                  value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -1029,7 +1029,7 @@
                    name="activeTaskCustomScheduleBo[0].timePeriodFromDays"
                    value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
                    maxlength="3" required pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number."/>
+                   data-pattern-error="Please enter valid number"/>
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1062,7 +1062,7 @@
                    name="activeTaskCustomScheduleBo[0].timePeriodToDays"
                    value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                    maxlength="3" pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number." required/>
+                   data-pattern-error="Please enter valid number" required/>
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1128,7 +1128,7 @@
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                      value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
                      maxlength="3" required pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number." data-type='xancorText'/>
+                     data-pattern-error="Please enter valid number" data-type='xancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
             </span>
@@ -1163,7 +1163,7 @@
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodToDays"
                      value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                      maxlength="3" pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number." required
+                     data-pattern-error="Please enter valid number" required
                      data-type='yancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
@@ -3408,7 +3408,7 @@
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
-                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
               $(".addbtn").addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -3446,7 +3446,7 @@
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -3485,7 +3485,7 @@
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-           $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+           $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         $(".addbtn").addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");
