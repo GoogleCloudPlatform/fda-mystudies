@@ -363,7 +363,7 @@
                                       .addClass(
                                           's-box')
                                       .text(
-                                          "Reorder done successfully");
+                                          "Content items reordered");
                                   $(
                                       '#alertMsg')
                                       .show();
