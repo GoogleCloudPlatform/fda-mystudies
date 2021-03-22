@@ -199,4 +199,6 @@ public interface StudyService {
   public boolean validateStudyActions(String studyId);
 
   public StudyBo getStudyInfo(String studyId);
+
+  public List<ConsentBo> getConsentList(String customStudyId);
 }

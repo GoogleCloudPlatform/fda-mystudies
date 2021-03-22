@@ -133,6 +133,9 @@ public class ConsentDto implements Serializable {
   @Column(name = "aggrement_of_consent")
   private String aggrementOfConsent;
 
+  @Column(name = "enroll_again")
+  private Boolean enrollAgain;
+
   public Integer getId() {
     return id;
   }
@@ -347,5 +350,13 @@ public class ConsentDto implements Serializable {
 
   public void setAggrementOfConsent(String aggrementOfConsent) {
     this.aggrementOfConsent = aggrementOfConsent;
+  }
+
+  public Boolean getEnrollAgain() {
+    return enrollAgain;
+  }
+
+  public void setEnrollAgain(Boolean enrollAgain) {
+    this.enrollAgain = enrollAgain;
   }
 }
