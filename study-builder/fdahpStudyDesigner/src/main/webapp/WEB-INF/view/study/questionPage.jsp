@@ -3040,11 +3040,11 @@ if(document.getElementById("singleSelect").checked==true){
             if (parseInt(stepsCount) < 1) {
               $("#displayStepsCount").parent().find(".help-block").append(
                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter  a smaller step size."));
+                  "Please enter a smaller step size"));
             } else {
               $("#displayStepsCount").parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter a larger step size."));
+                  "Please enter a larger step size"));
             }
 
           }
@@ -3095,7 +3095,7 @@ if(document.getElementById("singleSelect").checked==true){
         durationFlag = false;
         $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-               "Please select a non-zero Duration value."));
+               "Please select a non-zero Duration value"));
       } else {
         durationFlag = true;
         $('#timeIntervalDefaultId').parent().find(".help-block").empty();
@@ -4200,7 +4200,7 @@ if(document.getElementById("singleSelect").checked==true){
         if (!$('#questionTextId')[0].checkValidity()) {
           $("#questionTextId").parent().addClass('has-error has-danger').find(
               ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "This is a required field."));
+              "This is a required field"));
           $('.questionLevel a').tab('show');
         }
       }
@@ -4209,7 +4209,7 @@ if(document.getElementById("singleSelect").checked==true){
         if (!$('#shortTitle')[0].checkValidity()) {
           $("#shortTitle").parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("This is a required field."));
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("This is a required field"));
           $('.questionLevel a').tab('show');
         }
       }
@@ -4916,7 +4916,7 @@ if(document.getElementById("singleSelect").checked==true){
         $(thisAttr).parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             anchordateText
-            + " has already been used in the past."));
+            + " has already been used in the past"));
         callback(false);
       } else {
         $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
@@ -4948,7 +4948,7 @@ if(document.getElementById("singleSelect").checked==true){
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   anchordateText
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },

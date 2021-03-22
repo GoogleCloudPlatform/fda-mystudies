@@ -520,7 +520,7 @@
                 $('#emailId').parent().addClass("has-danger").addClass("has-error");
                 $('#emailId').parent().find(".help-block").empty();
                 $('#emailId').parent().find(".help-block").append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(emailCopy + " already exists."));
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(emailCopy + " already exists"));
               }
             }
           });
@@ -692,7 +692,7 @@
                 $('#emailId').parent().addClass("has-danger").addClass("has-error");
                 $('#emailId').parent().find(".help-block").empty();
                 $('#emailId').parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists."));
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists"));
               }
             }
           });

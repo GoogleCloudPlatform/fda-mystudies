@@ -415,7 +415,7 @@ margin-top:16px !important;
                             .empty()
                             .append(
                               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                                "Please fill out this field."));
+                                "Please fill out this field"));
                         return false;
                       } else {
                         $('#summernote').attr(
@@ -660,7 +660,7 @@ margin-top:16px !important;
                                     .empty()
                                     .append(
                                     	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                                        "This is a required field."));
+                                        "This is a required field"));
                                 return false;
                               } else {
                                 var appId = $(
@@ -771,7 +771,7 @@ margin-top:16px !important;
                                           ".help-block")
                                       .empty()
                                       .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                                          "This is a required field."));
+                                          "This is a required field"));
                                   return false;
                                 }
                               }

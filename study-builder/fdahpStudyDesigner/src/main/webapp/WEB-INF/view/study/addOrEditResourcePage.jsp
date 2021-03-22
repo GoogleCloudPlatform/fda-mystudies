@@ -214,7 +214,7 @@
                      value="${resourceBO.timePeriodFromDays}"
                      oldxDaysVal="${resourceBO.timePeriodFromDays}"
                      maxlength="3" required pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number."/>
+                     data-pattern-error="Please enter valid number"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
             <span class="mb-sm pr-md">
@@ -296,7 +296,7 @@
           <div class="form-group">
             <textarea class="form-control remReqOnSave" rows="4" id="comment"
                       name="resourceText"
-                      data-error="Please enter plain text of up to 250 characters max."
+                      data-error="Please enter plain text of up to 250 characters max"
                       maxlength="250"
                       >${resourceBO.resourceText}</textarea>
             <div class="help-block with-errors red-txt"></div>
@@ -461,7 +461,7 @@
         if ($("#resourceTitle").parent().addClass('has-error has-danger').find(".help-block").text()
             == '') {
           $("#resourceTitle").parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field"));
         }
         $('#saveResourceId').prop('disabled', false);
         return false;
@@ -961,7 +961,7 @@
         if (clickDone && isFromValid($('#ydays').parents('form')))
           $('#ydays').focus();
         $('#ydays').parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         valid = false;
       } else {
         $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -987,7 +987,7 @@
     if (value == '<p><br></p>' || value == '') {
       isValid = false;
       $('#richText').parent().addClass('has-error-cust').find(".help-block").empty().append(
-    	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
+    	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field"));
     }
     return isValid;
   }

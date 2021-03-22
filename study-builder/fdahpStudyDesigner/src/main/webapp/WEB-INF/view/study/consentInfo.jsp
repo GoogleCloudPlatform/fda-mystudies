@@ -614,7 +614,7 @@
         }
         $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 15000 characters are allowed."));
+            "Maximum 15000 characters are allowed"));
 
       } else {
         $('#elaboratedRTE').parent().removeClass("has-danger")
@@ -629,7 +629,7 @@
           .find(".help-block")
           .empty()
           .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field."));
+              "Please fill out this field"));
 
     }
     return isValid;

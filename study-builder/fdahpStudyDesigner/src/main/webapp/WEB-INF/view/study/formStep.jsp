@@ -621,7 +621,7 @@
                   'sprites-icons-2 tick pull-right mt-xs');
             }
             $("#addQuestionId").removeClass("cursor-none");
-            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             if ($("#saveBtn").text() == 'Next') {
