@@ -1043,7 +1043,7 @@ public class FdahpStudyDesignerUtil {
           new SimpleDateFormat(
               FdahpStudyDesignerConstants.DB_SDF_DATE
                   + " "
-                  + FdahpStudyDesignerConstants.DB_SDF_TIME);
+                  + FdahpStudyDesignerConstants.UI_SDF_TIME);
       date = new java.sql.Date(dateFormat.parse(timestampInString).getTime());
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
