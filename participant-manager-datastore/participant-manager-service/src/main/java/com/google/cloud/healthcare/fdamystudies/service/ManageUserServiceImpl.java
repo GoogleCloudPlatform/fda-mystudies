@@ -895,12 +895,8 @@ public class ManageUserServiceImpl implements ManageUserService {
                 ? NEW_ADMIN_INVITATION_EMAIL_SENT
                 : ACCOUNT_UPDATE_EMAIL_SENT;
 
-        logger.info(
-            "userId="
-                + adminRecordToSendEmail.getEmailTemplateType()
-                + "study Request="
-                + ReflectionToStringBuilder.toString(auditEnum));
-
+        invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
+        logger.info("audit Request=" + ReflectionToStringBuilder.toString(auditEnum));
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
         auditEnum =
@@ -910,22 +906,22 @@ public class ManageUserServiceImpl implements ManageUserService {
                 ? NEW_ADMIN_INVITATION_EMAIL_FAILED
                 : ACCOUNT_UPDATE_EMAIL_FAILED;
         userAccountEmailSchedulerTaskRepository.updateStatus(adminRecordToSendEmail.getUserId(), 0);
+        invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
       }
+    }
+  }
 
-      logger.info(
-          "userId="
-              + adminRecordToSendEmail.getEmailTemplateType()
-              + "study Request="
-              + ReflectionToStringBuilder.toString(auditEnum));
-
-      if (StringUtils.isNotEmpty(adminRecordToSendEmail.getAppId())
-          && StringUtils.isNotEmpty(adminRecordToSendEmail.getSource())) {
-        AuditLogEventRequest auditRequest = prepareAuditlogRequest(adminRecordToSendEmail);
-        Map<String, String> map = new HashMap<>();
-        map.put(CommonConstants.NEW_USER_ID, admin.getId());
-        map.put(CommonConstants.EDITED_USER_ID, admin.getId());
-        participantManagerHelper.logEvent(auditEnum, auditRequest, map);
-      }
+  private void invokeAuditEvent(
+      UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail,
+      UserRegAdminEntity admin,
+      ParticipantManagerEvent auditEnum) {
+    if (StringUtils.isNotEmpty(adminRecordToSendEmail.getAppId())
+        && StringUtils.isNotEmpty(adminRecordToSendEmail.getSource())) {
+      AuditLogEventRequest auditRequest = prepareAuditlogRequest(adminRecordToSendEmail);
+      Map<String, String> map = new HashMap<>();
+      map.put(CommonConstants.NEW_USER_ID, admin.getId());
+      map.put(CommonConstants.EDITED_USER_ID, admin.getId());
+      participantManagerHelper.logEvent(auditEnum, auditRequest, map);
     }
   }
 
