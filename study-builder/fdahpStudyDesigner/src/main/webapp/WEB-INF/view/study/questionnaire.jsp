@@ -2180,7 +2180,7 @@
 
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
 
               var questionnaireSteps = data.questionnaireJsonObject;
               var isDone = data.isDone;

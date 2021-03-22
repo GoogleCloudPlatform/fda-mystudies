@@ -193,7 +193,7 @@
               reloadConsentInfoDataTable(data.consentInfoList, null);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
               if ($('.fifthConsent').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.fifthConsent').find('span').removeClass(
