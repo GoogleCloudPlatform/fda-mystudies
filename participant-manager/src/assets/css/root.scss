@@ -1539,6 +1539,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .active_text {
   color: var(--light-green);
@@ -1552,6 +1553,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .paused_text {
   color: var(--orange-red);
