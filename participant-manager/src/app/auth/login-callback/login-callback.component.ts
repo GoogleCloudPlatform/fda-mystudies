@@ -61,14 +61,6 @@ export class LoginCallbackComponent implements OnInit {
                   ['/coordinator/accounts/change-password'],
                   {queryParams: {action: 'passwordsetup'}},
                 );
-              } else if (params.accountStatus === '5') {
-                this.toastr.error(
-                  'Your password is expired, please reset your password',
-                );
-                this.displayHeader.setDisplayHeaderStatus(false);
-                void this.router.navigate([
-                  '/coordinator/accounts/change-password',
-                ]);
               } else {
                 void this.router.navigate(['/coordinator/studies/sites']);
               }

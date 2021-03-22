@@ -84,7 +84,7 @@
                 <div class="dis-ellipsis pr-100">${activeTasksInfo.displayName}</div>
               </td>
               <td>${activeTasksInfo.type}</td>
-              <td>${activeTasksInfo.frequency  == 'Manually Schedule' ? 'Custom Schedule' : activeTasksInfo.frequency}</td>
+              <td>${activeTasksInfo.frequency  == 'Manually Schedule' ? 'Custom schedule' : activeTasksInfo.frequency}</td>
               <td>
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"

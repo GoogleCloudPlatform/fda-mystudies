@@ -1679,4 +1679,8 @@ meter::-moz-meter-bar {
   #body-container .form-item__element--select:invalid {
     margin-left: -4px !important;
   }
+   #body-container .form-item__element--select {
+    margin-left: -4px !important;
+    padding-right: 10px;
+  }
 }

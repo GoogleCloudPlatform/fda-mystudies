@@ -79,6 +79,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -893,6 +894,13 @@ public class ManageUserServiceImpl implements ManageUserService {
                     .equals(adminRecordToSendEmail.getEmailTemplateType())
                 ? NEW_ADMIN_INVITATION_EMAIL_SENT
                 : ACCOUNT_UPDATE_EMAIL_SENT;
+
+        logger.info(
+            "userId="
+                + adminRecordToSendEmail.getEmailTemplateType()
+                + "study Request="
+                + ReflectionToStringBuilder.toString(auditEnum));
+
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
         auditEnum =
@@ -903,6 +911,12 @@ public class ManageUserServiceImpl implements ManageUserService {
                 : ACCOUNT_UPDATE_EMAIL_FAILED;
         userAccountEmailSchedulerTaskRepository.updateStatus(adminRecordToSendEmail.getUserId(), 0);
       }
+
+      logger.info(
+          "userId="
+              + adminRecordToSendEmail.getEmailTemplateType()
+              + "study Request="
+              + ReflectionToStringBuilder.toString(auditEnum));
 
       if (StringUtils.isNotEmpty(adminRecordToSendEmail.getAppId())
           && StringUtils.isNotEmpty(adminRecordToSendEmail.getSource())) {
