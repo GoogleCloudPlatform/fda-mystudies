@@ -85,11 +85,11 @@
         <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png"
             alt=""/></span>
-        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Question Step</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'view'}">View Question Step <c:set
+        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit question step</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'view'}">View question step <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </c:if>
-        <c:if test="${actionTypeForQuestionPage == 'add'}">Add Question Step</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'add'}">Add question step</c:if>
       </div>
       <div class="dis-line form-group mb-none mr-sm">
         <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">

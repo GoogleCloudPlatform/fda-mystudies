@@ -24,9 +24,9 @@
         <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png"
             alt=""/></span>
-        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Form Step</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'add'}">Add Form Step</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'view'}">View Form Step <c:set
+        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit form step</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'add'}">Add form step</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'view'}">View form step <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </c:if>
       </div>

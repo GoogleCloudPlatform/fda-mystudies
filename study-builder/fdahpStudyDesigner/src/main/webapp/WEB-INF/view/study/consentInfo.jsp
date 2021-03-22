@@ -29,10 +29,10 @@
           <span class="pr-sm cur-pointer" onclick="goToBackPage(this);">
             <img src="../images/icons/back-b.png" alt=""/>
           </span>
-          <c:if test="${empty consentInfoBo.id}"> Add Consent Section</c:if>
+          <c:if test="${empty consentInfoBo.id}"> Add consent section</c:if>
           <c:if
-              test="${not empty consentInfoBo.id && actionPage eq 'addEdit'}">Edit Consent Section</c:if>
-          <c:if test="${not empty consentInfoBo.id && actionPage eq 'view'}">View Consent Section
+              test="${not empty consentInfoBo.id && actionPage eq 'addEdit'}">Edit consent section</c:if>
+          <c:if test="${not empty consentInfoBo.id && actionPage eq 'view'}">View consent section
             <c:set
                 var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
           </c:if>

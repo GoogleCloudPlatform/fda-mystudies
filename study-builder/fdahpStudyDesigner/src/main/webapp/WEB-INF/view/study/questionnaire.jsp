@@ -91,12 +91,12 @@
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
-      <div class="black-md-f text-uppercase dis-line pull-left line34">
+      <div class="black-md-f dis-line pull-left line34">
         <span class="pr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png" class="pr-md" alt=""/></span>
-        <c:if test="${actionType eq 'add'}">Add Questionnaire</c:if>
-        <c:if test="${actionType eq 'edit'}">Edit Questionnaire</c:if>
-        <c:if test="${actionType eq 'view'}">View Questionnaire <c:set
+        <c:if test="${actionType eq 'add'}">Add questionnaire</c:if>
+        <c:if test="${actionType eq 'edit'}">Edit questionnaire</c:if>
+        <c:if test="${actionType eq 'view'}">View questionnaire <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?questionnaireBo.questionnarieVersion:''}
         </c:if>
 
