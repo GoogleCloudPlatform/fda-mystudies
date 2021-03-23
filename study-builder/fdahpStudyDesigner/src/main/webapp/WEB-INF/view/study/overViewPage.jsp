@@ -699,12 +699,9 @@
       if ((file = this.files[0])) {
         img = new Image();
         img.onload = function () {
-          
+        	 var ht = this.height;
+             var wds = this.width;          
           if (thisId != '' && thisId == 1) {
-        	  this.height=1334;
-              this.width=750;
-              var ht = this.height;
-              var wds = this.width;
             if (ht == 1334 && wds == 750) {
               $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
               $(thisAttr).parent().parent().parent().find(".thumb img")
@@ -722,10 +719,6 @@
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             }
           } else {
-        	  this.height=570;
-              this.width=750;
-              var ht = this.height;
-              var wds = this.width;
             if (ht == 570 && wds == 750) {
               $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
               $(thisAttr).parent().parent().parent().find(".thumb img")
