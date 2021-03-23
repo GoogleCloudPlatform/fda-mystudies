@@ -607,8 +607,9 @@
   function maxLenValEditor() {
     var isValid = true;
     var value = $('#elaboratedRTE').summernote('code');
-    if (value != '<p><br></p>') {
-      if (value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
+    value = value.replaceAll('<p><br></p>', '');
+    if (value != '') {
+      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
         if (isValid) {
           isValid = false;
         }
