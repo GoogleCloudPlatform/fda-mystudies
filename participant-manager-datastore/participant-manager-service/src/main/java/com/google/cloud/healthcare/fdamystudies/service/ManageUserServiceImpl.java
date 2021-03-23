@@ -893,7 +893,7 @@ public class ManageUserServiceImpl implements ManageUserService {
                 ? NEW_ADMIN_INVITATION_EMAIL_SENT
                 : ACCOUNT_UPDATE_EMAIL_SENT;
 
-        invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
+        logAuditEvent(adminRecordToSendEmail, admin, auditEnum);
 
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
@@ -904,12 +904,12 @@ public class ManageUserServiceImpl implements ManageUserService {
                 ? NEW_ADMIN_INVITATION_EMAIL_FAILED
                 : ACCOUNT_UPDATE_EMAIL_FAILED;
         userAccountEmailSchedulerTaskRepository.updateStatus(adminRecordToSendEmail.getUserId(), 0);
-        invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
+        logAuditEvent(adminRecordToSendEmail, admin, auditEnum);
       }
     }
   }
 
-  private void invokeAuditEvent(
+  private void logAuditEvent(
       UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail,
       UserRegAdminEntity admin,
       ParticipantManagerEvent auditEnum) {
