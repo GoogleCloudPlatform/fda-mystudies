@@ -153,8 +153,8 @@ public class FDASchedulerService {
       date = FdahpStudyDesignerUtil.getCurrentDate();
       time =
           FdahpStudyDesignerUtil.privMinDateTime(
-              new SimpleDateFormat(FdahpStudyDesignerConstants.UI_SDF_TIME).format(new Date()),
-              FdahpStudyDesignerConstants.UI_SDF_TIME,
+              new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_TIME).format(new Date()),
+              FdahpStudyDesignerConstants.DB_SDF_TIME,
               1);
       pushNotificationBeans =
           notificationDAO.getPushNotificationList(
