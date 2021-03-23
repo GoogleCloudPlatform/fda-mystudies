@@ -1045,10 +1045,10 @@ public class FdahpStudyDesignerUtil {
                   + " "
                   + FdahpStudyDesignerConstants.UI_SDF_TIME);
       date = new java.sql.Date(dateFormat.parse(timestampInString).getTime());
+      return new Timestamp(date.getTime());
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
     }
-
-    return new Timestamp(date.getTime());
+    return null;
   }
 }
