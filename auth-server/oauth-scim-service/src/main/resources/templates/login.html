@@ -77,7 +77,7 @@
                         <label>Email</label> <input type="email"
                           name="email" th:field="*{email}" id="email"
                           placeholder="Enter your email"
-                          required="required"
+                          required="required" value=""
                           onblur="validateField('email');" />
                         <div class="err__msg" id="email_error"
                           style="display: none">Enter an email</div>
@@ -88,7 +88,7 @@
                           id="password"
                           placeholder="Enter your password"
                           required="required" minlength="8"
-                          maxlength="64"
+                          maxlength="64" value=""
                           onblur="validateField('password');" />
                         <div class="err__msg" id="password_error"
                           style="display: none">Please enter valid
