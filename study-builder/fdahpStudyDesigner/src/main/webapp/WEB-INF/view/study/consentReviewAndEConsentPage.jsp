@@ -500,7 +500,7 @@
                   $("#newDocumentDivId").parent().find(".help-block").empty();
                   $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
                       ".help-block").append(
-                      '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+                      '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
                 }
               }
           } else {
@@ -794,7 +794,7 @@
       callback: function (result) {
         if (result) {
           var a = document.createElement('a');
-          a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
+          a.href = "/studybuilder/adminStudies/studyList.do";
           document.body.appendChild(a).click();
         } else {
           $(item).prop('disabled', false);
@@ -847,7 +847,7 @@
         }
         $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 70000 characters are allowed."));
+            "Maximum 70000 characters are allowed"));
       } else {
         $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
         $('#learnMoreTextId').parent().find(".help-block").empty();
@@ -857,7 +857,7 @@
       $('#learnMoreTextId').attr('required', true);
       $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-          "Please fill out this field."));
+          "Please fill out this field"));
 
     }
 

@@ -495,7 +495,7 @@
             if (status == "SUCCESS") {
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
               if ($('.sixthQuestionnaires').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.sixthQuestionnaires').find('span').removeClass(
@@ -621,7 +621,7 @@
                   'sprites-icons-2 tick pull-right mt-xs');
             }
             $("#addQuestionId").removeClass("cursor-none");
-            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             if ($("#saveBtn").text() == 'Next') {

@@ -4309,7 +4309,7 @@
               } else {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter a larger step size."));
+                    "Please enter a larger step size"));
               }
 
             }
@@ -4638,7 +4638,7 @@
           $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-               "Please select a non-zero Duration value."));
+               "Please select a non-zero Duration value"));
         } else {
           durationFlag = true;
           $('#timeIntervalDefaultId').parent().find(".help-block").empty();
@@ -4666,8 +4666,6 @@
         if ((file = this.files[0])) {
           img = new Image();
           img.onload = function () {
-        	  this.height=100;
-        	  this.width=100;
             var ht = this.height;
             var wds = this.width;
             if ((parseInt(ht) == parseInt(wds)) && (parseInt(ht) >= 90 && parseInt(ht) <= 120)
@@ -6201,7 +6199,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     shortTitle
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 callback(false);
               }
             },
@@ -6250,7 +6248,7 @@
                 $("#statShortNameId").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     short_title
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 if (callback)
                   callback(false);
 
@@ -7130,7 +7128,7 @@
           $(thisAttr).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               anchordateText
-              + " has already been used in the past."));
+              + " has already been used in the past"));
           callback(false);
         } else {
           $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");

@@ -281,17 +281,17 @@
         Enrollment history
       </h2>
 
-      <div class="cards1 m-none">
-        <table class="table table-striped custom__table">
-          <thead class="custom__thead">
-            <tr>
-              <th>Date of enrollment</th>
-              <th>Date of withdrawal</th>
-              <th>Last enrollment status</th>
-            </tr>
-          </thead>
-          <tbody class="custom__tbody">
-            <tr
+ 
+<table class="table table-striped custom__table">
+  <tr>
+   <th>Date of enrollment</th>
+   <th style=" padding-right: 25px;" >Date of withdrawal</th>
+   <th style=" padding-right: 250px;">Last enrollment status</th>
+            
+           
+  
+  </tr>
+     <tr
               *ngFor="
                 let enrollmentDetails of participant.participantDetails
                   .enrollments
@@ -321,9 +321,9 @@
             <tr *ngIf="participant.participantDetails.enrollments.length === 0">
               <td colspan="3" class="text-center">No records found</td>
             </tr>
-          </tbody>
-        </table>
-      </div>
+</table>
+
+
       <h2 class="subheader__title text-weight-semibold mb-sm">
         Consent history
       </h2>
@@ -409,6 +409,7 @@
             </tr>
           </tfoot>
         </table>
+        
       </div>
     </section>
   </div>

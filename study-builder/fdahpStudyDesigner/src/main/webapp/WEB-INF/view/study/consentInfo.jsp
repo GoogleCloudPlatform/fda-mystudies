@@ -607,14 +607,15 @@
   function maxLenValEditor() {
     var isValid = true;
     var value = $('#elaboratedRTE').summernote('code');
-    if (value != '<p><br></p>') {
-      if (value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
+    value = value.replaceAll('<p><br></p>', '');
+    if (value != '') {
+      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
         if (isValid) {
           isValid = false;
         }
         $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 15000 characters are allowed."));
+            "Maximum 15000 characters are allowed"));
 
       } else {
         $('#elaboratedRTE').parent().removeClass("has-danger")
@@ -629,7 +630,7 @@
           .find(".help-block")
           .empty()
           .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field."));
+              "Please fill out this field"));
 
     }
     return isValid;

@@ -1539,6 +1539,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .active_text {
   color: var(--light-green);
@@ -1552,6 +1553,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .paused_text {
   color: var(--orange-red);
@@ -1565,6 +1567,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .deactivated_text {
   color: var(--light-red);
@@ -1629,19 +1632,15 @@ meter::-webkit-meter-high-value {
 }
 .weakPwd {
   color: var(--light-red);
-  font-size: 12px;
 }
 .fairPwd {
   color: var(--yellow);
-  font-size: 12px;
 }
 .goodPwd {
   color: var(--light-green);
-  font-size: 12px;
 }
 .strongPwd {
   color: var(--light-green);
-  font-size: 12px;
 }
 
 .weakPwd,
@@ -1682,5 +1681,9 @@ meter::-moz-meter-bar {
 @-moz-document url-prefix() {
   #body-container .form-item__element--select:invalid {
     margin-left: -4px !important;
+  }
+   #body-container .form-item__element--select {
+    margin-left: -4px !important;
+    padding-right: 10px;
   }
 }

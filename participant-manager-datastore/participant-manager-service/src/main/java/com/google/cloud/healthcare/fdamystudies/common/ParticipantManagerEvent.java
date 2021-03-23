@@ -205,8 +205,8 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "Account setup invitation email sent to admin (user ID -${new_user_id})",
-      "NEW_USER_INVITATION_EMAIL_SENT"),
+      "Account setup invitation email sent to admin (user ID -${new_user_id}).",
+      "NEW_ADMIN_INVITATION_EMAIL_SENT"),
 
   NEW_ADMIN_INVITATION_EMAIL_FAILED(
       PARTICIPANT_MANAGER,

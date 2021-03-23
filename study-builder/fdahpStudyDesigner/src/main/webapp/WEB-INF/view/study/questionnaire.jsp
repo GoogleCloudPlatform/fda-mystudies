@@ -534,7 +534,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
                           <input id="onetimexdaysId" type="text"
@@ -545,7 +545,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -674,7 +674,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
                           <input id="onetimeydaysId" type="text"
@@ -685,7 +685,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -779,7 +779,7 @@
                                name="questionnairesFrequenciesList[0].timePeriodFromDays"
                                value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -807,7 +807,7 @@
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1039,7 +1039,7 @@
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1079,7 +1079,7 @@
                                  value="${questionnaireBo.repeatQuestionnaire}" required
                                  onkeypress="return isNumber(event, this)"
                                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                 data-pattern-error="Please enter valid number."
+                                 data-pattern-error="Please enter valid number"
                                  maxlength="3"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
@@ -1101,7 +1101,7 @@
                                value="${questionnaireBo.repeatQuestionnaire}" required
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1227,7 +1227,7 @@
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1268,7 +1268,7 @@
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1311,7 +1311,7 @@
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1414,7 +1414,9 @@
                   <span class="addbtn addBtnDis align-span-center mr-md"
                         onclick="addDate();">+
                   </span>
-                  </span>
+                  <span id="delete"	
+                          class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"	
+                          onclick="removeDate(this);"></span>
                 </div>
               </c:if>
               <c:if
@@ -1519,7 +1521,7 @@
                            name="questionnaireCustomScheduleBo[0].timePeriodFromDays"
                            value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
                            maxlength="3" required pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number."/>
+                           data-pattern-error="Please enter valid number"/>
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1553,7 +1555,7 @@
                            name="questionnaireCustomScheduleBo[0].timePeriodToDays"
                            value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                            maxlength="3" pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number." required/>
+                           data-pattern-error="Please enter valid number" required/>
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1577,7 +1579,10 @@
                         class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
                         onclick="addDateAnchor();">+
                   </span>
-                  
+                  <span	
+                        id="deleteAncchor0"	
+                        class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"	
+                        onclick="removeDateAnchor(this);"></span>
                 </div>
               </c:if>
               <c:if
@@ -1624,7 +1629,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                              value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
                              maxlength="3" required pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number."/>
+                             data-pattern-error="Please enter valid number"/>
                       <span
                           class="help-block with-errors red-txt"></span>
                     </span>
@@ -1658,7 +1663,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodToDays"
                              value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                              maxlength="3" pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number." required/>
+                             data-pattern-error="Please enter valid number" required/>
                       <span class="help-block with-errors red-txt"></span>
                     </span>
                     <span class="mb-sm pr-md">
@@ -1924,24 +1929,32 @@
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
 
-        var j = 0;
-        for (j = customCount; j > 0; j--) {
-          var xdays = $("#xdays" + j).val();
-          if(xdays == '') {
-            document.getElementById('manualTime0').value = '';
-        	  
-            $("#AnchorDate" + j ).hide();
-            $("#AnchorDate" + j ).find('input:text').removeAttr('required', true);
-
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-          } else {
-           $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
+        
+        $($('.manually-anchor-option').get().reverse()).each(function () {
+           var id = $(this).attr("id");	
+           var count12 = $("#"+id).find(".xdays").attr("count");	
+           if($('#'+id).find('#xdays'+count12).val()=="" && $('.manually-anchor-option').filter(function() {	
+               return $(this).css('display') !== 'none';	
+           }).length !== 1){	
+         	
+                   $("#"+id).remove();	
+                   $("#"+id).find('input:text').removeAttr('required', true);	
+                   $("#AddButton").show();	
+                   $("#AddButton").attr('required', true);	
+               }else {	
+                     $("#AddButton").hide();	
+                     $("#AddButton").attr('required', false);	
+                 }	
+        });	
+        	
+        if( $('.manually-anchor-option').filter(function() {	
+            return $(this).css('display') !== 'none';	
+        }).length == 1){	
+         $("#AddButton").show();	
+       $('.manually-anchor-option').find(".delete").css("visibility", "hidden");	
+           }
+        
       } else {
-        $("#AddButton").show();
         localStorage.setItem("IsAnchorDateSelected", "false");
         localStorage.setItem("IsRegularSelected", "true");
 
@@ -1986,25 +1999,32 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
 
-        var i = 0;
-        for (i = customCount-1; i > 0; i--) {
-          var RegStartDate = $("#StartDate" + i).val();
-        	
-          if(RegStartDate == '') {
-        	document.getElementById('customTime0').value = '';
-        	$("#customTime0").attr("disabled", true);
-          
-            $("#RegDate" + i ).hide();
-            $("#RegDate" + i ).find('input:text').removeAttr('required', true);
-
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-       	    $('.manually-option').find(".delete").css("visibility", "hidden");
-       	    $('.manually-option').find('input').val('');
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
+    	
+        $('.manually-option').each(function () {	
+           var id = $(this).attr("id");	
+           var count12 = $("#"+id).find(".cusStrDate").attr("count");	
+           if($('#'+id).find('#StartDate'+count12).val()=="" && $('.manually-option').filter(function() {	
+               return $(this).css('display') !== 'none';	
+           }).length !== 1){	
+                 	
+                   $("#"+id).remove();	
+                   $("#"+id).find('input:text').removeAttr('required', true);	
+                   $("#AddButton").show();	
+                   $("#AddButton").attr('required', true);	
+               }else {	
+                     $("#AddButton").hide();	
+                     $("#AddButton").attr('required', false);	
+                 }	
+        });
+        
+        if( $('.manually-option').filter(function() {	
+            return $(this).css('display') !== 'none';}).length == 1){	
+    	   $("#AddButton").show();	
+           $('.manually-option').find(".delete").css("visibility", "hidden");	
+        }
+        
+        if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
+            $('.manually-option').find('#AddButton').first().hide();
         }
         
 	        var startDate = $("#startDate").val();
@@ -2177,7 +2197,7 @@
 
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
 
               var questionnaireSteps = data.questionnaireJsonObject;
               var isDone = data.isDone;
@@ -2972,7 +2992,7 @@
             $(timeId).parent().addClass("has-danger").addClass("has-error");
             $(timeId).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Time reset to current time. "));
+                "Time reset to current time"));
           }
         } else {
           $(timeId).data("DateTimePicker").minDate(false);
@@ -3084,14 +3104,16 @@
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
         + "</div>";
 
+        if ($('.manually-option').length > 1) {
+            $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
+        } else {
+            $('.manuallyContainer').find(".remBtnDis").addClass("hide");
+        }
+        
     $(".manually-option:last").after(newDateCon);
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
-    if ($('.manually-option').length > 1) {
-      $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
-    } else {
-      $('.manuallyContainer').find(".remBtnDis").addClass("hide");
-    }
+   
     customStartDate('StartDate' + customCount, customCount);
     customEndDate('EndDate' + customCount, customCount);
     timep('customTime' + customCount);
@@ -3115,7 +3137,12 @@
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
- 
+    
+    if( $('.manually-option').filter(function() {	
+        return $(this).css('display') !== 'none';}).length == 1){	
+       $('.manually-option').find(".delete").css("visibility", "hidden");	
+    }
+    
     $(document).find('.cusTime').trigger('dp.change');
   }
 
@@ -4280,13 +4307,13 @@
             $(this).parent().addClass('has-error has-danger');
             $(this).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Date reset to current date. "));
+                "Date reset to current date"));
           } else {
             $(this).data("DateTimePicker").clear();
             $(this).parent().addClass('has-error has-danger');
             $(this).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please select a valid date."));
+                "Please select a valid date"));
           }
         } else {
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4369,7 +4396,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
         + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectYSign' count='"
@@ -4382,7 +4409,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
@@ -4498,7 +4525,7 @@
   $(document).ready(function () {
 
     jQuery(document).on("keyup", ".xdays", function () {
-
+    	
       var xday = $(this).val()
       var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
       var parent_id = parseInt(parentId);
@@ -4577,10 +4604,16 @@
       $(this).parent().parent().addClass("current");
 
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+  	    return $(this).css('display') !== 'none';}).length == 1){
+  	 $("#AddButton").show();
+  	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+  	}
     });
 
     jQuery(document).on("keyup", ".ydays", function () {
-
+    	
       var parent_id = $(this).parent().parent().attr("id").replace('AnchorDate','');
       var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
       var xday = $("#xdays" + parent_id).val();
@@ -4613,6 +4646,12 @@
       $(this).parent().parent().siblings().removeClass("current");
       $(this).parent().parent().addClass("current");
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+  	    return $(this).css('display') !== 'none';}).length == 1){
+  	 $("#AddButton").show();
+  	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+  	}
 
     });
 

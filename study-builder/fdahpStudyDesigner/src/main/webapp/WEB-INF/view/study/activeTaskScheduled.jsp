@@ -191,7 +191,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimexdaysId" type="text"
@@ -201,7 +201,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -307,7 +307,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimeydaysId" type="text"
@@ -317,7 +317,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -396,7 +396,7 @@
                        name="activeTaskFrequenciesList[0].timePeriodFromDays"
                        value="${(fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0)?activeTaskBo.activeTaskFrequenciesList[0].timePeriodFromDays:''}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -421,7 +421,7 @@
                  value="${activeTaskBo.repeatActiveTask}"
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -610,7 +610,7 @@
                        placeholder="X" name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -646,7 +646,7 @@
                    value="${activeTaskBo.repeatActiveTask}" required
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                   data-pattern-error="Please enter valid number." maxlength="3"/>
+                   data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
           </span>
         </div>
@@ -667,7 +667,7 @@
                  value="${activeTaskBo.repeatActiveTask}" required
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -801,7 +801,7 @@
                        name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -839,7 +839,7 @@
                    value="${activeTaskBo.repeatActiveTask}"
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                   data-pattern-error="Please enter valid number." maxlength="3"/>
+                   data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
           </span>
         </div>
@@ -860,7 +860,7 @@
                  name="repeatActiveTask" placeholder="No of times" required
                  value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -946,6 +946,9 @@
             <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
+             <span id="delete"
+                  class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
+                  onclick="removeDate(this);"></span>
           
         </div>
       </c:if>
@@ -1029,7 +1032,7 @@
                    name="activeTaskCustomScheduleBo[0].timePeriodFromDays"
                    value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
                    maxlength="3" required pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number."/>
+                   data-pattern-error="Please enter valid number"/>
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1062,7 +1065,7 @@
                    name="activeTaskCustomScheduleBo[0].timePeriodToDays"
                    value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                    maxlength="3" pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number." required/>
+                   data-pattern-error="Please enter valid number" required/>
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1087,7 +1090,9 @@
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
                 onclick="addDateAnchor();">+
           </span>
-          
+             <span id="deleteAncchor"
+                  class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
+                  onclick="removeDateAnchor(this);"></span>
         </div>
       </c:if>
       <c:if
@@ -1128,7 +1133,7 @@
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                      value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
                      maxlength="3" required pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number." data-type='xancorText'/>
+                     data-pattern-error="Please enter valid number" data-type='xancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
             </span>
@@ -1163,7 +1168,7 @@
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodToDays"
                      value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                      maxlength="3" pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number." required
+                     data-pattern-error="Please enter valid number" required
                      data-type='yancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
@@ -1397,25 +1402,32 @@
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
 
-        var j = 0;
-        for (j = customCount; j > 0; j--) {
-          var xdays = $("#xdays" + j).val();
-          
-          if(xdays == '') {
-          	document.getElementById('manualTime0').value = '';
-        	  
-            $("#AnchorDate" + j ).hide();
-            $("#AnchorDate" + j ).find('input:text').removeAttr('required', true);
+        $($('.manually-anchor-option').get().reverse()).each(function () {
+           var id = $(this).attr("id");
+           var count12 = $("#"+id).find(".xdays").attr("count");
+           if($('#'+id).find('#xdays'+count12).val()=="" && $('.manually-anchor-option').filter(function() {
+               return $(this).css('display') !== 'none';
+           }).length !== 1){
+         
+                   $("#"+id).remove();
+                   $("#"+id).find('input:text').removeAttr('required', true);
 
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
+                   $("#AddButton").show();
+                   $("#AddButton").attr('required', true);
+               }else {
+                     $("#AddButton").hide();
+                     $("#AddButton").attr('required', false);
+                 }
+        });
+        
+        if( $('.manually-anchor-option').filter(function() {
+            return $(this).css('display') !== 'none';
+        }).length == 1){
+         $("#AddButton").show();
+       $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+           }
+        
       } else {
-    	$("#AddButton").show();
         localStorage.setItem("IsActiveAnchorDateSelected", "false");
         localStorage.setItem("IsActiveRegularSelected", "true");
 
@@ -1463,26 +1475,34 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
 
-       var i = 0;
-       for (i = customCount-1; i > 0; i--) {
-         var RegStartDate = $("#StartDate" + i).val();
-         
-         if(RegStartDate == '') {
-       	   document.getElementById('customTime0').value = '';
-       	   $("#customTime0").attr("disabled", true);
-         
-           $("#RegDate" + i ).hide();
-           $("#RegDate" + i ).find('input:text').removeAttr('required', true);
+        $('.manually-option').each(function () {
+           var id = $(this).attr("id");
+           var count12 = $("#"+id).find(".cusStrDate").attr("count");
+           if($('#'+id).find('#StartDate'+count12).val()=="" && $('.manually-option').filter(function() {
+               return $(this).css('display') !== 'none';
+           }).length !== 1){
+                 
+                   $("#"+id).remove();
+                   $("#"+id).find('input:text').removeAttr('required', true);
 
-           $("#AddButton").show();
-           $("#AddButton").attr('required', true);
-           $('.manually-option').find(".delete").css("visibility", "hidden");
-           $('.manually-option').find('input').val('');
-         } else {
-           $("#AddButton").hide();
-           $("#AddButton").attr('required', false);
-         }
-       }
+                   $("#AddButton").show();
+                   $("#AddButton").attr('required', true);
+               }else {
+                     $("#AddButton").hide();
+                     $("#AddButton").attr('required', false);
+                 }
+        });
+       
+        if( $('.manually-option').filter(function() {
+        	return $(this).css('display') !== 'none'; }).length == 1){
+    	     $("#AddButton").show();
+             $('.manually-option').find(".delete").css("visibility", "hidden");
+           }
+        
+        if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
+            $('.manually-option').find('#AddButton').first().hide();
+        }
+       
       }
 
       if (schedule_opts == 'One time') {
@@ -2261,14 +2281,16 @@
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
         + "</div>";
 
+        if ($('.manually-option').length > 1) {
+            $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
+          } else {
+            $('.manuallyContainer').find(".remBtnDis").addClass("hide");
+          }
+        
     $(".manually-option:last").after(newDateCon);
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
-    if ($('.manually-option').length > 1) {
-      $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
-    } else {
-      $('.manuallyContainer').find(".remBtnDis").addClass("hide");
-    }
+   
     customStartDate('StartDate' + customCount, customCount);
     customEndDate('EndDate' + customCount, customCount);
     timep('customTime' + customCount);
@@ -2291,6 +2313,12 @@
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
+    
+    if( $('.manually-option').filter(function() {
+        return $(this).css('display') !== 'none';}).length == 1){
+      $('.manually-option').find(".delete").css("visibility", "hidden");
+    }
+    
     $(document).find('.cusTime').trigger('dp.change');
   }
 
@@ -3408,7 +3436,7 @@
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
-                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
               $(".addbtn").addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -3429,6 +3457,12 @@
       $(this).parent().parent().addClass("current");
 
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+    	    return $(this).css('display') !== 'none';}).length == 1){
+    	 $("#AddButton").show();
+    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+      }
     });
 
     jQuery(document).on("keyup", ".ydays", function () {
@@ -3446,7 +3480,7 @@
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -3465,6 +3499,12 @@
       $(this).parent().parent().siblings().removeClass("current");
       $(this).parent().parent().addClass("current");
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+    	    return $(this).css('display') !== 'none';}).length == 1){
+    	 $("#AddButton").show();
+    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+      }
 
     });
 
@@ -3485,7 +3525,7 @@
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-           $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+           $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         $(".addbtn").addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");
