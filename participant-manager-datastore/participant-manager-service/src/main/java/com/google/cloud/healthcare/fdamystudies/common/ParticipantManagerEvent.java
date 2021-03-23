@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -205,7 +205,7 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "Account setup invitation email sent to admin (user ID -${new_user_id})",
+      "Account setup invitation email sent to admin (user ID -${new_user_id}).",
       "NEW_ADMIN_INVITATION_EMAIL_SENT"),
 
   NEW_ADMIN_INVITATION_EMAIL_FAILED(

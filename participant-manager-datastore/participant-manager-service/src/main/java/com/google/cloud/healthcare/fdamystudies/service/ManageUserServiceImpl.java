@@ -892,6 +892,9 @@ public class ManageUserServiceImpl implements ManageUserService {
                     .equals(adminRecordToSendEmail.getEmailTemplateType())
                 ? NEW_ADMIN_INVITATION_EMAIL_SENT
                 : ACCOUNT_UPDATE_EMAIL_SENT;
+
+        invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
+
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
         auditEnum =
@@ -901,16 +904,22 @@ public class ManageUserServiceImpl implements ManageUserService {
                 ? NEW_ADMIN_INVITATION_EMAIL_FAILED
                 : ACCOUNT_UPDATE_EMAIL_FAILED;
         userAccountEmailSchedulerTaskRepository.updateStatus(adminRecordToSendEmail.getUserId(), 0);
+        invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
       }
+    }
+  }
 
-      if (StringUtils.isNotEmpty(adminRecordToSendEmail.getAppId())
-          && StringUtils.isNotEmpty(adminRecordToSendEmail.getSource())) {
-        AuditLogEventRequest auditRequest = prepareAuditlogRequest(adminRecordToSendEmail);
-        Map<String, String> map = new HashMap<>();
-        map.put(CommonConstants.NEW_USER_ID, admin.getId());
-        map.put(CommonConstants.EDITED_USER_ID, admin.getId());
-        participantManagerHelper.logEvent(auditEnum, auditRequest, map);
-      }
+  private void invokeAuditEvent(
+      UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail,
+      UserRegAdminEntity admin,
+      ParticipantManagerEvent auditEnum) {
+    if (StringUtils.isNotEmpty(adminRecordToSendEmail.getAppId())
+        && StringUtils.isNotEmpty(adminRecordToSendEmail.getSource())) {
+      AuditLogEventRequest auditRequest = prepareAuditlogRequest(adminRecordToSendEmail);
+      Map<String, String> map = new HashMap<>();
+      map.put(CommonConstants.NEW_USER_ID, admin.getId());
+      map.put(CommonConstants.EDITED_USER_ID, admin.getId());
+      participantManagerHelper.logEvent(auditEnum, auditRequest, map);
     }
   }
 
