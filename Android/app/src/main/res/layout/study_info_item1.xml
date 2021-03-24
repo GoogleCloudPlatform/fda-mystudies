@@ -57,15 +57,16 @@
                     android:textColor="@android:color/white" />
 
 
-                <android.support.v7.widget.AppCompatTextView
+                <WebView
                     android:id="@+id/desc"
                     style="@style/TextType2"
-                    android:layout_below="@id/title"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_marginTop="5dp"
                     android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/title"
+                    android:background="@android:color/transparent"
                     android:text="@string/gateway_des1"
                     android:textColor="@android:color/white" />
 
