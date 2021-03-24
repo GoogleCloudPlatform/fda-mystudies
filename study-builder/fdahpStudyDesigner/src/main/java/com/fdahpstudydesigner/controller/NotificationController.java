@@ -147,6 +147,7 @@ public class NotificationController {
             if (notificationBO.isNotificationSent()) {
               notificationBO.setScheduleDate("");
               notificationBO.setScheduleTime("");
+              notificationBO.setScheduleTimestamp(null);
             }
             notificationBO.setActionPage("resend");
           }
