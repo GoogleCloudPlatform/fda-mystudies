@@ -923,7 +923,7 @@
 
     $('#anchorDateId').change(function () {
       var element = $(this).find('option:selected').text();
-      if (element == 'Enrollment Date') {
+      if (element == 'Enrollment date') {
         $('#xSign').children('option').remove();
         $('#xSign').append("<option value='0' selected>+</option>");
         $('#ySign').children('option').remove();

@@ -195,7 +195,7 @@
 					available for Android as compared to iOS. Please note the same
                     in your creation of study content:
                   </li>
-                  <li>i. Active tasks: Tower Of Hanoi, Spatial Span Memory
+                  <li>i. Active tasks: Tower of hanoi, Spatial span memory
                   </li>
                 </ul>
               </li>

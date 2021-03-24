@@ -92,7 +92,7 @@
         <tbody>
           <c:forEach items="${userList}" var="user">
             <tr
-                <c:if test="${fn:contains(aspList.capability , 'Project Lead' )}"> plRow </c:if>
+                <c:if test="${fn:contains(aspList.capability , 'Project lead' )}"> plRow </c:if>
                 <c:if test="${fn:contains(aspList.capability , 'Coordinator' )}"> cRow </c:if>>
               <td>
                 <div class="dis-ellipsis">${fn:escapeXml(user.userFullName)}</div>
