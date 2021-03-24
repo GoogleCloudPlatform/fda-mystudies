@@ -2740,7 +2740,7 @@
               }
             });
           } else {
-            showErrMsg("Please fill in all mandatory fields.");
+            showErrMsg("Please fill in all mandatory fields");
             var slaCount = $('#contentTab').find('.has-error.has-danger').length;
             var flaCount = $('#schedule').find('.has-error.has-danger').length;
             if (parseInt(slaCount) >= 1) {
@@ -2750,7 +2750,7 @@
             }
           }
         } else {
-          showErrMsg("Please fill in all mandatory fields.");
+          showErrMsg("Please fill in all mandatory fields");
           var slaCount = $('#contentTab').find('.has-error.has-danger').length;
           var flaCount = $('#schedule').find('.has-error.has-danger').length;
           if (parseInt(slaCount) >= 1) {
@@ -3891,7 +3891,7 @@
           callback(false);
       }
     } else {
-      showErrMsg("Please fill in all mandatory fields.");
+      showErrMsg("Please fill in all mandatory fields");
       $('.scheduleQusClass a').tab('show');
       if (callback)
         callback(false);

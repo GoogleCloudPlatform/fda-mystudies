@@ -2133,7 +2133,7 @@
                   } else {
                     $("#doneId").attr("disabled", false);
                     $("body").removeClass('loading');
-                    showErrMsg("Please fill in all mandatory fields.");
+                    showErrMsg("Please fill in all mandatory fields");
                     $('.contentClass a').tab('show');
                   }
                 });
@@ -2163,7 +2163,7 @@
         $("body").removeClass('loading');
         $("#doneId").attr("disabled", false);
         $('.contentClass a').tab('show');
-        showErrMsg("Please fill in all mandatory fields.");
+        showErrMsg("Please fill in all mandatory fields");
       }
     });
 
@@ -2172,7 +2172,7 @@
       $("#saveId").attr("disabled", true);
       var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
       if (shortTitleCount >= 1) {
-        showErrMsg("Please fill in all mandatory fields.");
+        showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         $("body").removeClass('loading');
         $("#saveId").attr("disabled", false);
@@ -2182,7 +2182,7 @@
             ".help-block").empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             "This is a required field"));
-        showErrMsg("Please fill in all mandatory fields.");
+        showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         $("body").removeClass('loading');
         $("#saveId").attr("disabled", false);
@@ -2281,7 +2281,7 @@
                 } else {
                   $("#saveId").attr("disabled", false);
                   $("body").removeClass('loading');
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                 }
               });

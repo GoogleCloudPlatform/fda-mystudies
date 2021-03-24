@@ -636,7 +636,7 @@
       		       .find(".help-block")
       		       .empty()
       		       .append(
-      		           '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+      		           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
        			valid=false;
        			return false;
           }else{

@@ -3042,7 +3042,7 @@
           callback(false);
       }
     } else {
-      showErrMsg("Please fill in all mandatory fields.");
+      showErrMsg("Please fill in all mandatory fields");
       $('.scheduleTaskClass a').tab('show');
       if (callback)
         callback(false);
