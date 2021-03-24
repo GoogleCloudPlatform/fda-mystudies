@@ -606,6 +606,10 @@
     var isValid = true;
     var value = $('#elaboratedRTE').summernote('code');
     value = value.replaceAll('<p><br></p>', '');
+    if (value == '<br>') {
+    	value = '';
+    }
+    
     if (value != '') {
       if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
         if (isValid) {
