@@ -829,7 +829,7 @@
       $('#newDocumentDivId').attr('required', true);
       $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-          "Please fill out this field."));
+          "Please fill out this field"));
 
     }
 

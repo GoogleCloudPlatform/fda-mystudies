@@ -2740,7 +2740,7 @@
               }
             });
           } else {
-            showErrMsg("Please fill in all mandatory fields.");
+            showErrMsg("Please fill in all mandatory fields");
             var slaCount = $('#contentTab').find('.has-error.has-danger').length;
             var flaCount = $('#schedule').find('.has-error.has-danger').length;
             if (parseInt(slaCount) >= 1) {
@@ -2750,7 +2750,7 @@
             }
           }
         } else {
-          showErrMsg("Please fill in all mandatory fields.");
+          showErrMsg("Please fill in all mandatory fields");
           var slaCount = $('#contentTab').find('.has-error.has-danger').length;
           var flaCount = $('#schedule').find('.has-error.has-danger').length;
           if (parseInt(slaCount) >= 1) {
@@ -3891,7 +3891,7 @@
           callback(false);
       }
     } else {
-      showErrMsg("Please fill in all mandatory fields.");
+      showErrMsg("Please fill in all mandatory fields");
       $('.scheduleQusClass a').tab('show');
       if (callback)
         callback(false);
@@ -4429,8 +4429,8 @@
     $(".manually-anchor-option").parents("form").validator();
     if ($('.manually-anchor-option').length > 1) {
       $('.manuallyAnchorContainer').find(".remBtnDis").removeClass("hide");
-      if ($('#anchorDateId').find('option:selected').text() == 'Enrollment Date') {
-        setAnchorDropdown('Manually Schedule', 'Enrollment Date');
+      if ($('#anchorDateId').find('option:selected').text() == 'Enrollment date') {
+        setAnchorDropdown('Manually Schedule', 'Enrollment date');
       }
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
@@ -4454,7 +4454,7 @@
   }
 
   function setAnchorDropdown(frequency_text, anchorType) {
-    if (anchorType == 'Enrollment Date') {
+    if (anchorType == 'Enrollment date') {
       if (frequency_text == 'One time') {
         $('#onetimeXSign').children('option').remove();
         $('#onetimeXSign').append("<option value='0' selected>+</option>");

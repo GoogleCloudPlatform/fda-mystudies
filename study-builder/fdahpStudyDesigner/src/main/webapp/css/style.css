@@ -2211,10 +2211,6 @@ option:first-child {
   text-transform: capitalize !important;
 }
 
-.filter-option {
-  text-transform: capitalize;
-}
-
 .numeric__row > span {
   width: 50px;
 }

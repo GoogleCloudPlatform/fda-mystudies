@@ -934,7 +934,7 @@
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   "Please select a non-zero Duration value"));
           }
-          showErrMsg("Please fill in all mandatory fields.");
+          showErrMsg("Please fill in all mandatory fields");
           $('.contentClass a').tab('show');
         }
       });
@@ -942,7 +942,7 @@
         $("body").addClass('loading');
         var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
         if (shortTitleCount >= 1) {
-          showErrMsg("Please fill in all mandatory fields.");
+          showErrMsg("Please fill in all mandatory fields");
           $('.contentClass a').tab('show');
           $("body").removeClass('loading');
           return false;
@@ -950,7 +950,7 @@
           $("#shortTitleId").parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "This is a required field."));
+              "This is a required field"));
           showErrMsg("Please fill in all mandatory fields");
           $('.contentClass a').tab('show');
           $("body").removeClass('loading');
@@ -975,14 +975,14 @@
                 var errorstatShortTitle = $('.statShortTitleClass').find(
                     '.help-block').children().text();
                 if (statShortTitleCount >= 1 && errorstatShortTitle
-                    != "Please fill out this field.") {
+                    != "Please fill out this field") {
                   var statId = $('.shortTitleStatCls').attr('id');
                   if (statId && statId == 'identifierId')
                     $('#identifierId').focus();
                   else
                     $('#static').focus();
 
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                   $("body").removeClass('loading');
                   return false;

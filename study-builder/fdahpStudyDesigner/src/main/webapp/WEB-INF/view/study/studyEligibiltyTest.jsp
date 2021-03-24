@@ -188,7 +188,7 @@
             $('#shortTitleId').parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "This is a required field."));
+                "This is a required field"));
           }
           $('#saveId').prop("disabled", false);
           return false;
