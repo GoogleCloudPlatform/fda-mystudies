@@ -136,6 +136,12 @@ public class NotificationDAOImpl implements NotificationDAO {
             null != notificationBO.getScheduleDate() ? notificationBO.getScheduleDate() : "");
         notificationBO.setScheduleTime(
             null != notificationBO.getScheduleTime() ? notificationBO.getScheduleTime() : "");
+        notificationBO.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
         notificationBO.setNotificationSent(notificationBO.isNotificationSent());
         notificationBO.setNotificationScheduleType(
             null != notificationBO.getNotificationScheduleType()
@@ -145,6 +151,7 @@ public class NotificationDAOImpl implements NotificationDAO {
             notificationBO.getNotificationScheduleType())) {
           notificationBO.setScheduleDate("");
           notificationBO.setScheduleTime("");
+          notificationBO.setScheduleTimestamp(null);
         }
       }
     } catch (Exception e) {
@@ -291,6 +298,12 @@ public class NotificationDAOImpl implements NotificationDAO {
         } else {
           notificationBOUpdate.setScheduleDate(notificationBO.getScheduleDate());
         }
+        notificationBOUpdate.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
 
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
@@ -341,6 +354,14 @@ public class NotificationDAOImpl implements NotificationDAO {
         } else {
           notificationBOUpdate.setScheduleDate(null);
         }
+
+        notificationBOUpdate.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
+
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);

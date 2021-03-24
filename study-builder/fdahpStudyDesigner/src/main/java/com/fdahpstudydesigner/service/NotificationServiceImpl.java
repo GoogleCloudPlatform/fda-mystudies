@@ -84,6 +84,13 @@ public class NotificationServiceImpl implements NotificationService {
                         FdahpStudyDesignerConstants.DB_SDF_TIME,
                         FdahpStudyDesignerConstants.SDF_TIME))
                 : "");
+
+        notificationBO.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
       }
     } catch (Exception e) {
       logger.error("NotificationServiceImpl - getNotification - ERROR", e);
