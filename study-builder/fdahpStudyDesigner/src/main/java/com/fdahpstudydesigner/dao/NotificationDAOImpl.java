@@ -356,7 +356,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         } else {
           notificationBOUpdate.setScheduleDate(null);
         }
-        notificationBO.setScheduleTimestamp(
+        notificationBOUpdate.setScheduleTimestamp(
             (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
                     && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
                 ? FdahpStudyDesignerUtil.getTimeStamp(
