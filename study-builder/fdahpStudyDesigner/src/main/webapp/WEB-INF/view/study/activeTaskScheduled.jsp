@@ -1088,7 +1088,7 @@
                 class='help-block with-errors red-txt'></span>
           </span>
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
-                onclick="addDateAnchor();">+
+                onclick="addDateAnchor(0);">+
           </span>
              <span id="deleteAncchor"
                   class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
@@ -1189,7 +1189,7 @@
                   class='help-block with-errors red-txt'></span>
             </span>
             <span class="addbtn addBtnDis align-span-center mr-md "
-                  onclick="addDateAnchor();">+
+                  onclick="addDateAnchor(${customVar.index});">+
             </span>
             <span id="deleteAncchor"
                   class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
@@ -3233,9 +3233,9 @@
     return valid;
   }
 
-  function addDateAnchor() {
+  function addDateAnchor(customCountIndex) {
 	$('.manually-anchor-option').find(".delete").css("visibility", "visible");
-    customAnchorCount = $('.manually-anchor-option').length;
+	customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
@@ -3271,7 +3271,7 @@
         + "].frequencyTime' placeholder='Time' required/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor();'>+</span>"
+        + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
         + "<span id='deleteAncchor' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
         + "</div>";
 

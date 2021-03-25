@@ -1577,7 +1577,7 @@
                   </span>
                   <span id="addbtn0"
                         class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
-                        onclick="addDateAnchor();">+
+                        onclick="addDateAnchor(0);">+
                   </span>
                   <span	
                         id="deleteAncchor0"	
@@ -1684,7 +1684,7 @@
                     </span>
                     <span id="addbtn${customVar.index}"
                           class="addbtn addBtnDis align-span-center mr-sm cursor-display"
-                          onclick="addDateAnchor();">+
+                          onclick="addDateAnchor(${customVar.index});">+
                     </span>
                     <span
                         id="deleteAncchor${customVar.index}"
@@ -4380,9 +4380,10 @@
     return valid;
   }
 
-  function addDateAnchor() {
+  function addDateAnchor(customCountIndex) {
+	  debugger
 	$('.manually-anchor-option').find(".delete").css("visibility", "visible");
-    customAnchorCount = parseInt($('.manually-anchor-option').length);
+    customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
@@ -4419,7 +4420,7 @@
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span id='addbtn" + customAnchorCount
-        + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor();'>+</span>"
+        + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
         + "<span id='deleteAncchor" + customAnchorCount
         + "' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
         + "</div>";
