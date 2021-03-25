@@ -156,6 +156,7 @@
 					<compilerArgs>
 						<arg>--enable-preview</arg>
 						<arg>-Xlint:all</arg>
+						<arg>-J-Dillegal-access=permit</arg>
 						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
 						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
 						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
