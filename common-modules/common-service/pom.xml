@@ -17,11 +17,11 @@
 	<description>Common service module for FDA MyStudies</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<common.text.version>1.8</common.text.version>
 		<mail.version>1.4</mail.version>
-		<maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
