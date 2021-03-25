@@ -86,7 +86,7 @@
         <div class="col-md-5 p-none form-group elaborateClass consentTitle">
           <select class="selectpicker" id="consentItemTitleId"
                   name="consentItemTitleId" required
-                  data-error="Please choose one title">
+                  data-error="Please select a topic">
             <option value="">Select</option>
             <c:forEach items="${consentMasterInfoList}" var="consentMaster">
               <option value="${consentMaster.id}"
@@ -159,7 +159,7 @@
           <span class="radio radio-info radio-inline p-45"><input
               class="" type="radio" id="inlineRadio3" value="Yes"
               name="visualStep" required
-              data-error="Please choose one visual step"
+              data-error="Please select one of the above options"
             ${consentInfoBo.visualStep=='Yes'?'checked':''}> <label
               for="inlineRadio3">Yes</label>
           </span>
@@ -168,7 +168,7 @@
                                                        value="No"
                                                        name="visualStep"
                                                        required
-                                                       data-error="Please choose one visual step"
+                                                       data-error="Please select one of the above options"
             ${consentInfoBo.visualStep=='No'?'checked':''}> <label
               for="inlineRadio4">No</label>
           </span>
@@ -374,7 +374,7 @@
                     .find(".help-block")
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                        "Please choose one visual step"));
+                        "Please select one of the above options"));
                 $("#doneId").prop(
                     'disabled', false);
               }
