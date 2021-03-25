@@ -4230,7 +4230,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -4329,7 +4329,7 @@
                 $(this).parent().addClass("has-danger").addClass("has-error");
                 $(this).parent().find(".help-block").empty().append(
                     $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Time reset to current time. "));
+                    "Time reset to current time "));
               }
             } else {
               if (dt < serverDateTime()) {
@@ -4370,7 +4370,7 @@
           $('#onetimeydaysId').focus();
         $('#onetimeydaysId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         valid = false;
       } else {
         $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4543,7 +4543,7 @@
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Y should be greater than X."));
+                "Y should be greater than X"));
             $("#addbtn" + parent_id).addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
@@ -4582,7 +4582,7 @@
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Y should be greater than X."));
+                  "Y should be greater than X"));
               $("#addbtn" + parent_id).addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -4627,7 +4627,7 @@
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -4671,7 +4671,7 @@
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         $("#addbtn" + parent_id).addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");

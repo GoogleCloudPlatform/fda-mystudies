@@ -4305,7 +4305,7 @@
               if (parseInt(stepsCount) < 1) {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter  a smaller step size."));
+                    "Please enter  a smaller step size"));
               } else {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -5649,7 +5649,7 @@
               $("#questionResponseTypeId").val(questionResponseId);
               $("#responseQuestionId").val(questionId);
 
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
 
@@ -6887,7 +6887,7 @@
           if (!isSingle) {
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-                "RDE (x) should be used only once.");
+                "RDE (x) should be used only once");
             setTimeout(hideDisplayMessage, 5000);
           }
         });
@@ -7160,7 +7160,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     anchordateText
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 callback(false);
               }
             },

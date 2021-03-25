@@ -449,7 +449,7 @@
                 $("#id").val(consentInfoId);
                 $("#alertMsg").removeClass('e-box').addClass(
                     's-box')
-                    .text("Content saved as draft.");
+                    .text("Content saved as draft");
                 $(item).prop('disabled', false);
                 $('#alertMsg').show();
               } else {

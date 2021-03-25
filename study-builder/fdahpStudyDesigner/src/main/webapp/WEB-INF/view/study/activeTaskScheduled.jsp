@@ -3223,7 +3223,7 @@
           $('#onetimeydaysId').focus();
         $('#onetimeydaysId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         valid = false;
       } else {
         $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -3249,7 +3249,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate xancorText'"
         + "count='" + customAnchorCount + "' placeholder='X' name='activeTaskCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
@@ -3262,7 +3262,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate yancorText' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
@@ -3396,7 +3396,7 @@
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append(
-                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
             $(".addbtn").addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");

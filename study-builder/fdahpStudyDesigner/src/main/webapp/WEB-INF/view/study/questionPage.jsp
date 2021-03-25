@@ -4163,7 +4163,7 @@ if(document.getElementById("singleSelect").checked==true){
               $("#prevStatShortNameId").val(statShortName);
             }
 
-            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             if (callback)
@@ -4637,7 +4637,7 @@ if(document.getElementById("singleSelect").checked==true){
               $("#statShortNameId").parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   short_title
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               if (callback)
                 callback(false);
 
@@ -4697,7 +4697,7 @@ if(document.getElementById("singleSelect").checked==true){
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },

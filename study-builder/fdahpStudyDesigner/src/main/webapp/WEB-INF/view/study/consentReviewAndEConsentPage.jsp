@@ -757,7 +757,7 @@
               a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
               document.body.appendChild(a).click();
             } else {
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
               if ($('.fifthConsentReview').find('span').hasClass(
@@ -819,7 +819,7 @@
         }
         $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 70000 characters are allowed."));
+            "Maximum 70000 characters are allowed"));
       } else {
         $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
         $('#newDocumentDivId').parent().find(".help-block").empty();

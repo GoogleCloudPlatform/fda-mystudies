@@ -962,7 +962,7 @@
                 $('#inputClockId').parent().addClass('has-error has-danger').find(
                     ".help-block").empty().append(
                     $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please select a non-zero Duration value."));
+                    "Please select a non-zero Duration value"));
                 $('#inputClockId').focus();
                 showErrMsg("Please fill in all mandatory fields");
                 $('.contentClass a').tab('show');

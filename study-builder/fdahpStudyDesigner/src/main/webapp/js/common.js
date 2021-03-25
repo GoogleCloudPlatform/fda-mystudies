@@ -110,7 +110,7 @@ $(document)
                           .empty()
                           .append($("<ul><li> </li></ul>")
                           .attr("class","list-unstyled")
-                          .text("Special characters such as #^}{ are not allowed."));
+                          .text("Special characters such as #^}{ are not allowed"));
                     } else {
                       $(this).parent()
                           .find(".help-block").empty();
@@ -178,7 +178,7 @@ $(document)
                             .empty()
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
-                            .text("Special characters such as #^}{ are not allowed."));
+                            .text("Special characters such as #^}{ are not allowed"));
                       }
                     }
                   });
@@ -237,7 +237,7 @@ $(document)
                           .empty()
                           .append($("<ul><li> </li></ul>")
                           .attr("class","list-unstyled")
-                          .text("Special characters such as #^}{ are not allowed."));
+                          .text("Special characters such as #^}{ are not allowed"));
                     } else {
                       $(this).parents().eq(2)
                           .find(".help-block").empty();
