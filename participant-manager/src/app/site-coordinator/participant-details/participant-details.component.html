@@ -285,11 +285,12 @@
 <table class="table table-striped custom__table">
   <tr>
    <th>Date of enrollment</th>
-   <th style=" padding-right: 25px;" >Date of withdrawal</th>
-   <th style=" padding-right: 250px;">Last enrollment status</th>
-            
-           
-  
+   <th>Date of withdrawal</th>
+   <th>Last enrollment status</th>
+   <th>&nbsp;</th>
+   <th>&nbsp;</th>
+   <th>&nbsp;</th>
+          
   </tr>
      <tr
               *ngFor="
@@ -317,12 +318,15 @@
                   {{ enrollmentDetails.enrollmentStatus }}
                 </span>
               </td>
+              <td> &nbsp; </td>
+               <td> &nbsp; </td>
+                <td> &nbsp; </td>      
             </tr>
             <tr *ngIf="participant.participantDetails.enrollments.length === 0">
               <td colspan="3" class="text-center">No records found</td>
             </tr>
+           
 </table>
-
 
       <h2 class="subheader__title text-weight-semibold mb-sm">
         Consent history
@@ -350,12 +354,13 @@
               </th>
               <th>
                 <mfDefaultSorter by="consentedDate">
-                  Consented date
+                 &nbsp;    &nbsp; &nbsp;   Consented date
+               
                 </mfDefaultSorter>
               </th>
-              <th>
+              <th >
                 <mfDefaultSorter by="dataSharingPermissions">
-                  Data sharing permissions
+                &nbsp;          Data sharing permissions
                 </mfDefaultSorter>
               </th>
               <th>
@@ -369,6 +374,7 @@
             <tr *ngFor="let consentDetails of mf.data">
               <td>{{ consentDetails.consentVersion }}</td>
               <td>
+                  &nbsp;    &nbsp; &nbsp;  
                 {{
                   consentDetails.consentedDate
                     ? consentDetails.consentedDate
@@ -376,6 +382,7 @@
                 }}
               </td>
               <td>
+                  &nbsp;
                 {{
                   consentDetails.dataSharingPermissions
                     ? consentDetails.dataSharingPermissions
