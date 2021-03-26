@@ -14,8 +14,6 @@
 		<app.dir.name>fdahpStudyDesigner</app.dir.name>
 		<org.springframework.version>3.2.8.RELEASE</org.springframework.version>
 		<spring.security.version>3.2.3.RELEASE</spring.security.version>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<maven.compiler.source>1.7</maven.compiler.source>
 	</properties>
 	<build>
 		<finalName>studybuilder</finalName>
