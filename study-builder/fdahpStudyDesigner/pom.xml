@@ -35,6 +35,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
+					<webXml>WEB-INF/web.xml</webXml>
 					<source>1.7</source>
 					<target>1.7</target>
 					<fork>true</fork>
@@ -49,7 +50,6 @@
 			            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
 			            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
 			            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
-			            <arg>-J--add-opens=java.base/java.lang=ALL-UNNAMED</arg>
 		           </compilerArgs>
           		   <annotationProcessorPaths>
 			            <path>
