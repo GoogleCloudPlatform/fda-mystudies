@@ -50,7 +50,7 @@
 			            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
 			            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
 			            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
-			            <arg>-J--add-opens=jdk.compiler/java.base/java.lang=ALL-UNNAMED</arg>
+			            <arg>-J--add-opens=java.base/java.lang=ALL-UNNAMED</arg>
 		           </compilerArgs>
           		   <annotationProcessorPaths>
 			            <path>
