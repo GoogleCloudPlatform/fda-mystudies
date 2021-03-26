@@ -4381,7 +4381,6 @@
   }
 
   function addDateAnchor(customCountIndex) {
-	  debugger
 	$('.manually-anchor-option').find(".delete").css("visibility", "visible");
     customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
