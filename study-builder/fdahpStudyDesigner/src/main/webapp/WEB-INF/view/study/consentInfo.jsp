@@ -605,8 +605,7 @@
   function maxLenValEditor() {
     var isValid = true;
     var value = $('#elaboratedRTE').summernote('code');
-    value = value.replaceAll('<p><br></p>', '');
-    if (value == '<br>') {
+    if (value == '<br>' || value == '<p><br></p>') {
     	value = '';
     }
     
