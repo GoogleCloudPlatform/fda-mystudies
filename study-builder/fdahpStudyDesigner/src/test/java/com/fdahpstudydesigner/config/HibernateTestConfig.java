@@ -16,9 +16,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate3.HibernateTransactionManager;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
+//@Configuration
+@ContextConfiguration(classes = {HibernateTestConfig.class})
 @EnableTransactionManagement
 @ComponentScan({"com.fdahpstudydesigner.dao"})
 public class HibernateTestConfig {

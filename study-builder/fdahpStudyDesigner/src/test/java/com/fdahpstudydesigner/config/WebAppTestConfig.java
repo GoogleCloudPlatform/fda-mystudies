@@ -20,10 +20,12 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@Configuration
+//@Configuration
+@ContextConfiguration(classes = {HibernateTestConfig.class})
 @EnableWebMvc
 @EnableWebSecurity
 @ComponentScan("com.fdahpstudydesigner")
