@@ -35,7 +35,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/seekbarlayout"
             android:layout_width="wrap_content"
             android:orientation="horizontal"
@@ -52,13 +52,23 @@
         <LinearLayout
             android:id="@+id/scaleValue"
             android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/seekbar"
             android:layout_height="280dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical">
 
         </LinearLayout>
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/currentvalue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/seekbar"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:textSize="15sp" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/minlayout"
@@ -85,12 +95,5 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/currentvalue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/seeklayout"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="5dp"
-        android:textSize="15sp"/>
+
 </RelativeLayout>
