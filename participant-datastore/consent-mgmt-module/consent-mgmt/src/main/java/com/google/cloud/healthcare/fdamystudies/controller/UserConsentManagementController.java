@@ -20,6 +20,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.UpdateEligibilityConsentBea
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
@@ -151,7 +152,13 @@ public class UserConsentManagementController {
       studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
       studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
       if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
-        String underDirectory = userId + "/" + consentStatusBean.getStudyId();
+        //        String underDirectory = userId + "/" + consentStatusBean.getStudyId();
+        String underDirectory =
+            studyInfo.getCustomId()
+                + "/"
+                + participantStudies.getParticipantId()
+                + "-"
+                + IdGenerator.id();
         String consentDocumentFileName =
             consentStatusBean.getConsent().getVersion()
                 + "_"
