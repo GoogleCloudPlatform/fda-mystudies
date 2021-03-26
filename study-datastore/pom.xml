@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.hphc.mystudies</groupId>
@@ -227,7 +228,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.1.1</version>
+        <version>3.3.1</version>
         <configuration>
           <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
           <packagingExcludes>META-INF/context.xml</packagingExcludes>
@@ -236,11 +237,31 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.8.1</version>
         <configuration>
           <webXml>WEB-INF/web.xml</webXml>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>11</source>
+          <target>11</target>
+          <fork>true</fork>
+          <compilerArgs>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
+          </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.12</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
@@ -248,8 +269,12 @@
         <artifactId>jib-maven-plugin</artifactId>
         <version>2.6.0</version>
         <configuration>
-          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
-          <container><appRoot>/usr/local/tomcat/webapps/study-datastore</appRoot></container>
+          <from>
+            <image>tomcat:9.0.33-jdk11-openjdk</image>
+          </from>
+          <container>
+            <appRoot>/usr/local/tomcat/webapps/study-datastore</appRoot>
+          </container>
         </configuration>
       </plugin>
     </plugins>
