@@ -43,7 +43,7 @@
     <string name="enter_confirm_password">Confirm password</string>
     <string name="enter_contact_us">Please let us know what you need help with. We will get back to you at the earliest.</string>
     <string name="agree">I Agree to the Terms and Privacy Policy</string>
-    <string name="submit">SUBMIT</string>
+    <string name="submit">Submit</string>
     <string name="verification_step">Verification Step</string>
     <string name="tap_below_txt">Once done, tap on the \n button below.</string>
     <string name="continue_txt">Continue</string>
@@ -53,7 +53,7 @@
     <string name="congrats_txt">Congrats!</string>
     <string name="survey_completed">Activity completed</string>
     <string name="signup_process_complete">Thank you for registering. Your app account is now set up and ready to use.</string>
-    <string name="next">NEXT</string>
+    <string name="next">Next</string>
     <string name="setup_passcode">Create passcode</string>
     <string name="sign_in">SIGN IN</string>
     <string name="sign_in_btn">Sign in</string>
@@ -82,7 +82,7 @@
     <string name="sign_out">Sign out</string>
     <string name="delete_my_account">Delete app account</string>
     <string name="update">Update</string>
-    <string name="get_started">GET STARTED</string>
+    <string name="get_started">Get started</string>
     <string name="gateway_welcome">Welcome!</string>
     <string name="gateway_welcome1">Leveraging the power of mobility for research</string>
     <string name="gateway_welcome2">Improving health outcomes</string>
@@ -251,7 +251,7 @@
     <string name="set_remainder">Set reminder</string>
     <string name="hour">hr</string>
     <string name="minute">min</string>
-    <string name="done">DONE</string>
+    <string name="done">Done</string>
     <string name="kick_count">TOTAL KICK COUNT</string>
     <string name="record_kick">TAP TO RECORD A KICK</string>
     <string name="start_timer">TAP TO START TIMER</string>
@@ -468,12 +468,12 @@
     <string name="noteligibledesc">Sorry, you are not eligible for participation in this study. We thank you for your interest and time, and encourage you to explore other studies as they are available in the app.</string>
     <string name="you_are_eligible">Eligibility confirmed</string>
     <string name="validated">Eligibility confirmed</string>
-    <string name="continuetxt">CONTINUE</string>
+    <string name="continuetxt">Continue</string>
     <string name="ComprehensionSuccessDesc">You answered all of the questions correctly. Tap next to continue.</string>
     <string name="great_job">Great job!</string>
     <string name="consentfailuremsgdesc">You answered one or more questions wrong. We want to make sure you understand what this study is about and what is involved. Review the consent information screens and try again.</string>
     <string name="try_again">Try again</string>
-    <string name="retry">RETRY</string>
+    <string name="retry">Retry</string>
     <string name="refreshToken">refreshToken</string>
     <string name="activetaskremindertxt">Reminder: The fetal kick recording activity is in progress. Please update the app with the count of the kicks or movements you experience in this period.. </string>
     <string name="notificatinturnoffnotification">Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activities in a timely manner.</string>
@@ -512,7 +512,7 @@
     <string name="privacyurl">https://www.google.com/</string>
     <string name="view_consent">View consent</string>
     <string name="visit_website">Visit website</string>
-    <string name="join_study">PARTICIPATE</string>
+    <string name="join_study">Participate</string>
     <string name="clientToken">clientToken</string>
     <string name="loginflow">loginflow</string>
     <string name="logintype">logintype</string>
@@ -526,4 +526,5 @@
     <string name="login_studyinfo_rejoin">login_studyinfo_rejoin</string>
     <string name="login_studyinfo_about_this_study">login_studyinfo_about_this_study</string>
     <string name="invalid_client">Invalid Client</string>
+    <string name="rsb_next">Next</string>
 </resources>
