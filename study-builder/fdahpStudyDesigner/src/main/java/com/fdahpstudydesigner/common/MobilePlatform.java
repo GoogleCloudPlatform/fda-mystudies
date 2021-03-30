@@ -8,11 +8,7 @@
 
 package com.fdahpstudydesigner.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
 public enum MobilePlatform {
   ANDROID("ANDROID", "Represents an Android platform"),
   IOS("IOS", "Represents an Apple platform"),
@@ -21,7 +17,12 @@ public enum MobilePlatform {
   private String value;
   private String description;
 
-  public static MobilePlatform fromValue(String value) {
+  private MobilePlatform(String value, String description) {
+	this.value = value;
+	this.description = description;
+}
+
+public static MobilePlatform fromValue(String value) {
     for (MobilePlatform platform : values()) {
       if (platform.value.equals(value)) {
         return platform;
@@ -34,4 +35,21 @@ public enum MobilePlatform {
     MobilePlatform platform = fromValue(mobilePlatform);
     return platform == ANDROID || platform == IOS;
   }
+
+public String getValue() {
+	return value;
+}
+
+public void setValue(String value) {
+	this.value = value;
+}
+
+public String getDescription() {
+	return description;
+}
+
+public void setDescription(String description) {
+	this.description = description;
+}
+  
 }
