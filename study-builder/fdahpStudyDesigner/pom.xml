@@ -67,6 +67,7 @@
           <container><appRoot>/usr/local/tomcat/webapps/studybuilder</appRoot></container>
         </configuration>
       </plugin>
+      
     </plugins>
   </build>
   <!-- Shared version number properties -->
@@ -530,11 +531,7 @@
       <version>1.5.0</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.12</version>
-    </dependency>
+    
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-ext</artifactId>
