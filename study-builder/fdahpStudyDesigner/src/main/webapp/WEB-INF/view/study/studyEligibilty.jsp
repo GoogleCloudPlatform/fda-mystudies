@@ -109,7 +109,7 @@
             </span>
           </div>
           <div class="form-group elaborateClass">
-            <textarea class="form-control" rows="5" id="comment"
+            <textarea class="form-control" rows="1" id="comment"
                       maxlength="230" required
                       name="instructionalText">${eligibility.instructionalText}</textarea>
             <div class="help-block with-errors red-txt"></div>
@@ -117,9 +117,9 @@
         </div>
       </div>
     </div>
-    <div id="eligibilityQusDivId"
+    <div id="eligibilityQusDivId" 
          <c:if test="${eligibility.eligibilityMechanism eq 1}">style="display: none;"</c:if>>
-      <div class="right-content-head">
+      <div class="right-content-head pt-none">
         <div class="text-right">
           <div class="black-md-f  dis-line pull-left line34">Eligibility test questions
           <span>
@@ -129,7 +129,7 @@
                class="filled-tooltip"></span>
             </span>
           </div>
-          <div class="dis-line form-group mb-none mr-sm">
+          <div class="dis-line form-group mb-none">
             <c:if test="${empty permission}">
             <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"
                   data-placement="bottom" data-original-title="">
@@ -289,7 +289,7 @@
                   "info": false,
                   "filter": false,
                   language: {
-                    "zeroRecords": "No content created yet.",
+                    "zeroRecords": "No content created yet",
                   },
                   rowReorder: reorder,
                   "columnDefs": [{

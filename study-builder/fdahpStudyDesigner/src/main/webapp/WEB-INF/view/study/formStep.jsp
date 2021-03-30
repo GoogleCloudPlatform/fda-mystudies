@@ -443,7 +443,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],

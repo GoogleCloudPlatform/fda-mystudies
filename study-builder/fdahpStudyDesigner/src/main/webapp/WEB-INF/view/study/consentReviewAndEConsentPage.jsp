@@ -70,9 +70,7 @@
                  value="${consentBo.version}">
           <div id="menu1" class="tab-pane fade in active">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm">Enable data-sharing permission
-                step for this study? (This will let participants choose whether
-                they want to allow their data to be shared with 3rd parties)
+              <div class="gray-xs-f mb-sm">Enable data-sharing permission step for this study? (This lets participants choose if they want to allow their data to be shared with 3rd parties)
               </div>
               <div class="col-md-12 pl-none">
                 <div class="form-group custom-form">
@@ -270,7 +268,7 @@
       		</div>
       		</c:if>
             <div class="mt-xlg">
-              <div class="blue-lg-f">
+              <div class="black-md-f text-uppercase">
                 Consent document
                 <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
                 <span id="requiredStarId" class="requiredStar">*</span>

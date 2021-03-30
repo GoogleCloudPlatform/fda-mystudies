@@ -150,7 +150,7 @@
       "lengthChange": false,
       "searching": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
     });
 
