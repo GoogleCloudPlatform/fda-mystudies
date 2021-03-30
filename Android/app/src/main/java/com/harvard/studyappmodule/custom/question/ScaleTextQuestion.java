@@ -126,7 +126,7 @@ public class ScaleTextQuestion implements StepBody {
         } else {
           txtparams.gravity = Gravity.CENTER;
           textView.setGravity(Gravity.CENTER);
-          params.setMargins(0,30,0,30);
+          params.setMargins(0, 30, 0, 30);
         }
         textView.setLayoutParams(txtparams);
         textView.setText(choiceTextExclusives[i].getText());
