@@ -70,6 +70,8 @@ import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.JsonUtils;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
+import com.fdahpstudydesigner.config.HibernateTestConfig;
+import com.fdahpstudydesigner.config.WebAppTestConfig;
 import com.fdahpstudydesigner.dao.NotificationDAOImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -86,10 +88,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.client.support.RestGatewaySupport;
 
+@ContextConfiguration(classes = {WebAppTestConfig.class, HibernateTestConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class StudyControllerTest extends BaseMockIT {
 
