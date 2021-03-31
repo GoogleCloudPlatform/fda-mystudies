@@ -12,7 +12,7 @@ metadata:
     networking.gke.io/managed-certificates: btc-qa-cert-participants,btc-qa-cert-studies
 spec:
   rules:
-    - host: participants.btc-qa.boston-technology.com
+    - host: participants-btc-qa.boston-technology.com
       http:
         paths:
           - path: /auth-server/*
@@ -47,7 +47,7 @@ spec:
             backend:
               serviceName: participant-manager-datastore-np
               servicePort: 50000
-    - host: studies.btc-qa.boston-technology.com
+    - host: studies-btc-qa.boston-technology.com
       http:
         paths:
           - path: /study-datastore/*
