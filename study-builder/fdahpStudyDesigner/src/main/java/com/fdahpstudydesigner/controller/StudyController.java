@@ -414,7 +414,7 @@ public class StudyController {
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-          mav = new ModelAndView("redirect:consentReview.do", map);
+          mav = new ModelAndView("redirect:comprehensionQuestionList.do", map);
         } else {
           request
               .getSession()
@@ -486,7 +486,7 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           map.addAttribute("_S", sessionStudyCount);
-          mav = new ModelAndView("redirect:comprehensionQuestionList.do", map);
+          mav = new ModelAndView("redirect:consentListPage.do", map);
         } else {
           request
               .getSession()
@@ -553,7 +553,7 @@ public class StudyController {
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-          mav = new ModelAndView("redirect:viewStudyQuestionnaires.do", map);
+          mav = new ModelAndView("redirect:consentReview.do", map);
         } else {
           request
               .getSession()
@@ -2067,6 +2067,7 @@ public class StudyController {
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE, auditRequest);
+          map.addAttribute("buttonText", "completed");
           request
               .getSession()
               .setAttribute(
@@ -2074,7 +2075,7 @@ public class StudyController {
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           StudyBuilderAuditEvent auditLogEvent = STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE;
           auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
-          mav = new ModelAndView("redirect:actionList.do", map);
+          mav = new ModelAndView("redirect:viewStudyNotificationList.do", map);
         } else {
           request
               .getSession()
@@ -2243,7 +2244,7 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           map.addAttribute("_S", sessionStudyCount);
-          mav = new ModelAndView("redirect:viewStudyActiveTasks.do", map);
+          mav = new ModelAndView("redirect:viewStudyQuestionnaires.do", map);
         } else {
           request
               .getSession()
@@ -2767,12 +2768,13 @@ public class StudyController {
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
             auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_RESOURCE_SECTION_MARKED_COMPLETE, auditRequest);
+            map.addAttribute("buttonText", "completed");
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            mav = new ModelAndView("redirect:viewStudyNotificationList.do", map);
+            mav = new ModelAndView("redirect:getResourceList.do", map);
           } else {
             request
                 .getSession()
@@ -3177,6 +3179,7 @@ public class StudyController {
             .setAttribute(
                 sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId() + "");
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("buttonText", buttonText);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (StringUtils.isNotEmpty(studyBo.getCustomStudyId())) {
             auditRequest.setStudyId(studyBo.getCustomStudyId());
@@ -3194,7 +3197,7 @@ public class StudyController {
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:viewSettingAndAdmins.do", map);
+            return new ModelAndView("redirect:viewBasicInfo.do", map);
           } else {
             request
                 .getSession()
@@ -3556,6 +3559,7 @@ public class StudyController {
             .setAttribute(
                 sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId() + "");
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("buttonText", buttonText);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
             request
@@ -3563,7 +3567,7 @@ public class StudyController {
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:overviewStudyPages.do", map);
+            return new ModelAndView("redirect:viewSettingAndAdmins.do", map);
           } else {
             request
                 .getSession()
@@ -3640,6 +3644,7 @@ public class StudyController {
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           if ((eligibilityBo != null) && ("save").equals(eligibilityBo.getActionType())) {
+            map.addAttribute("buttonText", eligibilityBo.getActionType());
             request
                 .getSession()
                 .setAttribute(
@@ -3648,13 +3653,14 @@ public class StudyController {
             auditLogEventHelper.logEvent(STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED, auditRequest);
             mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           } else {
+            map.addAttribute("buttonText", eligibilityBo.getActionType());
             auditLogEventHelper.logEvent(STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE, auditRequest);
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            mav = new ModelAndView("redirect:consentListPage.do", map);
+            mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           }
         } else {
           request
@@ -4037,6 +4043,7 @@ public class StudyController {
         studyPageBean.setUserId(sesObj.getUserId());
         message = studyService.saveOrUpdateOverviewStudyPages(studyPageBean, sesObj);
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("buttonText", buttonText);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
             request
@@ -4044,7 +4051,7 @@ public class StudyController {
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:viewStudyEligibilty.do", map);
+            return new ModelAndView("redirect:overviewStudyPages.do", map);
           } else {
             request
                 .getSession()

@@ -304,6 +304,20 @@
     document.questionnaireInfoForm.action = "/studybuilder/adminStudies/questionnaireMarkAsCompleted.do?_S=${param._S}";
     document.questionnaireInfoForm.submit();
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+		debugger
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
+	    }, 5000);
+	}
 </script>     
         
         
