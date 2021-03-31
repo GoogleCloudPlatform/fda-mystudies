@@ -1030,7 +1030,6 @@ margin-top:16px !important;
     }
 
   function showSucMsg(message) {
-	  debugger
     $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
     $('#alertMsg').show('5000');
     if('${param.buttonText}' == 'completed'){
