@@ -262,6 +262,7 @@
 	</dependencies>
 
 	<build>
+   <finalName>study-datastore</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
