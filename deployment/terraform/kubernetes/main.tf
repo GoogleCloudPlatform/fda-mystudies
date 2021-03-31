@@ -133,8 +133,8 @@ resource "kubernetes_secret" "shared_secrets" {
     consent_bucket_name               = "btc-qa-mystudies-consent-documents"
     study_resources_bucket_name       = "btc-qa-mystudies-study-resources"
     institution_resources_bucket_name = "btc-qa-mystudies-institution-resources"
-    base_url                          = "https://participants.btc-qa.boston-technology.com"
-    studies_base_url                  = "https://studies.btc-qa.boston-technology.com"
+    base_url                          = "https://participants-btc-qa.boston-technology.com"
+    studies_base_url                  = "https://studies-btc-qa.boston-technology.com"
     firestore_project_id              = "btc-qa-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
