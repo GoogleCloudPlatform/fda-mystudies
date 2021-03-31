@@ -1014,11 +1014,21 @@ public class FdahpStudyDesignerUtil {
     try {
       Storage storage = StorageOptions.getDefaultInstance().getService();
       storage.create(blobInfo, fileStream.getBytes());
-
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);
     }
     return fileNameWithExtension;
+  }
+
+  public static String getSignedUrl(String filePath, int durationInMinutes) {
+    try {
+      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      return storage.signUrl(blobInfo, durationInMinutes, TimeUnit.HOURS).toString();
+    } catch (Exception e) {
+      logger.error("Unable to generate signed url", e);
+    }
+    return null;
   }
 
   public static void saveDefaultImageToCloudStorage(

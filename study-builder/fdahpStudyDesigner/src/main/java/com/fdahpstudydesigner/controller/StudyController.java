@@ -2103,6 +2103,7 @@ public class StudyController {
     String errMsg = "";
     StudyPageBean studyPageBean = new StudyPageBean();
     String user = "";
+    Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -2169,12 +2170,28 @@ public class StudyController {
           studyPageBos = studyService.getOverviewStudyPagesById(studyId, sesObj.getUserId());
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           studyPageBean.setStudyId(studyBo.getId().toString());
+
           map.addAttribute("studyPageBos", studyPageBos);
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute("studyPageBean", studyPageBean);
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
           map.addAttribute("_S", sessionStudyCount);
           map.addAttribute("user", user);
+          map.addAttribute(
+              "defaultOverViewImageSignedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDTYLOGO
+                      + "/"
+                      + configMap.get("study.defaultImage"),
+                  12));
+          map.addAttribute(
+              "defaultPageOverviewImageSignedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDTYLOGO
+                      + "/"
+                      + configMap.get("study.page2.defaultImage"),
+                  12));
+
           mav = new ModelAndView("overviewStudyPages", map);
         } else {
           return new ModelAndView("redirect:studyList.do");
@@ -3854,6 +3871,7 @@ public class StudyController {
                             FdahpStudyDesignerConstants.SDF_TIME,
                             FdahpStudyDesignerConstants.DB_SDF_TIME))
                     : "");
+
             notificationBO.setScheduleTimestamp(
                 (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
                         && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
@@ -4426,6 +4444,7 @@ public class StudyController {
     String errMsg = "";
     ConsentBo consentBo = null;
     StudyIdBean studyIdBean = null;
+    Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -4567,6 +4586,18 @@ public class StudyController {
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID,
                   studyBo.getCustomStudyId());
+
+          map.addAttribute(
+              "signedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDTYLOGO + "/" + studyBo.getThumbnailImage(), 12));
+          map.addAttribute(
+              "defaultImageSignedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDTYLOGO
+                      + "/"
+                      + configMap.get("study.basicInformation.defaultImage"),
+                  12));
         }
         // grouped for Study category , Research Sponsors , Data partner
         referenceMap =

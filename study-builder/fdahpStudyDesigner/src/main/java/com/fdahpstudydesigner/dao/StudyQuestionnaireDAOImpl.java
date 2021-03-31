@@ -2118,6 +2118,27 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   getQuestionConditionalBranchingLogic(session, questionsBo.getId());
               questionnairesStepsBo.setQuestionConditionBranchBoList(questionConditionBranchList);
             }
+
+            if ((questionReponseTypeBo != null)
+                && StringUtils.isNotEmpty(questionReponseTypeBo.getMaxImage())) {
+              questionReponseTypeBo.setSignedMaxImage(
+                  FdahpStudyDesignerUtil.getSignedUrl(
+                      FdahpStudyDesignerConstants.QUESTIONNAIRE
+                          + "/"
+                          + questionReponseTypeBo.getMaxImage(),
+                      12));
+            }
+
+            if ((questionReponseTypeBo != null)
+                && StringUtils.isNotEmpty(questionReponseTypeBo.getMinImage())) {
+              questionReponseTypeBo.setSignedMinImage(
+                  FdahpStudyDesignerUtil.getSignedUrl(
+                      FdahpStudyDesignerConstants.QUESTIONNAIRE
+                          + "/"
+                          + questionReponseTypeBo.getMinImage(),
+                      12));
+            }
+
             questionnairesStepsBo.setQuestionReponseTypeBo(questionReponseTypeBo);
 
             List<QuestionResponseSubTypeBo> questionResponseSubTypeList = null;
@@ -2130,6 +2151,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             if ((null != questionResponseSubTypeList) && !questionResponseSubTypeList.isEmpty()) {
               for (QuestionResponseSubTypeBo s : questionResponseSubTypeList) {
                 if (FdahpStudyDesignerUtil.isNotEmpty(s.getImage())) {
+
+                  s.setSignedImage(
+                      FdahpStudyDesignerUtil.getSignedUrl(
+                          FdahpStudyDesignerConstants.QUESTIONNAIRE + "/" + s.getImage(), 12));
+
                   if (s.getImage().contains("?v=")) {
                     String imagePathArr[] = s.getImage().split("\\?");
                     s.setImage(imagePathArr[0] + "?v=" + new Date().getTime());
@@ -2138,6 +2164,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   }
                 }
                 if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
+                  s.setSignedSelectedImage(
+                      FdahpStudyDesignerUtil.getSignedUrl(
+                          FdahpStudyDesignerConstants.QUESTIONNAIRE + "/" + s.getSelectedImage(),
+                          12));
+
                   if (s.getSelectedImage().contains("?v=")) {
                     String imagePathArr[] = s.getSelectedImage().split("\\?");
                     s.setSelectedImage(imagePathArr[0] + "?v=" + new Date().getTime());
@@ -2582,6 +2613,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         if ((null != questionResponseSubTypeList) && !questionResponseSubTypeList.isEmpty()) {
           for (QuestionResponseSubTypeBo s : questionResponseSubTypeList) {
             if (FdahpStudyDesignerUtil.isNotEmpty(s.getImage())) {
+              s.setSignedImage(
+                  FdahpStudyDesignerUtil.getSignedUrl(
+                      FdahpStudyDesignerConstants.QUESTIONNAIRE + "/" + s.getImage(), 12));
+
               if (s.getImage().contains("?v=")) {
                 String imagePathArr[] = s.getImage().split("\\?");
                 s.setImage(imagePathArr[0] + "?v=" + new Date().getTime());
@@ -2590,6 +2625,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               }
             }
             if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
+              s.setSignedSelectedImage(
+                  FdahpStudyDesignerUtil.getSignedUrl(
+                      FdahpStudyDesignerConstants.QUESTIONNAIRE + "/" + s.getSelectedImage(), 12));
+
               if (s.getSelectedImage().contains("?v=")) {
                 String imagePathArr[] = s.getSelectedImage().split("\\?");
                 s.setSelectedImage(imagePathArr[0] + "?v=" + new Date().getTime());
