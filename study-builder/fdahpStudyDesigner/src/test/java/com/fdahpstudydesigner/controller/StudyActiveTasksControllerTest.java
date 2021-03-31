@@ -80,7 +80,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
-        .andExpect(view().name("redirect:/adminStudies/getResourceList.do"));
+        .andExpect(view().name("redirect:viewStudyActiveTasks.do"));
 
     verifyAuditEventCall(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE);
   }

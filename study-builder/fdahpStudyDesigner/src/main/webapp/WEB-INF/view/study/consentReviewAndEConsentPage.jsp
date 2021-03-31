@@ -968,4 +968,18 @@
           "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
     });
   }
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+	  debugger
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+		debugger
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+	    }, 5000);
+	}
 </script>

@@ -15,8 +15,8 @@ margin-top:16px !important;
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 
+      
 <div class="col-sm-10 col-rc white-bg p-none">
-
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateBasicInfo.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
       data-toggle="validator" role="form" id="basicInfoFormId" method="post"
@@ -1021,6 +1021,25 @@ margin-top:16px !important;
           });
     } else {
       callback(false);
+    }
+  }
+  
+    var sucMsg = '${sucMsg}';
+    if (sucMsg.length > 0) {
+      showSucMsg(sucMsg);
+    }
+
+  function showSucMsg(message) {
+	  debugger
+    $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+    $('#alertMsg').show('5000');
+    if('${param.buttonText}' == 'completed'){
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
+	
+	    }, 5000);
+    }else{
+    	setTimeout(hideDisplayMessage, 5000);
     }
   }
 </script>
