@@ -150,7 +150,7 @@
       "lengthChange": false,
       "searching": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
     });
 
@@ -160,4 +160,22 @@
     $('.markCompleted').prop('disabled', true);
     $("#notificationMarkAsCompletedForm").submit();
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+function showSucMsg(message) {
+  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+  $('#alertMsg').show('5000');
+  if('${param.buttonText}' == 'completed'){
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/actionList.do?_S=${param._S}";
+	
+	    }, 5000);
+  }else{
+  	setTimeout(hideDisplayMessage, 5000);
+  }
+}
 </script>

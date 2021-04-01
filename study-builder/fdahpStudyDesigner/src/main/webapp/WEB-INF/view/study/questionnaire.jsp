@@ -2136,7 +2136,7 @@
       "filter": false,
       rowReorder: reorder,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "columnDefs": [
         {orderable: false, targets: [0, 1, 2, 3]},

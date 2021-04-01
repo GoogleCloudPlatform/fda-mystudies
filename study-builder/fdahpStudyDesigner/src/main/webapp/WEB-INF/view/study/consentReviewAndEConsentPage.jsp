@@ -70,9 +70,7 @@
                  value="${consentBo.version}">
           <div id="menu1" class="tab-pane fade in active">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm">Enable data-sharing permission
-                step for this study? (This will let participants choose whether
-                they want to allow their data to be shared with 3rd parties)
+              <div class="gray-xs-f mb-sm">Enable data-sharing permission step for this study? (This lets participants choose if they want to allow their data to be shared with 3rd parties)
               </div>
               <div class="col-md-12 pl-none">
                 <div class="form-group custom-form">
@@ -270,7 +268,7 @@
       		</div>
       		</c:if>
             <div class="mt-xlg">
-              <div class="blue-lg-f">
+              <div class="black-md-f text-uppercase">
                 Consent document
                 <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
                 <span id="requiredStarId" class="requiredStar">*</span>
@@ -970,4 +968,18 @@
           "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
     });
   }
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+	  debugger
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+		debugger
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+	    }, 5000);
+	}
 </script>
