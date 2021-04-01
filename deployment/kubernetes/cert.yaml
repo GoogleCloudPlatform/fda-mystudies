@@ -9,7 +9,7 @@ metadata:
   name: btc-qa-cert-participants
 spec:
   domains:
-    - participants-btc-qa.boston-technology.com
+    - participants.btc-qa.boston-technology.com
 ---
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
@@ -17,4 +17,4 @@ metadata:
   name: btc-qa-cert-studies
 spec:
   domains:
-    - studies-btc-qa.boston-technology.com
+    - studies.btc-qa.boston-technology.com
