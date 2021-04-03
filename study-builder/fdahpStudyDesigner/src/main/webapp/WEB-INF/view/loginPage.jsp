@@ -118,7 +118,7 @@
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
-                <button type="button" id="loginBtnId" class="btn lg-btn">SIGN IN</button>
+                <button type="button" id="loginBtnId" class="btn lg-btn">Sign in</button>
               </div>
               <div class="pb-md pt-xs">
                 <a id="forgot_pwd"
@@ -148,7 +148,7 @@
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg">
-                <button type="submit" class="btn lg-btn" id="log-btn">SUBMIT</button>
+                <button type="submit" class="btn lg-btn" id="log-btn">Submit</button>
               </div>
               <div class="pt-xs">
                 <a id="login" class="gray-link white__text hover_text_white" href="javascript:void(0)">Back to sign in
