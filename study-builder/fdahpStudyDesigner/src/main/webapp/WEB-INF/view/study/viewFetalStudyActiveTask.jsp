@@ -9,6 +9,11 @@
     line-height: 12px;
     margin: 0px;
 }
+
+.widthShortTitle{
+    width: 250px !important;
+}
+
 .bootstrap-select.btn-group .dropdown-toggle .filter-option {
     text-transform: inherit; !important
 	}
@@ -41,9 +46,8 @@
             <c:if
                 test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
                maxlength="50" required style="white-space:normal;margin-bottom:2px;"/>              
-               
-        <div id="activityvalidate" class="validateActiveTask with-errors red-txt">
-         </div>
+        <div id="activityvalidate" class="validateActiveTask with-errors red-txt"></div>
+        <div class="help-block with-errors red-txt"></div>
       </div>
     </div>
   </div>
@@ -1222,7 +1226,7 @@
                 $('.shortTitleClass').parent().addClass("has-danger").addClass("has-error");
                 $('.shortTitleClass').parent().find(".help-block").empty();
                 $(thisAttr).parent().find(".help-block").append(
-                	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                	$("<ul><li> </li></ul>").attr("class","list-unstyled widthShortTitle").text(
                     shortTitle
                     + " has already been used in the past."));
                 callback(false);
