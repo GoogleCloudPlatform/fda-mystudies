@@ -79,7 +79,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -896,7 +895,7 @@ public class ManageUserServiceImpl implements ManageUserService {
                 : ACCOUNT_UPDATE_EMAIL_SENT;
 
         invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
-        logger.info("audit Request=" + ReflectionToStringBuilder.toString(auditEnum));
+        //        logger.info("audit Request=" + ReflectionToStringBuilder.toString(auditEnum));
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
         auditEnum =
