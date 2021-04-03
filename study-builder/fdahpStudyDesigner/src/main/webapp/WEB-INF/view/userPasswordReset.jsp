@@ -69,7 +69,10 @@
     <div id="lg-container" class="lg-container">
 
       <div class="logo__space">
-        <img src="images/logo/logo_landing_welcome.png" alt=""/>
+        <a id="login" class="gray-link backToLogin white__text hover_text_white"
+                 href="javascript:void(0)">
+        	<img src="images/logo/logo_landing_welcome.png" alt=""/>
+        </a>
       </div>
 
       <div class="login__container">
