@@ -401,9 +401,7 @@
 
     var visual_step = $('input[name="visualStep"]:checked').val();
 
-    var valid = maxLenValEditor();
-    if (valid
-        && (study_id != null && study_id != '' && typeof study_id != 'undefined')
+    if ((study_id != null && study_id != '' && typeof study_id != 'undefined')
         && (displayTitleText != null && displayTitleText != '' && typeof displayTitleText
             != 'undefined')) {
       $(item).prop('disabled', true);
