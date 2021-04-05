@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
@@ -45,8 +44,6 @@ public class CommonDaoImpl implements CommonDao {
   private static Logger logger = LoggerFactory.getLogger(CommonDaoImpl.class);
 
   @Autowired private SessionFactory sessionFactory;
-
-  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
   public String validatedUserAppDetailsByAllApi(String userId, String email, String appId) {

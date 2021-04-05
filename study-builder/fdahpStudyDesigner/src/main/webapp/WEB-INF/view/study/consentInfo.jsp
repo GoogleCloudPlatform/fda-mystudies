@@ -86,7 +86,7 @@
         <div class="col-md-5 p-none form-group elaborateClass consentTitle">
           <select class="selectpicker" id="consentItemTitleId"
                   name="consentItemTitleId" required
-                  data-error="Please choose one title">
+                  data-error="Please select a topic">
             <option value="">Select</option>
             <c:forEach items="${consentMasterInfoList}" var="consentMaster">
               <option value="${consentMaster.id}"
@@ -159,7 +159,7 @@
           <span class="radio radio-info radio-inline p-45"><input
               class="" type="radio" id="inlineRadio3" value="Yes"
               name="visualStep" required
-              data-error="Please choose one visual step"
+              data-error="Please select one of the above options"
             ${consentInfoBo.visualStep=='Yes'?'checked':''}> <label
               for="inlineRadio3">Yes</label>
           </span>
@@ -168,7 +168,7 @@
                                                        value="No"
                                                        name="visualStep"
                                                        required
-                                                       data-error="Please choose one visual step"
+                                                       data-error="Please select one of the above options"
             ${consentInfoBo.visualStep=='No'?'checked':''}> <label
               for="inlineRadio4">No</label>
           </span>
@@ -374,7 +374,7 @@
                     .find(".help-block")
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                        "Please choose one visual step"));
+                        "Please select one of the above options"));
                 $("#doneId").prop(
                     'disabled', false);
               }
@@ -401,9 +401,7 @@
 
     var visual_step = $('input[name="visualStep"]:checked').val();
 
-    var valid = maxLenValEditor();
-    if (valid
-        && (study_id != null && study_id != '' && typeof study_id != 'undefined')
+    if ((study_id != null && study_id != '' && typeof study_id != 'undefined')
         && (displayTitleText != null && displayTitleText != '' && typeof displayTitleText
             != 'undefined')) {
       $(item).prop('disabled', true);
@@ -605,35 +603,39 @@
   </c:if>
 
   function maxLenValEditor() {
-    var isValid = true;
-    var value = $('#elaboratedRTE').summernote('code');
-    if (value != '<p><br></p>') {
-      if (value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
-        if (isValid) {
-          isValid = false;
-        }
-        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 15000 characters are allowed."));
+	    var isValid = true;
+	    var value = $('#elaboratedRTE').summernote('code');
+	    if (value == '<br>' || value == '<p><br></p>') {
+	    	value = '';
+	    }
+	    
+	    if (value != '') {
+	      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
+	        if (isValid) {
+	          isValid = false;
+	        }
+	        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
+	        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	            "Maximum 15000 characters are allowed."));
 
-      } else {
-        $('#elaboratedRTE').parent().removeClass("has-danger")
-            .removeClass("has-error");
-        $('#elaboratedRTE').parent().find(".help-block").empty();
-      }
-    } else {
-      isValid = false;
-      $('#elaboratedRTE')
-          .parent()
-          .addClass('has-error has-danger')
-          .find(".help-block")
-          .empty()
-          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field."));
+	      } else {
+	        $('#elaboratedRTE').parent().removeClass("has-danger")
+	            .removeClass("has-error");
+	        $('#elaboratedRTE').parent().find(".help-block").empty();
+	      }
+	    } else {
+	      isValid = false;
+	      $('#elaboratedRTE')
+	          .parent()
+	          .addClass('has-error has-danger')
+	          .find(".help-block")
+	          .empty()
+	          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	              "Please fill out this field."));
 
-    }
-    return isValid;
-  }
+	    }
+	    return isValid;
+	  }
 
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");

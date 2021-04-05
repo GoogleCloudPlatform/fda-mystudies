@@ -495,7 +495,7 @@
             if (status == "SUCCESS") {
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
               if ($('.sixthQuestionnaires').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.sixthQuestionnaires').find('span').removeClass(
