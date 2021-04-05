@@ -2347,19 +2347,21 @@ public class ActivityMetaDataDao {
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMaxImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                      + reponseType.getMaxImage()));
+                  StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + reponseType.getMaxImage(),
+                      12)));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                      + reponseType.getMinImage()));
+                  StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + reponseType.getMinImage(),
+                      12)));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
     }
@@ -2414,19 +2416,21 @@ public class ActivityMetaDataDao {
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMaxImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                      + reponseType.getMaxImage()));
+                  StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + reponseType.getMaxImage(),
+                      12)));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                      + reponseType.getMinImage()));
+                  StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + reponseType.getMinImage(),
+                      12)));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
     }
@@ -2549,19 +2553,21 @@ public class ActivityMetaDataDao {
               StringUtils.isEmpty(subType.getImage())
                   ? ""
                   : this.getBase64Image(
-                      propMap.get("fda.imgDisplaydPath")
-                          + propMap.get("cloud.bucket.name")
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + subType.getImage()));
+                      StudyMetaDataUtil.getSignedUrl(
+                          propMap.get("cloud.bucket.name"),
+                          propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                              + subType.getImage(),
+                          12)));
           imageChoiceMap.put(
               "selectedImage",
               StringUtils.isEmpty(subType.getSelectedImage())
                   ? ""
                   : this.getBase64Image(
-                      propMap.get("fda.imgDisplaydPath")
-                          + propMap.get("cloud.bucket.name")
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + subType.getSelectedImage()));
+                      StudyMetaDataUtil.getSignedUrl(
+                          propMap.get("cloud.bucket.name"),
+                          propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                              + subType.getSelectedImage(),
+                          12)));
           imageChoiceMap.put(
               "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
           imageChoiceMap.put(
