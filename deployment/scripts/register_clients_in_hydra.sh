@@ -25,7 +25,7 @@ set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 # used by client side applications
-SCIM_AUTH_EXTERNAL_URL="participants.${PREFIX}-${ENV}.${DOMAIN}/auth-server"
+SCIM_AUTH_EXTERNAL_URL="participants-${PREFIX}-${ENV}.${DOMAIN}/auth-server"
 # used in server to server calls
 SCIM_AUTH_URL="http://auth-server-np:50000/auth-server"
 HYDRA_ADMIN_URL="http://hydra-admin-np:50000"
