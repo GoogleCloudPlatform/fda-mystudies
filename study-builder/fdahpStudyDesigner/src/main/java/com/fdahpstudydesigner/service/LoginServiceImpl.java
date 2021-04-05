@@ -555,6 +555,10 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               if ("".equals(type) && (!userdetails.isEnabled())) {
                 message = propMap.get("user.inactive.msg");
               }
+              
+              if ("".equals(type) && StringUtils.isEmpty(userdetails.getUserPassword())) {
+                message = propMap.get("user.not.found.msg");
+              }
             }
           }
         }
