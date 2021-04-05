@@ -243,7 +243,7 @@ public class SurveyActivitiesListAdapter
                 context.getResources().getString(R.string.run)
                         + ": "
                         + currentRunStatusForActivities.get(position).getCurrentRunId()
-                        + "/"
+                        + " of "
                         + currentRunStatusForActivities.get(position).getTotalRun()
                         + ", "
                         + currentRunStatusForActivities.get(position).getCompletedRun()
@@ -813,7 +813,7 @@ public class SurveyActivitiesListAdapter
                       context.getResources().getString(R.string.run)
                               + ": "
                               + (currentRunStatusForActivities.get(position).getCurrentRunId() + 1)
-                              + "/"
+                              + " of "
                               + currentRunStatusForActivities.get(position).getTotalRun()
                               + ", "
                               + currentRunStatusForActivities.get(position).getCompletedRun()
