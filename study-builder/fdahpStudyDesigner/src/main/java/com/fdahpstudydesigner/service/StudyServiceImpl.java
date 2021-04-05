@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1089,7 +1090,9 @@ public class StudyServiceImpl implements StudyService {
       resourceBO2.setTitle(null != resourceBO.getTitle() ? resourceBO.getTitle().trim() : "");
       resourceBO2.setTextOrPdf(resourceBO.isTextOrPdf());
       resourceBO2.setRichText(
-          null != resourceBO.getRichText() ? resourceBO.getRichText().trim() : "");
+          null != resourceBO.getRichText()
+              ? StringEscapeUtils.escapeHtml4(resourceBO.getRichText().trim())
+              : "");
       if ((resourceBO.getPdfFile() != null) && !resourceBO.getPdfFile().isEmpty()) {
         file =
             FdahpStudyDesignerUtil.getStandardFileName(

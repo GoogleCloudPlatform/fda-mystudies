@@ -89,7 +89,7 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if></li>
       <li class="sub sixthTask commonCls ">
-        Active Tasks
+        Active tasks
         <c:if test="${studyBo.studySequenceBo.studyExcActiveTask}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
