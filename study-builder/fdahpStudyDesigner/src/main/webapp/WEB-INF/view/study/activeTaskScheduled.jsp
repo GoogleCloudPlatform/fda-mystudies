@@ -1482,6 +1482,7 @@
 
            $("#AddButton").show();
            $("#AddButton").attr('required', true);
+           $('.manually-option').find('input').val('');
          } else {
            $("#AddButton").hide();
            $("#AddButton").attr('required', false);
