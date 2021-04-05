@@ -37,7 +37,6 @@ import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
-import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import java.io.File;
@@ -47,7 +46,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -135,29 +133,6 @@ public class FDASchedulerService {
       loginDAO.passwordLoginBlocked();
     } catch (Exception e) {
       logger.error("FDASchedulerService - createAuditLogs - ERROR", e);
-
-      List<String> emailAddresses = usersDAO.getSuperAdminList();
-      String failLogBody;
-      if ((emailAddresses != null) && !emailAddresses.isEmpty()) {
-        Map<String, String> genarateEmailContentMap = new HashMap<>();
-        String date =
-            new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE)
-                .format(FdahpStudyDesignerUtil.addDaysToDate(new Date(), -1));
-        if (emailAddresses.size() > 1) {
-          genarateEmailContentMap.put("$firstName", "Admin");
-        } else {
-          UserBO userBO = loginDAO.getValidUserByEmail(emailAddresses.get(0));
-          genarateEmailContentMap.put("$firstName", userBO.getFirstName());
-        }
-        genarateEmailContentMap.put("$startTime", date + " 00:00:00");
-        genarateEmailContentMap.put("$endTime", date + " 23:59:59");
-        genarateEmailContentMap.put("$orgName", (String) configMap.get("orgName"));
-        failLogBody =
-            FdahpStudyDesignerUtil.genarateEmailContent(
-                (String) configMap.get("mail.audit.failure.content"), genarateEmailContentMap);
-        EmailNotification.sendEmailNotificationToMany(
-            "mail.audit.failure.subject", failLogBody, emailAddresses, null, null);
-      }
     }
     logger.info("FDASchedulerService - createAuditLogs - Ends");
   }

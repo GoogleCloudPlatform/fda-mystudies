@@ -977,6 +977,7 @@ margin-top:16px !important;
     var studyType = $('input[name=type]:checked').val();
     var thisAttr = $("#appId");
     var customStudyId = $("#customStudyId").val();
+    var dbCustomStudyId = '${studyBo.customStudyId}';
     if (appId != null && appId != '' && typeof appId != 'undefined') {
       $
           .ajax({
@@ -987,6 +988,7 @@ margin-top:16px !important;
               customStudyId: customStudyId,
               appId: appId,
               studyType: studyType,
+              dbCustomStudyId: dbCustomStudyId,
               "${_csrf.parameterName}": "${_csrf.token}",
             },
             success: function getResponse(data) {

@@ -4523,7 +4523,7 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID,
                   studyBo.getCustomStudyId());
         }
-        // grouped for Study category , Research Sponsors , Data partner
+        // grouped for Study category , Research sponsors , Data partner
         referenceMap =
             (HashMap<String, List<ReferenceTablesBo>>) studyService.getreferenceListByCategory();
         if ((referenceMap != null) && (referenceMap.size() > 0)) {
@@ -5121,7 +5121,11 @@ public class StudyController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("studyType"))
                 ? ""
                 : request.getParameter("studyType");
-        flag = studyService.validateAppId(customStudyId, appId, studyType);
+        String dbCustomStudyId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("dbCustomStudyId"))
+                ? ""
+                : request.getParameter("dbCustomStudyId");
+        flag = studyService.validateAppId(customStudyId, appId, studyType, dbCustomStudyId);
         if (flag) {
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
