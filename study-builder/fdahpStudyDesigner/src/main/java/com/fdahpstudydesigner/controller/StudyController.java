@@ -4524,7 +4524,7 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID,
                   studyBo.getCustomStudyId());
         }
-        // grouped for Study category , Research Sponsors , Data partner
+        // grouped for Study category , Research sponsors , Data partner
         referenceMap =
             (HashMap<String, List<ReferenceTablesBo>>) studyService.getreferenceListByCategory();
         if ((referenceMap != null) && (referenceMap.size() > 0)) {
