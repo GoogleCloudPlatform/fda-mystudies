@@ -131,7 +131,7 @@
           <div>
             <input type="checkbox" id="inlineCheckbox9" class="class" name="checkbox9"
                    <c:if test="${checklist.checkbox9}">checked</c:if> required>
-            <label for="inlineCheckbox9"> Active Tasks Added </label>
+            <label for="inlineCheckbox9"> Active tasks added </label>
           </div>
           <div class=" pl-13">
             <span class="gray-xs-f mb-xs">If applicable to the study, active task added and scheduled for desired time
