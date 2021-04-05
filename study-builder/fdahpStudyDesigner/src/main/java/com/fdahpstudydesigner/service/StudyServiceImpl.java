@@ -1379,9 +1379,10 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public boolean validateAppId(String customStudyId, String appId, String studyType) {
+  public boolean validateAppId(
+      String customStudyId, String appId, String studyType, String dbCustomStudyId) {
     logger.info("StudyServiceImpl - validateAppId - Starts");
-    return studyDAO.validateAppId(customStudyId, appId, studyType);
+    return studyDAO.validateAppId(customStudyId, appId, studyType, dbCustomStudyId);
   }
 
   @Override

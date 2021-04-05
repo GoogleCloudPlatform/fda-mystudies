@@ -49,6 +49,11 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_address
+            - name: MAIL_CONTACT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: contact_email_address
             - name: FROM_EMAIL_PASSWORD
               valueFrom:
                 secretKeyRef:

@@ -13,7 +13,6 @@ import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
@@ -52,8 +51,6 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   private static final Logger logger = LoggerFactory.getLogger(UserProfileManagementDaoImpl.class);
 
   @Autowired private SessionFactory sessionFactory;
-
-  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Autowired UserDetailsRepository userDetailsRepository;
 
