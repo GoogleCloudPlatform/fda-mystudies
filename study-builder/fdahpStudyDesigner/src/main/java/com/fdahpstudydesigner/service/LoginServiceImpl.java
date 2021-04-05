@@ -547,6 +547,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 StudyBuilderAuditEvent auditLogEvent =
                     flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
                 auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
+              } else if ("USER_UPDATE".equals(type) && !userdetails.isEnabled()) {
+                flag = true;
               }
 
               message =

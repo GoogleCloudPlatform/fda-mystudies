@@ -6618,7 +6618,8 @@ public class StudyDAOImpl implements StudyDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean validateAppId(String customStudyId, String appId, String studyType) {
+  public boolean validateAppId(
+      String customStudyId, String appId, String studyType, String dbCustomStudyId) {
     logger.info("StudyDAOImpl - validateAppId() - Starts");
     boolean flag = false;
     Session session = null;
@@ -6649,7 +6650,15 @@ public class StudyDAOImpl implements StudyDAO {
           }
 
         } else {
-          if (StringUtils.isNotEmpty(customStudyId)) {
+          if (StringUtils.isNotEmpty(dbCustomStudyId)) {
+            searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
+            studyBos =
+                session
+                    .createQuery(searchQuery)
+                    .setString("appId", appId)
+                    .setString("customStudyId", dbCustomStudyId)
+                    .list();
+          } else if (StringUtils.isNotEmpty(customStudyId)) {
             searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
             studyBos =
                 session
