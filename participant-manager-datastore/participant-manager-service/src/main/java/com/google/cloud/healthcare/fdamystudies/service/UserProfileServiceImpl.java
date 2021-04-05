@@ -8,13 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_BY_USER;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_BY_ADMIN;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_REACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_DEACTIVATED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_DELETED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REACTIVATED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthUserRequest;
@@ -107,7 +107,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     if (!optUserRegAdminUser.isPresent()) {
       participantManagerHelper.logEvent(
-          USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION, auditRequest);
+          ADMIN_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION, auditRequest);
       throw new ErrorCodeException(ErrorCode.SECURITY_CODE_EXPIRED);
     }
 
@@ -116,7 +116,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     if (now.after(user.getSecurityCodeExpireDate())) {
       participantManagerHelper.logEvent(
-          USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION, auditRequest);
+          ADMIN_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION, auditRequest);
       throw new ErrorCodeException(ErrorCode.SECURITY_CODE_EXPIRED);
     }
 
@@ -149,7 +149,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     userRegAdminRepository.saveAndFlush(adminUser);
 
     auditRequest.setUserId(adminUser.getId());
-    participantManagerHelper.logEvent(ACCOUNT_UPDATE_BY_USER, auditRequest);
+    participantManagerHelper.logEvent(ACCOUNT_UPDATE_BY_ADMIN, auditRequest);
 
     logger.exit(MessageCode.PROFILE_UPDATE_SUCCESS);
     return new UserProfileResponse(MessageCode.PROFILE_UPDATE_SUCCESS);
@@ -262,7 +262,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     Map<String, String> map = Collections.singletonMap("edited_user_id", user.getId());
     ParticipantManagerEvent participantManagerEvent =
-        user.getStatus() == UserStatus.ACTIVE.getValue() ? USER_REACTIVATED : USER_DEACTIVATED;
+        user.getStatus() == UserStatus.ACTIVE.getValue() ? ADMIN_REACTIVATED : ADMIN_DEACTIVATED;
     participantManagerHelper.logEvent(participantManagerEvent, auditRequest, map);
 
     logger.exit(messageCode);
@@ -332,7 +332,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     auditRequest.setUserId(user.getId());
 
     Map<String, String> map = Collections.singletonMap("new_user_id", user.getId());
-    participantManagerHelper.logEvent(USER_DELETED, auditRequest, map);
+    participantManagerHelper.logEvent(ADMIN_DELETED, auditRequest, map);
 
     logger.exit("Sucessfully deleted invitation");
   }

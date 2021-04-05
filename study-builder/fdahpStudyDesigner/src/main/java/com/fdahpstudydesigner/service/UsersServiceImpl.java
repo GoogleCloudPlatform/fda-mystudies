@@ -58,19 +58,15 @@ public class UsersServiceImpl implements UsersService {
       HttpServletRequest request) {
     logger.info("UsersServiceImpl - activateOrDeactivateUser() - Starts");
     String msg = FdahpStudyDesignerConstants.FAILURE;
-    List<String> superAdminEmailList = null;
     Map<String, String> keyValueForSubject = null;
     String dynamicContent = "";
     UserBO userBo = null;
-    UserBO adminFullNameIfSizeOne = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customerCareMail = "";
-    String status = "";
 
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
-      superAdminEmailList = usersDAO.getSuperAdminList();
       userBo = usersDAO.getUserDetails(userId);
       if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
         StudyBuilderAuditEvent auditLogEvent =
@@ -79,36 +75,6 @@ public class UsersServiceImpl implements UsersService {
         values.put(EDITED_USER_ID, String.valueOf(userId));
         auditLogHelper.logEvent(auditLogEvent, auditRequest, values);
         keyValueForSubject = new HashMap<String, String>();
-        if ((superAdminEmailList != null) && !superAdminEmailList.isEmpty()) {
-          if (userStatus == 1) {
-            status = "Deactivated";
-          } else {
-            status = "Active";
-          }
-          if (superAdminEmailList.size() == 1) {
-            for (String email : superAdminEmailList) {
-              adminFullNameIfSizeOne = usersDAO.getSuperAdminNameByEmailId(email);
-              keyValueForSubject.put(
-                  "$admin",
-                  adminFullNameIfSizeOne.getFirstName()
-                      + " "
-                      + adminFullNameIfSizeOne.getLastName());
-            }
-          } else {
-            keyValueForSubject.put("$admin", "Admin");
-          }
-          keyValueForSubject.put("$userStatus", status);
-          keyValueForSubject.put(
-              "$sessionAdminFullName",
-              userSession.getFirstName() + " " + userSession.getLastName());
-          keyValueForSubject.put("$userEmail", userBo.getUserEmail());
-          keyValueForSubject.put("$orgName", propMap.get("orgName"));
-          dynamicContent =
-              FdahpStudyDesignerUtil.genarateEmailContent(
-                  "mailForAdminUserUpdateContent", keyValueForSubject);
-          EmailNotification.sendEmailNotification(
-              "mailForAdminUserUpdateSubject", dynamicContent, null, superAdminEmailList, null);
-        }
         if ((userBo != null) && Integer.valueOf(userStatus).equals(0)) {
           if (!userBo.isCredentialsNonExpired()) {
             loginService.sendPasswordResetLinkToMail(
