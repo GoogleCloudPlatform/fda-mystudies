@@ -18,7 +18,7 @@ export class LoginComponent {
       this.authService.initSessionStorage();
       setTimeout(() => {
         this.authService.beginLoginConsentFlow();
-      }, 1000);
+      }, 200);
     } else {
       void this.router.navigate(['/coordinator/studies/sites']);
     }
