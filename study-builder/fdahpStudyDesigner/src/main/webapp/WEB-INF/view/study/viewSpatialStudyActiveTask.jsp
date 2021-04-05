@@ -1747,7 +1747,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Initial Span must be >= 2"));
+              "Initial span must be >= 2"));
         }
         if (parseInt($(this).val()) > 20) {
           $(this).val('');
@@ -1755,7 +1755,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Initial Span should be <= 20  "));
+              "Initial span should be <= 20  "));
         }
         var minimumSpanVal = $('#minimumspanId').val();
         if (minimumSpanVal && (parseInt(minimumSpanVal) > parseInt($(this).val()))) {
@@ -1764,7 +1764,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $('#minimumspanId').parent().find(".help-block").empty();
           $('#minimumspanId').parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Minimum Span should be always <= Initial Span"));
+              "Minimum span should be always <= Initial span"));
         }
         var maxmimumSpanVal = $('#maximumspanId').val();
         if (maxmimumSpanVal && (parseInt(maxmimumSpanVal) < parseInt($(this).val()))) {
@@ -1773,7 +1773,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $('#maximumspanId').parent().find(".help-block").empty();
           $('#maximumspanId').parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Maximum Span should be always >= Initial Span"));
+              "Maximum span should be always >= Initial span"));
         }
       }
     });
@@ -1789,7 +1789,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Minimum Span should be always <= Initial Span  "));
+              "Minimum span should be always <= Initial span"));
         }
       }
     });
@@ -1806,14 +1806,14 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Maximum Span should be <= 20  "));
+              "Maximum span should be <= 20  "));
         } else if (parseInt($(this).val()) < parseInt(initialSpanVal)) {
           $(this).val('');
           $(this).parent().addClass("has-danger").addClass("has-error");
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Maximum Span should be always >= Initial Span"));
+              "Maximum span should be always >= Initial span"));
         }
       }
     });
@@ -1837,7 +1837,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $("#playspeedId").parent().find(".help-block").empty();
           $("#playspeedId").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Play Speed should be >= 0.5 seconds  "));
+              "Play speed should be >= 0.5 seconds  "));
         }
         if (parseFloat(value) > parseFloat(20)) {
           $("#playspeedId").val('');
@@ -1845,7 +1845,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $("#playspeedId").parent().find(".help-block").empty();
           $("#playspeedId").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Play Speed should be <= 20 seconds"));
+              "Play speed should be <= 20 seconds"));
         }
       }
     });
@@ -1859,7 +1859,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $(this).parent().find(".help-block").empty();
         $(this).parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum Tests should be >= 1"));
+            "Maximum tests should be >= 1"));
       }
       var maximumFailure = $('#maximumFailureId').val();
       if (value && parseInt(maximumFailure) >= parseInt($(this).val())) {
@@ -1868,7 +1868,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $('#maximumFailureId').parent().find(".help-block").empty();
         $('#maximumFailureId').parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum Consecutive Failures should be always < Maximum tests"));
+            "Maximum consecutive failures should be always < Maximum tests"));
       }
     });
     $("#maximumFailureId").blur(function () {
@@ -1882,7 +1882,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $(this).parent().find(".help-block").empty();
         $(this).parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum Tests should be >= 1"));
+            "Maximum tests should be >= 1"));
       }
       if (maxmimunTestVal && parseInt($(this).val()) >= parseInt(maxmimunTestVal)) {
         $(this).val('');
@@ -1890,7 +1890,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $(this).parent().find(".help-block").empty();
         $(this).parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum Consecutive Failures should be always < Maximum tests"));
+            "Maximum consecutive failures should be always < Maximum tests"));
       }
     });
 
