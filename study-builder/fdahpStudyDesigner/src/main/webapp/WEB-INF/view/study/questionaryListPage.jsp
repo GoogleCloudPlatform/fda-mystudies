@@ -76,7 +76,7 @@
               <td>
                 <div class="dis-ellipsis pr-100">${questionnaryInfo.title}</div>
               </td>
-              <td>${questionnaryInfo.frequency == 'Manually Schedule' ? 'Custom Schedule' :questionnaryInfo.frequency}</td>
+              <td>${questionnaryInfo.frequency == 'Manually Schedule' ? 'Custom schedule' :questionnaryInfo.frequency}</td>
               <td style="width:200px !important;">
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
@@ -272,7 +272,7 @@
         if (typeof obj.frequency === "undefined" && typeof obj.frequency === "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom Schedule' : obj.frequency);
+          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom schedule' : obj.frequency);
         }
         var actionDiv = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewQuestionnaires("
             + parseInt(obj.id) + ");'></span>";
