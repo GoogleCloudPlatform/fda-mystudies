@@ -10,14 +10,14 @@
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
-      <div class="black-md-f text-uppercase dis-line pull-left line34">
+      <div class="black-md-f dis-line pull-left line34">
         <span
             class="pr-sm cur-pointer"
             onclick="goToBackPage(this);">
           <img src="../images/icons/back-b.png" class="pr-md" alt=""/></span>
-        <c:if test="${actionPage eq 'add'}"> Add Active Task</c:if>
-        <c:if test="${actionPage eq 'addEdit'}">Edit Active Task</c:if>
-        <c:if test="${actionPage eq 'view'}">View Active Task <c:set
+        <c:if test="${actionPage eq 'add'}"> Add active task</c:if>
+        <c:if test="${actionPage eq 'addEdit'}">Edit active task</c:if>
+        <c:if test="${actionPage eq 'view'}">View active task <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?activeTaskBo.activeTaskVersion:''}
         </c:if>
       </div>
@@ -55,7 +55,7 @@
     <div class="tab-content pl-xlg pr-xlg">
       <!-- Content-->
       <div id="content" class="tab-pane fade in active mt-xlg">
-        <div class="mt-md blue-md-f text-uppercase">Select Active Task</div>
+        <div class="mt-md blue-md-f text-uppercase">Select Active task</div>
         <div class="gray-xs-f mt-md mb-sm">Choose from a list of pre-defined active tasks</div>
         <div class="col-md-4 p-none">
           <select class="selectpicker targetOption" id="targetOptionId" taskId="${activeTaskBo.id}"

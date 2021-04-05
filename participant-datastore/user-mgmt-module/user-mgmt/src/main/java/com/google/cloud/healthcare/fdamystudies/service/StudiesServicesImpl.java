@@ -11,14 +11,20 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PUSH_NOTIFICATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PUSH_NOTIFICATION_SENT;
 
+import com.eatthepath.pushy.apns.ApnsClient;
+import com.eatthepath.pushy.apns.ApnsClientBuilder;
+import com.eatthepath.pushy.apns.PushNotificationResponse;
+import com.eatthepath.pushy.apns.util.SimpleApnsPayloadBuilder;
+import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
+import com.eatthepath.pushy.apns.util.concurrent.PushNotificationFuture;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.beans.FcmPushNotificationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
-import com.google.cloud.healthcare.fdamystudies.beans.PushNotificationResponse;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
@@ -28,8 +34,6 @@ import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
-import com.notnoop.apns.APNS;
-import com.notnoop.apns.ApnsService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,7 +41,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -123,7 +126,7 @@ public class StudiesServicesImpl implements StudiesServices {
                   .collect(Collectors.toMap(StudyEntity::getCustomId, Function.identity()));
         }
       }
-      PushNotificationResponse fcmNotificationResponse = null;
+      FcmPushNotificationResponse fcmNotificationResponse = null;
       if ((allDeviceTokens != null && !allDeviceTokens.isEmpty())
           || (studiesMap != null && !studiesMap.isEmpty())) {
         for (NotificationBean notificationBean : notificationForm.getNotifications()) {
@@ -197,7 +200,7 @@ public class StudiesServicesImpl implements StudiesServices {
     return new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
   }
 
-  private PushNotificationResponse sendStudyLevelNotification(
+  private FcmPushNotificationResponse sendStudyLevelNotification(
       Map<String, Map<String, JSONArray>> studiesMap,
       Map<Object, StudyEntity> studyInfobyStudyCustomId,
       Map<Object, AppEntity> appInfobyAppCustomId,
@@ -207,12 +210,12 @@ public class StudiesServicesImpl implements StudiesServices {
     Map<String, JSONArray> deviceTokensMap =
         studiesMap.get(studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()).getId());
     notificationBean.setNotificationType(AppConstants.STUDY);
-    PushNotificationResponse pushNotificationResponse = null;
+    FcmPushNotificationResponse pushNotificationResponse = null;
     if (deviceTokensMap != null) {
       if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
         pushNotificationResponse =
-            pushFCMNotification(
+            pushFcmNotification(
                 notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
       }
       if (deviceTokensMap.get(AppConstants.DEVICE_IOS) != null) {
@@ -222,22 +225,22 @@ public class StudiesServicesImpl implements StudiesServices {
     }
     JsonNode fcmResponse =
         pushNotificationResponse != null ? pushNotificationResponse.getFcmResponse() : null;
-    return new PushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
+    return new FcmPushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
   }
 
-  private PushNotificationResponse sendGatewaylevelNotification(
+  private FcmPushNotificationResponse sendGatewaylevelNotification(
       Map<String, JSONArray> allDeviceTokens,
       Map<Object, AppEntity> appInfobyAppCustomId,
       NotificationBean notificationBean)
       throws IOException {
 
     notificationBean.setNotificationType(AppConstants.GATEWAY);
-    PushNotificationResponse pushNotificationResponse = null;
+    FcmPushNotificationResponse pushNotificationResponse = null;
     if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
         && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0) {
       notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
       pushNotificationResponse =
-          pushFCMNotification(
+          pushFcmNotification(
               notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
     }
     if (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null) {
@@ -246,10 +249,10 @@ public class StudiesServicesImpl implements StudiesServices {
     }
     JsonNode fcmResponse =
         pushNotificationResponse != null ? pushNotificationResponse.getFcmResponse() : null;
-    return new PushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
+    return new FcmPushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
   }
 
-  public PushNotificationResponse pushFCMNotification(
+  public FcmPushNotificationResponse pushFcmNotification(
       NotificationBean notification, AppEntity appPropertiesDetails) throws IOException {
 
     String authKey = "";
@@ -292,8 +295,8 @@ public class StudiesServicesImpl implements StudiesServices {
       wr.flush();
       String response = IOUtils.toString(conn.getInputStream(), StandardCharsets.UTF_8);
       JsonNode responseJson = new ObjectMapper().readTree(response);
-      PushNotificationResponse fcmNotificationResponse =
-          new PushNotificationResponse(
+      FcmPushNotificationResponse fcmNotificationResponse =
+          new FcmPushNotificationResponse(
               responseJson, conn.getResponseCode(), conn.getResponseMessage());
       logger.trace(
           String.format(
@@ -302,7 +305,7 @@ public class StudiesServicesImpl implements StudiesServices {
       return fcmNotificationResponse;
     }
 
-    return new PushNotificationResponse(null, HttpStatus.OK.value(), "SUCCESS");
+    return new FcmPushNotificationResponse(null, HttpStatus.OK.value(), "SUCCESS");
   }
 
   public void pushNotification(NotificationBean notificationBean, AppEntity appPropertiesDetails)
@@ -310,13 +313,11 @@ public class StudiesServicesImpl implements StudiesServices {
 
     logger.info("StudiesServicesImpl - pushNotification() : starts");
     String certificatePassword = "";
-    String iosNotificationType = applicationPropertyConfiguration.getIosPushNotificationType();
 
     File file = null;
     if (notificationBean.getDeviceToken() != null
         && notificationBean.getDeviceToken().length() > 0
         && appPropertiesDetails != null) {
-      File root = null;
       certificatePassword = appPropertiesDetails.getIosCertificatePassword();
 
       byte[] decodedBytes;
@@ -331,38 +332,52 @@ public class StudiesServicesImpl implements StudiesServices {
       fop.close();
       file.deleteOnExit();
 
-      ApnsService service = null;
       if (file != null) {
-        if (iosNotificationType.equals("production")) {
-          service =
-              APNS.newService()
-                  .withCert(file.getPath(), certificatePassword)
-                  .withProductionDestination()
-                  .build();
-        } else {
-          service =
-              APNS.newService()
-                  .withCert(file.getPath(), certificatePassword)
-                  .withSandboxDestination()
-                  .build();
-        }
-        List<String> tokens = new ArrayList<String>();
+        ApnsClient apnsClient =
+            new ApnsClientBuilder()
+                .setApnsServer(applicationPropertyConfiguration.getIosPushNotificationType())
+                .setClientCredentials(new File(file.getPath()), certificatePassword)
+                .build();
+
+        String payload =
+            new SimpleApnsPayloadBuilder()
+                .setAlertBody(notificationBean.getNotificationText())
+                .addCustomProperty("subtype", notificationBean.getNotificationSubType())
+                .addCustomProperty("type", notificationBean.getNotificationType())
+                .addCustomProperty("studyId", notificationBean.getCustomStudyId())
+                .setSound("default")
+                .build();
 
         for (int i = 0; i < notificationBean.getDeviceToken().length(); i++) {
           String token = (String) notificationBean.getDeviceToken().get(i);
-          tokens.add(token);
+          SimpleApnsPushNotification pushNotification =
+              new SimpleApnsPushNotification(token, appPropertiesDetails.getIosBundleId(), payload);
+          try {
+            final PushNotificationFuture<
+                    SimpleApnsPushNotification,
+                    PushNotificationResponse<SimpleApnsPushNotification>>
+                result = apnsClient.sendNotification(pushNotification);
+
+            // getting the response from APNs
+            final PushNotificationResponse<SimpleApnsPushNotification> pushNotificationResponse =
+                result.get();
+            if (pushNotificationResponse.isAccepted()) {
+              logger.info("Push notification accepted by APNs gateway.");
+            } else {
+              logger.info(
+                  "Notification rejected by the APNs gateway: "
+                      + pushNotificationResponse.getRejectionReason());
+              if (pushNotificationResponse.getTokenInvalidationTimestamp() != null) {
+                logger.info(
+                    "\t…and the token is invalid as of "
+                        + pushNotificationResponse.getTokenInvalidationTimestamp());
+              }
+            }
+          } catch (final Exception e) {
+            logger.error("Failed to send push notification.");
+            e.printStackTrace();
+          }
         }
-        String customPayload =
-            APNS.newPayload()
-                .badge(1)
-                .alertTitle("")
-                .alertBody(notificationBean.getNotificationText())
-                .customField("subtype", notificationBean.getNotificationSubType())
-                .customField("type", notificationBean.getNotificationType())
-                .customField("studyId", notificationBean.getCustomStudyId())
-                .sound("default")
-                .build();
-        service.push(tokens, customPayload);
       }
     }
   }
