@@ -77,6 +77,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -4239,6 +4240,17 @@ public class StudyDAOImpl implements StudyDAO {
           dbStudyBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           dbStudyBo.setAppId(studyBo.getAppId());
           session.update(dbStudyBo);
+          
+          String searchQuery = "From AnchorDateTypeBo where studyId=:id";
+          List<AnchorDateTypeBo> anchorDateTypeBoList =
+              session.createQuery(searchQuery).setInteger("id", studyBo.getId()).list();
+
+          if (CollectionUtils.isNotEmpty(anchorDateTypeBoList)) {
+            for (AnchorDateTypeBo anchorDateTypeBo : anchorDateTypeBoList) {
+              anchorDateTypeBo.setCustomStudyId(studyBo.getCustomStudyId());
+              session.update(anchorDateTypeBo);
+            }
+          }
         }
       }
       studySequenceBo =
