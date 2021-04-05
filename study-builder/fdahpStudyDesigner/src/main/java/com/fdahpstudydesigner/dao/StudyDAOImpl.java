@@ -3405,7 +3405,7 @@ public class StudyDAOImpl implements StudyDAO {
             }
             /** Content Purpose creating draft End * */
           }
-        } // Active TAsk End
+        } // Active task end
 
         // Consent updated update Start
         query =
@@ -5403,7 +5403,7 @@ public class StudyDAOImpl implements StudyDAO {
                   .createQuery("UPDATE ActiveTaskBo set live=0, isChange = 0 where studyId=:id")
                   .setInteger("id", studyBo.getId())
                   .executeUpdate();
-            } // Active TAsk End
+            } // Active task end
           } // In ActiveTask change or not
           // Activities End
 
