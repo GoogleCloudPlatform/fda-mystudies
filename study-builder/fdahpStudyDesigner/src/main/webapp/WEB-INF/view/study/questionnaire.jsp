@@ -216,7 +216,7 @@
             <div
                 class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
                 onclick="getQuestionnaireStep('Instruction');">Add
-              Instruction step
+              instruction step
             </div>
             <div
                 class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
@@ -2000,6 +2000,7 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
 
+
         $('.manually-option').each(function () {	
             var id = $(this).attr("id");	
             var countId = $("#"+id).find(".cusStrDate").attr("count");	
@@ -2026,6 +2027,7 @@
          if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
              $('.manually-option').find('#AddButton').first().hide();
          }
+
         
 	        var startDate = $("#startDate").val();
 	  

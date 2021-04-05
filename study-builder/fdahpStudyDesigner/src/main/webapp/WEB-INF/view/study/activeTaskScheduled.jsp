@@ -1502,8 +1502,10 @@
              $('.manually-option').find(".delete").css("visibility", "hidden");
          }
          
+
          if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
              $('.manually-option').find('#AddButton').first().hide();
+
          }
       }
 
