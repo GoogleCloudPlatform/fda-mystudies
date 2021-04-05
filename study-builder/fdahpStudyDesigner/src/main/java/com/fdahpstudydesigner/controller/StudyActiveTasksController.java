@@ -132,7 +132,6 @@ public class StudyActiveTasksController {
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
-          map.addAttribute("buttonText", "completed");
           request
               .getSession()
               .setAttribute(

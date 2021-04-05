@@ -254,7 +254,7 @@
 function showSucMsg(message) {
   $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
   $('#alertMsg').show('5000');
-  if('${param.buttonText}' == 'completed'){
+  if(message == 'Section marked complete'){
 	    window.setTimeout(function(){
 	        window.location.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
 	
