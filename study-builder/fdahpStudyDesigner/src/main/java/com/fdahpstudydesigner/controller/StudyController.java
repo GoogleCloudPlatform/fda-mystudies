@@ -409,6 +409,7 @@ public class StudyController {
                 customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           request
               .getSession()
               .setAttribute(
@@ -486,6 +487,7 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           map.addAttribute("_S", sessionStudyCount);
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           mav = new ModelAndView("redirect:consentListPage.do", map);
         } else {
           request
@@ -2067,6 +2069,7 @@ public class StudyController {
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE, auditRequest);
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           request
               .getSession()
               .setAttribute(
@@ -2260,6 +2263,7 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           map.addAttribute("_S", sessionStudyCount);
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           mav = new ModelAndView("redirect:viewStudyQuestionnaires.do", map);
         } else {
           request
@@ -2784,6 +2788,7 @@ public class StudyController {
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
             auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_RESOURCE_SECTION_MARKED_COMPLETE, auditRequest);
+            map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
             request
                 .getSession()
                 .setAttribute(
@@ -3206,6 +3211,7 @@ public class StudyController {
                     studyBo.getCustomStudyId());
           }
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            map.addAttribute("buttonText", buttonText);
             request
                 .getSession()
                 .setAttribute(
@@ -3575,6 +3581,7 @@ public class StudyController {
         map.addAttribute("_S", sessionStudyCount);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            map.addAttribute("buttonText", buttonText);
             request
                 .getSession()
                 .setAttribute(
@@ -3666,6 +3673,7 @@ public class StudyController {
             mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           } else {
             auditLogEventHelper.logEvent(STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE, auditRequest);
+            map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
             request
                 .getSession()
                 .setAttribute(
@@ -4057,6 +4065,7 @@ public class StudyController {
         map.addAttribute("_S", sessionStudyCount);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            map.addAttribute("buttonText", buttonText);
             request
                 .getSession()
                 .setAttribute(
