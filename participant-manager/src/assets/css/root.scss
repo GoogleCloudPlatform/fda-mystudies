@@ -1542,6 +1542,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .active_text {
   color: var(--light-green);
@@ -1555,6 +1556,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .paused_text {
   color: var(--orange-red);
@@ -1568,6 +1570,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .deactivated_text {
   color: var(--light-red);
@@ -1681,5 +1684,9 @@ meter::-moz-meter-bar {
 @-moz-document url-prefix() {
   #body-container .form-item__element--select:invalid {
     margin-left: -4px !important;
+  }
+  #body-container .form-item__element--select {
+    margin-left: -4px !important;
+    padding-right: 10px;
   }
 }

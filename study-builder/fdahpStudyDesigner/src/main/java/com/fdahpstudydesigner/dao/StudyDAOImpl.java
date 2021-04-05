@@ -77,6 +77,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -3405,7 +3406,7 @@ public class StudyDAOImpl implements StudyDAO {
             }
             /** Content Purpose creating draft End * */
           }
-        } // Active TAsk End
+        } // Active task end
 
         // Consent updated update Start
         query =
@@ -4239,6 +4240,17 @@ public class StudyDAOImpl implements StudyDAO {
           dbStudyBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           dbStudyBo.setAppId(studyBo.getAppId());
           session.update(dbStudyBo);
+          
+          String searchQuery = "From AnchorDateTypeBo where studyId=:id";
+          List<AnchorDateTypeBo> anchorDateTypeBoList =
+              session.createQuery(searchQuery).setInteger("id", studyBo.getId()).list();
+
+          if (CollectionUtils.isNotEmpty(anchorDateTypeBoList)) {
+            for (AnchorDateTypeBo anchorDateTypeBo : anchorDateTypeBoList) {
+              anchorDateTypeBo.setCustomStudyId(studyBo.getCustomStudyId());
+              session.update(anchorDateTypeBo);
+            }
+          }
         }
       }
       studySequenceBo =
@@ -5403,7 +5415,7 @@ public class StudyDAOImpl implements StudyDAO {
                   .createQuery("UPDATE ActiveTaskBo set live=0, isChange = 0 where studyId=:id")
                   .setInteger("id", studyBo.getId())
                   .executeUpdate();
-            } // Active TAsk End
+            } // Active task end
           } // In ActiveTask change or not
           // Activities End
 
@@ -5663,6 +5675,9 @@ public class StudyDAOImpl implements StudyDAO {
                     FdahpStudyDesignerConstants.NOTIFICATION_UPCOMING_OR_ACTIVE_TEXT);
                 notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
                 notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
+                notificationBO.setScheduleTimestamp(
+                    FdahpStudyDesignerUtil.getTimeStamp(
+                        notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
                 notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
                 notificationBO.setNotificationDone(true);
                 session.save(notificationBO);
@@ -5679,9 +5694,15 @@ public class StudyDAOImpl implements StudyDAO {
               // customStudyId
               session
                   .createQuery(
-                      "UPDATE NotificationBO set scheduleDate=:currentDate, scheduleTime = :currentTime where customStudyId=:customStudyId and scheduleDate IS NULL and scheduleTime IS NULL and notificationType= :notiSt and notificationSubType= :subType and notificationScheduleType=:immedidate ")
+                      "UPDATE NotificationBO set scheduleDate=:currentDate, scheduleTime = :currentTime, scheduleTimestamp=:currentTimestamp where customStudyId=:customStudyId and scheduleDate IS NULL and scheduleTime IS NULL and notificationType= :notiSt and notificationSubType= :subType and notificationScheduleType=:immedidate ")
                   .setString("currentDate", FdahpStudyDesignerUtil.getCurrentDate())
                   .setString("currentTime", FdahpStudyDesignerUtil.getCurrentTime())
+                  .setString(
+                      "currentTimestamp",
+                      FdahpStudyDesignerUtil.getTimeStamp(
+                              FdahpStudyDesignerUtil.getCurrentDate(),
+                              FdahpStudyDesignerUtil.getCurrentTime())
+                          .toString())
                   .setString("customStudyId", studyBo.getCustomStudyId())
                   .setString("notiSt", FdahpStudyDesignerConstants.NOTIFICATION_ST)
                   .setString("subType", FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_RESOURCE)
@@ -5692,9 +5713,15 @@ public class StudyDAOImpl implements StudyDAO {
               // customStudyId
               session
                   .createQuery(
-                      "UPDATE NotificationBO set scheduleDate=:currentDate, scheduleTime = :currentTime where customStudyId=:customStudyId and scheduleDate IS NULL and scheduleTime IS NULL and notificationType=:notiSt and notificationSubType=:subType and notificationScheduleType=:immedidate")
+                      "UPDATE NotificationBO set scheduleDate=:currentDate, scheduleTime = :currentTime, scheduleTimestamp=:currentTimestamp where customStudyId=:customStudyId and scheduleDate IS NULL and scheduleTime IS NULL and notificationType=:notiSt and notificationSubType=:subType and notificationScheduleType=:immedidate")
                   .setString("currentDate", FdahpStudyDesignerUtil.getCurrentDate())
                   .setString("currentTime", FdahpStudyDesignerUtil.getCurrentTime())
+                  .setString(
+                      "currentTimestamp",
+                      FdahpStudyDesignerUtil.getTimeStamp(
+                              FdahpStudyDesignerUtil.getCurrentDate(),
+                              FdahpStudyDesignerUtil.getCurrentTime())
+                          .toString())
                   .setString("customStudyId", studyBo.getCustomStudyId())
                   .setString("notiSt", FdahpStudyDesignerConstants.NOTIFICATION_ST)
                   .setString("subType", FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_ACTIVITY)
@@ -5743,6 +5770,9 @@ public class StudyDAOImpl implements StudyDAO {
                         "$customId", studyBo.getName()));
                 notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
                 notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
+                notificationBO.setScheduleTimestamp(
+                    FdahpStudyDesignerUtil.getTimeStamp(
+                        notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
                 notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
                 notificationBO.setNotificationDone(true);
                 session.save(notificationBO);
@@ -5770,6 +5800,9 @@ public class StudyDAOImpl implements StudyDAO {
                         "$customId", studyBo.getName()));
                 notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
                 notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
+                notificationBO.setScheduleTimestamp(
+                    FdahpStudyDesignerUtil.getTimeStamp(
+                        notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
                 notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
                 notificationBO.setNotificationDone(true);
                 session.save(notificationBO);
@@ -5798,6 +5831,9 @@ public class StudyDAOImpl implements StudyDAO {
                         "$customId", studyBo.getName()));
                 notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
                 notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
+                notificationBO.setScheduleTimestamp(
+                    FdahpStudyDesignerUtil.getTimeStamp(
+                        notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
                 notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
                 notificationBO.setNotificationDone(true);
                 session.save(notificationBO);
@@ -6606,7 +6642,8 @@ public class StudyDAOImpl implements StudyDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean validateAppId(String customStudyId, String appId, String studyType) {
+  public boolean validateAppId(
+      String customStudyId, String appId, String studyType, String dbCustomStudyId) {
     logger.info("StudyDAOImpl - validateAppId() - Starts");
     boolean flag = false;
     Session session = null;
@@ -6637,7 +6674,15 @@ public class StudyDAOImpl implements StudyDAO {
           }
 
         } else {
-          if (StringUtils.isNotEmpty(customStudyId)) {
+          if (StringUtils.isNotEmpty(dbCustomStudyId)) {
+            searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
+            studyBos =
+                session
+                    .createQuery(searchQuery)
+                    .setString("appId", appId)
+                    .setString("customStudyId", dbCustomStudyId)
+                    .list();
+          } else if (StringUtils.isNotEmpty(customStudyId)) {
             searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
             studyBos =
                 session
