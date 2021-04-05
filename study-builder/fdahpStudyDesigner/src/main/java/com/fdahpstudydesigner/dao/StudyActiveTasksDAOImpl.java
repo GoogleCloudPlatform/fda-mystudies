@@ -371,7 +371,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
 
-      // to get only "Fetal Kick Counter" type of active task based on
+      // to get only "Fetal kick counter" type of active task based on
       // Android platform
       Query query = null;
       if (StringUtils.isNotEmpty(platformType) && platformType.contains("A")) {
