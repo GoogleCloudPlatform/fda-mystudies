@@ -81,7 +81,7 @@ public interface StudyMetaDataConstants {
   public static final String STUDY_CLOSED = "Closed";
 
   public static final String STUDY_REF_CATEGORIES = "Categories";
-  public static final String STUDY_REF_SPONSERS = "Research Sponsors";
+  public static final String STUDY_REF_SPONSERS = "Research sponsors";
 
   public static final String YES = "Yes";
   public static final String NO = "No";

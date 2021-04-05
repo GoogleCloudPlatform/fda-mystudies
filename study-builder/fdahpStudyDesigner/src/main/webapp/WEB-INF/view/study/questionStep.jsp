@@ -85,11 +85,11 @@
         <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png"
             alt=""/></span>
-        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Question Step</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'view'}">View Question Step <c:set
+        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit question step</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'view'}">View question step <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </c:if>
-        <c:if test="${actionTypeForQuestionPage == 'add'}">Add Question Step</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'add'}">Add question step</c:if>
       </div>
       <div class="dis-line form-group mb-none mr-sm">
         <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">
@@ -1804,7 +1804,7 @@
           </div>
           <div id="TextScale" style="display: none;">
             <div class="clearfix"></div>
-            <div class="gray-choice-f mb-xs">Text Choices
+            <div class="gray-choice-f mb-xs">Text choices
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
@@ -2061,7 +2061,7 @@
               </div>
             </div>
             <div class="clearfix"></div>
-            <div class="gray-choice-f mb-xs mt-md">Text Choices
+            <div class="gray-choice-f mb-xs mt-md">Text choices
               <span
                   class="ml-xs sprites_v3 filled-tooltip"
                   data-toggle="tooltip"
@@ -2555,7 +2555,7 @@
 
           <div id="ImageChoice" style="display: none;">
             <div class="mt-lg">
-              <div class="gray-choice-f mb-xs">Image Choices
+              <div class="gray-choice-f mb-xs">Image choices
                 <span
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
@@ -3660,8 +3660,8 @@
         var isImageValid = true;
         var resType = $("#rlaResonseType").val();
         var anchorDateFlag = true;
-        if (resType == 'Text Scale' || resType == 'Image Choice' || resType == 'Value Picker'
-            || resType == 'Text Choice') {
+        if (resType == 'Text scale' || resType == 'Image choice' || resType == 'Value picker'
+            || resType == 'Text choice') {
           validateForUniqueValue('', resType, function (val) {
             if (val) {
             }
@@ -3672,7 +3672,7 @@
           $("#scaleMinValueId").trigger('blur');
           $("#scaleMaxValueId").trigger('blur');
           $("#scaleDefaultValueId").trigger('blur');
-        } else if (resType == "Continuous Scale") {
+        } else if (resType == "Continuous scale") {
           $("#continuesScaleMinValueId").trigger('blur');
           $("#continuesScaleMaxValueId").trigger('blur');
           $("#continuesScaleDefaultValueId").trigger('blur');
@@ -3680,7 +3680,7 @@
         } else if (resType == "Numeric") {
           $("#numericMinValueId").trigger('blur');
           $("#numericMaxValueId").trigger('blur');
-        } else if (resType == "Text Choice") {
+        } else if (resType == "Text choice") {
           if ($('#textchoiceOtherId').is(':checked')) {
             $('.textchoiceOtherCls').show();
             $('.textchoiceOtherCls').find('input:text,select').attr('required', true);
@@ -3738,11 +3738,11 @@
             }
           } else if (resType == "Time interval") {
             stepText = $("#timeIntervalStepId").val();
-          } else if (resType == "Scale" || resType == "Continuous Scale") {
+          } else if (resType == "Scale" || resType == "Continuous scale") {
             stepText = $("#scaleStepId").val();
             var minValue = ''
             var maxValue = ''
-            if (resType == "Continuous Scale") {
+            if (resType == "Continuous scale") {
               minValue = $("#continuesScaleMinDescriptionId").val();
               maxValue = $("#continuesScaleMaxDescriptionId").val();
             } else {
@@ -3753,7 +3753,7 @@
               isValid = true;
             } else {
               if (maxValue == '') {
-                if (resType == "Continuous Scale") {
+                if (resType == "Continuous scale") {
                   $("#continuesScaleMaxDescriptionId").parent().addClass("has-danger").addClass(
                       "has-error");
                   $("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
@@ -3769,7 +3769,7 @@
                 }
               }
               if (minValue == '') {
-                if (resType == "Continuous Scale") {
+                if (resType == "Continuous scale") {
                   $("#continuesScaleMinDescriptionId").parent().addClass("has-danger").addClass(
                       "has-error");
                   $("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
@@ -3792,7 +3792,7 @@
             var maxImagePath = '';
             var minImageFile = '';
             var maxImageFile = '';
-            if (resType == "Continuous Scale") {
+            if (resType == "Continuous scale") {
               minImagePath = $("#continuesScaleMinImagePathId").val();
               maxImagePath = $("#continuesScaleMaxImagePathId").val();
               minImageFile = document.getElementById("continuesScaleMinImageFileId").files[0];
@@ -3815,7 +3815,7 @@
             } else {
               if (maxImagePath == '' && (maxImageFile == '' || typeof maxImageFile == 'undefined'
                   || maxImageFile == null)) {
-                if (resType == "Continuous Scale") {
+                if (resType == "Continuous scale") {
                   $("#continuesScaleMaxImagePathId").parent().addClass("has-danger").addClass(
                       "has-error");
                   $("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
@@ -3831,7 +3831,7 @@
               }
               if (minImagePath == '' && (minImageFile == '' || typeof minImageFile == 'undefined'
                   || minImageFile == null)) {
-                if (resType == "Continuous Scale") {
+                if (resType == "Continuous scale") {
                   $("#continuesScaleMinImagePathId").parent().addClass("has-danger").addClass(
                       "has-error");
                   $("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
@@ -3850,7 +3850,7 @@
               $("#doneId").attr("disabled", false);
               $("body").removeClass("loading");
             }
-          } else if (resType == 'Text Scale') {
+          } else if (resType == 'Text scale') {
             var count = $('.text-scale').length;
             stepText = $("#textScalePositionId").val();
             if (stepText != '') {
@@ -4017,8 +4017,8 @@
               });
             } else {
               var resType = $("#rlaResonseType").val();
-              if (resType == 'Text Scale' || resType == 'Image Choice' || resType == 'Value Picker'
-                  || resType == 'Text Choice') {
+              if (resType == 'Text scale' || resType == 'Image choice' || resType == 'Value picker'
+                  || resType == 'Text choice') {
                 validateForUniqueValue('', resType, function (val) {
                   if (val) {
                     saveQuestionStepQuestionnaire('', '');
@@ -4670,7 +4670,7 @@
               $(thisAttr).parent().find(".help-block").empty();
               var id = $(thisAttr).next().attr("id");
 
-              if (response_type == "Scale" || response_type == "Continuous Scale") {
+              if (response_type == "Scale" || response_type == "Continuous scale") {
                 $("#" + id).next().removeClass("hide");
               }
 
@@ -4688,7 +4688,7 @@
               $("#" + id).val('');
               $("#" + $(thisAttr).attr("id")).val('');
               $('.textLabel' + id).text("Upload");
-              if (response_type == "Scale" || response_type == "Continuous Scale") {
+              if (response_type == "Scale" || response_type == "Continuous scale") {
                 $("#" + id).next().addClass("hide");
               }
             }
@@ -4706,19 +4706,19 @@
       });
 
       $('.textScaleValue').on('blur', function () {
-        validateForUniqueValue(this, "Text Scale", function () {
+        validateForUniqueValue(this, "Text scale", function () {
         });
       });
       $('.valuePickerVal').on('blur', function () {
-        validateForUniqueValue(this, "Value Picker", function () {
+        validateForUniqueValue(this, "Value picker", function () {
         });
       });
       $('.imageChoiceVal').on('blur', function () {
-        validateForUniqueValue(this, "Image Choice", function () {
+        validateForUniqueValue(this, "Image choice", function () {
         });
       });
       $('.textChoiceVal').on('blur', function () {
-        validateForUniqueValue(this, "Text Choice", function () {
+        validateForUniqueValue(this, "Text choice", function () {
         });
       });
       $('.constant').change(function () {
@@ -4964,7 +4964,7 @@
                 $("#defaultDate").datetimepicker().data('DateTimePicker').clear();
               }
             }
-            if (responseType == 'Image Choice') {
+            if (responseType == 'Image choice') {
               $("#" + responseType.replace(/\s/g, '')).find('input:file').val('');
               $("#" + responseType.replace(/\s/g, '')).find('img').attr("src",
                   "../images/icons/sm-thumb.jpg");
@@ -4973,7 +4973,7 @@
               });
             }
           }
-          if (responseType == 'Text Scale' && responseType == 'Text Choice' && responseType
+          if (responseType == 'Text scale' && responseType == 'Text choice' && responseType
               == 'Boolean') {
             var container = document.getElementById(responseType.replace(/\s/g, ''));
             var children = container.getElementsByTagName('select');
@@ -4988,9 +4988,9 @@
 
           $("#textScalePositionId").val(2);
           $("#scaleDefaultValueId").val(1);
-          if (responseType == 'Text Scale') {
+          if (responseType == 'Text scale') {
             $("#scalevertical").attr("checked", true);
-          } else if (responseType == 'Scale' || responseType == 'Continuous Scale') {
+          } else if (responseType == 'Scale' || responseType == 'Continuous scale') {
             $("#scalehorizontal").attr("checked", true);
             if (responseType == 'Scale') {
               $("#scaleMinImagePathId").val('');
@@ -5000,7 +5000,7 @@
               $("#continuesScaleMaxImagePathId").val('');
             }
           }
-          if (responseType == 'Text Choice') {
+          if (responseType == 'Text choice') {
 
               if ($('#textchoiceOtherId').is(':checked')) {
                     if ($('.text-choice').length > 1){
@@ -5120,14 +5120,14 @@
           } else {
             $("#useAnchorDateContainerId").hide();
           }
-          if (responseType == 'Scale' || responseType == 'Continuous Scale' || responseType
-              == 'Text Scale') {
+          if (responseType == 'Scale' || responseType == 'Continuous scale' || responseType
+              == 'Text scale') {
             $("#scaleType").show();
           } else {
             $("#scaleType").hide();
           }
 
-          if (responseType == 'Scale' || responseType == 'Continuous Scale' || responseType
+          if (responseType == 'Scale' || responseType == 'Continuous scale' || responseType
               == 'Height'
               || responseType == 'Time interval' || responseType == 'Numeric') {
             $("#condtionalBranchingId").show();
@@ -5270,7 +5270,7 @@
         questionReponseTypeBo.maxImage = maxImagePath;
         questionReponseTypeBo.formulaBasedLogic = formula_based_logic;
 
-      } else if (resType == "Continuous Scale") {
+      } else if (resType == "Continuous scale") {
 
         minValue = $("#continuesScaleMinValueId").val();
         maxValue = $("#continuesScaleMaxValueId").val();
@@ -5407,7 +5407,7 @@
         });
         questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
 
-      } else if (resType == "Value Picker") {
+      } else if (resType == "Value picker") {
         var questionSubResponseArray = new Array();
         $('.value-picker').each(function () {
           var questionSubResponseType = new Object();
@@ -5423,7 +5423,7 @@
           questionSubResponseArray.push(questionSubResponseType);
         });
         questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-      } else if (resType == "Text Scale") {
+      } else if (resType == "Text scale") {
         var questionSubResponseArray = new Array();
         $('.text-scale').each(function () {
           var questionSubResponseType = new Object();
@@ -5442,7 +5442,7 @@
 
         });
         questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-      } else if (resType == "Text Choice") {
+      } else if (resType == "Text choice") {
 
         var questionSubResponseArray = new Array();
         var selectionStyel = $('input[name="questionReponseTypeBo.selectionStyle"]:checked').val();
@@ -5503,7 +5503,7 @@
         questionReponseTypeBo.otherExclusive=otherExclusive;
         
         questionnaireStep.questionResponseSubTypeList = questionSubResponseArray;
-      } else if (resType == "Image Choice") {
+      } else if (resType == "Image choice") {
         var questionSubResponseArray = new Array();
         var i = 0;
 
@@ -5769,7 +5769,7 @@
           "   <div class='form-group'>" +
           "      <input type='text' class='form-control valuePickerVal' name='questionResponseSubTypeList["
           + count + "].value' id='displayValPickValue" + count
-          + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Value Picker&#34;,function(){})';>"
+          + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Value picker&#34;,function(){})';>"
           +
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
@@ -5832,7 +5832,7 @@
             "    <div class='form-group'>" +
             "       <input type='text' class='form-control TextScaleRequired textScaleValue' class='form-control' name='questionResponseSubTypeList["
             + scaleCount + "].value' id='displayTextSclValue" + scaleCount
-            + "' maxlength='50' required onblur='validateForUniqueValue(this,&#34;Text Scale&#34;,function(){});'>"
+            + "' maxlength='50' required onblur='validateForUniqueValue(this,&#34;Text scale&#34;,function(){});'>"
             +
             "       <div class='help-block with-errors red-txt'></div>" +
             "    </div>" +
@@ -5937,7 +5937,7 @@
           "   <div class='form-group mb-none'>" +
           "   <input type='text' class='form-control TextChoiceRequired textChoiceVal' name='questionResponseSubTypeList["
           + choiceCount + "].value' id='displayTextChoiceValue" + choiceCount
-          + "'  maxlength='100' required onblur='validateForUniqueValue(this,&#34;Text Choice&#34;,function(){});'>"
+          + "'  maxlength='100' required onblur='validateForUniqueValue(this,&#34;Text choice&#34;,function(){});'>"
           +
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
@@ -6094,7 +6094,7 @@
           "   <div class='form-group'>" +
           "      <input type='text' class='form-control ImageChoiceRequired imageChoiceVal' name='questionResponseSubTypeList["
           + imageCount + "].value' id='displayImageChoiceValue" + imageCount
-          + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Image Choice&#34;,function(){});'>"
+          + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Image choice&#34;,function(){});'>"
           +
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
@@ -6338,7 +6338,7 @@
       var id = $(item).attr("id");
 
       var isValid = true;
-      if (responsetype == 'Text Scale') {
+      if (responsetype == 'Text scale') {
         var valueArray = new Array();
         $('.text-scale').each(function () {
           var id = $(this).attr("id");
@@ -6363,7 +6363,7 @@
 
         });
         callback(isValid);
-      } else if (responsetype == "Value Picker") {
+      } else if (responsetype == "Value picker") {
         var valueArray = new Array();
         $('.value-picker').each(function () {
           var id = $(this).attr("id");
@@ -6388,7 +6388,7 @@
 
         });
         callback(isValid);
-      } else if (responsetype == "Image Choice") {
+      } else if (responsetype == "Image choice") {
         var valueArray = new Array();
         $('.image-choice').each(function () {
           var id = $(this).attr("id");
@@ -6414,7 +6414,7 @@
 
         });
         callback(isValid);
-      } else if (responsetype == "Text Choice") {
+      } else if (responsetype == "Text choice") {
         var valueArray = new Array();
         $('.text-choice').each(function () {
           var id = $(this).attr("id");
@@ -7063,7 +7063,7 @@
       if (responseType == 'Scale') {
         minValue = $("#scaleMinValueId").val();
         maxValue = $("#scaleMaxValueId").val();
-      } else if (responseType == 'Continuous Scale') {
+      } else if (responseType == 'Continuous scale') {
         minValue = $("#continuesScaleMinValueId").val();
         maxValue = $("#continuesScaleMaxValueId").val();
       } else if (responseType == 'Numeric') {

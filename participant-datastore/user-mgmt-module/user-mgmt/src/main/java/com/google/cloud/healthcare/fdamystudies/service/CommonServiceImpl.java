@@ -9,21 +9,15 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class CommonServiceImpl implements CommonService {
-
-  @Autowired private RestTemplate restTemplate;
-
-  @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Autowired private CommonDao commonDao;
 
