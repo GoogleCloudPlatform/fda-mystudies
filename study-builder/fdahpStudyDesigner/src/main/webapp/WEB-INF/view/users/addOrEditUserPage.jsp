@@ -26,13 +26,13 @@
             src="/studybuilder/images/icons/back-b.png" alt=""/></a>
       </span>
       <c:if test="${actionPage eq 'ADD_PAGE'}">
-        Add New User
+        Add new user
       </c:if>
       <c:if test="${actionPage eq 'EDIT_PAGE'}">
-        Edit User Details
+        Edit user details
       </c:if>
       <c:if test="${actionPage eq 'VIEW_PAGE'}">
-        User Details
+        User details
       </c:if>
 
     </div>

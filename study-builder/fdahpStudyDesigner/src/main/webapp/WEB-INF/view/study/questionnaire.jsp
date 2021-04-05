@@ -91,12 +91,12 @@
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
-      <div class="black-md-f text-uppercase dis-line pull-left line34">
+      <div class="black-md-f dis-line pull-left line34">
         <span class="pr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png" class="pr-md" alt=""/></span>
-        <c:if test="${actionType eq 'add'}">Add Questionnaire</c:if>
-        <c:if test="${actionType eq 'edit'}">Edit Questionnaire</c:if>
-        <c:if test="${actionType eq 'view'}">View Questionnaire <c:set
+        <c:if test="${actionType eq 'add'}">Add questionnaire</c:if>
+        <c:if test="${actionType eq 'edit'}">Edit questionnaire</c:if>
+        <c:if test="${actionType eq 'view'}">View questionnaire <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?questionnaireBo.questionnarieVersion:''}
         </c:if>
 
@@ -216,7 +216,7 @@
             <div
                 class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
                 onclick="getQuestionnaireStep('Instruction');">Add
-              Instruction step
+              instruction step
             </div>
             <div
                 class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
@@ -1580,7 +1580,7 @@
                   </span>
                   <span id="addbtn0"
                         class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
-                        onclick="addDateAnchor();">+
+                        onclick="addDateAnchor(0);">+
                   </span>
                   
                 </div>
@@ -1684,7 +1684,7 @@
                     </span>
                     <span id="addbtn${customVar.index}"
                           class="addbtn addBtnDis align-span-center mr-sm cursor-display"
-                          onclick="addDateAnchor();">+
+                          onclick="addDateAnchor(${customVar.index});">+
                     </span>
                     <span
                         id="deleteAncchor${customVar.index}"
@@ -2003,6 +2003,7 @@
 
             $("#AddButton").show();
             $("#AddButton").attr('required', true);
+            $('.manually-option').find('input').val('');
           } else {
             $("#AddButton").hide();
             $("#AddButton").attr('required', false);
@@ -2180,7 +2181,7 @@
 
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
 
               var questionnaireSteps = data.questionnaireJsonObject;
               var isDone = data.isDone;
@@ -2934,7 +2935,7 @@
 
     disablePastTime('#selectWeeklyTime', '#startWeeklyDate');
     disablePastTime('#selectMonthlyTime', '#startDateMonthly');
-    disablePastTime('#selectTime', '#chooseDate', '#selectTime1');
+    disablePastTime('#selectTime1', '#chooseDate');
 
     $(document).on('click change dp.change', '.cusStrDate, .cusTime', function (e) {
       if ($(this).is('.cusTime') && !$(this).prop('disabled')) {
@@ -4351,9 +4352,9 @@
     return valid;
   }
 
-  function addDateAnchor() {
+  function addDateAnchor(customCountIndex) {
 	  $('.manually-anchor-option').find(".delete").css("visibility", "visible");
-    customAnchorCount = parseInt($('.manually-anchor-option').length);
+	  customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
@@ -4390,7 +4391,7 @@
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span id='addbtn" + customAnchorCount
-        + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor();'>+</span>"
+        + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
         + "<span id='deleteAncchor" + customAnchorCount
         + "' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
         + "</div>";

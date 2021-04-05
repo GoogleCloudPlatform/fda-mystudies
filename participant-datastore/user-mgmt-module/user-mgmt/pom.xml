@@ -192,6 +192,12 @@
       <version>0.0.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/com.eatthepath/pushy -->
+	<dependency>
+      <groupId>com.eatthepath</groupId>
+      <artifactId>pushy</artifactId>
+      <version>0.14.1</version>
+	</dependency>
   </dependencies>
 
   <build>
@@ -269,7 +275,7 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
-      </plugin>	  
+      </plugin>
     </plugins>
   </build>
   <reporting>
