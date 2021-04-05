@@ -1155,7 +1155,7 @@
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 count='${customVar.index}' title="Select"
                 name="activeTaskCustomScheduleBo[${customVar.index}].yDaysSign"
-                id="ySign0">
+                id="ySign${customVar.index}">
               <option value="0"
                 ${not activeTaskCustomScheduleBo.yDaysSign ?'selected':''}>+
               </option>

@@ -156,7 +156,7 @@ public class FdahpStudyDesignerConstants {
   public static final String FDA_ENV_UATL = "uat";
 
   public static final String FDA_SALT = "BTCSoft";
-  public static final String FETAL_KICK_COUNTER = "Fetal Kick Counter";
+  public static final String FETAL_KICK_COUNTER = "Fetal kick counter";
 
   public static final String FORM_ID = "formId";
   public static final String FORM_STEP = "Form";
@@ -293,7 +293,7 @@ public class FdahpStudyDesignerConstants {
   public static final String QUESTIONSTEP_SAVED = "Question step saved";
   public static final String REDIRECT_SESSION_PARAM_NAME = "sessionUserId=";
   public static final String REFERENCE_TYPE_CATEGORIES = "Categories";
-  public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research Sponsors";
+  public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research sponsors";
   public static final String REQUIRED_DATE_TIME = "MM/dd/yyyy HH:mm";
   public static final String REQUIRED_DATE_TIME_FOR_DATE_DIFF = "MM/dd/yyyy HH:mm:ss";
   public static final String REQUIRED_TIME = "HH:mm";
@@ -352,7 +352,7 @@ public class FdahpStudyDesignerConstants {
   // Active task attribute name
   public static final String SHORT_TITLE = "shortTitle";
 
-  public static final String SPATIAL_SPAN_MEMORY = "Spatial Span Memory";
+  public static final String SPATIAL_SPAN_MEMORY = "Spatial span memory";
   public static final String SPECIALCHARACTERS = "specialcharacters";
   public static final String STAT_INFO_LIST = "statisticsInfoList";
   public static final boolean STATUS_ACTIVE = true;
@@ -393,7 +393,7 @@ public class FdahpStudyDesignerConstants {
   public static final String SUC_MSG = "sucMsg";
   public static final String SUCCESS = "SUCCESS";
 
-  public static final String TOWER_OF_HANOI = "Tower Of Hanoi";
+  public static final String TOWER_OF_HANOI = "Tower of hanoi";
   public static final String UI_DISPLAY_DATE = "EEE, MMM dd, yyyy";
   public static final String UI_SDF_DATE = "MM/dd/yyyy";
   public static final String UI_SDF_DATE_FORMAT = "dd/MM/yyyy";
