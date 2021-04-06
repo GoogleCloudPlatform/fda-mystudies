@@ -257,7 +257,7 @@
               </div>
             </div>
             <div class="mt-xlg">
-              <div class="blue-lg-f text-uppercase">
+              <div class="black-md-f text-uppercase">
                 CONSENT DOCUMENT
                 <span id="requiredStarId" class="requiredStar">*</span>
               </div>

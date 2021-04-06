@@ -89,7 +89,7 @@
         <div class="text-right">
           <div class="black-md-f dis-line pull-left line34">Comprehension test questions
           </div>
-          <div class="dis-line form-group mb-none mr-sm">
+          <div class="dis-line form-group mb-none">
             <c:if test="${empty permission}">
              <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"	
                   data-placement="bottom" data-original-title="">
@@ -238,7 +238,7 @@ var markAsComplete = "${markAsComplete}"
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1]}],
