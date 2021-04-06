@@ -58,6 +58,10 @@
     display: inline-block;
     vertical-align: top;
   }
+  
+   .help-block-txt ul {
+      width: max-content !important;
+    }
 
 
   /* error box css start here  */
@@ -387,7 +391,7 @@
                         ${questionnaireBo.anchorDateId eq anchorTypeInfo.id ? 'selected' : ''}>${anchorTypeInfo.name}</option>
                     </c:forEach>
                   </select>
-                  <div class="help-block with-errors red-txt"></div>
+                  <div class="help-block with-errors red-txt help-block-txt"></div>
                 </div>
               </div>
               <div class="clearfix"></div>
