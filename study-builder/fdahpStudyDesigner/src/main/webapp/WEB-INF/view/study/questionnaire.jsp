@@ -1424,7 +1424,9 @@
                   <span class="addbtn addBtnDis align-span-center mr-md"
                         onclick="addDate();">+
                   </span>
-                  </span>
+                   <span id="delete"	
+                          class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"	
+                          onclick="removeDate(this);"></span>
                 </div>
               </c:if>
               <c:if
@@ -1586,7 +1588,10 @@
                         class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
                         onclick="addDateAnchor(0);">+
                   </span>
-                  
+                  <span	
+                        id="deleteAncchor0"	
+                        class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"	
+                        onclick="removeDateAnchor(this);"></span>
                 </div>
               </c:if>
               <c:if
@@ -1931,23 +1936,28 @@
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
 
-        var j = 0;
-        for (j = customCount; j > 0; j--) {
-          var xdays = $("#xdays" + j).val();
-          
-          if(xdays == '') {
-            document.getElementById('manualTime0').value = '';
-        	  
-            $("#AnchorDate" + j ).hide();
-            $("#AnchorDate" + j ).find('input:text').removeAttr('required', true);
-
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
+        $($('.manually-anchor-option').get().reverse()).each(function () {
+            var id = $(this).attr("id");	
+            var countId = $("#"+id).find(".xdays").attr("count");	
+            if($('#'+id).find('#xdays'+countId).val()=="" && $('.manually-anchor-option').filter(function() {	
+                return $(this).css('display') !== 'none';	
+            }).length !== 1){	
+          	
+                    $("#"+id).remove();	
+                    $("#"+id).find('input:text').removeAttr('required', true);	
+                    $("#AddButton").show();	
+                    $("#AddButton").attr('required', true);	
+                }else {	
+                      $("#AddButton").hide();	
+                      $("#AddButton").attr('required', false);	
+                  }	
+         });	
+         	
+         if( $('.manually-anchor-option').filter(function() {	
+             return $(this).css('display') !== 'none';}).length == 1){	
+           $("#AddButton").show();	
+           $('.manually-anchor-option').find(".delete").css("visibility", "hidden");	
+         }
       } else {
           
         localStorage.setItem("IsAnchorDateSelected", "false");
@@ -1994,25 +2004,34 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
 
-        var i = 0;
-        for (i = customCount-1; i > 0; i--) {
-          var RegStartDate = $("#StartDate" + i).val();
-        	
-          if(RegStartDate == '') {
-        	document.getElementById('customTime0').value = '';
-        	$("#customTime0").attr("disabled", true);
-          
-            $("#RegDate" + i ).hide();
-            $("#RegDate" + i ).find('input:text').removeAttr('required', true);
 
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-            $('.manually-option').find('input').val('');
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
+        $('.manually-option').each(function () {	
+            var id = $(this).attr("id");	
+            var countId = $("#"+id).find(".cusStrDate").attr("count");	
+            if($('#'+id).find('#StartDate'+countId).val()=="" && $('.manually-option').filter(function() {	
+                return $(this).css('display') !== 'none';	
+            }).length !== 1){	
+                  	
+                    $("#"+id).remove();	
+                    $("#"+id).find('input:text').removeAttr('required', true);	
+                    $("#AddButton").show();	
+                    $("#AddButton").attr('required', true);	
+                }else {	
+                      $("#AddButton").hide();	
+                      $("#AddButton").attr('required', false);	
+                  }	
+         });
+         
+         if( $('.manually-option').filter(function() {	
+             return $(this).css('display') !== 'none';}).length == 1){	
+     	   $("#AddButton").show();	
+            $('.manually-option').find(".delete").css("visibility", "hidden");	
+         }
+         
+         if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
+             $('.manually-option').find('#AddButton').first().hide();
+         }
+
         
 	        var startDate = $("#startDate").val();
 	  
@@ -3094,14 +3113,16 @@
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
         + "</div>";
 
+        if ($('.manually-option').length > 1) {
+            $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
+        } else {
+            $('.manuallyContainer').find(".remBtnDis").addClass("hide");
+        }
+        
     $(".manually-option:last").after(newDateCon);
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
-    if ($('.manually-option').length > 1) {
-      $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
-    } else {
-      $('.manuallyContainer').find(".remBtnDis").addClass("hide");
-    }
+    
     customStartDate('StartDate' + customCount, customCount);
     customEndDate('EndDate' + customCount, customCount);
     timep('customTime' + customCount);
@@ -3111,6 +3132,11 @@
 
   function removeDate(param) {
     $(param).parents(".manually-option").remove();
+    if($('.manually-option').length == 1){
+   	 $('.manually-option').find(".delete").css("visibility", "hidden");
+   	 $('#AddButton').show();
+    }
+    
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
     if ($('.manually-option').length > 1) {
@@ -3120,6 +3146,12 @@
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
+    
+    if( $('.manually-option').filter(function() {	
+        return $(this).css('display') !== 'none';}).length == 1){	
+       $('.manually-option').find(".delete").css("visibility", "hidden");	
+    }
+    
     $(document).find('.cusTime').trigger('dp.change');
   }
 
@@ -4581,6 +4613,13 @@
       $(this).parent().parent().addClass("current");
 
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+    	    return $(this).css('display') !== 'none';}).length == 1){
+    	 $("#AddButton").show();
+    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+      }
+      
     });
 
     jQuery(document).on("keyup", ".ydays", function () {
@@ -4617,6 +4656,12 @@
       $(this).parent().parent().siblings().removeClass("current");
       $(this).parent().parent().addClass("current");
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+    	    return $(this).css('display') !== 'none';}).length == 1){
+    	 $("#AddButton").show();
+    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+      }
 
     });
 
