@@ -433,7 +433,7 @@
 	function showSucMsg(message) {
 	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
 	  $('#alertMsg').show('5000');
-	  if(message == 'Section marked complete'){
+	  if('${param.buttonText}' == 'completed'){
 		    window.setTimeout(function(){
 		        window.location.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
 		    }, 5000);
