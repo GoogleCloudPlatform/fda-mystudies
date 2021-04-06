@@ -1434,13 +1434,9 @@ public class StudyServiceImpl implements StudyService {
 
         studyDetails.setLogoImageUrl(
             StringUtils.isEmpty(studyBo.getThumbnailImage())
-                ? propMap.get("fda.imgDisplaydPath")
-                    + propMap.get("cloud.bucket.name")
-                    + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                ? propMap.get(FdahpStudyDesignerConstants.STUDTYLOGO)
                     + propMap.get(FdahpStudyDesignerConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE)
-                : propMap.get("fda.imgDisplaydPath")
-                    + propMap.get("cloud.bucket.name")
-                    + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                : propMap.get(FdahpStudyDesignerConstants.STUDTYLOGO)
                     + studyBo.getThumbnailImage());
       }
     } catch (Exception e) {

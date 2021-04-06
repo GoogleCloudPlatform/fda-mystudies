@@ -37,6 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepos
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LongSummaryStatistics;
@@ -68,6 +69,8 @@ public class StudyServiceImpl implements StudyService {
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistory;
+
+  @Autowired private ParticipantManagerUtil participantManagerUtil;
 
   @Override
   @Transactional(readOnly = true)
@@ -152,7 +155,7 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setName(study.getName());
       studyDetail.setType(study.getType());
       studyDetail.setStudyStatus(study.getStatus());
-      studyDetail.setLogoImageUrl(study.getLogoImageUrl());
+      studyDetail.setLogoImageUrl(participantManagerUtil.getSignedUrl(study.getLogoImageUrl(), 12));
       SiteCount siteCount = sitesPerStudyMap.get(study.getId());
       if (siteCount != null && siteCount.getCount() != null) {
         studyDetail.setSitesCount(siteCount.getCount());
@@ -198,7 +201,7 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setName(study.getStudyName());
       studyDetail.setType(study.getType());
       studyDetail.setStudyStatus(study.getStatus());
-      studyDetail.setLogoImageUrl(study.getLogoImageUrl());
+      studyDetail.setLogoImageUrl(participantManagerUtil.getSignedUrl(study.getLogoImageUrl(), 12));
       studyDetail.setStudyPermission(study.getEdit());
       studyDetail.setSitesCount(
           sitesCountMap.containsKey(study.getStudyId())
