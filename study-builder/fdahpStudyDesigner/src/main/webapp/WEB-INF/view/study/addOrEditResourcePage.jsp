@@ -23,9 +23,9 @@
                 src="/studybuilder/images/icons/back-b.png" alt=""/></a>
           </span>
           <c:if test="${isstudyProtocol ne 'isstudyProtocol'}">
-            <c:if test="${actionOn eq 'add'}">Add Resource</c:if>
-            <c:if test="${actionOn eq 'edit'}">Edit Resource</c:if>
-            <c:if test="${not empty resourceBO && actionOn eq 'view'}">View Resource <c:set
+            <c:if test="${actionOn eq 'add'}">Add resource</c:if>
+            <c:if test="${actionOn eq 'edit'}">Edit resource</c:if>
+            <c:if test="${not empty resourceBO && actionOn eq 'view'}">View resource <c:set
                 var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
             </c:if>
           </c:if>

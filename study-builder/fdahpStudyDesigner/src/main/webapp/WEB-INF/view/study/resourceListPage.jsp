@@ -199,7 +199,7 @@
               reloadResourceDataTable(data.resourceList, null);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully.");
+                  "Content items reordered");
               if ($('.eighthResources').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.eighthResources').find('span').removeClass(
