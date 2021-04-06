@@ -3821,16 +3821,27 @@ public class StudyController {
                             FdahpStudyDesignerConstants.SDF_TIME,
                             FdahpStudyDesignerConstants.DB_SDF_TIME))
                     : "");
+            notificationBO.setScheduleTimestamp(
+                (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                        && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                    ? FdahpStudyDesignerUtil.getTimeStamp(
+                        notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                    : null);
             notificationBO.setNotificationScheduleType(
                 FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
           } else if (FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE.equals(currentDateTime)) {
             notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
             notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
+            notificationBO.setScheduleTimestamp(
+                FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
+
             notificationBO.setNotificationScheduleType(
                 FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE);
           } else {
             notificationBO.setScheduleDate("");
             notificationBO.setScheduleTime("");
+            notificationBO.setScheduleTimestamp(null);
             notificationBO.setNotificationScheduleType("0");
           }
           String studyId =
@@ -5110,7 +5121,11 @@ public class StudyController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("studyType"))
                 ? ""
                 : request.getParameter("studyType");
-        flag = studyService.validateAppId(customStudyId, appId, studyType);
+        String dbCustomStudyId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("dbCustomStudyId"))
+                ? ""
+                : request.getParameter("dbCustomStudyId");
+        flag = studyService.validateAppId(customStudyId, appId, studyType, dbCustomStudyId);
         if (flag) {
           message = FdahpStudyDesignerConstants.SUCCESS;
         }

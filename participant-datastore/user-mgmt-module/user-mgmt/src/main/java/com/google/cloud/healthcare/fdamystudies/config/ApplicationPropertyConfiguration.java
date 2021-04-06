@@ -20,17 +20,6 @@ import org.springframework.context.annotation.Configuration;
 @ToString
 public class ApplicationPropertyConfiguration {
 
-  // If true, we do not authenticate with the SMTP server but rather rely on
-  // an IP whitelist for the domain `fromDomain`.
-  @Value("${from.email.use_ip_whitelist}")
-  private Boolean useIpWhitelist;
-
-  // Domain to use with the IP whitelist relay.
-  // Must be in the form domain rather than domain.com.
-
-  @Value("${from.email.domain}")
-  private String fromDomain;
-
   @Value("${confirmation.mail.subject}")
   private String confirmationMailSubject;
 
@@ -39,9 +28,6 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${auth.server.updateStatus.url}")
   private String authServerUpdateStatusUrl;
-
-  @Value("${register.url}")
-  private String authServerRegisterStatusUrl;
 
   @Value("${messaging.fcm.url}")
   private String apiUrlFcm;
