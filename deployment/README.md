@@ -88,7 +88,7 @@ The deployment process takes the following approach:
 1. Confirm you have access to a user account with the following Cloud IAM roles:
     - `roles/resourcemanager.folderAdmin` for the folder you created
     - `roles/resourcemanager.projectCreator` for the folder you created
-    - `roles/compute.xpnAdmin` for the folder you created
+    - `roles/compute.xpnAdmin` for the organization (note, this permission must be at the organization level not the folder level)
     - `roles/billing.admin` for the billing account that you will use
 1. Use the [groups manager](https://console.cloud.google.com/identity/groups) to [create](https://support.google.com/a/answer/33343?hl=en) the following
     administrative [IAM](https://cloud.google.com/iam/docs/overview#concepts_related_identity) groups that will be used during deployment:
