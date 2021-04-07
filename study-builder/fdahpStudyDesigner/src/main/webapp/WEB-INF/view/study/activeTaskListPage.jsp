@@ -143,7 +143,7 @@
       "order": [[0, "desc"]],
       "info": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "lengthChange": false,
       "searching": false,
