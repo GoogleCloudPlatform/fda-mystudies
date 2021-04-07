@@ -7,6 +7,11 @@
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
 
+# Release 2.0.4
+* Upgrade to newer - HTTP/2-based Apple Push Notification service (APNs) [#3417](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/3364)
+* Fix app container build issue [#3409](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/3409)
+* Update deployment instructions for Shared VPC Admin
+
 # Release 2.0.3
 * Added [database migration tools](/db-migration/README.md) using Flyway to support upgrades
 * Added [API documentation](/documentation/API/README.md) using Swagger libraries
