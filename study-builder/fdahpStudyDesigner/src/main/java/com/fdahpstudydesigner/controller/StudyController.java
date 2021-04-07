@@ -4593,14 +4593,14 @@ public class StudyController {
               "signedUrl",
               FdahpStudyDesignerUtil.getSignedUrl(
                   FdahpStudyDesignerConstants.STUDTYLOGO + "/" + studyBo.getThumbnailImage(), 12));
-          map.addAttribute(
-              "defaultImageSignedUrl",
-              FdahpStudyDesignerUtil.getSignedUrl(
-                  FdahpStudyDesignerConstants.STUDTYLOGO
-                      + "/"
-                      + configMap.get("study.basicInformation.defaultImage"),
-                  12));
         }
+        map.addAttribute(
+            "defaultImageSignedUrl",
+            FdahpStudyDesignerUtil.getSignedUrl(
+                FdahpStudyDesignerConstants.STUDTYLOGO
+                    + "/"
+                    + configMap.get("study.basicInformation.defaultImage"),
+                12));
         // grouped for Study category , Research Sponsors , Data partner
         referenceMap =
             (HashMap<String, List<ReferenceTablesBo>>) studyService.getreferenceListByCategory();
