@@ -74,6 +74,7 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
     LinearLayout l = (LinearLayout) findViewById(R.id.lin_layout_hours);
     if (status
             .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
+            && (activityStatus.getStatus() != null)
             && (activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED)
             || activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)
             || activityStatus.getCurrentRunId() == 0)) {
