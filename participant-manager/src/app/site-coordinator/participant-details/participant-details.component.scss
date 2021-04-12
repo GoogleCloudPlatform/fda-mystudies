@@ -16,3 +16,7 @@
 .table tbody tr:last-child td:first-child {
   border-bottom: none !important;
 }
+
+.table.custom__table th {
+  width: 34%;
+}

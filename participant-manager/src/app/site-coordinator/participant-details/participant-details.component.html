@@ -281,52 +281,50 @@
         Enrollment history
       </h2>
 
- 
-<table class="table table-striped custom__table">
-  <tr>
-   <th>Date of enrollment</th>
-   <th>Date of withdrawal</th>
-   <th>Last enrollment status</th>
-   <th>&nbsp;</th>
-   <th>&nbsp;</th>
-   <th>&nbsp;</th>
-          
-  </tr>
-     <tr
-              *ngFor="
-                let enrollmentDetails of participant.participantDetails
-                  .enrollments
-              "
+      <table class="table table-striped custom__table">
+        <tr>
+          <th>Date of enrollment</th>
+          <th>Date of withdrawal</th>
+          <th>&nbsp; Last enrollment status</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
+        </tr>
+        <tr
+          *ngFor="
+            let enrollmentDetails of participant.participantDetails.enrollments
+          "
+        >
+          <td>
+            <span>{{ enrollmentDetails.enrollmentDate }}</span>
+          </td>
+          <td>
+            <span>{{ enrollmentDetails.withdrawalDate }}</span>
+          </td>
+          <td>
+            <span
+              [ngClass]="{
+                'txt__green':
+                  enrollmentDetails.enrollmentStatus ==
+                  enrollmentStatus.Enrolled,
+                'txt__light-gray':
+                  enrollmentDetails.enrollmentStatus ==
+                  enrollmentStatus.Withdrawn
+              }"
             >
-              <td>
-                <span>{{ enrollmentDetails.enrollmentDate }}</span>
-              </td>
-              <td>
-                <span>{{ enrollmentDetails.withdrawalDate }}</span>
-              </td>
-              <td>
-                <span
-                  [ngClass]="{
-                    'txt__green':
-                      enrollmentDetails.enrollmentStatus ==
-                      enrollmentStatus.Enrolled,
-                    'txt__light-gray':
-                      enrollmentDetails.enrollmentStatus ==
-                      enrollmentStatus.Withdrawn
-                  }"
-                >
-                  {{ enrollmentDetails.enrollmentStatus }}
-                </span>
-              </td>
-              <td> &nbsp; </td>
-               <td> &nbsp; </td>
-                <td> &nbsp; </td>      
-            </tr>
-            <tr *ngIf="participant.participantDetails.enrollments.length === 0">
-              <td colspan="6" class="text-center font12 txt__light-gray">No records found</td>
-            </tr>
-           
-</table>
+              {{ enrollmentDetails.enrollmentStatus }}
+            </span>
+          </td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr *ngIf="participant.participantDetails.enrollments.length === 0">
+          <td colspan="6" class="text-center font12 txt__light-gray">
+            No records found
+          </td>
+        </tr>
+      </table>
 
       <h2 class="subheader__title text-weight-semibold mb-sm">
         Consent history
@@ -354,13 +352,12 @@
               </th>
               <th>
                 <mfDefaultSorter by="consentedDate">
-                 &nbsp;    &nbsp; &nbsp;   Consented date
-               
+                  Consented date
                 </mfDefaultSorter>
               </th>
-              <th >
+              <th>
                 <mfDefaultSorter by="dataSharingPermissions">
-                &nbsp;          Data sharing permissions
+                  Data sharing permissions
                 </mfDefaultSorter>
               </th>
               <th>
@@ -374,7 +371,6 @@
             <tr *ngFor="let consentDetails of mf.data">
               <td>{{ consentDetails.consentVersion }}</td>
               <td>
-                  &nbsp;    &nbsp; &nbsp;  
                 {{
                   consentDetails.consentedDate
                     ? consentDetails.consentedDate
@@ -382,7 +378,6 @@
                 }}
               </td>
               <td>
-                  &nbsp;
                 {{
                   consentDetails.dataSharingPermissions
                     ? consentDetails.dataSharingPermissions
@@ -404,7 +399,9 @@
             <tr
               *ngIf="participant.participantDetails.consentHistory.length === 0"
             >
-              <td colspan="4" class="text-center font12 txt__light-gray">No records found</td>
+              <td colspan="4" class="text-center font12 txt__light-gray">
+                No records found
+              </td>
             </tr>
           </tbody>
 
@@ -416,7 +413,6 @@
             </tr>
           </tfoot>
         </table>
-        
       </div>
     </section>
   </div>
