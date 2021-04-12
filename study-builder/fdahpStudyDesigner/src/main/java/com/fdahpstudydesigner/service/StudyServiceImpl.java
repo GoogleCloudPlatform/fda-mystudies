@@ -1434,10 +1434,10 @@ public class StudyServiceImpl implements StudyService {
 
         studyDetails.setLogoImageUrl(
             StringUtils.isEmpty(studyBo.getThumbnailImage())
-                ? propMap.get(FdahpStudyDesignerConstants.STUDTYLOGO)
+                ? FdahpStudyDesignerConstants.STUDTYLOGO
+                    + "/"
                     + propMap.get(FdahpStudyDesignerConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE)
-                : propMap.get(FdahpStudyDesignerConstants.STUDTYLOGO)
-                    + studyBo.getThumbnailImage());
+                : FdahpStudyDesignerConstants.STUDTYLOGO + "/" + studyBo.getThumbnailImage());
       }
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyByLatestVersion - Error", e);
