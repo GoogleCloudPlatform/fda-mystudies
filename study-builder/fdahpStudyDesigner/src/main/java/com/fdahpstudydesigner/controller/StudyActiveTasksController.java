@@ -133,11 +133,12 @@ public class StudyActiveTasksController {
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           request
               .getSession()
               .setAttribute(
                   sessionStudyCount + "sucMsg", propMap.get("complete.study.success.message"));
-          mav = new ModelAndView("redirect:/adminStudies/getResourceList.do", map);
+          mav = new ModelAndView("redirect:viewStudyActiveTasks.do", map);
         } else {
           request
               .getSession()

@@ -977,6 +977,7 @@ margin-top:16px !important;
     var studyType = $('input[name=type]:checked').val();
     var thisAttr = $("#appId");
     var customStudyId = $("#customStudyId").val();
+    var dbCustomStudyId = '${studyBo.customStudyId}';
     if (appId != null && appId != '' && typeof appId != 'undefined') {
       $
           .ajax({
@@ -987,6 +988,7 @@ margin-top:16px !important;
               customStudyId: customStudyId,
               appId: appId,
               studyType: studyType,
+              dbCustomStudyId: dbCustomStudyId,
               "${_csrf.parameterName}": "${_csrf.token}",
             },
             success: function getResponse(data) {
@@ -1021,4 +1023,22 @@ margin-top:16px !important;
       callback(false);
     }
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+function showSucMsg(message) {
+  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+  $('#alertMsg').show('5000');
+  if('${param.buttonText}' == 'completed'){
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
+	
+	    }, 5000);
+  }else{
+  	setTimeout(hideDisplayMessage, 5000);
+  }
+}
 </script>

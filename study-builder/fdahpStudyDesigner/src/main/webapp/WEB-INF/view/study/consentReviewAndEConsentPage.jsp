@@ -257,7 +257,7 @@
               </div>
             </div>
             <div class="mt-xlg">
-              <div class="blue-lg-f text-uppercase">
+              <div class="black-md-f text-uppercase">
                 CONSENT DOCUMENT
                 <span id="requiredStarId" class="requiredStar">*</span>
               </div>
@@ -769,7 +769,7 @@
       callback: function (result) {
         if (result) {
           var a = document.createElement('a');
-          a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
+          a.href = "/studybuilder/adminStudies/studyList.do";
           document.body.appendChild(a).click();
         } else {
           $(item).prop('disabled', false);
@@ -944,5 +944,18 @@
       $(this).parent().find(".glyphicon-chevron-down").removeClass(
           "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
     });
+  }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+  function showSucMsg(message) {
+	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	 $('#alertMsg').show('5000');
+	   window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+	    }, 5000);
   }
 </script>

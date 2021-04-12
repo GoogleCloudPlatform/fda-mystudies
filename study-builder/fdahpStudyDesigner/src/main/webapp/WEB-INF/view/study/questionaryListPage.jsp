@@ -76,7 +76,7 @@
               <td>
                 <div class="dis-ellipsis pr-100">${questionnaryInfo.title}</div>
               </td>
-              <td>${questionnaryInfo.frequency == 'Manually Schedule' ? 'Custom Schedule' :questionnaryInfo.frequency}</td>
+              <td>${questionnaryInfo.frequency == 'Manually Schedule' ? 'Custom schedule' :questionnaryInfo.frequency}</td>
               <td style="width:200px !important;">
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
@@ -128,7 +128,7 @@
         {"bSortable": true}
       ],
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "order": [[0, "desc"]],
       "info": false,
@@ -272,7 +272,7 @@
         if (typeof obj.frequency === "undefined" && typeof obj.frequency === "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom Schedule' : obj.frequency);
+          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom schedule' : obj.frequency);
         }
         var actionDiv = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewQuestionnaires("
             + parseInt(obj.id) + ");'></span>";
@@ -303,6 +303,23 @@
   function markAsCompleted() {
     document.questionnaireInfoForm.action = "/studybuilder/adminStudies/questionnaireMarkAsCompleted.do?_S=${param._S}";
     document.questionnaireInfoForm.submit();
+  }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+  function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
+	    }, 5000);
+	  }else{
+	    	setTimeout(hideDisplayMessage, 5000);
+	  }
   }
 </script>     
         

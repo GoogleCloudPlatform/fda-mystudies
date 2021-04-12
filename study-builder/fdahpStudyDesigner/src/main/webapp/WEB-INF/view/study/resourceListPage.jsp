@@ -146,7 +146,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
@@ -199,7 +199,7 @@
               reloadResourceDataTable(data.resourceList, null);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully.");
+                  "Content items reordered");
               if ($('.eighthResources').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.eighthResources').find('span').removeClass(
@@ -390,4 +390,21 @@
   function hideDisplayMessage() {
     $('#alertMsg').hide();
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminStudies/viewStudyNotificationList.do?_S=${param._S}";
+		    }, 5000);
+	  }else{
+	  	setTimeout(hideDisplayMessage, 5000);
+	  }
+	}
 </script>
