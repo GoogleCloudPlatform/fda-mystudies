@@ -194,7 +194,7 @@
 					available for Android as compared to iOS. Please note the same
                     in your creation of study content:
                   </li>
-                  <li>i. Active tasks: Tower Of Hanoi, Spatial Span Memory
+                  <li>i. Active tasks: Tower of hanoi, Spatial span memory
                   </li>
                 </ul>
               </li>
@@ -423,4 +423,21 @@
       $("#settingfoFormId").submit();
     }
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+  function showSucMsg(message) {
+	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	 $('#alertMsg').show('5000');
+	 if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
+		    }, 5000);
+	  }else{
+	  	setTimeout(hideDisplayMessage, 5000);
+	  }
+   }
 </script>

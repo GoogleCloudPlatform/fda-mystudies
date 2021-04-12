@@ -46,9 +46,11 @@
   .tool-tip [disabled] {
     pointer-events: none;
   }
+  
+   .help-block-txt ul {
+      width: max-content !important;
+    }
    
-
- 
 </style>
 <div class="gray-xs-f mb-sm">Active task schedule type</div>
 <div class="pb-lg ">
@@ -86,7 +88,7 @@
                       name="${anchorTypeInfo.name}" ${activeTaskBo.anchorDateId eq anchorTypeInfo.id ? 'selected' : ''}>${anchorTypeInfo.name}</option>
             </c:forEach>
           </select>
-          <div class="help-block with-errors red-txt"></div>
+          <div class="help-block with-errors red-txt help-block-txt"></div>
         </div>
       </div>
       <div class="clearfix"></div>
@@ -165,7 +167,7 @@
         <div class="mt-none resetDate">
           <div>
             <span class="pr-md">Anchor date</span>
-            <span>
+            <span  class="mr-xs">
               <select
                   class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                   title="Select" name="activeTaskFrequenciesBo.xDaysSign" id="onetimeXSign">
@@ -281,7 +283,7 @@
         <div class="mt-none resetDate">
           <div>
             <span class="pr-md">Anchor date</span>
-            <span>
+            <span class="mr-xs">
               <select
                   class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                   title="Select" name="activeTaskFrequenciesBo.yDaysSign"
@@ -372,7 +374,7 @@
               </span>
               <br/>
               <span class="pr-md">Anchor date</span>
-              <span>
+              <span class="mr-xs">
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                     title="Select" name="activeTaskFrequenciesList[0].xDaysSign"
@@ -594,7 +596,7 @@
               </span>
               <br/>
               <span class="pr-md">Anchor date</span>
-              <span>
+              <span class="mr-xs">
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                     title="Select" name="activeTaskFrequenciesBo.xDaysSign" id="weeklyXSign">
@@ -786,7 +788,7 @@
               </span>
               <br/>
               <span class="pr-md">Anchor date</span>
-              <span>
+              <span class="mr-xs">
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                     title="Select" name="activeTaskFrequenciesBo.xDaysSign"
@@ -954,7 +956,9 @@
             <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
-          
+          <span id="delete"
+                  class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
+                  onclick="removeDate(this);"></span>
         </div>
       </c:if>
       <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) gt 0}">
@@ -1093,9 +1097,11 @@
                 class='help-block with-errors red-txt'></span>
           </span>
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
-                onclick="addDateAnchor();">+
+                onclick="addDateAnchor(0);">+
           </span>
-          
+          <span id="deleteAncchor"
+                  class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
+                  onclick="removeDateAnchor(this);"></span>
         </div>
       </c:if>
       <c:if
@@ -1115,7 +1121,7 @@
                   class="light-txt opacity06"> Anchor date
               </span>
             </span>
-            <span>
+            <span class="mr-xs">
               <select
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 count='${customVar.index}' title="Select"
@@ -1150,12 +1156,12 @@
                 Date
               </span>
             </span>
-            <span>
+            <span class="mr-xs">
               <select
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 count='${customVar.index}' title="Select"
                 name="activeTaskCustomScheduleBo[${customVar.index}].yDaysSign"
-                id="ySign0">
+                id="ySign${customVar.index}">
               <option value="0"
                 ${not activeTaskCustomScheduleBo.yDaysSign ?'selected':''}>+
               </option>
@@ -1192,7 +1198,7 @@
                   class='help-block with-errors red-txt'></span>
             </span>
             <span class="addbtn addBtnDis align-span-center mr-md "
-                  onclick="addDateAnchor();">+
+                  onclick="addDateAnchor(${customVar.index});">+
             </span>
             <span id="deleteAncchor"
                   class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
@@ -1403,23 +1409,29 @@
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
 
-        var j = 0;
-        for (j = customCount; j > 0; j--) {
-          var xdays = $("#xdays" + j).val();
+        $($('.manually-anchor-option').get().reverse()).each(function () {
+            var id = $(this).attr("id");
+            var countId = $("#"+id).find(".xdays").attr("count");
+            if($('#'+id).find('#xdays'+countId).val()=="" && $('.manually-anchor-option').filter(function() {
+                return $(this).css('display') !== 'none';
+            }).length !== 1){
           
-          if(xdays == '') {
-          	document.getElementById('manualTime0').value = '';
-        	  
-            $("#AnchorDate" + j ).hide();
-            $("#AnchorDate" + j ).find('input:text').removeAttr('required', true);
-
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
+                    $("#"+id).remove();
+                    $("#"+id).find('input:text').removeAttr('required', true);
+                    $("#AddButton").show();
+                    $("#AddButton").attr('required', true);
+                }else {
+                      $("#AddButton").hide();
+                      $("#AddButton").attr('required', false);
+                  }
+         });
+         
+         if( $('.manually-anchor-option').filter(function() {
+             return $(this).css('display') !== 'none';}).length == 1){
+          $("#AddButton").show();
+          $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+         }
+         
       } else {
 
         localStorage.setItem("IsActiveAnchorDateSelected", "false");
@@ -1469,24 +1481,34 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
 
-       var i = 0;
-       for (i = customCount-1; i > 0; i--) {
-         var RegStartDate = $("#StartDate" + i).val();
-         
-         if(RegStartDate == '') {
-       	   document.getElementById('customTime0').value = '';
-       	   $("#customTime0").attr("disabled", true);
-         
-           $("#RegDate" + i ).hide();
-           $("#RegDate" + i ).find('input:text').removeAttr('required', true);
-
-           $("#AddButton").show();
-           $("#AddButton").attr('required', true);
-         } else {
-           $("#AddButton").hide();
-           $("#AddButton").attr('required', false);
+        $('.manually-option').each(function () {
+            var id = $(this).attr("id");
+            var countId = $("#"+id).find(".cusStrDate").attr("count");
+            if($('#'+id).find('#StartDate'+countId).val()=="" && $('.manually-option').filter(function() {
+                return $(this).css('display') !== 'none';
+            }).length !== 1){
+                  
+                    $("#"+id).remove();
+                    $("#"+id).find('input:text').removeAttr('required', true);
+                    $("#AddButton").show();
+                    $("#AddButton").attr('required', true);
+                }else {
+                      $("#AddButton").hide();
+                      $("#AddButton").attr('required', false);
+                  }
+         });
+        
+         if( $('.manually-option').filter(function() {
+         	return $(this).css('display') !== 'none'; }).length == 1){
+     	     $("#AddButton").show();
+             $('.manually-option').find(".delete").css("visibility", "hidden");
          }
-       }
+         
+
+         if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
+             $('.manually-option').find('#AddButton').first().hide();
+
+         }
       }
 
       if (schedule_opts == 'One time') {
@@ -2101,7 +2123,7 @@
     });
     disablePastTime('#selectWeeklyTime', '#startWeeklyDate');
     disablePastTime('#selectMonthlyTime', '#startDateMonthly');
-    disablePastTime('#selectTime', '#chooseDate');
+    disablePastTime('#selectTime1', '#chooseDate');
 
     $(document).on('click change dp.change', '.cusStrDate, .cusTime', function (e) {
       if ($(this).is('.cusTime') && !$(this).prop('disabled')) {
@@ -2265,14 +2287,16 @@
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
         + "</div>";
 
+        if ($('.manually-option').length > 1) {
+            $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
+        } else {
+            $('.manuallyContainer').find(".remBtnDis").addClass("hide");
+        }
+        
     $(".manually-option:last").after(newDateCon);
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
-    if ($('.manually-option').length > 1) {
-      $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
-    } else {
-      $('.manuallyContainer').find(".remBtnDis").addClass("hide");
-    }
+   
     customStartDate('StartDate' + customCount, customCount);
     customEndDate('EndDate' + customCount, customCount);
     timep('customTime' + customCount);
@@ -2282,6 +2306,10 @@
 
   function removeDate(param) {
     $(param).parents(".manually-option").remove();
+	if($('.manually-option').length == 1){
+   	  $('.manually-option').find(".delete").css("visibility", "hidden");
+   	  $('#AddButton').show();
+    }
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
     if ($('.manually-option').length > 1) {
@@ -2291,6 +2319,12 @@
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
+    
+    if( $('.manually-option').filter(function() {
+        return $(this).css('display') !== 'none';}).length == 1){
+      $('.manually-option').find(".delete").css("visibility", "hidden");
+    }
+    
     $(document).find('.cusTime').trigger('dp.change');
   }
 
@@ -3205,13 +3239,13 @@
     return valid;
   }
 
-  function addDateAnchor() {
+  function addDateAnchor(customCountIndex) {
 	  $('.manually-anchor-option').find(".delete").css("visibility", "visible");
-    customAnchorCount = $('.manually-anchor-option').length;
+	customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
-        + "<span><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
+        + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
@@ -3224,7 +3258,7 @@
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
-        + "<span><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
+        + "<span  class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].yDaysSign' id='ySign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
@@ -3243,7 +3277,7 @@
         + "].frequencyTime' placeholder='Time' required/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor();'>+</span>"
+        + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
         + "<span id='deleteAncchor' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
         + "</div>";
 
@@ -3429,6 +3463,12 @@
       $(this).parent().parent().addClass("current");
 
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+  	    return $(this).css('display') !== 'none';}).length == 1){
+  	   $("#AddButton").show();
+  	   $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+      }
     });
 
     jQuery(document).on("keyup", ".ydays", function () {
@@ -3465,6 +3505,12 @@
       $(this).parent().parent().siblings().removeClass("current");
       $(this).parent().parent().addClass("current");
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+  	    return $(this).css('display') !== 'none';}).length == 1){
+  	   $("#AddButton").show();
+  	   $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+      }
 
     });
 

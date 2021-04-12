@@ -1,9 +1,11 @@
 # Copyright 2020 Google LLC
-#
 # Use of this source code is governed by an MIT-style
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
+
 steps:
-  - name: 'maven'
-    args: ['mvn', '-B', 'package', 'com.google.cloud.tools:jib-maven-plugin:2.5.2:build', '-Dimage=gcr.io/$PROJECT_ID/study-builder']
-    dir: "study-builder/fdahpStudyDesigner"
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/study-builder', '.']
+    dir: "study-builder"
+
+images: ['gcr.io/$PROJECT_ID/study-builder']

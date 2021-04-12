@@ -65,7 +65,7 @@
             <th id="">
               <span class="marL10">#</span>
             </th>
-            <th id="">Consent Title</th>
+            <th id="">Section Title</th>
             <th id="">visual step</th>
             <th id="">
               <div class="dis-line form-group mb-none">
@@ -141,7 +141,7 @@
       "filter": false,
       rowReorder: reorder,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
       "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -193,7 +193,7 @@
               reloadConsentInfoDataTable(data.consentInfoList, null);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
               if ($('.fifthConsent').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.fifthConsent').find('span').removeClass(
@@ -392,6 +392,23 @@
       $("#consentInfoForm").submit();
     }
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+		$("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+		$('#alertMsg').show('5000');
+		if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
+		    }, 5000);
+		 }else{
+	    	setTimeout(hideDisplayMessage, 5000);
+	     }
+	  }
 </script>
 
 <script>

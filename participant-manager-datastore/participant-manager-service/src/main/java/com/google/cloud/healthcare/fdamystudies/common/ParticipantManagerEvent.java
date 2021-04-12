@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -26,40 +26,40 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       null,
       "USER_ACCOUNT_ACTIVATION_FAILED"),
 
-  USER_DEACTIVATED(
+  ADMIN_DEACTIVATED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "User account deactivated (user ID - ${edited_user_id}).",
-      "USER_DEACTIVATED"),
+      "Admin user account deactivated (user ID - ${edited_user_id}).",
+      "ADMIN_DEACTIVATED"),
 
-  USER_REACTIVATED(
+  ADMIN_REACTIVATED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "User account re-activated (user ID - ${edited_user_id}).",
-      "USER_REACTIVATED"),
+      "Admin user account re-activated (user ID - ${edited_user_id}).",
+      "ADMIN_REACTIVATED"),
 
-  USER_DELETED(
+  ADMIN_DELETED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "User record deleted  (user ID - ${new_user_id}).",
-      "USER_DELETED"),
+      "Admin user record deleted  (user ID - ${new_user_id})",
+      "ADMIN_DELETED"),
 
   RESEND_INVITATION(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "Invitation resent to the user (user ID - ${new_user_id}).",
+      "Invitation resent to the admin (user ID - ${new_user_id}",
       "RESEND_INVITATION"),
 
-  USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION(
+  ADMIN_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
       null,
-      "USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION"),
+      "ADMIN_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION"),
 
   SITE_ADDED_FOR_STUDY(
       PARTICIPANT_MANAGER,
@@ -194,56 +194,56 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       "Location activated (location ID- ${location_id}).",
       "LOCATION_ACTIVATED"),
 
-  NEW_USER_ADDED(
+  NEW_ADMIN_ADDED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "New user created (user ID - ${new_user_id}, access level - ${new_user_access_level}).",
-      "NEW_USER_ADDED"),
+      "New admin user created (user ID - ${new_user_id}, access level - ${new_user_access_level}).",
+      "NEW_ADMIN_ADDED"),
 
-  NEW_USER_INVITATION_EMAIL_SENT(
+  NEW_ADMIN_INVITATION_EMAIL_SENT(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "Account setup invitation email sent to user (user ID -${new_user_id})",
-      "NEW_USER_INVITATION_EMAIL_SENT"),
+      "Account setup invitation email sent to admin (user ID -${new_user_id}).",
+      "NEW_ADMIN_INVITATION_EMAIL_SENT"),
 
-  NEW_USER_INVITATION_EMAIL_FAILED(
+  NEW_ADMIN_INVITATION_EMAIL_FAILED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "Account setup invitation email could not be sent to user (user ID -${new_user_id}).",
-      "NEW_USER_INVITATION_EMAIL_FAILED"),
+      "Account setup invitation email could not be sent to admin (user ID -${new_user_id}).",
+      "NEW_ADMIN_INVITATION_EMAIL_FAILED"),
 
-  USER_RECORD_UPDATED(
+  ADMIN_USER_RECORD_UPDATED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "User record updated (user id - ${edited_user_id}, access level - ${edited_user_access_level}).",
-      "USER_RECORD_UPDATED"),
+      "Admin user record updated (user id - ${edited_user_id}, access level - ${edited_user_access_level}).",
+      "ADMIN_USER_RECORD_UPDATED"),
 
   ACCOUNT_UPDATE_EMAIL_SENT(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "Account update email sent to user (user id- ${edited_user_id}).",
+      "Account update email sent to admin user (user id- ${edited_user_id}).",
       "ACCOUNT_UPDATE_EMAIL_SENT"),
 
   ACCOUNT_UPDATE_EMAIL_FAILED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "Account update email could not be sent to user (user id- ${edited_user_id}).",
+      "Account update email could not be sent to admin user (user id- ${edited_user_id}).",
       "ACCOUNT_UPDATE_EMAIL_FAILED"),
 
-  ACCOUNT_UPDATE_BY_USER(
-      PARTICIPANT_MANAGER, PARTICIPANT_USER_DATASTORE, null, null, "ACCOUNT_UPDATE_BY_USER"),
+  ACCOUNT_UPDATE_BY_ADMIN(
+      PARTICIPANT_MANAGER, PARTICIPANT_USER_DATASTORE, null, null, "ACCOUNT_UPDATE_BY_ADMIN"),
 
   SITE_PARTICIPANT_REGISTRY_VIEWED(
       PARTICIPANT_MANAGER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "Site participant registry viewed by the user.(site ID- ${site_id})",
+      "Site participant registry viewed by the admin(site ID- ${site_id})",
       "SITE_PARTICIPANT_REGISTRY_VIEWED"),
 
   STUDY_PARTICIPANT_REGISTRY_VIEWED(

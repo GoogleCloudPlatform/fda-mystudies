@@ -91,7 +91,11 @@
 
     <script src="/studybuilder/js/underscore-min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
-
+	<style>
+	  .arrowLeftSugg {
+	    left: 95.5%; !important;
+	    }
+  	</style>
   </head>
   <body class="loading background__img">
     <div id="loader">
