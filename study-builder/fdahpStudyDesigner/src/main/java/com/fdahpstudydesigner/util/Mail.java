@@ -261,8 +261,7 @@ public class Mail {
     Properties props = new Properties();
     props.put("mail.smtp.host", this.getSmtpHostname());
     props.put("mail.smtp.port", this.getSmtpPortvalue());
-    props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-    props.put("mail.smtp.socketFactory.port", this.getSmtpPortvalue());
+    props.put("mail.smtp.starttls.enable", "true");
     if (useIpWhitelist) {
       props.put("mail.smtp.auth", "false");
       props.put("mail.smtp.ssl.enable", "true");
