@@ -153,7 +153,7 @@ public class BaseMockIT {
   private void loadAppProperties() throws IOException {
     Map<String, String> appProperties = FdahpStudyDesignerUtil.getAppProperties();
     appProperties.put("from.email.address", "sendmail029@gmail.com");
-    appProperties.put("from.email.password", "vxabvugnwdnerhqx");
+    appProperties.put("from.email.password", "qhczakpwtqpqmbjy");
     appProperties.put("smtp.hostname", "smtp.gmail.com");
     appProperties.put("from.email.use_ip_whitelist", " ");
     appProperties.put("from.email.domain", " ");
