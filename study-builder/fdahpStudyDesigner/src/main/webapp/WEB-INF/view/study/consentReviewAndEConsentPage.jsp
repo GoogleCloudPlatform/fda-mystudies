@@ -268,7 +268,7 @@
       		</div>
       		</c:if>
             <div class="mt-xlg">
-              <div class="black-md-f text-uppercase">
+              <div class="black-md-f">
                 Consent document
                 <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
                 <span id="requiredStarId" class="requiredStar">*</span>
