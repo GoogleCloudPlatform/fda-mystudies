@@ -112,15 +112,25 @@ public class ScaleTextQuestion implements StepBody {
             new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
         params.gravity = Gravity.CENTER;
-        linearLayout1.setLayoutParams(params);
+
         TextView textView = new TextView(inflater.getContext());
         LinearLayout.LayoutParams txtparams =
             new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        txtparams.gravity = Gravity.CENTER;
-        textView.setGravity(Gravity.CENTER);
+        if (i == choiceTextExclusives.length - 1) {
+          txtparams.gravity = Gravity.TOP;
+          textView.setGravity(Gravity.TOP);
+        } else if (i == 0) {
+          txtparams.gravity = Gravity.BOTTOM;
+          textView.setGravity(Gravity.BOTTOM);
+        } else {
+          txtparams.gravity = Gravity.CENTER;
+          textView.setGravity(Gravity.CENTER);
+          params.setMargins(0, 30, 0, 30);
+        }
         textView.setLayoutParams(txtparams);
         textView.setText(choiceTextExclusives[i].getText());
+        linearLayout1.setLayoutParams(params);
         linearLayout1.addView(textView);
 
         scalevsaluelayout.addView(linearLayout1);
