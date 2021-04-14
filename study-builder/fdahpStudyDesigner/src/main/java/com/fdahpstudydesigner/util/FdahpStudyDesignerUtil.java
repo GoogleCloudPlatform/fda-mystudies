@@ -1020,11 +1020,11 @@ public class FdahpStudyDesignerUtil {
     return fileNameWithExtension;
   }
 
-  public static String getSignedUrl(String filePath, int durationInMinutes) {
+  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
     try {
       BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      return storage.signUrl(blobInfo, durationInMinutes, TimeUnit.HOURS).toString();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
     } catch (Exception e) {
       logger.error("Unable to generate signed url", e);
     }
