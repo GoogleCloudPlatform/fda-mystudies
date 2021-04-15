@@ -251,7 +251,7 @@
       <span class="checkbox checkbox-inline">
         <input type="checkbox" id="isStudyLifeTime" name="activeTaskFrequenciesBo.isStudyLifeTime"
                value="true" ${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}
-               required="required">
+               required="required" >
         <label for="isStudyLifeTime"> Study lifetime</label>
       </span>
       <div class="mt-md form-group regularClass">

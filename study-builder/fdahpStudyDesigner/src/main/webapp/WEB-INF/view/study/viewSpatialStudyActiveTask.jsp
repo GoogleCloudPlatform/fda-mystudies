@@ -44,7 +44,7 @@
                  name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
               <c:if
                   test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
-                 maxlength="50" required/>
+                 maxlength="50" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>

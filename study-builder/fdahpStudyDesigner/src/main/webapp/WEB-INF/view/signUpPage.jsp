@@ -136,7 +136,7 @@
                     <input type="text" class="input-field wow_input" id=""
                            name="lastName" placeholder="Last Name"
                            value="${fn:escapeXml(userBO.lastName)}" maxlength="50"
-                           required autocomplete="off"/>
+                           required autocomplete="off" oninvalid="this.setCustomValidity('Please fill out this field')"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -187,7 +187,7 @@
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required"> <label for="inlineCheckbox">
+                        required="required" oninvalid="this.setCustomValidity('Please fill out this field')"> <label for="inlineCheckbox">
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"

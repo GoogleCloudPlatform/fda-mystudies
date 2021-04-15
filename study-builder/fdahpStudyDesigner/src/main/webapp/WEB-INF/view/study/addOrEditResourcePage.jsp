@@ -76,7 +76,7 @@
           <div class="form-group">
             <input autofocus="autofocus" type="text" class="form-control" id="resourceTitle"
                    name="title"
-                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required
+                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required oninvalid="this.setCustomValidity('Please fill out this field')"
                    <c:if test="${isstudyProtocol eq 'isstudyProtocol'}">readonly</c:if>/>
             <div class="help-block with-errors red-txt"></div>
           </div>
