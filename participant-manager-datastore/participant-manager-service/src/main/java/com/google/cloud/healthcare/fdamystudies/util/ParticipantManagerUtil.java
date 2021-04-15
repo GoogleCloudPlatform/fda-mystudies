@@ -8,7 +8,6 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
-import com.google.cloud.healthcare.fdamystudies.service.LocationServiceImpl;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParticipantManagerUtil {
 
-  private XLogger logger = XLoggerFactory.getXLogger(LocationServiceImpl.class.getName());
+  private XLogger logger = XLoggerFactory.getXLogger(ParticipantManagerUtil.class.getName());
 
   @Autowired private AppPropertyConfig appConfig;
 
