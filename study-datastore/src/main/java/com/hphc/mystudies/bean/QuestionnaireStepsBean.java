@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class QuestionnaireActivityStepsBean {
+public class QuestionnaireStepsBean {
 
   private String type = "";
 
@@ -53,8 +53,6 @@ public class QuestionnaireActivityStepsBean {
   private String healthDataKey = "";
 
   private Map<String, Object> format = new HashMap<>();
-
-  private List<QuestionnaireStepsBean> steps = new ArrayList<>();
 
   private String[] options = new String[0];
 
@@ -152,14 +150,6 @@ public class QuestionnaireActivityStepsBean {
 
   public void setFormat(Map<String, Object> format) {
     this.format = format;
-  }
-
-  public List<QuestionnaireStepsBean> getSteps() {
-    return steps;
-  }
-
-  public void setSteps(List<QuestionnaireStepsBean> steps) {
-    this.steps = steps;
   }
 
   public String[] getOptions() {

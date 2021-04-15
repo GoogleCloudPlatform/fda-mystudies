@@ -25,17 +25,17 @@
         "parameters" : [ {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "activityId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "activityVersion",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -49,9 +49,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/QuestionnaireActivityMetaDataResponse"
             }
           }
         }
@@ -68,13 +68,13 @@
         "parameters" : [ {
           "name" : "Authorization",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         }, {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -88,9 +88,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/ActivityResponse"
             }
           }
         }
@@ -114,22 +114,16 @@
         }, {
           "name" : "Authorization",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
-            "schema" : {
-              "type" : "object"
-            }
+            "description" : "Successful operation"
           },
           "400" : {
             "description" : "Invalid resource"
-          },
-          "404" : {
-            "description" : "Details not found"
           }
         }
       }
@@ -145,12 +139,12 @@
         "parameters" : [ {
           "name" : "appVersion",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "Authorization",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         } ],
@@ -162,9 +156,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/AppUpdatesResponse"
             }
           }
         }
@@ -181,22 +175,22 @@
         "parameters" : [ {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "consentVersion",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "activityId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "activityVersion",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -210,9 +204,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/ConsentDocumentResponse"
             }
           }
         }
@@ -229,7 +223,7 @@
         "parameters" : [ {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -243,9 +237,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/EligibilityConsentResponse"
             }
           }
         }
@@ -262,7 +256,7 @@
         "parameters" : [ {
           "name" : "Authorization",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         } ],
@@ -274,9 +268,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/GatewayInfoResponse"
             }
           }
         }
@@ -309,18 +303,18 @@
         "parameters" : [ {
           "name" : "skip",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "Authorization",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         }, {
           "name" : "applicationId",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         } ],
@@ -335,9 +329,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/NotificationsResponse"
             }
           }
         }
@@ -354,7 +348,7 @@
         "parameters" : [ {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -368,9 +362,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/ResourcesResponse"
             }
           }
         }
@@ -387,7 +381,7 @@
         "parameters" : [ {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -395,9 +389,9 @@
             "description" : "Invalid input."
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/StudyResponse"
             }
           }
         }
@@ -414,7 +408,7 @@
         "parameters" : [ {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -428,9 +422,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/StudyDashboardResponse"
             }
           }
         }
@@ -447,7 +441,7 @@
         "parameters" : [ {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -461,9 +455,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/StudyInfoResponse"
             }
           }
         }
@@ -480,13 +474,13 @@
         "parameters" : [ {
           "name" : "Authorization",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         }, {
           "name" : "applicationId",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         } ],
@@ -498,9 +492,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/StudyResponse"
             }
           }
         }
@@ -517,12 +511,12 @@
         "parameters" : [ {
           "name" : "studyId",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         }, {
           "name" : "studyVersion",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -533,9 +527,9 @@
             "description" : "NODATA"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/StudyUpdatesResponse"
             }
           }
         }
@@ -557,9 +551,9 @@
             "description" : "UNKNOWN"
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/TermsPolicyResponse"
             }
           }
         }
@@ -586,10 +580,7 @@
             "description" : "Invalid input."
           },
           "200" : {
-            "description" : "successful operation",
-            "schema" : {
-              "type" : "object"
-            }
+            "description" : "Successful operation"
           }
         }
       }
@@ -605,7 +596,7 @@
         "parameters" : [ {
           "name" : "token",
           "in" : "query",
-          "required" : false,
+          "required" : true,
           "type" : "string"
         } ],
         "responses" : {
@@ -613,9 +604,9 @@
             "description" : "Invalid input."
           },
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/EnrollmentTokenResponse"
             }
           }
         }
@@ -632,15 +623,15 @@
         "parameters" : [ {
           "name" : "applicationId",
           "in" : "header",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : ""
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful operation",
+            "description" : "Successful operation",
             "schema" : {
-              "type" : "object"
+              "$ref" : "#/definitions/AppVersionInfoBean"
             }
           },
           "400" : {
@@ -649,6 +640,1026 @@
           "404" : {
             "description" : "Details not found"
           }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "ActivitiesBean" : {
+      "type" : "object",
+      "properties" : {
+        "activityId" : {
+          "type" : "string"
+        },
+        "activityVersion" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "startTime" : {
+          "type" : "string"
+        },
+        "endTime" : {
+          "type" : "string"
+        },
+        "branching" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "isLaunchStudy" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "isStudyLifeTime" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "lastModified" : {
+          "type" : "string"
+        },
+        "state" : {
+          "type" : "string"
+        },
+        "taskSubType" : {
+          "type" : "string"
+        },
+        "schedulingType" : {
+          "type" : "string"
+        },
+        "anchorDate" : {
+          "$ref" : "#/definitions/ActivityAnchorDateBean"
+        },
+        "frequency" : {
+          "$ref" : "#/definitions/ActivityFrequencyBean"
+        }
+      }
+    },
+    "ActivityAnchorDateBean" : {
+      "type" : "object",
+      "properties" : {
+        "sourceType" : {
+          "type" : "string"
+        },
+        "sourceActivityId" : {
+          "type" : "string"
+        },
+        "sourceKey" : {
+          "type" : "string"
+        },
+        "sourceFormKey" : {
+          "type" : "string"
+        },
+        "start" : {
+          "$ref" : "#/definitions/ActivityAnchorStartBean"
+        },
+        "end" : {
+          "$ref" : "#/definitions/ActivityAnchorEndBean"
+        }
+      }
+    },
+    "ActivityAnchorEndBean" : {
+      "type" : "object",
+      "properties" : {
+        "anchorDays" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "repeatInterval" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "time" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ActivityAnchorStartBean" : {
+      "type" : "object",
+      "properties" : {
+        "anchorDays" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "dayOfWeek" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "dateOfMonth" : {
+          "type" : "string"
+        },
+        "time" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ActivityFrequencyAnchorRunsBean" : {
+      "type" : "object",
+      "properties" : {
+        "startDays" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "endDays" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "time" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ActivityFrequencyBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "runs" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ActivityFrequencyScheduleBean"
+          }
+        },
+        "anchorRuns" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ActivityFrequencyAnchorRunsBean"
+          }
+        }
+      }
+    },
+    "ActivityFrequencyScheduleBean" : {
+      "type" : "object",
+      "properties" : {
+        "startTime" : {
+          "type" : "string"
+        },
+        "endTime" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ActivityMetadataBean" : {
+      "type" : "object",
+      "properties" : {
+        "studyId" : {
+          "type" : "string"
+        },
+        "activityId" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string"
+        },
+        "lastModified" : {
+          "type" : "string"
+        },
+        "startDate" : {
+          "type" : "string"
+        },
+        "endDate" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ActivityResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "activities" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ActivitiesBean"
+          }
+        }
+      }
+    },
+    "AnchorDateBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "questionInfo" : {
+          "$ref" : "#/definitions/QuestionInfoBean"
+        }
+      }
+    },
+    "AppUpdatesResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "forceUpdate" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "currentVersion" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AppVersionInfoBean" : {
+      "type" : "object",
+      "properties" : {
+        "android" : {
+          "$ref" : "#/definitions/DeviceVersion"
+        },
+        "ios" : {
+          "$ref" : "#/definitions/DeviceVersion"
+        }
+      }
+    },
+    "ChartDataSourceBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        },
+        "activity" : {
+          "$ref" : "#/definitions/DashboardActivityBean"
+        },
+        "timeRangeType" : {
+          "type" : "string"
+        },
+        "startTime" : {
+          "type" : "string"
+        },
+        "endTime" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ChartsBean" : {
+      "type" : "object",
+      "properties" : {
+        "title" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "configuration" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        },
+        "scrollable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "dataSource" : {
+          "$ref" : "#/definitions/ChartDataSourceBean"
+        }
+      }
+    },
+    "ComprehensionDetailsBean" : {
+      "type" : "object",
+      "properties" : {
+        "passScore" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "questions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QuestionnaireActivityStepsBean"
+          }
+        },
+        "correctAnswers" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CorrectAnswersBean"
+          }
+        }
+      }
+    },
+    "ConsentBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "html" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        },
+        "visualStep" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "ConsentDetailsBean" : {
+      "type" : "object",
+      "properties" : {
+        "version" : {
+          "type" : "string"
+        },
+        "visualScreens" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ConsentBean"
+          }
+        },
+        "comprehension" : {
+          "$ref" : "#/definitions/ComprehensionDetailsBean"
+        },
+        "sharing" : {
+          "$ref" : "#/definitions/SharingBean"
+        },
+        "review" : {
+          "$ref" : "#/definitions/ReviewBean"
+        }
+      }
+    },
+    "ConsentDocumentBean" : {
+      "type" : "object",
+      "properties" : {
+        "version" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "content" : {
+          "type" : "string"
+        },
+        "enrollAgain" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "ConsentDocumentResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "consent" : {
+          "$ref" : "#/definitions/ConsentDocumentBean"
+        }
+      }
+    },
+    "CorrectAnswersBean" : {
+      "type" : "object",
+      "properties" : {
+        "key" : {
+          "type" : "string"
+        },
+        "answer" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "evaluation" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DashboardActivityBean" : {
+      "type" : "object",
+      "properties" : {
+        "activityId" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DashboardBean" : {
+      "type" : "object",
+      "properties" : {
+        "statistics" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StatisticsBean"
+          }
+        },
+        "charts" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ChartsBean"
+          }
+        }
+      }
+    },
+    "DestinationBean" : {
+      "type" : "object",
+      "properties" : {
+        "condition" : {
+          "type" : "string"
+        },
+        "operator" : {
+          "type" : "string"
+        },
+        "destination" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DeviceVersion" : {
+      "type" : "object",
+      "properties" : {
+        "latestVersion" : {
+          "type" : "string"
+        },
+        "forceUpdate" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EligibilityBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "tokenTitle" : {
+          "type" : "string"
+        },
+        "test" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QuestionnaireActivityStepsBean"
+          }
+        },
+        "correctAnswers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "EligibilityConsentResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "eligibility" : {
+          "$ref" : "#/definitions/EligibilityBean"
+        },
+        "consent" : {
+          "$ref" : "#/definitions/ConsentDetailsBean"
+        }
+      }
+    },
+    "EnrollmentTokenResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        }
+      }
+    },
+    "GatewayInfoResourceBean" : {
+      "type" : "object",
+      "properties" : {
+        "resourcesId" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "content" : {
+          "type" : "string"
+        }
+      }
+    },
+    "GatewayInfoResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "info" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/InfoBean"
+          }
+        },
+        "resources" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/GatewayInfoResourceBean"
+          }
+        }
+      }
+    },
+    "InfoBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "image" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "videoLink" : {
+          "type" : "string"
+        }
+      }
+    },
+    "NotificationsBean" : {
+      "type" : "object",
+      "properties" : {
+        "notificationId" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "subtype" : {
+          "type" : "string"
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "audience" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "date" : {
+          "type" : "string"
+        }
+      }
+    },
+    "NotificationsResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "notifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/NotificationsBean"
+          }
+        }
+      }
+    },
+    "QuestionInfoBean" : {
+      "type" : "object",
+      "properties" : {
+        "activityId" : {
+          "type" : "string"
+        },
+        "activityVersion" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        }
+      }
+    },
+    "QuestionnaireActivityMetaDataResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "activity" : {
+          "$ref" : "#/definitions/QuestionnaireActivityStructureBean"
+        }
+      }
+    },
+    "QuestionnaireActivityStepsBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "resultType" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "skippable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "groupName" : {
+          "type" : "string"
+        },
+        "repeatable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "repeatableText" : {
+          "type" : "string"
+        },
+        "destinations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DestinationBean"
+          }
+        },
+        "healthDataKey" : {
+          "type" : "string"
+        },
+        "format" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QuestionnaireStepsBean"
+          }
+        },
+        "options" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "QuestionnaireActivityStructureBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "metadata" : {
+          "$ref" : "#/definitions/ActivityMetadataBean"
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QuestionnaireActivityStepsBean"
+          }
+        }
+      }
+    },
+    "QuestionnaireStepsBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "resultType" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "skippable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "groupName" : {
+          "type" : "string"
+        },
+        "repeatable" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "repeatableText" : {
+          "type" : "string"
+        },
+        "destinations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DestinationBean"
+          }
+        },
+        "healthDataKey" : {
+          "type" : "string"
+        },
+        "format" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        },
+        "options" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ResourcesBean" : {
+      "type" : "object",
+      "properties" : {
+        "title" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "resourcesId" : {
+          "type" : "string"
+        },
+        "content" : {
+          "type" : "string"
+        },
+        "audience" : {
+          "type" : "string"
+        },
+        "notificationText" : {
+          "type" : "string"
+        },
+        "availability" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        }
+      }
+    },
+    "ResourcesResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "resources" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ResourcesBean"
+          }
+        }
+      }
+    },
+    "ReviewBean" : {
+      "type" : "object",
+      "properties" : {
+        "reviewHTML" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SettingsBean" : {
+      "type" : "object",
+      "properties" : {
+        "enrolling" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "platform" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SharingBean" : {
+      "type" : "object",
+      "properties" : {
+        "title" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "shortDesc" : {
+          "type" : "string"
+        },
+        "longDesc" : {
+          "type" : "string"
+        },
+        "learnMore" : {
+          "type" : "string"
+        },
+        "allowWithoutSharing" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "StatisticsBean" : {
+      "type" : "object",
+      "properties" : {
+        "title" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "statType" : {
+          "type" : "string"
+        },
+        "unit" : {
+          "type" : "string"
+        },
+        "calculation" : {
+          "type" : "string"
+        },
+        "dataSource" : {
+          "$ref" : "#/definitions/StatisticsDataSourceBean"
+        }
+      }
+    },
+    "StatisticsDataSourceBean" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        },
+        "activity" : {
+          "$ref" : "#/definitions/DashboardActivityBean"
+        }
+      }
+    },
+    "StudyBean" : {
+      "type" : "object",
+      "properties" : {
+        "studyId" : {
+          "type" : "string"
+        },
+        "studyVersion" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "category" : {
+          "type" : "string"
+        },
+        "sponsorName" : {
+          "type" : "string"
+        },
+        "tagline" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "logo" : {
+          "type" : "string"
+        },
+        "settings" : {
+          "$ref" : "#/definitions/SettingsBean"
+        }
+      }
+    },
+    "StudyDashboardResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "dashboard" : {
+          "$ref" : "#/definitions/DashboardBean"
+        }
+      }
+    },
+    "StudyInfoResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "studyWebsite" : {
+          "type" : "string"
+        },
+        "info" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/InfoBean"
+          }
+        },
+        "anchorDate" : {
+          "$ref" : "#/definitions/AnchorDateBean"
+        }
+      }
+    },
+    "StudyResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "studies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StudyBean"
+          }
+        }
+      }
+    },
+    "StudyUpdatesBean" : {
+      "type" : "object",
+      "properties" : {
+        "consent" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "activities" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "resources" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "info" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "status" : {
+          "type" : "string"
+        }
+      }
+    },
+    "StudyUpdatesResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "updates" : {
+          "$ref" : "#/definitions/StudyUpdatesBean"
+        },
+        "currentVersion" : {
+          "type" : "string"
+        },
+        "enrollAgain" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "TermsPolicyResponse" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "terms" : {
+          "type" : "string"
+        },
+        "privacy" : {
+          "type" : "string"
         }
       }
     }

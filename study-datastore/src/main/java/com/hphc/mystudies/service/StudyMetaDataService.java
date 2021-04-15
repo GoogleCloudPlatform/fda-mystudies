@@ -52,6 +52,7 @@ import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.HashMap;
@@ -97,14 +98,19 @@ public class StudyMetaDataService {
   @ApiResponses(
       value = {
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = GatewayInfoResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("gatewayInfo")
   public Object gatewayAppResourcesInfo(
-      @HeaderParam("Authorization") String authorization,
+      @ApiParam(name = "Authorization", required = true) @HeaderParam("Authorization")
+          String authorization,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - gatewayAppResourcesInfo() :: Starts");
@@ -134,15 +140,18 @@ public class StudyMetaDataService {
   @ApiResponses(
       value = {
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(code = 200, message = "Successful operation", response = StudyResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("studyList")
   public Object studyList(
-      @HeaderParam("Authorization") String authorization,
-      @HeaderParam("applicationId") String applicationId,
+      @ApiParam(name = "Authorization", required = true) @HeaderParam("Authorization")
+          String authorization,
+      @ApiParam(name = "applicationId", required = true) @HeaderParam("applicationId")
+          String applicationId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
@@ -196,14 +205,18 @@ public class StudyMetaDataService {
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = EligibilityConsentResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("eligibilityConsent")
   public Object eligibilityConsentMetadata(
-      @QueryParam("studyId") String studyId,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Starts");
@@ -259,17 +272,23 @@ public class StudyMetaDataService {
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = ConsentDocumentResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("consentDocument")
   public Object consentDocument(
-      @QueryParam("studyId") String studyId,
-      @QueryParam("consentVersion") String consentVersion,
-      @QueryParam("activityId") String activityId,
-      @QueryParam("activityVersion") String activityVersion,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
+      @ApiParam(name = "consentVersion", required = true) @QueryParam("consentVersion")
+          String consentVersion,
+      @ApiParam(name = "activityId", required = true) @QueryParam("activityId") String activityId,
+      @ApiParam(name = "activityVersion", required = true) @QueryParam("activityVersion")
+          String activityVersion,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
@@ -326,14 +345,18 @@ public class StudyMetaDataService {
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = ResourcesResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("resources")
   public Object resourcesForStudy(
-      @QueryParam("studyId") String studyId,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
@@ -388,14 +411,18 @@ public class StudyMetaDataService {
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = StudyInfoResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("studyInfo")
   public Object studyInfo(
-      @QueryParam("studyId") String studyId,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Starts");
@@ -477,15 +504,20 @@ public class StudyMetaDataService {
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_STUDY_ID),
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = ActivityResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("activityList")
   public Object studyActivityList(
-      @HeaderParam("Authorization") String authorization,
-      @QueryParam("studyId") String studyId,
+      @ApiParam(name = "Authorization", required = true) @HeaderParam("Authorization")
+          String authorization,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Starts");
@@ -542,16 +574,21 @@ public class StudyMetaDataService {
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = QuestionnaireActivityMetaDataResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("activity")
   public Object studyActivityMetadata(
-      @QueryParam("studyId") String studyId,
-      @QueryParam("activityId") String activityId,
-      @QueryParam("activityVersion") String activityVersion,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
+      @ApiParam(name = "activityId", required = true) @QueryParam("activityId") String activityId,
+      @ApiParam(name = "activityVersion", required = true) @QueryParam("activityVersion")
+          String activityVersion,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
@@ -656,14 +693,18 @@ public class StudyMetaDataService {
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = StudyDashboardResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("studyDashboard")
   public Object studyDashboardInfo(
-      @QueryParam("studyId") String studyId,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Starts");
@@ -717,7 +758,11 @@ public class StudyMetaDataService {
   @ApiResponses(
       value = {
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = TermsPolicyResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -753,16 +798,21 @@ public class StudyMetaDataService {
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
         @ApiResponse(code = 103, message = StudyMetaDataConstants.NO_RECORD),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = NotificationsResponse.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("notifications")
   public Object notifications(
-      @QueryParam("skip") String skip,
-      @HeaderParam("Authorization") String authorization,
-      @HeaderParam("applicationId") String appId,
+      @ApiParam(name = "skip", required = true) @QueryParam("skip") String skip,
+      @ApiParam(name = "Authorization", required = true) @HeaderParam("Authorization")
+          String authorization,
+      @ApiParam(name = "applicationId", required = true) @HeaderParam("applicationId") String appId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - notifications() :: Starts");
@@ -803,15 +853,20 @@ public class StudyMetaDataService {
   @ApiResponses(
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
-        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN)
+        @ApiResponse(code = 104, message = ErrorCodes.UNKNOWN),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = AppUpdatesResponse.class)
       })
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("appUpdates")
   public Object appUpdates(
-      @QueryParam("appVersion") String appVersion,
-      @HeaderParam("Authorization") String authorization,
+      @ApiParam(name = "appVersion", required = true) @QueryParam("appVersion") String appVersion,
+      @ApiParam(name = "Authorization", required = true) @HeaderParam("Authorization")
+          String authorization,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
@@ -845,15 +900,20 @@ public class StudyMetaDataService {
   @ApiResponses(
       value = {
         @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_STUDY_ID),
-        @ApiResponse(code = 103, message = ErrorCodes.NO_DATA)
+        @ApiResponse(code = 103, message = ErrorCodes.NO_DATA),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = StudyUpdatesResponse.class)
       })
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Path("studyUpdates")
   public Object studyUpdates(
-      @QueryParam("studyId") String studyId,
-      @QueryParam("studyVersion") String studyVersion,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
+      @ApiParam(name = "studyVersion", required = true) @QueryParam("studyVersion")
+          String studyVersion,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Starts");
@@ -906,7 +966,10 @@ public class StudyMetaDataService {
   @ApiOperation(
       value = "Update app version details like app version, OS type, custom study ID etc.")
   @ApiResponses(
-      value = {@ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)})
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 200, message = "Successful operation", response = String.class)
+      })
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -989,13 +1052,19 @@ public class StudyMetaDataService {
 
   @ApiOperation(value = "This API will validate the Enrollment Token and return the response")
   @ApiResponses(
-      value = {@ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)})
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = EnrollmentTokenResponse.class)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("validateEnrollmentToken")
   public Object validateEnrollmentToken(
-      @QueryParam("token") String token,
+      @ApiParam(name = "token", required = true) @QueryParam("token") String token,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - validateEnrollmentToken() :: Starts");
@@ -1053,13 +1122,16 @@ public class StudyMetaDataService {
 
   @ApiOperation(value = "Get basic information of study using study Id")
   @ApiResponses(
-      value = {@ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)})
+      value = {
+        @ApiResponse(code = 102, message = StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG),
+        @ApiResponse(code = 200, message = "Successful operation", response = StudyResponse.class)
+      })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("study")
   public Object study(
-      @QueryParam("studyId") String studyId,
+      @ApiParam(name = "studyId", required = true) @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
@@ -1089,14 +1161,19 @@ public class StudyMetaDataService {
   @ApiResponses(
       value = {
         @ApiResponse(code = 400, message = "Invalid resource"),
-        @ApiResponse(code = 404, message = "Details not found")
+        @ApiResponse(code = 404, message = "Details not found"),
+        @ApiResponse(
+            code = 200,
+            message = "Successful operation",
+            response = AppVersionInfoBean.class)
       })
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("versionInfo")
   public Object getAppVersionInfo(
-      @HeaderParam("applicationId") String appId, @Context HttpServletResponse response) {
+      @ApiParam(name = "applicationId", required = true) @HeaderParam("applicationId") String appId,
+      @Context HttpServletResponse response) {
     AppVersionInfoBean appVersionInfoBean = null;
     LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: Starts");
 
@@ -1134,7 +1211,7 @@ public class StudyMetaDataService {
   @ApiResponses(
       value = {
         @ApiResponse(code = 400, message = "Invalid resource"),
-        @ApiResponse(code = 404, message = "Details not found")
+        @ApiResponse(code = 200, message = "Successful operation", response = String.class)
       })
   @POST
   @Produces(MediaType.APPLICATION_JSON)
@@ -1142,7 +1219,8 @@ public class StudyMetaDataService {
   @Path("activityResponce")
   public Object storeJsonResponseFile(
       String params,
-      @HeaderParam("Authorization") String authorization,
+      @ApiParam(name = "Authorization", required = true) @HeaderParam("Authorization")
+          String authorization,
       @Context ServletContext context,
       @Context HttpServletResponse response)
       throws Exception {
