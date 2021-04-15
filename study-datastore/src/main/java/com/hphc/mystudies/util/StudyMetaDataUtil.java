@@ -799,11 +799,12 @@ public class StudyMetaDataUtil {
     return fileName;
   }
 
-  public static String getSignedUrl(String bucketName, String filePath, int durationInMinutes) {
+  public static String getSignedUrl(
+      String bucketName, String filePath, int signedUrlDurationInHours) {
     try {
       BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, filePath).build();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      return storage.signUrl(blobInfo, durationInMinutes, TimeUnit.HOURS).toString();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
     } catch (Exception e) {
       LOGGER.error("Unable to generate signed url", e);
     }

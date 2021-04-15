@@ -12,6 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.service.LocationServiceImpl;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,17 @@ public class ParticipantManagerUtil {
 
   @Autowired private Storage storageService;
 
-  public String getSignedUrl(String filePath, int durationInMinutes) {
+  public String getSignedUrl(String fileUrl, int signedUrlDurationInHours) {
     try {
+      if (StringUtils.isEmpty(fileUrl)) {
+        return null;
+      }
+      String filePath =
+          StringUtils.substringAfter(fileUrl, appConfig.getStudyBuilderCloudBucketName() + "/");
+
       BlobInfo blobInfo =
           BlobInfo.newBuilder(appConfig.getStudyBuilderCloudBucketName(), filePath).build();
-      return storageService.signUrl(blobInfo, durationInMinutes, TimeUnit.HOURS).toString();
+      return storageService.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
     } catch (Exception e) {
       logger.error("Unable to generate signed url", e);
     }
