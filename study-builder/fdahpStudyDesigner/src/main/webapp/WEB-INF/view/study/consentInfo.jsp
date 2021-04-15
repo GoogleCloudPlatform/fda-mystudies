@@ -65,13 +65,13 @@
       <div class="mt-sm form-group">
         <span class="radio radio-info radio-inline p-45"><input
             type="radio" id="inlineRadio1" value="ResearchKit/ResearchStack"
-            name="consentItemType" required data-error="Please choose type"
+            name="consentItemType" required oninvalid="this.setCustomValidity('Please fill out this field')" data-error="Please choose type"
           ${empty consentInfoBo.consentItemType  || consentInfoBo.consentItemType=='ResearchKit/ResearchStack' ?'checked':''}>
           <label for="inlineRadio1">Default options</label>
         </span>
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="Custom"
-                                                     name="consentItemType" required
+                                                     name="consentItemType" required oninvalid="this.setCustomValidity('Please fill out this field')"
                                                      data-error="Please choose type"
           ${consentInfoBo.consentItemType=='Custom'?'checked':''}> <label
             for="inlineRadio2">Custom</label>
@@ -85,7 +85,7 @@
         </div>
         <div class="col-md-5 p-none form-group elaborateClass consentTitle">
           <select class="selectpicker" id="consentItemTitleId"
-                  name="consentItemTitleId" required
+                  name="consentItemTitleId" required oninvalid="this.setCustomValidity('Please fill out this field')"
                   data-error="Please select a topic">
             <option value="">Select</option>
             <c:forEach items="${consentMasterInfoList}" var="consentMaster">
@@ -112,7 +112,7 @@
         </div>
         <div class="form-group">
           <input autofocus="autofocus" type="text" id="displayTitle"
-                 class="form-control" name="displayTitle" required
+                 class="form-control" name="displayTitle" required oninvalid="this.setCustomValidity('Please fill out this field')"
                  value="${fn:escapeXml(consentInfoBo.displayTitle)}" maxlength="75">
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -127,7 +127,7 @@
         </div>
         <div class="form-group">
           <textarea class="form-control" rows="7" id="briefSummary"
-                    name="briefSummary" required
+                    name="briefSummary" required oninvalid="this.setCustomValidity('Please fill out this field')"
                     maxlength="500">${consentInfoBo.briefSummary}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -142,7 +142,7 @@
         </div>
         <div class="form-group">
           <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE"
-                    required>${consentInfoBo.elaborated}</textarea>
+                    required oninvalid="this.setCustomValidity('Please fill out this field')">${consentInfoBo.elaborated}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -158,7 +158,7 @@
         <div class="form-group visualStepDiv">
           <span class="radio radio-info radio-inline p-45"><input
               class="" type="radio" id="inlineRadio3" value="Yes"
-              name="visualStep" required
+              name="visualStep" required oninvalid="this.setCustomValidity('Please fill out this field')"
               data-error="Please select one of the above options"
             ${consentInfoBo.visualStep=='Yes'?'checked':''}> <label
               for="inlineRadio3">Yes</label>
@@ -167,7 +167,7 @@
                                                        type="radio" id="inlineRadio4"
                                                        value="No"
                                                        name="visualStep"
-                                                       required
+                                                       required oninvalid="this.setCustomValidity('Please fill out this field')"
                                                        data-error="Please select one of the above options"
             ${consentInfoBo.visualStep=='No'?'checked':''}> <label
               for="inlineRadio4">No</label>

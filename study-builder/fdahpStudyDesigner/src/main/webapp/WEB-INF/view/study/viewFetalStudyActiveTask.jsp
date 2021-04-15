@@ -350,7 +350,7 @@
            value="${taskMasterAttributeBo.addToDashboard}">
     <input type="text" class="form-control pr-xlg" id="fetalKickId"
            name="taskAttributeValueBos[1].attributeVal"
-           value="${taskValueAttributeBo.attributeVal}" maxlength="2" required/>
+           value="${taskValueAttributeBo.attributeVal}" maxlength="2" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <div class="clearfix"></div>
@@ -370,7 +370,7 @@
         <input type="hidden" name="taskAttributeValueBos[0].addToDashboard"
                value="${activeTaskBo.taskMasterAttributeBos[0].addToDashboard}">
         <input type="hidden" id="inputClockId" class="form-control pr-xlg clock" placeholder="Time"
-               name="taskAttributeValueBos[0].attributeVal" value="23:59" required/>
+               name="taskAttributeValueBos[0].attributeVal" value="23:59" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
       </div>
     </div>
     </c:if>

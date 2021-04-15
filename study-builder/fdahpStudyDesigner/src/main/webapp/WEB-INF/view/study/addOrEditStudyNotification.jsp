@@ -80,7 +80,7 @@
         <div class="form-group">
           <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
                     id="notificationText"
-                    name="notificationText" required
+                    name="notificationText" required oninvalid="this.setCustomValidity('Please fill out this field')"
           >${notificationBO.notificationText}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>

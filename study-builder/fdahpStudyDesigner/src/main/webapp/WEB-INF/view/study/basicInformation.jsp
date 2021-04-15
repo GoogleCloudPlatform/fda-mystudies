@@ -79,7 +79,7 @@ margin-top:16px !important;
                    value="${studyBo.customStudyId}"
                 <c:if
                     test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}"> disabled</c:if>
-                   required/>
+                   required oninvalid="this.setCustomValidity('Please fill out this field')"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -103,7 +103,7 @@ margin-top:16px !important;
                    maxlength="15" value="${studyBo.appId}"
                 <c:if
                     test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}"> disabled</c:if>
-                   required/>
+                   required oninvalid="this.setCustomValidity('Please fill out this field')"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -126,7 +126,7 @@ margin-top:16px !important;
           <div class="form-group">
              <input type="text" class="form-control" name="name"
                    id="customStudyName" value="${fn:escapeXml(studyBo.name)}"
-                   maxlength="50" required/>
+                   maxlength="50" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -160,7 +160,7 @@ margin-top:16px !important;
         </div>
         <div class="form-group">
           <input type="text" class="form-control" name="fullName"
-                 value="${fn:escapeXml(studyBo.fullName)}" maxlength="150" required/>
+                 value="${fn:escapeXml(studyBo.fullName)}" maxlength="150" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -181,7 +181,7 @@ margin-top:16px !important;
             <span class="radio radio-info radio-inline p-45"><input
                 type="radio" id="inlineRadio5"
                 class="rejoin_radio studyTypeClass" name="type" value="GT"
-              ${studyBo.type eq 'GT'?'checked':""} required
+              ${studyBo.type eq 'GT'?'checked':""} required oninvalid="this.setCustomValidity('Please fill out this field')"
             <c:if
                 test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}">
                 disabled </c:if>>
@@ -192,7 +192,7 @@ margin-top:16px !important;
                                                     class="rejoin_radio studyTypeClass"
                                                     name="type"
                                                     value="SD" ${studyBo.type eq 'SD'?'checked':""}
-                                                    required
+                                                    required oninvalid="this.setCustomValidity('Please fill out this field')"
             <c:if
                 test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}">
                                                     disabled </c:if>>
@@ -211,7 +211,7 @@ margin-top:16px !important;
           </div>
           <div class="form-group">
             <input type="text" class="form-control" name="inboxEmailAddress"
-                   value="${studyBo.inboxEmailAddress}" required maxlength="100"
+                   value="${studyBo.inboxEmailAddress}" required oninvalid="this.setCustomValidity('Please fill out this field')" maxlength="100"
                    pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                    autocomplete="off" data-pattern-error="Email address is invalid"/>
             <div class="help-block with-errors red-txt"></div>

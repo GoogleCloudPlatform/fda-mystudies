@@ -63,7 +63,7 @@
                  class="form-control ${eligibilityTest.used ? 'cursor-none-disabled-event' : ''}"
                  name="shortTitle" id="shortTitleId"
                  value="${fn:escapeXml(eligibilityTest.shortTitle)}"
-                 required="required"
+                 required="required" oninvalid="this.setCustomValidity('Please fill out this field')"
                  maxlength="15" ${eligibilityTest.used ? 'readonly' : ''} />
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -75,7 +75,7 @@
         </span>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" required name="question" id="question"
+        <input type="text" class="form-control" required oninvalid="this.setCustomValidity('Please fill out this field')" name="question" id="question"
                value="${fn:escapeXml(eligibilityTest.question)}" maxlength="250"/>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -100,7 +100,7 @@
             <input type="text" class="form-control" name="tentativeDuration" value="Yes" disabled/>
           </div>
           <div class="form-group col-md-6 pr-none">
-            <select class="selectpicker elaborateClass" required title="Select"
+            <select class="selectpicker elaborateClass" required oninvalid="this.setCustomValidity('Please fill out this field')" title="Select"
                     name="responseYesOption"
                     id="resYesOptId" onchange="chkValidChoosedOption()">
               <option value="true" ${eligibilityTest.responseYesOption ? 'selected':''}>Pass
@@ -118,7 +118,7 @@
             <input type="text" class="form-control" name="tentativeDuration" value="No" disabled/>
           </div>
           <div class="form-group col-md-6 pr-none">
-            <select class="selectpicker elaborateClass form-control" required title="Select"
+            <select class="selectpicker elaborateClass form-control" required oninvalid="this.setCustomValidity('Please fill out this field')" title="Select"
                     name="responseNoOption" id="resNoOptId" onchange="chkValidChoosedOption()">
               <option value="true" ${eligibilityTest.responseNoOption ? 'selected':''} >Pass
               </option>

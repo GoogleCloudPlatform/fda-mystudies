@@ -149,7 +149,7 @@
             <input type="text" custAttType="cust" class="form-control" name="shortTitle"
                    id="shortTitle"
                    value="${fn:escapeXml(
-                     questionsBo.shortTitle)}" required maxlength="15" <c:if
+                     questionsBo.shortTitle)}" required oninvalid="this.setCustomValidity('Please fill out this field')" maxlength="15" <c:if
                 test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
             <div class="help-block with-errors red-txt"></div>
             <input type="hidden" id="preShortTitleId" value="${fn:escapeXml(
@@ -168,7 +168,7 @@
           <div class="form-group">
             <input type="text" class="form-control" name="question" id="questionTextId"
                    placeholder="Type the question you wish to ask the participant" value="${fn:escapeXml(
-                  questionsBo.question)}" required maxlength="300"/>
+                  questionsBo.question)}" required oninvalid="this.setCustomValidity('Please fill out this field')" maxlength="300"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -201,7 +201,7 @@
           <div class="clearfix"></div>
           <div class="col-md-4 col-lg-3 p-none">
             <div class="form-group">
-              <select id="responseTypeId" class="selectpicker" name="responseType" required
+              <select id="responseTypeId" class="selectpicker" name="responseType" required oninvalid="this.setCustomValidity('Please fill out this field')"
                       value="${questionsBo.responseType}" <c:if
                   test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
                 <option value=''>Select</option>

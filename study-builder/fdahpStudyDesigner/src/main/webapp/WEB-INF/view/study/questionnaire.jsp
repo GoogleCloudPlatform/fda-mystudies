@@ -200,7 +200,7 @@
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
                 <c:if
                     test="${not empty questionnaireBo.shortTitleDuplicate && (questionnaireBo.shortTitleDuplicate gt 0)}"> disabled</c:if>
-                   required="required" maxlength="50"/>
+                   required="required" oninvalid="this.setCustomValidity('Please fill out this field')" maxlength="50"/>
             <div class="help-block with-errors red-txt"></div>
             <input type="hidden" id="preShortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"/>
@@ -213,7 +213,7 @@
           <div class="form-group">
             <input type="text" class="form-control" name="title" id="titleId"
                    value="${fn:escapeXml(questionnaireBo.title)}" maxlength="300"
-                   required="required"/>
+                   required="required" oninvalid="this.setCustomValidity('Please fill out this field')"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
           <div class="mt-lg" id="stepContainer">
@@ -384,7 +384,7 @@
                 <div class="form-group">
                   <select id="anchorDateId"
                           class="selectpicker ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          required name="anchorDateId">
+                          required oninvalid="this.setCustomValidity('Please fill out this field')" name="anchorDateId">
                     <option value=''>Select</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
                       <option value="${anchorTypeInfo.id}"
@@ -495,7 +495,7 @@
                   id="oneTimeFreId"
                   value="${questionnaireBo.questionnairesFrequenciesBo.id}">
                 <input type="checkbox" id="isLaunchStudy"
-                       name="questionnairesFrequenciesBo.isLaunchStudy" value="true"
+                       name="questionnairesFrequenciesBo.isLaunchStudy" value="true" oninvalid="this.setCustomValidity('Please fill out this field')"
                   ${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy ?'checked':''}
                        required ${(questionnaireBo.shortTitleDuplicate>
                     0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
@@ -582,7 +582,7 @@
                          name="questionnairesFrequenciesBo.frequencyDate"
                          placeholder="Choose date"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"
-                         required
+                         required oninvalid="this.setCustomValidity('Please fill out this field')"
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
                   <span class='help-block with-errors red-txt'></span>
@@ -593,7 +593,7 @@
                          class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
-                         required
+                         required oninvalid="this.setCustomValidity('Please fill out this field')"
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
                          placeholder="Select time"/>
@@ -610,7 +610,7 @@
             <div class="mt-sm">
               <span class="checkbox checkbox-inline"><input
                   type="checkbox" id="isStudyLifeTime"
-                  name="questionnairesFrequenciesBo.isStudyLifeTime" value="true"
+                  name="questionnairesFrequenciesBo.isStudyLifeTime" value="true" oninvalid="this.setCustomValidity('Please fill out this field')"
                 ${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime ?'checked':''}
                   required ${(questionnaireBo.shortTitleDuplicate>
                   0)?'disabled' : ''}> <label for="isStudyLifeTime"> Study
@@ -634,7 +634,7 @@
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="studyLifetimeEnd" placeholder="Choose end date"
-                             required
+                             required oninvalid="this.setCustomValidity('Please fill out this field')"
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                              value="${questionnaireBo.studyLifetimeEnd}"/>
@@ -805,7 +805,7 @@
                   </span>
                   <br/> <input id="days" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required oninvalid="this.setCustomValidity('Please fill out this field')"
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -852,7 +852,7 @@
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
                       <input id="time0" type="text"
-                             name="questionnairesFrequenciesList[0].frequencyTime" required
+                             name="questionnairesFrequenciesList[0].frequencyTime" required oninvalid="this.setCustomValidity('Please fill out this field')"
                              class="form-control clock dailyClock" placeholder="Time"
                              onclick='timep(this.id);'/>
                       <span
@@ -878,7 +878,7 @@
                           class="form-group m-none dis-inline vertical-align-middle pr-md">
                         <input id="time${frequeincesVar.index}" type="text"
                                name="questionnairesFrequenciesList[${frequeincesVar.index}].frequencyTime"
-                               required
+                               required oninvalid="this.setCustomValidity('Please fill out this field')"
                                class="form-control clock dailyClock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="Time" onclick='timep(this.id);'
                                value="${questionnairesFrequencies.frequencyTime}"
@@ -945,7 +945,7 @@
                     class=" form-group m-none dis-inline vertical-align-middle pr-md">
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                         name="dayOfTheWeek" required>
+                                         name="dayOfTheWeek" required oninvalid="this.setCustomValidity('Please fill out this field')">
                     <option value=''>Select</option>
                     <option value='Sunday'
                       ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -977,7 +977,7 @@
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="selectWeeklyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required oninvalid="this.setCustomValidity('Please fill out this field')" onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1002,7 +1002,7 @@
                   <br/> <input
                     id="startWeeklyDate" type="text"
                     class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                    required name="studyLifetimeStart" placeholder="Choose date"
+                    required oninvalid="this.setCustomValidity('Please fill out this field')" name="studyLifetimeStart" placeholder="Choose date"
                     value="${questionnaireBo.studyLifetimeStart}"
                     readonly="readonly"/>
                   <span
@@ -1065,7 +1065,7 @@
                       class="form-group m-none dis-inline vertical-align-middle pr-md">
                     <input id="selectWeeklyTimeAnchor" type="text"
                            class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                           required onclick="timep(this.id)" placeholder="Time"
+                           required oninvalid="this.setCustomValidity('Please fill out this field')" onclick="timep(this.id)" placeholder="Time"
                            name="questionnairesFrequenciesBo.frequencyTime"
                            value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                     <span class='help-block with-errors red-txt'></span>
@@ -1082,7 +1082,7 @@
                     <br/> <input id="weeksAnchor" type="text"
                                  class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                  name="repeatQuestionnaire" placeholder="No of times"
-                                 value="${questionnaireBo.repeatQuestionnaire}" required
+                                 value="${questionnaireBo.repeatQuestionnaire}" required oninvalid="this.setCustomValidity('Please fill out this field')"
                                  onkeypress="return isNumber(event, this)"
                                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                                  data-pattern-error="Please enter valid number."
@@ -1104,7 +1104,7 @@
                   <br/> <input id="weeks" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                name="repeatQuestionnaire" placeholder="No of times"
-                               value="${questionnaireBo.repeatQuestionnaire}" required
+                               value="${questionnaireBo.repeatQuestionnaire}" required oninvalid="this.setCustomValidity('Please fill out this field')"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                                data-pattern-error="Please enter valid number." maxlength="3"/>
@@ -1177,7 +1177,7 @@
                   class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
                 <span class=""><input id="startDateMonthly" type="text"
                                       class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                      required placeholder="Choose date"
+                                      required oninvalid="this.setCustomValidity('Please fill out this field')" placeholder="Choose date"
                                       name="questionnairesFrequenciesBo.frequencyDate"
                                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1187,7 +1187,7 @@
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="selectMonthlyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required oninvalid="this.setCustomValidity('Please fill out this field')" onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1215,7 +1215,7 @@
                   <br/> <input id="pickStartDate"
                                type="text"
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               placeholder="Choose start date" required
+                               placeholder="Choose start date" required oninvalid="this.setCustomValidity('Please fill out this field')"
                                name="studyLifetimeStart"
                                value="${questionnaireBo.studyLifetimeStart}"
                                readonly="readonly"/>
@@ -1232,7 +1232,7 @@
                   </span>
                   <br/> <input id="months" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required oninvalid="this.setCustomValidity('Please fill out this field')"
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -1301,7 +1301,7 @@
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
                   <input id="selectMonthlyTimeAnchor" type="text"
                          class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                         required onclick="timep(this.id)" placeholder="Time"
+                         required oninvalid="this.setCustomValidity('Please fill out this field')" onclick="timep(this.id)" placeholder="Time"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1316,7 +1316,7 @@
                   </span>
                   <br/> <input id="monthsAnchor" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required oninvalid="this.setCustomValidity('Please fill out this field')"
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -1396,7 +1396,7 @@
                            class="form-control calendar customCalnder cusStrDate"
                            name="questionnaireCustomScheduleBo[0].frequencyStartDate"
                            value="" placeholder="Start date"
-                           onclick='customStartDate(this.id,0);' required/>
+                           onclick='customStartDate(this.id,0);' required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                     <span
                         class='help-block with-errors red-txt'></span>
                   </span>
@@ -1409,7 +1409,7 @@
                            class="form-control calendar customCalnder cusEndDate"
                            name="questionnaireCustomScheduleBo[0].frequencyEndDate"
                            placeholder="End date" onclick='customEndDate(this.id,0);'
-                           required/>
+                           required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
                  
@@ -1418,7 +1418,7 @@
                     <input id="customTime0" type="text" count='0'
                            class="form-control clock cusTime"
                            name="questionnaireCustomScheduleBo[0].frequencyTime"
-                           placeholder="Time" onclick='timep(this.id);' disabled required/>
+                           placeholder="Time" onclick='timep(this.id);' disabled required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
                   <span class="addbtn addBtnDis align-span-center mr-md"
@@ -1456,7 +1456,7 @@
                              value="${questionnaireCustomScheduleBo.frequencyStartDate}"
                              placeholder="Start date"
                              onclick='customStartDate(this.id,${customVar.index});'
-                             required/>
+                             required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                       <span class='help-block with-errors red-txt'></span>
                     </span>
                     <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -1470,7 +1470,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndDate"
                              value="${questionnaireCustomScheduleBo.frequencyEndDate}"
                              placeholder="End date"
-                             onclick='customEndDate(this.id,${customVar.index});' required/>
+                             onclick='customEndDate(this.id,${customVar.index});' required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                       <span class='help-block with-errors red-txt'></span>
                     </span>
                     <span
@@ -1529,7 +1529,7 @@
                            count='0' placeholder="X"
                            name="questionnaireCustomScheduleBo[0].timePeriodFromDays"
                            value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                           maxlength="3" required pattern="[0-9]+"
+                           maxlength="3" required oninvalid="this.setCustomValidity('Please fill out this field')" pattern="[0-9]+"
                            data-pattern-error="Please enter valid number."/>
                     <span
                         class="help-block with-errors red-txt"></span>
@@ -1564,7 +1564,7 @@
                            name="questionnaireCustomScheduleBo[0].timePeriodToDays"
                            value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                            maxlength="3" pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number." required/>
+                           data-pattern-error="Please enter valid number." required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1580,7 +1580,7 @@
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyTime"
                                                           value="${questionnaireCustomScheduleBo.frequencyTime}"
-                                                          placeholder="Time" required/>
+                                                          placeholder="Time" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                     <span
                         class='help-block with-errors red-txt'></span>
                   </span>
@@ -1637,7 +1637,7 @@
                              count='${customVar.index}' placeholder="X"
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                              value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                             maxlength="3" required pattern="[0-9]+"
+                             maxlength="3" required oninvalid="this.setCustomValidity('Please fill out this field')" pattern="[0-9]+"
                              data-pattern-error="Please enter valid number."/>
                       <span
                           class="help-block with-errors red-txt"></span>
@@ -1672,7 +1672,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodToDays"
                              value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                              maxlength="3" pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number." required/>
+                             data-pattern-error="Please enter valid number." required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                       <span class="help-block with-errors red-txt"></span>
                     </span>
                     <span class="mb-sm pr-md">
@@ -1687,7 +1687,7 @@
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                         value="${questionnaireCustomScheduleBo.frequencyTime}"
-                        placeholder="Time" required/>
+                        placeholder="Time" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>

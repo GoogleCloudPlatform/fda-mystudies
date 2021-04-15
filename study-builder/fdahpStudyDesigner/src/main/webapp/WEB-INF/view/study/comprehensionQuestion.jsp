@@ -58,7 +58,7 @@
           </span>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" name="questionText" id="questionText" required
+          <input type="text" class="form-control" name="questionText" id="questionText" required oninvalid="this.setCustomValidity('Please fill out this field')"
                  value="${comprehensionQuestionBo.questionText}" maxlength="300"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -97,7 +97,7 @@
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control responseOptionClass'
-                         name="responseList[0].responseOption" id="responseOptionId0" required
+                         name="responseList[0].responseOption" id="responseOptionId0" required oninvalid="this.setCustomValidity('Please fill out this field')"
                          maxlength="150" onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -106,7 +106,7 @@
               <div class='col-md-3'>
                 <div class="form-group">
                   <select class='selectpicker wid100' name="responseList[0].correctAnswer"
-                          id="correctAnswerId0" required data-error='Please choose one option'>
+                          id="correctAnswerId0" required oninvalid="this.setCustomValidity('Please fill out this field')" data-error='Please choose one option'>
                     <option value=''>Select</option>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
@@ -129,7 +129,7 @@
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control' name="responseList[1].responseOption"
-                         id="responseOptionId1" required maxlength="150"
+                         id="responseOptionId1" required oninvalid="this.setCustomValidity('Please fill out this field')" maxlength="150"
                          onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -138,7 +138,7 @@
               <div class='col-md-3'>
                 <div class="form-group">
                   <select class='selectpicker wid100' name="responseList[1].correctAnswer"
-                          id="correctAnswerId1" required data-error='Please choose one option'>
+                          id="correctAnswerId1" required oninvalid="this.setCustomValidity('Please fill out this field')" data-error='Please choose one option'>
                     <option value=''>Select</option>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
@@ -186,7 +186,7 @@
                     <input type='text' class='form-control'
                            name="responseList[${responseBoVar.index}].responseOption"
                            id="responseOptionId${responseBoVar.index}"
-                           value="${responseBo.responseOption}" required maxlength="150"
+                           value="${responseBo.responseOption}" required oninvalid="this.setCustomValidity('Please fill out this field')" maxlength="150"
                            onblur="validateForUniqueValue(this,function(){});"
                            onkeypress="resetValue(this);"/>
                     <div class='help-block with-errors red-txt'></div>
@@ -194,7 +194,7 @@
                 </div>
                 <div class='col-md-3'>
                   <div class="form-group">
-                    <select class='selectpicker wid100' required
+                    <select class='selectpicker wid100' required oninvalid="this.setCustomValidity('Please fill out this field')"
                             data-error='Please choose one option'
                             name="responseList[${responseBoVar.index}].correctAnswer"
                             id="correctAnswerId${responseBoVar.index}">

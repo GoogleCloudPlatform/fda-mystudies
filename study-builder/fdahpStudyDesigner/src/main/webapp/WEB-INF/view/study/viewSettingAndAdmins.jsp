@@ -103,13 +103,13 @@
 						type="radio" id="inlineRadio1" value="Yes" 
 						name="enrollingParticipants"
 						<c:if test="${studyBo.enrollingParticipants eq 'Yes' || studyBo.status eq 'Pre-launch'}">checked</c:if>
-						 required> <label
+						 required oninvalid="this.setCustomValidity('Please fill out this field')"> <label
 						for="inlineRadio1">Yes</label> </span> <span class="radio radio-inline"><input
 						type="radio" id="inlineRadio2" value="No"
 						name="enrollingParticipants"
 						${studyBo.status eq 'Pre-launch' ?'disabled':''}
 						<c:if test="${ studyBo.enrollingParticipants eq 'No' }">checked</c:if>
-						 required>
+						 required oninvalid="this.setCustomValidity('Please fill out this field')">
 						<label for="inlineRadio2">No</label> </span>
 					<div class="help-block with-errors red-txt"></div>
 				</div>
@@ -136,7 +136,7 @@
               type="radio" id="inlineRadio11" value="Yes"
               name="enrollmentdateAsAnchordate"
               <c:if test="${studyBo.enrollmentdateAsAnchordate}">checked</c:if>
-              required> <label for="inlineRadio11">Yes</label>
+              required oninvalid="this.setCustomValidity('Please fill out this field')"> <label for="inlineRadio11">Yes</label>
           </span>
           <span class="radio radio-inline"><input type="radio"
                                                   id="inlineRadio22" value="No"
@@ -144,7 +144,7 @@
             ${isAnchorForEnrollmentLive?'disabled':''}
                                                   <c:if
                                                       test="${studyBo.enrollmentdateAsAnchordate eq false}">checked</c:if>
-                                                  required> <label
+                                                  required oninvalid="this.setCustomValidity('Please fill out this field')"> <label
               for="inlineRadio22">No</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
