@@ -59,13 +59,18 @@ import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.service.UsersService;
+import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.ImageUtility;
 import com.fdahpstudydesigner.util.SessionObject;
 import com.google.cloud.ReadChannel;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -74,9 +79,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -3141,6 +3148,19 @@ public class StudyController {
                 FdahpStudyDesignerUtil.getStandardFileName(
                     "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
           }
+
+          BufferedImage newBi =
+              ImageIO.read(new ByteArrayInputStream(studyBo.getFile().getBytes()));
+          BufferedImage resizedImage = ImageUtility.resizeImage(newBi, 225, 225);
+          String extension = FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename());
+
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          ImageIO.write(resizedImage, extension, baos);
+          baos.flush();
+
+          studyBo.setFile(
+              new CustomMultipartFile(
+                  baos.toByteArray(), studyBo.getFile().getOriginalFilename(), extension));
 
           fileName =
               FdahpStudyDesignerUtil.saveImage(
