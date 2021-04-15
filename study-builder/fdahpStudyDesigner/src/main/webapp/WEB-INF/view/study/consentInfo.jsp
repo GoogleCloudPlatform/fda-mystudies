@@ -112,7 +112,7 @@
         </div>
         <div class="form-group">
           <input autofocus="autofocus" type="text" id="displayTitle"
-                 class="form-control" name="displayTitle" required
+                 class="form-control" name="displayTitle" required oninvalid="this.setCustomValidity('Please fill out this field')"
                  value="${fn:escapeXml(consentInfoBo.displayTitle)}" maxlength="75">
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -127,7 +127,7 @@
         </div>
         <div class="form-group">
           <textarea class="form-control" rows="7" id="briefSummary"
-                    name="briefSummary" required
+                    name="briefSummary" required oninvalid="this.setCustomValidity('Please fill out this field')"
                     maxlength="500">${consentInfoBo.briefSummary}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -141,7 +141,7 @@
           </span>
         </div>
         <div class="form-group">
-          <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE"
+          <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE" oninvalid="this.setCustomValidity('Please fill out this field')"
                     required>${consentInfoBo.elaborated}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
