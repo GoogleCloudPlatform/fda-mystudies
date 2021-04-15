@@ -63,7 +63,7 @@
                  class="form-control ${eligibilityTest.used ? 'cursor-none-disabled-event' : ''}"
                  name="shortTitle" id="shortTitleId"
                  value="${fn:escapeXml(eligibilityTest.shortTitle)}"
-                 required="required" oninvalid="this.setCustomValidity('Please fill out this field')"
+                 required="required"
                  maxlength="15" ${eligibilityTest.used ? 'readonly' : ''} />
           <div class="help-block with-errors red-txt"></div>
         </div>

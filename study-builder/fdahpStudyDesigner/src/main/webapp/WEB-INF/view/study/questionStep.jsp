@@ -165,7 +165,7 @@
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"
                   <c:if
                       test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>
-                     required maxlength="15" oninvalid="this.setCustomValidity('Please fill out this field')"/>
+                     required maxlength="15"/>
               <div class="help-block with-errors red-txt"></div>
               <input type="hidden" id="preShortTitleId"
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"/>
@@ -222,7 +222,7 @@
                    name="questionsBo.question"
                    id="questionTextId"
                    placeholder="Type the question you wish to ask the participant"
-                   value="${fn:escapeXml(questionnairesStepsBo.questionsBo.question)}" required oninvalid="this.setCustomValidity('Please fill out this field')"
+                   value="${fn:escapeXml(questionnairesStepsBo.questionsBo.question)}" required
                    maxlength="300"/>
             <div class="help-block with-errors red-txt"></div>
           </div>

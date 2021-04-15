@@ -45,7 +45,7 @@
                id="shortTitleId" name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
             <c:if
                 test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
-               maxlength="50" required oninvalid="this.setCustomValidity('Please fill out this field')" style="white-space:normal;margin-bottom:2px;"/>              
+               maxlength="50" required style="white-space:normal;margin-bottom:2px;"/>              
         <div id="activityvalidate" class="validateActiveTask with-errors red-txt"></div>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -78,7 +78,7 @@
   </div>
   <div class="form-group">
     <textarea class="form-control" rows="5" id="comment" name="instruction" maxlength="150"
-              required oninvalid="this.setCustomValidity('Please fill out this field')">${activeTaskBo.instruction}</textarea>
+              required>${activeTaskBo.instruction}</textarea>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <c:if test="${fn:length(activeTaskBo.taskAttributeValueBos) eq 0}">
@@ -102,7 +102,7 @@
            value="${taskMasterAttributeBo.addToDashboard}">
     <input type="text" class="form-control pr-xlg" id="fetalKickId"
            name="taskAttributeValueBos[1].attributeVal"
-           maxlength="2" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
+           maxlength="2" required/>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <div class="clearfix"></div>
@@ -350,7 +350,7 @@
            value="${taskMasterAttributeBo.addToDashboard}">
     <input type="text" class="form-control pr-xlg" id="fetalKickId"
            name="taskAttributeValueBos[1].attributeVal"
-           value="${taskValueAttributeBo.attributeVal}" maxlength="2" required oninvalid="this.setCustomValidity('Please fill out this field')"/>
+           value="${taskValueAttributeBo.attributeVal}" maxlength="2" required/>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <div class="clearfix"></div>

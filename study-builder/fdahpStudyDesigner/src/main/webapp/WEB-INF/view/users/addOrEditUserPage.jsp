@@ -141,7 +141,7 @@
             <div class="form-group">
               <input autofocus="autofocus" type="text" class="form-control"
                      name="firstName" value="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required oninvalid="this.setCustomValidity('Please fill out this field')"
+                     maxlength="50" required
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -154,7 +154,7 @@
             </div>
             <div class="form-group">
               <input type="text" class="form-control" name="lastName"
-                     value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required oninvalid="this.setCustomValidity('Please fill out this field')"
+                     value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>

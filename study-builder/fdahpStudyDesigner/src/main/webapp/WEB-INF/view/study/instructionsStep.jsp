@@ -64,7 +64,7 @@
           <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
                  name="questionnairesStepsBo.stepShortTitle" id="shortTitleId"
                  value="${fn:escapeXml(instructionsBo.questionnairesStepsBo.stepShortTitle)}"
-                 required="required" oninvalid="this.setCustomValidity('Please fill out this field')"
+                 required="required"
                  maxlength="15" <c:if
               test="${not empty instructionsBo.questionnairesStepsBo.isShorTitleDuplicate && (instructionsBo.questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
           <div class="help-block with-errors red-txt"></div>

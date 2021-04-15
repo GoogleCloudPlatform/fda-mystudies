@@ -59,7 +59,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="lastName" value="${fn:escapeXml(userBO.lastName)}"
                      oldVal="${fn:escapeXml(userBO.lastName)}"
-                     maxlength="50" required readonly oninvalid="this.setCustomValidity('Please fill out this field')"/>
+                     maxlength="50" required readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -168,7 +168,7 @@
                   <input autofocus="autofocus" type="password"
                          class="input-field wow_input emptyField" maxlength="64" id="oldPassword"
                          name="oldPassword"
-                         required tabindex="1" autocomplete="off" oninvalid="this.setCustomValidity('Please fill out this field')"/>
+                         required tabindex="1" autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
               </div>
