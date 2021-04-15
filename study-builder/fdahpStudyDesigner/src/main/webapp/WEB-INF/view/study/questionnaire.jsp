@@ -200,7 +200,7 @@
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
                 <c:if
                     test="${not empty questionnaireBo.shortTitleDuplicate && (questionnaireBo.shortTitleDuplicate gt 0)}"> disabled</c:if>
-                   required="required" maxlength="50"/>
+                   required="required" oninvalid="this.setCustomValidity('Please fill out this field')" maxlength="50"/>
             <div class="help-block with-errors red-txt"></div>
             <input type="hidden" id="preShortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"/>
@@ -213,7 +213,7 @@
           <div class="form-group">
             <input type="text" class="form-control" name="title" id="titleId"
                    value="${fn:escapeXml(questionnaireBo.title)}" maxlength="300"
-                   required="required"/>
+                   required="required" oninvalid="this.setCustomValidity('Please fill out this field')"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
           <div class="mt-lg" id="stepContainer">
