@@ -794,7 +794,7 @@
       callback: function (result) {
         if (result) {
           var a = document.createElement('a');
-          a.href = "/studybuilder/adminStudies/studyList.do"";
+          a.href = "/studybuilder/adminStudies/studyList.do";
           document.body.appendChild(a).click();
         } else {
           $(item).prop('disabled', false);
