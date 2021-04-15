@@ -71,4 +71,9 @@ public final class Constants {
   public static final String STUDY_ID_1 = "study-1";
   public static final String USER_EMAIL = "cdash93@gmail.com";
   public static final String CONTACT_EMAIL_ID = "contactemail@gmail.com";
+  public static final String IOS = "IOS";
+  public static final String UPDATED_IOS_APP_VERSION = "1.2.123";
+  public static final String IOS_APP_VERSION = "2.8.69";
+  public static final String DEVICE_TOKEN =
+      "7B3F1433E1157D370EE8A6BA2E612B27EC2C0081771FC8BA1ECFCBB07BBA5A17";
 }
