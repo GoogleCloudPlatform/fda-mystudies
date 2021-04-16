@@ -13,6 +13,7 @@ import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.service.AuditEventServiceImpl;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.service.LoginServiceImpl;
+import com.fdahpstudydesigner.util.EmailNotification;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -44,5 +45,11 @@ public class WebAppTestConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LoginService loginService() {
     return new LoginServiceImpl();
+  }
+
+  @Bean
+  @Primary
+  public EmailNotification email() {
+    return mock(EmailNotification.class);
   }
 }

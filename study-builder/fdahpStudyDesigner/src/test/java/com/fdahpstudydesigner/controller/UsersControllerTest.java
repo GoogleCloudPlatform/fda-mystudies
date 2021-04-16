@@ -19,7 +19,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,22 +28,16 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
-import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
 import java.util.UUID;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-@PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
-@PrepareForTest({EmailNotification.class})
+/// @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
+// @PrepareForTest({EmailNotification.class})
 public class UsersControllerTest extends BaseMockIT {
 
   @Test
@@ -132,15 +125,9 @@ public class UsersControllerTest extends BaseMockIT {
   @Test
   public void shouldResendActivateDetailsLink() throws Exception {
     HttpHeaders headers = getCommonHeaders();
-    /*Mockito.when(
-        emailNotification.sendEmailNotification(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            Mockito.anyString(),
-            Mockito.anyListOf(String.class),
-            Mockito.anyListOf(String.class)))
-    .thenReturn(true);*/
+    /*EmailNotification emailNotification = mock(EmailNotification.class);
 
+    */
     /*try (MockedStatic<EmailNotification> theMock = Mockito.mockStatic(EmailNotification.class)) {
       theMock.when(()->EmailNotification.sendEmailNotification(
             Mockito.anyString(),
@@ -150,14 +137,14 @@ public class UsersControllerTest extends BaseMockIT {
             Mockito.anyListOf(String.class))).thenReturn(true);
     }*/
 
-    PowerMockito.mockStatic(EmailNotification.class);
+    /*    PowerMockito.mockStatic(EmailNotification.class);
     when(EmailNotification.sendEmailNotification(
             Mockito.anyString(),
             Mockito.anyString(),
             Mockito.anyString(),
             Mockito.anyListOf(String.class),
             Mockito.anyListOf(String.class)))
-        .thenReturn(true);
+        .thenReturn(true);*/
 
     mockMvc
         .perform(

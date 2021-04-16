@@ -75,6 +75,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Autowired private HttpServletRequest request;
 
+  @Autowired private EmailNotification emailNotification;
+
   private LoginDAOImpl loginDAO;
 
   @Override
@@ -182,7 +184,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           dynamicContent =
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "newASPInitialPasswordSetupContent", keyValueForSubject);
-          EmailNotification.sendEmailNotification(
+          emailNotification.sendEmailNotification(
               "newASPInitialPasswordSetupSubject",
               dynamicContent,
               propMap.get("email.address.to"),
@@ -480,7 +482,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "userRegistrationContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "userRegistrationSubject", dynamicContent, email, null, null);
 
                 Map<String, String> values = new HashMap<>();
@@ -495,7 +497,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailForUserUpdateContent", keyValueForSubject2);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailForUserUpdateSubject", dynamicContent, email, null, null);
               } else if ("USER_EMAIL_UPDATE".equals(type)) {
                 // Email to old email address
@@ -503,7 +505,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailToOldEmailForUserEmailUpdateContent", keyValueForSubject2);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailToOldEmailForUserEmailUpdateSubject",
                         dynamicContent,
                         oldEmail,
@@ -514,7 +516,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailToNewEmailForUserEmailUpdateContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailToNewEmailForUserEmailUpdateSubject",
                         anotherdynamicContent,
                         email,
@@ -525,7 +527,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailForEnforcePasswordChangeContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailForEnforcePasswordChangeSubject", dynamicContent, email, null, null);
               } else if ("ReactivateMailAfterEnforcePassChange".equals(type)
                   && userdetails.isEnabled()) {
@@ -533,7 +535,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailForReactivatingUserAfterEnforcePassChangeContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailForReactivatingUserAfterEnforcePassChangeSubject",
                         dynamicContent,
                         email,
@@ -544,7 +546,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "passwordResetLinkContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "passwordResetLinkSubject", dynamicContent, email, null, null);
                 StudyBuilderAuditEvent auditLogEvent =
                     flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
@@ -630,7 +632,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                   "accountLockedContent", keyValueForSubject);
 
           boolean response =
-              EmailNotification.sendEmailNotification(
+              emailNotification.sendEmailNotification(
                   "accountLockedSubject", dynamicContent, email, null, null);
           StudyBuilderAuditEvent auditEvent =
               response

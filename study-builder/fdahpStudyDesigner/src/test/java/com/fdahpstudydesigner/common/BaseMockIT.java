@@ -12,6 +12,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -22,6 +23,7 @@ import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.config.HibernateTestConfig;
 import com.fdahpstudydesigner.config.WebAppTestConfig;
 import com.fdahpstudydesigner.service.AuditEventService;
+import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
@@ -48,6 +50,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -92,6 +96,8 @@ public class BaseMockIT {
   @Autowired private AuditEventService mockAuditService;
 
   @Mock @Autowired protected RestTemplate restTemplate;
+
+  @Mock @Autowired private EmailNotification emailNotification;
 
   @Autowired protected FilterChainProxy filterChainProxy;
 
@@ -144,6 +150,24 @@ public class BaseMockIT {
             })
         .when(mockAuditService)
         .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
+
+    EmailNotification emailNotification = mock(EmailNotification.class);
+    Mockito.when(
+            emailNotification.sendEmailNotification(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyListOf(String.class),
+                Mockito.anyListOf(String.class)))
+        .thenReturn(true);
+  }
+
+  @Configuration
+  static class MykServiceTestContextConfiguration {
+    @Bean
+    public EmailNotification emailNotifications() {
+      return new EmailNotification();
+    }
   }
 
   @After
