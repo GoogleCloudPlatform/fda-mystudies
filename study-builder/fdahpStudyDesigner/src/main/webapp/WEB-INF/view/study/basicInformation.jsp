@@ -226,8 +226,8 @@ margin-top:16px !important;
                     data-toggle="tooltip" data-placement="top"
                     data-html="true"
                     title="
-                    <p class='text-left'>Image requirements: The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to override it.</p>
-					<p class='text-left'>The image must be of type .JPG or .PNG. The minimum image size required is 225 x 225. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger."></p>
+                    <p class='text-left'>Image requirements: The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to override it</p>
+					<p class='text-left'>The image must be of type .JPG or .PNG. The minimum image size required is 225 x 225. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></p>
             </span>
       </div>
           
@@ -839,7 +839,7 @@ margin-top:16px !important;
                       .find(".help-block")
                       .empty()
                       .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                          "Invalid image size or format."));
+                          "Invalid image size or format"));
                   $(".thumb.alternate img")
                       .attr("src",
                           "/studybuilder/images/dummy-img.jpg");
@@ -865,7 +865,7 @@ margin-top:16px !important;
                     .find(".help-block")
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                        "Invalid image size or format."));
+                        "Invalid image size or format"));
                 $('#removeUrl').css("visibility", "hidden");
                 $(".thumb.alternate img").attr("src",
                     "/studybuilder/images/dummy-img.jpg");

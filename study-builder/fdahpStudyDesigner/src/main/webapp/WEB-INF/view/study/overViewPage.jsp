@@ -116,8 +116,8 @@
                       <span class="filled-tooltip"
                             data-toggle="tooltip" data-placement="top" data-html="true"
                             title=""
-                            data-original-title="<p class='text-class'>Image requirements: The default image shown below will be used for the study overview screen (first page) in the mobile app. Upload an alternate image if you wish to override it.</p>
-                            <p class='text-class'>The image must be of type .JPG or .PNG. The minimum image size required is 750 x 1334. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger.</p>"></span>
+                            data-original-title="<p class='text-class'>Image requirements: The default image shown below will be used for the study overview screen (first page) in the mobile app. Upload an alternate image if you wish to override it</p>
+                            <p class='text-class'>The image must be of type .JPG or .PNG. The minimum image size required is 750 x 1334. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger</p>"></span>
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
@@ -244,8 +244,8 @@
                               data-toggle="tooltip" data-placement="top"
                               data-html="true"
                               title="" src="/studybuilder/images/icons/tooltip.png"
-                              data-original-title="<p class='text-left'>Image requirements: The default image shown below will be used for the study overview screen <c:if test='${spbSt.first}'>(first page)</c:if><c:if test='${not spbSt.first}'>(second page onwards)</c:if> in the mobile app. Upload an alternate image if you wish to override it.</p>
-                              <p class='text-left'>The image must be of type .JPG or .PNG. The minimum image size required is<c:if test='${spbSt.first}'>750 x 1334.</c:if><c:if test='${not spbSt.first}'>750 x 570.</c:if>For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger. "></p></span>
+                              data-original-title="<p class='text-left'>Image requirements: The default image shown below will be used for the study overview screen <c:if test='${spbSt.first}'>(first page)</c:if><c:if test='${not spbSt.first}'>(second page onwards)</c:if> in the mobile app. Upload an alternate image if you wish to override it</p>
+                              <p class='text-left'>The image must be of type .JPG or .PNG. The minimum image size required is<c:if test='${spbSt.first}'>750 x 1334.</c:if><c:if test='${not spbSt.first}'>750 x 570.</c:if>For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></p></span>
                     </div>
                       <div class="thumb" style="display: inline-block;width:77px !important">
                        <c:choose>
@@ -504,7 +504,7 @@
           "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
           "<div class=panel-body  pt-none>" +
           "<div>" +
-          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='Image requirements: The default image shown below will be used for the study overview screen (second page onwards) in the mobile app. Upload an alternate image if you wish to override it.</br></br>The image must be of type .JPG or .PNG. The minimum image size required is 750 x 570. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger.'></span></span> </div>"
+          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='Image requirements: The default image shown below will be used for the study overview screen (second page onwards) in the mobile app. Upload an alternate image if you wish to override it</br></br>The image must be of type .JPG or .PNG. The minimum image size required is 750 x 570. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger'></span></span> </div>"
           +
           "<div>" +
           "<div class=thumb style='display: inline-block;width:77px !important'><img src=<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/> class=wid100></div>" +
@@ -727,10 +727,17 @@
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Invalid image size or format."));
+                  "Invalid image size or format"));
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             }
           } else {
+        	  if(this.height>=570 && this.width>=750){
+                	 this.height=570;
+                    this.width=750;
+                  }
+          	  var ht = this.height;
+                var wds = this.width;
+                
             if (ht == 570 && wds == 750) {
               $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
               $(thisAttr).parent().parent().parent().find(".thumb img")
@@ -744,7 +751,7 @@
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Invalid image size or format."));
+                  "Invalid image size or format"));
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             }
           }
@@ -755,7 +762,7 @@
           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
           $(thisAttr).parent().find(".help-block").empty().append(
         	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Invalid image size or format."));
+              "Invalid image size or format"));
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
