@@ -141,7 +141,7 @@
             <div class="form-group">
               <input autofocus="autofocus" type="text" class="form-control"
                      name="firstName" value="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required
+                     maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -154,7 +154,7 @@
             </div>
             <div class="form-group">
               <input type="text" class="form-control" name="lastName"
-                     value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required
+                     value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -177,7 +177,7 @@
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}"
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                     data-pattern-error="Email address is invalid" maxlength="100"
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
                      required
                      <c:if
                          test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> />
@@ -212,7 +212,7 @@
             <div class="form-group">
               <select id="roleId"
                       class="selectpicker <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
-                      name="roleId" required>
+                      name="roleId" required data-error="Please fill out this field">
                 <option value="" selected disabled>- Select Role -</option>
                 <c:forEach items="${roleBOList}" var="role">
                   <option ${role.roleId eq userBO.roleId ? 'selected' : ''}

@@ -165,7 +165,7 @@
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"
                   <c:if
                       test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>
-                     required maxlength="15"/>
+                     required data-error="Please fill out this field" maxlength="15"/>
               <div class="help-block with-errors red-txt"></div>
               <input type="hidden" id="preShortTitleId"
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"/>
@@ -222,7 +222,7 @@
                    name="questionsBo.question"
                    id="questionTextId"
                    placeholder="Type the question you wish to ask the participant"
-                   value="${fn:escapeXml(questionnairesStepsBo.questionsBo.question)}" required
+                   value="${fn:escapeXml(questionnairesStepsBo.questionsBo.question)}" required data-error="Please fill out this field"
                    maxlength="300"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -267,7 +267,7 @@
           <div class="col-md-4 col-lg-3 p-none">
             <div class="form-group">
               <select id="responseTypeId" class="selectpicker" name="questionsBo.responseType"
-                      required
+                      required data-error="Please fill out this field"
                       value="${questionnairesStepsBo.questionsBo.responseType}" <c:if
                   test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
                 <option value=''>Select</option>

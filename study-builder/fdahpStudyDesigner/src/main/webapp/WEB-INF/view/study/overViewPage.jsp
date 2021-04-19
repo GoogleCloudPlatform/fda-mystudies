@@ -178,7 +178,7 @@
                     </div>
                     <div class="form-group">
                       <input type="text" class="form-control updateInput"
-                             name="title" required maxlength="50"
+                             name="title" required data-error="Please fill out this field" maxlength="50"
                              value="${fn:escapeXml(studyBo.name)}"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -321,7 +321,7 @@
                     <div class="form-group">
                       <input type="text" class="form-control updateInput"
                              name="title" value="${fn:escapeXml(studyPageBo.title)}"
-                             required maxlength="50"/>
+                             required data-error="Please fill out this field" maxlength="50"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
@@ -535,7 +535,7 @@
           "<div class='gray-xs-f mb-xs'>Title <small>(50 characters max) </small><span class='requiredStar'>*</span></div>"
           +
           "<div class=form-group>" +
-          "<input type='text' class='form-control updateInput'  name='title' required maxlength='50'>"
+          "<input type='text' class='form-control updateInput'  name='title' required data-error='Please fill out this field' maxlength='50'>"
           +
           "<div class='help-block with-errors red-txt'></div>" +
           "</div>" +

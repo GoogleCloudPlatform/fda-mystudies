@@ -66,7 +66,7 @@
         </div>
         <span class="radio radio-info radio-inline p-45"><input
             type="radio" id="inlineRadio1" value="1" class="eligibilityOptCls"
-            name="eligibilityMechanism" required
+            name="eligibilityMechanism" required data-error="Please fill out this field"
             <c:if test="${eligibility.eligibilityMechanism eq 1}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
           <label for="inlineRadio1">Token validation</label>
@@ -74,7 +74,7 @@
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="2"
                                                      class="eligibilityOptCls"
-                                                     name="eligibilityMechanism" required
+                                                     name="eligibilityMechanism" required data-error="Please fill out this field"
                                                      <c:if
                                                          test="${eligibility.eligibilityMechanism eq 2}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
@@ -83,7 +83,7 @@
         <span class="radio radio-inline"><input type="radio"
                                                 id="inlineRadio3" value="3"
                                                 class="eligibilityOptCls"
-                                                name="eligibilityMechanism" required
+                                                name="eligibilityMechanism" required data-error="Please fill out this field"
                                                 <c:if
                                                     test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>> <label
@@ -110,7 +110,7 @@
           </div>
           <div class="form-group elaborateClass">
             <textarea class="form-control" rows="1" id="comment"
-                      maxlength="230" required
+                      maxlength="230" required data-error="Please fill out this field"
                       name="instructionalText">${eligibility.instructionalText}</textarea>
             <div class="help-block with-errors red-txt"></div>
           </div>

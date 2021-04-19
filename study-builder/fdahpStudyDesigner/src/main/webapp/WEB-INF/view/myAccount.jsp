@@ -82,7 +82,7 @@
                      id="userEmail" name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" maxlength="100"
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                     data-pattern-error="Email address is invalid" required readonly/>
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" required readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -167,7 +167,7 @@
                 <div class="form-group">
                   <input autofocus="autofocus" type="password"
                          class="input-field wow_input emptyField" maxlength="64" id="oldPassword"
-                         name="oldPassword"
+                         name="oldPassword" data-error="Please fill out this field"
                          required tabindex="1" autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -204,7 +204,7 @@
               <div class="col-md-6 p-none">
                 <div class="form-group">
                   <input type="password" class="input-field wow_input emptyField" maxlength="64"
-                         data-minlength="8" data-match-error="Passwords do not match"
+                         data-minlength="8" data-match-error="Passwords do not match" data-error="Please fill out this field"
                          id="conpassword" data-match="#password"
                          tabindex="3" required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>

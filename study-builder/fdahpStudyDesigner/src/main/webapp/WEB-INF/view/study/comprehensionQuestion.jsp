@@ -58,7 +58,7 @@
           </span>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" name="questionText" id="questionText" required
+          <input type="text" class="form-control" name="questionText" id="questionText" required data-error="Please fill out this field"
                  value="${comprehensionQuestionBo.questionText}" maxlength="300"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -97,7 +97,7 @@
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control responseOptionClass'
-                         name="responseList[0].responseOption" id="responseOptionId0" required
+                         name="responseList[0].responseOption" id="responseOptionId0" required data-error="Please fill out this field"
                          maxlength="150" onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -129,7 +129,7 @@
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control' name="responseList[1].responseOption"
-                         id="responseOptionId1" required maxlength="150"
+                         id="responseOptionId1" required maxlength="150" data-error="Please fill out this field"
                          onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -194,7 +194,7 @@
                 </div>
                 <div class='col-md-3'>
                   <div class="form-group">
-                    <select class='selectpicker wid100' required
+                    <select class='selectpicker wid100' required data-error="Please fill out this field"
                             data-error='Please choose one option'
                             name="responseList[${responseBoVar.index}].correctAnswer"
                             id="correctAnswerId${responseBoVar.index}">
@@ -292,7 +292,7 @@
     var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
         + "'><div class='col-md-6 pl-none'>"
         + "<div class='form-group'>"
-        + "<input type='text' class='form-control' required name='responseList[" + ansCount
+        + "<input type='text' class='form-control' required data-error='Please fill out this field' name='responseList[" + ansCount
         + "].responseOption' id='responseOptionId" + ansCount
         + "'  maxlength='150' onblur='validateForUniqueValue(this,function(){});' onkeypress='resetValue(this);'/>"
         + "<div class='help-block with-errors red-txt'></div>"

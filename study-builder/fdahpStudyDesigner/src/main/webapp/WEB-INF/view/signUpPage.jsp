@@ -126,7 +126,7 @@
                     <input type="text" class="input-field wow_input" id=""
                            name="firstName" placeholder="First Name"
                            value="${fn:escapeXml(userBO.firstName)}" maxlength="50"
-                           required autocomplete="off"/>
+                           required data-error="Please fill out this field" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -136,7 +136,7 @@
                     <input type="text" class="input-field wow_input" id=""
                            name="lastName" placeholder="Last Name"
                            value="${fn:escapeXml(userBO.lastName)}" maxlength="50"
-                           required autocomplete="off"/>
+                           required data-error="Please fill out this field" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -147,7 +147,7 @@
                            name="userEmail" placeholder="Email Address"
                            value="${userBO.userEmail}" oldVal="${userBO.userEmail}"
                            pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                           data-pattern-error="Email address is invalid" maxlength="100"
+                           data-pattern-error="Email address is invalid" data-error="Please fill out this field"  maxlength="100"
                            required readonly="readonly" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -178,7 +178,7 @@
                     <input type="password" class="input-field wow_input"
                            id="cfnPassword" name="" maxlength="64"
                            data-match="#password"
-                           data-match-error="Passwords do not match"
+                           data-match-error="Passwords do not match" data-error="Please fill out this field"
                            placeholder="Confirm password*" required autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>

@@ -192,7 +192,7 @@
             		</span>
                   </div>
                   <div class="form-group">
-                    <textarea id="learnMoreTextId" name="learnMoreText"
+                    <textarea id="learnMoreTextId" name="learnMoreText" data-error="Please fill out this field"
                               required>${consentBo.learnMoreText}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>

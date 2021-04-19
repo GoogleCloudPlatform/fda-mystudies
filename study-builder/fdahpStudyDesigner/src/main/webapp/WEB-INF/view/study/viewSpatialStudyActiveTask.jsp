@@ -44,7 +44,7 @@
                  name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
               <c:if
                   test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
-                 maxlength="50" required/>
+                 maxlength="50" required data-error="Please fill out this field"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -64,7 +64,7 @@
         <div class="form-group">
           <input type="text" class="form-control" name="displayName"
                  value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150"
-                 required/>
+                 required data-error="Please fill out this field"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -78,7 +78,7 @@
     </div>
     <div class="form-group">
       <textarea class="form-control" rows="5" id="comment" name="instruction" maxlength="150"
-                required>${activeTaskBo.instruction}</textarea>
+                required data-error="Please fill out this field">${activeTaskBo.instruction}</textarea>
       <div class="help-block with-errors red-txt"></div>
     </div>
     <c:if test="${fn:length(activeTaskBo.taskAttributeValueBos) eq 0}">
@@ -101,7 +101,7 @@
             <div class="form-group">
               <input type="text" id="initialspanId" class="form-control"
                      name="taskAttributeValueBos[0].attributeVal" maxlength="2"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -124,7 +124,7 @@
             <div class="form-group">
               <input type="text" id="minimumspanId" class="form-control"
                      name="taskAttributeValueBos[1].attributeVal" maxlength="2"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -148,7 +148,7 @@
             <div class="form-group">
               <input type="text" id="maximumspanId" class="form-control"
                      name="taskAttributeValueBos[2].attributeVal" maxlength="2"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -171,7 +171,7 @@
                    value="${taskMasterAttributeBo.addToDashboard}">
             <div class="form-group">
               <input type="text" id="playspeedId" class="form-control"
-                     name="taskAttributeValueBos[3].attributeVal" maxlength="5" required
+                     name="taskAttributeValueBos[3].attributeVal" maxlength="5" required data-error="Please fill out this field"
                      onkeypress="return isNumberFloat(event)"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -196,7 +196,7 @@
             <div class="form-group">
               <input type="text" id="maximumtestId" class="form-control"
                      name="taskAttributeValueBos[4].attributeVal" maxlength="3"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -220,7 +220,7 @@
             <div class="form-group">
               <input type="text" id="maximumFailureId" class="form-control"
                      name="taskAttributeValueBos[5].attributeVal" maxlength="3"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -246,14 +246,14 @@
                 <input type="radio" id="inlineRadio7"
                        class="rejoin_radio studyTypeClass"
                        name="taskAttributeValueBos[6].attributeVal" value="Y"
-                       required>
+                       required data-error="Please fill out this field">
                 <label for="inlineRadio7">Yes</label>
               </span>
               <span class="radio radio-inline">
                 <input type="radio" id="inlineRadio8"
                        class="rejoin_radio studyTypeClass"
                        name="taskAttributeValueBos[6].attributeVal" value="N"
-                       checked required>
+                       checked required data-error="Please fill out this field">
                 <label for="inlineRadio8">No</label>
               </span>
               <div class="help-block with-errors red-txt"></div>
@@ -953,7 +953,7 @@
               <div class="form-group">
                 <input type="text" id="playspeedId" class="form-control"
                        name="taskAttributeValueBos[3].attributeVal" maxlength="5"
-                       onkeypress="return isNumberFloat(event)" required
+                       onkeypress="return isNumberFloat(event)" required data-error="Please fill out this field"
                        value="${taskValueAttributeBo.attributeVal}"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -981,7 +981,7 @@
               <div class="form-group">
                 <input type="text" id="maximumtestId" class="form-control"
                        name="taskAttributeValueBos[4].attributeVal" maxlength="3"
-                       onkeypress="return isNumber(event)" required
+                       onkeypress="return isNumber(event)" required data-error="Please fill out this field"
                        value="${taskValueAttributeBo.attributeVal}"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -1008,7 +1008,7 @@
               <div class="form-group">
                 <input type="text" id="maximumFailureId" class="form-control"
                        name="taskAttributeValueBos[5].attributeVal" maxlength="3"
-                       onkeypress="return isNumber(event)" required
+                       onkeypress="return isNumber(event)" required data-error="Please fill out this field"
                        value="${taskValueAttributeBo.attributeVal}"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -1047,7 +1047,7 @@
                   <input type="radio" id="inlineRadio8"
                          class="rejoin_radio studyTypeClass"
                          name="taskAttributeValueBos[6].attributeVal" value="N"
-                         required
+                         required data-error="Please fill out this field"
                          <c:if
                              test="${empty taskValueAttributeBo.attributeVal  || empty taskValueAttributeBo}">checked</c:if> ${taskValueAttributeBo.attributeVal eq 'N'?'checked':""}>
                   <label for="inlineRadio8">No</label>
