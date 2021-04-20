@@ -10,6 +10,8 @@ package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_RESENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED;
@@ -27,14 +29,18 @@ import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.Mail;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
 import java.util.UUID;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 public class UsersControllerTest extends BaseMockIT {
+
+  @Autowired Mail mail;
 
   @Test
   public void shouldViewUserDetails() throws Exception {
@@ -132,7 +138,7 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
-    // verifyAuditEventCall(NEW_USER_INVITATION_RESENT);
+    verifyAuditEventCall(NEW_USER_INVITATION_RESENT);
   }
 
   @Test
@@ -237,7 +243,7 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
     verifyAuditEventCall(NEW_USER_CREATED);
-    // verifyAuditEventCall(NEW_USER_INVITATION_EMAIL_SENT);
+    verifyAuditEventCall(NEW_USER_INVITATION_EMAIL_SENT);
   }
 
   public HashMap<String, Object> getSession() {

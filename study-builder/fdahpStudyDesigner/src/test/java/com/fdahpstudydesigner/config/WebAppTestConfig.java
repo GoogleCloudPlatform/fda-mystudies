@@ -13,8 +13,7 @@ import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.service.AuditEventServiceImpl;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.service.LoginServiceImpl;
-import com.fdahpstudydesigner.util.EmailNotification;
-import org.mockito.ArgumentMatchers;
+import com.fdahpstudydesigner.util.Mail;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -51,16 +50,9 @@ public class WebAppTestConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   @Primary
-  public EmailNotification email() {
-    EmailNotification email = mock(EmailNotification.class);
-    Mockito.when(
-            email.sendEmailNotification(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.<String>anyList(),
-                ArgumentMatchers.<String>anyList()))
-        .thenReturn(true);
-    return email;
+  public Mail email() {
+    Mail mail = mock(Mail.class);
+    Mockito.when(mail.sendemail()).thenReturn(true);
+    return mail;
   }
 }

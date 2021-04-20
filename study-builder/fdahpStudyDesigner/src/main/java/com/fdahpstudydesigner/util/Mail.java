@@ -42,7 +42,8 @@ import javax.mail.internet.MimeMultipart;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.mail.MailAuthenticationException;
-
+import org.springframework.stereotype.Component;
+@Component
 public class Mail {
 
   private static Logger logger = Logger.getLogger(Mail.class.getName());
