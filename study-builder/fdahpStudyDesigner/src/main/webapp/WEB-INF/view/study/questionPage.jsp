@@ -4904,7 +4904,7 @@ if(document.getElementById("singleSelect").checked==true){
     var thisAttr = $("#anchorTextId");
     var anchorDateId = '${questionsBo.anchorDateId}';
     if (anchordateText != null && anchordateText != '' && typeof anchordateText != 'undefined') {
-      var staticText = "Enrollment Date";
+      var staticText = "Enrollment date";
       if (anchordateText.toUpperCase() === staticText.toUpperCase()) {
         $(thisAttr).val('');
         $(thisAttr).parent().addClass("has-danger").addClass("has-error");

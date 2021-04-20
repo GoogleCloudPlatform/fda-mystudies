@@ -3286,8 +3286,8 @@
     $(".manually-anchor-option").parents("form").validator();
     if ($('.manually-anchor-option').length > 1) {
       $('.manuallyAnchorContainer').find(".remBtnDis").removeClass("hide");
-      if ($('#anchorDateId').find('option:selected').text() == 'Enrollment Date') {
-        setAnchorDropdown('Manually Schedule', 'Enrollment Date');
+      if ($('#anchorDateId').find('option:selected').text() == 'Enrollment date') {
+        setAnchorDropdown('Manually Schedule', 'Enrollment date');
       }
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
@@ -3311,7 +3311,7 @@
   }
 
   function setAnchorDropdown(frequency_text, anchorType) {
-    if (anchorType == 'Enrollment Date') {
+    if (anchorType == 'Enrollment date') {
       if (frequency_text == 'One time') {
         $('#onetimeXSign').children('option').remove();
         $('#onetimeXSign').append("<option value='0' selected>+</option>");
