@@ -494,7 +494,7 @@
               </span>
             </div>
             <div class="form-group">
-              <input type="text" custAttType="cust" class="form-control requireClass"
+              <input type="text" custAttType="cust" class="form-control requireClass" data-error="Please fill out this field"
                      name="questionsBo.statShortName" id="statShortNameId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionsBo.statShortName)}"
               <c:if
@@ -513,7 +513,7 @@
               <span class="requiredStar">*</span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control requireClass"
+              <input type="text" class="form-control requireClass" data-error="Please fill out this field"
                      name="questionsBo.statDisplayName"
                      id="statDisplayNameId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionsBo.statDisplayName)}"
@@ -532,7 +532,7 @@
                     title="For Response Types of Time Interval and Height, participant responses are saved in hours and cms respectively. Please enter units accordingly."></span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control requireClass"
+              <input type="text" class="form-control requireClass" data-error="Please fill out this field"
                      name="questionsBo.statDisplayUnits"
                      id="statDisplayUnitsId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionsBo.statDisplayUnits)}"
@@ -548,7 +548,7 @@
               </span>
             </div>
             <div class="form-group">
-              <select class="selectpicker elaborateClass requireClass" id="statTypeId"
+              <select class="selectpicker elaborateClass requireClass" data-error="Please fill out this field" id="statTypeId"
                       title="Select"
                       name="questionsBo.statType">
                 <option value="" selected>Select</option>
@@ -568,7 +568,7 @@
               </span>
             </div>
             <div class="form-group">
-              <select class="selectpicker elaborateClass requireClass" id="statFormula"
+              <select class="selectpicker elaborateClass requireClass" data-error="Please fill out this field" id="statFormula"
                       title="Select"
                       name="questionsBo.statFormula">
                 <option value="" selected>Select</option>
@@ -677,7 +677,7 @@
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
-                           name="questionReponseTypeBo.minValue" id="scaleMinValueId"
+                           name="questionReponseTypeBo.minValue" id="scaleMinValueId" data-error="Please fill out this field"
                            value="${questionnairesStepsBo.questionReponseTypeBo.minValue}"
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -694,7 +694,7 @@
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
-                           name="questionReponseTypeBo.maxValue" id="scaleMaxValueId"
+                           name="questionReponseTypeBo.maxValue" data-error="Please fill out this field" id="scaleMaxValueId"
                            value="${questionnairesStepsBo.questionReponseTypeBo.maxValue}"
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -744,12 +744,12 @@
                   <div class="form-group">
                     <c:if
                         test="${not empty questionnairesStepsBo.questionReponseTypeBo.step && questionnairesStepsBo.questionReponseTypeBo.step ne 0}">
-                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount"
+                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount" data-error="Please fill out this field"
                              value="<fmt:formatNumber  value="${(questionnairesStepsBo.questionReponseTypeBo.maxValue-questionnairesStepsBo.questionReponseTypeBo.minValue)/questionnairesStepsBo.questionReponseTypeBo.step}"  groupingUsed="false" maxFractionDigits="0" type="number"/>"
                              onkeypress="return isNumber(event)">
                     </c:if>
                     <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.step}">
-                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount"
+                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount" data-error="Please fill out this field"
                              value="" onkeypress="return isNumber(event)">
                     </c:if>
                     <div class="help-block with-errors red-txt"></div>
@@ -786,7 +786,7 @@
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
-                           name="questionReponseTypeBo.defaultValue" id="scaleDefaultValueId"
+                           name="questionReponseTypeBo.defaultValue" id="scaleDefaultValueId" data-error="Please fill out this field"
                            value="${questionnairesStepsBo.questionReponseTypeBo.defaultValue}"
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -893,7 +893,7 @@
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ContinuousscaleRequired"
-                           name="questionReponseTypeBo.minValue" id="continuesScaleMinValueId"
+                           name="questionReponseTypeBo.minValue" id="continuesScaleMinValueId" data-error="Please fill out this field"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minValue)}"
                            onkeypress="return isNumberKey(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -910,7 +910,7 @@
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ContinuousscaleRequired"
-                           name="questionReponseTypeBo.maxValue" id="continuesScaleMaxValueId"
+                           name="questionReponseTypeBo.maxValue" data-error="Please fill out this field" id="continuesScaleMaxValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxValue)}"
                            onkeypress="return isNumberKey(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -932,7 +932,7 @@
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ContinuousscaleRequired"
-                           name="questionReponseTypeBo.defaultValue"
+                           name="questionReponseTypeBo.defaultValue" data-error="Please fill out this field"
                            id="continuesScaleDefaultValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.defaultValue)}"
                            onkeypress="return isNumberKey(event)">
@@ -1423,7 +1423,7 @@
                         title="Enter minimum value allowed"></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" name="questionReponseTypeBo.minValue"
+                    <input type="text" class="form-control" name="questionReponseTypeBo.minValue" data-error="Please fill out this field"
                            id="numericMinValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minValue)}"
                            onkeypress="return isNumberKey(event)" maxlength="50">
@@ -1439,7 +1439,7 @@
                         title="Enter maximum value allowed"></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" name="questionReponseTypeBo.maxValue"
+                    <input type="text" class="form-control" name="questionReponseTypeBo.maxValue" data-error="Please fill out this field"
                            id="numericMaxValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxValue)}"
                            onkeypress="return isNumberKey(event)" maxlength="50">

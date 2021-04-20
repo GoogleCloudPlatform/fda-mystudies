@@ -213,7 +213,7 @@
                      placeholder="X" name="timePeriodFromDays"
                      value="${resourceBO.timePeriodFromDays}"
                      oldxDaysVal="${resourceBO.timePeriodFromDays}"
-                     maxlength="3" required pattern="[0-9]+"
+                     maxlength="3" required pattern="[0-9]+" data-error="Please fill out this field"
                      data-pattern-error="Please enter valid number"/>
               <span class="help-block with-errors red-txt"></span>
             </span>

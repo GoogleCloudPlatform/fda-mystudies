@@ -108,7 +108,7 @@
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
-                           placeholde="" id="titleId" name="title"
+                           placeholde="" id="titleId" name="title" data-error="Please fill out this field"
                            value="${consentBo.title}" maxlength="250"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -132,7 +132,7 @@
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
-                           placeholder="" maxlength="250" name="taglineDescription"
+                           placeholder="" maxlength="250" name="taglineDescription" data-error="Please fill out this field"
                            id="taglineDescriptionId"
                            value="${consentBo.taglineDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -154,7 +154,7 @@
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
-                           placeholder="" maxlength="250" name="shortDescription"
+                           placeholder="" maxlength="250" name="shortDescription" data-error="Please fill out this field"
                            id="shortDescriptionId" value="${consentBo.shortDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -175,7 +175,7 @@
                   </div>
                   <div class="form-group custom-form">
                     <textarea class="form-control requiredClass" rows="5"
-                              maxlength="500" placeholder="" name="longDescription"
+                              maxlength="500" placeholder="" name="longDescription" data-error="Please fill out this field"
                               id="longDescriptionId">${consentBo.longDescription}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>

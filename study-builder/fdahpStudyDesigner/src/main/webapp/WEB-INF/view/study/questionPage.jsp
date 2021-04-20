@@ -607,7 +607,7 @@
                         title="Enter an integer number in the range (Min, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field"
                            name="questionReponseTypeBo.minValue" id="scaleMinValueId" value="${fn:escapeXml(
                         questionsBo.questionReponseTypeBo.minValue)}"
                            onkeypress="return isOnlyNumber(event)">
@@ -625,7 +625,7 @@
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
-                           name="questionReponseTypeBo.maxValue" id="scaleMaxValueId" value="${fn:escapeXml(
+                           name="questionReponseTypeBo.maxValue" data-error="Please fill out this field" id="scaleMaxValueId" value="${fn:escapeXml(
                         questionsBo.questionReponseTypeBo.maxValue)}"
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -674,12 +674,12 @@
                   </div>
                   <div class="form-group">
                     <c:if test="${not empty questionsBo.questionReponseTypeBo.step}">
-                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount"
+                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount" data-error="Please fill out this field"
                              value="<fmt:formatNumber  value="${(questionsBo.questionReponseTypeBo.maxValue-questionsBo.questionReponseTypeBo.minValue)/questionsBo.questionReponseTypeBo.step}"  groupingUsed="false" maxFractionDigits="0" type="number" />"
                              onkeypress="return isNumber(event)">
                     </c:if>
                     <c:if test="${empty questionsBo.questionReponseTypeBo.step}">
-                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount"
+                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount" data-error="Please fill out this field"
                              value="" onkeypress="return isNumber(event)">
                     </c:if>
                     <div class="help-block with-errors red-txt"></div>
@@ -716,7 +716,7 @@
                   </div>
                   <div class="form-group">
                     <input type="text" class="form-control ScaleRequired"
-                           name="questionReponseTypeBo.defaultValue" id="scaleDefaultValueId"
+                           name="questionReponseTypeBo.defaultValue" id="scaleDefaultValueId" data-error="Please fill out this field"
                            value="${fn:escapeXml(
                         questionsBo.questionReponseTypeBo.defaultValue)}"
                            onkeypress="return isOnlyNumber(event)">
@@ -825,7 +825,7 @@
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control ContinuousscaleRequired"
-                         name="questionReponseTypeBo.minValue" id="continuesScaleMinValueId"
+                         name="questionReponseTypeBo.minValue" id="continuesScaleMinValueId" data-error="Please fill out this field"
                          value="${questionsBo.questionReponseTypeBo.minValue}"
                          onkeypress="return isNumberKey(event)">
                   <div class="help-block with-errors red-txt"></div>
@@ -842,7 +842,7 @@
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control ContinuousscaleRequired"
-                         name="questionReponseTypeBo.maxValue" id="continuesScaleMaxValueId"
+                         name="questionReponseTypeBo.maxValue" data-error="Please fill out this field" id="continuesScaleMaxValueId"
                          value="${questionsBo.questionReponseTypeBo.maxValue}"
                          onkeypress="return isNumberKey(event)">
                   <div class="help-block with-errors red-txt"></div>
@@ -862,7 +862,7 @@
                         title="Enter an integer between the minimum and maximum."></span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control ContinuousscaleRequired"
+                  <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field"
                          name="questionReponseTypeBo.defaultValue" id="continuesScaleDefaultValueId"
                          value="${questionsBo.questionReponseTypeBo.defaultValue}"
                          onkeypress="return isNumberKey(event)">
@@ -1352,7 +1352,7 @@
                       title="Enter minimum value allowed"></span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="questionReponseTypeBo.minValue"
+                  <input type="text" class="form-control" name="questionReponseTypeBo.minValue" data-error="Please fill out this field"
                          id="numericMinValueId"
                          value="${fn:escapeXml(questionsBo.questionReponseTypeBo.minValue)}"
                          onkeypress="return isNumberKey(event)" maxlength="50">
@@ -1369,7 +1369,7 @@
                       title="Enter maximum value allowed"></span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="questionReponseTypeBo.maxValue"
+                  <input type="text" class="form-control" name="questionReponseTypeBo.maxValue" data-error="Please fill out this field"
                          id="numericMaxValueId"
                          value="${fn:escapeXml(questionsBo.questionReponseTypeBo.maxValue)}"
                          onkeypress="return isNumberKey(event)" maxlength="50">

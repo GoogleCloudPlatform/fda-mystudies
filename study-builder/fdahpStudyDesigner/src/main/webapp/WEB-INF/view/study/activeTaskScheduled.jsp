@@ -419,7 +419,7 @@
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="repeatActiveTask" placeholder="No of times" required
                  value="${activeTaskBo.repeatActiveTask}"
-                 onkeypress="return isNumber(event, this)"
+                 onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
@@ -644,7 +644,7 @@
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                    name="repeatActiveTask" placeholder="No of times"
                    value="${activeTaskBo.repeatActiveTask}" required
-                   onkeypress="return isNumber(event, this)"
+                   onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                    data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
@@ -665,7 +665,7 @@
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="repeatActiveTask" placeholder="No of times"
                  value="${activeTaskBo.repeatActiveTask}" required
-                 onkeypress="return isNumber(event, this)"
+                 onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
@@ -837,7 +837,7 @@
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                    name="repeatActiveTask" placeholder="No of times" required
                    value="${activeTaskBo.repeatActiveTask}"
-                   onkeypress="return isNumber(event, this)"
+                   onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                    data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
@@ -858,7 +858,7 @@
           <input id="months" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="repeatActiveTask" placeholder="No of times" required
-                 value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)"
+                 value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
