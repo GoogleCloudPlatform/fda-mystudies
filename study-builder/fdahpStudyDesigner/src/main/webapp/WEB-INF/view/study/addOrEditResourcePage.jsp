@@ -76,7 +76,7 @@
           <div class="form-group">
             <input autofocus="autofocus" type="text" class="form-control" id="resourceTitle"
                    name="title"
-                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required
+                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required data-error="Please fill out this field"
                    <c:if test="${isstudyProtocol eq 'isstudyProtocol'}">readonly</c:if>/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -108,7 +108,7 @@
       <div id="richEditor"
            class="mt-lg form-group resetContentType <c:if test="${resourceBO.textOrPdf}">dis-none</c:if>">
         <textarea class="remReqOnSave" id="richText" name="richText"
-                  required>${resourceBO.richText}</textarea>
+                  required data-error="Please fill out this field">${resourceBO.richText}</textarea>
         <div class="help-block with-errors red-txt"></div>
       </div>
 
@@ -182,7 +182,7 @@
               </div>
               <div class="col-md-3 col-lg-3 p-none">
                 <div class="form-group">
-                  <select id="anchorDateId" class="selectpicker disBtn1" required
+                  <select id="anchorDateId" class="selectpicker disBtn1" required data-error="Please fill out this field"
                           name="anchorDateId">
                     <option value=''>Select</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
@@ -242,7 +242,7 @@
                      class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm resetAncDate"
                      placeholder="Y"
                      name="timePeriodToDays" value="${resourceBO.timePeriodToDays}"
-                     oldyDaysVal="${resourceBO.timePeriodToDays}" maxlength="3" required/>
+                     oldyDaysVal="${resourceBO.timePeriodToDays}" maxlength="3" required data-error="Please fill out this field"/>
 
               <span class="help-block with-errors red-txt"></span>
             </span>
@@ -266,7 +266,7 @@
                      class="form-control disRadBtn1 disBtn2 datepicker remReqOnSave mt-md"
                      placeholder="Start date" name="startDate"
                      value="${resourceBO.startDate}"
-                     oldStartDateVal="${resourceBO.startDate}" required/>
+                     oldStartDateVal="${resourceBO.startDate}" required data-error="Please fill out this field"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
             <span class="gray-xs-f mb-sm pr-md">
@@ -276,7 +276,7 @@
               <input id="EndDate" type="text"
                      class="form-control disRadBtn1 disBtn2 datepicker remReqOnSave mt-md"
                      placeholder="End date" name="endDate" value="${resourceBO.endDate}"
-                     oldEndDateVal="${resourceBO.endDate}" required/>
+                     oldEndDateVal="${resourceBO.endDate}" required data-error="Please fill out this field"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
             <div class="help-block with-errors red-txt"></div>

@@ -44,7 +44,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox1" class="class" name="checkbox1"
-                   <c:if test="${checklist.checkbox1}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox1}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox1"> IRB Review Completed </label>
           </div>
           <div class="pl-13">
@@ -54,7 +54,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox2" class="class" name="checkbox2"
-                   <c:if test="${checklist.checkbox2}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox2}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox2"> Participant Cohort Identified </label>
           </div>
           <div class=" pl-13">
@@ -66,7 +66,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox3" class="class" name="checkbox3"
-                   <c:if test="${checklist.checkbox3}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox3}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox3"> Platform Support and Participant Device Usage
               Verified </label>
           </div>
@@ -80,7 +80,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox5" class="class" name="checkbox5"
-                   <c:if test="${checklist.checkbox5}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox5}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox5"> Eligibility - Token Distribution </label>
           </div>
           <div class=" pl-13">
@@ -93,7 +93,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox6" class="class" name="checkbox6"
-                   <c:if test="${checklist.checkbox6}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox6}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox6"> App Install and Study Start Instructions Provided </label>
           </div>
           <div class=" pl-13">
@@ -105,7 +105,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox7" class="class" name="checkbox7"
-                   <c:if test="${checklist.checkbox7}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox7}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox7"> Appearance of full consent document - Reviewed and
               Confirmed </label>
           </div>
@@ -118,7 +118,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox8" class="class" name="checkbox8"
-                   <c:if test="${checklist.checkbox8}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox8}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox8"> Questionnaires Added </label>
           </div>
           <div class=" pl-13">
@@ -130,7 +130,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox9" class="class" name="checkbox9"
-                   <c:if test="${checklist.checkbox9}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox9}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox9"> Active Tasks Added </label>
           </div>
           <div class=" pl-13">
@@ -142,7 +142,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox10" class="class" name="checkbox10"
-                   <c:if test="${checklist.checkbox10}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox10}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox10"> Resources Added </label>
           </div>
           <div class=" pl-13">
@@ -154,7 +154,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox11" class="class" name="checkbox11"
-                   <c:if test="${checklist.checkbox11}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox11}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox11"> Mobile App Tested </label>
           </div>
           <div class=" pl-13">
@@ -166,7 +166,7 @@
         <div class="checkbox checkbox-inline p-45 pb-md">
           <div>
             <input type="checkbox" id="inlineCheckbox12" class="class" name="checkbox12"
-                   <c:if test="${checklist.checkbox12}">checked</c:if> required>
+                   <c:if test="${checklist.checkbox12}">checked</c:if> required data-error="Please fill out this field">
             <label for="inlineCheckbox12"> Mobile App submitted to app stores and approved</label>
           </div>
           <div class=" pl-13">

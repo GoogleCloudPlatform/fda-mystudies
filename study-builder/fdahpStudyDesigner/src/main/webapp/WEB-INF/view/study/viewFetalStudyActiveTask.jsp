@@ -45,7 +45,7 @@
                id="shortTitleId" name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
             <c:if
                 test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
-               maxlength="50" required style="white-space:normal;margin-bottom:2px;"/>              
+               maxlength="50" required data-error="Please fill out this field" style="white-space:normal;margin-bottom:2px;"/>              
         <div id="activityvalidate" class="validateActiveTask with-errors red-txt"></div>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -64,7 +64,7 @@
     <div>
       <div class="form-group">
         <input type="text" class="form-control" name="displayName"
-               value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150" required/>
+               value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150" required data-error="Please fill out this field"/>
         <div class="help-block with-errors red-txt"></div>
       </div>
     </div>
@@ -78,7 +78,7 @@
   </div>
   <div class="form-group">
     <textarea class="form-control" rows="5" id="comment" name="instruction" maxlength="150"
-              required>${activeTaskBo.instruction}</textarea>
+              required data-error="Please fill out this field">${activeTaskBo.instruction}</textarea>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <c:if test="${fn:length(activeTaskBo.taskAttributeValueBos) eq 0}">
@@ -102,7 +102,7 @@
            value="${taskMasterAttributeBo.addToDashboard}">
     <input type="text" class="form-control pr-xlg" id="fetalKickId"
            name="taskAttributeValueBos[1].attributeVal"
-           maxlength="2" required/>
+           maxlength="2" required data-error="Please fill out this field"/>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <div class="clearfix"></div>
@@ -350,7 +350,7 @@
            value="${taskMasterAttributeBo.addToDashboard}">
     <input type="text" class="form-control pr-xlg" id="fetalKickId"
            name="taskAttributeValueBos[1].attributeVal"
-           value="${taskValueAttributeBo.attributeVal}" maxlength="2" required/>
+           value="${taskValueAttributeBo.attributeVal}" maxlength="2" required data-error="Please fill out this field"/>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <div class="clearfix"></div>
@@ -370,7 +370,7 @@
         <input type="hidden" name="taskAttributeValueBos[0].addToDashboard"
                value="${activeTaskBo.taskMasterAttributeBos[0].addToDashboard}">
         <input type="hidden" id="inputClockId" class="form-control pr-xlg clock" placeholder="Time"
-               name="taskAttributeValueBos[0].attributeVal" value="23:59" required/>
+               name="taskAttributeValueBos[0].attributeVal" value="23:59" required data-error="Please fill out this field"/>
       </div>
     </div>
     </c:if>

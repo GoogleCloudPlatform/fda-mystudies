@@ -200,7 +200,7 @@
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
                 <c:if
                     test="${not empty questionnaireBo.shortTitleDuplicate && (questionnaireBo.shortTitleDuplicate gt 0)}"> disabled</c:if>
-                   required="required" maxlength="50"/>
+                   required="required" data-error="Please fill out this field" maxlength="50"/>
             <div class="help-block with-errors red-txt"></div>
             <input type="hidden" id="preShortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"/>
@@ -213,7 +213,7 @@
           <div class="form-group">
             <input type="text" class="form-control" name="title" id="titleId"
                    value="${fn:escapeXml(questionnaireBo.title)}" maxlength="300"
-                   required="required"/>
+                   required="required" data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
           <div class="mt-lg" id="stepContainer">
@@ -581,7 +581,7 @@
                          name="questionnairesFrequenciesBo.frequencyDate"
                          placeholder="Choose date"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"
-                         required
+                         required data-error="Please fill out this field"
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
                   <span class='help-block with-errors red-txt'></span>
@@ -592,7 +592,7 @@
                          class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
-                         required
+                         required data-error="Please fill out this field"
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
                          placeholder="Select time"/>
@@ -624,7 +624,7 @@
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="studyLifetimeEnd" placeholder="Choose end date"
-                             required
+                             required data-error="Please fill out this field"
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                              value=""/>
@@ -633,7 +633,7 @@
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="studyLifetimeEnd" placeholder="Choose end date"
-                             required
+                             required data-error="Please fill out this field"
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                              value="${questionnaireBo.studyLifetimeEnd}"/>
@@ -848,7 +848,7 @@
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
                       <input id="time0" type="text"
-                             name="questionnairesFrequenciesList[0].frequencyTime" required
+                             name="questionnairesFrequenciesList[0].frequencyTime" required data-error="Please fill out this field"
                              class="form-control clock dailyClock" placeholder="Time"
                              onclick='timep(this.id);'/>
                       <span
@@ -874,7 +874,7 @@
                           class="form-group m-none dis-inline vertical-align-middle pr-md">
                         <input id="time${frequeincesVar.index}" type="text"
                                name="questionnairesFrequenciesList[${frequeincesVar.index}].frequencyTime"
-                               required
+                               required data-error="Please fill out this field"
                                class="form-control clock dailyClock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="Time" onclick='timep(this.id);'
                                value="${questionnairesFrequencies.frequencyTime}"
@@ -940,7 +940,7 @@
                     class=" form-group m-none dis-inline vertical-align-middle pr-md">
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                         name="dayOfTheWeek" required>
+                                         name="dayOfTheWeek" required data-error="Please fill out this field">
                     <option value=''>Select</option>
                     <option value='Sunday'
                       ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -972,7 +972,7 @@
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="selectWeeklyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1059,7 +1059,7 @@
                       class="form-group m-none dis-inline vertical-align-middle pr-md">
                     <input id="selectWeeklyTimeAnchor" type="text"
                            class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                           required onclick="timep(this.id)" placeholder="Time"
+                           required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                            name="questionnairesFrequenciesBo.frequencyTime"
                            value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                     <span class='help-block with-errors red-txt'></span>
@@ -1169,7 +1169,7 @@
                   class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
                 <span class=""><input id="startDateMonthly" type="text"
                                       class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                      required placeholder="Choose date"
+                                      required data-error="Please fill out this field" placeholder="Choose date"
                                       name="questionnairesFrequenciesBo.frequencyDate"
                                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1179,7 +1179,7 @@
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="selectMonthlyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1206,7 +1206,7 @@
                   <br/> <input id="pickStartDate"
                                type="text"
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               placeholder="Choose start date" required
+                               placeholder="Choose start date" required data-error="Please fill out this field"
                                name="studyLifetimeStart"
                                value="${questionnaireBo.studyLifetimeStart}"
                                readonly="readonly"/>
@@ -1292,7 +1292,7 @@
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
                   <input id="selectMonthlyTimeAnchor" type="text"
                          class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                         required onclick="timep(this.id)" placeholder="Time"
+                         required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1399,7 +1399,7 @@
                            class="form-control calendar customCalnder cusEndDate"
                            name="questionnaireCustomScheduleBo[0].frequencyEndDate"
                            placeholder="End date" onclick='customEndDate(this.id,0);'
-                           required/>
+                           required data-error="Please fill out this field"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
                  
@@ -1460,7 +1460,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndDate"
                              value="${questionnaireCustomScheduleBo.frequencyEndDate}"
                              placeholder="End date"
-                             onclick='customEndDate(this.id,${customVar.index});' required/>
+                             onclick='customEndDate(this.id,${customVar.index});' required data-error="Please fill out this field"/>
                       <span class='help-block with-errors red-txt'></span>
                     </span>
                     <span
@@ -1470,7 +1470,7 @@
                              class="form-control clock cusTime ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                              value="${questionnaireCustomScheduleBo.frequencyTime}"
-                             placeholder="Time" onclick='timep(this.id);' required/>
+                             placeholder="Time" onclick='timep(this.id);' required data-error="Please fill out this field"/>
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
@@ -1571,7 +1571,7 @@
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyTime"
                                                           value="${questionnaireCustomScheduleBo.frequencyTime}"
-                                                          placeholder="Time" required/>
+                                                          placeholder="Time" required data-error="Please fill out this field"/>
                     <span
                         class='help-block with-errors red-txt'></span>
                   </span>
@@ -1678,7 +1678,7 @@
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                         value="${questionnaireCustomScheduleBo.frequencyTime}"
-                        placeholder="Time" required/>
+                        placeholder="Time" required data-error="Please fill out this field"/>
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
