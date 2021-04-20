@@ -136,7 +136,7 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
-    // verifyAuditEventCall(NEW_USER_INVITATION_RESENT);
+    verifyAuditEventCall(NEW_USER_INVITATION_RESENT);
   }
 
   @Test
@@ -241,7 +241,7 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
     verifyAuditEventCall(NEW_USER_CREATED);
-    // verifyAuditEventCall(NEW_USER_INVITATION_EMAIL_SENT);
+    verifyAuditEventCall(NEW_USER_INVITATION_EMAIL_SENT);
   }
 
   public HashMap<String, Object> getSession() {
