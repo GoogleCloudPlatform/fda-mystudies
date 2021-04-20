@@ -28,12 +28,14 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EmailNotification {
 
   private static Logger logger = Logger.getLogger(EmailNotification.class.getName());
+  @Autowired Mail mail;
 
   public boolean sendEmailNotification(
       String subjectProprtyName,
@@ -45,7 +47,6 @@ public class EmailNotification {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     boolean sentMail = false;
     try {
-      Mail mail = new Mail();
       if (toMail != null) {
         toMail = toMail.trim();
         mail.setToemail(toMail.toLowerCase());
@@ -81,7 +82,6 @@ public class EmailNotification {
     boolean sentMail = false;
     List<String> toMailListNew = new ArrayList<>();
     try {
-      Mail mail = new Mail();
       if ((toMailList != null) && !toMailList.isEmpty()) {
         for (String mailId : toMailList) {
           mailId = mailId.trim();
@@ -122,7 +122,6 @@ public class EmailNotification {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     boolean sentMail = false;
     try {
-      Mail mail = new Mail();
       if (toMail != null) {
         toMail = toMail.trim();
         mail.setToemail(toMail.toLowerCase());
