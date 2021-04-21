@@ -121,9 +121,11 @@ spec:
             initialDelaySeconds: 180
             periodSeconds: 20
           resources:
-            requests:
-              memory: "100Mi"
-              cpu: "15m"
+            limits:
+              cpu: "100m"
+          requests:
+             cpu: "15m"
+           memory: "100Mi"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
