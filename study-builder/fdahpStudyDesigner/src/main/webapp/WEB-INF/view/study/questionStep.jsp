@@ -165,7 +165,7 @@
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"
                   <c:if
                       test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>
-                     required data-error="Please fill out this field" maxlength="15"/>
+                     required  data-error="Please fill out this field" maxlength="15"/>
               <div class="help-block with-errors red-txt"></div>
               <input type="hidden" id="preShortTitleId"
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"/>
@@ -424,7 +424,7 @@
                       title="The options available here depend on the scheduling frequency set for the activity. For multiple-times-a-day and custom- scheduled activities, the chart's X axis divisions will represent runs. For the former case, the chart will display all runs for the day while for the latter, the chart will display a max of 5 runs at a time."></span>
               </div>
               <div class="form-group">
-                <select class="selectpicker elaborateClass chartrequireClass" data-error="Please fill out this field"
+                <select class="selectpicker elaborateClass chartrequireClass" 
                         id="lineChartTimeRangeId"
                         name="questionsBo.lineChartTimeRange"
                         value="${questionnairesStepsBo.questionsBo.lineChartTimeRange}">
@@ -466,7 +466,7 @@
                 </span>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control chartrequireClass" data-error="Please fill out this field"
+                <input type="text" class="form-control chartrequireClass" 
                        name="questionsBo.chartTitle"
                        id="chartTitleId" value="${questionnairesStepsBo.questionsBo.chartTitle}"
                        maxlength="30">
@@ -512,7 +512,7 @@
               months) (1 to 50 characters)
               <span class="requiredStar">*</span>
             </div>
-            <div class="form-group">
+            <div class="form-group"> 
               <input type="text" class="form-control requireClass" data-error="Please fill out this field"
                      name="questionsBo.statDisplayName"
                      id="statDisplayNameId"
@@ -532,7 +532,7 @@
                     title="For Response Types of Time Interval and Height, participant responses are saved in hours and cms respectively. Please enter units accordingly."></span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control requireClass" data-error="Please fill out this field"
+              <input type="text" class="form-control requireClass"  data-error="Please fill out this field"
                      name="questionsBo.statDisplayUnits"
                      id="statDisplayUnitsId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionsBo.statDisplayUnits)}"
@@ -568,7 +568,7 @@
               </span>
             </div>
             <div class="form-group">
-              <select class="selectpicker elaborateClass requireClass" data-error="Please fill out this field" id="statFormula"
+              <select class="selectpicker elaborateClass requireClass"  data-error="Please fill out this field" id="statFormula"
                       title="Select"
                       name="questionsBo.statFormula">
                 <option value="" selected>Select</option>
@@ -651,12 +651,12 @@
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="ScaleRequired" id="scalevertical" value="true"
+                  <input type="radio" class="ScaleRequired" data-error="Please fill out this field" id="scalevertical" value="true"
                          name="questionReponseTypeBo.vertical"  ${questionnairesStepsBo.questionReponseTypeBo.vertical ? 'checked':''} >
                   <label for="scalevertical">Vertical</label>
                 </span>
                 <span class="radio radio-inline">
-                  <input type="radio" class="ScaleRequired" id="scalehorizontal" value="false"
+                  <input type="radio" class="ScaleRequired" data-error="Please fill out this field" id="scalehorizontal" value="false"
                          name="questionReponseTypeBo.vertical" ${empty questionnairesStepsBo.questionReponseTypeBo.vertical || !questionnairesStepsBo.questionReponseTypeBo.vertical ? 'checked':''} >
                   <label for="scalehorizontal">Horizontal</label>
                 </span>
@@ -676,8 +676,8 @@
                         title="Enter an integer number in the range (Min, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired"
-                           name="questionReponseTypeBo.minValue" id="scaleMinValueId" data-error="Please fill out this field"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field"
+                           name="questionReponseTypeBo.minValue" id="scaleMinValueId" 
                            value="${questionnairesStepsBo.questionReponseTypeBo.minValue}"
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -693,8 +693,8 @@
                         title="Enter an integer number in the range (Min+1, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired"
-                           name="questionReponseTypeBo.maxValue" data-error="Please fill out this field" id="scaleMaxValueId"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field"
+                           name="questionReponseTypeBo.maxValue"  id="scaleMaxValueId"
                            value="${questionnairesStepsBo.questionReponseTypeBo.maxValue}"
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -744,12 +744,12 @@
                   <div class="form-group">
                     <c:if
                         test="${not empty questionnairesStepsBo.questionReponseTypeBo.step && questionnairesStepsBo.questionReponseTypeBo.step ne 0}">
-                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount" data-error="Please fill out this field"
+                      <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" id="displayStepsCount" 
                              value="<fmt:formatNumber  value="${(questionnairesStepsBo.questionReponseTypeBo.maxValue-questionnairesStepsBo.questionReponseTypeBo.minValue)/questionnairesStepsBo.questionReponseTypeBo.step}"  groupingUsed="false" maxFractionDigits="0" type="number"/>"
                              onkeypress="return isNumber(event)">
                     </c:if>
                     <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.step}">
-                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount" data-error="Please fill out this field"
+                      <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" id="displayStepsCount" 
                              value="" onkeypress="return isNumber(event)">
                     </c:if>
                     <div class="help-block with-errors red-txt"></div>
@@ -764,7 +764,7 @@
                           title="This represents the number of steps the scale is divided into."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired" id="scaleStepId"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" id="scaleStepId"
                            value="${questionnairesStepsBo.questionReponseTypeBo.step}"
                            onkeypress="return isNumber(event)" maxlength="2" disabled="disabled">
                     <div class="help-block with-errors red-txt"></div>
@@ -785,8 +785,8 @@
                           title="Enter an integer number to indicate the desired default step position for the slider in the scale.  Ensure it is in the range (0,  Numer of  Steps). For example, if you have 6 steps,  0 indicates the minimum value, 1 indicates the first step and so on. 6 indicates the maximum value."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired"
-                           name="questionReponseTypeBo.defaultValue" id="scaleDefaultValueId" data-error="Please fill out this field"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field"
+                           name="questionReponseTypeBo.defaultValue" id="scaleDefaultValueId" 
                            value="${questionnairesStepsBo.questionReponseTypeBo.defaultValue}"
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -892,8 +892,8 @@
                         title="Enter an integer number in the range (Min, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field"
-                           name="questionReponseTypeBo.minValue" id="continuesScaleMinValueId" data-error="Please fill out this field"
+                    <input type="text" class="form-control ContinuousscaleRequired"  data-error="Please fill out this field"
+                           name="questionReponseTypeBo.minValue" id="continuesScaleMinValueId" 
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minValue)}"
                            onkeypress="return isNumberKey(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -909,8 +909,8 @@
                         title="Enter an integer number in the range (Min+1, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired" 
-                           name="questionReponseTypeBo.maxValue" data-error="Please fill out this field" id="continuesScaleMaxValueId"
+                    <input type="text" class="form-control ContinuousscaleRequired"  data-error="Please fill out this field"
+                           name="questionReponseTypeBo.maxValue"  id="continuesScaleMaxValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxValue)}"
                            onkeypress="return isNumberKey(event)">
                     <div class="help-block with-errors red-txt"></div>
@@ -931,8 +931,8 @@
                           title="Enter an integer between the minimum and maximum."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired"
-                           name="questionReponseTypeBo.defaultValue" data-error="Please fill out this field"
+                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field"
+                           name="questionReponseTypeBo.defaultValue" 
                            id="continuesScaleDefaultValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.defaultValue)}"
                            onkeypress="return isNumberKey(event)">
@@ -950,7 +950,7 @@
                           title="Enter the maximum number of decimal places to be shown for the values on the scale. Note that your options  (0,1,2,3,4) are limited by the selected maximum and minimum values."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field"
+                    <input type="text" class="form-control ContinuousscaleRequired"  data-error="Please fill out this field"
                            name="questionReponseTypeBo.maxFractionDigits"
                            id="continuesScaleFractionDigitsId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxFractionDigits)}"
@@ -1423,7 +1423,7 @@
                         title="Enter minimum value allowed"></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" name="questionReponseTypeBo.minValue" data-error="Please fill out this field"
+                    <input type="text" class="form-control" name="questionReponseTypeBo.minValue" 
                            id="numericMinValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minValue)}"
                            onkeypress="return isNumberKey(event)" maxlength="50">
@@ -1439,7 +1439,7 @@
                         title="Enter maximum value allowed"></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control" name="questionReponseTypeBo.maxValue" data-error="Please fill out this field"
+                    <input type="text" class="form-control" name="questionReponseTypeBo.maxValue" 
                            id="numericMaxValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxValue)}"
                            onkeypress="return isNumberKey(event)" maxlength="50">
@@ -1845,7 +1845,7 @@
                              value="${questionResponseSubType.responseSubTypeValueId}">
                       <div class="col-md-3 pl-none">
                         <div class="form-group">
-                          <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field"
+                          <input type="text" class="form-control TextscaleRequired"  data-error="Please fill out this field"
                                  name="questionResponseSubTypeList[${subtype.index}].text"
                                  id="displayTextSclText${subtype.index}"
                                  value="${fn:escapeXml(questionResponseSubType.text)}"
@@ -1856,7 +1856,7 @@
                       <div class="col-md-4 pl-none">
                         <div class="form-group">
                           <input type="text"
-                                 class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field"
+                                 class="form-control TextscaleRequired textScaleValue"  data-error="Please fill out this field"
                                  name="questionResponseSubTypeList[${subtype.index}].value"
                                  id="displayTextSclValue${subtype.index}"
                                  value="${fn:escapeXml(questionResponseSubType.value)}"
@@ -1918,7 +1918,7 @@
                   <div class="text-scale row" id="0">
                     <div class="col-md-3 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field"
+                        <input type="text" class="form-control TextscaleRequired"  data-error="Please fill out this field"
                                name="questionResponseSubTypeList[0].text"
                                id="displayTextSclText0"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].text)}"
@@ -1928,7 +1928,7 @@
                     </div>
                     <div class="col-md-4 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field"
+                        <input type="text" class="form-control TextscaleRequired textScaleValue"  data-error="Please fill out this field"
                                name="questionResponseSubTypeList[0].value"
                                id="displayTextSclValue0"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}"
@@ -1969,7 +1969,7 @@
                   <div class="text-scale row" id="1">
                     <div class="col-md-3 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field"
+                        <input type="text" class="form-control TextscaleRequired"  data-error="Please fill out this field"
                                name="questionResponseSubTypeList[1].text"
                                id="displayTextSclText1"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].text)}"
@@ -1979,7 +1979,7 @@
                     </div>
                     <div class="col-md-4 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field"
+                        <input type="text" class="form-control TextscaleRequired textScaleValue"  data-error="Please fill out this field"
                                name="questionResponseSubTypeList[1].value"
                                id="displayTextSclValue1"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}"
@@ -5838,7 +5838,7 @@
         var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
             "	<div class='col-md-3 pl-none'>" +
             "    <div class='form-group'>" +
-            "      <input type='text' class='form-control TextscaleRequired' data-error="Please fill out this field" name='questionResponseSubTypeList["
+            "      <input type='text' class='form-control TextscaleRequired'  data-error='Please fill out this field' name='questionResponseSubTypeList["
             + scaleCount + "].text' id='displayTextSclText" + scaleCount
             + "'+  maxlength='15' required>" +
             "      <div class='help-block with-errors red-txt'></div>" +
@@ -5846,7 +5846,7 @@
             "</div>" +
             " <div class='col-md-4 pl-none'>" +
             "    <div class='form-group'>" +
-            "       <input type='text' class='form-control TextscaleRequired textScaleValue' data-error="Please fill out this field" class='form-control' name='questionResponseSubTypeList["
+            "       <input type='text' class='form-control TextscaleRequired textScaleValue'  data-error='Please fill out this field' class='form-control' name='questionResponseSubTypeList["
             + scaleCount + "].value' id='displayTextSclValue" + scaleCount
             + "' maxlength='50' required data-error='Please fill out this field' onblur='validateForUniqueValue(this,&#34;Text scale&#34;,function(){});'>"
             +
