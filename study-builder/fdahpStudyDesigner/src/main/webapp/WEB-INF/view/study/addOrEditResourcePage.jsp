@@ -120,7 +120,7 @@
         </button>
         <input id="uploadImg" class="dis-none remReqOnSave" type="file" name="pdfFile" accept=".pdf"
                data-error="Please select a pdf file" required>
-        <input type="hidden" class="remReqOnSave" value="${resourceBO.pdfUrl}" required id="pdfUrl"
+        <input type="hidden" class="remReqOnSave" value="${resourceBO.pdfUrl}" required data-error="Please fill out this field" id="pdfUrl"
                name="pdfUrl">
         <input type="hidden" value="${resourceBO.pdfName}" id="pdfName" name="pdfName">
         <span class="alert customalert pdfDiv">

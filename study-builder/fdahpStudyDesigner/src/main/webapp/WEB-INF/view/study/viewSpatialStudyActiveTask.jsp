@@ -863,7 +863,7 @@
                      value="${taskMasterAttributeBo.addToDashboard}">
               <div class="form-group">
                 <input type="text" id="initialspanId" class="form-control"
-                       name="taskAttributeValueBos[0].attributeVal" maxlength="2" required
+                       name="taskAttributeValueBos[0].attributeVal" maxlength="2" required data-error="Please fill out this field"
                        value="${taskValueAttributeBo.attributeVal}"
                        onkeypress="return isNumber(event)"
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -892,7 +892,7 @@
                      value="${taskMasterAttributeBo.addToDashboard}">
               <div class="form-group">
                 <input type="text" id="minimumspanId" class="form-control"
-                       name="taskAttributeValueBos[1].attributeVal" maxlength="2" required
+                       name="taskAttributeValueBos[1].attributeVal" maxlength="2" required data-error="Please fill out this field"
                        value="${taskValueAttributeBo.attributeVal}"
                        onkeypress="return isNumber(event)"
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
@@ -926,7 +926,7 @@
                        onkeypress="return isNumber(event)" required
                        value="${taskValueAttributeBo.attributeVal}"
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                       data-pattern-error="Please enter valid number"/>
+                       data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
