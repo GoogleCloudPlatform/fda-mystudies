@@ -734,7 +734,6 @@
           $('#inlineRadio5').prop('disabled', true);
           $('.disRadBtn1').prop('disabled', true);
           $('.disRadBtn1').prop('checked', false);
-          $('.disRadBtn1').val('');
           $('.disBtn1').removeAttr('required');
           $('.disBtn1').val('');
 

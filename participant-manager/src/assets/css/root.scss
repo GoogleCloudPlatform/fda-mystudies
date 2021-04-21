@@ -1180,6 +1180,11 @@ select {
 
 /* Responsive code - tab mobile start here */
 
+@media (min-width: 320px) {
+#desktop-menu {
+    display: none;
+}
+}
 @media only screen and (max-width: 360px) and (min-width: 320px) {
   .search_svg {
     background: transparent;
