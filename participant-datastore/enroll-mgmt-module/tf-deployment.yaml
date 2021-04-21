@@ -79,8 +79,8 @@ spec:
             periodSeconds: 20
           resources:
             requests:
-              memory: "400Mi"
-              cpu: "50m"
+              memory: "200Mi"
+              cpu: "30m"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
