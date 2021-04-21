@@ -16,7 +16,7 @@ export PREFIX=btc
 export ENV=qa
 
 # GIT_ROOT is the local path to the root of your cloned FDA MyStudies repository
-export GIT_ROOT=/home/mohank/develop-du/develop-fda-mystudies
+export GIT_ROOT=/home/yugandhare/develop-du/develop-fda-mystudies
 
 # LOCATION is the loctaion you specified for your deployment in
 # deployment.hcl, for example `us-central1`
