@@ -38,7 +38,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="firstName" value="${fn:escapeXml(userBO.firstName)}"
                      oldVal="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required data-error="Please fill out this field" readonly/>
+                     maxlength="50" required readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -59,7 +59,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="lastName" value="${fn:escapeXml(userBO.lastName)}"
                      oldVal="${fn:escapeXml(userBO.lastName)}"
-                     maxlength="50" required data-error="Please fill out this field" readonly/>
+                     maxlength="50" required readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -82,7 +82,7 @@
                      id="userEmail" name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" maxlength="100"
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" required data-error="Please fill out this field" readonly/>
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" required readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>

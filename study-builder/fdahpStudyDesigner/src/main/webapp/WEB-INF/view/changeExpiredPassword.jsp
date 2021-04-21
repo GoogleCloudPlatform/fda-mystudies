@@ -102,7 +102,7 @@
                 <input type="password" class="form-control input-field wow_input" id="oldPassword"
                        name=""
                        maxlength="14" data-minlength="8" placeholder="Previous password"
-                       data-error="Invalid previous password" required data-error="Please fill out this field"
+                       data-error="Invalid previous password" required 
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
                 <input type="hidden" name="oldPassword" id="hideOldPass" data-error="Please fill out this field"/>

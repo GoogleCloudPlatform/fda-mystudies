@@ -191,7 +191,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimexdaysId" type="text"
@@ -201,7 +201,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -251,7 +251,7 @@
       <span class="checkbox checkbox-inline">
         <input type="checkbox" id="isStudyLifeTime" name="activeTaskFrequenciesBo.isStudyLifeTime"
                value="true" ${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}
-               required="required" data-error="Please fill out this field">
+               required="required">
         <label for="isStudyLifeTime"> Study lifetime</label>
       </span>
       <div class="mt-md form-group regularClass">
@@ -307,7 +307,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimeydaysId" type="text"
@@ -317,7 +317,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -396,7 +396,7 @@
                        name="activeTaskFrequenciesList[0].timePeriodFromDays"
                        value="${(fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0)?activeTaskBo.activeTaskFrequenciesList[0].timePeriodFromDays:''}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -610,7 +610,7 @@
                        placeholder="X" name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -801,7 +801,7 @@
                        name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -1065,7 +1065,7 @@
                    name="activeTaskCustomScheduleBo[0].timePeriodToDays"
                    value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                    maxlength="3" pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number" data-error="Please fill out this field" required/>
+                   data-pattern-error="Please enter valid number" required/>
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1132,7 +1132,7 @@
                      count='${customVar.index}' placeholder="X"
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                      value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
-                     maxlength="3" required pattern="[0-9]+" data-error="Please fill out this field"
+                     maxlength="3" required pattern="[0-9]+"
                      data-pattern-error="Please enter valid number" data-type='xancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
@@ -1168,7 +1168,7 @@
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodToDays"
                      value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                      maxlength="3" pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number" required data-error="Please fill out this field"
+                     data-pattern-error="Please enter valid number" required
                      data-type='yancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
@@ -3249,7 +3249,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate xancorText'"
         + "count='" + customAnchorCount + "' placeholder='X' name='activeTaskCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
@@ -3262,7 +3262,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate yancorText' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"

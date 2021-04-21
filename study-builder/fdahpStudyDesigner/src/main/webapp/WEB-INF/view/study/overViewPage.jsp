@@ -57,7 +57,7 @@
                  id="studyMediaLinkId" name="mediaLink"
                  value="${studyBo.mediaLink}" maxlength="300"
                  pattern="^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
-                 title="Include http://" data-error="Please fill out this field"
+                 title="Include http://"
                  data-pattern-error="Please enter a valid URL">
           <div class="help-block with-errors red-txt"></div>
         </div>

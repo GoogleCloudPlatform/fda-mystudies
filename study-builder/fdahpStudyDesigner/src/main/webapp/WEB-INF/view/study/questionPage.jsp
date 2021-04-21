@@ -355,7 +355,7 @@
                       title="The options available here depend on the scheduling frequency set for the activity. For multiple-times-a-day and custom- scheduled activities, the chart's X axis divisions will represent runs. For the former case, the chart will display all runs for the day while for the latter, the chart will display a max of 5 runs at a time."></span>
               </div>
               <div class="form-group">
-                <select class="selectpicker elaborateClass chartrequireClass" data-error="Please fill out this field"
+                <select class="selectpicker elaborateClass chartrequireClass"
                         id="lineChartTimeRangeId"
                         name="lineChartTimeRange" value="${questionsBo.lineChartTimeRange}">
                   <option value="" selected>Select</option>
@@ -396,7 +396,7 @@
                 </span>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control chartrequireClass" data-error="Please fill out this field" name="chartTitle"
+                <input type="text" class="form-control chartrequireClass" name="chartTitle"
                        id="chartTitleId" value="${fn:escapeXml(
                   questionsBo.chartTitle)}" maxlength="30">
                 <div class="help-block with-errors red-txt"></div>
@@ -841,7 +841,7 @@
                       title="Enter an integer number in the range (Min+1, 10000)."></span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field"
+                  <input type="text" class="form-control ContinuousscaleRequired"
                          name="questionReponseTypeBo.maxValue" data-error="Please fill out this field" id="continuesScaleMaxValueId"
                          value="${questionsBo.questionReponseTypeBo.maxValue}"
                          onkeypress="return isNumberKey(event)">
@@ -878,7 +878,7 @@
                         title="Enter the maximum number of decimal places to be shown for the values on the scale. Note that your options  (0,1,2,3,4) are limited by the selected maximum and minimum values."></span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field"
+                  <input type="text" class="form-control ContinuousscaleRequired"
                          name="questionReponseTypeBo.maxFractionDigits"
                          id="continuesScaleFractionDigitsId"
                          value="${questionsBo.questionReponseTypeBo.maxFractionDigits}"
@@ -1721,7 +1721,7 @@
                            value="${questionResponseSubType.responseSubTypeValueId}">
                     <div class="col-md-3 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field"
+                        <input type="text" class="form-control TextscaleRequired"
                                name="questionResponseSubTypeList[${subtype.index}].text"
                                id="displayTextSclText${subtype.index}"
                                value="${fn:escapeXml(questionResponseSubType.text)}"
@@ -1731,7 +1731,7 @@
                     </div>
                     <div class="col-md-4 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field"
+                        <input type="text" class="form-control TextscaleRequired textScaleValue"
                                name="questionResponseSubTypeList[${subtype.index}].value"
                                id="displayTextSclValue${subtype.index}"
                                value="${fn:escapeXml(questionResponseSubType.value)}"
@@ -1769,7 +1769,7 @@
                 <div class="text-scale row" id="0">
                   <div class="col-md-3 pl-none">
                     <div class="form-group">
-                      <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field"
+                      <input type="text" class="form-control TextscaleRequired"
                              name="questionResponseSubTypeList[0].text" id="displayTextSclText0"
                              value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].text)}"
                              maxlength="15">
@@ -1778,7 +1778,7 @@
                   </div>
                   <div class="col-md-4 pl-none">
                     <div class="form-group">
-                      <input type="text" class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field"
+                      <input type="text" class="form-control TextscaleRequired textScaleValue"
                              name="questionResponseSubTypeList[0].value" id="displayTextSclValue0"
                              value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].value)}"
                              maxlength="50">
@@ -1797,7 +1797,7 @@
                 <div class="text-scale row" id="1">
                   <div class="col-md-3 pl-none">
                     <div class="form-group">
-                      <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field"
+                      <input type="text" class="form-control TextscaleRequired"
                              name="questionResponseSubTypeList[1].text" id="displayTextSclText1"
                              value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].text)}"
                              maxlength="15">
@@ -1806,7 +1806,7 @@
                   </div>
                   <div class="col-md-4 pl-none">
                     <div class="form-group">
-                      <input type="text" class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field"
+                      <input type="text" class="form-control TextscaleRequired textScaleValue"
                              name="questionResponseSubTypeList[1].value" id="displayTextSclValue1"
                              value="${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].value)}"
                              maxlength="50">
@@ -4284,14 +4284,14 @@ if(document.getElementById("singleSelect").checked==true){
         "	<div class='col-md-3 pl-none'>" +
         "   <div class='form-group'>" +
         "      <input type='text' class='form-control' name='questionResponseSubTypeList[" + count
-        + "].text' id='displayValPickText" + count + "' required data-error='Please fill out this field' maxlength='20'>" +
+        + "].text' id='displayValPickText" + count + "' required maxlength='20'>" +
         "      <div class='help-block with-errors red-txt'></div>" +
         "   </div>" +
         "</div>" +
         "<div class='col-md-4 pl-none'>" +
         "   <div class='form-group'>" +
         "      <input type='text' class='form-control valuePickerVal' name='questionResponseSubTypeList["
-        + count + "].value' id='displayValPickValue" + count + "' required data-error='Please fill out this field' maxlength='50'" +
+        + count + "].value' id='displayValPickValue" + count + "' required maxlength='50'" +
         " onblur='validateForUniqueValue(this,&#34;Value picker&#34;,function(){});'>" +
         "      <div class='help-block with-errors red-txt'></div>" +
         "   </div>" +
@@ -4345,7 +4345,7 @@ if(document.getElementById("singleSelect").checked==true){
       var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
           "	<div class='col-md-3 pl-none'>" +
           "    <div class='form-group'>" +
-          "      <input type='text' class='form-control TextscaleRequired' data-error='Please fill out this field' name='questionResponseSubTypeList["
+          "      <input type='text' class='form-control TextscaleRequired' name='questionResponseSubTypeList["
           + scaleCount + "].text' id='displayTextSclText" + scaleCount
           + "'+  maxlength='15' required>" +
           "      <div class='help-block with-errors red-txt'></div>" +
@@ -4353,9 +4353,9 @@ if(document.getElementById("singleSelect").checked==true){
           "</div>" +
           " <div class='col-md-4 pl-none'>" +
           "    <div class='form-group'>" +
-          "       <input type='text' class='form-control TextscaleRequired textScaleValue' data-error='Please fill out this field' class='form-control' name='questionResponseSubTypeList["
+          "       <input type='text' class='form-control TextscaleRequired textScaleValue' class='form-control' name='questionResponseSubTypeList["
           + scaleCount + "].value' id='displayTextSclValue" + scaleCount
-          + "' maxlength='50' required data-error='Please fill out this field' onblur='validateForUniqueValue(this,&#34;Text scale&#34;,function(){});'>"
+          + "' maxlength='50' required onblur='validateForUniqueValue(this,&#34;Text scale&#34;,function(){});'>"
           +
           "       <div class='help-block with-errors red-txt'></div>" +
           "    </div>" +
@@ -4445,7 +4445,7 @@ if(document.getElementById("singleSelect").checked==true){
         "   <div class='form-group mb-none'>" +
         "   <input type='text' class='form-control TextchoiceRequired textChoiceVal' name='questionResponseSubTypeList["
         + choiceCount + "].value' id='displayTextChoiceValue" + choiceCount
-        + "'  maxlength='100' required data-error='Please fill out this field'  onblur='validateForUniqueValue(this,&#34;Text choice&#34;,function(){});'>"
+        + "'  maxlength='100' required onblur='validateForUniqueValue(this,&#34;Text choice&#34;,function(){});'>"
         +
         "      <div class='help-block with-errors red-txt'></div>" +
         "   </div>" +

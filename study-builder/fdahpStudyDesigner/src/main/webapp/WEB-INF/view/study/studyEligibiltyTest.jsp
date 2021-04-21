@@ -118,7 +118,7 @@
             <input type="text" class="form-control" name="tentativeDuration" value="No" disabled/>
           </div>
           <div class="form-group col-md-6 pr-none">
-            <select class="selectpicker elaborateClass form-control" required data-error="Please fill out this field" title="Select"
+            <select class="selectpicker elaborateClass form-control" required title="Select"
                     name="responseNoOption" id="resNoOptId" onchange="chkValidChoosedOption()">
               <option value="true" ${eligibilityTest.responseNoOption ? 'selected':''} >Pass
               </option>
