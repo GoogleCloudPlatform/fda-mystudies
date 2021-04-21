@@ -143,7 +143,7 @@ margin-top:16px !important;
                    name="studyWebsite" value="${studyBo.studyWebsite}"
                    pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                    title="Include http://" maxlength="100"
-                   data-pattern-error="Please enter a valid URL"/>
+                   data-pattern-error="Please enter a valid URL" data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div> 
         </div>

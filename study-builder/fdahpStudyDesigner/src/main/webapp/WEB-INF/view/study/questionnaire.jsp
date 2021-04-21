@@ -384,7 +384,7 @@
                 <div class="form-group">
                   <select id="anchorDateId"
                           class="selectpicker ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          required name="anchorDateId">
+                          required data-error="Please fill out this field" name="anchorDateId">
                     <option value=''>Select</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
                       <option value="${anchorTypeInfo.id}"
@@ -496,7 +496,7 @@
                 <input type="checkbox" id="isLaunchStudy"
                        name="questionnairesFrequenciesBo.isLaunchStudy" value="true"
                   ${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy ?'checked':''}
-                       required ${(questionnaireBo.shortTitleDuplicate>
+                       required data-error="Please fill out this field" ${(questionnaireBo.shortTitleDuplicate>
                     0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
                   with study</label>
               </span>
@@ -533,7 +533,7 @@
                                  value=""
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
-                                 maxlength="3" pattern="[0-9]+"
+                                 maxlength="3" data-error="Please fill out this field" pattern="[0-9]+"
                                  data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
@@ -544,7 +544,7 @@
                                  value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
-                                 maxlength="3" pattern="[0-9]+"
+                                 maxlength="3" data-error="Please fill out this field" pattern="[0-9]+"
                                  data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
@@ -557,7 +557,7 @@
                     </span>
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <input id="selectTime" type="text"
+                      <input id="selectTime" type="text" data-error="Please fill out this field"
                              class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="questionnairesFrequenciesBo.frequencyTime"
                              value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
@@ -673,7 +673,7 @@
                                  value=""
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
-                                 maxlength="3" pattern="[0-9]+"
+                                 maxlength="3" data-error="Please fill out this field" pattern="[0-9]+"
                                  data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
@@ -685,7 +685,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number"/>
+                                 data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -779,7 +779,7 @@
                                name="questionnairesFrequenciesList[0].timePeriodFromDays"
                                value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number"/>
+                               data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1039,7 +1039,7 @@
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number"/>
+                               data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1079,7 +1079,7 @@
                                  value="${questionnaireBo.repeatQuestionnaire}" required
                                  onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                 data-pattern-error="Please enter valid number"
+                                 data-pattern-error="Please enter valid number" 
                                  maxlength="3"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
@@ -1268,7 +1268,7 @@
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number"/>
+                               data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -4396,7 +4396,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
         + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectYSign' count='"
@@ -4409,7 +4409,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
