@@ -120,7 +120,7 @@ spec:
               port: 8080
             initialDelaySeconds: 180
             periodSeconds: 20
-        resources:
+         resources:
              limits:
               cpu: "100m"
              requests:
