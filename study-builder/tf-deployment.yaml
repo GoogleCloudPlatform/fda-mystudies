@@ -123,9 +123,9 @@ spec:
           resources:
             limits:
               cpu: "100m"
-          requests:
-             cpu: "15m"
-           memory: "100Mi"
+           requests:
+               cpu: "15m"
+              memory: "100Mi"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
