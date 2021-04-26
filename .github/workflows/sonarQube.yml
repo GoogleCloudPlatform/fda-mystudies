@@ -12,6 +12,6 @@ jobs:
     - name: SonarQube Scan
       uses: kitabisa/sonarqube-action@v1.1.0
       with:
-        projectBaseDir: "study-builder"
+        projectBaseDir: "study-builder/fdahpStudyDesigner"
         host: ${{ secrets.SONARQUBE_HOST }}
         login: ${{ secrets.SONARQUBE_TOKEN }}
