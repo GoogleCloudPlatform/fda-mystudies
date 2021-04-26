@@ -2,7 +2,7 @@ name: Sonar Qube
 on: 
  pull_request:
   paths:
-    - 'study-builder/fdahpStudyDesigner/**'
+    - 'study-builder/**'
 jobs:
   sonarQubeTrigger:
     name: SonarQube Trigger
