@@ -1,9 +1,10 @@
 name: Sonar Qube
 on: 
- pull_request:
-  paths:
-    - 'study-builder/fdahpStudyDesigner/**'
-    - '.github/workflows/build-studybuilder.yml'
+  pull_request:
+    paths:
+    - 'common-modules/**'
+    - 'participant-manager-datastore/**'
+    - '.github/workflows/build-participant-manager-datastore.yml'
 jobs:
   sonarQubeTrigger:
     name: SonarQube Trigger
