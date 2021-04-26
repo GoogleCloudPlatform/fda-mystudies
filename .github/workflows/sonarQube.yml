@@ -3,6 +3,7 @@ on:
  pull_request:
   paths:
     - 'study-builder/fdahpStudyDesigner/**'
+    - '.github/workflows/build-studybuilder.yml'
 jobs:
   sonarQubeTrigger:
     name: SonarQube Trigger
@@ -12,6 +13,5 @@ jobs:
     - name: SonarQube Scan
       uses: kitabisa/sonarqube-action@v1.1.0
       with:
-        projectBaseDir: "study-builder/fdahpStudyDesigner"
         host: ${{ secrets.SONARQUBE_HOST }}
         login: ${{ secrets.SONARQUBE_TOKEN }}
