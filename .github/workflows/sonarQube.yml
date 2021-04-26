@@ -1,5 +1,8 @@
 name: Sonar Qube
-on: pull_request
+on: 
+ pull_request:
+  paths:
+    - 'study-builder/fdahpStudyDesigner/**'
 jobs:
   sonarQubeTrigger:
     name: SonarQube Trigger
