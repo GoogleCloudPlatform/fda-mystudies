@@ -1004,17 +1004,25 @@ public class FdahpStudyDesignerUtil {
     return generatedHash;
   }
 
-  public static String saveImage(MultipartFile fileStream, String fileName, String underDirectory) {
+  public static String saveImage(
+      MultipartFile fileStream, String fileName, String underDirectory, String customStudyId) {
     String fileNameWithExtension =
         fileName + "." + FilenameUtils.getExtension(fileStream.getOriginalFilename());
-    String absoluteFileName = underDirectory + PATH_SEPARATOR + fileNameWithExtension;
+    String absoluteFileName =
+        FdahpStudyDesignerConstants.STUDIES
+            + PATH_SEPARATOR
+            + customStudyId
+            + PATH_SEPARATOR
+            + underDirectory
+            + PATH_SEPARATOR
+            + fileNameWithExtension;
     BlobInfo blobInfo =
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
 
     try {
-      byte[] b = fileStream.getBytes();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      storage.create(blobInfo, b);
+      storage.create(blobInfo, fileStream.getBytes());
+
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);
     }

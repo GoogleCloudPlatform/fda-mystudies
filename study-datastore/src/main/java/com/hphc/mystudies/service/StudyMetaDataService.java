@@ -175,7 +175,8 @@ public class StudyMetaDataService {
                 studyBeanObject.setLogo(
                     StudyMetaDataUtil.getSignedUrl(
                         propMap.get("cloud.bucket.name"),
-                        propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                        propMap.get(StudyMetaDataConstants.DEFAULT_IMAGES).trim()
+                            + "/"
                             + propMap.get(
                                 StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE),
                         12));
@@ -471,7 +472,8 @@ public class StudyMetaDataService {
             infoBean.setImage(
                 StudyMetaDataUtil.getSignedUrl(
                     propMap.get("cloud.bucket.name"),
-                    propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                    propMap.get(StudyMetaDataConstants.DEFAULT_IMAGES).trim()
+                        + "/"
                         + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE),
                     12));
 
@@ -479,7 +481,8 @@ public class StudyMetaDataService {
             infoBean.setImage(
                 StudyMetaDataUtil.getSignedUrl(
                     propMap.get("cloud.bucket.name"),
-                    propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                    propMap.get(StudyMetaDataConstants.DEFAULT_IMAGES).trim()
+                        + "/"
                         + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE),
                     12));
           }

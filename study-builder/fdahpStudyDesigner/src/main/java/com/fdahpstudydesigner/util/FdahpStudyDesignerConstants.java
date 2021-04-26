@@ -454,6 +454,12 @@ public class FdahpStudyDesignerConstants {
   public static final String SUPER_ADMIN_PERMISSIONS =
       "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW,ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT,ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW";
 
+  public static final String PATH_SEPARATOR = "/";
+
+  public static final String STUDIES = "demotest/studies";
+
+  public static final String DEFAULT_IMAGES = "defaultImages";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
