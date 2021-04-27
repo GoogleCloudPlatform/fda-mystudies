@@ -49,6 +49,8 @@ public class UsersServiceImpl implements UsersService {
 
   @Autowired private UsersDAO usersDAO;
 
+  @Autowired EmailNotification emailNotification;
+
   @Override
   public String activateOrDeactivateUser(
       int userId,
@@ -91,7 +93,7 @@ public class UsersServiceImpl implements UsersService {
             dynamicContent =
                 FdahpStudyDesignerUtil.genarateEmailContent(
                     "mailForReactivatingUserContent", keyValueForSubject);
-            EmailNotification.sendEmailNotification(
+            emailNotification.sendEmailNotification(
                 "mailForReactivatingUserSubject",
                 dynamicContent,
                 userBo.getUserEmail(),
