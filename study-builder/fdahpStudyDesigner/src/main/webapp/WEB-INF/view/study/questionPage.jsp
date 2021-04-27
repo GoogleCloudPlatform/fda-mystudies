@@ -3039,11 +3039,11 @@ if(document.getElementById("singleSelect").checked==true){
             if (parseInt(stepsCount) < 1) {
               $("#displayStepsCount").parent().find(".help-block").append(
                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter  a smaller step size."));
+                  "Please enter  a smaller step size"));
             } else {
               $("#displayStepsCount").parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please enter a larger step size."));
+                  "Please enter a larger step size"));
             }
 
           }
@@ -3094,7 +3094,7 @@ if(document.getElementById("singleSelect").checked==true){
         durationFlag = false;
         $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-               "Please select a non-zero Duration value."));
+               "Please select a non-zero Duration value"));
       } else {
         durationFlag = true;
         $('#timeIntervalDefaultId').parent().find(".help-block").empty();
@@ -4160,7 +4160,7 @@ if(document.getElementById("singleSelect").checked==true){
               $("#prevStatShortNameId").val(statShortName);
             }
 
-            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             if (callback)
@@ -4635,7 +4635,7 @@ if(document.getElementById("singleSelect").checked==true){
               $("#statShortNameId").parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   short_title
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               if (callback)
                 callback(false);
 
@@ -4695,7 +4695,7 @@ if(document.getElementById("singleSelect").checked==true){
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -4912,7 +4912,7 @@ if(document.getElementById("singleSelect").checked==true){
         $(thisAttr).parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             anchordateText
-            + " has already been used in the past."));
+            + " has already been used in the past"));
         callback(false);
       } else {
         $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
@@ -4944,7 +4944,7 @@ if(document.getElementById("singleSelect").checked==true){
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   anchordateText
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },

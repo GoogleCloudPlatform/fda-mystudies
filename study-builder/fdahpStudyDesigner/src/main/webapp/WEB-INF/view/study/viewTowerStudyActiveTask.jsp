@@ -778,12 +778,12 @@
                         $("#identifierId").parent().addClass('has-error has-danger').find(
                             ".help-block").empty().append(
                             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                            "This is a required field."));
+                            "This is a required field"));
                       } else {
                         $("#static").parent().addClass('has-error has-danger').find(
                             ".help-block").empty().append(
                             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                            "This is a required field."));
+                            "This is a required field"));
                       }
                       $("#doneId").attr("disabled", false);
                       $("body").removeClass('loading');
@@ -812,7 +812,7 @@
             console.log("else of Done");
             $("body").removeClass('loading');
             $("#doneId").attr("disabled", false);
-            showErrMsg("Please fill in all mandatory fields.");
+            showErrMsg("Please fill in all mandatory fields");
             $('.contentClass a').tab('show');
           }
         });
@@ -820,7 +820,7 @@
           $("body").addClass('loading');
           var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
           if (shortTitleCount >= 1) {
-            showErrMsg("Please fill in all mandatory fields.");
+            showErrMsg("Please fill in all mandatory fields");
             $('.contentClass a').tab('show');
             $("body").removeClass('loading');
             return false;
@@ -828,8 +828,8 @@
             $("#shortTitleId").parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "This is a required field."));
-            showErrMsg("Please fill in all mandatory fields.");
+                "This is a required field"));
+            showErrMsg("Please fill in all mandatory fields");
             $('.contentClass a').tab('show');
             $("body").removeClass('loading');
             return false;
@@ -848,7 +848,7 @@
                   else
                     $('#static').focus();
 
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                   $("body").removeClass('loading');
                   return false;
@@ -921,7 +921,7 @@
               $(this).val(newVal);
               $(this).parent().addClass("has-danger has-error");
               $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Special characters such as #^}{ are not allowed."));
+                  "Special characters such as #^}{ are not allowed"));
             }
           }
         });
@@ -1010,7 +1010,7 @@
                   $(thisAttr).parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     shortTitle
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                   callback(false);
                 }
               },
@@ -1064,9 +1064,9 @@
                     $('#identifierId').parent().find(".help-block").append(
                     	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         activeTaskAttIdVal
-                        + " has already been used in the past."));
+                        + " has already been used in the past"));
                     $('#identifierId').focus();
-                    showErrMsg("Please fill in all mandatory fields.");
+                    showErrMsg("Please fill in all mandatory fields");
                     $('.contentClass a').tab('show');
                     shortTitleStatFlag = false;
                     callback(false);
@@ -1110,7 +1110,7 @@
                   $(thisAttr).parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                       activeTaskAttIdVal
-                      + " has already been used in the past."));
+                      + " has already been used in the past"));
                   if (callback)
                     callback(false);
 

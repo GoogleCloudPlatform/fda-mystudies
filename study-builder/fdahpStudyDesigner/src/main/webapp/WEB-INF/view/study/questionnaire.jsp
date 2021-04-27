@@ -2747,7 +2747,7 @@
               }
             });
           } else {
-            showErrMsg("Please fill in all mandatory fields.");
+            showErrMsg("Please fill in all mandatory fields");
             var slaCount = $('#contentTab').find('.has-error.has-danger').length;
             var flaCount = $('#schedule').find('.has-error.has-danger').length;
             if (parseInt(slaCount) >= 1) {
@@ -2757,7 +2757,7 @@
             }
           }
         } else {
-          showErrMsg("Please fill in all mandatory fields.");
+          showErrMsg("Please fill in all mandatory fields");
           var slaCount = $('#contentTab').find('.has-error.has-danger').length;
           var flaCount = $('#schedule').find('.has-error.has-danger').length;
           if (parseInt(slaCount) >= 1) {
@@ -2775,7 +2775,7 @@
           if (isFromValid("#contentFormId")) {
             doneQuestionnaire(this, 'save', function (val) {
               if (val) {
-                showSucMsg("Content saved as draft.");
+                showSucMsg("Content saved as draft");
               } else {
                 var slaCount = $('#contentTab').find('.has-error.has-danger').length;
                 var flaCount = $('#schedule').find('.has-error.has-danger').length;
@@ -3000,7 +3000,7 @@
             $(timeId).parent().addClass("has-danger").addClass("has-error");
             $(timeId).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Time reset to current time. "));
+                "Time reset to current time "));
           }
         } else {
           $(timeId).data("DateTimePicker").minDate(false);
@@ -3887,7 +3887,7 @@
           if (!val) {
             $('.scheduleQusClass a').tab('show');
           } else if (actType === 'save') {
-            showSucMsg("Content saved as draft.");
+            showSucMsg("Content saved as draft");
             $("body").removeClass("loading");
           }
           callback(val);
@@ -3899,7 +3899,7 @@
           callback(false);
       }
     } else {
-      showErrMsg("Please fill in all mandatory fields.");
+      showErrMsg("Please fill in all mandatory fields");
       $('.scheduleQusClass a').tab('show');
       if (callback)
         callback(false);
@@ -4238,7 +4238,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -4315,13 +4315,13 @@
             $(this).parent().addClass('has-error has-danger');
             $(this).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Date reset to current date. "));
+                "Date reset to current date "));
           } else {
             $(this).data("DateTimePicker").clear();
             $(this).parent().addClass('has-error has-danger');
             $(this).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please select a valid date."));
+                "Please select a valid date"));
           }
         } else {
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4337,7 +4337,7 @@
                 $(this).parent().addClass("has-danger").addClass("has-error");
                 $(this).parent().find(".help-block").empty().append(
                     $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Time reset to current time. "));
+                    "Time reset to current time "));
               }
             } else {
               if (dt < serverDateTime()) {
@@ -4378,7 +4378,7 @@
           $('#onetimeydaysId').focus();
         $('#onetimeydaysId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         valid = false;
       } else {
         $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4404,7 +4404,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
         + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectYSign' count='"
@@ -4417,7 +4417,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
@@ -4552,7 +4552,7 @@
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Y should be greater than X."));
+                "Y should be greater than X"));
             $("#addbtn" + parent_id).addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
@@ -4591,7 +4591,7 @@
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Y should be greater than X."));
+                  "Y should be greater than X"));
               $("#addbtn" + parent_id).addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -4637,7 +4637,7 @@
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -4682,7 +4682,7 @@
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         $("#addbtn" + parent_id).addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");

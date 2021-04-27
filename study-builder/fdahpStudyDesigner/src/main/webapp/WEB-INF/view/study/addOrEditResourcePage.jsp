@@ -296,7 +296,7 @@
           <div class="form-group">
             <textarea class="form-control remReqOnSave" rows="4" id="comment"
                       name="resourceText"
-                      data-error="Please enter plain text of up to 250 characters max."
+                      data-error="Please enter plain text of up to 250 characters max"
                       maxlength="250"
                       >${resourceBO.resourceText}</textarea>
             <div class="help-block with-errors red-txt"></div>
@@ -960,7 +960,7 @@
         if (clickDone && isFromValid($('#ydays').parents('form')))
           $('#ydays').focus();
         $('#ydays').parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         valid = false;
       } else {
         $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").empty();

@@ -4302,11 +4302,11 @@
               if (parseInt(stepsCount) < 1) {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter  a smaller step size."));
+                    "Please enter  a smaller step size"));
               } else {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter a larger step size."));
+                    "Please enter a larger step size"));
               }
 
             }
@@ -4634,7 +4634,7 @@
           $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-               "Please select a non-zero Duration value."));
+               "Please select a non-zero Duration value"));
         } else {
           durationFlag = true;
           $('#timeIntervalDefaultId').parent().find(".help-block").empty();
@@ -5643,7 +5643,7 @@
               $("#questionResponseTypeId").val(questionResponseId);
               $("#responseQuestionId").val(questionId);
 
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
 
@@ -6193,7 +6193,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     shortTitle
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 callback(false);
               }
             },
@@ -6242,7 +6242,7 @@
                 $("#statShortNameId").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     short_title
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 if (callback)
                   callback(false);
 
@@ -6624,7 +6624,7 @@
         if (!isValid) {
 
           $("#inputTypeErrorValueId" + index).show();
-          $("#inputTypeErrorValueId" + index).text('RDE (x) should be used only once.');
+          $("#inputTypeErrorValueId" + index).text('RDE (x) should be used only once');
         } else {
           $(".numeric__row").each(function (j) {
             var id = $(this).attr("id");
@@ -6883,7 +6883,7 @@
           if (!isSingle) {
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-                "RDE (x) should be used only once.");
+                "RDE (x) should be used only once");
             setTimeout(hideDisplayMessage, 5000);
           }
         });
@@ -7124,7 +7124,7 @@
           $(thisAttr).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               anchordateText
-              + " has already been used in the past."));
+              + " has already been used in the past"));
           callback(false);
         } else {
           $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
@@ -7156,7 +7156,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     anchordateText
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 callback(false);
               }
             },

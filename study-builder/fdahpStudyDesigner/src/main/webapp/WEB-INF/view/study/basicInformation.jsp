@@ -837,7 +837,7 @@ margin-top:16px !important;
                       .find(".help-block")
                       .empty()
                       .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                          "Please upload image as per provided guidelines."));
+                          "Please upload image as per provided guidelines"));
                   $(".thumb.alternate img")
                       .attr("src",
                           "/studybuilder/images/dummy-img.jpg");
@@ -863,7 +863,7 @@ margin-top:16px !important;
                     .find(".help-block")
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                        "Please upload image as per provided guidelines."));
+                        "Please upload image as per provided guidelines"));
                 $('#removeUrl').css("visibility", "hidden");
                 $(".thumb.alternate img").attr("src",
                     "/studybuilder/images/dummy-img.jpg");
@@ -935,7 +935,7 @@ margin-top:16px !important;
                       .empty()
                       .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                           customStudyId
-                          + " has already been used in the past."));
+                          + " has already been used in the past"));
                   callback(false);
                 }
               },

@@ -2133,7 +2133,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   } else {
                     $("#doneId").attr("disabled", false);
                     $("body").removeClass('loading');
-                    showErrMsg("Please fill in all mandatory fields.");
+                    showErrMsg("Please fill in all mandatory fields");
                     $('.contentClass a').tab('show');
                   }
                 });
@@ -2172,7 +2172,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
       $("#saveId").attr("disabled", true);
       var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
       if (shortTitleCount >= 1) {
-        showErrMsg("Please fill in all mandatory fields.");
+        showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         $("body").removeClass('loading');
         $("#saveId").attr("disabled", false);
@@ -2182,7 +2182,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
             ".help-block").empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             "This is a required field"));
-        showErrMsg("Please fill in all mandatory fields.");
+        showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         $("body").removeClass('loading');
         $("#saveId").attr("disabled", false);
@@ -2281,7 +2281,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 } else {
                   $("#saveId").attr("disabled", false);
                   $("body").removeClass('loading');
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                 }
               });
@@ -2438,7 +2438,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $(thisAttr).parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             activeTaskAttIdVal
-            + " has already been used in the past."));
+            + " has already been used in the past"));
         showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         shortTitleStatFlag = false;
@@ -2476,7 +2476,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     activeTaskAttIdVal
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 showErrMsg("Please fill in all mandatory fields");
                 $('.contentClass a').tab('show');
                 if (callback)
@@ -2533,7 +2533,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   $(thisAttr).parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                       activeTaskAttIdVal
-                      + " has already been used in the past."));
+                      + " has already been used in the past"));
                   $(thisAttr).focus();
                   showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');

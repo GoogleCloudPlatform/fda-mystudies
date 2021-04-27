@@ -449,7 +449,7 @@
                 $("#id").val(consentInfoId);
                 $("#alertMsg").removeClass('e-box').addClass(
                     's-box')
-                    .text("Content saved as draft.");
+                    .text("Content saved as draft");
                 $(item).prop('disabled', false);
                 $('#alertMsg').show();
               } else {
@@ -476,7 +476,7 @@
             .find(".help-block")
             .empty()
             .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "This is a required field."));
+                "This is a required field"));
         setTimeout(hideDisplayMessage, 5000);
       }
 
@@ -616,7 +616,7 @@
 	        }
 	        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
 	        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	            "Maximum 15000 characters are allowed."));
+	            "Maximum 15000 characters are allowed"));
 
 	      } else {
 	        $('#elaboratedRTE').parent().removeClass("has-danger")
