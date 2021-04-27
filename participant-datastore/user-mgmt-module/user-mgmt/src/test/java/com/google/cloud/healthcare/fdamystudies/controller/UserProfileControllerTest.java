@@ -19,6 +19,10 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USE
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
+import static com.google.cloud.healthcare.fdamystudies.testutils.Constants.DEVICE_TOKEN;
+import static com.google.cloud.healthcare.fdamystudies.testutils.Constants.IOS;
+import static com.google.cloud.healthcare.fdamystudies.testutils.Constants.IOS_APP_VERSION;
+import static com.google.cloud.healthcare.fdamystudies.testutils.Constants.UPDATED_IOS_APP_VERSION;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -47,9 +51,13 @@ import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
@@ -105,6 +113,10 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired private StudyRepository studyRepository;
 
+  @Autowired private AuthInfoRepository authInfoRepository;
+
+  @Autowired private AppRepository appRepository;
+
   @Test
   public void contextLoads() {
     assertNotNull(profileController);
@@ -159,8 +171,29 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void updateUserProfileSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
+    Optional<AppEntity> optApp = appRepository.findById("1");
+    Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findById("45");
+
+    // insert new record having same device token in auth_info table
+    AuthInfoEntity newAuthInfo = new AuthInfoEntity();
+    newAuthInfo.setApp(optApp.get());
+    newAuthInfo.setDeviceToken(DEVICE_TOKEN);
+    newAuthInfo.setIosAppVersion(IOS_APP_VERSION);
+    newAuthInfo.setUserDetails(optUserDetails.get());
+    newAuthInfo = authInfoRepository.saveAndFlush(newAuthInfo);
+
+    Optional<AuthInfoEntity> optAuthInfo = authInfoRepository.findById("222");
+    optAuthInfo.get().setDeviceToken(DEVICE_TOKEN);
+    authInfoRepository.saveAndFlush(optAuthInfo.get());
+
+    List<AuthInfoEntity> authInfoListOnBeforeUpdate =
+        authInfoRepository.findByDeviceToken(DEVICE_TOKEN);
+    assertEquals(2, authInfoListOnBeforeUpdate.size());
+
+    InfoBean infoBean = new InfoBean(IOS, UPDATED_IOS_APP_VERSION, DEVICE_TOKEN);
+
     SettingsRespBean settingRespBean = new SettingsRespBean(true, true, true, true, "", "");
-    UserRequestBean userRequestBean = new UserRequestBean(settingRespBean, new InfoBean());
+    UserRequestBean userRequestBean = new UserRequestBean(settingRespBean, infoBean);
     String requestJson = getObjectMapper().writeValueAsString(userRequestBean);
     mockMvc
         .perform(
@@ -173,6 +206,12 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(content().string(containsString(String.valueOf(HttpStatus.OK.value()))));
 
     verifyTokenIntrospectRequest(1);
+
+    // Fetching data using same device token and expecting only one record
+    List<AuthInfoEntity> authInfoListOnSuccessUpdate =
+        authInfoRepository.findByDeviceToken(DEVICE_TOKEN);
+
+    assertEquals(1, authInfoListOnSuccessUpdate.size());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
