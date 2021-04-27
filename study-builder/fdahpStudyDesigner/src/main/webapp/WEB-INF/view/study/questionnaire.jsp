@@ -196,11 +196,11 @@
           </div>
           <div class="form-group col-md-5 p-none">
             <input autofocus="autofocus" type="text" autocomplete="off" custAttType="customValidate"
-                   class="form-control" name="shortTitle" id="shortTitleId"
+                   class="form-control" name="shortTitle" id="shortTitleId" data-error="Please fill out this field" 
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
                 <c:if
                     test="${not empty questionnaireBo.shortTitleDuplicate && (questionnaireBo.shortTitleDuplicate gt 0)}"> disabled</c:if>
-                   required="required" maxlength="50"/>
+                   required="required" data-error="Please fill out this field"  maxlength="50"/>
             <div class="help-block with-errors red-txt"></div>
             <input type="hidden" id="preShortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"/>
@@ -213,7 +213,7 @@
           <div class="form-group">
             <input type="text" class="form-control" name="title" id="titleId"
                    value="${fn:escapeXml(questionnaireBo.title)}" maxlength="300"
-                   required="required"/>
+                   required="required" data-error="Please fill out this field" />
             <div class="help-block with-errors red-txt"></div>
           </div>
           <div class="mt-lg" id="stepContainer">
@@ -497,7 +497,7 @@
                 <input type="checkbox" id="isLaunchStudy"
                        name="questionnairesFrequenciesBo.isLaunchStudy" value="true"
                   ${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy ?'checked':''}
-                       required ${(questionnaireBo.shortTitleDuplicate>
+                       required data-error="Please fill out this field"  ${(questionnaireBo.shortTitleDuplicate>
                     0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
                   with study</label>
               </span>
@@ -535,7 +535,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
                           <input id="onetimexdaysId" type="text"
@@ -546,7 +546,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -558,7 +558,7 @@
                     </span>
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <input id="selectTime" type="text"
+                      <input id="selectTime" type="text" data-error="Please fill out this field" 
                              class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="questionnairesFrequenciesBo.frequencyTime"
                              value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
@@ -577,23 +577,23 @@
               <div class="mt-md form-group regularClass">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <input id="chooseDate" type="text"
+                  <input id="chooseDate" type="text" data-error="Please fill out this field" 
                          class="mt-sm form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                          name="questionnairesFrequenciesBo.frequencyDate"
                          placeholder="Choose date"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"
-                         required
+                         required data-error="Please fill out this field" 
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
                   <span class='help-block with-errors red-txt'></span>
                 </span>
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <input id="selectTime1" type="text"
+                  <input id="selectTime1" type="text" data-error="Please fill out this field" 
                          class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
-                         required
+                         required data-error="Please fill out this field" 
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
                          placeholder="Select time"/>
@@ -612,7 +612,7 @@
                   type="checkbox" id="isStudyLifeTime"
                   name="questionnairesFrequenciesBo.isStudyLifeTime" value="true"
                 ${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime ?'checked':''}
-                  required ${(questionnaireBo.shortTitleDuplicate>
+                  required data-error="Please fill out this field"  ${(questionnaireBo.shortTitleDuplicate>
                   0)?'disabled' : ''}> <label for="isStudyLifeTime"> Study
                 lifetime </label>
               </span>
@@ -625,7 +625,7 @@
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="studyLifetimeEnd" placeholder="Choose end date"
-                             required
+                             required data-error="Please fill out this field" 
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                              value=""/>
@@ -634,7 +634,7 @@
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="studyLifetimeEnd" placeholder="Choose end date"
-                             required
+                             required data-error="Please fill out this field" 
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                              value="${questionnaireBo.studyLifetimeEnd}"/>
@@ -675,7 +675,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
                           <input id="onetimeydaysId" type="text"
@@ -686,7 +686,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -734,7 +734,7 @@
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                   </span>
                   <br/> <input id="startDate"
-                               type="text"
+                               type="text" data-error="Please fill out this field" 
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="Choose date" name="studyLifetimeStart"
                                value="${questionnaireBo.studyLifetimeStart}"/>
@@ -760,7 +760,7 @@
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          title="Select"
+                          title="Select" data-error="Please fill out this field" 
                           name="questionnairesFrequenciesList[0].xDaysSign"
                           id="dailyXSign">
                         <option value="0"
@@ -775,13 +775,13 @@
                       </span>
                       <span
                           class="form-group m-none dis-inline vertical-align-middle">
-                        <input id="dailyxdaysId" type="text"
+                        <input id="dailyxdaysId" type="text" data-error="Please fill out this field" 
                                class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="X"
                                name="questionnairesFrequenciesList[0].timePeriodFromDays"
                                value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -805,11 +805,11 @@
                   </span>
                   <br/> <input id="days" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required data-error="Please fill out this field" 
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -852,7 +852,7 @@
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
                       <input id="time0" type="text"
-                             name="questionnairesFrequenciesList[0].frequencyTime" required
+                             name="questionnairesFrequenciesList[0].frequencyTime" required data-error="Please fill out this field" 
                              class="form-control clock dailyClock" placeholder="Time"
                              onclick='timep(this.id);'/>
                       <span
@@ -878,7 +878,7 @@
                           class="form-group m-none dis-inline vertical-align-middle pr-md">
                         <input id="time${frequeincesVar.index}" type="text"
                                name="questionnairesFrequenciesList[${frequeincesVar.index}].frequencyTime"
-                               required
+                               required data-error="Please fill out this field" 
                                class="form-control clock dailyClock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="Time" onclick='timep(this.id);'
                                value="${questionnairesFrequencies.frequencyTime}"
@@ -945,7 +945,7 @@
                     class=" form-group m-none dis-inline vertical-align-middle pr-md">
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                         name="dayOfTheWeek" required>
+                                         name="dayOfTheWeek" required data-error="Please fill out this field" >
                     <option value=''>Select</option>
                     <option value='Sunday'
                       ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -975,9 +975,9 @@
               </span>
               <span
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
-                <input id="selectWeeklyTime" type="text"
+                <input id="selectWeeklyTime" type="text" data-error="Please fill out this field" 
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1002,7 +1002,7 @@
                   <br/> <input
                     id="startWeeklyDate" type="text"
                     class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                    required name="studyLifetimeStart" placeholder="Choose date"
+                    required name="studyLifetimeStart" placeholder="Choose date" data-error="Please fill out this field" 
                     value="${questionnaireBo.studyLifetimeStart}"
                     readonly="readonly"/>
                   <span
@@ -1027,7 +1027,7 @@
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          title="Select" name="questionnairesFrequenciesBo.xDaysSign"
+                          title="Select" name="questionnairesFrequenciesBo.xDaysSign" data-error="Please fill out this field" 
                           id="weeklyXSign">
                         <option value="0"
                           ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+
@@ -1039,13 +1039,13 @@
                       </span>
                       <span
                           class="form-group m-none dis-inline vertical-align-middle">
-                        <input id="weeklyxdaysId" type="text"
+                        <input id="weeklyxdaysId" type="text" data-error="Please fill out this field" 
                                class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="X"
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number" data-error="Please fill out this field" />
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1063,9 +1063,9 @@
                     <br/></span>
                   <span
                       class="form-group m-none dis-inline vertical-align-middle pr-md">
-                    <input id="selectWeeklyTimeAnchor" type="text"
+                    <input id="selectWeeklyTimeAnchor" type="text" data-error="Please fill out this field" 
                            class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                           required onclick="timep(this.id)" placeholder="Time"
+                           required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
                            name="questionnairesFrequenciesBo.frequencyTime"
                            value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                     <span class='help-block with-errors red-txt'></span>
@@ -1082,10 +1082,10 @@
                     <br/> <input id="weeksAnchor" type="text"
                                  class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                  name="repeatQuestionnaire" placeholder="No of times"
-                                 value="${questionnaireBo.repeatQuestionnaire}" required
+                                 value="${questionnaireBo.repeatQuestionnaire}" required data-error="Please fill out this field" 
                                  onkeypress="return isNumber(event, this)"
                                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                 data-pattern-error="Please enter valid number."
+                                 data-pattern-error="Please enter valid number"
                                  maxlength="3"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
@@ -1104,10 +1104,10 @@
                   <br/> <input id="weeks" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                name="repeatQuestionnaire" placeholder="No of times"
-                               value="${questionnaireBo.repeatQuestionnaire}" required
+                               value="${questionnaireBo.repeatQuestionnaire}" required data-error="Please fill out this field" 
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1177,7 +1177,7 @@
                   class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
                 <span class=""><input id="startDateMonthly" type="text"
                                       class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                      required placeholder="Choose date"
+                                      required data-error="Please fill out this field"  placeholder="Choose date"
                                       name="questionnairesFrequenciesBo.frequencyDate"
                                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1187,7 +1187,7 @@
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="selectMonthlyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1215,7 +1215,7 @@
                   <br/> <input id="pickStartDate"
                                type="text"
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               placeholder="Choose start date" required
+                               placeholder="Choose start date" required data-error="Please fill out this field" 
                                name="studyLifetimeStart"
                                value="${questionnaireBo.studyLifetimeStart}"
                                readonly="readonly"/>
@@ -1232,11 +1232,11 @@
                   </span>
                   <br/> <input id="months" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required data-error="Please fill out this field" 
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1273,11 +1273,11 @@
                           class="form-group m-none dis-inline vertical-align-middle">
                         <input id="monthlyxdaysId" type="text"
                                class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               placeholder="X"
+                               placeholder="X" data-error="Please fill out this field" 
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1301,7 +1301,7 @@
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
                   <input id="selectMonthlyTimeAnchor" type="text"
                          class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                         required onclick="timep(this.id)" placeholder="Time"
+                         required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1316,11 +1316,11 @@
                   </span>
                   <br/> <input id="monthsAnchor" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required data-error="Please fill out this field" 
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1396,7 +1396,7 @@
                            class="form-control calendar customCalnder cusStrDate"
                            name="questionnaireCustomScheduleBo[0].frequencyStartDate"
                            value="" placeholder="Start date"
-                           onclick='customStartDate(this.id,0);' required/>
+                           onclick='customStartDate(this.id,0);' required data-error="Please fill out this field" />
                     <span
                         class='help-block with-errors red-txt'></span>
                   </span>
@@ -1409,7 +1409,7 @@
                            class="form-control calendar customCalnder cusEndDate"
                            name="questionnaireCustomScheduleBo[0].frequencyEndDate"
                            placeholder="End date" onclick='customEndDate(this.id,0);'
-                           required/>
+                           required data-error="Please fill out this field" />
                     <span class='help-block with-errors red-txt'></span>
                   </span>
                  
@@ -1418,7 +1418,7 @@
                     <input id="customTime0" type="text" count='0'
                            class="form-control clock cusTime"
                            name="questionnaireCustomScheduleBo[0].frequencyTime"
-                           placeholder="Time" onclick='timep(this.id);' disabled required/>
+                           placeholder="Time" onclick='timep(this.id);' disabled required data-error="Please fill out this field" />
                     <span class='help-block with-errors red-txt'></span>
                   </span>
                   <span class="addbtn addBtnDis align-span-center mr-md"
@@ -1456,7 +1456,7 @@
                              value="${questionnaireCustomScheduleBo.frequencyStartDate}"
                              placeholder="Start date"
                              onclick='customStartDate(this.id,${customVar.index});'
-                             required/>
+                             required data-error="Please fill out this field" />
                       <span class='help-block with-errors red-txt'></span>
                     </span>
                     <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -1470,7 +1470,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndDate"
                              value="${questionnaireCustomScheduleBo.frequencyEndDate}"
                              placeholder="End date"
-                             onclick='customEndDate(this.id,${customVar.index});' required/>
+                             onclick='customEndDate(this.id,${customVar.index});' required data-error="Please fill out this field" />
                       <span class='help-block with-errors red-txt'></span>
                     </span>
                     <span
@@ -1480,7 +1480,7 @@
                              class="form-control clock cusTime ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                              value="${questionnaireCustomScheduleBo.frequencyTime}"
-                             placeholder="Time" onclick='timep(this.id);' required/>
+                             placeholder="Time" onclick='timep(this.id);' required data-error="Please fill out this field" />
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
@@ -1529,8 +1529,8 @@
                            count='0' placeholder="X"
                            name="questionnaireCustomScheduleBo[0].timePeriodFromDays"
                            value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                           maxlength="3" required pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number."/>
+                           maxlength="3" required  data-error="Please fill out this field" pattern="[0-9]+"
+                           data-pattern-error="Please enter valid number"/>
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1564,7 +1564,7 @@
                            name="questionnaireCustomScheduleBo[0].timePeriodToDays"
                            value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                            maxlength="3" pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number." required/>
+                           data-pattern-error="Please enter valid number" required data-error="Please fill out this field" />
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1580,7 +1580,7 @@
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyTime"
                                                           value="${questionnaireCustomScheduleBo.frequencyTime}"
-                                                          placeholder="Time" required/>
+                                                          placeholder="Time" required data-error="Please fill out this field" />
                     <span
                         class='help-block with-errors red-txt'></span>
                   </span>
@@ -1637,8 +1637,8 @@
                              count='${customVar.index}' placeholder="X"
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                              value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                             maxlength="3" required pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number."/>
+                             maxlength="3" required data-error="Please fill out this field" pattern="[0-9]+"
+                             data-pattern-error="Please enter valid number"/>
                       <span
                           class="help-block with-errors red-txt"></span>
                     </span>
@@ -1672,7 +1672,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodToDays"
                              value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                              maxlength="3" pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number." required/>
+                             data-pattern-error="Please enter valid number" required data-error="Please fill out this field" />
                       <span class="help-block with-errors red-txt"></span>
                     </span>
                     <span class="mb-sm pr-md">
@@ -1687,7 +1687,7 @@
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                         value="${questionnaireCustomScheduleBo.frequencyTime}"
-                        placeholder="Time" required/>
+                        placeholder="Time" required data-error="Please fill out this field" />
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
@@ -3039,7 +3039,7 @@
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
-        "  <input id='time" + count + "' type='text' required name='questionnairesFrequenciesList["
+        "  <input id='time" + count + "' type='text' required data-error='Please fill out this field'  name='questionnairesFrequenciesList["
         + count
         + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>"
         +
@@ -3088,7 +3088,7 @@
     var newDateCon = "<div class='manually-option mb-md form-group' id='RegDate" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
-        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field'  name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start date' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
@@ -3098,14 +3098,14 @@
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
-        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End date' onclick='customEndDate(this.id,"
         + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
-        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -4404,7 +4404,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
         + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectYSign' count='"
@@ -4417,13 +4417,13 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].frequencyTime' placeholder='Time' required/>"
+        + "].frequencyTime' placeholder='Time' required data-error='Please fill out this field' />"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span id='addbtn" + customAnchorCount

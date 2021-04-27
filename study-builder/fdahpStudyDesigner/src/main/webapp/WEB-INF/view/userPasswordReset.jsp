@@ -93,7 +93,7 @@
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input"
                        id="password" tabindex="2" maxlength="64" data-minlength="8"
-                       placeholder="New password*" required
+                       placeholder="New password*" required data-error="Please fill out this field" 
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                        data-error="Password is invalid" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
@@ -106,7 +106,7 @@
                        id="cfnPassword" tabindex="3" name="" maxlength="64"
                        data-match="#password"
                        data-match-error="Passwords do not match"
-                       placeholder="Confirm new password*" required autocomplete="off"/>
+                       placeholder="Confirm new password*" required data-error="Please fill out this field" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
