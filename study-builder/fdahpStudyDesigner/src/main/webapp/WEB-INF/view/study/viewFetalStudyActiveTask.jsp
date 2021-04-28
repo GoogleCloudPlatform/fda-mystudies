@@ -45,7 +45,7 @@
                id="shortTitleId" name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
             <c:if
                 test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
-               maxlength="50" required style="white-space:normal;margin-bottom:2px;"/>              
+               maxlength="50" required data-error="Please fill out this field" style="white-space:normal;margin-bottom:2px;"/>              
         <div id="activityvalidate" class="validateActiveTask with-errors red-txt"></div>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -64,7 +64,7 @@
     <div>
       <div class="form-group">
         <input type="text" class="form-control" name="displayName"
-               value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150" required/>
+               value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150" required data-error="Please fill out this field" />
         <div class="help-block with-errors red-txt"></div>
       </div>
     </div>
@@ -78,7 +78,7 @@
   </div>
   <div class="form-group">
     <textarea class="form-control" rows="5" id="comment" name="instruction" maxlength="150"
-              required>${activeTaskBo.instruction}</textarea>
+              required data-error="Please fill out this field" >${activeTaskBo.instruction}</textarea>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <c:if test="${fn:length(activeTaskBo.taskAttributeValueBos) eq 0}">
@@ -102,7 +102,7 @@
            value="${taskMasterAttributeBo.addToDashboard}">
     <input type="text" class="form-control pr-xlg" id="fetalKickId"
            name="taskAttributeValueBos[1].attributeVal"
-           maxlength="2" required/>
+           maxlength="2" required data-error="Please fill out this field" />
     <div class="help-block with-errors red-txt"></div>
   </div>
   <div class="clearfix"></div>
@@ -156,7 +156,7 @@
             </div>
             <div class="add_notify_option form-group">
               <select
-                  class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
+                  class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
                   id="chartId" name="taskAttributeValueBos[2].timeRangeChart" title="Select">
                 <option value="" selected disabled>Select</option>
                 <c:forEach items="${timeRangeList}" var="timeRangeAttr">
@@ -199,7 +199,7 @@
             </div>
             <div class="add_notify_option">
               <div class="form-group">
-                <input type="text" class="form-control requireClass"
+                <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                        name="taskAttributeValueBos[2].titleChat" maxlength="30"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -227,7 +227,7 @@
           <div class="add_notify_option">
             <div class="form-group statShortTitleClass">
               <input autofocus="autofocus" type="text" custAttType="cust"
-                     class="form-control requireClass shortTitleStatCls" id="static"
+                     class="form-control requireClass shortTitleStatCls" id="static" data-error="Please fill out this field" 
                      name="taskAttributeValueBos[2].identifierNameStat" maxlength="20"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -241,7 +241,7 @@
             <span class="requiredStar"> *</span>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control requireClass"
+            <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                    name="taskAttributeValueBos[2].displayNameStat" maxlength="50"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -256,7 +256,7 @@
           </div>
           <div class="add_notify_option">
             <div class="form-group">
-              <input type="text" class="form-control requireClass"
+              <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                      name="taskAttributeValueBos[2].displayUnitStat" maxlength="15"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -270,7 +270,7 @@
             </span>
           </div>
           <div class="add_notify_option form-group">
-            <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+            <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                     title="Select"
                     name="taskAttributeValueBos[2].uploadTypeStat">
               <c:forEach items="${statisticImageList}" var="statisticImage">
@@ -286,7 +286,7 @@
             <span class="requiredStar"> *</span>
           </div>
           <div class="form-group">
-            <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+            <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                     title="Select"
                     name="taskAttributeValueBos[2].formulaAppliedStat">
               <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -350,7 +350,7 @@
            value="${taskMasterAttributeBo.addToDashboard}">
     <input type="text" class="form-control pr-xlg" id="fetalKickId"
            name="taskAttributeValueBos[1].attributeVal"
-           value="${taskValueAttributeBo.attributeVal}" maxlength="2" required/>
+           value="${taskValueAttributeBo.attributeVal}" maxlength="2" required data-error="Please fill out this field" />
     <div class="help-block with-errors red-txt"></div>
   </div>
   <div class="clearfix"></div>
@@ -370,7 +370,7 @@
         <input type="hidden" name="taskAttributeValueBos[0].addToDashboard"
                value="${activeTaskBo.taskMasterAttributeBos[0].addToDashboard}">
         <input type="hidden" id="inputClockId" class="form-control pr-xlg clock" placeholder="Time"
-               name="taskAttributeValueBos[0].attributeVal" value="23:59" required/>
+               name="taskAttributeValueBos[0].attributeVal" value="23:59" required data-error="Please fill out this field" />
       </div>
     </div>
     </c:if>
@@ -412,7 +412,7 @@
               </div>
               <div class="add_notify_option form-group mb-none">
                 <select
-                    class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
+                    class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass" data-error="Please fill out this field" 
                     id="chartId" name="taskAttributeValueBos[2].timeRangeChart" title="Select">
                   <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                     <option
@@ -461,7 +461,7 @@
               </div>
               <div class="add_notify_option">
                 <div class="form-group">
-                  <input type="text" class="form-control requireClass" id="lineChartId"
+                  <input type="text" class="form-control requireClass" id="lineChartId" data-error="Please fill out this field" 
                          name="taskAttributeValueBos[2].titleChat" maxlength="30"
                          value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
                   <div class="help-block with-errors red-txt"></div>
@@ -495,7 +495,7 @@
                 <input type="hidden" id="dbIdentifierId"
                        value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}">
                 <input autofocus="autofocus" type="text"
-                       class="form-control requireClass shortTitleStatCls" custAttType="cust"
+                       class="form-control requireClass shortTitleStatCls" custAttType="cust" data-error="Please fill out this field" 
                        id="identifierId" name="taskAttributeValueBos[2].identifierNameStat"
                        maxlength="20"
                        value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}"
@@ -514,7 +514,7 @@
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control requireClass"
+              <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                      name="taskAttributeValueBos[2].displayNameStat" maxlength="50"
                      value="${fn:escapeXml(taskValueAttributeBo.displayNameStat)}"/>
               <div class="help-block with-errors red-txt"></div>
@@ -533,7 +533,7 @@
             </div>
             <div class="add_notify_option">
               <div class="form-group">
-                <input type="text" class="form-control requireClass"
+                <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                        name="taskAttributeValueBos[2].displayUnitStat" maxlength="15"
                        value="${fn:escapeXml(taskValueAttributeBo.displayUnitStat)}"/>
                 <div class="help-block with-errors red-txt"></div>
@@ -551,7 +551,7 @@
                 </span>
               </div>
               <div class="add_notify_option form-group">
-                <select class="selectpicker  aq-select aq-select-form elaborateClass requireClass"
+                <select class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                         title="Select" name="taskAttributeValueBos[2].uploadTypeStat">
                   <c:forEach items="${statisticImageList}" var="statisticImage">
                     <option
@@ -568,7 +568,7 @@
                 </span>
               </div>
               <div class="form-group">
-                <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                         title="Select" name="taskAttributeValueBos[2].formulaAppliedStat">
                   <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
                     <option
@@ -656,7 +656,7 @@
           $('#inputClockId').parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please select a non-zero Duration value."));
+              "Please select a non-zero Duration value"));
         } else {
           durationFlag = true;
           $('#inputClockId').parent().find(".help-block").empty();
@@ -759,13 +759,13 @@
               $("#identifierId").parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "This is a required field."));
+                  "This is a required field"));
               $('#identifierId').focus();
             } else {
               $("#static").parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
                    $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                   "This is a required field."));
+                   "This is a required field"));
               $('#static').focus();
             }
             statFlag = false;
@@ -822,7 +822,7 @@
               $('#inputClockId').parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please select a non-zero Duration value."));
+                    "Please select a non-zero Duration value"));
           } else {
             $('#inputClockId').parent().find(".help-block").empty();
             var dt = new Date();
@@ -879,12 +879,12 @@
                           $("#identifierId").parent().addClass('has-error has-danger').find(
                               ".help-block").empty().append(
                                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                                "This is a required field."));
+                                "This is a required field"));
                         } else {
                           $("#static").parent().addClass('has-error has-danger').find(
                               ".help-block").empty().append(
                               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                              "This is a required field."));
+                              "This is a required field"));
                         }
                         $("#doneId").attr("disabled", false);
                         $("body").removeClass('loading');
@@ -905,7 +905,7 @@
                     $('#inputClockId').parent().addClass('has-error has-danger').find(
                         ".help-block").empty().append(
                         $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                        "Please select a non-zero Duration value."));
+                        "Please select a non-zero Duration value"));
                     $("#doneId").attr("disabled", false);
                     $("body").removeClass('loading');
                   }
@@ -932,9 +932,9 @@
               $('#inputClockId').parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please select a non-zero Duration value."));
+                  "Please select a non-zero Duration value"));
           }
-          showErrMsg("Please fill in all mandatory fields.");
+          showErrMsg("Please fill in all mandatory fields");
           $('.contentClass a').tab('show');
         }
       });
@@ -942,7 +942,7 @@
         $("body").addClass('loading');
         var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
         if (shortTitleCount >= 1) {
-          showErrMsg("Please fill in all mandatory fields.");
+          showErrMsg("Please fill in all mandatory fields");
           $('.contentClass a').tab('show');
           $("body").removeClass('loading');
           return false;
@@ -950,8 +950,8 @@
           $("#shortTitleId").parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "This is a required field."));
-          showErrMsg("Please fill in all mandatory fields.");
+              "This is a required field"));
+          showErrMsg("Please fill in all mandatory fields");
           $('.contentClass a').tab('show');
           $("body").removeClass('loading');
           return false;
@@ -962,27 +962,27 @@
                 $('#inputClockId').parent().addClass('has-error has-danger').find(
                     ".help-block").empty().append(
                     $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please select a non-zero Duration value."));
+                    "Please select a non-zero Duration value"));
                 $('#inputClockId').focus();
-                showErrMsg("Please fill in all mandatory fields.");
+                showErrMsg("Please fill in all mandatory fields");
                 $('.contentClass a').tab('show');
                 $("body").removeClass('loading');
                 return false;
               } else {
-                //Please fill out this field.
+                //Please fill out this field
                 var statShortTitleCount = $('.statShortTitleClass').find(
                     '.help-block').children().length;
                 var errorstatShortTitle = $('.statShortTitleClass').find(
                     '.help-block').children().text();
                 if (statShortTitleCount >= 1 && errorstatShortTitle
-                    != "Please fill out this field.") {
+                    != "Please fill out this field") {
                   var statId = $('.shortTitleStatCls').attr('id');
                   if (statId && statId == 'identifierId')
                     $('#identifierId').focus();
                   else
                     $('#static').focus();
 
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                   $("body").removeClass('loading');
                   return false;
@@ -1166,7 +1166,7 @@
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
             $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Special characters such as #^}{ are not allowed."));
+                "Special characters such as #^}{ are not allowed"));
           }
         }
       });
@@ -1183,7 +1183,7 @@
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
             $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "The characters like (< >) are not allowed."));
+                "The characters like (< >) are not allowed"));
           }
         }
       });
@@ -1228,7 +1228,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled widthShortTitle").text(
                     shortTitle
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 callback(false);
               }
             },
@@ -1282,9 +1282,9 @@
                   $('#identifierId').parent().find(".help-block").append(
                 	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                       activeTaskAttIdVal
-                      + " has already been used in the past."));
+                      + " has already been used in the past"));
                   $('#identifierId').focus();
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                   shortTitleStatFlag = false;
                   callback(false);
@@ -1328,7 +1328,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     activeTaskAttIdVal
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 if (callback)
                   callback(false);
 

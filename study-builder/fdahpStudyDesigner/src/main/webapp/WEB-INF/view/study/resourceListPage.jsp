@@ -208,7 +208,7 @@
             } else {
               $('#alertMsg').show();
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-                  "Unable to reorder consent.");
+                  "Unable to reorder consent");
             }
             setTimeout(hideDisplayMessage, 5000);
           },
@@ -255,12 +255,12 @@
                   $('#spanMarkAsComp').removeAttr('data-original-title');
                 }
                 $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                    "Resource deleted successfully.");
+                    "Resource deleted successfully");
                 $('#alertMsg').show();
                 reloadData(studyId);
               } else {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-                    "Unable to delete resource.");
+                    "Unable to delete resource");
                 $('#alertMsg').show();
               }
               setTimeout(hideDisplayMessage, 5000);
