@@ -80,7 +80,7 @@
         <div class="form-group">
           <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
                     id="notificationText"
-                    name="notificationText" required
+                    name="notificationText" required data-error="Please fill out this field" 
           >${notificationBO.notificationText}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -128,7 +128,7 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group date">
-          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal"
+          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" data-error="Please fill out this field" 
                  id="scheduleDate"
                  name="scheduleDate" value="${notificationBO.scheduleDate}"
                  oldValue="${notificationBO.scheduleDate}"
@@ -142,7 +142,7 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group">
-          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime"
+          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime" data-error="Please fill out this field" 
                  name="scheduleTime" value="${notificationBO.scheduleTime}"
                  oldValue="${notificationBO.scheduleTime}"
                  placeholder="00:00" disabled/>
