@@ -243,7 +243,7 @@
               var status = data.message;
               if (status == "SUCCESS") {
                 $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                    "Consent Section deleted successfully.");
+                    "Consent Section deleted successfully");
                 $('#alertMsg').show();
                 reloadData(studyId);
                 if ($('.fifthConsent').find('span').hasClass(

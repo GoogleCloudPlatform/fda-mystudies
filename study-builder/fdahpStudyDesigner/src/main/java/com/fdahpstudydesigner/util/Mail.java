@@ -42,7 +42,9 @@ import javax.mail.internet.MimeMultipart;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.mail.MailAuthenticationException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Mail {
 
   private static Logger logger = Logger.getLogger(Mail.class.getName());
@@ -261,8 +263,7 @@ public class Mail {
     Properties props = new Properties();
     props.put("mail.smtp.host", this.getSmtpHostname());
     props.put("mail.smtp.port", this.getSmtpPortvalue());
-    props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-    props.put("mail.smtp.socketFactory.port", this.getSmtpPortvalue());
+    props.put("mail.smtp.starttls.enable", "true");
     if (useIpWhitelist) {
       props.put("mail.smtp.auth", "false");
       props.put("mail.smtp.ssl.enable", "true");
