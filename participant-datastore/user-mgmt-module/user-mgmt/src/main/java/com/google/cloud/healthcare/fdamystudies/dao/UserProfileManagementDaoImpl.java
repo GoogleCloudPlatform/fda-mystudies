@@ -20,6 +20,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantEnrollmentHistoryRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -37,6 +38,7 @@ import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -53,6 +55,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   @Autowired private SessionFactory sessionFactory;
 
   @Autowired UserDetailsRepository userDetailsRepository;
+
+  @Autowired private AuthInfoRepository authInfoRepository;
 
   @Autowired CommonDao commonDao;
 
@@ -110,19 +114,25 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       String userId, UserDetailsEntity userDetail, AuthInfoEntity authInfo) {
     logger.info("UserProfileManagementDaoImpl updateUserProfile() - Starts ");
     ErrorBean errorBean = null;
-    Boolean isUpdatedAuthInfo = false;
-    Session session = this.sessionFactory.getCurrentSession();
 
     if (null != userDetail) {
-      session.saveOrUpdate(userDetail);
+      userDetailsRepository.save(userDetail);
       errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
       if (null != authInfo) {
-        session.saveOrUpdate(authInfo);
-        isUpdatedAuthInfo = true;
+        List<AuthInfoEntity> authInfoList =
+            authInfoRepository.findByDeviceToken(authInfo.getDeviceToken());
+        if (CollectionUtils.isNotEmpty(authInfoList)) {
+          authInfoRepository.deleteByDeviceTokenAndUserId(
+              authInfo.getDeviceToken(), userDetail.getId());
+        }
+
+        authInfoRepository.save(authInfo);
       }
+
     } else {
       errorBean = new ErrorBean(ErrorCode.EC_61.code(), ErrorCode.EC_61.errorMessage());
     }
+
     logger.info("UserProfileManagementDaoImpl updateUserProfile() - Starts ");
     return errorBean;
   }
