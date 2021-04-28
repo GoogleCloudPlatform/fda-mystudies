@@ -52,8 +52,8 @@ import java.util.stream.Collectors;
 import javax.transaction.SystemException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -62,7 +62,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StudyStateServiceImpl implements StudyStateService {
 
-  private static final Logger logger = LoggerFactory.getLogger(StudyStateServiceImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(StudyStateServiceImpl.class.getName());
 
   @Autowired StudyStateDao studyStateDao;
 
@@ -88,7 +89,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Transactional(readOnly = true)
   public List<ParticipantStudyEntity> getParticipantStudiesList(
       UserDetailsEntity user, List<StudiesBean> studiesBeenList) {
-    logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
+    logger.entry("Begin getParticipantStudiesList()");
 
     List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
     List<String> participantStudyIds = new ArrayList<>();
@@ -124,7 +125,7 @@ public class StudyStateServiceImpl implements StudyStateService {
     if (CollectionUtils.isNotEmpty(participantStudyIds)) {
       participantStudies = participantStudyRepository.findAllById(participantStudyIds);
     }
-    logger.info("StudyStateServiceImpl getParticipantStudiesList() - Ends ");
+    logger.exit("getParticipantStudiesList() - Ends ");
     return participantStudies;
   }
 
@@ -135,7 +136,7 @@ public class StudyStateServiceImpl implements StudyStateService {
       List<ParticipantStudyEntity> existParticipantStudies,
       AuditLogEventRequest auditRequest,
       UserDetailsEntity user) {
-    logger.info("StudyStateServiceImpl saveParticipantStudies() - Starts ");
+    logger.entry("Begin saveParticipantStudies()");
     StudyStateRespBean studyStateRespBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     List<ParticipantStudyEntity> participantStudies = new ArrayList<ParticipantStudyEntity>();
@@ -199,14 +200,14 @@ public class StudyStateServiceImpl implements StudyStateService {
       logger.error("StudyStateServiceImpl saveParticipantStudies() - error ", e);
       throw e;
     }
-    logger.info("StudyStateServiceImpl saveParticipantStudies() - Ends ");
+    logger.exit("saveParticipantStudies() - Ends ");
     return studyStateRespBean;
   }
 
   @Override
   @Transactional(readOnly = true)
   public List<StudyStateBean> getStudiesState(String userId) throws SystemException {
-    logger.info("(Service)...StudyStateServiceImpl.getStudiesState()...Started");
+    logger.entry("Begin getStudiesState()");
 
     List<StudyStateBean> serviceResponseList = new ArrayList<>();
 
@@ -272,7 +273,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Transactional
   public WithDrawFromStudyRespBean withdrawFromStudy(
       String participantId, String studyId, AuditLogEventRequest auditRequest) {
-    logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
+    logger.entry("Begin withdrawFromStudy()");
     WithDrawFromStudyRespBean respBean = null;
 
     String message = studyStateDao.withdrawFromStudy(participantId, studyId);
@@ -303,19 +304,19 @@ public class StudyStateServiceImpl implements StudyStateService {
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
     }
 
-    logger.info("StudyStateServiceImpl withdrawFromStudy() - Ends ");
+    logger.exit("withdrawFromStudy() - Ends ");
     return respBean;
   }
 
   @Override
   public String getSiteId(String userId, String token) {
-    logger.info("StudyStateServiceImpl getSiteId() - Starts ");
+    logger.entry("Begin getSiteId()");
     String siteId = null;
     if (StringUtils.isNotEmpty(token)) {
       siteId = participantStudyRepository.getSiteId(userId, token.toUpperCase());
     }
 
-    logger.info("StudyStateServiceImpl getSiteId() - Ends ");
+    logger.exit("getSiteId() - Ends ");
     return StringUtils.defaultString(siteId);
   }
 }

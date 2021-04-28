@@ -49,8 +49,8 @@ import java.util.Optional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,13 +76,13 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
   @Autowired UserDetailsRepository userDetailsRepository;
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
+  private XLogger logger =
+      XLoggerFactory.getXLogger(UserManagementProfileServiceImpl.class.getName());
 
   @Override
   @Transactional(readOnly = true)
   public UserProfileRespBean getParticipantInfoDetails(String userId, Integer appInfoId) {
-    logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
+    logger.entry("Begin getParticipantInfoDetails()");
     UserDetailsEntity userDetails = null;
     UserProfileRespBean userProfileRespBean = null;
 
@@ -101,14 +101,14 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userProfileRespBean.getSettings().setLocale(userDetails.getLocale());
     }
 
-    logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Ends ");
+    logger.exit("getParticipantInfoDetails() - Ends ");
     return userProfileRespBean;
   }
 
   @Override
   @Transactional()
   public ErrorBean updateUserProfile(String userId, UserRequestBean user) {
-    logger.info("UserManagementProfileServiceImpl updateUserProfile() - Starts ");
+    logger.entry("Begin updateUserProfile()");
     ErrorBean errorBean = null;
     UserDetailsEntity userDetails = null;
     AuthInfoEntity authInfo = null;
@@ -145,14 +145,14 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       errorBean = userProfileManagementDao.updateUserProfile(userId, userDetails, authInfo);
     }
 
-    logger.info("UserManagementProfileServiceImpl updateUserProfile() - Ends ");
+    logger.exit("updateUserProfile() - Ends ");
     return errorBean;
   }
 
   @Override
   @Transactional(readOnly = true)
   public UserDetailsEntity getParticipantDetailsByEmail(String email, String appInfoId) {
-    logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Starts ");
+    logger.entry("Begin getParticipantDetailsByEmail()");
     UserDetailsEntity userDetails = null;
 
     Optional<AppEntity> optApp = appRepository.findByAppId(appInfoId);
@@ -160,51 +160,51 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userDetails = userProfileManagementDao.getParticipantDetailsByEmail(email, optApp.get());
     }
 
-    logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Ends ");
+    logger.exit("getParticipantDetailsByEmail() - Ends ");
     return userDetails;
   }
 
   @Override
   @Transactional(readOnly = true)
   public LoginAttemptsEntity getLoginAttempts(String email) {
-    logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Starts ");
+    logger.entry("Begin getLoginAttempts()");
     LoginAttemptsEntity loginAttempts = null;
 
     loginAttempts = userProfileManagementDao.getLoginAttempts(email);
 
-    logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Ends ");
+    logger.exit("getLoginAttempts() - Ends ");
     return loginAttempts;
   }
 
   @Override
   @Transactional(readOnly = true)
   public void resetLoginAttempts(String email) {
-    logger.info("UserManagementProfileServiceImpl resetLoginAttempts() - Started ");
+    logger.entry("Begin resetLoginAttempts()");
 
     userProfileManagementDao.resetLoginAttempts(email);
 
-    logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Ends ");
+    logger.exit("getLoginAttempts() - Ends ");
   }
 
   @Override
   @Transactional(readOnly = true)
   public UserDetailsEntity getParticipantDetails(String id) {
-    logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Starts");
+    logger.entry("Begin getParticipantDetails()");
 
     UserDetailsEntity userDetails = userProfileManagementDao.getParticipantDetails(id);
 
-    logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Ends");
+    logger.exit("getParticipantDetails() - Ends");
     return userDetails;
   }
 
   @Override
   @Transactional()
   public UserDetailsEntity saveParticipant(UserDetailsEntity participant) {
-    logger.info("UserManagementProfileServiceImpl - saveParticipant() - Starts");
+    logger.entry("Begin saveParticipant()");
 
     UserDetailsEntity userDetails = userProfileManagementDao.saveParticipant(participant);
 
-    logger.info("UserManagementProfileServiceImpl - saveParticipant() - Ends");
+    logger.exit("saveParticipant() - Ends");
     return userDetails;
   }
 
@@ -241,7 +241,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Transactional()
   public String deactivateAccount(
       String userId, DeactivateAcctBean deactivateAcctBean, AuditLogEventRequest auditRequest) {
-    logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
+    logger.entry("Begin deActivateAcct()");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     String userDetailsId = String.valueOf(0);
     WithdrawFromStudyBean studyBean = null;
@@ -313,7 +313,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userMgmntAuditHelper.logEvent(USER_DELETION_FAILED, auditRequest);
     }
 
-    logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Ends");
+    logger.exit("deActivateAcct() - Ends");
     return message;
   }
 
@@ -321,7 +321,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Override
   public EmailResponse resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId, String appName) {
-    logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Starts");
+    logger.entry("Begin resendConfirmationthroughEmail()");
     AppEntity appPropertiesDetails = null;
 
     String content = "";
@@ -357,7 +357,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             subject,
             content,
             templateArgs);
-    logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Ends");
+    logger.exit("resendConfirmationthroughEmail() - Ends");
     return emailService.sendMimeMail(emailRequest);
   }
 

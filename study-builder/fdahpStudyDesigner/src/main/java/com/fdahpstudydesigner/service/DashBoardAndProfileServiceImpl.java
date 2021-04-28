@@ -36,14 +36,16 @@ import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileService {
 
-  private static Logger logger = Logger.getLogger(DashBoardAndProfileServiceImpl.class);
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(DashBoardAndProfileServiceImpl.class.getName());
 
   @Autowired private DashBoardAndProfileDAO dashBoardAndProfiledao;
 
@@ -53,14 +55,14 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
 
   @Override
   public MasterDataBO getMasterData(String type) {
-    logger.info("DashBoardAndProfileServiceImpl - getMasterData() - Starts");
+    logger.entry("begin getMasterData()");
     MasterDataBO masterDataBO = null;
     try {
       masterDataBO = dashBoardAndProfiledao.getMasterData(type);
     } catch (Exception e) {
       logger.error("DashBoardAndProfileServiceImpl - getMasterData() - ERROR", e);
     }
-    logger.info("DashBoardAndProfileServiceImpl - getMasterData() - Ends");
+    logger.exit("getMasterData() - Ends");
     return masterDataBO;
   }
 
@@ -71,7 +73,7 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
 
   @Override
   public String updateProfileDetails(UserBO userBO, int userId, SessionObject userSession) {
-    logger.info("DashBoardAndProfileServiceImpl - updateProfileDetails - Starts");
+    logger.entry("begin updateProfileDetails()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     StudyBuilderAuditEvent auditLogEvent = null;
     try {
@@ -86,7 +88,7 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
     } catch (Exception e) {
       logger.error("DashBoardAndProfileServiceImpl - updateProfileDetails() - Error", e);
     }
-    logger.info("DashBoardAndProfileServiceImpl - updateProfileDetails - Starts");
+    logger.exit("updateProfileDetails - Ends");
     return message;
   }
 }

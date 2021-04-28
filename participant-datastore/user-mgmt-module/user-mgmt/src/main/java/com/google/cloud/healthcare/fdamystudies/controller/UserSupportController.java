@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,7 +43,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserSupportController {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserSupportController.class);
+  private XLogger logger = XLoggerFactory.getXLogger(UserSupportController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @Autowired UserSupportService supportService;
 
@@ -59,7 +63,7 @@ public class UserSupportController {
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
-    logger.info("INFO: UserSupportController - feedbackDetails() :: Starts");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ResponseBean responseBean = new ResponseBean();
@@ -73,7 +77,7 @@ public class UserSupportController {
       throw new ErrorCodeException(ErrorCode.FEEDBACK_ERROR_MESSAGE);
     }
 
-    logger.info("INFO: UserSupportController - feedbackDetails() :: Ends");
+    logger.exit(String.format(STATUS_LOG, HttpStatus.OK.value()));
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 
@@ -89,7 +93,7 @@ public class UserSupportController {
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
-    logger.info("INFO: UserSupportController - contactUsDetails() :: Starts");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ResponseBean responseBean = new ResponseBean();
@@ -102,7 +106,7 @@ public class UserSupportController {
       throw new ErrorCodeException(ErrorCode.CONTACT_US_ERROR_MESSAGE);
     }
 
-    logger.info("INFO: UserSupportController - contactUsDetails() :: Ends");
+    logger.exit(String.format(STATUS_LOG, HttpStatus.OK.value()));
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 }

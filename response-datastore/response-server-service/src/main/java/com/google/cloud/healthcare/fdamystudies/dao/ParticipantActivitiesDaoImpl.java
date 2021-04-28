@@ -16,22 +16,22 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(ParticipantActivitiesDaoImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(ParticipantActivitiesDaoImpl.class.getName());
   @Autowired private EntityManagerFactory entityManagerFactory;
 
   @Override
   @SuppressWarnings("unchecked")
   public List<ParticipantActivitiesEntity> getParticipantActivities(
       String studyId, String participantId) throws ProcessActivityStateException {
-    logger.debug("getParticipantActivities()...start");
+    logger.entry("begin getParticipantActivities()");
     List<ParticipantActivitiesEntity> participantActivitiesList = null;
 
     if (studyId != null && participantId != null) {
@@ -46,7 +46,7 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
         query.setParameter("participantId", participantId);
         participantActivitiesList = query.getResultList();
 
-        logger.debug("getParticipantActivities()...end " + participantActivitiesList);
+        logger.exit("getParticipantActivities() end " + participantActivitiesList);
         return participantActivitiesList;
       } catch (Exception e) {
         logger.error("getParticipantActivities: (ERROR) ", e);
@@ -61,7 +61,7 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
   @Override
   public void saveParticipantActivities(List<ParticipantActivitiesEntity> participantActivitiesList)
       throws ProcessActivityStateException {
-    logger.debug("saveParticipantActivities() - Starts ");
+    logger.entry("begin saveParticipantActivities()");
 
     Transaction transaction = null;
     Session session = null;
@@ -86,14 +86,14 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
       if (session != null) {
         session.close();
       }
-      logger.debug("saveParticipantActivities() - Ends ");
+      logger.exit("saveParticipantActivities() - Ends ");
     }
   }
 
   @Override
   public void deleteParticipantActivites(String studyId, String participantId)
       throws ProcessActivityStateException {
-    logger.debug("deleteParticipantActivites()...start");
+    logger.entry("begin deleteParticipantActivites()");
     Transaction transaction = null;
     Session session = null;
     if (studyId != null && participantId != null) {
@@ -108,7 +108,7 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
             .setParameter("participantId", participantId)
             .setParameter("studyId", studyId)
             .executeUpdate();
-        logger.debug("deleteParticipantActivites()...end ");
+        logger.exit("deleteParticipantActivites()...end ");
       } catch (Exception e) {
         logger.error("deleteParticipantActivites: (ERROR) ", e);
         throw new ProcessActivityStateException(
@@ -120,7 +120,7 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
         if (session != null) {
           session.close();
         }
-        logger.debug("deleteParticipantActivites() - Ends ");
+        logger.exit("deleteParticipantActivites() - Ends ");
       }
     } else {
       throw new ProcessActivityStateException("Required input parameter is null");

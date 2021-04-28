@@ -31,8 +31,8 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,14 +41,14 @@ import org.springframework.util.StringUtils;
 @Repository
 public class CommonDaoImpl implements CommonDao {
 
-  private static Logger logger = LoggerFactory.getLogger(CommonDaoImpl.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(CommonDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
   @Override
   public String validatedUserAppDetailsByAllApi(String userId, String email, String appId) {
 
-    logger.info("CommonDaoImpl validatedUserAppDetailsByAllApi() - Starts ");
+    logger.entry("Begin validatedUserAppDetailsByAllApi()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> userDetailsBoCriteria = null;
     CriteriaQuery<UserAppDetailsEntity> userAppDetailsBoCriteria = null;
@@ -109,13 +109,13 @@ public class CommonDaoImpl implements CommonDao {
     } else {
       message = MyStudiesUserRegUtil.ErrorCodes.ACCOUNT_DEACTIVATE_ERROR_MSG.getValue();
     }
-    logger.info("CommonDaoImpl validatedUserAppDetailsByAllApi() - Ends ");
+    logger.exit("validatedUserAppDetailsByAllApi() - Ends ");
     return message;
   }
 
   @Override
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId) {
-    logger.info("CommonDaoImpl validatedUserAppDetailsByAllApi() - Starts ");
+    logger.entry("Begin getUserAppDetailsByAllApi()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppEntity> appDetailsBoCriteria = null;
     Root<AppEntity> appDetailsBoRoot = null;
@@ -139,13 +139,13 @@ public class CommonDaoImpl implements CommonDao {
     appDetails = appDetailsList.get(0);
     appOrgInfoBean.setAppInfoId(appDetails.getAppId());
 
-    logger.info("CommonDaoImpl getUserAppDetailsByAllApi() - Ends ");
+    logger.exit("getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
   }
 
   @Override
   public String getUserInfoDetails(String userId) {
-    logger.info("CommonDaoImpl getUserInfoDetails() - Starts ");
+    logger.entry("Begin getUserInfoDetails()");
     CriteriaBuilder criteriaBuilder = null;
     String userDetailsId = null;
     CriteriaQuery<UserDetailsEntity> userDetailsCriteriaQuery = null;
@@ -165,13 +165,13 @@ public class CommonDaoImpl implements CommonDao {
       userDetails = userDetailsBoList.get(0);
       userDetailsId = userDetails.getId();
     }
-    logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
+    logger.exit("getUserInfoDetails() - Ends ");
     return userDetailsId;
   }
 
   @Override
   public List<AppEntity> getAppInfoSet(HashSet<String> appIds) {
-    logger.info("CommonDaoImpl getAppInfoIds() - start ");
+    logger.entry("Begin getAppInfoSet()");
     List<AppEntity> appInfos = new ArrayList();
     Session session = this.sessionFactory.getCurrentSession();
     appInfos =
@@ -180,7 +180,7 @@ public class CommonDaoImpl implements CommonDao {
             .setParameterList("appIds", appIds)
             .getResultList();
 
-    logger.info("CommonDaoImpl getAppInfoIds() - ends ");
+    logger.exit("getAppInfoSet() - ends ");
 
     return appInfos;
   }
@@ -188,7 +188,7 @@ public class CommonDaoImpl implements CommonDao {
   @Override
   @Transactional(readOnly = true)
   public List<StudyEntity> getStudyInfoSet(HashSet<String> studyIdSet) {
-    logger.info("CommonDaoImpl getStudyInfoIds() - starts ");
+    logger.entry("Begin getStudyInfoSet() - starts ");
     List<StudyEntity> studyInfos = new ArrayList();
     Session session = this.sessionFactory.getCurrentSession();
     studyInfos =
@@ -197,7 +197,7 @@ public class CommonDaoImpl implements CommonDao {
             .setParameterList("studyIdSet", studyIdSet)
             .getResultList();
 
-    logger.info("CommonDaoImpl getStudyInfoIds() - ends ");
+    logger.exit("getStudyInfoSet() - ends ");
 
     return studyInfos;
   }
@@ -205,7 +205,7 @@ public class CommonDaoImpl implements CommonDao {
   @Override
   public Map<String, Map<String, JSONArray>> getStudyLevelDeviceToken(
       List<StudyEntity> studyInfos) {
-    logger.info("CommonDaoImpl.getStudyLevelDeviceToken() - starts");
+    logger.entry("Begin getStudyLevelDeviceToken()");
 
     Map<String, Map<String, JSONArray>> studyDeviceTokenMap = new HashMap<>();
     Session session = this.sessionFactory.getCurrentSession();
@@ -262,12 +262,12 @@ public class CommonDaoImpl implements CommonDao {
       }
     }
 
-    logger.info("CommonDaoImpl.getStudyLevelDeviceToken() - ends ");
+    logger.exit("getStudyLevelDeviceToken() - ends ");
     return studyDeviceTokenMap;
   }
 
   public String getParticipantId(String id, String customStudyId) {
-    logger.info("CommonDaoImpl getParticicpantId() - Starts ");
+    logger.entry("Begin getParticicpantId()");
     CriteriaBuilder criteriaBuilder = null;
     String participantId = null;
     CriteriaQuery<StudyEntity> criteriaQuery = null;
@@ -303,7 +303,7 @@ public class CommonDaoImpl implements CommonDao {
         participantId = participantStudyBo.getParticipantId();
       }
     }
-    logger.info("CommonDaoImpl getParticicpantId() - Ends ");
+    logger.exit("getParticicpantId() - Ends ");
     return participantId;
   }
 }

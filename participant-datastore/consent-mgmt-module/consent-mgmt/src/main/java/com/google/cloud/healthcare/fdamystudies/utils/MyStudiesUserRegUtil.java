@@ -15,12 +15,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class MyStudiesUserRegUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(MyStudiesUserRegUtil.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(MyStudiesUserRegUtil.class);
 
   static String email = "";
 
@@ -159,14 +159,14 @@ public class MyStudiesUserRegUtil {
   }
 
   public static LocalDateTime getCurrentDateTime() {
-    logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: starts");
+    logger.entry("MyStudiesUserRegUtil - getCurrentDateTime() :: starts");
     LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
-    logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: ends");
+    logger.exit("MyStudiesUserRegUtil - getCurrentDateTime() :: ends");
     return currentDateTime;
   }
 
   public static String getCurrentDateTime(String pattern) {
-    logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: starts");
+    logger.entry("MyStudiesUserRegUtil - getCurrentDateTime() :: starts");
     String currentDateTime = "";
     try {
       LocalDateTime now = LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
@@ -175,7 +175,7 @@ public class MyStudiesUserRegUtil {
     } catch (Exception e) {
       logger.error("ERROR: MyStudiesUserRegUtil - getCurrentDateTime()", e);
     }
-    logger.info("INFO: MyStudiesUserRegUtil - getCurrentDateTime() :: ends");
+    logger.exit("MyStudiesUserRegUtil - getCurrentDateTime() :: ends");
     return currentDateTime;
   }
 }

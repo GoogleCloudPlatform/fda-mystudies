@@ -15,14 +15,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 public class MyStudiesUserRegUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(MyStudiesUserRegUtil.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(MyStudiesUserRegUtil.class.getName());
   @Autowired UserProfileManagementDao userProfileManagementDao;
 
   static String Email = "";
@@ -187,7 +188,7 @@ public class MyStudiesUserRegUtil {
       }
 
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getFailureResponse() :: ERROR ", e);
+      logger.error("MyStudiesUserRegUtil - getFailureResponse() :: ERROR ", e);
     }
   }
 
@@ -203,7 +204,7 @@ public class MyStudiesUserRegUtil {
           new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
               .parse(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newDate));
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
+      logger.error("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
     }
     return futureDate;
   }
@@ -225,14 +226,14 @@ public class MyStudiesUserRegUtil {
           sb.append(hex);
         }
       } catch (Exception e) {
-        logger.info("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
+        logger.error("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
       }
     }
     return sb.toString();
   }
 
   public static String generateEmailContent(String emailContent, Map<String, String> keyValue) {
-    logger.info("MyStudiesUserRegUtil - genarateEmailContent() start");
+    logger.entry("Begin genarateEmailContent()");
     try {
       if (!StringUtils.isEmpty(emailContent)) {
         for (Map.Entry<String, String> entry : keyValue.entrySet()) {
@@ -244,17 +245,17 @@ public class MyStudiesUserRegUtil {
     } catch (Exception e) {
       logger.error("MyStudiesUserRegUtil - genarateEmailContent() - error() ", e);
     }
-    logger.info("MyStudiesUserRegUtil - genarateEmailContent() end");
+    logger.exit("genarateEmailContent() end");
     return emailContent;
   }
 
   public static boolean isValidEmailId(String emailId) {
-    logger.info("isValidEmailId() called");
+    logger.entry("isValidEmailId() called");
 
     if (emailId != null) {
       return emailId.matches("([A-Za-z0-9-_.]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
     } else {
-      logger.info("invalid emailId format");
+      logger.exit("invalid emailId format");
       return false;
     }
   }

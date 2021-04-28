@@ -17,32 +17,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthInfoBODaoImpl implements AuthInfoBODao {
 
-  private static final Logger logger = LoggerFactory.getLogger(AuthInfoBODaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(AuthInfoBODaoImpl.class.getName());
 
   @Autowired AuthInfoRepository authInfoRepository;
 
   @Override
   public AuthInfoEntity save(AuthInfoEntity authInfo) {
-    logger.info("AuthInfoBODaoImpl save() - starts");
+    logger.entry("Begin save()");
     AuthInfoEntity dbResponse = null;
     if (authInfo != null) {
       dbResponse = authInfoRepository.save(authInfo);
-      logger.info("AuthInfoBODaoImpl save() - ends");
+      logger.exit("save() - ends");
       return dbResponse;
     } else return null;
   }
 
   @Override
   public Map<String, JSONArray> getDeviceTokenOfAllUsers(List<AppEntity> appInfos) {
-    logger.info("AuthInfoBODaoImpl.getDeviceTokenOfAllUsers()-Start");
+    logger.entry("Begin getDeviceTokenOfAllUsers()");
     JSONArray androidJsonArray = null;
     JSONArray iosJsonArray = null;
     Map<String, JSONArray> deviceMap = new HashMap<>();
@@ -75,7 +76,7 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
       }
     }
 
-    logger.info("AuthInfoBODaoImpl.getDeviceTokenOfAllUsers()-end ");
+    logger.exit("getDeviceTokenOfAllUsers()-ends ");
     return deviceMap;
   }
 }

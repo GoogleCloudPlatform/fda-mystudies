@@ -25,8 +25,8 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserSupportServiceImpl implements UserSupportService {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserSupportServiceImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(UserSupportServiceImpl.class.getName());
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
@@ -46,7 +46,7 @@ public class UserSupportServiceImpl implements UserSupportService {
   @Transactional()
   public EmailResponse feedback(
       FeedbackReqBean feedbackRequest, AuditLogEventRequest auditRequest) {
-    logger.info("UserManagementProfileServiceImpl - feedback() :: Starts");
+    logger.entry("Begin feedback()");
     String feedbackSubject = appConfig.getFeedbackMailSubject() + feedbackRequest.getSubject();
     String feedbackBody = appConfig.getFeedbackMailBody();
     Map<String, String> templateArgs = new HashMap<>();
@@ -76,7 +76,7 @@ public class UserSupportServiceImpl implements UserSupportService {
 
     userMgmntAuditHelper.logEvent(auditEvent, auditRequest, map);
 
-    logger.info("UserManagementProfileServiceImpl - feedback() :: Ends");
+    logger.exit("feedback() :: Ends");
     return emailResponse;
   }
 
@@ -84,7 +84,7 @@ public class UserSupportServiceImpl implements UserSupportService {
   @Override
   public EmailResponse contactUsDetails(
       ContactUsReqBean contactUsRequest, AuditLogEventRequest auditRequest) throws Exception {
-    logger.info("AppMetaDataOrchestration - contactUsDetails() :: Starts");
+    logger.entry("Begin contactUsDetails()");
     String contactUsSubject = appConfig.getContactusMailSubject() + contactUsRequest.getSubject();
     String contactUsContent = appConfig.getContactusMailBody();
     Map<String, String> templateArgs = new HashMap<>();

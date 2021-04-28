@@ -47,8 +47,8 @@ import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,7 +67,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StudyStateController {
 
-  private static final Logger logger = LoggerFactory.getLogger(StudyStateController.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(StudyStateController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @Autowired private StudyStateService studyStateService;
 
@@ -87,7 +92,7 @@ public class StudyStateController {
       @Valid @RequestBody StudyStateReqBean studyStateReqBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("StudyStateController updateStudyState() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     StudyStateRespBean studyStateRespBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
@@ -124,6 +129,7 @@ public class StudyStateController {
         if (StringUtils.equals(studyInfo.getStatus(), EnrollmentStatus.NOT_ELIGIBLE.getStatus())) {
           enrollAuditEventHelper.logEvent(USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
         }
+        logger.exit(String.format(STATUS_LOG, studyStateRespBean.getCode()));
       }
     } else {
       MyStudiesUserRegUtil.getFailureResponse(
@@ -134,7 +140,6 @@ public class StudyStateController {
       return null;
     }
 
-    logger.info("StudyStateController updateStudyState() - Ends ");
     return new ResponseEntity<>(studyStateRespBean, HttpStatus.OK);
   }
 
@@ -148,7 +153,7 @@ public class StudyStateController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     try {
-      logger.info("(C)...StudyStateController.getStudyState()...Started");
+      logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
       StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
 
       List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
@@ -177,7 +182,7 @@ public class StudyStateController {
       @Valid @RequestBody WithdrawFromStudyBean withdrawFromStudyBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("StudyStateController withdrawFromStudy() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     WithDrawFromStudyRespBean respBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -195,12 +200,11 @@ public class StudyStateController {
             withdrawFromStudyBean.getStudyId(),
             auditRequest);
     if (respBean != null) {
-      logger.info("StudyStateController withdrawFromStudy() - Ends ");
       respBean.setCode(ErrorCode.EC_200.code());
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
 
       enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
-
+      logger.exit(String.format(STATUS_LOG, respBean.getCode()));
       return new ResponseEntity<>(respBean, HttpStatus.OK);
     } else {
       MyStudiesUserRegUtil.getFailureResponse(

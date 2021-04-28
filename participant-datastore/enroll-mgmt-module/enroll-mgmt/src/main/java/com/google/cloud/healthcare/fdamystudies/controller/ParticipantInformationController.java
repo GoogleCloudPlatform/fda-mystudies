@@ -27,8 +27,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,8 +44,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ParticipantInformationController {
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(ParticipantInformationController.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(ParticipantInformationController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @Autowired private ParticipantInformationService participantInfoService;
 
@@ -60,7 +64,7 @@ public class ParticipantInformationController {
       @RequestParam(name = "participantId") String participantId,
       @Context HttpServletResponse response,
       @Context HttpServletRequest request) {
-    logger.info("ParticipantInformationController getParticipantDetails() - starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     ParticipantInfoRespBean participantInfoResp = null;
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
@@ -94,7 +98,7 @@ public class ParticipantInformationController {
       return null;
     }
 
-    logger.info("ParticipantInformationController getParticipantDetails() - Ends ");
+    logger.exit(String.format(STATUS_LOG, participantInfoResp.getCode()));
     return new ResponseEntity<>(participantInfoResp, HttpStatus.OK);
   }
 }

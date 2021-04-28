@@ -51,8 +51,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -61,7 +61,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StudiesServicesImpl implements StudiesServices {
 
-  private static Logger logger = LoggerFactory.getLogger(StudiesServicesImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(StudiesServicesImpl.class.getName());
 
   @Autowired private StudiesDao studiesDao;
 
@@ -76,12 +76,12 @@ public class StudiesServicesImpl implements StudiesServices {
   @Override
   @Transactional()
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
-    logger.info("StudiesServicesImpl - saveStudyMetadata() : starts");
+    logger.entry("Begin saveStudyMetadata()");
     ErrorBean errorBean = null;
 
     errorBean = studiesDao.saveStudyMetadata(studyMetadataBean);
 
-    logger.info("StudiesServicesImpl - saveStudyMetadata() : ends");
+    logger.exit("saveStudyMetadata() : ends");
     return errorBean;
   }
 
@@ -95,7 +95,7 @@ public class StudiesServicesImpl implements StudiesServices {
     Map<Object, StudyEntity> studyInfobyStudyCustomId = new HashMap<>();
     Map<String, JSONArray> allDeviceTokens = new HashMap<>();
     Map<Object, AppEntity> appInfobyAppCustomId = new HashMap<>();
-    logger.info("StudiesServicesImpl.SendNotificationAction() - starts");
+    logger.entry("Begin SendNotificationAction()");
 
     for (NotificationBean notificationBean : notificationForm.getNotifications()) {
       if (notificationBean.getNotificationType().equalsIgnoreCase(AppConstants.STUDY_LEVEL)) {
@@ -197,7 +197,7 @@ public class StudiesServicesImpl implements StudiesServices {
       }
     }
 
-    logger.info("StudiesServicesImpl.SendNotificationAction() - ends");
+    logger.exit("SendNotificationAction() - ends");
     return new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
   }
 
@@ -260,7 +260,7 @@ public class StudiesServicesImpl implements StudiesServices {
       NotificationBean notification, AppEntity appPropertiesDetails) throws IOException {
 
     String authKey = "";
-    logger.info("StudiesServicesImpl - pushFCMNotification() : starts");
+    logger.entry("Begin pushFCMNotification()");
 
     if (notification.getDeviceToken() != null
         && notification.getDeviceToken().length() > 0
@@ -315,7 +315,7 @@ public class StudiesServicesImpl implements StudiesServices {
   public void pushNotification(NotificationBean notificationBean, AppEntity appPropertiesDetails)
       throws IOException {
 
-    logger.info("StudiesServicesImpl - pushNotification() : starts");
+    logger.entry("Begin pushNotification()");
     String certificatePassword = "";
 
     File file = null;

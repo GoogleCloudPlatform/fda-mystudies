@@ -10,24 +10,25 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserAppDetailsDaoImpl implements UserAppDetailsDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserAppDetailsDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(UserAppDetailsDaoImpl.class.getName());
   @Autowired private UserAppDetailsRepository userAppDetailsRepository;
 
   @Override
   public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) {
-    logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - starts");
+    logger.entry("Begin loadEmailCodeByUserId()");
     if (userAppDetails != null) {
 
       UserAppDetailsEntity dbResponse = userAppDetailsRepository.save(userAppDetails);
-      logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - ends");
+      logger.exit("loadEmailCodeByUserId() - ends");
       return dbResponse;
     }
     return null;

@@ -27,18 +27,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.glassfish.jersey.internal.util.Base64;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class AuthenticationService {
 
-  public static final Logger LOGGER = Logger.getLogger(AuthenticationService.class);
+  private static final XLogger LOGGER =
+      XLoggerFactory.getXLogger(AuthenticationService.class.getName());
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> authPropMap = StudyMetaDataUtil.getAuthorizationProperties();
 
   public boolean authenticate(String authCredentials) {
-    LOGGER.info("INFO: AuthenticationService - authenticate() - Starts");
+    LOGGER.entry("begin authenticate()");
     boolean authenticationStatus = false;
     String bundleIdAndAppToken = null;
     String bundleIdKey = "";
@@ -74,7 +76,7 @@ public class AuthenticationService {
       LOGGER.error("AuthenticationService - authenticate() :: ERROR", e);
       return authenticationStatus;
     }
-    LOGGER.info("INFO: AuthenticationService - authenticate() - Ends");
+    LOGGER.exit("authenticate() - Ends");
     return authenticationStatus;
   }
 

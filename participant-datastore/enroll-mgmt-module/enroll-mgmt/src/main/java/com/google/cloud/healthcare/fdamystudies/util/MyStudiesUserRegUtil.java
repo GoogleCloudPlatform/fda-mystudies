@@ -17,13 +17,14 @@ import java.util.Map;
 import java.util.TimeZone;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.SystemException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.util.StringUtils;
 
 public class MyStudiesUserRegUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(MyStudiesUserRegUtil.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(MyStudiesUserRegUtil.class.getName());
 
   static String email = "";
 
@@ -225,7 +226,7 @@ public class MyStudiesUserRegUtil {
       }
 
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getFailureResponse() :: ERROR ", e);
+      logger.error("MyStudiesUserRegUtil - getFailureResponse() :: ERROR ", e);
     }
   }
 
@@ -241,7 +242,7 @@ public class MyStudiesUserRegUtil {
           new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
               .parse(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newDate));
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
+      logger.error("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
     }
     return futureDate;
   }
@@ -263,14 +264,14 @@ public class MyStudiesUserRegUtil {
           sb.append(hex);
         }
       } catch (Exception e) {
-        logger.info("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
+        logger.error("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
       }
     }
     return sb.toString();
   }
 
   public static String generateEmailContent(String emailContent, Map<String, String> keyValue) {
-    logger.info("MyStudiesUserRegUtil - genarateEmailContent() start");
+    logger.entry("Begin genarateEmailContent()");
     try {
       if (!StringUtils.isEmpty(emailContent)) {
         for (Map.Entry<String, String> entry : keyValue.entrySet()) {
@@ -282,17 +283,17 @@ public class MyStudiesUserRegUtil {
     } catch (Exception e) {
       logger.error("MyStudiesUserRegUtil - genarateEmailContent() - error() ", e);
     }
-    logger.info("MyStudiesUserRegUtil - genarateEmailContent() end");
+    logger.exit("genarateEmailContent() ends");
     return emailContent;
   }
 
   public static boolean isValidEmailId(String emailId) throws SystemException {
-    logger.info("MyStudiesUserRegUtil isValidEmailId() starts");
+    logger.entry("Begin isValidEmailId()");
     try {
       if (emailId != null) {
         return emailId.matches("([A-Za-z0-9-_.]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
       } else {
-        logger.info("invalid emailId formate");
+        logger.exit("invalid emailId formate");
         return false;
       }
     } catch (Exception e) {
@@ -321,9 +322,9 @@ public class MyStudiesUserRegUtil {
       }
       generatedHash = sb.toString();
     } catch (NoSuchAlgorithmException e) {
-      logger.info("MyStudiesUserRegUtil getHashedValue() - error() ", e);
+      logger.error("MyStudiesUserRegUtil getHashedValue() - error() ", e);
     }
-    logger.info("MyStudiesUserRegUtil - getHashedValue() - ends");
+    logger.exit("getHashedValue() - ends");
     return generatedHash;
   }
 
@@ -335,7 +336,7 @@ public class MyStudiesUserRegUtil {
       sdf.setTimeZone(TimeZone.getTimeZone("CET"));
       returnDate = sdf.format(date);
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return returnDate;
   }

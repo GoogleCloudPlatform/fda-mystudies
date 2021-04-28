@@ -11,8 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantInformationDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ParticipantInformationServiceimpl implements ParticipantInformationService {
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(ParticipantInformationServiceimpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(ParticipantInformationServiceimpl.class.getName());
 
   @Autowired ParticipantInformationDao participantInfoDao;
   @Autowired CommonDao commonDao;
@@ -29,14 +29,14 @@ public class ParticipantInformationServiceimpl implements ParticipantInformation
   @Override
   @Transactional(readOnly = true)
   public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
-    logger.info("ParticipantInformationServiceimpl getParticipantDetails() - starts ");
+    logger.entry("Begin getParticipantDetails()");
     ParticipantInfoRespBean participantInforespBean = null;
     String studyInfoId = String.valueOf(0);
     studyInfoId = commonDao.getStudyId(studyId);
     participantInforespBean =
         participantInfoDao.getParticipantInfoDetails(particpinatId, studyInfoId);
 
-    logger.info("ParticipantInformationServiceimpl getParticipantDetails() - ends ");
+    logger.exit("getParticipantDetails() - ends ");
     return participantInforespBean;
   }
 }

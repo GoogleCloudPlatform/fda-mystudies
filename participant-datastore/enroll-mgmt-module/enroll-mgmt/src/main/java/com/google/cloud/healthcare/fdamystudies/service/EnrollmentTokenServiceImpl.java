@@ -15,8 +15,8 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import javax.validation.constraints.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,44 +30,45 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Autowired CommonService commonService;
 
-  private static final Logger logger = LoggerFactory.getLogger(EnrollmentTokenServiceImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(EnrollmentTokenServiceImpl.class.getName());
 
   @Override
   @Transactional(readOnly = true)
   public boolean enrollmentTokenRequired(String studyId) {
-    logger.info("EnrollmentTokenServiceImpl enrollmentTokenRequired() - Starts ");
+    logger.entry("Begin enrollmentTokenRequired()");
     boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(studyId);
-    logger.info("EnrollmentTokenServiceImpl enrollmentTokenRequired() - Ends ");
+    logger.exit("enrollmentTokenRequired() - Ends ");
     return isTokenRequired;
   }
 
   @Override
   @Transactional(readOnly = true)
   public boolean hasParticipant(String studyId, @NotNull String tokenValue) {
-    logger.info("EnrollmentTokenServiceImpl hasParticipant() - Starts ");
+    logger.entry("Begin hasParticipant()");
     boolean hasParticipant = enrollmentTokenDao.hasParticipant(studyId, tokenValue);
-    logger.info("EnrollmentTokenServiceImpl hasParticipant() - Ends ");
+    logger.exit("hasParticipant() - Ends ");
     return hasParticipant;
   }
 
   @Override
   @Transactional(readOnly = true)
   public boolean isValidStudyToken(@NotNull String token, String studyId, String userId) {
-    logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Starts ");
+    logger.entry("Begin isValidStudyToken()");
     // fetching registered emailid
     UserDetailsEntity userDetails = commonService.getUserInfoDetails(userId);
     boolean isValidStudyToken =
         enrollmentTokenDao.isValidStudyToken(token, studyId, userDetails.getEmail());
-    logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Ends ");
+    logger.exit("isValidStudyToken() - Ends ");
     return isValidStudyToken;
   }
 
   @Override
   @Transactional(readOnly = true)
   public StudyEntity getStudyDetails(String studyId) {
-    logger.info("EnrollmentTokenServiceImpl studyExists() - Starts ");
+    logger.entry("Begin getStudyDetails()");
     StudyEntity studyDetails = enrollmentTokenDao.getStudyDetails(studyId);
-    logger.info("EnrollmentTokenServiceImpl studyExists() - Ends ");
+    logger.exit("getStudyDetails() - Ends ");
     return studyDetails;
   }
 
@@ -79,7 +80,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
       String userId,
       Float studyVersion,
       AuditLogEventRequest auditRequest) {
-    logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
+    logger.entry("Begin enrollParticipant()");
     boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
     String hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue.toUpperCase());
     String participantId =
@@ -95,7 +96,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
       participantBean.setHashedToken(hashedTokenValue);
       participantBean.setParticipantId(participantId);
     }
-    logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Ends ");
+    logger.exit("enrollParticipant() - Ends ");
     return participantBean;
   }
 }

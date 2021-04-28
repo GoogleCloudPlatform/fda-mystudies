@@ -19,8 +19,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Repository;
 public class FileResponsesDaoImpl implements ResponsesDao {
   @Autowired private ApplicationConfiguration appConfig;
 
-  private static final Logger logger = LoggerFactory.getLogger(FileResponsesDaoImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(FileResponsesDaoImpl.class.getName());
 
   @Override
   public void saveStudyMetadata(

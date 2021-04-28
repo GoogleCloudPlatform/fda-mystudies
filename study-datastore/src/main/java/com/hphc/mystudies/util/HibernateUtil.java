@@ -22,13 +22,14 @@
  */
 package com.hphc.mystudies.util;
 
-import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class HibernateUtil {
 
-  private static Logger logger = Logger.getLogger(HibernateUtil.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(HibernateUtil.class.getName());
 
   private static SessionFactory sessionFactory = null;
 
@@ -37,7 +38,7 @@ public class HibernateUtil {
   }
 
   public static SessionFactory getSessionFactory() {
-    logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
+    logger.entry("begin getSessionFactory() :: Starts");
     try {
       if (sessionFactory == null) {
         sessionFactory =
@@ -50,7 +51,7 @@ public class HibernateUtil {
     } catch (Exception e) {
       logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);
     }
-    logger.info("INFO: HibernateUtil - getSessionFactory() :: Ends");
+    logger.exit("getSessionFactory() :: Ends");
     return sessionFactory;
   }
 

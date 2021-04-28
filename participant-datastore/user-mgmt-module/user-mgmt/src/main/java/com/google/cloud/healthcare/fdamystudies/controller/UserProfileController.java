@@ -44,8 +44,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -68,7 +68,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class UserProfileController {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserProfileController.class);
+  private XLogger logger = XLoggerFactory.getXLogger(UserProfileController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @Autowired UserManagementProfileService userManagementProfService;
 
@@ -87,7 +91,7 @@ public class UserProfileController {
       @RequestHeader("userId") String userId,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("UserProfileController getUserProfile() - starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(userId);
 
@@ -110,7 +114,7 @@ public class UserProfileController {
           response);
     }
 
-    logger.info("UserProfileController getUserProfile() - Ends ");
+    logger.exit(String.format(STATUS_LOG, HttpStatus.OK.value()));
     return new ResponseEntity<>(userProfileRespBean, HttpStatus.OK);
   }
 
@@ -124,7 +128,7 @@ public class UserProfileController {
       @RequestBody UserRequestBean user,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("UserProfileController updateUserProfile() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(userId);
 
@@ -139,7 +143,7 @@ public class UserProfileController {
 
       return new ResponseEntity<>(errorBean, HttpStatus.CONFLICT);
     }
-    logger.info("UserProfileController updateUserProfile() - Ends ");
+    logger.exit(String.format(STATUS_LOG, errorBean.getCode()));
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
@@ -153,7 +157,7 @@ public class UserProfileController {
       @RequestBody DeactivateAcctBean deactivateAcctBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("UserProfileController deactivateAccount() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
@@ -172,7 +176,7 @@ public class UserProfileController {
       return null;
     }
 
-    logger.info("UserProfileController deactivateAccount() - Ends ");
+    logger.exit(String.format(STATUS_LOG, HttpStatus.OK.value()));
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 
@@ -188,7 +192,7 @@ public class UserProfileController {
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
-    logger.info("UserProfileController resendConfirmation() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setAppId(appId);
 
@@ -260,7 +264,7 @@ public class UserProfileController {
       return null;
     }
 
-    logger.info("UserProfileController resendConfirmation() - Ends ");
+    logger.exit(String.format(STATUS_LOG, HttpStatus.OK.value()));
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
 }

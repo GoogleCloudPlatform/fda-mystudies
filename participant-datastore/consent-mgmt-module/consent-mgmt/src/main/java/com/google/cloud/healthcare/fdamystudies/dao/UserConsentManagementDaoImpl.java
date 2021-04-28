@@ -28,8 +28,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -37,7 +37,7 @@ import org.springframework.util.StringUtils;
 @Repository
 public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserConsentManagementDaoImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(UserConsentManagementDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
@@ -45,7 +45,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
 
   @Override
   public ParticipantStudyEntity getParticipantStudies(String studyId, String userId) {
-    logger.info("UserConsentManagementDaoImpl getParticipantStudies() - Started ");
+    logger.entry("Begin getParticipantStudies() ");
 
     Session session = this.sessionFactory.getCurrentSession();
 
@@ -99,14 +99,13 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
         participantStudiesEntity = participantStudiesBoList.get(0);
       }
     }
-
-    logger.info("UserConsentManagementDaoImpl getParticipantStudies() - Ends ");
+    logger.exit("getParticipantStudies() - Ends ");
     return participantStudiesEntity;
   }
 
   @Override
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
-    logger.info("UserConsentManagementDaoImpl saveParticipantStudies() - Started ");
+    logger.entry("Begin saveParticipantStudies()");
 
     Session session = this.sessionFactory.getCurrentSession();
 
@@ -138,13 +137,13 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     if ((isUpdated > 0) || (isSaved > 0)) {
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
     }
-    logger.info("UserConsentManagementDaoImpl saveParticipantStudies() - Ends ");
+    logger.exit("saveParticipantStudies() - Ends ");
     return message;
   }
 
   @Override
   public StudyConsentEntity getStudyConsent(String userId, String studyId, String consentVersion) {
-    logger.info("UserConsentManagementDaoImpl getStudyConsent() - Started ");
+    logger.entry("Begin getStudyConsent()");
     StudyConsentEntity studyConsent = null;
 
     Session session = this.sessionFactory.getCurrentSession();
@@ -201,13 +200,13 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       studyConsent = studyConsentBoList.get(0);
     }
 
-    logger.info("UserConsentManagementDaoImpl getStudyConsent() - Ends ");
+    logger.exit("getStudyConsent() - Ends ");
     return studyConsent;
   }
 
   @Override
   public String saveStudyConsent(StudyConsentEntity studyConsent) {
-    logger.info("UserConsentManagementDaoImpl saveStudyConsent() - Started ");
+    logger.entry("Begin saveStudyConsent()");
 
     Session session = this.sessionFactory.getCurrentSession();
 
@@ -221,14 +220,13 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     if (!StringUtils.isEmpty(isSaved)) {
       addConsentMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
     }
-
-    logger.info("UserConsentManagementDaoImpl saveStudyConsent() - Ends ");
+    logger.exit("saveStudyConsent() - Ends ");
     return addConsentMessage;
   }
 
   @Override
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId) {
-    logger.info("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - Started ");
+    logger.entry("Begin validatedUserAppDetailsByAllApi()");
 
     Session session = this.sessionFactory.getCurrentSession();
 
@@ -257,13 +255,13 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
 
     appOrgInfoBean.setAppInfoId(appInfoId);
 
-    logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");
+    logger.exit("getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
   }
 
   @Override
   public StudyEntity getStudyInfo(String customStudyId) {
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Starts ");
+    logger.entry("Begin getStudyInfo()");
 
     Session session = this.sessionFactory.getCurrentSession();
 
@@ -285,13 +283,13 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
         studyEntity = studyInfoList.get(0);
       }
     }
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
+    logger.exit("getStudyInfo() - Ends ");
     return studyEntity;
   }
 
   @Override
   public String getUserDetailsId(String userId) {
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Starts ");
+    logger.entry("Begin getUserDetailsId()");
 
     Session session = this.sessionFactory.getCurrentSession();
 
@@ -314,8 +312,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       userDetailsEntity = userDetailsBoList.get(0);
       userDetailsId = userDetailsEntity.getId();
     }
-
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
+    logger.exit("getUserDetailsId() - Ends ");
     return userDetailsId;
   }
 }

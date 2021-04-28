@@ -11,11 +11,12 @@ package com.google.cloud.healthcare.fdamystudies.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class ResponseServerUtil {
-  private static final Logger logger = LoggerFactory.getLogger(ResponseServerUtil.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(ResponseServerUtil.class.getName());
 
   public enum ErrorCodes {
     INVALID_INPUT("INVALID_INPUT"),
@@ -77,7 +78,7 @@ public class ResponseServerUtil {
   }
 
   public static String getHashedValue(String secretToHash) {
-    logger.info("ResponseServerUtil - getHashedValue() - starts");
+    logger.entry("begin getHashedValue()");
     String generatedHash = null;
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -90,7 +91,7 @@ public class ResponseServerUtil {
     } catch (NoSuchAlgorithmException e) {
       logger.info("ResponseServerUtil getHashedValue() - error() ", e);
     }
-    logger.info("ResponseServerUtil - getHashedValue() - ends");
+    logger.exit("getHashedValue() - ends");
     return generatedHash;
   }
 }

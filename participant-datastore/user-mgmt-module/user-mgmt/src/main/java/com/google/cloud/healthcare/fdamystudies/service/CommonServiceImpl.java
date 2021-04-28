@@ -10,8 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +21,13 @@ public class CommonServiceImpl implements CommonService {
 
   @Autowired private CommonDao commonDao;
 
-  private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(CommonServiceImpl.class.getName());
 
   @Override
   @Transactional(readOnly = true)
   public String validatedUserAppDetailsByAllApi(String userId, String email, String appId) {
 
-    logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - starts");
+    logger.entry("Begin validatedUserAppDetailsByAllApi()");
     String message = "";
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
 
@@ -35,7 +35,7 @@ public class CommonServiceImpl implements CommonService {
     message =
         commonDao.validatedUserAppDetailsByAllApi(userId, email, appOrgInfoBean.getAppInfoId());
 
-    logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - ends");
+    logger.exit("validatedUserAppDetailsByAllApi() - ends");
     return message;
   }
 
@@ -44,11 +44,11 @@ public class CommonServiceImpl implements CommonService {
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String emailId, String appId) {
 
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - starts");
+    logger.entry("Begin getUserAppDetailsByAllApi()");
 
     appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId);
 
-    logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - ends");
+    logger.exit("getUserAppDetailsByAllApi() - ends");
     return appOrgInfoBean;
   }
 }

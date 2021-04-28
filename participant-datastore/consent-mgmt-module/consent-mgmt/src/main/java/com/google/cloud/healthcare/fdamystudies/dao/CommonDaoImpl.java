@@ -20,8 +20,8 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -29,13 +29,13 @@ import org.springframework.util.StringUtils;
 @Repository
 public class CommonDaoImpl implements CommonDao {
 
-  private static Logger logger = LoggerFactory.getLogger(CommonDaoImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(CommonDaoImpl.class.getName());
 
   @Autowired private EntityManagerFactory entityManagerFactory;
 
   @Override
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId) {
-    logger.info("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - Started ");
+    logger.entry("Begin validatedUserAppDetailsByAllApi()");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppEntity> appDetailsBoCriteria = null;
@@ -68,13 +68,13 @@ public class CommonDaoImpl implements CommonDao {
       appOrgInfoBean.setAppInfoId(appInfoId);
       logger.error("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - error ", e);
     }
-    logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");
+    logger.exit("getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
   }
 
   @Override
   public String getUserDetailsId(String userId) {
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Starts ");
+    logger.entry("Begin getUserDetailsId()");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> userDetailsBoCriteria = null;
@@ -101,10 +101,10 @@ public class CommonDaoImpl implements CommonDao {
       }
     } catch (Exception e) {
       userDetailsId = String.valueOf(0);
-      logger.error("UserProfileManagementDaoImpl validatedUserAppDetailsByAllApi() - error ", e);
+      logger.error("UserProfileManagementDaoImpl getUserDetailsId() - error ", e);
     }
 
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
+    logger.exit("getUserDetailsId() - Ends ");
     return userDetailsId;
   }
 }

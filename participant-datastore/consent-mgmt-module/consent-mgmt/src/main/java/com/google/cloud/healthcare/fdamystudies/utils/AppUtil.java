@@ -13,15 +13,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
 public class AppUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(AppUtil.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(AppUtil.class.getName());
 
   private static Map<String, String> appProperties;
 
@@ -34,7 +34,7 @@ public class AppUtil {
   }
 
   public static ResponseEntity<Object> httpResponseForInternalServerError() {
-    logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: starts");
+    logger.entry("AppUtil - httpResponseForInternalServerError() :: starts");
     ErrorBean errorBean = null;
 
     try {
@@ -45,7 +45,7 @@ public class AppUtil {
     } catch (Exception e) {
       logger.error("ERROR: AppUtil - httpResponseForInternalServerError()", e);
     }
-    logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: ends");
+    logger.exit("AppUtil - httpResponseForInternalServerError() :: ends");
     return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 

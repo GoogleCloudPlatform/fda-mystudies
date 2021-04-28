@@ -10,14 +10,14 @@ package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class AppUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(AppUtil.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(AppUtil.class.getName());
 
   private static Map<String, String> appProperties;
 
@@ -30,7 +30,7 @@ public class AppUtil {
   }
 
   public static ResponseEntity<Object> httpResponseForInternalServerError() {
-    logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: starts");
+    logger.entry("Begin httpResponseForInternalServerError()");
     ErrorBean errorBean = null;
     try {
       errorBean =
@@ -40,7 +40,7 @@ public class AppUtil {
     } catch (Exception e) {
       logger.error("ERROR: AppUtil - httpResponseForInternalServerError()", e);
     }
-    logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: ends");
+    logger.exit("httpResponseForInternalServerError() ends");
     return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 

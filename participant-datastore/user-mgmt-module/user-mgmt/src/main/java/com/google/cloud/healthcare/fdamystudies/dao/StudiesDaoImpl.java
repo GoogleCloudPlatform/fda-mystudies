@@ -30,21 +30,21 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class StudiesDaoImpl implements StudiesDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(StudiesDaoImpl.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(StudiesDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
   @Override
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
-    logger.info("StudiesDaoImpl - saveStudyMetadata() : Starts");
+    logger.entry("Begin saveStudyMetadata()");
     CriteriaBuilder builder = null;
     CriteriaQuery<StudyEntity> studyCriteria = null;
     Root<StudyEntity> studyRoot = null;
@@ -175,7 +175,7 @@ public class StudiesDaoImpl implements StudiesDao {
     }
 
     errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
-    logger.info("StudiesDaoImpl - saveStudyMetadata() : ends");
+    logger.exit("saveStudyMetadata() : ends");
     return errorBean;
   }
 }

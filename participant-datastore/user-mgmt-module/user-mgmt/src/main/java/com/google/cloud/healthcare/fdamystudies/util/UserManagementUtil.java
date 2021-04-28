@@ -25,8 +25,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -40,7 +40,8 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class UserManagementUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserManagementUtil.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(UserManagementUtil.class.getName());
 
   @Autowired private RestTemplate restTemplate;
 
@@ -54,7 +55,7 @@ public class UserManagementUtil {
       UpdateEmailStatusRequest updateEmailStatusRequest,
       String userId,
       AuditLogEventRequest auditRequest) {
-    logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
+    logger.entry("Begin updateUserInfoInAuthServer()");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -86,7 +87,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.info("UserManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("UserManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -112,7 +113,7 @@ public class UserManagementUtil {
       String studyId,
       String studyVersion,
       AuditLogEventRequest auditRequest) {
-    logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
+    logger.entry("Begin withDrawParticipantFromStudy()");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
 
@@ -143,12 +144,12 @@ public class UserManagementUtil {
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
     }
 
-    logger.info("UserManagementUtil withDrawParticipantFromStudy() - Ends ");
+    logger.exit("withDrawParticipantFromStudy() - Ends ");
     return message;
   }
 
   public static String genarateEmailContent(String emailContentName, Map<String, String> keyValue) {
-    logger.info("UserManagementUtil - genarateEmailContent() :: Starts");
+    logger.entry("Begin genarateEmailContent()");
     if (StringUtils.isNotEmpty(emailContentName)) {
       for (Map.Entry<String, String> entry : keyValue.entrySet()) {
         emailContentName =
@@ -156,7 +157,7 @@ public class UserManagementUtil {
                 entry.getKey(), StringUtils.isBlank(entry.getValue()) ? "" : entry.getValue());
       }
     }
-    logger.info("UserManagementUtil - genarateEmailContent() :: Ends");
+    logger.exit("genarateEmailContent() :: Ends");
     return emailContentName;
   }
 

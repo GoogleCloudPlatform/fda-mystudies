@@ -66,8 +66,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,8 +92,10 @@ public class ProcessActivityResponseController {
 
   @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(ProcessActivityResponseController.class);
+  private static final String BEGIN_REQUEST_LOG = "%s request";
+
+  private XLogger logger =
+      XLoggerFactory.getXLogger(ProcessActivityResponseController.class.getName());
 
   @ApiOperation(value = "Process activity response for participant and store in cloud fire store")
   @PostMapping("/participant/process-response")
@@ -101,6 +103,7 @@ public class ProcessActivityResponseController {
       @RequestBody ActivityResponseBean questionnaireActivityResponseBean,
       @RequestHeader String userId,
       HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(userId);
     String applicationId = null;
@@ -404,6 +407,7 @@ public class ProcessActivityResponseController {
       @RequestParam("questionKey") String questionKey,
       @RequestHeader String userId,
       HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
 
@@ -499,7 +503,7 @@ public class ProcessActivityResponseController {
       @RequestParam(name = "participantId") String participantId,
       HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    logger.debug("ParticipantIdController withdrawParticipantFromStudy() - starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
       logger.debug(
           "ParticipantIdController withdrawParticipantFromStudy() - studyId or participantId is blank ");

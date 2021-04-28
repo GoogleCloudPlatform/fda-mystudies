@@ -20,21 +20,22 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ParticipantInformationDaoImpl implements ParticipantInformationDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(ParticipantInformationDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(ParticipantInformationDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
   @Override
   public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
-    logger.info("ParticipantInformationDaoImpl getParticipantDetails() - starts ");
+    logger.entry("Begin getParticipantDetails()");
     CriteriaBuilder criteriaBuilder = null;
 
     CriteriaQuery<ParticipantStudyEntity> participantStudyCriteria = null;
@@ -74,7 +75,7 @@ public class ParticipantInformationDaoImpl implements ParticipantInformationDao 
       }
     }
 
-    logger.info("ParticipantInformationDaoImpl getParticipantDetails() - ends ");
+    logger.exit("getParticipantDetails() - ends ");
     return participantRespBean;
   }
 }

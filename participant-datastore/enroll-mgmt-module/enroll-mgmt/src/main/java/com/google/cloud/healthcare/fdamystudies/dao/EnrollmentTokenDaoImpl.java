@@ -35,15 +35,16 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(EnrollmentTokenDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(EnrollmentTokenDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
@@ -53,7 +54,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
   @Override
   public StudyEntity getStudyDetails(String studyId) {
-    logger.info("EnrollmentTokenDaoImpl studyExists() - Started ");
+    logger.entry("Begin getStudyDetails()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
     Root<StudyEntity> studyInfoRoot = null;
@@ -76,13 +77,13 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       isStudyExist = true;
     }*/
 
-    logger.info("EnrollmentTokenDaoImpl studyExists() - Ends ");
+    logger.exit("getStudyDetails() - Ends ");
     return studyEntity;
   }
 
   @Override
   public boolean isValidStudyToken(@NotNull String token, String studyId, @NotNull String email) {
-    logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
+    logger.entry("Begin isValidStudyToken()");
     ParticipantRegistrySiteEntity participantRegistrySite = null;
     Session session = this.sessionFactory.getCurrentSession();
 
@@ -111,14 +112,14 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       throw new ErrorCodeException(ErrorCode.TOKEN_EXPIRED);
     }
 
-    logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Ends ");
+    logger.exit("isValidStudyToken() - Ends ");
     return true;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public boolean hasParticipant(String studyId, @NotNull String tokenValue) {
-    logger.info("EnrollmentTokenDaoImpl hasParticipant() - Started ");
+    logger.entry("Begin hasParticipant()");
     List<Object[]> participantList = null;
     Session session = this.sessionFactory.getCurrentSession();
 
@@ -134,13 +135,13 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
             .setParameter("tokenUsed", true)
             .getResultList();
 
-    logger.info("EnrollmentTokenDaoImpl hasParticipant() - Ends ");
+    logger.exit("hasParticipant() - Ends ");
     return participantList != null && !participantList.isEmpty();
   }
 
   @Override
   public boolean enrollmentTokenRequired(String studyId) {
-    logger.info("EnrollmentTokenDaoImpl enrollmentTokenRequired() - Started ");
+    logger.entry("Begin enrollmentTokenRequired()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyEntityCriteria = null;
     Root<StudyEntity> studyEntityRoot = null;
@@ -163,7 +164,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       isTokenRequired = true;
     }
 
-    logger.info("EnrollmentTokenDaoImpl enrollmentTokenRequired() - Ends ");
+    logger.exit("enrollmentTokenRequired() - Ends ");
     return isTokenRequired;
   }
 
@@ -175,7 +176,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       UserDetailsEntity userDetail,
       boolean isTokenRequired,
       String participantid) {
-    logger.info("EnrollmentTokenDaoImpl enrollParticipant() - Started ");
+    logger.entry("Begin enrollParticipant()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyEntityCriteria = null;
     Root<StudyEntity> studyEntityRoot = null;
@@ -358,7 +359,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
         ParticipantStatusHistoryMapper.toParticipantStatusHistoryEntity(
             participantregistrySite, EnrollmentStatus.ENROLLED, userDetail);
     participantEnrollmentHistoryRepository.save(participantStatusHistoryEntity);
-    logger.info("EnrollmentTokenDaoImpl enrollParticipant() - Ends ");
+    logger.exit("enrollParticipant() - Ends ");
     return participantBeans;
   }
 }

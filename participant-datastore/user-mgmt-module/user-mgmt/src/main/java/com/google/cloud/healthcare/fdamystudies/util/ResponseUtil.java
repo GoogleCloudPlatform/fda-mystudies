@@ -11,15 +11,15 @@ package com.google.cloud.healthcare.fdamystudies.util;
 import com.google.cloud.healthcare.fdamystudies.bean.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil.ErrorCodes;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.http.HttpStatus;
 
 public final class ResponseUtil {
 
   private ResponseUtil() {}
 
-  private static final Logger LOG = LoggerFactory.getLogger(ResponseUtil.class);
+  private static final XLogger LOG = XLoggerFactory.getXLogger(ResponseUtil.class.getName());
 
   public static ResponseBean prepareBadRequestResponse(
       HttpServletResponse response, String... errorTypes) {
@@ -50,7 +50,7 @@ public final class ResponseUtil {
         response);
     responseBean.setCode(HttpStatus.BAD_REQUEST.value());
     responseBean.setMessage(errorMsg.getValue());
-    LOG.info("Bad Request Response: " + responseBean);
+    LOG.exit("Bad Request Response: " + responseBean);
     return responseBean;
   }
 

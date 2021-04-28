@@ -15,8 +15,8 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +28,13 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Autowired private SessionFactory sessionFactory;
 
-  private static final Logger logger = LoggerFactory.getLogger(FdaEaUserDetailsDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(FdaEaUserDetailsDaoImpl.class.getName());
 
   @Override
   @Transactional
   public UserDetailsEntity loadUserDetailsByUserId(String userId) {
-    logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - starts");
+    logger.entry("Begin loadUserDetailsByUserId()");
 
     UserDetailsEntity userDetails = null;
     if (userId != null) {
@@ -42,7 +43,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
         userDetails = optUserDetails.get();
       }
     }
-    logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
+    logger.exit("loadUserDetailsByUserId() - ends");
     return userDetails;
   }
 
@@ -53,7 +54,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   public UserDetailsEntity loadEmailCodeByUserId(String userId) {
-    logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() - starts");
+    logger.entry("Begin loadEmailCodeByUserId()");
 
     UserDetailsEntity dbResponse = null;
     if (userId != null) {
@@ -61,10 +62,10 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
       if (optUserDetails.isPresent()) {
         dbResponse = optUserDetails.get();
       }
-      logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
+      logger.exit("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
       return dbResponse;
     } else {
-      logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
+      logger.exit("loadEmailCodeByUserId() -ends");
       return dbResponse;
     }
   }
@@ -73,7 +74,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
   @Transactional
   public boolean updateStatus(UserDetailsEntity participantDetails) {
 
-    logger.info("FdaEaUserDetailsDaoImpl updateStatus() - starts");
+    logger.entry("Begin updateStatus()");
     Session session = this.sessionFactory.getCurrentSession();
 
     if (participantDetails == null) {
@@ -87,7 +88,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
   public boolean saveAllRecords(
       UserDetailsEntity userDetails, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails) {
 
-    logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - starts");
+    logger.entry("Begin saveAllRecords()");
     if (userDetails != null && authInfo != null && userAppDetails != null) {
       Session session = this.sessionFactory.getCurrentSession();
 
@@ -104,7 +105,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
       return true;
 
     } else {
-      logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - ends");
+      logger.exit("saveAllRecords() - ends");
       return false;
     }
   }

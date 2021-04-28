@@ -36,7 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -49,7 +50,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider {
 
-  private static Logger logger = Logger.getLogger(LimitLoginAuthenticationProvider.class.getName());
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(LimitLoginAuthenticationProvider.class.getName());
 
   private LoginDAOImpl loginDAO;
 

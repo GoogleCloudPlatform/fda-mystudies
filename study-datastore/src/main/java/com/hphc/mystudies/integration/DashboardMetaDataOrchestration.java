@@ -27,11 +27,13 @@ import com.hphc.mystudies.dao.DashboardMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import java.util.HashMap;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class DashboardMetaDataOrchestration {
 
-  private static final Logger LOGGER = Logger.getLogger(DashboardMetaDataOrchestration.class);
+  private static final XLogger LOGGER =
+      XLoggerFactory.getXLogger(DashboardMetaDataOrchestration.class.getName());
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -39,14 +41,14 @@ public class DashboardMetaDataOrchestration {
   DashboardMetaDataDao dashboardMetaDataDao = new DashboardMetaDataDao();
 
   public StudyDashboardResponse studyDashboardInfo(String studyId) throws OrchestrationException {
-    LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Starts");
+    LOGGER.entry("begin studyDashboardInfo()");
     StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
     try {
       studyDashboardResponse = dashboardMetaDataDao.studyDashboardInfo(studyId);
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataOrchestration - studyDashboardInfo() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataOrchestration - studyDashboardInfo() :: Ends");
+    LOGGER.exit("studyDashboardInfo() :: Ends");
     return studyDashboardResponse;
   }
 }

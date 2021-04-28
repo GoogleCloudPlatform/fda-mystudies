@@ -10,24 +10,25 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserRegAdminUserDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(UserRegAdminUserDaoImpl.class.getName());
 
   @Autowired private UserRegAdminRepository adminUserRepository;
 
   @Override
   public UserRegAdminEntity save(UserRegAdminEntity adminUser) {
-    logger.info("UserRegAdminUserDaoImpl save() - starts");
+    logger.entry("Begin save()");
     if (adminUser != null) {
       UserRegAdminEntity userRegAdminUser = adminUserRepository.save(adminUser);
-      logger.info("UserRegAdminUserDaoImpl save() - ends");
+      logger.exit("save() - ends");
       return userRegAdminUser;
     }
     return null;
