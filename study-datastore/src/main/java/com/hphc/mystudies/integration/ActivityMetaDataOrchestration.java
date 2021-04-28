@@ -29,13 +29,11 @@ import com.hphc.mystudies.dao.ActivityMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import java.util.HashMap;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 
 public class ActivityMetaDataOrchestration {
 
-  private static final XLogger LOGGER =
-      XLoggerFactory.getXLogger(ActivityMetaDataOrchestration.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(ActivityMetaDataOrchestration.class);
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -44,20 +42,21 @@ public class ActivityMetaDataOrchestration {
 
   public ActivityResponse studyActivityList(String studyId, String authorization)
       throws OrchestrationException {
-    LOGGER.entry("begin studyActivityList()");
+    LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActivityList() :: Starts");
     ActivityResponse activityResponse = new ActivityResponse();
     try {
       activityResponse = activityMetaDataDao.studyActivityList(studyId, authorization);
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataOrchestration - studyActivityList() :: ERROR", e);
     }
-    LOGGER.exit("studyActivityList() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActivityList() :: Ends");
     return activityResponse;
   }
 
   public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(
       String studyId, String activityId, String activityVersion) throws OrchestrationException {
-    LOGGER.entry("begin studyActiveTaskActivityMetadata()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: Starts");
     ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse =
         new ActiveTaskActivityMetaDataResponse();
     try {
@@ -66,13 +65,14 @@ public class ActivityMetaDataOrchestration {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: ERROR", e);
     }
-    LOGGER.exit("studyActiveTaskActivityMetadata() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataOrchestration - studyActiveTaskActivityMetadata() :: Ends");
     return activeTaskActivityMetaDataResponse;
   }
 
   public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(
       String studyId, String activityId, String activityVersion) throws OrchestrationException {
-    LOGGER.entry("begin studyQuestionnaireActivityMetadata()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: Starts");
     QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse =
         new QuestionnaireActivityMetaDataResponse();
     try {
@@ -83,7 +83,8 @@ public class ActivityMetaDataOrchestration {
       LOGGER.error(
           "ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: ERROR", e);
     }
-    LOGGER.exit("studyQuestionnaireActivityMetadata() :: Ends");
+    LOGGER.info(
+        "INFO: ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: Ends");
     return questionnaireActivityMetaDataResponse;
   }
 }

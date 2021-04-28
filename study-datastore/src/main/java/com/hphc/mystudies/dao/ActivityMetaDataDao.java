@@ -83,17 +83,15 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 
 public class ActivityMetaDataDao {
 
-  private static final XLogger LOGGER =
-      XLoggerFactory.getXLogger(ActivityMetaDataDao.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(ActivityMetaDataDao.class);
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -107,7 +105,7 @@ public class ActivityMetaDataDao {
   @SuppressWarnings("unchecked")
   public ActivityResponse studyActivityList(String studyId, String authorization)
       throws DAOException {
-    LOGGER.entry("begin studyActivityList()");
+    LOGGER.info("INFO: ActivityMetaDataDao - studyActivityList() :: Starts");
     Session session = null;
     ActivityResponse activityResponse = new ActivityResponse();
     List<ActiveTaskDto> activeTaskDtoList = null;
@@ -324,13 +322,13 @@ public class ActivityMetaDataDao {
         session.close();
       }
     }
-    LOGGER.exit("studyActivityList() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - studyActivityList() :: Ends");
     return activityResponse;
   }
 
   public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(
       String studyId, String activityId, String activityVersion) throws DAOException {
-    LOGGER.entry("begin studyActiveTaskActivityMetadata()");
+    LOGGER.info("INFO: ActivityMetaDataDao - studyActiveTaskActivityMetadata() :: Starts");
     Session session = null;
     ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse =
         new ActiveTaskActivityMetaDataResponse();
@@ -360,13 +358,13 @@ public class ActivityMetaDataDao {
         session.close();
       }
     }
-    LOGGER.exit("studyActiveTaskActivityMetadata() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - studyActiveTaskActivityMetadata() :: Ends");
     return activeTaskActivityMetaDataResponse;
   }
 
   public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(
       String studyId, String activityId, String activityVersion) throws DAOException {
-    LOGGER.entry("begin studyQuestionnaireActivityMetadata()");
+    LOGGER.info("INFO: ActivityMetaDataDao - studyQuestionnaireActivityMetadata() :: Starts");
     Session session = null;
     QuestionnaireActivityMetaDataResponse activityMetaDataResponse =
         new QuestionnaireActivityMetaDataResponse();
@@ -396,7 +394,7 @@ public class ActivityMetaDataDao {
         session.close();
       }
     }
-    LOGGER.exit("studyQuestionnaireActivityMetadata() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - studyQuestionnaireActivityMetadata() :: Ends");
     return activityMetaDataResponse;
   }
 
@@ -404,7 +402,7 @@ public class ActivityMetaDataDao {
   public ActiveTaskActivityStructureBean activeTaskMetadata(
       String studyId, String activityId, Session session, String activityVersion)
       throws DAOException {
-    LOGGER.entry("begin activeTaskMetadata()");
+    LOGGER.info("INFO: ActivityMetaDataDao - activeTaskMetadata() :: Starts");
     ActiveTaskActivityStructureBean activeTaskActivityStructureBean =
         new ActiveTaskActivityStructureBean();
     ActiveTaskDto activeTaskDto = null;
@@ -596,7 +594,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - activeTaskMetadata() :: ERROR", e);
     }
-    LOGGER.exit("activeTaskMetadata() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - activeTaskMetadata() :: Ends");
     return activeTaskActivityStructureBean;
   }
 
@@ -604,7 +602,7 @@ public class ActivityMetaDataDao {
   public QuestionnaireActivityStructureBean questionnaireMetadata(
       String studyId, String activityId, Session session, String activityVersion)
       throws DAOException {
-    LOGGER.entry("begin questionnaireMetadata()");
+    LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Starts");
     QuestionnaireActivityStructureBean activityStructureBean =
         new QuestionnaireActivityStructureBean();
     Map<String, Integer> sequenceNoMap = new HashMap<>();
@@ -837,14 +835,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - questionnaireMetadata() :: ERROR", e);
     }
-    LOGGER.exit("questionnaireMetadata() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Ends");
     return activityStructureBean;
   }
 
   public ActivityFrequencyBean getFrequencyRunsDetailsForActiveTasks(
       ActiveTaskDto activeTask, ActivityFrequencyBean frequencyDetails, Session session)
       throws DAOException {
-    LOGGER.entry("begin getFrequencyRunsDetailsForActiveTasks()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: Starts");
     List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<>();
     List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean = new ArrayList<>();
     try {
@@ -871,14 +869,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: ERROR", e);
     }
-    LOGGER.exit("getFrequencyRunsDetailsForActiveTasks() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: Ends");
     return frequencyDetails;
   }
 
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForOneTime(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.entry("begin getActiveTaskFrequencyDetailsForOneTime()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForOneTime() :: Starts");
     try {
       if (activeTask != null) {
         ActivityFrequencyScheduleBean oneTimeBean = new ActivityFrequencyScheduleBean();
@@ -897,7 +895,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getActiveTaskFrequencyDetailsForOneTime() :: ERROR", e);
     }
-    LOGGER.exit("getActiveTaskFrequencyDetailsForOneTime() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForOneTime() :: Ends");
     return runDetailsBean;
   }
 
@@ -905,7 +903,7 @@ public class ActivityMetaDataDao {
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForDaily(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session)
       throws DAOException {
-    LOGGER.entry("begin getActiveTaskFrequencyDetailsForDaily()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForDaily() :: Starts");
     try {
       if ((activeTask.getScheduleType() != null)
           && !activeTask.getScheduleType().isEmpty()
@@ -983,14 +981,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getActiveTaskFrequencyDetailsForDaily() :: ERROR", e);
     }
-    LOGGER.exit("getActiveTaskFrequencyDetailsForDaily() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForDaily() :: Ends");
     return runDetailsBean;
   }
 
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForWeekly(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.entry("begin getActiveTaskFrequencyDetailsForWeekly()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForWeekly() :: Starts");
     try {
       if (StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart())
           && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd())
@@ -1063,14 +1061,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getActiveTaskFrequencyDetailsForWeekly() :: ERROR", e);
     }
-    LOGGER.exit("getActiveTaskFrequencyDetailsForWeekly() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForWeekly() :: Ends");
     return runDetailsBean;
   }
 
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForMonthly(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.entry("begin getActiveTaskFrequencyDetailsForMonthly()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForMonthly() :: Starts");
     try {
       if (StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart())
           && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd())) {
@@ -1128,7 +1126,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getActiveTaskFrequencyDetailsForMonthly() :: ERROR", e);
     }
-    LOGGER.exit("getActiveTaskFrequencyDetailsForMonthly() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForMonthly() :: Ends");
     return runDetailsBean;
   }
 
@@ -1136,7 +1134,8 @@ public class ActivityMetaDataDao {
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForManuallySchedule(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session)
       throws DAOException {
-    LOGGER.entry("begin getActiveTaskFrequencyDetailsForManuallySchedule()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForManuallySchedule() :: Starts");
     try {
       List<ActiveTaskCustomFrequenciesDto> manuallyScheduleFrequencyList =
           session
@@ -1174,14 +1173,15 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getActiveTaskFrequencyDetailsForManuallySchedule() :: ERROR", e);
     }
-    LOGGER.exit("getActiveTaskFrequencyDetailsForManuallySchedule() :: Ends");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForManuallySchedule() :: Ends");
     return runDetailsBean;
   }
 
   public ActivityFrequencyBean getFrequencyRunsDetailsForQuestionaires(
       QuestionnairesDto questionaire, ActivityFrequencyBean frequencyDetails, Session session)
       throws DAOException {
-    LOGGER.entry("begin getFrequencyRunsDetailsForQuestionaires()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: Starts");
     List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<>();
     List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean = new ArrayList<>();
     try {
@@ -1208,14 +1208,15 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: ERROR", e);
     }
-    LOGGER.exit("getFrequencyRunsDetailsForQuestionaires() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: Ends");
     return frequencyDetails;
   }
 
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForOneTime(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForOneTime()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForOneTime() :: Starts");
     try {
       if (questionaire != null) {
         ActivityFrequencyScheduleBean oneTimeBean = new ActivityFrequencyScheduleBean();
@@ -1235,7 +1236,7 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForOneTime() :: ERROR", e);
     }
-    LOGGER.exit("getQuestionnaireFrequencyDetailsForOneTime() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForOneTime() :: Ends");
     return runDetailsBean;
   }
 
@@ -1245,7 +1246,7 @@ public class ActivityMetaDataDao {
       List<ActivityFrequencyScheduleBean> runDetailsBean,
       Session session)
       throws DAOException {
-    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForDaily()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForDaily() :: Starts");
     List<QuestionnairesFrequenciesDto> dailyFrequencyList = null;
     try {
       if ((questionaire.getScheduleType() != null)
@@ -1326,14 +1327,15 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForDaily() :: ERROR", e);
     }
-    LOGGER.exit("getQuestionnaireFrequencyDetailsForDaily() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForDaily() :: Ends");
     return runDetailsBean;
   }
 
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForWeekly(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForWeekly()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForWeekly() :: Starts");
     try {
       if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())
           && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())
@@ -1407,14 +1409,15 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForWeekly() :: ERROR", e);
     }
-    LOGGER.exit("getQuestionnaireFrequencyDetailsForWeekly() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForWeekly() :: Ends");
     return runDetailsBean;
   }
 
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForMonthly(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForMonthly()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForMonthly() :: Starts");
     try {
       if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())
           && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
@@ -1472,7 +1475,7 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForMonthly() :: ERROR", e);
     }
-    LOGGER.exit("getQuestionnaireFrequencyDetailsForMonthly() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForMonthly() :: Ends");
     return runDetailsBean;
   }
 
@@ -1482,7 +1485,8 @@ public class ActivityMetaDataDao {
       List<ActivityFrequencyScheduleBean> runDetailsBean,
       Session session)
       throws DAOException {
-    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForManuallySchedule()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForManuallySchedule() :: Starts");
     try {
 
       List<QuestionnairesCustomFrequenciesDto> manuallyScheduleFrequencyList =
@@ -1519,7 +1523,8 @@ public class ActivityMetaDataDao {
           "ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForManuallySchedule() :: ERROR",
           e);
     }
-    LOGGER.exit("getQuestionnaireFrequencyDetailsForManuallySchedule() :: Ends");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForManuallySchedule() :: Ends");
     return runDetailsBean;
   }
 
@@ -1536,7 +1541,7 @@ public class ActivityMetaDataDao {
       List<QuestionnairesStepsDto> questionaireStepsList,
       QuestionnairesDto questionnaireDto)
       throws DAOException {
-    LOGGER.entry("begin getStepsInfoForQuestionnaires()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: Starts");
     TreeMap<Integer, QuestionnaireActivityStepsBean> stepsOrderSequenceTreeMap = new TreeMap<>();
     try {
       switch (type) {
@@ -1579,7 +1584,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: ERROR", e);
     }
-    LOGGER.exit("getStepsInfoForQuestionnaires() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: Ends");
     return stepsOrderSequenceTreeMap;
   }
 
@@ -1589,7 +1594,7 @@ public class ActivityMetaDataDao {
       SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap,
       Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap)
       throws DAOException {
-    LOGGER.entry("begin getInstructionDetailsForQuestionnaire()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getInstructionDetailsForQuestionnaire() :: Starts");
     try {
       if ((instructionsDtoList != null) && !instructionsDtoList.isEmpty()) {
         for (InstructionsDto instructionsDto : instructionsDtoList) {
@@ -1651,7 +1656,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getInstructionDetailsForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.exit("getInstructionDetailsForQuestionnaire() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getInstructionDetailsForQuestionnaire() :: Ends");
     return stepsSequenceTreeMap;
   }
 
@@ -1666,7 +1671,7 @@ public class ActivityMetaDataDao {
       List<QuestionnairesStepsDto> questionaireStepsList,
       QuestionnairesDto questionnaireDto)
       throws DAOException {
-    LOGGER.entry("begin getQuestionDetailsForQuestionnaire()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: Starts");
     List<QuestionResponseSubTypeDto> destinationConditionList = null;
     Transaction transaction = null;
     try {
@@ -1924,7 +1929,7 @@ public class ActivityMetaDataDao {
       }
       LOGGER.error("ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.exit("getQuestionDetailsForQuestionnaire() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: Ends");
     return stepsSequenceTreeMap;
   }
 
@@ -1937,7 +1942,7 @@ public class ActivityMetaDataDao {
       Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap,
       List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList)
       throws DAOException {
-    LOGGER.entry("begin getFormDetailsForQuestionnaire()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: Starts");
     try {
       if ((formsList != null) && !formsList.isEmpty()) {
         List<Integer> formQuestionIdsList = new ArrayList<>();
@@ -2071,7 +2076,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.exit("getFormDetailsForQuestionnaire() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: Ends");
     return stepsSequenceTreeMap;
   }
 
@@ -2080,7 +2085,7 @@ public class ActivityMetaDataDao {
       ActiveTaskMasterAttributeDto masterAttributeValue,
       FetalKickCounterFormatBean fetalKickCounterFormat)
       throws DAOException {
-    LOGGER.entry("begin fetalKickCounterDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - fetalKickCounterDetails() :: Starts");
     try {
       if (masterAttributeValue.getOrderByTaskType().equals(1)) {
         if (StringUtils.isNotEmpty(attributeValues.getAttributeVal())) {
@@ -2107,7 +2112,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - fetalKickCounterDetails() :: ERROR", e);
     }
-    LOGGER.exit("fetalKickCounterDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - fetalKickCounterDetails() :: Ends");
     return fetalKickCounterFormat;
   }
 
@@ -2116,7 +2121,7 @@ public class ActivityMetaDataDao {
       ActiveTaskMasterAttributeDto masterAttributeValue,
       SpatialSpanMemoryFormatBean spatialSpanMemoryFormat)
       throws DAOException {
-    LOGGER.entry("begin spatialSpanMemoryDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - spatialSpanMemoryDetails() :: Starts");
     try {
       switch (masterAttributeValue.getAttributeName().trim()) {
         case StudyMetaDataConstants.SSM_INITIAL:
@@ -2168,12 +2173,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - spatialSpanMemoryDetails() :: ERROR", e);
     }
-    LOGGER.exit("spatialSpanMemoryDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - spatialSpanMemoryDetails() :: Ends");
     return spatialSpanMemoryFormat;
   }
 
   public String[] activeTaskOptions() {
-    LOGGER.entry("begin activeTaskOptions()");
+    LOGGER.info("INFO: ActivityMetaDataDao - activeTaskOptions() :: Starts");
     String[] activeTaskOptionsArray = new String[8];
     try {
       activeTaskOptionsArray[0] = "excludeInstructions";
@@ -2187,13 +2192,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - activeTaskOptions() :: ERROR", e);
     }
-    LOGGER.exit("activeTaskOptions() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - activeTaskOptions() :: Ends");
     return activeTaskOptionsArray;
   }
 
   public Map<String, Object> getQuestionaireQuestionFormatByType(
       QuestionsDto questionDto, String questionResultType, Session session) throws DAOException {
-    LOGGER.entry("begin getQuestionaireQuestionFormatByType()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     QuestionReponseTypeDto reponseType = null;
     try {
@@ -2284,13 +2289,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: ERROR", e);
     }
-    LOGGER.exit("getQuestionaireQuestionFormatByType() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionScaleDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
-    LOGGER.entry("begin formatQuestionScaleDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2360,13 +2365,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionScaleDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionContinuousScaleDetails(
       QuestionReponseTypeDto reponseType) throws DAOException {
-    LOGGER.entry("begin formatQuestionContinuousScaleDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2429,7 +2434,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionContinuousScaleDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Ends");
     return questionFormat;
   }
 
@@ -2437,7 +2442,7 @@ public class ActivityMetaDataDao {
   public Map<String, Object> formatQuestionTextScaleDetails(
       QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session)
       throws DAOException {
-    LOGGER.entry("begin formatQuestionTextScaleDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextScaleDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
     List<LinkedHashMap<String, Object>> textChoicesList = new ArrayList<>();
@@ -2480,14 +2485,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionTextScaleDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionTextScaleDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextScaleDetails() :: Ends");
     return questionFormat;
   }
 
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionValuePickerDetails(
       QuestionsDto questionDto, Session session) throws DAOException {
-    LOGGER.entry("begin formatQuestionValuePickerDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionValuePickerDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
     List<LinkedHashMap<String, Object>> valuePickerList = new ArrayList<>();
@@ -2521,14 +2526,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionValuePickerDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionValuePickerDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionValuePickerDetails() :: Ends");
     return questionFormat;
   }
 
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionImageChoiceDetails(
       QuestionsDto questionDto, Session session) throws DAOException {
-    LOGGER.entry("begin formatQuestionImageChoiceDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
     List<LinkedHashMap<String, Object>> imageChoicesList = new ArrayList<>();
@@ -2574,7 +2579,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionImageChoiceDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: Ends");
     return questionFormat;
   }
 
@@ -2582,7 +2587,7 @@ public class ActivityMetaDataDao {
   public Map<String, Object> formatQuestionTextChoiceDetails(
       QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session)
       throws DAOException {
-    LOGGER.entry("begin formatQuestionTextChoiceDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
     List<LinkedHashMap<String, Object>> textChoiceMapList = new ArrayList<>();
@@ -2698,13 +2703,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionTextChoiceDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionNumericDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
-    LOGGER.entry("begin formatQuestionNumericDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2751,13 +2756,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionNumericDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionNumericDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionDateDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
-    LOGGER.entry("begin formatQuestionDateDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     String dateFormat = "";
     try {
@@ -2808,13 +2813,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionDateDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionDateDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionTextDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
-    LOGGER.entry("begin formatQuestionTextDetails()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2847,7 +2852,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionTextDetails() :: ERROR", e);
     }
-    LOGGER.exit("formatQuestionTextDetails() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextDetails() :: Ends");
     return questionFormat;
   }
 
@@ -2855,7 +2860,7 @@ public class ActivityMetaDataDao {
   public ActivitiesBean getTimeDetailsByActivityIdForActiveTask(
       ActiveTaskDto activeTaskDto, ActivitiesBean activityBean, Session session)
       throws DAOException {
-    LOGGER.entry("begin getTimeDetailsByActivityIdForActiveTask()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Starts");
     String startDateTime = "";
     String endDateTime = "";
     try {
@@ -3018,7 +3023,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: ERROR", e);
     }
-    LOGGER.exit("getTimeDetailsByActivityIdForActiveTask() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Ends");
     return activityBean;
   }
 
@@ -3026,7 +3031,8 @@ public class ActivityMetaDataDao {
   public ActivitiesBean getTimeDetailsByActivityIdForQuestionnaire(
       QuestionnairesDto questionaire, ActivitiesBean activityBean, Session session)
       throws DAOException {
-    LOGGER.entry("begin getTimeDetailsByActivityIdForQuestionnaire()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Starts");
     String startDateTime = "";
     String endDateTime = "";
     try {
@@ -3180,13 +3186,13 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.exit("getTimeDetailsByActivityIdForQuestionnaire() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Ends");
     return activityBean;
   }
 
   public List<QuestionnairesStepsDto> getDestinationStepType(
       List<QuestionnairesStepsDto> questionaireStepsList) throws DAOException {
-    LOGGER.entry("begin getDestinationStepType()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepType() :: Starts");
     List<QuestionnairesStepsDto> questionnaireStepsTypeList = new ArrayList<>();
     try {
       for (QuestionnairesStepsDto questionnaireStepsDto : questionaireStepsList) {
@@ -3204,7 +3210,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getDestinationStepType() :: ERROR", e);
     }
-    LOGGER.exit("getDestinationStepType() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepType() :: Ends");
     return questionnaireStepsTypeList;
   }
 
@@ -3213,7 +3219,7 @@ public class ActivityMetaDataDao {
       QuestionResponseSubTypeDto destinationDto,
       List<QuestionnairesStepsDto> questionaireStepsList)
       throws DAOException {
-    LOGGER.entry("begin getDestinationStepTypeForResponseSubType()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepTypeForResponseSubType() :: Starts");
     try {
       for (QuestionnairesStepsDto stepsDto : questionaireStepsList) {
         if (destinationDto.getDestinationStepId().equals(stepsDto.getStepId())) {
@@ -3227,12 +3233,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getDestinationStepTypeForResponseSubType() :: ERROR", e);
     }
-    LOGGER.exit("getDestinationStepTypeForResponseSubType() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepTypeForResponseSubType() :: Ends");
     return destinationBean;
   }
 
   public String getBase64Image(String imagePath) throws DAOException {
-    LOGGER.entry("begin getBase64Image()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Starts");
     String base64Image = "";
     byte[] imageBytes = null;
     try {
@@ -3249,13 +3255,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getBase64Image() :: ERROR", e);
     }
-    LOGGER.exit("getBase64Image() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Ends");
     return base64Image;
   }
 
   public Integer getScaleStepCount(Integer step, Integer maxValue, Integer minValue)
       throws DAOException {
-    LOGGER.entry("begin getScaleStepCount()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepCount() :: Starts");
     Integer scaleStepCount = 1;
     Integer maxStepCount = 13;
     List<Integer> stepCountList = new ArrayList<>();
@@ -3275,26 +3281,26 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getScaleStepCount() :: ERROR", e);
     }
-    LOGGER.exit("getScaleStepCount() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepCount() :: Ends");
     return scaleStepCount;
   }
 
   public Integer getScaleStepSize(Integer step, Integer maxValue, Integer minValue)
       throws DAOException {
-    LOGGER.entry("begin getScaleStepSize()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepSize() :: Starts");
     Integer scaleStepCount = step;
     try {
       scaleStepCount = (maxValue - minValue) / step;
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getScaleStepSize() :: ERROR", e);
     }
-    LOGGER.exit("getScaleStepSize() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepSize() :: Ends");
     return scaleStepCount;
   }
 
   public Integer getScaleDefaultValue(
       Integer step, Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException {
-    LOGGER.entry("begin getScaleDefaultValue()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getScaleDefaultValue() :: Starts");
     Integer stepSize = (maxValue - minValue) / step;
     Integer scaleDefaultValue = minValue;
     try {
@@ -3302,13 +3308,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getScaleDefaultValue() :: ERROR", e);
     }
-    LOGGER.exit("getScaleDefaultValue() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getScaleDefaultValue() :: Ends");
     return scaleDefaultValue;
   }
 
   public Integer getContinuousScaleMaxFractionDigits(
       Integer maxValue, Integer minValue, Integer actualFractionDigits) throws DAOException {
-    LOGGER.entry("begin getContinuousScaleMaxFractionDigits()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Starts");
     Integer maxFracDigits = 0;
     Integer minTemp = 0;
     Integer maxTemp = 0;
@@ -3345,13 +3351,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: ERROR", e);
     }
-    LOGGER.exit("getContinuousScaleMaxFractionDigits() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Ends");
     return maxFracDigits;
   }
 
   public Integer getContinuousScaleDefaultValue(
       Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException {
-    LOGGER.entry("begin getContinuousScaleDefaultValue()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleDefaultValue() :: Starts");
     Integer continuousScaleDefaultValue = minValue;
     try {
       if ((defaultValue != null) && (defaultValue >= minValue) && (defaultValue <= maxValue)) {
@@ -3360,12 +3366,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getContinuousScaleDefaultValue() :: ERROR", e);
     }
-    LOGGER.exit("getContinuousScaleDefaultValue() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleDefaultValue() :: Ends");
     return continuousScaleDefaultValue;
   }
 
   public Integer getTimeIntervalStep(Integer stepValue) throws DAOException {
-    LOGGER.entry("begin getTimeIntervalStep()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getTimeIntervalStep() :: Starts");
     Integer step = 1;
     Integer[] stepArray = {1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30};
     try {
@@ -3380,12 +3386,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getTimeIntervalStep() :: ERROR", e);
     }
-    LOGGER.exit("getTimeIntervalStep() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getTimeIntervalStep() :: Ends");
     return step;
   }
 
   public Long getTimeInSeconds(String time) throws DAOException {
-    LOGGER.entry("begin getTimeInSeconds()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Starts");
     Long defaultTime = 0L;
     try {
       String[] timeArray = time.split(":");
@@ -3394,7 +3400,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getTimeInSeconds() :: ERROR", e);
     }
-    LOGGER.exit("getTimeInSeconds() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Ends");
     return defaultTime;
   }
 
@@ -3403,7 +3409,7 @@ public class ActivityMetaDataDao {
       List<DestinationBean> destinationsList,
       QuestionnaireActivityStepsBean questionBean)
       throws DAOException {
-    LOGGER.entry("begin getConditionalBranchingDestinations()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Starts");
     ScriptEngineManager mgr = new ScriptEngineManager();
     ScriptEngine engine = mgr.getEngineByName("JavaScript");
 
@@ -3593,13 +3599,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getConditionalBranchingDestinations() :: ERROR", e);
     }
-    LOGGER.exit("getConditionalBranchingDestinations() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Ends");
     return updatedDestinationsList;
   }
 
   public Map<String, Object> conditionalBranchingPrerequisites(
       QuestionnaireActivityStepsBean questionBean) throws DAOException {
-    LOGGER.entry("begin conditionalBranchingPrerequisites()");
+    LOGGER.info("INFO: ActivityMetaDataDao - conditionalBranchingPrerequisites() :: Starts");
     Map<String, Object> prerequisitesMap = new HashMap<>();
     Double maxFractionDigit = 1D;
     Double minValue = 0D;
@@ -3682,12 +3688,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - conditionalBranchingPrerequisites() :: ERROR", e);
     }
-    LOGGER.exit("conditionalBranchingPrerequisites() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - conditionalBranchingPrerequisites() :: Ends");
     return prerequisitesMap;
   }
 
   public String getOperatorFromConditionalFormula(String conditionFormula) throws DAOException {
-    LOGGER.entry("begin getOperatorFromConditionalFormula()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getOperatorFromConditionalFormula() :: Starts");
     String operator = "";
     try {
       if (conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)) {
@@ -3702,7 +3708,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getOperatorFromConditionalFormula() :: ERROR", e);
     }
-    LOGGER.exit("getOperatorFromConditionalFormula() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getOperatorFromConditionalFormula() :: Ends");
     return operator;
   }
 
@@ -3712,7 +3718,7 @@ public class ActivityMetaDataDao {
       String trueOperator,
       String falseOperator)
       throws DAOException {
-    LOGGER.entry("begin getConditionalBranchingFormat()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingFormat() :: Starts");
     try {
       if ((destinationsList != null)
           && !destinationsList.isEmpty()
@@ -3726,14 +3732,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getConditionalBranchingFormat() :: ERROR", e);
     }
-    LOGGER.exit("getConditionalBranchingFormat() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingFormat() :: Ends");
     return destinationsList;
   }
 
   public List<DestinationBean> formatValueOfX(
       List<DestinationBean> destinationsList, QuestionnaireActivityStepsBean questionBean)
       throws DAOException {
-    LOGGER.entry("begin formatValueOfX()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfX() :: Starts");
     List<DestinationBean> updatedDestinationsList = destinationsList;
     try {
       if ((destinationsList != null)
@@ -3787,7 +3793,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatValueOfX() :: ERROR", e);
     }
-    LOGGER.exit("formatValueOfX() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfX() :: Ends");
     return updatedDestinationsList;
   }
 
@@ -3796,7 +3802,7 @@ public class ActivityMetaDataDao {
       String stringFormat,
       QuestionnaireActivityStepsBean questionBean)
       throws DAOException {
-    LOGGER.entry("begin formatValueOfXByStringFormat()");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfXByStringFormat() :: Starts");
     try {
       if ((destinationsList != null)
           && !destinationsList.isEmpty()
@@ -3830,12 +3836,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatValueOfXByStringFormat() :: ERROR", e);
     }
-    LOGGER.exit("formatValueOfXByStringFormat() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfXByStringFormat() :: Ends");
     return destinationsList;
   }
 
   public String getDateRangeType(String dateRange) {
-    LOGGER.entry("begin getDateRangeType()");
+    LOGGER.info("INFO: ActivityMetaDataDao - getDateRangeType() :: Starts");
     String dateRangeType = "";
     try {
       switch (dateRange) {
@@ -3854,7 +3860,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getDateRangeType() :: ERROR", e);
     }
-    LOGGER.exit("getDateRangeType() :: Ends");
+    LOGGER.info("INFO: ActivityMetaDataDao - getDateRangeType() :: Ends");
     return dateRangeType;
   }
 
@@ -3862,7 +3868,8 @@ public class ActivityMetaDataDao {
   public ActivitiesBean getAnchordateDetailsByActivityIdForActivetask(
       ActiveTaskDto activeTaskDto, ActivitiesBean activityBean, Session session)
       throws DAOException {
-    LOGGER.entry("ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: Starts");
     String searchQuery = "";
     try {
       ActivityAnchorDateBean activityAnchorDateBean = new ActivityAnchorDateBean();
@@ -4048,7 +4055,8 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.exit("getAnchordateDetailsByActivityIdForQuestionnaire() :: Ends");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: Ends");
     return activityBean;
   }
 
@@ -4059,8 +4067,8 @@ public class ActivityMetaDataDao {
           List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean,
           Session session)
           throws DAOException {
-    LOGGER.entry(
-        "ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: Starts");
     try {
       List<QuestionnairesCustomFrequenciesDto> manuallyScheduleFrequencyList =
           session
@@ -4091,8 +4099,8 @@ public class ActivityMetaDataDao {
           "ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: ERROR",
           e);
     }
-    LOGGER.exit(
-        "ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: Ends");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: Ends");
     return anchorRunDetailsBean;
   }
 
@@ -4100,7 +4108,8 @@ public class ActivityMetaDataDao {
   public ActivitiesBean getAnchordateDetailsByActivityIdForQuestionnaire(
       QuestionnairesDto questionaire, ActivitiesBean activityBean, Session session)
       throws DAOException {
-    LOGGER.entry("ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: Starts");
     String searchQuery = "";
     try {
       ActivityAnchorDateBean activityAnchorDateBean = new ActivityAnchorDateBean();
@@ -4290,7 +4299,8 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.exit("getAnchordateDetailsByActivityIdForQuestionnaire() :: Ends");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: Ends");
     return activityBean;
   }
 
@@ -4300,7 +4310,8 @@ public class ActivityMetaDataDao {
       List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean,
       Session session)
       throws DAOException {
-    LOGGER.entry("begin getAcivetaskFrequencyAncorDetailsForManuallySchedule()");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getAcivetaskFrequencyAncorDetailsForManuallySchedule() :: Starts");
     try {
       List<ActiveTaskCustomFrequenciesDto> manuallyScheduleFrequencyList =
           session
@@ -4330,7 +4341,8 @@ public class ActivityMetaDataDao {
           "ActivityMetaDataDao - getAcivetaskFrequencyAncorDetailsForManuallySchedule() :: ERROR",
           e);
     }
-    LOGGER.exit("getAcivetaskFrequencyAncorDetailsForManuallySchedule() :: Ends");
+    LOGGER.info(
+        "INFO: ActivityMetaDataDao - getAcivetaskFrequencyAncorDetailsForManuallySchedule() :: Ends");
     return anchorRunDetailsBean;
   }
 }

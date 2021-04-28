@@ -94,20 +94,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.jsoup.Jsoup;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class StudyDAOImpl implements StudyDAO {
-  private static XLogger logger = XLoggerFactory.getXLogger(StudyDAOImpl.class.getName());
+  private static Logger logger = Logger.getLogger(StudyDAOImpl.class.getName());
 
   @Autowired private HttpServletRequest request;
 
@@ -126,7 +125,7 @@ public class StudyDAOImpl implements StudyDAO {
 
   @Override
   public String checkActiveTaskTypeValidation(Integer studyId) {
-    logger.entry("begin checkActiveTaskTypeValidation()");
+    logger.info("StudyDAOImpl - checkActiveTaskTypeValidation() - starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     List<String> taskNameList = null;
@@ -159,13 +158,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("checkActiveTaskTypeValidation() - Ends");
+    logger.info("StudyDAOImpl - checkActiveTaskTypeValidation() - Ends");
     return message;
   }
 
   @Override
   public int comprehensionTestQuestionOrder(Integer studyId) {
-    logger.entry("begin comprehensionTestQuestionOrder()");
+    logger.info("StudyDAOImpl - comprehensionTestQuestionOrder() - Starts");
     Session session = null;
     int count = 0;
     ComprehensionTestQuestionBo comprehensionTestQuestionBo = null;
@@ -190,13 +189,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("comprehensionTestQuestionOrder() - Ends");
+    logger.info("StudyDAOImpl - comprehensionTestQuestionOrder() - Ends");
     return count;
   }
 
   @Override
   public int consentInfoOrder(Integer studyId) {
-    logger.entry("begin consentInfoOrder()");
+    logger.info("StudyDAOImpl - consentInfoOrder() - Starts");
     Session session = null;
     int count = 1;
     ConsentInfoBo consentInfoBo = null;
@@ -219,7 +218,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("consentInfoOrder() - Ends");
+    logger.info("StudyDAOImpl - consentInfoOrder() - Ends");
     return count;
   }
 
@@ -227,7 +226,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public String deleteComprehensionTestQuestion(
       Integer questionId, Integer studyId, SessionObject sessionObject) {
-    logger.entry("begin deleteComprehensionTestQuestion()");
+    logger.info("StudyDAOImpl - deleteComprehensionTestQuestion() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     String searchQuery = "";
@@ -289,7 +288,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteComprehensionTestQuestion() - Ends");
+    logger.info("StudyDAOImpl - deleteComprehensionTestQuestion() - Ends");
     return message;
   }
 
@@ -297,7 +296,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public String deleteConsentInfo(
       Integer consentInfoId, Integer studyId, SessionObject sessionObject, String customStudyId) {
-    logger.entry("begin deleteConsentInfo()");
+    logger.info("StudyDAOImpl - deleteConsentInfo() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     int count = 0;
@@ -360,7 +359,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteConsentInfo() - Ends");
+    logger.info("StudyDAOImpl - deleteConsentInfo() - Ends");
     return message;
   }
 
@@ -371,7 +370,7 @@ public class StudyDAOImpl implements StudyDAO {
       Integer studyId,
       SessionObject sessionObject,
       String customStudyId) {
-    logger.entry("begin deleteEligibilityTestQusAnsById()");
+    logger.info("StudyDAOImpl - deleteEligibilityTestQusAnsById - Starts");
     Session session = null;
     Integer eligibilityDeleteResult = 0;
     Transaction trans = null;
@@ -448,13 +447,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteEligibilityTestQusAnsById() - Ends");
+    logger.info("StudyDAOImpl - deleteEligibilityTestQusAnsById - Ends");
     return result;
   }
 
   @Override
   public boolean deleteLiveStudy(String customStudyId) {
-    logger.entry("begin deleteLiveStudy()");
+    logger.info("StudyDAOImpl - deleteLiveStudy() - Starts");
     boolean flag = false;
     Session session = null;
     StudyBo liveStudyBo = null;
@@ -523,13 +522,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteLiveStudy() - Ends");
+    logger.info("StudyDAOImpl - deleteLiveStudy() - Ends");
     return flag;
   }
 
   @Override
   public String deleteOverviewStudyPageById(String studyId, String pageId) {
-    logger.entry("begin deleteOverviewStudyPageById()");
+    logger.info("StudyDAOImpl - deleteOverviewStudyPageById() - Starts");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     int count = 0;
@@ -556,7 +555,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteOverviewStudyPageById() - Ends");
+    logger.info("StudyDAOImpl - deleteOverviewStudyPageById() - Ends");
     return message;
   }
 
@@ -564,7 +563,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public String deleteResourceInfo(
       Integer resourceInfoId, boolean resourceVisibility, int studyId) {
-    logger.entry("begin deleteResourceInfo()");
+    logger.info("StudyDAOImpl - deleteResourceInfo() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     int resourceCount = 0;
@@ -614,13 +613,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteResourceInfo() - Ends");
+    logger.info("StudyDAOImpl - deleteResourceInfo() - Ends");
     return message;
   }
 
   @Override
   public boolean deleteStudyByCustomStudyId(String customStudyId) {
-    logger.entry("begin deleteStudyByCustomStudyId()");
+    logger.info("StudyDAOImpl - deleteStudyByCustomStudyId() - Starts");
     Session session = null;
     boolean falg = false;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -640,7 +639,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteStudyByCustomStudyId() - Ends");
+    logger.info("StudyDAOImpl - deleteStudyByCustomStudyId() - Ends");
     return falg;
   }
 
@@ -648,7 +647,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public String deleteStudyByIdOrCustomstudyId(
       Session session, Transaction transaction, String studyId, String customStudyId) {
-    logger.entry("begin deleteStudyByIdOrCustomstudyId()");
+    logger.info("StudyDAOImpl - deleteStudyByIdOrCustomstudyId() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     List<StudyBo> studyBOList = null;
     // String subQuery = "";
@@ -1356,13 +1355,13 @@ public class StudyDAOImpl implements StudyDAO {
       transaction.rollback();
       logger.error("StudyDAOImpl - deleteStudyByIdOrCustomstudyId() - ERROR ", e);
     }
-    logger.exit("deleteStudyByIdOrCustomstudyId() - Ends");
+    logger.info("StudyDAOImpl - deleteStudyByIdOrCustomstudyId() - Ends");
     return message;
   }
 
   @Override
   public int eligibilityTestOrderCount(Integer eligibilityId) {
-    logger.entry("begin eligibilityTestOrderCount");
+    logger.info("StudyDAOImpl - eligibilityTestOrderCount - Starts");
     Session session = null;
     int count = 1;
     EligibilityTestBo eligibilityTestBo = null;
@@ -1384,14 +1383,14 @@ public class StudyDAOImpl implements StudyDAO {
     } catch (Exception e) {
       logger.error("StudyDAOImpl - eligibilityTestOrderCount - Error", e);
     }
-    logger.exit("eligibilityTestOrderCount - Ends");
+    logger.info("StudyDAOImpl - eligibilityTestOrderCount - Ends");
     return count;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<StudyBo> getAllStudyList() {
-    logger.entry("begin getAllStudyList()");
+    logger.info("StudyDAOImpl - getAllStudyList() - Starts");
     Session session = null;
     List<StudyBo> studyBOList = null;
     try {
@@ -1408,13 +1407,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getAllStudyList() - Ends");
+    logger.info("StudyDAOImpl - getAllStudyList() - Ends");
     return studyBOList;
   }
 
   @Override
   public Checklist getchecklistInfo(Integer studyId) {
-    logger.entry("begin getchecklistInfo()");
+    logger.info("StudyDAOImpl - getchecklistInfo() - Starts");
     Checklist checklist = null;
     Session session = null;
     try {
@@ -1431,14 +1430,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getchecklistInfo() - Ends");
+    logger.info("StudyDAOImpl - getchecklistInfo() - Ends");
     return checklist;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public ComprehensionTestQuestionBo getComprehensionTestQuestionById(Integer questionId) {
-    logger.entry("begin getComprehensionTestQuestionById()");
+    logger.info("StudyDAOImpl - getComprehensionTestQuestionById() - Starts");
     ComprehensionTestQuestionBo comprehensionTestQuestionBo = null;
     Session session = null;
     List<ComprehensionTestResponseBo> comprehensionTestResponsList = null;
@@ -1461,14 +1460,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getComprehensionTestQuestionById() - Ends");
+    logger.info("StudyDAOImpl - getComprehensionTestQuestionById() - Ends");
     return comprehensionTestQuestionBo;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ComprehensionTestQuestionBo> getComprehensionTestQuestionList(Integer studyId) {
-    logger.entry("begin getComprehensionTestQuestionList()");
+    logger.info("StudyDAOImpl - getComprehensionTestQuestionList() - Starts");
     Session session = null;
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionList = null;
     try {
@@ -1486,7 +1485,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getComprehensionTestQuestionList() - Ends");
+    logger.info("StudyDAOImpl - getComprehensionTestQuestionList() - Ends");
     return comprehensionTestQuestionList;
   }
 
@@ -1494,7 +1493,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public List<ComprehensionTestResponseBo> getComprehensionTestResponseList(
       Integer comprehensionQuestionId) {
-    logger.entry("begin deleteComprehensionTestQuestion()");
+    logger.info("StudyDAOImpl - deleteComprehensionTestQuestion() - Starts");
     Session session = null;
     List<ComprehensionTestResponseBo> comprehensionTestResponseList = null;
     try {
@@ -1511,13 +1510,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteComprehensionTestQuestion() - Ends");
+    logger.info("StudyDAOImpl - deleteComprehensionTestQuestion() - Ends");
     return comprehensionTestResponseList;
   }
 
   @Override
   public ConsentBo getConsentDetailsByStudyId(String studyId) {
-    logger.entry("begin getConsentDetailsByStudyId()");
+    logger.info("INFO: StudyDAOImpl - getConsentDetailsByStudyId() :: Starts");
     ConsentBo consentBo = null;
     Session session = null;
     Query query = null;
@@ -1533,13 +1532,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getConsentDetailsByStudyId() :: Ends");
+    logger.info("INFO: StudyDAOImpl - getConsentDetailsByStudyId() :: Ends");
     return consentBo;
   }
 
   @Override
   public ConsentInfoBo getConsentInfoById(Integer consentInfoId) {
-    logger.entry("begin getConsentInfoById()");
+    logger.info("StudyDAOImpl - getConsentInfoById() - Starts");
     ConsentInfoBo consentInfoBo = null;
     Session session = null;
     try {
@@ -1575,14 +1574,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getConsentInfoById() - Ends");
+    logger.info("StudyDAOImpl - getConsentInfoById() - Ends");
     return consentInfoBo;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ConsentInfoBo> getConsentInfoDetailsListByStudyId(String studyId) {
-    logger.entry("begin getConsentInfoDetailsListByStudyId()");
+    logger.info("INFO: StudyDAOImpl - getConsentInfoDetailsListByStudyId() :: Starts");
     Session session = null;
     Query query = null;
     List<ConsentInfoBo> consentInfoBoList = null;
@@ -1620,14 +1619,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getConsentInfoDetailsListByStudyId() :: Ends");
+    logger.info("INFO: StudyDAOImpl - getConsentInfoDetailsListByStudyId() :: Ends");
     return consentInfoBoList;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ConsentInfoBo> getConsentInfoList(Integer studyId) {
-    logger.entry("begin getConsentInfoList()");
+    logger.info("StudyDAOImpl - getConsentInfoList() - Starts");
     List<ConsentInfoBo> consentInfoList = null;
     Session session = null;
     try {
@@ -1644,14 +1643,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getConsentInfoList() - Ends");
+    logger.info("StudyDAOImpl - getConsentInfoList() - Ends");
     return consentInfoList;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ConsentMasterInfoBo> getConsentMasterInfoList() {
-    logger.entry("begin getConsentMasterInfoList()");
+    logger.info("StudyDAOImpl - getConsentMasterInfoList() - Starts");
     Session session = null;
     List<ConsentMasterInfoBo> consentMasterInfoList = null;
     try {
@@ -1665,7 +1664,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getConsentMasterInfoList() - Ends");
+    logger.info("StudyDAOImpl - getConsentMasterInfoList() - Ends");
     return consentMasterInfoList;
   }
 
@@ -1709,7 +1708,7 @@ public class StudyDAOImpl implements StudyDAO {
 
   @Override
   public StudyIdBean getLiveVersion(String customStudyId) {
-    logger.entry("begin getLiveVersion()");
+    logger.info("StudyDAOImpl - getLiveVersion() - Starts");
     Session session = null;
     StudyVersionBo studyVersionBo = null;
     Integer consentStudyId = null;
@@ -1782,13 +1781,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getLiveVersion() - Ends");
+    logger.info("StudyDAOImpl - getLiveVersion() - Ends");
     return studyIdBean;
   }
 
   @Override
   public NotificationBO getNotificationByResourceId(Integer resourseId) {
-    logger.entry("begin getNotificationByResourceId()");
+    logger.info("StudyDAOImpl - getNotificationByResourceId() - Starts");
     Session session = null;
     String queryString = null;
     NotificationBO notificationBO = null;
@@ -1805,14 +1804,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getNotificationByResourceId - Ends");
+    logger.info("StudyDAOImpl - getNotificationByResourceId - Ends");
     return notificationBO;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<StudyPageBo> getOverviewStudyPagesById(String studyId, Integer userId) {
-    logger.entry("begin getOverviewStudyPagesById()");
+    logger.info("StudyDAOImpl - getOverviewStudyPagesById() - Starts");
     Session session = null;
     List<StudyPageBo> studyPageBo = null;
     try {
@@ -1829,14 +1828,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getOverviewStudyPagesById() - Ends");
+    logger.info("StudyDAOImpl - getOverviewStudyPagesById() - Ends");
     return studyPageBo;
   }
 
   @SuppressWarnings({"unchecked"})
   @Override
   public HashMap<String, List<ReferenceTablesBo>> getreferenceListByCategory() {
-    logger.entry("begin getreferenceListByCategory()");
+    logger.info("StudyDAOImpl - getreferenceListByCategory() - Starts");
     Session session = null;
     List<ReferenceTablesBo> allReferenceList = null;
     List<ReferenceTablesBo> categoryList = new ArrayList<>();
@@ -1878,13 +1877,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getreferenceListByCategory() - Ends");
+    logger.info("StudyDAOImpl - getreferenceListByCategory() - Ends");
     return referenceMap;
   }
 
   @Override
   public ResourceBO getResourceInfo(Integer resourceInfoId) {
-    logger.entry("begin getResourceInfo()");
+    logger.info("StudyDAOImpl - getResourceInfo() - Starts");
     ResourceBO resourceBO = null;
     Session session = null;
     try {
@@ -1898,14 +1897,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getResourceInfo() - Ends");
+    logger.info("StudyDAOImpl - getResourceInfo() - Ends");
     return resourceBO;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ResourceBO> getResourceList(Integer studyId) {
-    logger.entry("begin getResourceList()");
+    logger.info("StudyDAOImpl - getResourceList() - Starts");
     List<ResourceBO> resourceBOList = null;
     Session session = null;
     try {
@@ -1937,14 +1936,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getResourceList() - Ends");
+    logger.info("StudyDAOImpl - getResourceList() - Ends");
     return resourceBOList;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<NotificationBO> getSavedNotification(Integer studyId) {
-    logger.entry("begin getSavedNotification()");
+    logger.info("StudyDAOImpl - getSavedNotification() - Starts");
     List<NotificationBO> notificationSavedList = null;
     Session session = null;
     String searchQuery = "";
@@ -1963,13 +1962,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getSavedNotification() - Ends");
+    logger.info("StudyDAOImpl - getSavedNotification() - Ends");
     return notificationSavedList;
   }
 
   @Override
   public StudyBo getStudyById(String studyId, Integer userId) {
-    logger.entry("begin getStudyById()");
+    logger.info("StudyDAOImpl - getStudyById() - Starts");
     Session session = null;
     StudyBo studyBo = null;
     StudySequenceBo studySequenceBo = null;
@@ -2038,13 +2037,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyById() - Ends");
+    logger.info("StudyDAOImpl - getStudyById() - Ends");
     return studyBo;
   }
 
   @Override
   public EligibilityBo getStudyEligibiltyByStudyId(String studyId) {
-    logger.entry("begin getStudyEligibiltyByStudyId()");
+    logger.info("StudyDAOImpl - getStudyEligibiltyByStudyId() - Starts");
     Session session = null;
     EligibilityBo eligibilityBo = null;
     try {
@@ -2063,14 +2062,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyEligibiltyByStudyId() - Ends");
+    logger.info("StudyDAOImpl - getStudyEligibiltyByStudyId() - Ends");
     return eligibilityBo;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<StudyListBean> getStudyList(Integer userId) {
-    logger.entry("begin getStudyList()");
+    logger.info("StudyDAOImpl - getStudyList() - Starts");
     Session session = null;
     List<StudyListBean> studyListBeans = null;
     String name = "";
@@ -2165,14 +2164,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyList() - Ends");
+    logger.info("StudyDAOImpl - getStudyList() - Ends");
     return studyListBeans;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<StudyListBean> getStudyListByUserId(Integer userId) {
-    logger.entry("begin getStudyListByUserId()");
+    logger.info("StudyDAOImpl - getStudyListByUserId() - Starts");
     Session session = null;
     List<StudyListBean> studyListBeans = null;
     try {
@@ -2195,13 +2194,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyListByUserId() - Ends");
+    logger.info("StudyDAOImpl - getStudyListByUserId() - Ends");
     return studyListBeans;
   }
 
   @Override
   public StudyBo getStudyLiveStatusByCustomId(String customStudyId) {
-    logger.entry("begin getStudyLiveStatusByCustomId()");
+    logger.info("StudyDAOImpl - getStudyLiveStatusByCustomId() - Starts");
     StudyBo studyLive = null;
     Session session = null;
     String searchQuery = "";
@@ -2218,13 +2217,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyLiveStatusByCustomId() - Ends");
+    logger.info("StudyDAOImpl - getStudyLiveStatusByCustomId() - Ends");
     return studyLive;
   }
 
   @Override
   public ResourceBO getStudyProtocol(Integer studyId) {
-    logger.entry("begin getStudyProtocol()");
+    logger.info("StudyDAOImpl - getStudyProtocol() - Starts");
     ResourceBO studyprotocol = null;
     Session session = null;
     try {
@@ -2241,13 +2240,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyProtocol() - Ends");
+    logger.info("StudyDAOImpl - getStudyProtocol() - Ends");
     return studyprotocol;
   }
 
   @SuppressWarnings("unchecked")
   public List<Integer> getSuperAdminUserIds() {
-    logger.entry("begin getSuperAdminUserIds()");
+    logger.info("StudyDAOImpl - getSuperAdminUserIds() - Starts");
     Session session = null;
     List<Integer> superAdminUserIds = null;
     Query query = null;
@@ -2264,14 +2263,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getSuperAdminUserIds() - Ends");
+    logger.info("StudyDAOImpl - getSuperAdminUserIds() - Ends");
     return superAdminUserIds;
   }
 
   @Override
   public String markAsCompleted(
       int studyId, String markCompleted, boolean flag, SessionObject sesObj, String customStudyId) {
-    logger.entry("begin markAsCompleted()");
+    logger.info("StudyDAOImpl - markAsCompleted() - Starts");
     String msg = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     int count = 0;
@@ -2401,14 +2400,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("markAsCompleted() - Ends");
+    logger.info("StudyDAOImpl - markAsCompleted() - Ends");
     return msg;
   }
 
   @Override
   public String reOrderComprehensionTestQuestion(
       Integer studyId, int oldOrderNumber, int newOrderNumber) {
-    logger.entry("begin reOrderComprehensionTestQuestion()");
+    logger.info("StudyDAOImpl - reOrderComprehensionTestQuestion() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     Query query = null;
@@ -2487,13 +2486,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("reOrderComprehensionTestQuestion() - Ends");
+    logger.info("StudyDAOImpl - reOrderComprehensionTestQuestion() - Ends");
     return message;
   }
 
   @Override
   public String reOrderConsentInfoList(Integer studyId, int oldOrderNumber, int newOrderNumber) {
-    logger.entry("begin reOrderConsentInfoList()");
+    logger.info("StudyDAOImpl - reOrderConsentInfoList() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     Query query = null;
@@ -2570,14 +2569,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("reOrderConsentInfoList() - Ends");
+    logger.info("StudyDAOImpl - reOrderConsentInfoList() - Ends");
     return message;
   }
 
   @Override
   public String reorderEligibilityTestQusAns(
       Integer eligibilityId, int oldOrderNumber, int newOrderNumber, Integer studyId) {
-    logger.entry("begin reorderEligibilityTestQusAns");
+    logger.info("StudyDAOImpl - reorderEligibilityTestQusAns - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     Query hibQuery = null;
@@ -2658,13 +2657,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("reorderEligibilityTestQusAns - Ends");
+    logger.info("StudyDAOImpl - reorderEligibilityTestQusAns - Ends");
     return message;
   }
 
   @Override
   public String reOrderResourceList(Integer studyId, int oldOrderNumber, int newOrderNumber) {
-    logger.entry("begin reOrderResourceList()");
+    logger.info("StudyDAOImpl - reOrderResourceList() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     Query query = null;
@@ -2738,7 +2737,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("reOrderResourceList() - Ends");
+    logger.info("StudyDAOImpl - reOrderResourceList() - Ends");
     return message;
   }
 
@@ -2746,7 +2745,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public boolean resetDraftStudyByCustomStudyId(
       String customStudyId, String action, SessionObject sesObj) {
-    logger.entry("begin resetDraftStudyByCustomStudyId()");
+    logger.info("StudyDAOImpl - resetDraftStudyByCustomStudyId() - Starts");
     Session session = null;
     boolean flag = false;
     StudyBo liveStudyBo = null;
@@ -3569,13 +3568,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("resetDraftStudyByCustomStudyId() - Ends");
+    logger.info("StudyDAOImpl - resetDraftStudyByCustomStudyId() - Ends");
     return flag;
   }
 
   @Override
   public int resourceOrder(Integer studyId) {
-    logger.entry("begin resourceOrder()");
+    logger.info("StudyDAOImpl - resourceOrder() - Starts");
     Session session = null;
     int count = 1;
     ResourceBO resourceBo = null;
@@ -3597,14 +3596,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("resourceOrder() - Ends");
+    logger.info("StudyDAOImpl - resourceOrder() - Ends");
     return count;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ResourceBO> resourcesSaved(Integer studyId) {
-    logger.entry("begin resourcesSaved()");
+    logger.info("StudyDAOImpl - resourcesSaved() - Starts");
     List<ResourceBO> resourceBOList = null;
     Session session = null;
     try {
@@ -3621,14 +3620,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("resourcesSaved() - Ends");
+    logger.info("StudyDAOImpl - resourcesSaved() - Ends");
     return resourceBOList;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ResourceBO> resourcesWithAnchorDate(Integer studyId) {
-    logger.entry("begin resourcesWithAnchorDate()");
+    logger.info("StudyDAOImpl - resourcesWithAnchorDate() - Starts");
     List<ResourceBO> resourceList = null;
     Session session = null;
     try {
@@ -3645,7 +3644,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("resourcesWithAnchorDate() - Ends");
+    logger.info("StudyDAOImpl - resourcesWithAnchorDate() - Ends");
     return resourceList;
   }
 
@@ -3653,7 +3652,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public ConsentBo saveOrCompleteConsentReviewDetails(
       ConsentBo consentBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("INFO: StudyDAOImpl - saveOrCompleteConsentReviewDetails() :: Starts");
+    logger.info("INFO: StudyDAOImpl - saveOrCompleteConsentReviewDetails() :: Starts");
     Session session = null;
     StudySequenceBo studySequence = null;
     List<ConsentInfoBo> consentInfoList = null;
@@ -3798,13 +3797,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("INFO: StudyDAOImpl - saveOrCompleteConsentReviewDetails() :: Ends");
+    logger.info("INFO: StudyDAOImpl - saveOrCompleteConsentReviewDetails() :: Ends");
     return consentBo;
   }
 
   @Override
   public Integer saveOrDoneChecklist(Checklist checklist) {
-    logger.entry("begin saveOrDoneChecklist()");
+    logger.info("StudyDAOImpl - saveOrDoneChecklist() - Starts");
     Session session = null;
     Integer checklistId = 0;
     try {
@@ -3825,14 +3824,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrDoneChecklist() - Ends");
+    logger.info("StudyDAOImpl - saveOrDoneChecklist() - Ends");
     return checklistId;
   }
 
   @Override
   public ComprehensionTestQuestionBo saveOrUpdateComprehensionTestQuestion(
       ComprehensionTestQuestionBo comprehensionTestQuestionBo) {
-    logger.entry("begin saveOrUpdateComprehensionTestQuestion()");
+    logger.info("StudyDAOImpl - saveOrUpdateComprehensionTestQuestion() - Starts");
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -3883,14 +3882,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateComprehensionTestQuestion() - Ends");
+    logger.info("StudyDAOImpl - saveOrUpdateComprehensionTestQuestion() - Ends");
     return comprehensionTestQuestionBo;
   }
 
   @Override
   public ConsentInfoBo saveOrUpdateConsentInfo(
       ConsentInfoBo consentInfoBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("begin saveOrUpdateConsentInfo()");
+    logger.info("StudyDAOImpl - saveOrUpdateConsentInfo() - Starts");
     Session session = null;
     StudySequenceBo studySequence = null;
     try {
@@ -3945,7 +3944,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateConsentInfo() - Ends");
+    logger.info("StudyDAOImpl - saveOrUpdateConsentInfo() - Ends");
     return consentInfoBo;
   }
 
@@ -3955,7 +3954,7 @@ public class StudyDAOImpl implements StudyDAO {
       Integer studyId,
       SessionObject sesObj,
       String customStudyId) {
-    logger.entry("begin saveOrUpdateEligibilityTestQusAns");
+    logger.info("StudyDAOImpl - saveOrUpdateEligibilityTestQusAns - Starts");
     Session session = null;
     Integer eligibilityTestId = 0;
     Transaction trans = null;
@@ -3999,13 +3998,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateEligibilityTestQusAns - Ends");
+    logger.info("StudyDAOImpl - saveOrUpdateEligibilityTestQusAns - Ends");
     return eligibilityTestId;
   }
 
   @Override
   public String saveOrUpdateOverviewStudyPages(StudyPageBean studyPageBean, SessionObject sesObj) {
-    logger.entry("begin saveOrUpdateOverviewStudyPages()");
+    logger.info("StudyDAOImpl - saveOrUpdateOverviewStudyPages() - Starts");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     int titleLength = 0;
@@ -4131,13 +4130,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateOverviewStudyPages() - Ends");
+    logger.info("StudyDAOImpl - saveOrUpdateOverviewStudyPages() - Ends");
     return message;
   }
 
   @Override
   public Integer saveOrUpdateResource(ResourceBO resourceBO) {
-    logger.entry("begin saveOrUpdateResource()");
+    logger.info("StudyDAOImpl - saveOrUpdateResource() - Starts");
     Session session = null;
     Integer resourceId = 0;
     try {
@@ -4158,14 +4157,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateResource() - Ends");
+    logger.info("StudyDAOImpl - saveOrUpdateResource() - Ends");
     return resourceId;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public String saveOrUpdateStudy(StudyBo studyBo, SessionObject sessionObject) {
-    logger.entry("begin saveOrUpdateStudy()");
+    logger.info("StudyDAOImpl - saveOrUpdateStudy() - Starts");
     Session session = null;
     String message = FdahpStudyDesignerConstants.SUCCESS;
     StudyPermissionBO studyPermissionBO = null;
@@ -4310,14 +4309,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateSubAdmin() - Ends");
+    logger.info("StudyDAOImpl - saveOrUpdateSubAdmin() - Ends");
     return message;
   }
 
   @Override
   public String saveOrUpdateStudyEligibilty(
       EligibilityBo eligibilityBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("begin saveOrUpdateStudyEligibilty()");
+    logger.info("StudyDAOImpl - saveOrUpdateStudyEligibilty() - Starts");
     String result = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     StudySequenceBo studySequence = null;
@@ -4378,14 +4377,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateStudyEligibilty() - Ends");
+    logger.info("StudyDAOImpl - saveOrUpdateStudyEligibilty() - Ends");
     return result;
   }
 
   @SuppressWarnings({"unchecked"})
   @Override
   public String saveOrUpdateStudySettings(StudyBo studyBo, SessionObject sesObj) {
-    logger.entry("begin saveOrUpdateStudySettings()");
+    logger.info("StudyDAOImpl - saveOrUpdateStudySettings() - Starts");
     String result = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     StudySequenceBo studySequence = null;
@@ -4493,7 +4492,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateStudySettings() - Ends");
+    logger.info("StudyDAOImpl - saveOrUpdateStudySettings() - Ends");
     return result;
   }
 
@@ -4517,14 +4516,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("deleteOverviewStudyPageById() - Ends");
+    logger.info("StudyDAOImpl - deleteOverviewStudyPageById() - Ends");
 
     return pageId;
   }
 
   @Override
   public String saveResourceNotification(NotificationBO notificationBO, boolean notiFlag) {
-    logger.entry("begin saveResourceNotification()");
+    logger.info("StudyDAOImpl - saveResourceNotification() - Starts");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -4545,7 +4544,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("saveResourceNotification() - Ends");
+    logger.info("StudyDAOImpl - saveResourceNotification() - Ends");
     return message;
   }
 
@@ -4557,7 +4556,7 @@ public class StudyDAOImpl implements StudyDAO {
   @SuppressWarnings("unchecked")
   public String studyDraftCreation(
       StudyBo studyBo, Session session, AuditLogEventRequest auditRequest) {
-    logger.entry("begin studyDraftCreation()");
+    logger.info("StudyDAOImpl - studyDraftCreation() - Starts");
     List<StudyPageBo> studyPageBo = null;
     List<StudyPermissionBO> studyPermissionList = null;
     EligibilityBo eligibilityBo = null;
@@ -5586,7 +5585,7 @@ public class StudyDAOImpl implements StudyDAO {
       logger.error("StudyDAOImpl - studyDraftCreation() - ERROR ", e);
       e.printStackTrace();
     }
-    logger.exit("studyDraftCreation() - Ends");
+    logger.info("StudyDAOImpl - studyDraftCreation() - Ends");
 
     return message;
   }
@@ -5594,7 +5593,7 @@ public class StudyDAOImpl implements StudyDAO {
   @SuppressWarnings("unchecked")
   @Override
   public String updateStudyActionOnAction(String studyId, String buttonText, SessionObject sesObj) {
-    logger.entry("begin updateStudyActionOnAction()");
+    logger.info("StudyDAOImpl - updateStudyActionOnAction() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     StudyBo studyBo = null;
@@ -5884,14 +5883,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("updateStudyActionOnAction() - Ends");
+    logger.info("StudyDAOImpl - updateStudyActionOnAction() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public String validateActivityComplete(String studyId, String action) {
-    logger.entry("begin validateActivityComplete()");
+    logger.info("StudyDAOImpl - validateActivityComplete() - Starts");
     Session session = null;
     boolean questionnarieFlag = true;
     boolean activeTaskEmpty = false;
@@ -5968,7 +5967,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("validateActivityComplete() - Ends");
+    logger.info("StudyDAOImpl - validateActivityComplete() - Ends");
     return message;
   }
 
@@ -6251,7 +6250,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public String validateEligibilityTestKey(
       Integer eligibilityTestId, String shortTitle, Integer eligibilityId) {
-    logger.entry("begin getStudyVersionInfo()");
+    logger.info("StudyDAOImpl - getStudyVersionInfo() - Starts");
     Session session = null;
     List<EligibilityTestBo> eligibilityTestBos;
     String result = FdahpStudyDesignerConstants.FAILURE;
@@ -6270,13 +6269,13 @@ public class StudyDAOImpl implements StudyDAO {
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getStudyVersionInfo() - ERROR ", e);
     }
-    logger.exit("getStudyVersionInfo() - Ends");
+    logger.info("StudyDAOImpl - getStudyVersionInfo() - Ends");
     return result;
   }
 
   @Override
   public String validateStudyAction(String studyId, String buttonText) {
-    logger.entry("begin validateStudyAction() - Ends");
+    logger.info("StudyDAOImpl - validateStudyAction() - Ends");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     Session session = null;
     StudyBo studyBo = null;
@@ -6308,14 +6307,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("validateStudyAction() - Ends");
+    logger.info("StudyDAOImpl - validateStudyAction() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public boolean validateStudyId(String customStudyId) {
-    logger.entry("begin validateStudyId()");
+    logger.info("StudyDAOImpl - validateStudyId() - Starts");
     boolean flag = false;
     Session session = null;
     List<StudyBo> studyBos = null;
@@ -6336,14 +6335,14 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("validateStudyId() - Ends");
+    logger.info("StudyDAOImpl - validateStudyId() - Starts");
     return flag;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<EligibilityTestBo> viewEligibilityTestQusAnsByEligibilityId(Integer eligibilityId) {
-    logger.entry("begin viewEligibilityTestQusAnsByEligibilityId");
+    logger.info("StudyDAOImpl - viewEligibilityTestQusAnsByEligibilityId - Starts");
     Session session = null;
     List<EligibilityTestBo> eligibilityTestList = null;
     try {
@@ -6360,13 +6359,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("viewEligibilityTestQusAnsByEligibilityId - Ends");
+    logger.info("StudyDAOImpl - viewEligibilityTestQusAnsByEligibilityId - Ends");
     return eligibilityTestList;
   }
 
   @Override
   public EligibilityTestBo viewEligibilityTestQusAnsById(Integer eligibilityTestId) {
-    logger.entry("begin viewEligibilityTestQusAnsById");
+    logger.info("StudyDAOImpl - viewEligibilityTestQusAnsById - Starts");
     Session session = null;
     EligibilityTestBo eligibilityTest = null;
     try {
@@ -6384,13 +6383,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("viewEligibilityTestQusAnsById - Ends");
+    logger.info("StudyDAOImpl - viewEligibilityTestQusAnsById - Ends");
     return eligibilityTest;
   }
 
   @Override
   public Boolean isAnchorDateExistForEnrollment(Integer studyId, String customStudyId) {
-    logger.entry("begin isAnchorDateExistForEnrollment");
+    logger.info("StudyDAOImpl - isAnchorDateExistForEnrollment - Starts");
     Session session = null;
     Boolean isExist = false;
     String searchQuery = "";
@@ -6451,13 +6450,13 @@ public class StudyDAOImpl implements StudyDAO {
     } catch (Exception e) {
 
     }
-    logger.exit("isAnchorDateExistForEnrollment - Ends");
+    logger.info("StudyDAOImpl - isAnchorDateExistForEnrollment - Ends");
     return isExist;
   }
 
   @Override
   public Boolean isAnchorDateExistForEnrollmentDraftStudy(Integer studyId, String customStudyId) {
-    logger.entry("begin isAnchorDateExistForEnrollmentDraftStudy");
+    logger.info("StudyDAOImpl - isAnchorDateExistForEnrollmentDraftStudy - Starts");
     Session session = null;
     Boolean isExist = false;
     String searchQuery = "";
@@ -6521,7 +6520,7 @@ public class StudyDAOImpl implements StudyDAO {
     } catch (Exception e) {
 
     }
-    logger.exit("isAnchorDateExistForEnrollmentDraftStudy - Ends");
+    logger.info("StudyDAOImpl - isAnchorDateExistForEnrollmentDraftStudy - Ends");
     return isExist;
   }
 
@@ -6529,7 +6528,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public String updateAnchordateForEnrollmentDate(
       StudyBo oldStudy, StudyBo updatedStudy, Session session, Transaction transaction) {
-    logger.entry("begin isAnchorDateExistForEnrollmentDraftStudy");
+    logger.info("StudyDAOImpl - isAnchorDateExistForEnrollmentDraftStudy - Starts");
     Boolean isAnchorUsed = false;
     String searchQuery = "";
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -6658,7 +6657,7 @@ public class StudyDAOImpl implements StudyDAO {
       transaction.rollback();
       logger.error("StudyDAOImpl - isAnchorDateExistForEnrollmentDraftStudy - ERROR ", e);
     }
-    logger.exit("isAnchorDateExistForEnrollmentDraftStudy - Ends");
+    logger.info("StudyDAOImpl - isAnchorDateExistForEnrollmentDraftStudy - Ends");
     return message;
   }
 
@@ -6666,7 +6665,7 @@ public class StudyDAOImpl implements StudyDAO {
   @Override
   public boolean validateAppId(
       String customStudyId, String appId, String studyType, String dbCustomStudyId) {
-    logger.entry("begin validateAppId()");
+    logger.info("StudyDAOImpl - validateAppId() - Starts");
     boolean flag = false;
     Session session = null;
     List<StudyBo> studyBos = null;
@@ -6728,13 +6727,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("validateAppId() - Ends");
+    logger.info("StudyDAOImpl - validateAppId() - Ends");
     return flag;
   }
 
   @Override
   public StudyPermissionBO getStudyPermissionBO(int studyId, int userId) {
-    logger.entry("begin getStudyPermissionBO()");
+    logger.info("StudyDAOImpl - getStudyPermissionBO() - Starts");
     Session session = null;
     StudyPermissionBO studyPermissionBO = null;
     String searchQuery = "";
@@ -6753,13 +6752,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyPermissionBO() - Ends");
+    logger.info("StudyDAOImpl - getStudyPermissionBO() - Ends");
     return studyPermissionBO;
   }
 
   @Override
   public StudyBo getStudyByLatestVersion(String customStudyId) {
-    logger.entry("begin getStudyByLatestVersion()");
+    logger.info("StudyDAOImpl - getStudyByLatestVersion() - Starts");
     Session session = null;
     StudyBo studyBo = null;
     String searchQuery = "";
@@ -6780,13 +6779,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyByLatestVersion() - Ends");
+    logger.info("StudyDAOImpl - getStudyByLatestVersion() - Ends");
     return studyBo;
   }
 
   @Override
   public String getStudyCategory(Integer id) {
-    logger.entry("begin getStudyCategory()");
+    logger.info("StudyDAOImpl - getStudyCategory() - Starts");
     Session session = null;
     String searchQuery = "";
     Query query = null;
@@ -6804,13 +6803,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudyCategory() - Ends");
+    logger.info("StudyDAOImpl - getStudyCategory() - Ends");
     return studyCatagory;
   }
 
   @Override
   public Integer getEligibilityType(Integer studyId) {
-    logger.entry("begin getEligibilityType()");
+    logger.info("StudyDAOImpl - getEligibilityType() - Starts");
     Session session = null;
     String searchQuery = "";
     Query query = null;
@@ -6828,13 +6827,13 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getEligibilityType() - Ends");
+    logger.info("StudyDAOImpl - getEligibilityType() - Ends");
     return eligibilityType;
   }
 
   @Override
   public StudyBo getStudy(Integer id) {
-    logger.entry("begin getStudy()");
+    logger.info("StudyDAOImpl - getStudy() - Starts");
     Session session = null;
     StudyBo study = null;
     try {
@@ -6848,7 +6847,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getStudy() - Ends");
+    logger.info("StudyDAOImpl - getStudy() - Ends");
     return study;
   }
 
@@ -6884,7 +6883,7 @@ public class StudyDAOImpl implements StudyDAO {
 
   @Override
   public boolean validateStudyActions(String studyId) {
-    logger.entry("begin validateStudyAction()");
+    logger.info("StudyDAOImpl - validateStudyAction() - Ends");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     Session session = null;
     StudySequenceBo studySequenceBo = null;
@@ -6928,7 +6927,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("validateStudyAction() - Ends");
+    logger.info("StudyDAOImpl - validateStudyAction() - Ends");
     return markedAsCompleted;
   }
 
@@ -6974,7 +6973,7 @@ public class StudyDAOImpl implements StudyDAO {
         session.close();
       }
     }
-    logger.exit("getConsentList() - Ends");
+    logger.info("StudyDAOImpl - getConsentList() - Ends");
     return consentBoList;
   }
 }

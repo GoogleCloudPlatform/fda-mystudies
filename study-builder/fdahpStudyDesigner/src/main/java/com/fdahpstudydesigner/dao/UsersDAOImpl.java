@@ -38,12 +38,11 @@ import java.util.List;
 import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -51,7 +50,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UsersDAOImpl implements UsersDAO {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(UsersDAOImpl.class.getName());
+  private static Logger logger = Logger.getLogger(UsersDAOImpl.class);
 
   HibernateTemplate hibernateTemplate;
 
@@ -65,7 +64,7 @@ public class UsersDAOImpl implements UsersDAO {
   @Override
   public String activateOrDeactivateUser(
       int userId, int userStatus, int loginUser, SessionObject userSession) {
-    logger.entry("begin activateOrDeactivateUser()");
+    logger.info("UsersDAOImpl - activateOrDeactivateUser() - Starts");
     String msg = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     int count = 0;
@@ -110,7 +109,7 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("activateOrDeactivateUser() - Ends");
+    logger.info("UsersDAOImpl - activateOrDeactivateUser() - Ends");
     return msg;
   }
 
@@ -118,7 +117,7 @@ public class UsersDAOImpl implements UsersDAO {
   @Override
   public UserIdAccessLevelInfo addOrUpdateUserDetails(
       UserBO userBO, String permissions, String selectedStudies, String permissionValues) {
-    logger.entry("begin addOrUpdateUserDetails()");
+    logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Starts");
     Session session = null;
     Integer userId = 0;
     String msg = FdahpStudyDesignerConstants.FAILURE;
@@ -250,7 +249,7 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("addOrUpdateUserDetails() - Ends");
+    logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Ends");
     if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
       return userIdAccessLevelInfo;
     } else return null;
@@ -258,7 +257,7 @@ public class UsersDAOImpl implements UsersDAO {
 
   @Override
   public String enforcePasswordChange(Integer userId, String email) {
-    logger.entry("begin enforcePasswordChange()");
+    logger.info("UsersDAOImpl - enforcePasswordChange() - Starts");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -317,14 +316,14 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("enforcePasswordChange() - Ends");
+    logger.info("UsersDAOImpl - enforcePasswordChange() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<String> getActiveUserEmailIds() {
-    logger.entry("begin getActiveUserEmailIds()");
+    logger.info("UsersDAOImpl - getActiveUserEmailIds() - Starts");
     Session session = null;
     List<String> emails = null;
     try {
@@ -345,14 +344,14 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("getActiveUserEmailIds() - Ends");
+    logger.info("UsersDAOImpl - getActiveUserEmailIds() - Ends");
     return emails;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<Integer> getPermissionsByUserId(Integer userId) {
-    logger.entry("begin getPermissionsByUserId()");
+    logger.info("UsersDAOImpl - getPermissionsByUserId() - Starts");
     Session session = null;
     Query query = null;
     List<Integer> permissions = null;
@@ -371,13 +370,13 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("getPermissionsByUserId() - Ends");
+    logger.info("UsersDAOImpl - getPermissionsByUserId() - Ends");
     return permissions;
   }
 
   @Override
   public List<String> getSuperAdminList() {
-    logger.entry("begin getSuperAdminList()");
+    logger.info("UsersDAOImpl - getSuperAdminList() - Starts");
     Session session = null;
     List<String> userSuperAdminList = null;
     Query query = null;
@@ -394,13 +393,13 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("getSuperAdminList() - Ends");
+    logger.info("UsersDAOImpl - getSuperAdminList() - Ends");
     return userSuperAdminList;
   }
 
   @Override
   public UserBO getSuperAdminNameByEmailId(String emailId) {
-    logger.entry("begin getSuperAdminNameByEmailId()");
+    logger.info("UsersDAOImpl - getSuperAdminNameByEmailId() - Starts");
     Session session = null;
     UserBO userBo = null;
     Query query = null;
@@ -418,13 +417,13 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("getSuperAdminNameByEmailId() - Ends");
+    logger.info("UsersDAOImpl - getSuperAdminNameByEmailId() - Ends");
     return userBo;
   }
 
   @Override
   public UserBO getUserDetails(int userId) {
-    logger.entry("begin getUserDetails()");
+    logger.info("UsersDAOImpl - getUserDetails() - Starts");
     Session session = null;
     UserBO userBO = null;
     Query query = null;
@@ -450,14 +449,14 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("getUserDetails() - Ends");
+    logger.info("UsersDAOImpl - getUserDetails() - Ends");
     return userBO;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<UserBO> getUserList() {
-    logger.entry("begin getUserList()");
+    logger.info("UsersDAOImpl - getUserList() - Starts");
     Session session = null;
     List<UserBO> userList = null;
     List<Object[]> objList = null;
@@ -494,13 +493,13 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("getUserList() - Ends");
+    logger.info("UsersDAOImpl - getUserList() - Ends");
     return userList;
   }
 
   @Override
   public Integer getUserPermissionByUserId(Integer sessionUserId) {
-    logger.entry("begin getUserPermissionByUserId()");
+    logger.info("UsersDAOImpl - getUserPermissionByUserId() - Starts");
     Session session = null;
     Integer userId = null;
     Query query = null;
@@ -518,13 +517,13 @@ public class UsersDAOImpl implements UsersDAO {
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserPermissionByUserId() - ERROR", e);
     }
-    logger.exit("getUserPermissionByUserId() - Ends");
+    logger.info("UsersDAOImpl - getUserPermissionByUserId() - Ends");
     return userId;
   }
 
   @Override
   public RoleBO getUserRole(int roleId) {
-    logger.entry("begin getUserRole()");
+    logger.info("UsersDAOImpl - getUserRole() - Starts");
     Session session = null;
     RoleBO roleBO = null;
     Query query = null;
@@ -539,14 +538,14 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("getUserRole() - Ends");
+    logger.info("UsersDAOImpl - getUserRole() - Ends");
     return roleBO;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<RoleBO> getUserRoleList() {
-    logger.entry("begin getUserRoleList()");
+    logger.info("UsersDAOImpl - getUserRoleList() - Starts");
     List<RoleBO> roleBOList = null;
     Query query = null;
     Session session = null;
@@ -561,7 +560,7 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.exit("getUserRoleList() - Ends");
+    logger.info("UsersDAOImpl - getUserRoleList() - Ends");
     return roleBOList;
   }
 }

@@ -37,14 +37,12 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import java.util.HashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 
 public class AppMetaDataOrchestration {
 
-  private static final XLogger LOGGER =
-      XLoggerFactory.getXLogger(AppMetaDataOrchestration.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(AppMetaDataOrchestration.class);
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -52,53 +50,53 @@ public class AppMetaDataOrchestration {
   AppMetaDataDao appMetaDataDao = new AppMetaDataDao();
 
   public TermsPolicyResponse termsPolicy() throws OrchestrationException {
-    LOGGER.entry("begin termsPolicy()");
+    LOGGER.info("INFO: AppMetaDataOrchestration - termsPolicy() :: Starts");
     TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
     try {
       termsPolicyResponse = appMetaDataDao.termsPolicy();
     } catch (Exception e) {
       LOGGER.error("AppMetaDataOrchestration - termsPolicy() :: ERROR", e);
     }
-    LOGGER.exit("termsPolicy() :: Ends");
+    LOGGER.info("INFO: AppMetaDataOrchestration - termsPolicy() :: Ends");
     return termsPolicyResponse;
   }
 
   public NotificationsResponse notifications(String skip, String authorization, String appId)
       throws OrchestrationException {
-    LOGGER.entry("begin notifications()");
+    LOGGER.info("INFO: AppMetaDataOrchestration - notifications() :: Starts");
     NotificationsResponse notificationsResponse = new NotificationsResponse();
     try {
       notificationsResponse = appMetaDataDao.notifications(skip, authorization, appId);
     } catch (Exception e) {
       LOGGER.error("AppMetaDataOrchestration - notifications() :: ERROR", e);
     }
-    LOGGER.exit("notifications() :: Ends");
+    LOGGER.info("INFO: AppMetaDataOrchestration - notifications() :: Ends");
     return notificationsResponse;
   }
 
   public AppUpdatesResponse appUpdates(String appVersion, String app)
       throws OrchestrationException {
-    LOGGER.entry("begin appUpdates()");
+    LOGGER.info("INFO: AppMetaDataOrchestration - appUpdates() :: Starts");
     AppUpdatesResponse appUpdates = new AppUpdatesResponse();
     try {
       appUpdates = appMetaDataDao.appUpdates(appVersion, app);
     } catch (Exception e) {
       LOGGER.error("AppMetaDataOrchestration - appUpdates() :: ERROR", e);
     }
-    LOGGER.exit("appUpdates() :: Ends");
+    LOGGER.info("INFO: AppMetaDataOrchestration - appUpdates() :: Ends");
     return appUpdates;
   }
 
   public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion)
       throws OrchestrationException {
-    LOGGER.entry("begin studyUpdates()");
+    LOGGER.info("INFO: AppMetaDataOrchestration - studyUpdates() :: Starts");
     StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
     try {
       studyUpdates = appMetaDataDao.studyUpdates(studyId, studyVersion);
     } catch (Exception e) {
       LOGGER.error("AppMetaDataOrchestration - studyUpdates() :: ERROR", e);
     }
-    LOGGER.exit("studyUpdates() :: Ends");
+    LOGGER.info("INFO: AppMetaDataOrchestration - studyUpdates() :: Ends");
     return studyUpdates;
   }
 
@@ -110,7 +108,7 @@ public class AppMetaDataOrchestration {
       String customStudyId,
       String message)
       throws OrchestrationException {
-    LOGGER.entry("begin updateAppVersionDetails()");
+    LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Starts");
     String updateAppVersionResponse = "OOPS! Something went wrong.";
     try {
       updateAppVersionResponse =
@@ -119,12 +117,12 @@ public class AppMetaDataOrchestration {
     } catch (Exception e) {
       LOGGER.error("AppMetaDataOrchestration - updateAppVersionDetails() :: ERROR", e);
     }
-    LOGGER.exit("updateAppVersionDetails() :: Ends");
+    LOGGER.info("INFO: AppMetaDataOrchestration - updateAppVersionDetails() :: Ends");
     return updateAppVersionResponse;
   }
 
   public AppVersionInfoBean getAppVersionInfo(String appId) {
-    LOGGER.entry("begin getAppVersionInfo()");
+    LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Starts");
     AppVersionInfoBean aAppVersionInfoBean;
     AppVersionInfo appVersionInfo = null;
     DeviceVersion android = new DeviceVersion();
@@ -132,7 +130,7 @@ public class AppMetaDataOrchestration {
 
     appVersionInfo = appMetaDataDao.getAppVersionInfo(appId);
     if (appVersionInfo == null) {
-      LOGGER.exit("getAppVersionInfo() :: Ends");
+      LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Ends");
       return null;
     }
     android.setLatestVersion(appVersionInfo.getAndroidVersion());
@@ -150,12 +148,12 @@ public class AppMetaDataOrchestration {
     aAppVersionInfoBean = new AppVersionInfoBean();
     aAppVersionInfoBean.setAndroid(android);
     aAppVersionInfoBean.setIos(ios);
-    LOGGER.exit("getAppVersionInfo() :: Ends");
+    LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Ends");
     return aAppVersionInfoBean;
   }
 
   public ErrorResponse storeResponseActivitiesTemp(String jsonData) throws Exception {
-    LOGGER.entry("begin storeResponseActivitiesTemp()");
+    LOGGER.info("INFO: AppMetaDataOrchestration - storeResponseActivitiesTemp() :: starts");
     ErrorResponse errorResponse = new ErrorResponse();
     JSONObject json = null, metadataJson = null;
     try {
@@ -187,7 +185,7 @@ public class AppMetaDataOrchestration {
     } catch (Exception e) {
       LOGGER.error("ERROR: AppMetaDataOrchestration - storeResponseActivitiesTemp()", e);
     }
-    LOGGER.exit("storeResponseActivitiesTemp() :: ends");
+    LOGGER.info("INFO: AppMetaDataOrchestration - storeResponseActivitiesTemp() :: ends");
     return errorResponse;
   }
 }

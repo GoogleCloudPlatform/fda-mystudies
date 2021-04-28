@@ -45,9 +45,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -56,8 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class DashBoardAndProfileController {
-  private static XLogger logger =
-      XLoggerFactory.getXLogger(DashBoardAndProfileController.class.getName());
+  private static Logger logger = Logger.getLogger(DashBoardAndProfileController.class.getName());
 
   @Autowired private DashBoardAndProfileService dashBoardAndProfileService;
 
@@ -71,7 +69,7 @@ public class DashBoardAndProfileController {
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
-    logger.entry("begin changePassword()");
+    logger.info("DashBoardAndProfileController - changePassword() - Starts");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = "";
@@ -101,25 +99,25 @@ public class DashBoardAndProfileController {
       response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
       logger.error("DashBoardAndProfileController - changePassword() - ERROR ", e);
     }
-    logger.exit("changePassword() - Ends");
+    logger.info("DashBoardAndProfileController - changePassword() - Ends");
   }
 
   @RequestMapping("/adminDashboard/viewDashBoard.do")
   public ModelAndView getAdminDashboard() {
-    logger.entry("begin getAdminDashboard");
+    logger.info("DashBoardAndProfileController - getAdminDashboard - Starts");
     ModelAndView mav = new ModelAndView();
     try {
       mav = new ModelAndView("fdaAdminDashBoardPage");
     } catch (Exception e) {
       logger.error("DashBoardAndProfileController - getAdminDashboard - ERROR", e);
     }
-    logger.exit("getAdminDashboard - Ends");
+    logger.info("DashBoardAndProfileController - getAdminDashboard - Ends");
     return mav;
   }
 
   @RequestMapping("/isEmailValid.do")
   public void isEmailValid(HttpServletResponse response, String email) {
-    logger.entry("begin isEmailValid()");
+    logger.info("DashBoardAndProfileController - isEmailValid() - Starts ");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -135,12 +133,12 @@ public class DashBoardAndProfileController {
       response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
       logger.error("DashBoardAndProfileController - isEmailValid() - ERROR " + e);
     }
-    logger.exit("isEmailValid() - Ends ");
+    logger.info("DashBoardAndProfileController - isEmailValid() - Ends ");
   }
 
   @RequestMapping("/adminDashboard/updateUserDetails.do")
   public ModelAndView updateProfileDetails(HttpServletRequest request, UserBO userBO) {
-    logger.entry("begin updateProfileDetails()");
+    logger.info("DashBoardAndProfileController - Entry Point: updateProfileDetails()");
     ModelAndView mav = new ModelAndView();
     Integer userId = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -183,13 +181,13 @@ public class DashBoardAndProfileController {
     } catch (Exception e) {
       logger.error("DashBoardAndProfileController:  updateProfileDetails()' = ", e);
     }
-    logger.exit("Exit Point: updateProfileDetails()");
+    logger.info("DashBoardAndProfileController - Exit Point: updateProfileDetails()");
     return mav;
   }
 
   @RequestMapping("/adminDashboard/viewUserDetails.do")
   public ModelAndView viewUserDetails(HttpServletRequest request) {
-    logger.entry("begin viewUserDetails()");
+    logger.info("DashBoardAndProfileController - viewUserDetails - Starts");
     ModelMap map = new ModelMap();
     ModelAndView mav = new ModelAndView();
     UserBO userBO = null;
@@ -240,7 +238,7 @@ public class DashBoardAndProfileController {
     } catch (Exception e) {
       logger.error("DashBoardAndProfileController - viewUserDetails - ERROR", e);
     }
-    logger.exit("viewUserDetails() - Ends");
+    logger.info("DashBoardAndProfileController - viewUserDetails - Ends");
     return mav;
   }
 }

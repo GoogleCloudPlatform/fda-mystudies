@@ -58,8 +58,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -70,7 +69,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginServiceImpl implements LoginService, UserDetailsService {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(LoginServiceImpl.class.getName());
+  private static Logger logger = Logger.getLogger(LoginServiceImpl.class.getName());
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
@@ -84,7 +83,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   public String authAndAddPassword(
       String securityToken, String password, UserBO userBO2, SessionObject sesObj) {
     UserBO userBO = null;
-    logger.entry("begin checkSecurityToken()");
+    logger.info("LoginServiceImpl - checkSecurityToken() - Starts");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     boolean isValid = false;
     boolean isIntialPasswordSetUp = false;
@@ -196,14 +195,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - checkSecurityToken() - ERROR ", e);
     }
-    logger.exit("checkSecurityToken() - Ends");
+    logger.info("LoginServiceImpl - checkSecurityToken() - Ends");
     return result;
   }
 
   @Override
   public String changePassword(
       Integer userId, String newPassword, String oldPassword, SessionObject sesObj) {
-    logger.entry("begin changePassword()");
+    logger.info("LoginServiceImpl - changePassword() - Starts");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;
     String oldPasswordError = propMap.get("old.password.error.msg");
@@ -275,14 +274,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - changePassword() - ERROR ", e);
     }
-    logger.exit("changePassword() - Ends");
+    logger.info("LoginServiceImpl - changePassword() - Ends");
     return message;
   }
 
   @Override
   public UserBO checkSecurityToken(String securityToken) {
     UserBO userBO = null;
-    logger.entry("begin checkSecurityToken()");
+    logger.info("LoginServiceImpl - checkSecurityToken() - Starts");
     Date securityTokenExpiredDate = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     UserBO chkBO = null;
@@ -315,26 +314,26 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - checkSecurityToken() - ERROR ", e);
     }
-    logger.exit("checkSecurityToken() - Ends");
+    logger.info("LoginServiceImpl - checkSecurityToken() - Ends");
     return chkBO;
   }
 
   @Override
   public Boolean isFrocelyLogOutUser(SessionObject sessionObject) {
-    logger.entry("begin isFrocelyLogOutUser()");
+    logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Starts");
     Boolean isFrocelyLogOut = false;
     try {
       isFrocelyLogOut = loginDAO.isFrocelyLogOutUser(sessionObject.getUserId());
     } catch (Exception e) {
       logger.error("LoginServiceImpl - isFrocelyLogOutUser() - ERROR ", e);
     }
-    logger.exit("isFrocelyLogOutUser() - Ends");
+    logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Ends");
     return isFrocelyLogOut;
   }
 
   @Override
   public Boolean isUserEnabled(SessionObject sessionObject) {
-    logger.entry("begin isUserEnabled()");
+    logger.info("LoginServiceImpl - isUserEnabled() - Starts");
     Boolean isUserEnabled = true;
     try {
       if (sessionObject.isSuperAdmin()) {
@@ -348,7 +347,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - isUserEnabled() - ERROR ", e);
     }
-    logger.exit("isUserEnabled() - Ends");
+    logger.info("LoginServiceImpl - isUserEnabled() - Ends");
     return isUserEnabled;
   }
 
@@ -364,7 +363,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   public Boolean logUserLogOut(SessionObject sessionObject) {
-    logger.entry("begin isFrocelyLogOutUser()");
+    logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Starts");
     Boolean isLogged = false;
     try {
 
@@ -372,7 +371,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - isFrocelyLogOutUser() - ERROR ", e);
     }
-    logger.exit("isFrocelyLogOutUser() - Ends");
+    logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Ends");
     return isLogged;
   }
 
@@ -383,7 +382,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       String oldEmail,
       String type,
       AuditLogEventRequest auditRequest) {
-    logger.entry("begin sendPasswordResetLinkToMail");
+    logger.info("LoginServiceImpl - sendPasswordResetLinkToMail - Starts");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String passwordResetToken = null;
     String message = propMap.get("user.forgot.error.msg");
@@ -573,7 +572,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       logger.error("LoginServiceImpl - sendPasswordResetLinkToMail - ERROR ", e);
       auditLogEventHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
     }
-    logger.exit("sendPasswordResetLinkToMail - Ends");
+    logger.info("LoginServiceImpl - sendPasswordResetLinkToMail - Ends");
     return message;
   }
 
@@ -584,7 +583,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   public String validateEmailChangeVerification(String securityToken) {
     UserBO userBO = null;
-    logger.entry("begin checkSecurityToken()");
+    logger.info("LoginServiceImpl - checkSecurityToken() - Starts");
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
       userBO = loginDAO.getUserBySecurityToken(securityToken);
@@ -596,7 +595,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - checkSecurityToken() - ERROR ", e);
     }
-    logger.exit("checkSecurityToken() - Ends");
+    logger.info("LoginServiceImpl - checkSecurityToken() - Ends");
     return result;
   }
 
@@ -604,7 +603,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   // Send mail to user when account locked due to invalid login credentials
   public void sendLockedAccountPasswordResetLinkToMail(
       String email, AuditLogEventRequest auditRequest) {
-    logger.entry("begin sendLockedAccountPasswordResetLinkToMail");
+    logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Starts");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
       String acceptLinkMail = propMap.get("acceptLinkMail").trim();
@@ -646,24 +645,24 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       logger.error("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - ERROR ", e);
       auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
     }
-    logger.exit("sendLockedAccountPasswordResetLinkToMail - Ends");
+    logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Ends");
   }
 
   @Override
   public boolean isInactiveUser(String securityToken) {
-    logger.entry("begin isActiveUser()");
+    logger.info("LoginServiceImpl - isActiveUser() - Starts");
     UserBO user = loginDAO.getUserBySecurityToken(securityToken);
     boolean isInactiveUser = user != null && !user.isEnabled();
-    logger.exit("isActiveUser() - Ends");
+    logger.info("LoginServiceImpl - isActiveUser() - Ends");
     return isInactiveUser;
   }
 
   @Override
   public boolean isIntialPasswordSetUp(String securityToken) {
-    logger.entry("begin isIntialPasswordSetUp()");
+    logger.info("LoginServiceImpl - isIntialPasswordSetUp() - Starts");
     UserBO user = loginDAO.getUserBySecurityToken(securityToken);
     boolean isIntialPasswordSetUp = StringUtils.isBlank(user.getUserPassword());
-    logger.exit("isIntialPasswordSetUp() - Ends");
+    logger.info("LoginServiceImpl - isIntialPasswordSetUp() - Ends");
     return isIntialPasswordSetUp;
   }
 }

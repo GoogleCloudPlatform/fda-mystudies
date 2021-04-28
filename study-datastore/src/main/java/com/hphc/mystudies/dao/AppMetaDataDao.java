@@ -50,16 +50,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 
 public class AppMetaDataDao {
 
-  private static final XLogger LOGGER = XLoggerFactory.getXLogger(AppMetaDataDao.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(AppMetaDataDao.class);
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -71,7 +70,7 @@ public class AppMetaDataDao {
   Query query = null;
 
   public TermsPolicyResponse termsPolicy() throws DAOException {
-    LOGGER.entry("begin termsPolicy()");
+    LOGGER.info("INFO: AppMetaDataDao - termsPolicy() :: Starts");
     TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
     try {
       termsPolicyResponse.setMessage(StudyMetaDataConstants.SUCCESS);
@@ -86,14 +85,14 @@ public class AppMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("AppMetaDataDao - termsPolicy() :: ERROR", e);
     }
-    LOGGER.exit("termsPolicy() :: Ends");
+    LOGGER.info("INFO: AppMetaDataDao - termsPolicy() :: Ends");
     return termsPolicyResponse;
   }
 
   @SuppressWarnings("unchecked")
   public NotificationsResponse notifications(String skip, String authorization, String appId)
       throws DAOException {
-    LOGGER.entry("begin notifications()");
+    LOGGER.info("INFO: AppMetaDataDao - notifications() :: Starts");
     Session session = null;
     NotificationsResponse notificationsResponse = new NotificationsResponse();
     List<NotificationDto> notificationList = null;
@@ -222,7 +221,7 @@ public class AppMetaDataDao {
         session.close();
       }
     }
-    LOGGER.exit("notifications() :: Ends");
+    LOGGER.info("INFO: AppMetaDataDao - notifications() :: Ends");
     return notificationsResponse;
   }
 
@@ -267,7 +266,7 @@ public class AppMetaDataDao {
 
   public AppUpdatesResponse appUpdates(String appVersion, String authCredentials)
       throws DAOException {
-    LOGGER.entry("begin appUpdates()");
+    LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Starts");
     Session session = null;
     AppUpdatesResponse appUpdates = new AppUpdatesResponse();
     AppVersionDto appVersionDto = null;
@@ -318,14 +317,14 @@ public class AppMetaDataDao {
         session.close();
       }
     }
-    LOGGER.exit("appUpdates() :: Ends");
+    LOGGER.info("INFO: AppMetaDataDao - appUpdates() :: Ends");
     return appUpdates;
   }
 
   @SuppressWarnings("unchecked")
   public StudyUpdatesResponse studyUpdates(String studyId, String studyVersion)
       throws DAOException {
-    LOGGER.entry("begin studyUpdates()");
+    LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Starts");
     Session session = null;
     StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
     StudyUpdatesBean updates = new StudyUpdatesBean();
@@ -463,7 +462,7 @@ public class AppMetaDataDao {
         session.close();
       }
     }
-    LOGGER.exit("studyUpdates() :: Ends");
+    LOGGER.info("INFO: AppMetaDataDao - studyUpdates() :: Ends");
     return studyUpdates;
   }
 
@@ -476,7 +475,7 @@ public class AppMetaDataDao {
       String customStudyId,
       String message)
       throws DAOException {
-    LOGGER.entry("begin updateAppVersionDetails()");
+    LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Starts");
     Session session = null;
     Transaction transaction = null;
     String updateAppVersionResponse = "OOPS! Something went wrong.";
@@ -554,12 +553,12 @@ public class AppMetaDataDao {
         session.close();
       }
     }
-    LOGGER.exit("updateAppVersionDetails() :: Ends");
+    LOGGER.info("INFO: AppMetaDataDao - updateAppVersionDetails() :: Ends");
     return updateAppVersionResponse;
   }
 
   public AppVersionInfo getAppVersionInfo(String appId) {
-    LOGGER.entry("begin getAppVersionInfo()");
+    LOGGER.info("INFO: AppMetaDataDao - getAppVersionInfo() :: Starts");
     Session session = null;
     AppVersionInfo appVersionInfo = null;
     try {
@@ -573,7 +572,7 @@ public class AppMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ERROR: AppMetaDataDao - getAppVersionInfo()", e);
     }
-    LOGGER.exit("getAppVersionInfo() :: Ends");
+    LOGGER.info("INFO: AppMetaDataDao - getAppVersionInfo() :: Ends");
     return appVersionInfo;
   }
 }

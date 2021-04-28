@@ -30,22 +30,21 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorAdapter {
 
-  private static XLogger logger =
-      XLoggerFactory.getXLogger(FdahpStudyDesignerPreHandlerInterceptor.class.getName());
+  private static final Logger logger =
+      Logger.getLogger(FdahpStudyDesignerPreHandlerInterceptor.class);
 
   @Autowired private UsersService usersService;
 
   @Override
   public boolean preHandle(
       HttpServletRequest request, HttpServletResponse response, Object handler) {
-    logger.entry("begin preHandle()");
+    logger.info("FdahpStudyDesignerPreHandlerInterceptor - preHandle() - Starts");
     SessionObject session = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String defaultURL = propMap.get("action.default.redirect.url");
@@ -148,7 +147,7 @@ public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorA
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerPreHandlerInterceptor - preHandle()", e);
     }
-    logger.exit(
+    logger.info(
         "FdahpStudyDesignerPreHandlerInterceptor - End Point: preHandle() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime()

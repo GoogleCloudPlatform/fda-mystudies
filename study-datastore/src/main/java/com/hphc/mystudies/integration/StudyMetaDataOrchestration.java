@@ -32,13 +32,11 @@ import com.hphc.mystudies.dao.StudyMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import java.util.HashMap;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 
 public class StudyMetaDataOrchestration {
 
-  private static final XLogger LOGGER =
-      XLoggerFactory.getXLogger(StudyMetaDataOrchestration.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(StudyMetaDataOrchestration.class);
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -46,60 +44,60 @@ public class StudyMetaDataOrchestration {
   StudyMetaDataDao studyMetaDataDao = new StudyMetaDataDao();
 
   public boolean isValidAuthorizationId(String authorization) throws OrchestrationException {
-    LOGGER.entry("begin isValidAuthorizationId()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
     boolean hasValidAuthorization = false;
     try {
       hasValidAuthorization = studyMetaDataDao.isValidAuthorizationId(authorization);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
     }
-    LOGGER.exit("isValidAuthorizationId() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
     return hasValidAuthorization;
   }
 
   public GatewayInfoResponse gatewayAppResourcesInfo(String authorization)
       throws OrchestrationException {
-    LOGGER.entry("begin gatewayAppResourcesInfo()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: Starts");
     GatewayInfoResponse gatewayInfo = new GatewayInfoResponse();
     try {
       gatewayInfo = studyMetaDataDao.gatewayAppResourcesInfo(authorization);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: ERROR", e);
     }
-    LOGGER.exit("gatewayAppResourcesInfo() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - gatewayAppResourcesInfo() :: Ends");
     return gatewayInfo;
   }
 
   public StudyResponse studyList(String authorization, String applicationId)
       throws OrchestrationException {
-    LOGGER.entry("begin studyList()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - studyList() :: Starts");
     StudyResponse studyResponse = new StudyResponse();
     try {
       studyResponse = studyMetaDataDao.studyList(authorization, applicationId);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - studyList() :: ERROR", e);
     }
-    LOGGER.exit("studyList() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - studyList() :: Ends");
     return studyResponse;
   }
 
   public EligibilityConsentResponse eligibilityConsentMetadata(String studyId)
       throws OrchestrationException {
-    LOGGER.entry("begin eligibilityConsentMetadata()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Starts");
     EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
     try {
       eligibilityConsentResponse = studyMetaDataDao.eligibilityConsentMetadata(studyId);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - eligibilityConsentMetadata() :: ERROR", e);
     }
-    LOGGER.exit("eligibilityConsentMetadata() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - eligibilityConsentMetadata() :: Ends");
     return eligibilityConsentResponse;
   }
 
   public ConsentDocumentResponse consentDocument(
       String studyId, String consentVersion, String activityId, String activityVersion)
       throws OrchestrationException {
-    LOGGER.entry("begin consentDocument()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Starts");
     ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
     try {
       consentDocumentResponse =
@@ -107,93 +105,93 @@ public class StudyMetaDataOrchestration {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - consentDocument() :: ERROR", e);
     }
-    LOGGER.exit("consentDocument() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - consentDocument() :: Ends");
     return consentDocumentResponse;
   }
 
   public ResourcesResponse resourcesForStudy(String studyId) throws OrchestrationException {
-    LOGGER.entry("begin resourcesForStudy()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - resourcesForStudy() :: Starts");
     ResourcesResponse resourcesResponse = new ResourcesResponse();
     try {
       resourcesResponse = studyMetaDataDao.resourcesForStudy(studyId);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - resourcesForStudy() :: ERROR", e);
     }
-    LOGGER.exit("resourcesForStudy() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - resourcesForStudy() :: Ends");
     return resourcesResponse;
   }
 
   public StudyInfoResponse studyInfo(String studyId) throws OrchestrationException {
-    LOGGER.entry("begin studyInfo()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Starts");
     StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
     try {
       studyInfoResponse = studyMetaDataDao.studyInfo(studyId);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - studyInfo() :: ERROR", e);
     }
-    LOGGER.exit("studyInfo() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - studyInfo() :: Ends");
     return studyInfoResponse;
   }
 
   public boolean isValidStudy(String studyId) throws OrchestrationException {
-    LOGGER.entry("begin isValidStudy()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
     boolean flag = false;
     try {
       flag = studyMetaDataDao.isValidStudy(studyId);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - isValidStudy() :: ERROR", e);
     }
-    LOGGER.exit("isValidStudy() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Ends");
     return flag;
   }
 
   public boolean isValidActivity(String activityId, String studyId, String activityVersion)
       throws OrchestrationException {
-    LOGGER.entry("begin isValidActivity()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
     boolean flag = false;
     try {
       flag = studyMetaDataDao.isValidActivity(activityId, studyId, activityVersion);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - isValidActivity() :: ERROR", e);
     }
-    LOGGER.exit("isValidActivity() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Ends");
     return flag;
   }
 
   public boolean isActivityTypeQuestionnaire(
       String activityId, String studyId, String activityVersion) throws OrchestrationException {
-    LOGGER.entry("begin isActivityTypeQuestionnaire()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
     boolean flag = false;
     try {
       flag = studyMetaDataDao.isActivityTypeQuestionnaire(activityId, studyId, activityVersion);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: ERROR", e);
     }
-    LOGGER.exit("isActivityTypeQuestionnaire() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
     return flag;
   }
 
   public boolean isValidToken(String token) throws OrchestrationException {
-    LOGGER.entry("begin isValidToken()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidToken() :: Starts");
     boolean flag = false;
     try {
       flag = studyMetaDataDao.isValidToken(token);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - isValidToken() :: ERROR", e);
     }
-    LOGGER.exit("isValidToken() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidToken() :: Ends");
     return flag;
   }
 
   public StudyResponse study(String studyId) throws OrchestrationException {
-    LOGGER.entry("begin study()");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Starts");
     StudyResponse studyResponse = new StudyResponse();
     try {
       studyResponse = studyMetaDataDao.study(studyId);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - study() :: ERROR", e);
     }
-    LOGGER.exit("study() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataOrchestration - study() :: Ends");
     return studyResponse;
   }
 }

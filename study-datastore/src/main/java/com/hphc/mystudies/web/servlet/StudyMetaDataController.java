@@ -31,13 +31,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 
 public class StudyMetaDataController extends HttpServlet {
 
-  private static final XLogger LOGGER =
-      XLoggerFactory.getXLogger(StudyMetaDataController.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(StudyMetaDataController.class);
 
   private static final long serialVersionUID = 1L;
 
@@ -47,23 +45,23 @@ public class StudyMetaDataController extends HttpServlet {
 
   @Override
   public void init(ServletConfig servletConfig) throws ServletException {
-    LOGGER.entry("begin init()");
+    LOGGER.info("INFO: StudyMetaDataController - init() :: Starts");
     super.init(servletConfig);
-    LOGGER.exit("init() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataController - init() :: Ends");
   }
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    LOGGER.entry("begin doGet()");
+    LOGGER.info("INFO: StudyMetaDataController - doGet() :: Starts");
     doPost(req, resp);
-    LOGGER.exit("doGet() :: Ends");
+    LOGGER.info("INFO: StudyMetaDataController - doGet() :: Ends");
   }
 
   @Override
   public void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    LOGGER.entry("begin doPost()");
+    LOGGER.info("INFO: StudyMetaDataController - doPost() :: Starts");
     String jsonp_callback = null;
     String localForwardURL = forwardURL;
     URL URL = new URL(localForwardURL);
@@ -105,6 +103,6 @@ public class StudyMetaDataController extends HttpServlet {
     } else {
       resp.getWriter().write(builder.toString());
     }
-    LOGGER.exit("doPost() :: Ends ");
+    LOGGER.info("INFO: StudyMetaDataController - doPost() :: Ends ");
   }
 }

@@ -57,12 +57,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -73,8 +72,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class StudyActiveTasksController {
 
-  private static XLogger logger =
-      XLoggerFactory.getXLogger(StudyActiveTasksController.class.getName());
+  private static Logger logger = Logger.getLogger(StudyActiveTasksController.class.getName());
 
   @Autowired private StudyActiveTasksService studyActiveTasksService;
 
@@ -86,7 +84,7 @@ public class StudyActiveTasksController {
 
   @RequestMapping("/adminStudies/activeTAskMarkAsCompleted.do")
   public ModelAndView activeTAskMarkAsCompleted(HttpServletRequest request) {
-    logger.entry("begin activeTAskMarkAsCompleted()");
+    logger.info("StudyActiveTasksController - activeTAskMarkAsCompleted() - Starts");
     ModelAndView mav = new ModelAndView("redirect:viewStudyActiveTasks.do");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -150,13 +148,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - consentMarkAsCompleted() - ERROR", e);
     }
-    logger.exit("consentMarkAsCompleted() - Ends");
+    logger.info("StudyActiveTasksController - consentMarkAsCompleted() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/deleteActiveTask.do", method = RequestMethod.POST)
   public void deleteActiveTask(HttpServletRequest request, HttpServletResponse response) {
-    logger.entry("begin deleteActiveTask()");
+    logger.info("StudyActiveTasksController - deleteActiveTask - Starts");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -212,7 +210,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - deleteActiveTask - ERROR", e);
     }
-    logger.exit("deleteActiveTask() - Ends");
+    logger.info("StudyActiveTasksController - deleteActiveTask - Ends");
   }
 
   public List<String> getTimeRangeList(ActiveTaskBo activeTaskBo) {
@@ -262,7 +260,7 @@ public class StudyActiveTasksController {
 
   @RequestMapping("/adminStudies/navigateContentActiveTask.do")
   public ModelAndView navigateContentActiveTask(HttpServletRequest request) {
-    logger.entry("begin navigateContentActiveTask()");
+    logger.info("StudyActiveTasksController - navigateContentActiveTask() - Starts");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
@@ -370,13 +368,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - navigateContentActiveTask() - ERROR", e);
     }
-    logger.exit("navigateContentActiveTask() - Ends");
+    logger.info("StudyActiveTasksController - navigateContentActiveTask() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/saveActiveTaskSchedule.do", method = RequestMethod.POST)
   public void saveActiveTaskSchedule(HttpServletRequest request, HttpServletResponse response) {
-    logger.entry("begin saveActiveTaskSchedule()");
+    logger.info("StudyActiveTasksController - saveQuestionnaireSchedule - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -441,13 +439,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - saveQuestionnaireSchedule - Error", e);
     }
-    logger.exit("saveActiveTaskSchedule() - Ends");
+    logger.info("StudyActiveTasksController - saveQuestionnaireSchedule - Ends");
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateActiveTaskContent.do")
   public ModelAndView saveOrUpdateActiveTaskContent(
       HttpServletRequest request, ActiveTaskBo activeTaskBo) {
-    logger.entry("begin saveOrUpdateActiveTaskContent()");
+    logger.info("StudyActiveTasksController - saveOrUpdateActiveTaskContent - Starts");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ActiveTaskBo addActiveTaskBo = null;
@@ -552,7 +550,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - saveOrUpdateActiveTaskContent - ERROR", e);
     }
-    logger.exit("saveOrUpdateActiveTaskContent() - Ends");
+    logger.info("StudyActiveTasksController - saveOrUpdateActiveTaskContent - Ends");
     return mav;
   }
 
@@ -561,7 +559,7 @@ public class StudyActiveTasksController {
       method = RequestMethod.POST)
   public ModelAndView saveorUpdateActiveTaskSchedule(
       HttpServletRequest request, ActiveTaskBo activeTaskBo) {
-    logger.entry("begin saveorUpdateActiveTaskSchedule()");
+    logger.info("StudyActiveTaskController - saveorUpdateActiveTaskSchedule - Starts");
     ModelAndView mav = new ModelAndView("questionnairePage");
     new ArrayList<>();
     StudyBo studyBo = null;
@@ -585,7 +583,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTaskController - saveorUpdateActiveTaskSchedule - Error", e);
     }
-    logger.exit("saveorUpdateActiveTaskSchedule() - Ends");
+    logger.info("StudyActiveTaskController - saveorUpdateActiveTaskSchedule - Ends");
     return mav;
   }
 
@@ -594,7 +592,7 @@ public class StudyActiveTasksController {
       method = RequestMethod.POST)
   public void validateActiveTaskShortTitleId(
       HttpServletRequest request, HttpServletResponse response) throws IOException {
-    logger.entry("begin validateActiveTaskShortTitleId()");
+    logger.info("StudyActiveTasksController - validateActiveTaskShortTitleId() - Starts ");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -660,7 +658,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - validateActiveTaskShortTitleId() - ERROR ", e);
     }
-    logger.exit("validateActiveTaskShortTitleId() - Ends ");
+    logger.info("StudyActiveTasksController - validateActiveTaskShortTitleId() - Ends ");
     jsonobject.put("message", message);
     response.setContentType("application/json");
     out = response.getWriter();
@@ -672,7 +670,7 @@ public class StudyActiveTasksController {
       method = RequestMethod.POST)
   public void validateActiveTaskStatShortTitleId(
       HttpServletRequest request, HttpServletResponse response) throws IOException {
-    logger.entry("begin validateActiveTaskShortTitleId()");
+    logger.info("StudyActiveTasksController - validateActiveTaskShortTitleId() - Starts ");
     JSONObject jsonobject = new JSONObject();
     JSONArray statJsonArray = null;
     PrintWriter out;
@@ -728,7 +726,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - validateActiveTaskShortTitleId() - ERROR ", e);
     }
-    logger.exit("validateActiveTaskShortTitleId() - Ends ");
+    logger.info("StudyActiveTasksController - validateActiveTaskShortTitleId() - Ends ");
     jsonobject.put("message", message);
     response.setContentType("application/json");
     out = response.getWriter();
@@ -737,7 +735,7 @@ public class StudyActiveTasksController {
 
   @RequestMapping("/adminStudies/viewActiveTask.do")
   public ModelAndView viewActiveTask(HttpServletRequest request) {
-    logger.entry("begin viewActiveTask()");
+    logger.info("StudyActiveTasksController - viewActiveTask() - Starts");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     ActiveTaskBo activeTaskBo = null;
@@ -862,13 +860,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - viewActiveTask() - ERROR", e);
     }
-    logger.exit("viewActiveTask() - Ends");
+    logger.info("StudyActiveTasksController - viewActiveTask() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/viewScheduledActiveTask.do")
   public ModelAndView viewScheduledActiveTask(HttpServletRequest request) {
-    logger.entry("begin viewScheduledActiveTask()");
+    logger.info("StudyActiveTaskController - viewScheduledActiveTask - Starts");
     ModelAndView mav = new ModelAndView("questionnairePage");
     ModelMap map = new ModelMap();
     String sucMsg = "";
@@ -964,13 +962,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTaskController - viewScheduledActiveTask - Error", e);
     }
-    logger.exit("viewScheduledActiveTask() - Ends");
+    logger.info("StudyActiveTaskController - viewScheduledActiveTask - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/viewStudyActiveTasks.do")
   public ModelAndView viewStudyActiveTasks(HttpServletRequest request) {
-    logger.entry("begin viewStudyActiveTasks()");
+    logger.info("StudyActiveTasksController - viewStudyActiveTasks - Starts");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
@@ -1082,7 +1080,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - viewStudyActiveTasks - ERROR", e);
     }
-    logger.exit("viewStudyActiveTasks() - Ends");
+    logger.info("StudyActiveTasksController - viewStudyActiveTasks - Ends");
     return mav;
   }
 }

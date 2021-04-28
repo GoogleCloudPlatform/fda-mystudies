@@ -55,8 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -76,14 +75,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class FdahpStudyDesignerUtil {
 
   /* Read Properties file */
-  private static XLogger logger = XLoggerFactory.getXLogger(FdahpStudyDesignerUtil.class.getName());
+  private static Logger logger = Logger.getLogger(FdahpStudyDesignerUtil.class.getName());
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
 
   private static final String PATH_SEPARATOR = "/";
 
   public static Date addDaysToDate(Date date, int days) {
-    logger.entry("begin addDaysToDate()");
+    logger.info("fdahpStudyDesignerUtiltyLinkUtil: addDaysToDate :: Starts");
     try {
       Calendar cal = Calendar.getInstance();
       cal.setTime(date);
@@ -92,7 +91,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("ERROR: FdahpStudyDesignerUtil.addDaysToDate() ::", e);
     }
-    logger.exit("addDaysToDate() :: Ends");
+    logger.info("FdahpStudyDesignerUtil: addDaysToDate :: Ends");
     return date;
   }
 
@@ -113,7 +112,7 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static String addMinutes(String dtStr, int minutes) {
-    logger.entry("begin addMinutes()");
+    logger.info("FdahpStudyDesignerUtil - Entry Point: addMinutes()");
     String newdateStr = "";
     try {
       Date dt = new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME).parse(dtStr);
@@ -126,7 +125,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - addMinutes() : ", e);
     }
-    logger.exit("addMinutes() - Ends");
+    logger.info("FdahpStudyDesignerUtil - Exit Point: addMinutes()");
     return newdateStr;
   }
 
@@ -184,19 +183,22 @@ public class FdahpStudyDesignerUtil {
 
   public static Boolean compareEncryptedPassword(String dbEncryptPassword, String uiPassword) {
     Boolean isMatch = false;
-    logger.entry("begin getEncryptedString()");
+    logger.info("getEncryptedString start");
     try {
       BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       isMatch = passwordEncoder.matches(uiPassword, dbEncryptPassword);
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - compairEncryptedPassword() - ERROR", e);
     }
-    logger.exit("getEncryptedString() end");
+    logger.info("getEncryptedString end");
     return isMatch;
   }
 
   public static boolean fieldsValidation(String... fields) {
-    logger.entry("begin formValidation() - " + " : " + FdahpStudyDesignerUtil.getCurrentDateTime());
+    logger.info(
+        "FdahpStudyDesignerUtil - Entry Point: formValidation() - "
+            + " : "
+            + FdahpStudyDesignerUtil.getCurrentDateTime());
     List<String> fieldsList = new ArrayList<>();
     boolean result = true;
     try {
@@ -213,13 +215,15 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("ERROR: FdahpStudyDesignerUtil: formValidation(): ", e);
     }
-    logger.exit(
-        "Exit Point: formValidation() - " + " : " + FdahpStudyDesignerUtil.getCurrentDateTime());
+    logger.info(
+        "FdahpStudyDesignerUtil - Exit Point: formValidation() - "
+            + " : "
+            + FdahpStudyDesignerUtil.getCurrentDateTime());
     return result;
   }
 
   public static String formatTime(String inputTime, String inputFormat, String outputFormat) {
-    logger.entry("begin formatTime()");
+    logger.info("FdahpStudyDesignerUtil.formatTime() :: Starts");
     String finalTime = "";
     SimpleDateFormat inputSDF = new SimpleDateFormat(inputFormat);
     SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat);
@@ -230,7 +234,7 @@ public class FdahpStudyDesignerUtil {
         logger.error("FdahpStudyDesignerUtil.formatTime() ::", e);
       }
     }
-    logger.exit("formatTime() :: Ends");
+    logger.info("FdahpStudyDesignerUtil.formatTime() :: Ends");
     return finalTime;
   }
 
@@ -251,7 +255,7 @@ public class FdahpStudyDesignerUtil {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public static Map<String, String> getAppProperties() {
     HashMap hm = new HashMap<String, String>();
-    logger.entry("begin getAppProperties() :: Properties Initialization");
+    logger.info("FdahpStudyDesignerUtil - getAppProperties() :: Properties Initialization");
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
     Resource resource = null;
@@ -276,7 +280,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getAppProperties() - ERROR ", e);
     }
-    logger.exit("getAppProperties() - ends");
+    logger.info("FdahpStudyDesignerUtil - getAppProperties() - ends");
     return hm;
   }
 
@@ -428,8 +432,8 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static Date getCurrentDateTimeAsDate() {
-    logger.entry(
-        "begin getCurrentDateTimeAsDate() - "
+    logger.info(
+        "FdahpStudyDesignerUtil - Entry Point: getCurrentDateTimeAsDate() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime());
     Date dateNow = null;
@@ -445,8 +449,8 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("ERROR: getCurrentDateTimeAsDate(): ", e);
     }
-    logger.exit(
-        "Exit Point: getCurrentDateTimeAsDate() - "
+    logger.info(
+        "FdahpStudyDesignerUtil - Exit Point: getCurrentDateTimeAsDate() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime());
     return dateNow;
@@ -459,8 +463,10 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static Date getCurrentUtilDateTime() {
-    logger.entry(
-        "begin getCurrentUtilDateTime() - " + " : " + FdahpStudyDesignerUtil.getCurrentDateTime());
+    logger.info(
+        "FdahpStudyDesignerUtil - Entry Point: getCurrentUtilDateTime() - "
+            + " : "
+            + FdahpStudyDesignerUtil.getCurrentDateTime());
     Date utilDate = new Date();
     Calendar currentDate = Calendar.getInstance();
     String dateNow =
@@ -471,17 +477,17 @@ public class FdahpStudyDesignerUtil {
     } catch (ParseException e) {
       logger.error("FdahpStudyDesignerUtil - getCurrentUtilDateTime() : ", e);
     }
-    logger.exit(
-        "Exit Point: getCurrentUtilDateTime() - "
+    logger.info(
+        "FdahpStudyDesignerUtil - Exit Point: getCurrentUtilDateTime() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime());
     return utilDate;
   }
 
   public static String getDate(String date, SimpleDateFormat sdf) {
-    logger.entry("begin getDate()");
+    logger.info("FdahpStudyDesignerUtil.getDate() :: Starts");
     String postedDate = sdf.format(date);
-    logger.exit("getDate() :: Ends");
+    logger.info("FdahpStudyDesignerUtil.getDate() :: Ends");
     return postedDate;
   }
 
@@ -501,13 +507,13 @@ public class FdahpStudyDesignerUtil {
     } catch (ParseException e) {
       logger.error("FdahpStudyDesignerUtil - getDateAndTimeBasedOnTimeZone() : ", e);
     }
-    logger.exit(" User Date and Time based on the Time Zone : " + actualDateTime);
+    logger.info(" User Date and Time based on the Time Zone : " + actualDateTime);
     return actualDateTime;
   }
 
   public static String getDecodedStringByBase64(String encodedText) {
-    logger.entry(
-        "begin getDecodedStringByBase64() - "
+    logger.info(
+        "FdahpStudyDesignerUtil - Entry Point: getDecodedStringByBase64() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime());
     try {
@@ -518,8 +524,8 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getDecodedStringByBase64() : ", e);
     }
-    logger.exit(
-        "Exit Point: getDecodedStringByBase64() - "
+    logger.info(
+        "FdahpStudyDesignerUtil - Exit Point: getDecodedStringByBase64() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime());
     return "";
@@ -548,8 +554,8 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static String getEncodedStringByBase64(String plainText) {
-    logger.entry(
-        "begin getEncodedStringByBase64() - "
+    logger.info(
+        "FdahpStudyDesignerUtil - Entry Point: getEncodedStringByBase64() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime());
     try {
@@ -559,8 +565,8 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getEncodedStringByBase64() : ", e);
     }
-    logger.exit(
-        "Exit Point: getEncodedStringByBase64() - "
+    logger.info(
+        "FdahpStudyDesignerUtil - Exit Point: getEncodedStringByBase64() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime());
     return "";
@@ -568,7 +574,7 @@ public class FdahpStudyDesignerUtil {
 
   public static String getEncryptedFormat(String input) {
     StringBuffer sb = new StringBuffer();
-    logger.entry("begin Password Encryption method==start");
+    logger.debug("Password Encryption method==start");
     if (input != null) {
       /* Add the password salt to input parameter */
       input = input + FdahpStudyDesignerConstants.ENCRYPT_SALT;
@@ -588,14 +594,14 @@ public class FdahpStudyDesignerUtil {
         logger.error("FdahpStudyDesignerUtil - getEncryptedFormat() - ERROR", e);
       }
     }
-    logger.exit("Password Encryption method==end");
+    logger.debug("Password Encryption method==end");
     return sb.toString();
   }
 
   /* getEncodedString(String test) method returns Encoded String */
   public static String getEncryptedPassword(String input) {
     String hashedPassword = null;
-    logger.entry("begin getEncryptedPassword()");
+    logger.info("getEncryptedString start");
     if (input != null) {
       try {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -604,14 +610,14 @@ public class FdahpStudyDesignerUtil {
         logger.error("FdahpStudyDesignerUtil - getEncryptedPassword() - ERROR", e);
       }
     }
-    logger.exit("getEncryptedPassword() end");
+    logger.info("getEncryptedString end");
     return hashedPassword;
   }
 
   /* getEncodedString(String test) method returns Encoded String */
   public static String getEncryptedString(String input) {
     StringBuffer sb = new StringBuffer();
-    logger.entry("begin getEncryptedString()");
+    logger.info("getEncryptedString start");
     if (input != null) {
       /** Add the password salt to input parameter */
       input = input + FdahpStudyDesignerConstants.FDA_SALT;
@@ -631,7 +637,7 @@ public class FdahpStudyDesignerUtil {
         logger.error("FdahpStudyDesignerUtil - getEncryptedString() - ERROR", e);
       }
     }
-    logger.exit("getEncryptedString() end");
+    logger.info("getEncryptedString end");
     return sb.toString();
   }
 
@@ -753,7 +759,7 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static String getSessionUserRole() {
-    logger.entry("begin getSessionUserRole()");
+    logger.info("FdahpStudyDesignerUtil - getSessionUser() :: Starts");
     String userRoles = "";
     try {
       SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -765,7 +771,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getSessionUser() - ERROR ", e);
     }
-    logger.exit("getSessionUserRole() :: Ends");
+    logger.info("FdahpStudyDesignerUtil - getSessionUser() :: Ends");
     return userRoles;
   }
 
@@ -800,8 +806,8 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static Integer getTimeDiffToCurrentTimeInHr(Date date) {
-    logger.entry(
-        "begin getTimeDiffToCurrentTimeInHr() - "
+    logger.info(
+        "FdahpStudyDesignerUtil - Entry Point: getTimeDiffToCurrentTimeInHr() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime());
     Integer diffHours = null;
@@ -813,7 +819,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getTimeDiffToCurrentTimeInHr() : ", e);
     }
-    logger.exit("getTimeDiffToCurrentTimeInHr() - Ends");
+    logger.info("FdahpStudyDesignerUtil - Exit Point: getTimeDiffToCurrentTimeInHr() - ");
     return diffHours;
   }
 
@@ -872,24 +878,24 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static boolean isEmpty(String str) {
-    logger.entry("begin isEmpty()");
+    logger.info("FdahpStudyDesignerUtil - isEmpty() :: Starts");
     boolean flag = false;
     if ((null == str) || "".equals(str)) {
       flag = true;
     }
-    logger.exit("isEmpty() :: Ends");
+    logger.info("FdahpStudyDesignerUtil - isEmpty() :: Ends");
     return flag;
   }
 
   public static boolean isNotEmpty(String str) {
-    logger.entry("begin isNotEmpty()");
+    logger.info("FdahpStudyDesignerUtil - isNotEmpty() :: Starts");
     boolean flag = !isEmpty(str);
-    logger.exit("isNotEmpty() :: Ends");
+    logger.info("FdahpStudyDesignerUtil - isNotEmpty() :: Ends");
     return flag;
   }
 
   public static boolean isSession(HttpServletRequest request) {
-    logger.entry("begin isSession()");
+    logger.info("FdahpStudyDesignerUtil - isSession() :: Starts");
     boolean flag = false;
     try {
       SessionObject sesObj =
@@ -901,7 +907,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - isSession() - ERROR ", e);
     }
-    logger.exit("FdahpStudyDesignerUtil - isSession() :: Ends");
+    logger.info("FdahpStudyDesignerUtil - isSession() :: Ends");
     return flag;
   }
 
@@ -932,31 +938,31 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static String round(double value) {
-    logger.entry("begin round()");
+    logger.info("FdahpStudyDesignerUtil: double round :: Starts");
     String rounded = "0";
     try {
       rounded = String.valueOf(Math.round(value));
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil: double round() :: ERROR: ", e);
     }
-    logger.exit("round() :: Ends");
+    logger.info("FdahpStudyDesignerUtil: double round :: Ends");
     return rounded;
   }
 
   public static String round(float value) {
-    logger.entry("begin float round()");
+    logger.info("FdahpStudyDesignerUtil: float round :: Starts");
     String rounded = "0";
     try {
       rounded = String.valueOf(Math.round(value));
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil: float round() :: ERROR: ", e);
     }
-    logger.exit("float round() :: Ends");
+    logger.info("FdahpStudyDesignerUtil: float round :: Ends");
     return rounded;
   }
 
   public static String round(String value) {
-    logger.entry("begin String round()");
+    logger.info("FdahpStudyDesignerUtil: String round :: Starts");
     String rounded = "0";
     try {
       if (StringUtils.isNotEmpty(value)) {
@@ -965,7 +971,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil: String round() :: ERROR: ", e);
     }
-    logger.exit("String round() :: Ends");
+    logger.info("FdahpStudyDesignerUtil: String round :: Ends");
     return rounded;
   }
 
@@ -981,7 +987,7 @@ public class FdahpStudyDesignerUtil {
   }
 
   public static String getHashedValue(String secretToHash) {
-    logger.entry("begin getHashedValue()");
+    logger.info("FdahpStudyDesignerUtil - getHashedValue() - starts");
     String generatedHash = null;
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -994,7 +1000,7 @@ public class FdahpStudyDesignerUtil {
     } catch (NoSuchAlgorithmException e) {
       logger.info("FdahpStudyDesignerUtil getHashedValue() - error() ", e);
     }
-    logger.exit("getHashedValue() - ends");
+    logger.info("FdahpStudyDesignerUtil - getHashedValue() - ends");
     return generatedHash;
   }
 

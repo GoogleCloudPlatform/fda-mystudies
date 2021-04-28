@@ -45,16 +45,14 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService {
 
-  private static XLogger logger =
-      XLoggerFactory.getXLogger(StudyQuestionnaireServiceImpl.class.getName());
+  private static Logger logger = Logger.getLogger(StudyQuestionnaireServiceImpl.class);
 
   @Autowired private StudyQuestionnaireDAO studyQuestionnaireDAO;
 
@@ -64,21 +62,22 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       String shortTitle,
       String questionnaireShortTitle,
       String customStudyId) {
-    logger.entry("begin checkFromQuestionShortTitle()");
+    logger.info("StudyQuestionnaireServiceImpl - checkFromQuestionShortTitle - Starts");
     return studyQuestionnaireDAO.checkFromQuestionShortTitle(
         questionnaireId, shortTitle, questionnaireShortTitle, customStudyId);
   }
 
   @Override
   public String checkQuestionnaireResponseTypeValidation(Integer studyId, String customStudyId) {
-    logger.entry("begin checkQuestionnaireResponseTypeValidation()");
+    logger.info(
+        "StudyQuestionnaireServiceImpl - checkQuestionnaireResponseTypeValidation - Starts");
     return studyQuestionnaireDAO.checkQuestionnaireResponseTypeValidation(studyId, customStudyId);
   }
 
   @Override
   public String checkQuestionnaireShortTitle(
       Integer studyId, String shortTitle, String customStudyId) {
-    logger.entry("begin checkQuestionnaireShortTitle()");
+    logger.info("StudyQuestionnaireServiceImpl - checkQuestionnaireShortTitle() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
@@ -86,7 +85,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionnaireStepList - Error", e);
     }
-    logger.exit("checkQuestionnaireShortTitle() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - checkQuestionnaireShortTitle() - Ends");
     return message;
   }
 
@@ -97,7 +96,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       String shortTitle,
       String questionnaireShortTitle,
       String customStudyId) {
-    logger.entry("begin checkQuestionnaireStepShortTitle()");
+    logger.info("StudyQuestionnaireServiceImpl - checkQuestionnaireStepShortTitle - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
@@ -106,20 +105,20 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - checkQuestionnaireStepShortTitle - Error", e);
     }
-    logger.exit("checkQuestionnaireStepShortTitle() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - checkQuestionnaireStepShortTitle - Ends");
     return message;
   }
 
   @Override
   public String checkStatShortTitle(Integer studyId, String shortTitle, String customStudyId) {
-    logger.entry("begin checkStatShortTitle");
+    logger.info("StudyQuestionnaireServiceImpl - checkStatShortTitle - Starts");
     return studyQuestionnaireDAO.checkStatShortTitle(studyId, shortTitle, customStudyId);
   }
 
   @Override
   public QuestionnaireBo copyStudyQuestionnaireBo(
       Integer questionnaireId, String customStudyId, SessionObject sessionObject) {
-    logger.entry("begin copyStudyQuestionnaireBo");
+    logger.info("StudyQuestionnaireServiceImpl - copyStudyQuestionnaireBo - Starts");
     return studyQuestionnaireDAO.copyStudyQuestionnaireBo(
         questionnaireId, customStudyId, sessionObject);
   }
@@ -131,7 +130,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       SessionObject sessionObject,
       String customStudyId,
       AuditLogEventRequest auditRequest) {
-    logger.entry("begin deleteFromStepQuestion()");
+    logger.info("StudyQuestionnaireServiceImpl - deleteFromStepQuestion - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
@@ -140,7 +139,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - deleteFromStepQuestion - Error", e);
     }
-    logger.exit("deleteFromStepQuestion() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - deleteFromStepQuestion - Ends");
     return message;
   }
 
@@ -151,7 +150,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       String stepType,
       SessionObject sessionObject,
       String customStudyId) {
-    logger.entry("begin deleteQuestionnaireStep()");
+    logger.info("StudyQuestionnaireServiceImpl - deleteQuestionnaireStep - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
@@ -160,21 +159,21 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - deleteQuestionnaireStep - Error", e);
     }
-    logger.exit("deleteQuestionnaireStep() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - deleteQuestionnaireStep - Ends");
     return message;
   }
 
   @Override
   public String deletQuestionnaire(
       Integer studyId, Integer questionnaireId, SessionObject sessionObject, String customStudyId) {
-    logger.entry("begin deletQuestionnaire");
+    logger.info("StudyQuestionnaireServiceImpl - deletQuestionnaire - Starts");
     return studyQuestionnaireDAO.deleteQuestuionnaireInfo(
         studyId, questionnaireId, sessionObject, customStudyId);
   }
 
   @Override
   public List<HealthKitKeysInfo> getHeanlthKitKeyInfoList() {
-    logger.entry("begin getHeanlthKitKeyInfoList");
+    logger.info("StudyQuestionnaireServiceImpl - getHeanlthKitKeyInfoList - Starts");
     return studyQuestionnaireDAO.getHeanlthKitKeyInfoList();
   }
 
@@ -184,7 +183,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       String questionnaireShortTitle,
       String customStudyId,
       Integer questionnaireId) {
-    logger.entry("begin getInstructionsBo");
+    logger.info("StudyQuestionnaireServiceImpl - getInstructionsBo - Starts");
     InstructionsBo instructionsBo = null;
     try {
       instructionsBo =
@@ -193,13 +192,13 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getInstructionsBo - ERROR ", e);
     }
-    logger.exit("getInstructionsBo - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getInstructionsBo - Ends");
     return instructionsBo;
   }
 
   @Override
   public QuestionnaireBo getQuestionnaireById(Integer questionnaireId, String customStudyId) {
-    logger.entry("begin getQuestionnaireById");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireById - Starts");
     QuestionnaireBo questionnaireBo = null;
     try {
       questionnaireBo = studyQuestionnaireDAO.getQuestionnaireById(questionnaireId, customStudyId);
@@ -293,14 +292,14 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionnaireById - Error", e);
     }
-    logger.exit("getQuestionnaireById - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireById - Ends");
     return questionnaireBo;
   }
 
   @Override
   public List<QuestionnairesStepsBo> getQuestionnairesStepsList(
       Integer questionnaireId, Integer sequenceNo) {
-    logger.entry("begin getQuestionnairesStepsList()");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnairesStepsList - Starts");
     List<QuestionnairesStepsBo> questionnairesStepsList = null;
     try {
       questionnairesStepsList =
@@ -308,7 +307,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionnairesStepsList - Error", e);
     }
-    logger.exit("getQuestionnairesStepsList() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnairesStepsList - Starts");
     return questionnairesStepsList;
   }
 
@@ -319,7 +318,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       String questionnaireShortTitle,
       String customStudyId,
       Integer questionnaireId) {
-    logger.entry("begin getQuestionnaireStep()");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireStep - Starts");
     QuestionnairesStepsBo questionnairesStepsBo = null;
     try {
       questionnairesStepsBo =
@@ -357,14 +356,14 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionnaireStep - Error", e);
     }
-    logger.exit("getQuestionnaireStep() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireStep - Ends");
     return questionnairesStepsBo;
   }
 
   @Override
   public SortedMap<Integer, QuestionnaireStepBean> getQuestionnaireStepList(
       Integer questionnaireId) {
-    logger.entry("begin getQuestionnaireStepList()");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireStepList() - Starts");
     SortedMap<Integer, QuestionnaireStepBean> questionnaireStepMap = null;
     try {
       questionnaireStepMap = studyQuestionnaireDAO.getQuestionnaireStepList(questionnaireId);
@@ -413,27 +412,27 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionnaireStepList - Error", e);
     }
-    logger.exit("getQuestionnaireStepList() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireStepList() - Ends");
     return questionnaireStepMap;
   }
 
   @Override
   public List<QuestionResponseTypeMasterInfoBo> getQuestionReponseTypeList() {
-    logger.entry("begin getQuestionReponseTypeList()");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionReponseTypeList - Starts");
     List<QuestionResponseTypeMasterInfoBo> questionResponseTypeMasterInfoList = null;
     try {
       questionResponseTypeMasterInfoList = studyQuestionnaireDAO.getQuestionReponseTypeList();
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionReponseTypeList - Error", e);
     }
-    logger.exit("getQuestionReponseTypeList() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionReponseTypeList - Ends");
     return questionResponseTypeMasterInfoList;
   }
 
   @Override
   public QuestionsBo getQuestionsById(
       Integer questionId, String questionnaireShortTitle, String customStudyId) {
-    logger.entry("begin getQuestionsById()");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionsById - Starts");
     QuestionsBo questionsBo = null;
     try {
       questionsBo =
@@ -442,38 +441,38 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionsById - Error", e);
     }
-    logger.exit("getQuestionsById() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionsById - Ends");
     return questionsBo;
   }
 
   @Override
   public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId, Boolean isLive) {
-    logger.entry("begin getStudyQuestionnairesByStudyId()");
+    logger.info("StudyQuestionnaireServiceImpl - getStudyQuestionnairesByStudyId() - Starts");
     List<QuestionnaireBo> questionnaires = null;
     try {
       questionnaires = studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyId, isLive);
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getStudyQuestionnairesByStudyId() - ERROR ", e);
     }
-    logger.exit("getStudyQuestionnairesByStudyId() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getStudyQuestionnairesByStudyId() - Ends");
     return questionnaires;
   }
 
   @Override
   public Boolean isAnchorDateExistsForStudy(Integer studyId, String customStudyId) {
-    logger.entry("begin isAnchorDateExistsForStudy");
+    logger.info("StudyQuestionnaireServiceImpl - isAnchorDateExistsForStudy - Starts");
     return studyQuestionnaireDAO.isAnchorDateExistsForStudy(studyId, customStudyId);
   }
 
   @Override
   public Boolean isQuestionnairesCompleted(Integer studyId) {
-    logger.entry("begin isAnchorDateExistsForStudy");
+    logger.info("StudyQuestionnaireServiceImpl - isAnchorDateExistsForStudy - Starts");
     return studyQuestionnaireDAO.isQuestionnairesCompleted(studyId);
   }
 
   @Override
   public String reOrderFormStepQuestions(Integer formId, int oldOrderNumber, int newOrderNumber) {
-    logger.entry("begin reOrderFormStepQuestions()");
+    logger.info("StudyQuestionnaireServiceImpl - reOrderFormStepQuestions - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
@@ -481,14 +480,14 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - reOrderFormStepQuestions - Error", e);
     }
-    logger.exit("reOrderFormStepQuestions() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - reOrderFormStepQuestions - Starts");
     return message;
   }
 
   @Override
   public String reOrderQuestionnaireSteps(
       Integer questionnaireId, int oldOrderNumber, int newOrderNumber) {
-    logger.entry("begin reOrderQuestionnaireSteps");
+    logger.info("StudyQuestionnaireServiceImpl - reOrderQuestionnaireSteps - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
@@ -497,14 +496,14 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - reOrderQuestionnaireSteps - Error", e);
     }
-    logger.exit("reOrderQuestionnaireSteps() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - reOrderQuestionnaireSteps - Starts");
     return message;
   }
 
   @Override
   public QuestionnairesStepsBo saveOrUpdateFromStepQuestionnaire(
       QuestionnairesStepsBo questionnairesStepsBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("begin saveOrUpdateFromStepQuestionnaire()");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateFromStepQuestionnaire - Starts");
     QuestionnairesStepsBo addOrUpdateQuestionnairesStepsBo = null;
     try {
       addOrUpdateQuestionnairesStepsBo =
@@ -513,14 +512,14 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - saveOrUpdateFromStepQuestionnaire - Error", e);
     }
-    logger.exit("saveOrUpdateFromStepQuestionnaire() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateFromStepQuestionnaire - Starts");
     return addOrUpdateQuestionnairesStepsBo;
   }
 
   @Override
   public InstructionsBo saveOrUpdateInstructionsBo(
       InstructionsBo instructionsBo, SessionObject sessionObject, String customStudyId) {
-    logger.entry("begin saveOrUpdateInstructionsBo()");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateInstructionsBo - Starts");
     InstructionsBo addOrUpdateInstructionsBo = null;
     try {
       if (null != instructionsBo) {
@@ -578,14 +577,14 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - saveOrUpdateInstructionsBo - Error", e);
     }
-    logger.exit("saveOrUpdateInstructionsBo() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateInstructionsBo - Ends");
     return addOrUpdateInstructionsBo;
   }
 
   @Override
   public QuestionsBo saveOrUpdateQuestion(
       QuestionsBo questionsBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("begin saveOrUpdateQuestion()");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateQuestion - Starts");
     QuestionsBo addQuestionsBo = null;
     try {
       if (null != questionsBo) {
@@ -699,14 +698,14 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - saveOrUpdateQuestion - Error", e);
     }
-    logger.exit("saveOrUpdateQuestion() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateQuestion - Ends");
     return addQuestionsBo;
   }
 
   @Override
   public QuestionnaireBo saveOrUpdateQuestionnaire(
       QuestionnaireBo questionnaireBo, SessionObject sessionObject, String customStudyId) {
-    logger.entry("begin saveORUpdateQuestionnaire()");
+    logger.info("StudyQuestionnaireServiceImpl - saveORUpdateQuestionnaire - Starts");
     QuestionnaireBo addQuestionnaireBo = null;
     try {
       if (null != questionnaireBo) {
@@ -889,14 +888,14 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - saveORUpdateQuestionnaire - Error", e);
     }
-    logger.exit("saveORUpdateQuestionnaire() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - saveORUpdateQuestionnaire - Ends");
     return addQuestionnaireBo;
   }
 
   @Override
   public QuestionnaireBo saveOrUpdateQuestionnaireSchedule(
       QuestionnaireBo questionnaireBo, SessionObject sessionObject, String customStudyId) {
-    logger.entry("begin saveOrUpdateQuestionnaireSchedule()");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateQuestionnaireSchedule - Starts");
     QuestionnaireBo addQuestionnaireBo = null;
     try {
       addQuestionnaireBo =
@@ -905,7 +904,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - saveOrUpdateQuestionnaireSchedule - Error", e);
     }
-    logger.exit("saveOrUpdateQuestionnaireSchedule() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateQuestionnaireSchedule - Ends");
     return addQuestionnaireBo;
   }
 
@@ -914,7 +913,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       QuestionnairesStepsBo questionnairesStepsBo,
       SessionObject sessionObject,
       String customStudyId) {
-    logger.entry("begin saveOrUpdateQuestionStep()");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateQuestionStep - Starts");
     QuestionnairesStepsBo addOrUpdateQuestionnairesStepsBo = null;
     try {
       QuestionsBo addQuestionsBo = null;
@@ -1026,20 +1025,22 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - saveOrUpdateQuestionStep - Error", e);
     }
-    logger.exit("saveOrUpdateQuestionStep() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateQuestionStep - Ends");
     return addOrUpdateQuestionnairesStepsBo;
   }
 
   @Override
   public String validateLineChartSchedule(Integer questionnaireId, String frequency) {
-    logger.entry("begin validateLineChartSchedule()");
+    logger.info(
+        "StudyQuestionnaireServiceImpl - checkQuestionnaireResponseTypeValidation - Starts");
     return studyQuestionnaireDAO.validateLineChartSchedule(questionnaireId, frequency);
   }
 
   @Override
   public FormulaInfoBean validateQuestionConditionalBranchingLogic(
       String lhs, String rhs, String operator, String input) {
-    logger.entry("begin validateQuestionConditionalBranchingLogic()");
+    logger.info(
+        "StudyQuestionnaireServiceImpl - validateQuestionConditionalBranchingLogic - Starts");
     FormulaInfoBean formulaInfoBean = new FormulaInfoBean();
     if (StringUtils.isNotEmpty(lhs)
         && StringUtils.isNotEmpty(rhs)
@@ -1047,20 +1048,20 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       formulaInfoBean =
           FdahpStudyDesignerUtil.getConditionalFormulaResult(lhs, rhs, operator, input);
     }
-    logger.exit("validateQuestionConditionalBranchingLogic() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - validateQuestionConditionalBranchingLogic - Ends");
     return formulaInfoBean;
   }
 
   @Override
   public String validateRepetableFormQuestionStats(Integer formId) {
-    logger.entry("begin validateRepetableFormQuestionStats()");
+    logger.info("StudyQuestionnaireServiceImpl - validateRepetableFormQuestionStats - Starts");
     return studyQuestionnaireDAO.validateRepetableFormQuestionStats(formId);
   }
 
   @Override
   public String checkUniqueAnchorDateName(
       String anchordateText, String customStudyId, String anchorDateId) {
-    logger.entry("begin checkUniqueAnchorDateName()");
+    logger.info("StudyQuestionnaireServiceImpl - checkUniqueAnchorDateName - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
@@ -1069,13 +1070,13 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - checkUniqueAnchorDateName - Error", e);
     }
-    logger.exit("checkUniqueAnchorDateName() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - checkUniqueAnchorDateName - Ends");
     return message;
   }
 
   @Override
   public List<AnchorDateTypeBo> getAnchorTypesByStudyId(String customStudyId) {
-    logger.entry("begin getAnchorTypesByStudyId()");
+    logger.info("StudyQuestionnaireServiceImpl - getAnchorTypesByStudyId - Starts");
     List<AnchorDateTypeBo> anchorDateTypeBos = null;
     HashMap<String, AnchorDateTypeBo> anchorMap = new HashMap<>();
     try {
@@ -1087,25 +1088,25 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getAnchorTypesByStudyId - Error", e);
     }
-    logger.exit("getAnchorTypesByStudyId() - Ends");
+    logger.info("StudyQuestionnaireServiceImpl - getAnchorTypesByStudyId - Ends");
     return anchorDateTypeBos;
   }
 
   @Override
   public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId) {
-    logger.entry("begin isAnchorDateExistByQuestionnaire");
+    logger.info("StudyQuestionnaireServiceImpl - isAnchorDateExistByQuestionnaire - Starts");
     return studyQuestionnaireDAO.isAnchorDateExistByQuestionnaire(questionnaireId);
   }
 
   @Override
   public QuestionnaireBo getQuestionnaireById(Integer questionnaireId) {
-    logger.entry("begin getQuestionnaireById");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionnaireById - Starts");
     return studyQuestionnaireDAO.getQuestionnaireById(questionnaireId);
   }
 
   @Override
   public QuestionsBo getQuestionById(Integer questionId) {
-    logger.entry("begin getQuestionById");
+    logger.info("StudyQuestionnaireServiceImpl - getQuestionById - Starts");
     return studyQuestionnaireDAO.getQuestionById(questionId);
   }
 }

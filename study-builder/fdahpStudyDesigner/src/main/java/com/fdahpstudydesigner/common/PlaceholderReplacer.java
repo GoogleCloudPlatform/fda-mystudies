@@ -10,8 +10,7 @@ package com.fdahpstudydesigner.common;
 
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.util.PropertyPlaceholderHelper.PlaceholderResolver;
 
@@ -19,7 +18,7 @@ public final class PlaceholderReplacer {
 
   private PlaceholderReplacer() {}
 
-  private static XLogger logger = XLoggerFactory.getXLogger(PlaceholderReplacer.class.getName());
+  private static Logger logger = Logger.getLogger(PlaceholderReplacer.class);
 
   public static String replaceNamedPlaceholders(
       final String textWithNamedPlaceholders, final Map<String, String> values) {

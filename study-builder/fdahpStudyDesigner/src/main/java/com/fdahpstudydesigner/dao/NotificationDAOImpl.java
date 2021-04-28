@@ -50,13 +50,12 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -64,7 +63,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class NotificationDAOImpl implements NotificationDAO {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(NotificationDAOImpl.class.getName());
+  private static Logger logger = Logger.getLogger(NotificationDAOImpl.class);
 
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
@@ -79,7 +78,7 @@ public class NotificationDAOImpl implements NotificationDAO {
   @Override
   public String deleteNotification(
       int notificationIdForDelete, SessionObject sessionObject, String notificationType) {
-    logger.entry("begin deleteNotification()");
+    logger.info("NotificationDAOImpl - deleteNotification() - Starts");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     String queryString = "";
@@ -111,13 +110,13 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.exit("deleteNotification - Ends");
+    logger.info("NotificationDAOImpl - deleteNotification - Ends");
     return message;
   }
 
   @Override
   public NotificationBO getNotification(int notificationId) {
-    logger.entry("begin getNotification()");
+    logger.info("NotificationDAOImpl - getNotification() - Starts");
     Session session = null;
     String queryString = null;
     NotificationBO notificationBO = null;
@@ -163,14 +162,14 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.exit("getNotification - Ends");
+    logger.info("NotificationDAOImpl - getNotification - Ends");
     return notificationBO;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(int notificationId) {
-    logger.entry("begin getNotificationHistoryListNoDateTime()");
+    logger.info("NotificationDAOImpl - getNotificationHistoryListNoDateTime() - Starts");
     Session session = null;
     String queryString = null;
     List<NotificationHistoryBO> notificationHistoryListNoDateTime = null;
@@ -188,14 +187,14 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.exit("getNotificationHistoryListNoDateTime - Ends");
+    logger.info("NotificationDAOImpl - getNotificationHistoryListNoDateTime - Ends");
     return notificationHistoryListNoDateTime;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<NotificationBO> getNotificationList(int studyId, String type) {
-    logger.entry("begin getNotificationList()");
+    logger.info("NotificationDAOImpl - getNotificationList() - Starts");
     List<NotificationBO> notificationList = null;
     Session session = null;
     String queryString = null;
@@ -222,14 +221,14 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.exit("getNotificationList() - Ends");
+    logger.info("NotificationDAOImpl - getNotificationList() - Ends");
     return notificationList;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<PushNotificationBean> getPushNotificationList(String scheduledTimestamp) {
-    logger.entry("begin getPushNotificationList");
+    logger.info("NotificationDAOImpl - getPushNotificationList - Starts");
     Session session = null;
     String sb = "";
     List<PushNotificationBean> pushNotificationBeans = null;
@@ -265,7 +264,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.exit("getPushNotificationList - Ends");
+    logger.info("NotificationDAOImpl - getPushNotificationList - Ends");
     return pushNotificationBeans;
   }
 
@@ -275,7 +274,7 @@ public class NotificationDAOImpl implements NotificationDAO {
       String notificationType,
       String buttonType,
       SessionObject sessionObject) {
-    logger.entry("begin saveOrUpdateOrResendNotification()");
+    logger.info("NotificationDAOImpl - saveOrUpdateOrResendNotification() - Starts");
     Session session = null;
     NotificationBO notificationBOUpdate = null;
     Integer notificationId = 0;
@@ -430,7 +429,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateOrResendNotification - Ends");
+    logger.info("NotificationDAOImpl - saveOrUpdateOrResendNotification - Ends");
     return notificationId;
   }
 
@@ -442,7 +441,7 @@ public class NotificationDAOImpl implements NotificationDAO {
   @SuppressWarnings("unchecked")
   @Override
   public List<String> getGatwayAppList() {
-    logger.entry("begin getGatwayAppList()");
+    logger.info("NotificationDAOImpl - getGatwayAppList() - Starts");
     List<String> gatewayAppList = null;
     Session session = null;
     String queryString = null;
@@ -462,13 +461,13 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.exit("getGatwayAppList - Ends");
+    logger.info("NotificationDAOImpl - getGatwayAppList - Ends");
     return gatewayAppList;
   }
 
   @Override
   public List<NotificationBO> getNotificationList(Integer studyId) {
-    logger.entry("begin getNotificationList()");
+    logger.info("NotificationDAOImpl - getNotificationList() - Starts");
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -480,7 +479,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.exit("getNotificationList() - Ends");
+    logger.info("NotificationDAOImpl - getNotificationList() - Ends");
     return null;
   }
 }

@@ -40,15 +40,13 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.stereotype.Component;
-
 @Component
 public class Mail {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(Mail.class.getName());
+  private static Logger logger = Logger.getLogger(Mail.class.getName());
 
   // Fallback hostname if we are authenticating.
   private static final String SMTP_HOSTNAME = "smtp.gmail.com";
@@ -151,7 +149,7 @@ public class Mail {
   }
 
   public boolean sendemail() {
-    logger.entry("begin sendemail()");
+    logger.info("Mail.sendemail() :: Starts");
     boolean sentMail = false;
     try {
       final String username = this.getFromEmailAddress();
@@ -193,12 +191,12 @@ public class Mail {
       logger.error("ERROR: sendemail() - ", e);
       sentMail = false;
     }
-    logger.exit("sendemail() :: Ends");
+    logger.info("Mail.sendemail() :: Ends");
     return sentMail;
   }
 
   public boolean sendMailWithAttachment() {
-    logger.entry("begin sendMailWithAttachment()");
+    logger.info("Mail.sendMailWithAttachment() :: Starts");
     boolean sentMail = false;
     BodyPart messageBodyPart = null;
     Multipart multipart = null;
@@ -254,7 +252,7 @@ public class Mail {
     } catch (Exception e) {
       logger.error("ERROR:  sendemail() - ", e);
     }
-    logger.exit("sendMailWithAttachment() :: Ends");
+    logger.info("Mail.sendMailWithAttachment() :: Ends");
     return sentMail;
   }
 

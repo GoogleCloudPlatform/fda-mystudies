@@ -41,13 +41,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.security.authentication.LockedException;
@@ -56,7 +55,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LoginDAOImpl implements LoginDAO {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(LoginDAOImpl.class.getName());
+  private static Logger logger = Logger.getLogger(LoginDAOImpl.class.getName());
 
   @Autowired private LoginService loginService;
 
@@ -70,7 +69,7 @@ public class LoginDAOImpl implements LoginDAO {
 
   @Override
   public String changePassword(Integer userId, String newPassword, String oldPassword) {
-    logger.entry("begin changePassword()");
+    logger.info("LoginDAOImpl - changePassword() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     UserBO adminUserBO = null;
@@ -108,14 +107,14 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("changePassword() - Ends");
+    logger.info("LoginDAOImpl - changePassword() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<UserPasswordHistory> getPasswordHistory(Integer userId) {
-    logger.entry("begin updatePasswordHistory()");
+    logger.info("LoginDAOImpl - updatePasswordHistory() - Starts");
     List<UserPasswordHistory> passwordHistories = null;
     Session session = null;
     try {
@@ -132,13 +131,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("updatePasswordHistory() - Ends");
+    logger.info("LoginDAOImpl - updatePasswordHistory() - Ends");
     return passwordHistories;
   }
 
   @Override
   public UserAttemptsBo getUserAttempts(String userEmailId) {
-    logger.entry("begin getUserAttempts()");
+    logger.info("LoginDAOImpl - getUserAttempts() - Starts");
     Session session = null;
     UserAttemptsBo attemptsBo = null;
     try {
@@ -153,13 +152,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("getUserAttempts() - Ends");
+    logger.info("LoginDAOImpl - getUserAttempts() - Ends");
     return attemptsBo;
   }
 
   @Override
   public UserBO getUserBySecurityToken(String securityToken) {
-    logger.entry("begin getUserBySecurityToken()");
+    logger.info("LoginDAOImpl - getUserBySecurityToken() - Starts");
     Session session = null;
     UserBO userBO = null;
     try {
@@ -180,13 +179,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("getUserBySecurityToken() - Ends");
+    logger.info("LoginDAOImpl - getUserBySecurityToken() - Ends");
     return userBO;
   }
 
   @Override
   public UserBO getValidUserByEmail(String email) {
-    logger.entry("begin getValidUserByEmail()");
+    logger.info("LoginDAOImpl - getValidUserByEmail() - Starts");
     UserBO userBo = null;
     Session session = null;
     try {
@@ -217,13 +216,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("getValidUserByEmail() - Ends");
+    logger.info("LoginDAOImpl - getValidUserByEmail() - Ends");
     return userBo;
   }
 
   @Override
   public Boolean isFrocelyLogOutUser(Integer userId) {
-    logger.entry("begin isFrocelyLogOutUser()");
+    logger.info("LoginDAOImpl - isFrocelyLogOutUser() - Starts");
     UserBO userBo = null;
     boolean result = false;
     Session session = null;
@@ -245,13 +244,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("isFrocelyLogOutUser() - Ends");
+    logger.info("LoginDAOImpl - isFrocelyLogOutUser() - Ends");
     return result;
   }
 
   @Override
   public Boolean isUserEnabled(Integer userId) {
-    logger.entry("begin isUserExists()");
+    logger.info("LoginDAOImpl - isUserExists() - Starts");
     UserBO userBo = null;
     boolean result = false;
     Session session = null;
@@ -273,12 +272,12 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("isUserExists() - Ends");
+    logger.info("LoginDAOImpl - isUserExists() - Ends");
     return result;
   }
 
   private boolean isUserExists(String userEmail) {
-    logger.entry("begin isUserExists()");
+    logger.info("LoginDAOImpl - isUserExists() - Starts");
     UserBO userBo = null;
     boolean result = false;
     try {
@@ -289,14 +288,14 @@ public class LoginDAOImpl implements LoginDAO {
     } catch (Exception e) {
       logger.error("LoginDAOImpl - isUserExists() - ERROR ", e);
     }
-    logger.exit("isUserExists() - Ends");
+    logger.info("LoginDAOImpl - isUserExists() - Ends");
     return result;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public void passwordLoginBlocked() {
-    logger.entry("begin passwordLoginBlocked()");
+    logger.info("LoginDAOImpl - passwordLoginBlocked() - Starts");
     Session session = null;
     List<Integer> userBOList = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -335,12 +334,12 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("passwordLoginBlocked() - Ends");
+    logger.info("LoginDAOImpl - passwordLoginBlocked() - Ends");
   }
 
   @Override
   public void resetFailAttempts(String userEmailId) {
-    logger.entry("begin resetFailAttempts()");
+    logger.info("LoginDAOImpl - resetFailAttempts() - Starts");
     Session session = null;
     UserAttemptsBo attemptsBo = null;
     try {
@@ -361,7 +360,7 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("resetFailAttempts() - Ends");
+    logger.info("LoginDAOImpl - resetFailAttempts() - Ends");
   }
 
   @Autowired
@@ -371,7 +370,7 @@ public class LoginDAOImpl implements LoginDAO {
 
   @Override
   public void updateFailAttempts(String userEmailId, AuditLogEventRequest auditRequest) {
-    logger.entry("begin updateUser()");
+    logger.info("LoginDAOImpl - updateUser() - Starts");
     Session session = null;
     UserAttemptsBo attemptsBo = null;
     boolean isAcountLocked = false;
@@ -456,13 +455,13 @@ public class LoginDAOImpl implements LoginDAO {
       loginService.sendLockedAccountPasswordResetLinkToMail(userEmailId, auditRequest);
       throw new LockedException(propMap.get("account.lock.msg"));
     }
-    logger.exit("updateUser() - Ends");
+    logger.info("LoginDAOImpl - updateUser() - Ends");
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public String updatePasswordHistory(Integer userId, String userPassword) {
-    logger.entry("begin updatePasswordHistory()");
+    logger.info("LoginDAOImpl - updatePasswordHistory() - Starts");
     List<UserPasswordHistory> passwordHistories = null;
     UserPasswordHistory savePasswordHistory = null;
     String result = FdahpStudyDesignerConstants.FAILURE;
@@ -499,13 +498,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("updatePasswordHistory() - Ends");
+    logger.info("LoginDAOImpl - updatePasswordHistory() - Ends");
     return result;
   }
 
   @Override
   public String updateUser(UserBO userBO) {
-    logger.entry("begin updateUser()");
+    logger.info("LoginDAOImpl - updateUser() - Starts");
     Session session = null;
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -525,14 +524,14 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("updateUser() - Ends");
+    logger.info("LoginDAOImpl - updateUser() - Ends");
     return result;
   }
 
   @Override
   // Reset the user details as part of account locking flow
   public String updateUserForResetPassword(UserBO userBO) {
-    logger.entry("begin updateUserForResetPassword()");
+    logger.info("LoginDAOImpl - updateUserForResetPassword() - Starts");
     Session session = null;
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -551,7 +550,7 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.exit("updateUserForResetPassword() - Ends");
+    logger.info("LoginDAOImpl - updateUserForResetPassword() - Ends");
     return result;
   }
 }

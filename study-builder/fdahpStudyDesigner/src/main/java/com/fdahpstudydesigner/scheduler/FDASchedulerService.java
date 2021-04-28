@@ -61,14 +61,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -80,7 +79,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @EnableScheduling
 public class FDASchedulerService {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(FDASchedulerService.class.getName());
+  private static Logger logger = Logger.getLogger(FDASchedulerService.class.getName());
 
   private static final Map<?, ?> configMap = FdahpStudyDesignerUtil.getAppProperties();
 
@@ -112,7 +111,7 @@ public class FDASchedulerService {
 
   @Scheduled(cron = "0 0 0 * * ?")
   public void createAuditLogs() {
-    logger.entry("begin createAuditLogs()");
+    logger.info("FDASchedulerService - createAuditLogs - Starts");
     StringBuilder logString = null;
     try {
       logString = new StringBuilder();
@@ -134,12 +133,12 @@ public class FDASchedulerService {
     } catch (Exception e) {
       logger.error("FDASchedulerService - createAuditLogs - ERROR", e);
     }
-    logger.exit("createAuditLogs() - Ends");
+    logger.info("FDASchedulerService - createAuditLogs - Ends");
   }
 
   @Scheduled(cron = "0 * * * * ?")
   public void sendPushNotification() {
-    logger.entry("begin sendPushNotification()");
+    logger.info("FDASchedulerService - sendPushNotification - Starts");
     List<PushNotificationBean> pushNotificationBeans;
     List<PushNotificationBean> pushNotificationBeanswithAppId =
         new ArrayList<PushNotificationBean>();
@@ -233,7 +232,7 @@ public class FDASchedulerService {
 
       logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
     }
-    logger.exit("sendPushNotification() - Ends");
+    logger.info("FDASchedulerService - sendPushNotification - Ends");
   }
 
   private void updateNotification(PushNotificationBean pushNotificationBean) {

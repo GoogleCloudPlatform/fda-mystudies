@@ -60,8 +60,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,45 +68,45 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class StudyServiceImpl implements StudyService {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(StudyServiceImpl.class.getName());
+  private static Logger logger = Logger.getLogger(StudyServiceImpl.class);
 
   private StudyDAO studyDAO;
 
   @Override
   public String checkActiveTaskTypeValidation(Integer studyId) {
-    logger.entry("StudyServiceImpl - checkActiveTaskTypeValidation - Starts");
+    logger.info("StudyServiceImpl - checkActiveTaskTypeValidation - Starts");
     return studyDAO.checkActiveTaskTypeValidation(studyId);
   }
 
   @Override
   public int comprehensionTestQuestionOrder(Integer studyId) {
     int count = 1;
-    logger.entry("StudyServiceImpl - comprehensionTestQuestionOrder() - Starts");
+    logger.info("StudyServiceImpl - comprehensionTestQuestionOrder() - Starts");
     try {
       count = studyDAO.comprehensionTestQuestionOrder(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - comprehensionTestQuestionOrder() - Error", e);
     }
-    logger.exit("StudyServiceImpl - comprehensionTestQuestionOrder() - Ends");
+    logger.info("StudyServiceImpl - comprehensionTestQuestionOrder() - Ends");
     return count;
   }
 
   @Override
   public int consentInfoOrder(Integer studyId) {
     int count = 1;
-    logger.entry("StudyServiceImpl - consentInfoOrder() - Starts");
+    logger.info("StudyServiceImpl - consentInfoOrder() - Starts");
     try {
       count = studyDAO.consentInfoOrder(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - consentInfoOrder() - Error", e);
     }
-    logger.exit("StudyServiceImpl - consentInfoOrder() - Ends");
+    logger.info("StudyServiceImpl - consentInfoOrder() - Ends");
     return count;
   }
 
   @Override
   public boolean copyliveStudyByCustomStudyId(String customStudyId, SessionObject object) {
-    logger.entry("StudyServiceImpl - copyliveStudyByCustomStudyId() - Starts");
+    logger.info("StudyServiceImpl - copyliveStudyByCustomStudyId() - Starts");
     boolean flag = false;
     try {
       flag =
@@ -116,35 +115,35 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - copyliveStudyByCustomStudyId() - Error", e);
     }
-    logger.exit("StudyServiceImpl - copyliveStudyByCustomStudyId() - Ends");
+    logger.info("StudyServiceImpl - copyliveStudyByCustomStudyId() - Ends");
     return flag;
   }
 
   @Override
   public String deleteComprehensionTestQuestion(
       Integer questionId, Integer studyId, SessionObject sessionObject) {
-    logger.entry("StudyServiceImpl - deleteComprehensionTestQuestion() - Starts");
+    logger.info("StudyServiceImpl - deleteComprehensionTestQuestion() - Starts");
     String message = null;
     try {
       message = studyDAO.deleteComprehensionTestQuestion(questionId, studyId, sessionObject);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - deleteComprehensionTestQuestion() - Error", e);
     }
-    logger.exit("StudyServiceImpl - deleteComprehensionTestQuestion() - Ends");
+    logger.info("StudyServiceImpl - deleteComprehensionTestQuestion() - Ends");
     return message;
   }
 
   @Override
   public String deleteConsentInfo(
       Integer consentInfoId, Integer studyId, SessionObject sessionObject, String customStudyId) {
-    logger.entry("StudyServiceImpl - deleteConsentInfo() - Starts");
+    logger.info("StudyServiceImpl - deleteConsentInfo() - Starts");
     String message = null;
     try {
       message = studyDAO.deleteConsentInfo(consentInfoId, studyId, sessionObject, customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - deleteConsentInfo() - Error", e);
     }
-    logger.exit("StudyServiceImpl - deleteConsentInfo() - Ends");
+    logger.info("StudyServiceImpl - deleteConsentInfo() - Ends");
     return message;
   }
 
@@ -154,7 +153,7 @@ public class StudyServiceImpl implements StudyService {
       Integer studyId,
       SessionObject sessionObject,
       String customStudyId) {
-    logger.entry("StudyServiceImpl - deleteEligibilityTestQusAnsById - Starts");
+    logger.info("StudyServiceImpl - deleteEligibilityTestQusAnsById - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
       message =
@@ -163,13 +162,13 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - deleteEligibilityTestQusAnsById - Error", e);
     }
-    logger.exit("StudyServiceImpl - deleteEligibilityTestQusAnsById - Ends");
+    logger.info("StudyServiceImpl - deleteEligibilityTestQusAnsById - Ends");
     return message;
   }
 
   @Override
   public String deleteOverviewStudyPageById(String studyId, String pageId) {
-    logger.entry("StudyServiceImpl - deleteOverviewStudyPageById() - Starts");
+    logger.info("StudyServiceImpl - deleteOverviewStudyPageById() - Starts");
     String message = "";
     try {
       message = studyDAO.deleteOverviewStudyPageById(studyId, pageId);
@@ -182,7 +181,7 @@ public class StudyServiceImpl implements StudyService {
   @Override
   public String deleteResourceInfo(
       Integer resourceInfoId, SessionObject sesObj, String customStudyId, int studyId) {
-    logger.entry("StudyServiceImpl - deleteConsentInfo() - Starts");
+    logger.info("StudyServiceImpl - deleteConsentInfo() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     ResourceBO resourceBO = null;
     try {
@@ -195,79 +194,79 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - deleteConsentInfo() - Error", e);
     }
-    logger.exit("StudyServiceImpl - deleteConsentInfo() - Ends");
+    logger.info("StudyServiceImpl - deleteConsentInfo() - Ends");
     return message;
   }
 
   @Override
   public boolean deleteStudyByCustomStudyId(String customStudyId) {
-    logger.entry("StudyServiceImpl - deleteStudyByCustomStudyId() - Starts");
+    logger.info("StudyServiceImpl - deleteStudyByCustomStudyId() - Starts");
     boolean flag = false;
     try {
       flag = studyDAO.deleteStudyByCustomStudyId(customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - deleteStudyByCustomStudyId() - Error", e);
     }
-    logger.exit("StudyServiceImpl - deleteStudyByCustomStudyId() - Ends");
+    logger.info("StudyServiceImpl - deleteStudyByCustomStudyId() - Ends");
     return flag;
   }
 
   @Override
   public List<StudyBo> getAllStudyList() {
-    logger.entry("StudyServiceImpl - getAllStudyList() - Starts");
+    logger.info("StudyServiceImpl - getAllStudyList() - Starts");
     List<StudyBo> studyBOList = null;
     try {
       studyBOList = studyDAO.getAllStudyList();
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getAllStudyList() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getAllStudyList() - Ends");
+    logger.info("StudyServiceImpl - getAllStudyList() - Ends");
     return studyBOList;
   }
 
   @Override
   public Checklist getchecklistInfo(Integer studyId) {
-    logger.entry("StudyServiceImpl - getchecklistInfo() - Starts");
+    logger.info("StudyServiceImpl - getchecklistInfo() - Starts");
     Checklist checklist = null;
     try {
       checklist = studyDAO.getchecklistInfo(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getchecklistInfo() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getchecklistInfo() - Ends");
+    logger.info("StudyServiceImpl - getchecklistInfo() - Ends");
     return checklist;
   }
 
   @Override
   public ComprehensionTestQuestionBo getComprehensionTestQuestionById(Integer questionId) {
-    logger.entry("StudyServiceImpl - getComprehensionTestQuestionById() - Starts");
+    logger.info("StudyServiceImpl - getComprehensionTestQuestionById() - Starts");
     ComprehensionTestQuestionBo comprehensionTestQuestionBo = null;
     try {
       comprehensionTestQuestionBo = studyDAO.getComprehensionTestQuestionById(questionId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getComprehensionTestQuestionById() - Error", e);
     }
-    logger.exit("StudyServiceImpl - getComprehensionTestQuestionById() - Ends");
+    logger.info("StudyServiceImpl - getComprehensionTestQuestionById() - Ends");
     return comprehensionTestQuestionBo;
   }
 
   @Override
   public List<ComprehensionTestQuestionBo> getComprehensionTestQuestionList(Integer studyId) {
-    logger.entry("StudyServiceImpl - getComprehensionTestQuestionList() - Starts");
+    logger.info("StudyServiceImpl - getComprehensionTestQuestionList() - Starts");
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionList = null;
     try {
       comprehensionTestQuestionList = studyDAO.getComprehensionTestQuestionList(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getComprehensionTestQuestionList() - Error", e);
     }
-    logger.exit("StudyServiceImpl - getComprehensionTestQuestionList() - Starts");
+    logger.info("StudyServiceImpl - getComprehensionTestQuestionList() - Starts");
     return comprehensionTestQuestionList;
   }
 
   @Override
   public List<ComprehensionTestResponseBo> getComprehensionTestResponseList(
       Integer comprehensionQuestionId) {
-    logger.entry("StudyServiceImpl - getComprehensionTestResponseList() - Starts");
+    logger.info("StudyServiceImpl - getComprehensionTestResponseList() - Starts");
     List<ComprehensionTestResponseBo> comprehensionTestResponseLsit = null;
     try {
       comprehensionTestResponseLsit =
@@ -275,26 +274,26 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getComprehensionTestResponseList() - ERROR", e);
     }
-    logger.exit("StudyServiceImpl - getComprehensionTestResponseList() - Starts");
+    logger.info("StudyServiceImpl - getComprehensionTestResponseList() - Starts");
     return comprehensionTestResponseLsit;
   }
 
   @Override
   public ConsentBo getConsentDetailsByStudyId(String studyId) {
-    logger.entry("INFO: StudyServiceImpl - getConsentDetailsByStudyId() :: Starts");
+    logger.info("INFO: StudyServiceImpl - getConsentDetailsByStudyId() :: Starts");
     ConsentBo consentBo = null;
     try {
       consentBo = studyDAO.getConsentDetailsByStudyId(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentDetailsByStudyId() :: ERROR", e);
     }
-    logger.exit("INFO: StudyServiceImpl - getConsentDetailsByStudyId() :: Ends");
+    logger.info("INFO: StudyServiceImpl - getConsentDetailsByStudyId() :: Ends");
     return consentBo;
   }
 
   @Override
   public ConsentInfoBo getConsentInfoById(Integer consentInfoId) {
-    logger.entry("StudyServiceImpl - getConsentInfoById() - Starts");
+    logger.info("StudyServiceImpl - getConsentInfoById() - Starts");
     ConsentInfoBo consentInfoBo = null;
     try {
       consentInfoBo = studyDAO.getConsentInfoById(consentInfoId);
@@ -305,39 +304,39 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentInfoById() - Error", e);
     }
-    logger.exit("StudyServiceImpl - getConsentInfoById() - Ends");
+    logger.info("StudyServiceImpl - getConsentInfoById() - Ends");
     return consentInfoBo;
   }
 
   @Override
   public List<ConsentInfoBo> getConsentInfoDetailsListByStudyId(String studyId) {
-    logger.entry("INFO: StudyServiceImpl - getConsentInfoDetailsListByStudyId() :: Starts");
+    logger.info("INFO: StudyServiceImpl - getConsentInfoDetailsListByStudyId() :: Starts");
     List<ConsentInfoBo> consentInfoBoList = null;
     try {
       consentInfoBoList = studyDAO.getConsentInfoDetailsListByStudyId(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentInfoDetailsListByStudyId() - ERROR", e);
     }
-    logger.exit("INFO: StudyServiceImpl - getConsentInfoDetailsListByStudyId() :: Ends");
+    logger.info("INFO: StudyServiceImpl - getConsentInfoDetailsListByStudyId() :: Ends");
     return consentInfoBoList;
   }
 
   @Override
   public List<ConsentInfoBo> getConsentInfoList(Integer studyId) {
-    logger.entry("StudyServiceImpl - getConsentInfoList() - Starts");
+    logger.info("StudyServiceImpl - getConsentInfoList() - Starts");
     List<ConsentInfoBo> consentInfoList = null;
     try {
       consentInfoList = studyDAO.getConsentInfoList(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentInfoList() - Error", e);
     }
-    logger.exit("StudyServiceImpl - getConsentInfoList() - Ends");
+    logger.info("StudyServiceImpl - getConsentInfoList() - Ends");
     return consentInfoList;
   }
 
   @Override
   public List<ConsentMasterInfoBo> getConsentMasterInfoList() {
-    logger.entry("StudyServiceImpl - getConsentMasterInfoList() - Starts");
+    logger.info("StudyServiceImpl - getConsentMasterInfoList() - Starts");
     List<ConsentMasterInfoBo> consentMasterInfoList = null,
         sortedConsentMasterInfoList = new ArrayList<>();
 
@@ -365,26 +364,26 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentMasterInfoList() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getConsentMasterInfoList() - Ends");
+    logger.info("StudyServiceImpl - getConsentMasterInfoList() - Ends");
     return sortedConsentMasterInfoList;
   }
 
   @Override
   public StudyIdBean getLiveVersion(String customStudyId) {
-    logger.entry("StudyServiceImpl - getLiveVersion() - Starts");
+    logger.info("StudyServiceImpl - getLiveVersion() - Starts");
     StudyIdBean studyIdBean = new StudyIdBean();
     try {
       studyIdBean = studyDAO.getLiveVersion(customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getLiveVersion() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getLiveVersion() - Ends");
+    logger.info("StudyServiceImpl - getLiveVersion() - Ends");
     return studyIdBean;
   }
 
   @Override
   public List<StudyPageBo> getOverviewStudyPagesById(String studyId, Integer userId) {
-    logger.entry("StudyServiceImpl - getOverviewStudyPagesById() - Starts");
+    logger.info("StudyServiceImpl - getOverviewStudyPagesById() - Starts");
     List<StudyPageBo> studyPageBos = null;
     try {
       studyPageBos = studyDAO.getOverviewStudyPagesById(studyId, userId);
@@ -412,20 +411,20 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public Map<String, List<ReferenceTablesBo>> getreferenceListByCategory() {
-    logger.entry("StudyServiceImpl - getreferenceListByCategory() - Starts");
+    logger.info("StudyServiceImpl - getreferenceListByCategory() - Starts");
     HashMap<String, List<ReferenceTablesBo>> referenceMap = null;
     try {
       referenceMap = studyDAO.getreferenceListByCategory();
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyList() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getreferenceListByCategory() - Ends");
+    logger.info("StudyServiceImpl - getreferenceListByCategory() - Ends");
     return referenceMap;
   }
 
   @Override
   public ResourceBO getResourceInfo(Integer resourceInfoId) {
-    logger.entry("StudyServiceImpl - getResourceInfo() - Starts");
+    logger.info("StudyServiceImpl - getResourceInfo() - Starts");
     ResourceBO resourceBO = null;
     try {
       resourceBO = studyDAO.getResourceInfo(resourceInfoId);
@@ -450,65 +449,65 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getResourceInfo() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getResourceInfo() - Ends");
+    logger.info("StudyServiceImpl - getResourceInfo() - Ends");
     return resourceBO;
   }
 
   @Override
   public List<ResourceBO> getResourceList(Integer studyId) {
-    logger.entry("StudyServiceImpl - getResourceList() - Starts");
+    logger.info("StudyServiceImpl - getResourceList() - Starts");
     List<ResourceBO> resourceBOList = null;
     try {
       resourceBOList = studyDAO.getResourceList(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getResourceList() - Error", e);
     }
-    logger.exit("StudyServiceImpl - getResourceList() - Ends");
+    logger.info("StudyServiceImpl - getResourceList() - Ends");
     return resourceBOList;
   }
 
   @Override
   public List<NotificationBO> getSavedNotification(Integer studyId) {
-    logger.entry("StudyServiceImpl - notificationSaved() - Starts");
+    logger.info("StudyServiceImpl - notificationSaved() - Starts");
     List<NotificationBO> notificationSavedList = null;
     try {
       notificationSavedList = studyDAO.getSavedNotification(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - notificationSaved() - Error", e);
     }
-    logger.exit("StudyServiceImpl - resourcesSaved() - Ends");
+    logger.info("StudyServiceImpl - resourcesSaved() - Ends");
     return notificationSavedList;
   }
 
   @Override
   public StudyBo getStudyById(String studyId, Integer userId) {
-    logger.entry("StudyServiceImpl - getStudyById() - Starts");
+    logger.info("StudyServiceImpl - getStudyById() - Starts");
     StudyBo studyBo = null;
     try {
       studyBo = studyDAO.getStudyById(studyId, userId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyById() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getStudyById() - Ends");
+    logger.info("StudyServiceImpl - getStudyById() - Ends");
     return studyBo;
   }
 
   @Override
   public EligibilityBo getStudyEligibiltyByStudyId(String studyId) {
-    logger.entry("StudyServiceImpl - getStudyEligibiltyByStudyId() - Starts");
+    logger.info("StudyServiceImpl - getStudyEligibiltyByStudyId() - Starts");
     EligibilityBo eligibilityBo = null;
     try {
       eligibilityBo = studyDAO.getStudyEligibiltyByStudyId(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyEligibiltyByStudyId() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getStudyEligibiltyByStudyId() - Ends");
+    logger.info("StudyServiceImpl - getStudyEligibiltyByStudyId() - Ends");
     return eligibilityBo;
   }
 
   @Override
   public List<StudyListBean> getStudyList(Integer userId) {
-    logger.entry("StudyServiceImpl - getStudyList() - Starts");
+    logger.info("StudyServiceImpl - getStudyList() - Starts");
     List<StudyListBean> studyBos = null;
     try {
       if ((userId != null) && (userId != 0)) {
@@ -517,108 +516,108 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyList() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getStudyList() - Ends");
+    logger.info("StudyServiceImpl - getStudyList() - Ends");
     return studyBos;
   }
 
   @Override
   public List<StudyListBean> getStudyListByUserId(Integer userId) {
-    logger.entry("StudyServiceImpl - getStudyListByUserId() - Starts");
+    logger.info("StudyServiceImpl - getStudyListByUserId() - Starts");
     List<StudyListBean> studyListBeans = null;
     try {
       studyListBeans = studyDAO.getStudyListByUserId(userId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyListByUserId() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getStudyListByUserId() - Ends");
+    logger.info("StudyServiceImpl - getStudyListByUserId() - Ends");
     return studyListBeans;
   }
 
   @Override
   public StudyBo getStudyLiveStatusByCustomId(String customStudyId) {
-    logger.entry("StudyServiceImpl - getStudyLiveStatusByCustomId() - Starts");
+    logger.info("StudyServiceImpl - getStudyLiveStatusByCustomId() - Starts");
     StudyBo studyLive = null;
     try {
       studyLive = studyDAO.getStudyLiveStatusByCustomId(customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyLiveStatusByCustomId() - Error", e);
     }
-    logger.exit("StudyServiceImpl - getStudyLiveStatusByCustomId() - Ends");
+    logger.info("StudyServiceImpl - getStudyLiveStatusByCustomId() - Ends");
     return studyLive;
   }
 
   @Override
   public ResourceBO getStudyProtocol(Integer studyId) {
-    logger.entry("StudyServiceImpl - getStudyProtocol() - Starts");
+    logger.info("StudyServiceImpl - getStudyProtocol() - Starts");
     ResourceBO studyprotocol = null;
     try {
       studyprotocol = studyDAO.getStudyProtocol(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyProtocol() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getStudyProtocol() - Ends");
+    logger.info("StudyServiceImpl - getStudyProtocol() - Ends");
     return studyprotocol;
   }
 
   @Override
   public String markAsCompleted(
       int studyId, String markCompleted, Boolean flag, SessionObject sesObj, String customStudyId) {
-    logger.entry("StudyServiceImpl - markAsCompleted() - Starts");
+    logger.info("StudyServiceImpl - markAsCompleted() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message = studyDAO.markAsCompleted(studyId, markCompleted, flag, sesObj, customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - markAsCompleted() - Error", e);
     }
-    logger.exit("StudyServiceImpl - markAsCompleted() - Ends");
+    logger.info("StudyServiceImpl - markAsCompleted() - Ends");
     return message;
   }
 
   @Override
   public String markAsCompleted(
       int studyId, String markCompleted, SessionObject sesObj, String customStudyId) {
-    logger.entry("StudyServiceImpl - markAsCompleted() - Starts");
+    logger.info("StudyServiceImpl - markAsCompleted() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message = studyDAO.markAsCompleted(studyId, markCompleted, true, sesObj, customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - markAsCompleted() - Error", e);
     }
-    logger.exit("StudyServiceImpl - markAsCompleted() - Ends");
+    logger.info("StudyServiceImpl - markAsCompleted() - Ends");
     return message;
   }
 
   @Override
   public String reOrderComprehensionTestQuestion(
       Integer studyId, int oldOrderNumber, int newOrderNumber) {
-    logger.entry("StudyServiceImpl - reOrderComprehensionTestQuestion() - Starts");
+    logger.info("StudyServiceImpl - reOrderComprehensionTestQuestion() - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
       message = studyDAO.reOrderComprehensionTestQuestion(studyId, oldOrderNumber, newOrderNumber);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - reOrderComprehensionTestQuestion() - Error", e);
     }
-    logger.exit("StudyServiceImpl - reOrderComprehensionTestQuestion - Ends");
+    logger.info("StudyServiceImpl - reOrderComprehensionTestQuestion - Ends");
     return message;
   }
 
   @Override
   public String reOrderConsentInfoList(Integer studyId, int oldOrderNumber, int newOrderNumber) {
-    logger.entry("StudyServiceImpl - reOrderConsentInfoList() - Starts");
+    logger.info("StudyServiceImpl - reOrderConsentInfoList() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message = studyDAO.reOrderConsentInfoList(studyId, oldOrderNumber, newOrderNumber);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - reOrderConsentInfoList() - Error", e);
     }
-    logger.exit("StudyServiceImpl - reOrderConsentInfoList() - Ends");
+    logger.info("StudyServiceImpl - reOrderConsentInfoList() - Ends");
     return message;
   }
 
   @Override
   public String reorderEligibilityTestQusAns(
       Integer eligibilityId, int oldOrderNumber, int newOrderNumber, Integer studyId) {
-    logger.entry("StudyServiceImpl - reorderEligibilityTestQusAns - Starts");
+    logger.info("StudyServiceImpl - reorderEligibilityTestQusAns - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
       message =
@@ -627,26 +626,26 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - reorderEligibilityTestQusAns - Error", e);
     }
-    logger.exit("StudyServiceImpl - reorderEligibilityTestQusAns - Ends");
+    logger.info("StudyServiceImpl - reorderEligibilityTestQusAns - Ends");
     return message;
   }
 
   @Override
   public String reOrderResourceList(Integer studyId, int oldOrderNumber, int newOrderNumber) {
-    logger.entry("StudyServiceImpl - reOrderResourceList() - Starts");
+    logger.info("StudyServiceImpl - reOrderResourceList() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message = studyDAO.reOrderResourceList(studyId, oldOrderNumber, newOrderNumber);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - reOrderResourceList() - Error", e);
     }
-    logger.exit("StudyServiceImpl - reOrderResourceList() - Ends");
+    logger.info("StudyServiceImpl - reOrderResourceList() - Ends");
     return message;
   }
 
   @Override
   public boolean resetDraftStudyByCustomStudyId(String customStudy) {
-    logger.entry("StudyServiceImpl - resetDraftStudyByCustomStudyId() - Starts");
+    logger.info("StudyServiceImpl - resetDraftStudyByCustomStudyId() - Starts");
     boolean flag = false;
     try {
       SessionObject object = null;
@@ -659,53 +658,53 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - resetDraftStudyByCustomStudyId() - Error", e);
     }
-    logger.exit("StudyServiceImpl - resetDraftStudyByCustomStudyId() - Ends");
+    logger.info("StudyServiceImpl - resetDraftStudyByCustomStudyId() - Ends");
     return flag;
   }
 
   @Override
   public int resourceOrder(Integer studyId) {
     int count = 1;
-    logger.entry("StudyServiceImpl - resourceOrder() - Starts");
+    logger.info("StudyServiceImpl - resourceOrder() - Starts");
     try {
       count = studyDAO.resourceOrder(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - resourceOrder() - Error", e);
     }
-    logger.exit("StudyServiceImpl - resourceOrder() - Ends");
+    logger.info("StudyServiceImpl - resourceOrder() - Ends");
     return count;
   }
 
   @Override
   public List<ResourceBO> resourcesSaved(Integer studyId) {
-    logger.entry("StudyServiceImpl - resourcesSaved() - Starts");
+    logger.info("StudyServiceImpl - resourcesSaved() - Starts");
     List<ResourceBO> resourceBOList = null;
     try {
       resourceBOList = studyDAO.resourcesSaved(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - resourcesSaved() - Error", e);
     }
-    logger.exit("StudyServiceImpl - resourcesSaved() - Ends");
+    logger.info("StudyServiceImpl - resourcesSaved() - Ends");
     return resourceBOList;
   }
 
   @Override
   public List<ResourceBO> resourcesWithAnchorDate(Integer studyId) {
-    logger.entry("StudyServiceImpl - resourcesWithAnchorDate() - Starts");
+    logger.info("StudyServiceImpl - resourcesWithAnchorDate() - Starts");
     List<ResourceBO> resourceList = null;
     try {
       resourceList = studyDAO.resourcesWithAnchorDate(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - resourcesWithAnchorDate() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - resourcesWithAnchorDate() - Ends");
+    logger.info("StudyServiceImpl - resourcesWithAnchorDate() - Ends");
     return resourceList;
   }
 
   @Override
   public ConsentBo saveOrCompleteConsentReviewDetails(
       ConsentBo consentBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("INFO: StudyServiceImpl - saveOrCompleteConsentReviewDetails() :: Starts");
+    logger.info("INFO: StudyServiceImpl - saveOrCompleteConsentReviewDetails() :: Starts");
     ConsentBo updateConsentBo = null;
     try {
       if (consentBo.getId() != null) {
@@ -823,14 +822,14 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrCompleteConsentReviewDetails() :: ERROR", e);
     }
-    logger.exit("INFO: StudyServiceImpl - saveOrCompleteConsentReviewDetails() :: Ends");
+    logger.info("INFO: StudyServiceImpl - saveOrCompleteConsentReviewDetails() :: Ends");
     return updateConsentBo;
   }
 
   @Override
   public Integer saveOrDoneChecklist(
       Checklist checklist, String actionBut, SessionObject sesObj, String customStudyId) {
-    logger.entry("StudyServiceImpl - saveOrDoneChecklist() - Starts");
+    logger.info("StudyServiceImpl - saveOrDoneChecklist() - Starts");
     Integer checklistId = 0;
     Checklist checklistBO = null;
     StudyBo studyBo = null;
@@ -870,14 +869,14 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrDoneChecklist() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - saveOrDoneChecklist() - Ends");
+    logger.info("StudyServiceImpl - saveOrDoneChecklist() - Ends");
     return checklistId;
   }
 
   @Override
   public ComprehensionTestQuestionBo saveOrUpdateComprehensionTestQuestion(
       ComprehensionTestQuestionBo comprehensionTestQuestionBo) {
-    logger.entry("StudyServiceImpl - getComprehensionTestResponseList() - Starts");
+    logger.info("StudyServiceImpl - getComprehensionTestResponseList() - Starts");
     ComprehensionTestQuestionBo updateComprehensionTestQuestionBo = null;
     try {
       if (comprehensionTestQuestionBo != null) {
@@ -934,14 +933,14 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getComprehensionTestResponseList() - Error", e);
     }
-    logger.exit("StudyServiceImpl - getComprehensionTestResponseList() - Ends");
+    logger.info("StudyServiceImpl - getComprehensionTestResponseList() - Ends");
     return updateComprehensionTestQuestionBo;
   }
 
   @Override
   public ConsentInfoBo saveOrUpdateConsentInfo(
       ConsentInfoBo consentInfoBo, SessionObject sessionObject, String customStudyId) {
-    logger.entry("StudyServiceImpl - saveOrUpdateConsentInfo() - Starts");
+    logger.info("StudyServiceImpl - saveOrUpdateConsentInfo() - Starts");
     ConsentInfoBo updateConsentInfoBo = null;
     try {
       if (consentInfoBo != null) {
@@ -999,7 +998,7 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrUpdateConsentInfo() - Error", e);
     }
-    logger.exit("StudyServiceImpl - saveOrUpdateConsentInfo() - Ends");
+    logger.info("StudyServiceImpl - saveOrUpdateConsentInfo() - Ends");
     return updateConsentInfoBo;
   }
 
@@ -1009,7 +1008,7 @@ public class StudyServiceImpl implements StudyService {
       Integer studyId,
       SessionObject sessionObject,
       String customStudyId) {
-    logger.entry("StudyServiceImpl - saveOrUpdateEligibilityTestQusAns - Starts");
+    logger.info("StudyServiceImpl - saveOrUpdateEligibilityTestQusAns - Starts");
     Integer eligibilityTestId = 0;
     Integer seqCount = 0;
     try {
@@ -1025,13 +1024,13 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrUpdateEligibilityTestQusAns - Error", e);
     }
-    logger.entry("StudyServiceImpl - saveOrUpdateEligibilityTestQusAns - Ends");
+    logger.info("StudyServiceImpl - saveOrUpdateEligibilityTestQusAns - Ends");
     return eligibilityTestId;
   }
 
   @Override
   public String saveOrUpdateOverviewStudyPages(StudyPageBean studyPageBean, SessionObject sesObj) {
-    logger.entry("StudyServiceImpl - saveOrUpdateOverviewStudyPages() - Starts");
+    logger.info("StudyServiceImpl - saveOrUpdateOverviewStudyPages() - Starts");
     String message = "";
     CustomMultipartFile[] customMultipart = null;
     try {
@@ -1120,7 +1119,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public Integer saveOrUpdateResource(ResourceBO resourceBO, SessionObject sesObj) {
-    logger.entry("StudyServiceImpl - saveOrUpdateResource() - Starts");
+    logger.info("StudyServiceImpl - saveOrUpdateResource() - Starts");
     Integer resourseId = 0;
     ResourceBO resourceBO2 = null;
     String fileName = "";
@@ -1276,47 +1275,47 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrUpdateResource() - Error", e);
     }
-    logger.exit("StudyServiceImpl - saveOrUpdateResource() - Ends");
+    logger.info("StudyServiceImpl - saveOrUpdateResource() - Ends");
     return resourseId;
   }
 
   @Override
   public String saveOrUpdateStudy(StudyBo studyBo, Integer userId, SessionObject sessionObject) {
-    logger.entry("StudyServiceImpl - saveOrUpdateStudy() - Starts");
+    logger.info("StudyServiceImpl - saveOrUpdateStudy() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message = studyDAO.saveOrUpdateStudy(studyBo, sessionObject);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrUpdateStudy() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - saveOrUpdateStudy() - Ends");
+    logger.info("StudyServiceImpl - saveOrUpdateStudy() - Ends");
     return message;
   }
 
   @Override
   public String saveOrUpdateStudyEligibilty(
       EligibilityBo eligibilityBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("StudyServiceImpl - saveOrUpdateStudyEligibilty() - Starts");
+    logger.info("StudyServiceImpl - saveOrUpdateStudyEligibilty() - Starts");
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
       result = studyDAO.saveOrUpdateStudyEligibilty(eligibilityBo, sesObj, customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrUpdateStudyEligibilty() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - saveOrUpdateStudyEligibilty() - Ends");
+    logger.info("StudyServiceImpl - saveOrUpdateStudyEligibilty() - Ends");
     return result;
   }
 
   @Override
   public String saveOrUpdateStudySettings(StudyBo studyBo, SessionObject sesObj) {
-    logger.entry("StudyServiceImpl - saveOrUpdateStudySettings() - Starts");
+    logger.info("StudyServiceImpl - saveOrUpdateStudySettings() - Starts");
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
       result = studyDAO.saveOrUpdateStudySettings(studyBo, sesObj);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - saveOrUpdateStudySettings() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - saveOrUpdateStudySettings() - Ends");
+    logger.info("StudyServiceImpl - saveOrUpdateStudySettings() - Ends");
     return result;
   }
 
@@ -1327,7 +1326,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String updateStudyActionOnAction(String studyId, String buttonText, SessionObject sesObj) {
-    logger.entry("StudyServiceImpl - updateStudyActionOnAction() - Starts");
+    logger.info("StudyServiceImpl - updateStudyActionOnAction() - Starts");
     String message = "";
     try {
       if (StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(buttonText)) {
@@ -1336,117 +1335,117 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - validateStudyAction() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - updateStudyActionOnAction() - Ends");
+    logger.info("StudyServiceImpl - updateStudyActionOnAction() - Ends");
     return message;
   }
 
   @Override
   public String validateActivityComplete(String studyId, String action) {
-    logger.entry("StudyServiceImpl - validateActivityComplete() - Starts");
+    logger.info("StudyServiceImpl - validateActivityComplete() - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
       message = studyDAO.validateActivityComplete(studyId, action);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - validateActivityComplete() - Error", e);
     }
-    logger.exit("StudyServiceImpl - validateActivityComplete() - Ends");
+    logger.info("StudyServiceImpl - validateActivityComplete() - Ends");
     return message;
   }
 
   @Override
   public String validateEligibilityTestKey(
       Integer eligibilityTestId, String shortTitle, Integer eligibilityId) {
-    logger.entry("StudyServiceImpl - validateEligibilityTestKey - Starts");
+    logger.info("StudyServiceImpl - validateEligibilityTestKey - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
       message = studyDAO.validateEligibilityTestKey(eligibilityTestId, shortTitle, eligibilityId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - validateEligibilityTestKey - Error", e);
     }
-    logger.exit("StudyServiceImpl - validateEligibilityTestKey - Ends");
+    logger.info("StudyServiceImpl - validateEligibilityTestKey - Ends");
     return message;
   }
 
   @Override
   public String validateStudyAction(String studyId, String buttonText) {
-    logger.entry("StudyServiceImpl - validateStudyAction() - Starts");
+    logger.info("StudyServiceImpl - validateStudyAction() - Starts");
     String message = "";
     try {
       message = studyDAO.validateStudyAction(studyId, buttonText);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - validateStudyAction() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - validateStudyAction() - Ends");
+    logger.info("StudyServiceImpl - validateStudyAction() - Ends");
     return message;
   }
 
   @Override
   public boolean validateStudyId(String studyId) {
-    logger.entry("StudyServiceImpl - validateStudyId() - Starts");
+    logger.info("StudyServiceImpl - validateStudyId() - Starts");
     boolean flag = false;
     try {
       flag = studyDAO.validateStudyId(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - validateStudyId() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - validateStudyId() - Ends");
+    logger.info("StudyServiceImpl - validateStudyId() - Ends");
     return flag;
   }
 
   @Override
   public List<EligibilityTestBo> viewEligibilityTestQusAnsByEligibilityId(Integer eligibilityId) {
-    logger.entry("StudyServiceImpl - viewEligibilityTestQusAnsByEligibilityId - Starts");
+    logger.info("StudyServiceImpl - viewEligibilityTestQusAnsByEligibilityId - Starts");
     List<EligibilityTestBo> eligibilityTestBos = null;
     try {
       eligibilityTestBos = studyDAO.viewEligibilityTestQusAnsByEligibilityId(eligibilityId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - viewEligibilityTestQusAnsByEligibilityId - Error", e);
     }
-    logger.exit("StudyServiceImpl - viewEligibilityTestQusAnsByEligibilityId - Ends");
+    logger.info("StudyServiceImpl - viewEligibilityTestQusAnsByEligibilityId - Ends");
     return eligibilityTestBos;
   }
 
   @Override
   public EligibilityTestBo viewEligibilityTestQusAnsById(Integer eligibilityTestId) {
-    logger.entry("StudyServiceImpl - viewEligibilityTestQusAnsById - Starts");
+    logger.info("StudyServiceImpl - viewEligibilityTestQusAnsById - Starts");
     EligibilityTestBo eligibilityTestBo = null;
     try {
       eligibilityTestBo = studyDAO.viewEligibilityTestQusAnsById(eligibilityTestId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - viewEligibilityTestQusAnsById - Error", e);
     }
-    logger.exit("StudyServiceImpl - viewEligibilityTestQusAnsById - Ends");
+    logger.info("StudyServiceImpl - viewEligibilityTestQusAnsById - Ends");
     return eligibilityTestBo;
   }
 
   @Override
   public Boolean isAnchorDateExistForEnrollment(Integer studyId, String customStudyId) {
-    logger.entry("StudyServiceImpl - isAnchorDateExistForEnrollment - Starts");
+    logger.info("StudyServiceImpl - isAnchorDateExistForEnrollment - Starts");
     return studyDAO.isAnchorDateExistForEnrollment(studyId, customStudyId);
   }
 
   @Override
   public Boolean isAnchorDateExistForEnrollmentDraftStudy(Integer studyId, String customStudyId) {
-    logger.entry("StudyServiceImpl - isAnchorDateExistForEnrollmentDraftStudy - Starts");
+    logger.info("StudyServiceImpl - isAnchorDateExistForEnrollmentDraftStudy - Starts");
     return studyDAO.isAnchorDateExistForEnrollmentDraftStudy(studyId, customStudyId);
   }
 
   @Override
   public boolean validateAppId(
       String customStudyId, String appId, String studyType, String dbCustomStudyId) {
-    logger.entry("StudyServiceImpl - validateAppId - Starts");
+    logger.info("StudyServiceImpl - validateAppId - Starts");
     return studyDAO.validateAppId(customStudyId, appId, studyType, dbCustomStudyId);
   }
 
   @Override
   public StudyPermissionBO findStudyPermissionBO(int studyId, int userId) {
-    logger.entry("StudyServiceImpl - findStudyPermissionBO() - Starts");
+    logger.info("StudyServiceImpl - findStudyPermissionBO() - Starts");
     return studyDAO.getStudyPermissionBO(studyId, userId);
   }
 
   @Override
   public StudyDetailsBean getStudyByLatestVersion(String customStudyId) {
-    logger.entry("StudyServiceImpl - getStudyByLatestVersion - Starts");
+    logger.info("StudyServiceImpl - getStudyByLatestVersion - Starts");
     StudyDetailsBean studyDetails = null;
     StudyBo studyBo = null;
     String studyCatagory = "";
@@ -1496,20 +1495,20 @@ public class StudyServiceImpl implements StudyService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyByLatestVersion - Error", e);
     }
-    logger.exit("StudyServiceImpl - getStudyByLatestVersion - Ends");
+    logger.info("StudyServiceImpl - getStudyByLatestVersion - Ends");
     return studyDetails;
   }
 
   @Override
   public boolean validateStudyActions(String studyId) {
-    logger.entry("StudyServiceImpl - validateStudyAction() - Starts");
+    logger.info("StudyServiceImpl - validateStudyAction() - Starts");
     boolean markAsCompleted = false;
     try {
       markAsCompleted = studyDAO.validateStudyActions(studyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - validateStudyAction() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - validateStudyAction() - Ends");
+    logger.info("StudyServiceImpl - validateStudyAction() - Ends");
     return markAsCompleted;
   }
 
@@ -1519,14 +1518,14 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public List<ConsentBo> getConsentList(String customStudyId) {
-    logger.entry("StudyServiceImpl - getConsentList() - Starts");
+    logger.info("StudyServiceImpl - getConsentList() - Starts");
     List<ConsentBo> consentBoList = null;
     try {
       consentBoList = studyDAO.getConsentList(customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentList() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getConsentList() - Ends");
+    logger.info("StudyServiceImpl - getConsentList() - Ends");
     return consentBoList;
   }
 }

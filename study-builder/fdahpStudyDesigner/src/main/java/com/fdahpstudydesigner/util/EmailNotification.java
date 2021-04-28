@@ -27,15 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EmailNotification {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(EmailNotification.class.getName());
+  private static Logger logger = Logger.getLogger(EmailNotification.class.getName());
   @Autowired Mail mail;
 
   public boolean sendEmailNotification(
@@ -67,7 +66,7 @@ public class EmailNotification {
     } catch (Exception e) {
       logger.error("EmailNotification.sendEmailNotification() :: ERROR ", e);
     }
-    logger.exit("EmailNotification - Ends: sendLinkToEmail() - returning  a List value" + " : ");
+    logger.info("EmailNotification - Ends: sendLinkToEmail() - returning  a List value" + " : ");
     return sentMail;
   }
 
@@ -78,7 +77,7 @@ public class EmailNotification {
       List<String> ccMailList,
       List<String> bccMailList) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    logger.entry(
+    logger.info(
         "EmailNotification - Starts: sendEmailNotificationToMany() - Input arg are ServletContext ");
     boolean sentMail = false;
     List<String> toMailListNew = new ArrayList<>();
@@ -107,7 +106,7 @@ public class EmailNotification {
       sentMail = false;
       logger.error("EmailNotification.sendEmailNotificationToMany() :: ERROR ", e);
     }
-    logger.exit(
+    logger.info(
         "EmailNotification - Ends: sendEmailNotificationToMany() - returning  a List value"
             + " : ");
     return sentMail;
@@ -144,7 +143,7 @@ public class EmailNotification {
     } catch (Exception e) {
       logger.error("EmailNotification.sendEmailNotification() :: ERROR ", e);
     }
-    logger.exit("EmailNotification - Ends: sendLinkToEmail() - returning  a List value" + " : ");
+    logger.info("EmailNotification - Ends: sendLinkToEmail() - returning  a List value" + " : ");
     return sentMail;
   }
 }

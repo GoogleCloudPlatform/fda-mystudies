@@ -55,12 +55,11 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -68,8 +67,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
-  private static XLogger logger =
-      XLoggerFactory.getXLogger(StudyActiveTasksDAOImpl.class.getName());
+  private static Logger logger = Logger.getLogger(StudyActiveTasksDAOImpl.class.getName());
   @Autowired private HttpServletRequest request;
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
   HibernateTemplate hibernateTemplate;
@@ -84,7 +82,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
   @Override
   public String deleteActiveTask(
       ActiveTaskBo activeTaskBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("begin deleteActiveTAsk()");
+    logger.info("StudyActiveTasksDAOImpl - deleteActiveTAsk() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     StudyVersionBo studyVersionBo = null;
@@ -201,14 +199,14 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("deleteActiveTAsk() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - deleteActiveTAsk() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public ActiveTaskBo getActiveTaskById(Integer activeTaskId, String customStudyId) {
-    logger.entry("begin getActiveTaskById()");
+    logger.info("StudyActiveTasksDAOImpl - getActiveTaskById() - Starts");
     ActiveTaskBo activeTaskBo = null;
     Session session = null;
     List<ActiveTaskAtrributeValuesBo> activeTaskAtrributeValuesBos = null;
@@ -313,14 +311,14 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("getActiveTaskById() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - getActiveTaskById() - Ends");
     return activeTaskBo;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ActivetaskFormulaBo> getActivetaskFormulas() {
-    logger.entry("begin getActivetaskFormulas()");
+    logger.info("StudyActiveTasksDAOImpl - getActivetaskFormulas() - Starts");
     Session session = null;
     List<ActivetaskFormulaBo> activetaskFormulaList = new ArrayList<>();
     try {
@@ -334,7 +332,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("getActivetaskFormulas() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - getActivetaskFormulas() - Ends");
     return activetaskFormulaList;
   }
 
@@ -342,7 +340,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
   @Override
   public List<ActiveTaskMasterAttributeBo> getActiveTaskMasterAttributesByType(
       String activeTaskType) {
-    logger.entry("begin getActiveTaskMasterAttributesByType()");
+    logger.info("StudyActiveTasksDAOImpl - getActiveTaskMasterAttributesByType() - Starts");
     Session session = null;
     List<ActiveTaskMasterAttributeBo> taskMasterAttributeBos = new ArrayList<>();
     try {
@@ -359,14 +357,14 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("getActiveTaskMasterAttributesByType() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - getActiveTaskMasterAttributesByType() - Ends");
     return taskMasterAttributeBos;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ActiveTaskListBo> getAllActiveTaskTypes(String platformType) {
-    logger.entry("begin getAllActiveTaskTypes()");
+    logger.info("StudyActiveTasksDAOImpl - getAllActiveTaskTypes() - Starts");
     Session session = null;
     List<ActiveTaskListBo> activeTaskListBos = new ArrayList<>();
     try {
@@ -393,14 +391,14 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("getAllActiveTaskTypes() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - getAllActiveTaskTypes() - Ends");
     return activeTaskListBos;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<StatisticImageListBo> getStatisticImages() {
-    logger.entry("begin getStatisticImages()");
+    logger.info("StudyActiveTasksDAOImpl - getStatisticImages() - Starts");
     Session session = null;
     List<StatisticImageListBo> imageListBos = new ArrayList<>();
     try {
@@ -414,14 +412,14 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("getStatisticImages() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - getStatisticImages() - Ends");
     return imageListBos;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<ActiveTaskBo> getStudyActiveTasksByStudyId(String studyId, Boolean isLive) {
-    logger.entry("begin getStudyActiveTasksByStudyId()");
+    logger.info("StudyActiveTasksDAOImpl - getStudyActiveTasksByStudyId() - Starts");
     Session session = null;
     List<ActiveTaskBo> activeTasks = null;
     List<ActiveTaskListBo> activeTaskListBos = null;
@@ -468,13 +466,13 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("getStudyActiveTasksByStudyId() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - getStudyActiveTasksByStudyId() - Ends");
     return activeTasks;
   }
 
   @Override
   public ActiveTaskBo saveOrUpdateActiveTask(ActiveTaskBo activeTaskBo, String customStudyId) {
-    logger.entry("begin saveOrUpdateActiveTask()");
+    logger.info("StudyActiveTasksDAOImpl - saveOrUpdateActiveTask() - Starts");
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -628,20 +626,20 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
-      logger.error("StudyActiveTasksDAOImpl - saveOrUpdateActiveTask() - Error", e);
+      logger.info("StudyActiveTasksDAOImpl - saveOrUpdateActiveTask() - Error", e);
     } finally {
       if (session != null) {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateActiveTask() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - saveOrUpdateActiveTask() - Ends");
     return activeTaskBo;
   }
 
   @Override
   public ActiveTaskBo saveOrUpdateActiveTaskInfo(
       ActiveTaskBo activeTaskBo, SessionObject sesObj, String customStudyId) {
-    logger.entry("begin saveOrUpdateActiveTaskInfo()");
+    logger.info("StudyActiveTasksDAOImpl - saveOrUpdateActiveTaskInfo() - Starts");
     Session session = null;
     StudySequenceBo studySequence = null;
     List<ActiveTaskAtrributeValuesBo> taskAttributeValueBos = new ArrayList<>();
@@ -768,7 +766,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateActiveTaskInfo() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - saveOrUpdateActiveTaskInfo() - Ends");
     return activeTaskBo;
   }
 
@@ -785,7 +783,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       String activeTaskAttIdVal,
       String activeTaskAttIdName,
       String customStudyId) {
-    logger.entry("begin validateActiveTaskAttrById()");
+    logger.info("StudyActiveTasksDAOImpl - validateActiveTaskAttrById() - Starts");
     boolean flag = false;
     Session session = null;
     String queryString = "";
@@ -1031,7 +1029,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("validateActiveTaskAttrById() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - validateActiveTaskAttrById() - Ends");
     return flag;
   }
 
@@ -1039,7 +1037,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
   @Override
   public List<ActiveStatisticsBean> validateActiveTaskStatIds(
       String customStudyId, List<ActiveStatisticsBean> activeStatisticsBeans) {
-    logger.entry("begin validateActiveTaskStatIds()");
+    logger.info("StudyActiveTasksDAOImpl - validateActiveTaskStatIds() - Starts");
     Session session = null;
     List<String> ids = new ArrayList<>();
     String subString = "";
@@ -1105,7 +1103,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         session.close();
       }
     }
-    logger.exit("validateActiveTaskStatIds() - Ends");
+    logger.info("StudyActiveTasksDAOImpl - validateActiveTaskStatIds() - Ends");
     return activeStatisticsBeans;
   }
 }
