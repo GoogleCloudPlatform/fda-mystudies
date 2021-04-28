@@ -30,6 +30,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
   @IBOutlet var buttonVisitWebsite: UIButton?
   @IBOutlet var labelTitle: UILabel?
   @IBOutlet var labelDescription: UILabel?
+  @IBOutlet var textViewDescription: UITextView?
   @IBOutlet var imageViewStudy: UIImageView?
 
   // MARK: - Properties
@@ -48,6 +49,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
       let url = URL.init(string: overviewSectionDetail.imageURL!)
       imageViewStudy?.sd_setImage(with: url, placeholderImage: nil)
     }
+    textViewDescription?.isEditable = false
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -95,13 +97,22 @@ class StudyOverviewViewControllerSecond: UIViewController {
       )
 
       if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
-        self.labelDescription?.attributedText = attributedText
-
+        let detailText = overviewSectionDetail.text ?? ""
+        let regex = "<[^>]+>"
+        self.textViewDescription?.text = detailText
+        if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+          self.labelDescription?.text = detailText
+          self.textViewDescription?.text = detailText
+        } else {
+          if let valText = detailText.stringByDecodingHTMLEntities.htmlToAttributedString {
+            self.textViewDescription?.attributedText = valText
+          }
+        }
       } else {
-        self.labelDescription?.text = ""
+        self.textViewDescription?.text = ""
       }
     }
-    self.labelDescription?.textAlignment = .center
+    self.textViewDescription?.textAlignment = .center
   }
 
   // MARK: - Button Actions
