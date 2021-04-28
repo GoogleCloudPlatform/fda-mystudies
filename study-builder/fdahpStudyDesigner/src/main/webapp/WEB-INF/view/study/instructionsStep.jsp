@@ -64,7 +64,7 @@
           <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
                  name="questionnairesStepsBo.stepShortTitle" id="shortTitleId"
                  value="${fn:escapeXml(instructionsBo.questionnairesStepsBo.stepShortTitle)}"
-                 required="required"
+                 required="required" data-error="Please fill out this field" 
                  maxlength="15" <c:if
               test="${not empty instructionsBo.questionnairesStepsBo.isShorTitleDuplicate && (instructionsBo.questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
           <div class="help-block with-errors red-txt"></div>
@@ -81,7 +81,7 @@
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" required name="instructionTitle"
+        <input type="text" class="form-control" required data-error="Please fill out this field"  name="instructionTitle"
                id="instructionTitle"
                value="${fn:escapeXml(instructionsBo.instructionTitle)}" maxlength="250"/>
         <div class="help-block with-errors red-txt"></div>
@@ -93,7 +93,7 @@
       </div>
       <div class="form-group">
         <textarea class="form-control" rows="5" id="summernote" name="instructionText"
-                  required
+                  required data-error="Please fill out this field" 
                   maxlength="500">${instructionsBo.instructionText}</textarea>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -107,7 +107,7 @@
           </div>
           <div class="form-group">
             <select name="questionnairesStepsBo.destinationStep" id="destinationStepId"
-                    data-error="Please choose one title" class="selectpicker" required>
+                    data-error="Please choose one title" class="selectpicker" required data-error="Please fill out this field" >
               <c:forEach items="${destinationStepList}" var="destinationStep">
                 <option
                     value="${destinationStep.stepId}" ${instructionsBo.questionnairesStepsBo.destinationStep eq destinationStep.stepId ? 'selected' :''}>
@@ -228,7 +228,7 @@
 	       .find(".help-block")
 	       .empty()
 	       .append(
-	           '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+	           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
 	   return false;
 	 } else {
 	   $('#summernote').attr(
@@ -280,7 +280,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -337,7 +337,7 @@
             var stepId = data.stepId;
             $("#id").val(instructionId);
             $("#stepId").val(stepId);
-            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $("#saveId").attr("disabled", false);
             $('#alertMsg').show();
@@ -365,7 +365,7 @@
       if (!$('#shortTitleId')[0].checkValidity()) {
         $("#shortTitleId").parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "This is a required field."));
+            "This is a required field"));
       }
     }
   }
