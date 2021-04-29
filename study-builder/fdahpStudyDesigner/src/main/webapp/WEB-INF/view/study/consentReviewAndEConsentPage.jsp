@@ -109,7 +109,7 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass"
+                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
                            placeholde="" id="titleId" name="title"
                            value="${consentBo.title}" maxlength="250"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -133,7 +133,7 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass"
+                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
                            placeholder="" maxlength="250" name="taglineDescription"
                            id="taglineDescriptionId"
                            value="${consentBo.taglineDescription}"/>
@@ -155,7 +155,7 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass"
+                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
                            placeholder="" maxlength="250" name="shortDescription"
                            id="shortDescriptionId" value="${consentBo.shortDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -176,7 +176,7 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <textarea class="form-control requiredClass" rows="5"
+                    <textarea class="form-control requiredClass" rows="5" data-error="Please fill out this field" 
                               maxlength="500" placeholder="" name="longDescription"
                               id="longDescriptionId">${consentBo.longDescription}</textarea>
                     <div class="help-block with-errors red-txt"></div>
@@ -195,7 +195,7 @@
                   </div>
                   <div class="form-group">
                     <textarea id="learnMoreTextId" name="learnMoreText"
-                              required>${consentBo.learnMoreText}</textarea>
+                              required data-error="Please fill out this field" >${consentBo.learnMoreText}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -220,7 +220,7 @@
                 <div id="consentDocTypeDivId">
                   <span class="radio radio-info radio-inline p-45"><input
                       type="radio" id="inlineRadio1" value="Auto"
-                      name="consentDocType" required
+                      name="consentDocType" required 
                       data-error="Please choose consent document type"
                     ${consentBo.consentDocType=='Auto'?'checked':''}> <label
                       for="inlineRadio1">Auto-created consent document</label>
@@ -481,7 +481,7 @@
                   $("#newDocumentDivId").parent().find(".help-block").empty();
                   $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
                       ".help-block").append(
-                      '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+                      '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
                 }
               }
           } else {
@@ -732,7 +732,7 @@
               a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
               document.body.appendChild(a).click();
             } else {
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
               if ($('.fifthConsentReview').find('span').hasClass(
@@ -794,7 +794,7 @@
         }
         $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 70000 characters are allowed."));
+            "Maximum 70000 characters are allowed"));
       } else {
         $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
         $('#newDocumentDivId').parent().find(".help-block").empty();
@@ -804,7 +804,7 @@
       $('#newDocumentDivId').attr('required', true);
       $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-          "Please fill out this field."));
+          "Please fill out this field"));
 
     }
 
@@ -822,7 +822,7 @@
         }
         $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 70000 characters are allowed."));
+            "Maximum 70000 characters are allowed"));
       } else {
         $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
         $('#learnMoreTextId').parent().find(".help-block").empty();
@@ -832,7 +832,7 @@
       $('#learnMoreTextId').attr('required', true);
       $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-          "Please fill out this field."));
+          "Please fill out this field"));
 
     }
 

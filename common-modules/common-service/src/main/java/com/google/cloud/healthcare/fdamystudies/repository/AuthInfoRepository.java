@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @ConditionalOnProperty(
@@ -30,4 +32,12 @@ public interface AuthInfoRepository extends JpaRepository<AuthInfoEntity, String
   public List<AuthInfoEntity> findDevicesTokens(List<String> appInfoIds);
 
   public Optional<AuthInfoEntity> findByUserDetails(UserDetailsEntity userDetails);
+
+  @Transactional
+  @Modifying
+  @Query(
+      "DELETE from AuthInfoEntity ai where ai.deviceToken=:deviceToken and ai.userDetails.id!=:userId")
+  public void deleteByDeviceTokenAndUserId(String deviceToken, String userId);
+
+  public List<AuthInfoEntity> findByDeviceToken(String deviceToken);
 }
