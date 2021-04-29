@@ -17,3 +17,7 @@ jobs:
         projectBaseDir: "participant-manager-datastore/"
         host: ${{ secrets.SONARQUBE_HOST }}
         login: ${{ secrets.SONARQUBE_TOKEN }}
+        args: > 
+         -Dsonar.exclusions=*.java
+         
+        
