@@ -53,7 +53,7 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-
+	  
     $('.addEditStudy').on('click', function () {
       $('#addEditStudyForm').submit();
     });
@@ -66,7 +66,7 @@
     <c:if test="${studyListId eq true}">
     $('#studyListId').show();
     </c:if>
-    var sucMsg = '${sucMsg}';
+    var sucMsg = "${sucMsg}";
     if (sucMsg.length > 0) {
       showSucMsg(sucMsg);
     }

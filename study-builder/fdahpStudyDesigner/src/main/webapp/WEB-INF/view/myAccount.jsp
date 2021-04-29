@@ -239,7 +239,7 @@
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW') or
               fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
       <div class="edit-user-list-widget mb-xs">
-        <span>Users</span>
+        <span>Admins</span>
         <span class="gray-xs-f pull-right">
            <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>

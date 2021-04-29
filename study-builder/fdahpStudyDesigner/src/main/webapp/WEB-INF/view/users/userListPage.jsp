@@ -24,7 +24,7 @@
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none mb-md">
 
-      <div class="black-lg-f" style="margin-top: 0px">Manage users</div>
+      <div class="black-lg-f" style="margin-top: 0px">Manage admins</div>
 
       <div class="dis-inline" style="margin-top: 8px">
         <form class="navbar-form" role="search">
@@ -50,7 +50,7 @@
               test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
             <button type="button"
                     class="btn btn-primary blue-btn addOrEditUser"
-                    style="margin-top: 12px;">Add user
+                    style="margin-top: 12px;">Add admin
             </button>
           </c:if>
         </div>
@@ -191,7 +191,7 @@
     $('#enforcePasswordId').on('click', function () {
       bootbox.confirm({
         closeButton: false,
-        message: "Are you sure you wish to enforce password change for all users? Note: This will not apply to your own account.",
+        message: "Are you sure you wish to enforce password change for all admins? Note: This will not apply to your own account.",
         buttons: {
           'cancel': {
             label: 'No',
@@ -269,7 +269,7 @@
     } else if ("1" == status) {
       msgPart = "deactivate";
     }
-    bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
+    bootbox.confirm("Are you sure you want to " + msgPart + " this admin?", function (result) {
       if (result) {
         $.ajax({
           url: "/studybuilder/adminUsersEdit/activateOrDeactivateUser.do",
@@ -284,12 +284,12 @@
             var message = data.message;
             if (message == 'SUCCESS') {
               if (status == 1) {
-                showSucMsg('User successfully deactivated.');
+                showSucMsg('Admin user successfully deactivated.');
                 $('#' + userId).val("0");
                 $('#label' + userId).attr('data-original-title', 'Account status: Deactivated');
                 $('#editIcon' + userId).addClass('cursor-none');
               } else {
-                showSucMsg('User successfully activated.');
+                showSucMsg('Admin user successfully activated.');
                 $('#' + userId).val("1");
                 $('#label' + userId).attr('data-original-title', 'Account status: Active');
                 $('#editIcon' + userId).removeClass('cursor-none');

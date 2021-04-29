@@ -27,13 +27,13 @@
             src="/studybuilder/images/icons/back-b.png" alt=""/></a>
       </span>
       <c:if test="${actionPage eq 'ADD_PAGE'}">
-        Add new user
+        Add new admin
       </c:if>
       <c:if test="${actionPage eq 'EDIT_PAGE'}">
-        Edit user details
+        Edit admin details
       </c:if>
       <c:if test="${actionPage eq 'VIEW_PAGE'}">
-        User details
+        Admin details
       </c:if>
 
     </div>
@@ -130,7 +130,7 @@
       <div class="ed-user-layout row">
         <!-- Edit User Layout-->
 
-        <div class="blue-md-f text-uppercase mb-md">User Information</div>
+        <div class="blue-md-f text-uppercase mb-md">Admin Information</div>
         <div class="col-md-12 p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
@@ -730,7 +730,7 @@
     $('#enforcePasswordId').on('click', function () {
       bootbox.confirm({
         closeButton: false,
-        message: "Are you sure you wish to enforce a password change for this user?",
+        message: "Are you sure you wish to enforce a password change for this admin?",
         buttons: {
           'cancel': {
             label: 'No',
@@ -803,7 +803,7 @@
     } else {
       msgPart = "deactivate";
     }
-    bootbox.confirm("Are you sure you want to " + msgPart + " this user?", function (result) {
+    bootbox.confirm("Are you sure you want to " + msgPart + " this admin?", function (result) {
       if (result) {
         if (status == 'true') {
           $('#change' + userId).val(false);
