@@ -74,14 +74,14 @@
 			         <c:when test="${actionPage eq 'VIEW_PAGE'}">
 			              <span class="black-sm-f resend pl-md">
 			                <a  href="javascript:void(0)"  id="resendLinkId" class="disabled">Re-send
-			                  Activation Link
+			                  activation link
 			                </a>
 			              </span>
 			         </c:when>
 			         <c:otherwise>
 			           		<span class="black-sm-f resend pl-md">
 			                <a  href="javascript:void(0)" id="resendLinkId" >Re-send
-			                  Activation Link
+			                  activation link
 			                </a>
 			              </span>
 			         </c:otherwise>
