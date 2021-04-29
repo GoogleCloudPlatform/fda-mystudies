@@ -15,7 +15,6 @@ jobs:
       uses: kitabisa/sonarqube-action@v1.1.0
       with:
         host: ${{ secrets.SONARQUBE_HOST }}
-        projectBaseDir: "participant-manager-datastore"
         projectKey: ${{ secrets.SONARQUBE_TOKEN }}
         projectName: "newproject"
           
