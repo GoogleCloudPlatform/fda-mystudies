@@ -1,10 +1,5 @@
 name: Sonar Qube
-on:
-  pull_request:
-    paths:
-    - 'common-modules/**'
-    - 'participant-manager-datastore/**'
-    - '.github/workflows/build-participant-manager-datastore.yml'
+on: push
 jobs:
   sonarQubeTrigger:
     name: SonarQube Trigger
