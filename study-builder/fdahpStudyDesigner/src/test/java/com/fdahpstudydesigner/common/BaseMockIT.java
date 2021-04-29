@@ -35,7 +35,6 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,6 +46,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -84,7 +85,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 })
 public class BaseMockIT {
 
-  private static Logger logger = Logger.getLogger(BaseMockIT.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(BaseMockIT.class.getName());
 
   @Rule public TestName testName = new TestName();
 

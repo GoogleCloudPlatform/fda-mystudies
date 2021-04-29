@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -40,14 +41,15 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Mail {
 
-  private static Logger logger = Logger.getLogger(Mail.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(Mail.class.getName());
 
   // Fallback hostname if we are authenticating.
   private static final String SMTP_HOSTNAME = "smtp.gmail.com";
@@ -150,7 +152,7 @@ public class Mail {
   }
 
   public boolean sendemail() {
-    logger.info("Mail.sendemail() :: Starts");
+    logger.entry("begin sendemail()");
     boolean sentMail = false;
     try {
       final String username = this.getFromEmailAddress();
@@ -192,12 +194,12 @@ public class Mail {
       logger.error("ERROR: sendemail() - ", e);
       sentMail = false;
     }
-    logger.info("Mail.sendemail() :: Ends");
+    logger.exit("sendemail() :: Ends");
     return sentMail;
   }
 
   public boolean sendMailWithAttachment() {
-    logger.info("Mail.sendMailWithAttachment() :: Starts");
+    logger.entry("begin sendMailWithAttachment()");
     boolean sentMail = false;
     BodyPart messageBodyPart = null;
     Multipart multipart = null;
@@ -253,7 +255,7 @@ public class Mail {
     } catch (Exception e) {
       logger.error("ERROR:  sendemail() - ", e);
     }
-    logger.info("Mail.sendMailWithAttachment() :: Ends");
+    logger.exit("sendMailWithAttachment() :: Ends");
     return sentMail;
   }
 
