@@ -1,5 +1,5 @@
 name: Sonar Qube
-on: pushon:
+on:
   pull_request:
     paths:
     - 'common-modules/**'
