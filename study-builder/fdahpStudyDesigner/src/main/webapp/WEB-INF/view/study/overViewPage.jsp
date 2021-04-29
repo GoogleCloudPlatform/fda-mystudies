@@ -120,7 +120,7 @@
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
-                        <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                        <img src="${defaultOverViewImageSignedUrl}"
                                 onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                     </div>                
@@ -249,13 +249,13 @@
                        <c:choose>
                        <c:when test="${spbSt.count==1}">
                         <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                           src="${defaultOverViewImageSignedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                             </c:when>
                             <c:otherwise>
                              <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/>"
+                           src="${defaultPageOverviewImageSignedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                             </c:otherwise>
@@ -264,7 +264,7 @@
                     <div style="display: inline-block">
                       <div class="thumb" style="display: inline-block;width:77px !important">
                         <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studypages/${fn:escapeXml(studyPageBo.imagePath)}"
+                           src="${studyPageBo.signedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                       </div>
@@ -505,7 +505,7 @@
           "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24></span></span> The default image shown below will be used for the study overview screens in the mobile app. You can over-ride it by uploading an alternate image in JPG or PNG format. The image must have a size of 750x570 pixels.'></span> </div>"
           +
           "<div>" +
-          "<div class=thumb style='display: inline-block;width:77px !important'><img src=<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/> class=wid100></div>" +
+          "<div class=thumb style='display: inline-block;width:77px !important'><img src='${defaultPageOverviewImageSignedUrl}' class=wid100></div>" +
           "<div style='display: inline-block'>" +
           "<div class=thumb style='width:77px !important'><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
           "<div class=dis-inline>" +

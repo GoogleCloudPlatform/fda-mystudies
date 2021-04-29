@@ -2079,6 +2079,7 @@ public class StudyController {
     String errMsg = "";
     StudyPageBean studyPageBean = new StudyPageBean();
     String user = "";
+    Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -2151,6 +2152,20 @@ public class StudyController {
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
           map.addAttribute("_S", sessionStudyCount);
           map.addAttribute("user", user);
+          map.addAttribute(
+              "defaultOverViewImageSignedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDTYLOGO
+                      + "/"
+                      + configMap.get("study.defaultImage"),
+                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+          map.addAttribute(
+              "defaultPageOverviewImageSignedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDTYLOGO
+                      + "/"
+                      + configMap.get("study.page2.defaultImage"),
+                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
           mav = new ModelAndView("overviewStudyPages", map);
         } else {
           return new ModelAndView("redirect:studyList.do");
@@ -4401,6 +4416,7 @@ public class StudyController {
     String errMsg = "";
     ConsentBo consentBo = null;
     StudyIdBean studyIdBean = null;
+    Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -4542,6 +4558,11 @@ public class StudyController {
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID,
                   studyBo.getCustomStudyId());
+          map.addAttribute(
+              "signedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDTYLOGO + "/" + studyBo.getThumbnailImage(),
+                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
         }
         // grouped for Study category , Research sponsors , Data partner
         referenceMap =
@@ -4559,6 +4580,13 @@ public class StudyController {
             }
           }
         }
+        map.addAttribute(
+            "defaultImageSignedUrl",
+            FdahpStudyDesignerUtil.getSignedUrl(
+                FdahpStudyDesignerConstants.STUDTYLOGO
+                    + "/"
+                    + configMap.get("study.basicInformation.defaultImage"),
+                FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");

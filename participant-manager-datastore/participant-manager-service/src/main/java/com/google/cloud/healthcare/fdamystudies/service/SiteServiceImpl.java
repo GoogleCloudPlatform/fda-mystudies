@@ -54,6 +54,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
@@ -96,6 +97,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepositor
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -173,6 +175,8 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private InviteParticipantsEmailRepository invitedParticipantsEmailRepository;
 
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
+
+  @Autowired private ParticipantManagerUtil participantManagerUtil;
 
   @Override
   @Transactional
@@ -1191,7 +1195,11 @@ public class SiteServiceImpl implements SiteService {
 
     for (StudySiteInfo studySiteInfo : studySiteDetails) {
       if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
-        studiesMap.put(studySiteInfo.getStudyId(), StudyMapper.toStudyDetails(studySiteInfo));
+        StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
+        studyDetail.setLogoImageUrl(
+            participantManagerUtil.getSignedUrl(
+                studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+        studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
 
       StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
@@ -1235,7 +1243,11 @@ public class SiteServiceImpl implements SiteService {
     if (CollectionUtils.isNotEmpty(studySiteDetails)) {
       for (StudySiteInfo studySiteInfo : studySiteDetails) {
         if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
-          studiesMap.put(studySiteInfo.getStudyId(), StudyMapper.toStudyDetails(studySiteInfo));
+          StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
+          studyDetail.setLogoImageUrl(
+              participantManagerUtil.getSignedUrl(
+                  studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+          studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
         StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
         if (StringUtils.isNotEmpty(studySiteInfo.getSiteId())) {

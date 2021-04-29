@@ -441,4 +441,6 @@ public class FdahpStudyDesignerConstants {
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
+
+  public static final int SIGNED_URL_DURATION_IN_HOURS = 12;
 }
