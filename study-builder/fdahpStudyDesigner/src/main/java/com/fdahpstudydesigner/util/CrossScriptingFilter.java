@@ -31,11 +31,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class CrossScriptingFilter implements Filter {
 
-  private static Logger logger = Logger.getLogger(CrossScriptingFilter.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(CrossScriptingFilter.class.getName());
 
   @Override
   public void destroy() {}
@@ -43,9 +44,9 @@ public class CrossScriptingFilter implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    logger.info("Inlter CrossScriptingFilter  ...............");
+    logger.entry("Inlter CrossScriptingFilter  ...............");
     chain.doFilter(new RequestWrapper((HttpServletRequest) request), response);
-    logger.info("Outlter CrossScriptingFilter ...............");
+    logger.exit("Outlter CrossScriptingFilter ...............");
   }
 
   @Override

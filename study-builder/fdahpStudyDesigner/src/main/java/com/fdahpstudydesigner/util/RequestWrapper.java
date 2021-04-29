@@ -25,11 +25,12 @@ package com.fdahpstudydesigner.util;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class RequestWrapper extends HttpServletRequestWrapper {
 
-  private static Logger logger = Logger.getLogger(RequestWrapper.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(RequestWrapper.class.getName());
 
   public RequestWrapper(HttpServletRequest servletRequest) {
     super(servletRequest);
@@ -37,9 +38,9 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
   private String cleanXSS(String value) {
     // You'll need to remove the spaces from the html entities below
-    logger.info("cleanXSS starts");
+    logger.entry("begin cleanXSS()");
     if (value == null) {
-      logger.info("cleanXSS ends");
+      logger.exit("cleanXSS() ends");
       return null;
     }
     String filteredValue =
@@ -50,35 +51,35 @@ public class RequestWrapper extends HttpServletRequestWrapper {
             .replaceAll("(?i)<script.*?>.*?</script.*?>", "")
             .replaceAll("(?i)<.*?javascript:.*?>.*?</.*?>", "");
     /* to skip the coverted html content from truncating */
-    logger.info("cleanXSS ends");
+    logger.exit("cleanXSS() ends");
     return filteredValue;
   }
 
   @Override
   public String getHeader(String name) {
-    logger.info("getHeader starts");
+    logger.entry("begin getHeader()");
     String value = super.getHeader(name);
     if (value == null) {
       return value;
     }
-    logger.info("getHeader ends");
+    logger.exit("getHeader() ends");
     return this.cleanXSS(value);
   }
 
   @Override
   public String getParameter(String parameter) {
-    logger.info("getParameter starts");
+    logger.entry("begin getParameter()");
     String value = super.getParameter(parameter);
     if (value == null) {
       return value;
     }
-    logger.info("getParameter ends");
+    logger.exit("getParameter() ends");
     return this.cleanXSS(value);
   }
 
   @Override
   public String[] getParameterValues(String parameter) {
-    logger.info("getParameterValues starts");
+    logger.entry("begin getParameterValues()");
     String[] values = super.getParameterValues(parameter);
     if (values == null) {
       return values;
@@ -88,7 +89,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
     for (int i = 0; i < count; i++) {
       encodedValues[i] = this.cleanXSS(values[i]);
     }
-    logger.info("getParameterValues ends");
+    logger.exit("getParameterValues() ends");
     return encodedValues;
   }
 }

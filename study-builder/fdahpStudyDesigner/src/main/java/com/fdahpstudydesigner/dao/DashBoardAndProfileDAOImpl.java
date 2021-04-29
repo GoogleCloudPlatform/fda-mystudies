@@ -26,11 +26,12 @@ package com.fdahpstudydesigner.dao;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -38,7 +39,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
 
-  private static Logger logger = Logger.getLogger(DashBoardAndProfileDAOImpl.class);
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(DashBoardAndProfileDAOImpl.class.getName());
 
   HibernateTemplate hibernateTemplate;
 
@@ -46,7 +48,7 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
 
   @Override
   public MasterDataBO getMasterData(String type) {
-    logger.info("DashBoardAndProfileDAOImpl - getMasterData() - Starts");
+    logger.entry("begin getMasterData()");
     Session session = null;
     MasterDataBO masterDataBO = null;
     Query query = null;
@@ -61,13 +63,13 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
         session.close();
       }
     }
-    logger.info("DashBoardAndProfileDAOImpl - getMasterData() - Ends");
+    logger.exit("getMasterData() - Ends");
     return masterDataBO;
   }
 
   @Override
   public String isEmailValid(String email) {
-    logger.info("DashBoardAndProfileDAOImpl - isEmailValid() - Starts");
+    logger.entry("begin isEmailValid()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     String queryString = null;
@@ -88,7 +90,7 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
         session.close();
       }
     }
-    logger.info("DashBoardAndProfileDAOImpl - isEmailValid() - Ends");
+    logger.exit("isEmailValid() - Ends");
     return message;
   }
 
@@ -99,7 +101,7 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
 
   @Override
   public String updateProfileDetails(UserBO userBO, int userId) {
-    logger.info("DashBoardAndProfileDAOImpl - updateProfileDetails() - Starts");
+    logger.entry("begin updateProfileDetails()");
     Session session = null;
     Query query = null;
     String queryString = "";
@@ -135,7 +137,7 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
         session.close();
       }
     }
-    logger.info("DashBoardAndProfileDAOImpl - updateProfileDetails - Ends");
+    logger.exit("updateProfileDetails - Ends");
     return message;
   }
 }
