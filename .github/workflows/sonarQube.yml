@@ -17,6 +17,6 @@ jobs:
         host: ${{ secrets.SONARQUBE_HOST }}
         projectKey: ${{ secrets.SONARQUBE_TOKEN }}
         projectName: "newproject"
-        sonar.login: "admin"
-        sonar.password: "Gonthina!2"
+        login: "admin"
+        password: "Gonthina!2"
           
