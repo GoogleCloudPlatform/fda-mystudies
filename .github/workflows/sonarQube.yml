@@ -14,9 +14,7 @@ jobs:
     - name: SonarQube Scan
       uses: kitabisa/sonarqube-action@v1.1.0
       with:
-        host: ${{ secrets.SONARQUBE_HOST }}
-        projectKey: ${{ secrets.SONARQUBE_TOKEN }}
-        projectName: "newproject"
-        login: "admin"
-        password: "Gonthina!2"
+        host: "http://35.222.67.4:9095"
+        projectKey: "newproject"
+        login: "9325b3af34081bd97f25ff7c2bb4383adf0d1ae1"
           
