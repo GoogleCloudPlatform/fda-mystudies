@@ -47,11 +47,13 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class StudyMetaDataUtil {
 
-  private static final Logger LOGGER = Logger.getLogger(StudyMetaDataUtil.class.getName());
+  private static final XLogger LOGGER =
+      XLoggerFactory.getXLogger(StudyMetaDataUtil.class.getName());
 
   @SuppressWarnings("rawtypes")
   protected static final HashMap configMap = StudyMetaDataUtil.getAppProperties();
@@ -64,7 +66,7 @@ public class StudyMetaDataUtil {
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public static HashMap getAppProperties() {
-    LOGGER.info("INFO: StudyMetaDataUtil - getAppProperties() :: starts");
+    LOGGER.entry("begin getAppProperties()");
     HashMap hm = new HashMap<String, String>();
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
@@ -89,12 +91,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - getAppProperties() - ERROR ", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - getAppProperties() :: ends");
+    LOGGER.exit("getAppProperties() :: ends");
     return hm;
   }
 
   public static FailureResponse getFailureResponse(String status, String title, String detail) {
-    LOGGER.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Starts");
+    LOGGER.entry("begin getFailureResponse()");
     FailureResponse failureResponse = new FailureResponse();
     try {
       failureResponse.setResultType(StudyMetaDataConstants.FAILURE);
@@ -104,13 +106,13 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataUtil - getFailureResponse() ", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Ends");
+    LOGGER.exit("getFailureResponse() :: Ends");
     return failureResponse;
   }
 
   public static void getFailureResponse(
       String status, String title, String detail, HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Starts");
+    LOGGER.entry("begin getFailureResponse()");
     try {
       response.setHeader("status", status);
       response.setHeader("title", title);
@@ -118,11 +120,11 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataUtil - getFailureResponse() ", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - getFailureResponse() :: Ends");
+    LOGGER.exit("getFailureResponse() :: Ends");
   }
 
   public static int noOfDaysForMonthYear(int month, int year) {
-    LOGGER.info("INFO: StudyMetaDataUtil - noOfDaysForMonthYear() :: Starts");
+    LOGGER.entry("begin noOfDaysForMonthYear()");
     int numDays = 30;
     try {
       Calendar calendar = Calendar.getInstance();
@@ -132,12 +134,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataUtil - noOfDaysForMonthYear() " + e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - noOfDaysForMonthYear() :: Ends");
+    LOGGER.exit("noOfDaysForMonthYear() :: Ends");
     return numDays;
   }
 
   public static int noOfDaysBetweenTwoDates(String startDate, String endDate) {
-    LOGGER.info("INFO: StudyMetaDataUtil - noOfDaysBetweenTwoDates() :: Starts");
+    LOGGER.entry("begin noOfDaysBetweenTwoDates()");
     int daysdiff = 0;
     try {
       long diff =
@@ -148,12 +150,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataUtil - noOfDaysBetweenTwoDates() " + e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - noOfDaysBetweenTwoDates() :: Ends");
+    LOGGER.exit("noOfDaysBetweenTwoDates() :: Ends");
     return daysdiff;
   }
 
   public static String getCurrentDate() {
-    LOGGER.info("INFO: StudyMetaDataUtil - getCurrentDate() :: Starts");
+    LOGGER.entry("begin getCurrentDate()");
     String dateNow = "";
     try {
       Calendar currentDate = Calendar.getInstance();
@@ -163,12 +165,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataUtil - getCurrentDate() " + e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - getCurrentDate() :: Ends");
+    LOGGER.exit("getCurrentDate() :: Ends");
     return dateNow;
   }
 
   public static String getCurrentDateTime() {
-    LOGGER.info("StudyMetaDataUtil: getCurrentDateTime() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getCurrentDateTime() - Starts ");
     String getToday = "";
     try {
       Date today = new Date();
@@ -179,13 +181,13 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - getCurrentDateTime() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: getCurrentDateTime() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getCurrentDateTime() - Ends ");
     return getToday;
   }
 
   public static String getFormattedDate1(
       String inputDate, String inputFormat, String outputFormat) {
-    LOGGER.info("StudyMetaDataUtil: getFormattedDate1() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getFormattedDate1() - Starts ");
     String finalDate = "";
     java.sql.Date formattedDate = null;
     if ((inputDate != null) && !"".equals(inputDate) && !"null".equalsIgnoreCase(inputDate)) {
@@ -199,12 +201,12 @@ public class StudyMetaDataUtil {
         LOGGER.error("StudyMetaDataUtil: getFormattedDate1() - ERROR", e);
       }
     }
-    LOGGER.info("StudyMetaDataUtil: getFormattedDate1() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getFormattedDate1() - Ends ");
     return finalDate;
   }
 
   public static String getTimeDiffInDaysHoursMins(Date dateOne, Date dateTwo) {
-    LOGGER.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Starts ");
     String diff = "";
     try {
       long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
@@ -219,12 +221,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - getTimeDiffInDaysHoursMins() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Ends ");
     return diff;
   }
 
   public static String getTimeDiffInDaysHoursMins(String dateOne1, String dateTwo2) {
-    LOGGER.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Starts ");
     String diff = "";
     try {
       Date dateOne = StudyMetaDataConstants.SDF_DATE_TIME.parse(dateOne1);
@@ -234,12 +236,12 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - getTimeDiffInDaysHoursMins() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getTimeDiffInDaysHoursMins() - Ends ");
     return diff;
   }
 
   public static String getEncodedStringByBase64(String plainText) {
-    LOGGER.info("StudyMetaDataUtil: getEncodedStringByBase64() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getEncodedStringByBase64() - Starts ");
     if (StringUtils.isEmpty(plainText)) {
       return "";
     }
@@ -249,12 +251,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - getEncodedStringByBase64() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: getEncodedStringByBase64() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getEncodedStringByBase64() - Ends ");
     return "";
   }
 
   public static String getDecodedStringByBase64(String encodedText) {
-    LOGGER.info("StudyMetaDataUtil: getDecodedStringByBase64() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getDecodedStringByBase64() - Starts ");
     if (StringUtils.isEmpty(encodedText)) {
       return "";
     }
@@ -264,12 +266,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - getDecodedStringByBase64() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: getDecodedStringByBase64() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getDecodedStringByBase64() - Ends ");
     return "";
   }
 
   public static String getEncryptedString(String input) {
-    LOGGER.info("INFO: getEncryptedString :: Starts");
+    LOGGER.entry("getEncryptedString");
     StringBuilder sb = new StringBuilder();
     String encryptValue = "";
     if (StringUtils.isNotEmpty(input)) {
@@ -290,12 +292,12 @@ public class StudyMetaDataUtil {
         LOGGER.error("ERROR: getEncryptedString ", e);
       }
     }
-    LOGGER.info("INFO: getEncryptedString :: Ends");
+    LOGGER.exit("getEncryptedString :: Ends");
     return sb.toString();
   }
 
   public static String getFormattedDate(String inputDate, String inputFormat, String outputFormat) {
-    LOGGER.info("StudyMetaDataUtil: getFormattedDate() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getFormattedDate() - Starts ");
     String finalDate = "";
     java.sql.Date formattedDate = null;
     if ((inputDate != null) && !"".equals(inputDate) && !"null".equalsIgnoreCase(inputDate)) {
@@ -309,12 +311,12 @@ public class StudyMetaDataUtil {
         LOGGER.error("ERROR: getFormattedDate ", e);
       }
     }
-    LOGGER.info("StudyMetaDataUtil: getFormattedDate() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getFormattedDate() - Ends ");
     return finalDate;
   }
 
   public static String addMinutes(String dtStr, int minutes) {
-    LOGGER.info("StudyMetaDataUtil: addMinutes() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: addMinutes() - Starts ");
     String newdateStr = "";
     try {
       SimpleDateFormat date = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
@@ -327,12 +329,12 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - addMinutes() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: addMinutes() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: addMinutes() - Ends ");
     return newdateStr;
   }
 
   public static String addDays(String dtStr, int days) {
-    LOGGER.info("StudyMetaDataUtil: addDays() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: addDays() - Starts ");
     String newdateStr = "";
     try {
       Date dt = StudyMetaDataConstants.SDF_DATE_TIME.parse(dtStr);
@@ -344,12 +346,12 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - addDays() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: addDays() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: addDays() - Ends ");
     return newdateStr;
   }
 
   public static String addMonth(String dtStr, int months) {
-    LOGGER.info("StudyMetaDataUtil: addMonth() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: addMonth() - Starts ");
     String newdateStr = "";
     try {
       Date dt = StudyMetaDataConstants.SDF_DATE.parse(dtStr);
@@ -361,12 +363,12 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - addMonth() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: addMonth() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: addMonth() - Ends ");
     return newdateStr;
   }
 
   public static String addYear(String dtStr, int years) {
-    LOGGER.info("StudyMetaDataUtil: addYear() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: addYear() - Starts ");
     String newdateStr = "";
     try {
       Date dt = StudyMetaDataConstants.SDF_DATE.parse(dtStr);
@@ -378,12 +380,12 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - addYear() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: addYear() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: addYear() - Ends ");
     return newdateStr;
   }
 
   public static Long getDateToSeconds(String getCurrentDate) {
-    LOGGER.info("StudyMetaDataUtil: getDateToSeconds() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getDateToSeconds() - Starts ");
     Long getInSeconds = null;
     try {
       Date dt = StudyMetaDataConstants.SDF_DATE.parse(getCurrentDate);
@@ -391,34 +393,34 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - getDateToSeconds() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: getDateToSeconds() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getDateToSeconds() - Ends ");
     return getInSeconds;
   }
 
   public static String getSecondsToDate(String value) {
-    LOGGER.info("StudyMetaDataUtil: getSecondsToDate() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getSecondsToDate() - Starts ");
     String dateText;
     long getLongValue = Long.parseLong(value);
     Date date = new Date(getLongValue);
     SimpleDateFormat df2 = new SimpleDateFormat("MM/dd/yyyy"); // yyyy-MM-dd
     df2.setTimeZone(TimeZone.getTimeZone("America/New_York"));
     dateText = df2.format(date);
-    LOGGER.info("StudyMetaDataUtil: getSecondsToDate() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getSecondsToDate() - Ends ");
     return dateText;
   }
 
   public static String getToDate(String value) {
-    LOGGER.info("StudyMetaDataUtil: getToDate() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getToDate() - Starts ");
     String dateText;
     SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd"); // yyyy-MM-dd
     df2.setTimeZone(TimeZone.getTimeZone("America/New_York"));
     dateText = df2.format(value);
-    LOGGER.info("StudyMetaDataUtil: getToDate() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getToDate() - Ends ");
     return dateText;
   }
 
   public static String getCurrentDateTimeInUTC() {
-    LOGGER.info("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Starts ");
     String dateNow = null;
     final SimpleDateFormat sdf = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
     String timeZone = "UTC";
@@ -432,12 +434,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil: getCurrentDateTimeInUTC(): ERROR " + e);
     }
-    LOGGER.info("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getCurrentDateTimeInUTC() - Ends ");
     return dateNow;
   }
 
   public static String platformType(String authCredentials, String type) {
-    LOGGER.info("INFO: StudyMetaDataUtil - platformType() - Starts");
+    LOGGER.entry("begin platformType() - Starts");
     String bundleIdAndAppToken = null;
     String platform = "";
     try {
@@ -500,13 +502,13 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - platformType() :: ERROR", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - platformType() - Ends");
+    LOGGER.exit("platformType() - Ends");
     return platform;
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public static HashMap getAuthorizationProperties() {
-    LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Starts");
+    LOGGER.entry("begin getAuthorizationProperties()");
     HashMap hashMap = new HashMap<String, String>();
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
@@ -522,12 +524,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - getAuthorizationProperties() - ERROR ", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Ends");
+    LOGGER.exit("getAuthorizationProperties() :: Ends");
     return hashMap;
   }
 
   public static String getDayByDate(String input) {
-    LOGGER.info("StudyMetaDataUtil: getDayByDate() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getDayByDate() - Starts ");
     String actualDay = "";
     try {
       if (StringUtils.isNotEmpty(input)) {
@@ -539,12 +541,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - getDayByDate() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: getDayByDate() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getDayByDate() - Ends ");
     return actualDay;
   }
 
   public static String addDaysToDate(String input, int days) {
-    LOGGER.info("StudyMetaDataUtil: addDaysToDate() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: addDaysToDate() - Starts ");
     String output = "";
     try {
       Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
@@ -556,12 +558,12 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - addDaysToDate() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: addDaysToDate() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: addDaysToDate() - Ends ");
     return output;
   }
 
   public static String addWeeksToDate(String input, int weeks) {
-    LOGGER.info("StudyMetaDataUtil: addWeeksToDate() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: addWeeksToDate() - Starts ");
     String output = "";
     try {
       Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
@@ -573,12 +575,12 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - addWeeksToDate() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: addWeeksToDate() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: addWeeksToDate() - Ends ");
     return output;
   }
 
   public static String addMonthsToDate(String input, int months) {
-    LOGGER.info("StudyMetaDataUtil: addMonthsToDate() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: addMonthsToDate() - Starts ");
     String output = "";
     try {
       Date dt = StudyMetaDataConstants.SDF_DATE.parse(input);
@@ -590,13 +592,13 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("StudyMetaDataUtil - addMonthsToDate() - ERROR ", e);
     }
-    LOGGER.info("StudyMetaDataUtil: addMonthsToDate() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: addMonthsToDate() - Ends ");
     return output;
   }
 
   public static String getFormattedDateTimeZone(
       String input, String inputFormat, String outputFormat) {
-    LOGGER.info("StudyMetaDataUtil: getFormattedDateTimeZone() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getFormattedDateTimeZone() - Starts ");
     String output = "";
     try {
       if (StringUtils.isNotEmpty(input)) {
@@ -608,12 +610,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("AuthenticationService - getFormattedDateTimeZone() :: ERROR", e);
     }
-    LOGGER.info("StudyMetaDataUtil: getFormattedDateTimeZone() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getFormattedDateTimeZone() - Ends ");
     return output;
   }
 
   public static String addSeconds(String dtStr, int seconds) {
-    LOGGER.info("StudyMetaDataUtil: addSeconds() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: addSeconds() - Starts ");
     String newdateStr = "";
     try {
       SimpleDateFormat date = new SimpleDateFormat(StudyMetaDataConstants.SDF_DATE_TIME_PATTERN);
@@ -626,21 +628,21 @@ public class StudyMetaDataUtil {
     } catch (ParseException e) {
       LOGGER.error("AuthenticationService - addSeconds() :: ERROR", e);
     }
-    LOGGER.info("StudyMetaDataUtil: addSeconds() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: addSeconds() - Ends ");
     return newdateStr;
   }
 
   public static String getMilliSecondsForImagePath() {
-    LOGGER.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Starts ");
+    LOGGER.entry("StudyMetaDataUtil: getMilliSecondsForImagePath() - Starts ");
     String milliSeconds;
     Calendar cal = Calendar.getInstance();
     milliSeconds = "?v=" + cal.getTimeInMillis();
-    LOGGER.info("StudyMetaDataUtil: getMilliSecondsForImagePath() - Ends ");
+    LOGGER.exit("StudyMetaDataUtil: getMilliSecondsForImagePath() - Ends ");
     return milliSeconds;
   }
 
   public static String getBundleIdFromAuthorization(String authCredentials) {
-    LOGGER.info("INFO: StudyMetaDataUtil - getBundleIdFromAuthorization() - Starts");
+    LOGGER.entry("begin getBundleIdFromAuthorization() - Starts");
     String bundleIdAndAppToken = null;
     String appBundleId = "";
     try {
@@ -660,17 +662,17 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataUtil - getBundleIdFromAuthorization() :: ERROR", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - getBundleIdFromAuthorization() - Ends");
+    LOGGER.exit("getBundleIdFromAuthorization() - Ends");
     return appBundleId;
   }
 
   public static String replaceSingleQuotes(String activityId) {
-    LOGGER.info("INFO: StudyMetaDataUtil - replaceSingleQuotes() - Starts");
+    LOGGER.entry("begin replaceSingleQuotes() - Starts");
     String newActivityId = activityId;
     if (activityId.indexOf("'") > -1) {
       newActivityId = activityId.replaceAll("'", "''");
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - replaceSingleQuotes() - Ends");
+    LOGGER.exit("replaceSingleQuotes() - Ends");
     return newActivityId;
   }
 
@@ -711,7 +713,7 @@ public class StudyMetaDataUtil {
       String activityRunId,
       String participantId,
       String version) {
-    LOGGER.info("INFO: StudyMetaDataUtil - saveResponsesActivityDocument() :: starts");
+    LOGGER.entry("begin saveResponsesActivityDocument()");
     File serverFile;
     String consentFileName = null;
     try {
@@ -749,12 +751,12 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataUtil - saveResponsesActivityDocument()", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - saveResponsesActivityDocument() :: ends");
+    LOGGER.exit("saveResponsesActivityDocument() :: ends");
     return consentFileName;
   }
 
   public static void saveFileInPath(File serverFile, byte[] bytes) {
-    LOGGER.info("INFO: StudyMetaDataUtil - saveFileInPath() :: starts");
+    LOGGER.entry("begin saveFileInPath()");
     try (FileOutputStream fileOutputStream = new FileOutputStream(serverFile);
         BufferedOutputStream stream = new BufferedOutputStream(fileOutputStream); ) {
       stream.write(bytes);
@@ -764,7 +766,7 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataUtil - saveFileInPath()", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - saveFileInPath() :: ends");
+    LOGGER.exit("saveFileInPath() :: ends");
   }
 
   public static String getStandardFileNameForResponses(
@@ -773,7 +775,7 @@ public class StudyMetaDataUtil {
       String activityRunId,
       String participantId,
       String version) {
-    LOGGER.info("INFO: StudyMetaDataUtil - getStandardFileNameForResponses() :: starts");
+    LOGGER.entry("begin getStandardFileNameForResponses()");
     String fileName = null;
     try {
       fileName =
@@ -795,7 +797,7 @@ public class StudyMetaDataUtil {
     } catch (Exception e) {
       LOGGER.error("ERROR: StudyMetaDataUtil - getStandardFileNameForResponses()", e);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - getStandardFileNameForResponses() :: ends");
+    LOGGER.exit("getStandardFileNameForResponses() :: ends");
     return fileName;
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -10,11 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.utils;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class AppUtil {
-  private static final Logger logger = LogManager.getLogger(AppUtil.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(AppUtil.class.getName());
 
   public static ErrorBean dynamicResponse(
       int code, String userMessage, String type, String detailMessage) {
