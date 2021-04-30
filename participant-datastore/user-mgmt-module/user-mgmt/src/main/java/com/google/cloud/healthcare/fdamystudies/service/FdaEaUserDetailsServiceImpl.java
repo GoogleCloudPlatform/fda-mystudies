@@ -21,8 +21,8 @@ import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import org.apache.commons.lang3.SerializationUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
-  private static final Logger logger = LoggerFactory.getLogger(FdaEaUserDetailsServiceImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(FdaEaUserDetailsServiceImpl.class.getName());
 
   @Autowired private AuthInfoBOService authInfoService;
 
@@ -43,7 +43,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   @Override
   @Transactional
   public UserDetailsEntity saveUser(UserDetailsEntity userDetails) {
-    logger.info("FdaEaUserDetailsServiceImpl saveUser() - starts");
+    logger.entry("Begin saveUser()");
     UserDetailsEntity daoResp = null;
     if (userDetails != null) {
       daoResp = userDetailsDao.saveUser(userDetails);
@@ -58,7 +58,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
       userAppDetails.setUserDetails(daoResp);
       userAppDetailsService.save(userAppDetails);
     }
-    logger.info("FdaEaUserDetailsServiceImpl saveUser() - ends");
+    logger.exit("saveUser() - ends");
 
     return daoResp;
   }
@@ -67,19 +67,19 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   @Transactional(readOnly = true)
   public UserDetailsEntity loadUserDetailsByUserId(String userId) {
     // call dao layer to get the user details using userId
-    logger.info("FdaEaUserDetailsServiceImpl loadUserDetailsByUserId() - starts");
+    logger.entry("Begin loadUserDetailsByUserId()");
     UserDetailsEntity daoResp = null;
     if (userId != null) {
       daoResp = userDetailsDao.loadUserDetailsByUserId(userId);
     }
-    logger.info("FdaEaUserDetailsServiceImpl loadUserDetailsByUserId() - ends");
+    logger.exit("loadUserDetailsByUserId()");
     return daoResp;
   }
 
   @Override
   @Transactional(readOnly = true)
   public boolean verifyCode(String code, UserDetailsEntity participantDetails) {
-    logger.info("FdaEaUserDetailsServiceImpl verifyCode() - starts");
+    logger.entry("Begin verifyCode()");
     boolean result = code == null || participantDetails == null;
     if (result) {
       throw new IllegalArgumentException();
@@ -88,7 +88,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
         && Timestamp.from(Instant.now()).before(participantDetails.getCodeExpireDate())) {
       return true;
     } else {
-      logger.info("FdaEaUserDetailsServiceImpl verifyCode() - ends");
+      logger.exit("verifyCode() - ends");
       return false;
     }
   }
@@ -97,7 +97,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   @Transactional()
   public String updateStatus(
       UserDetailsEntity participantDetails, AuditLogEventRequest auditRequest) {
-    logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
+    logger.entry("Begin updateStatus()");
 
     UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
     updateEmailStatusRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());

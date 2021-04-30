@@ -53,8 +53,8 @@ import javax.validation.Valid;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import org.apache.commons.collections4.map.HashedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -89,8 +89,12 @@ public class UserConsentManagementController {
 
   @Autowired ParticipantStudyRepository participantStudyRepository;
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(UserConsentManagementController.class);
+  private XLogger logger =
+      XLoggerFactory.getXLogger(UserConsentManagementController.class.getName());
+
+  private static final String STATUS_LOG = "status=%s";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @ApiOperation(
       value = "Update consent status and store the consent document in Google Cloud Storage (GCS)")
@@ -104,7 +108,7 @@ public class UserConsentManagementController {
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
-    logger.info("UserConsentManagementController updateEligibilityConsentStatus() - starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     ErrorBean errorBean = null;
     StudyEntity studyInfo = null;
@@ -197,7 +201,7 @@ public class UserConsentManagementController {
     UpdateEligibilityConsentBean updateEligibilityConsentBean =
         new UpdateEligibilityConsentBean(
             errorBean.getCode(), errorBean.getMessage(), consentdocumentFilepath);
-    logger.info("UserConsentManagementController updateEligibilityConsentStatus() - ends ");
+    logger.exit(String.format(STATUS_LOG, updateEligibilityConsentBean.getCode()));
     return new ResponseEntity<>(updateEligibilityConsentBean, HttpStatus.OK);
   }
 
@@ -231,7 +235,7 @@ public class UserConsentManagementController {
       @QueryParam("consentVersion") String consentVersion,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("UserConsentManagementController getStudyConsentPDF() - starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     ErrorBean errorBean = null;
     ConsentStudyResponseBean consentStudyResponseBean = null;
@@ -270,7 +274,7 @@ public class UserConsentManagementController {
       return new ResponseEntity<>(errorBean, HttpStatus.NOT_FOUND);
     }
 
-    logger.info("UserConsentManagementController getStudyConsentPDF() - ends ");
+    logger.exit(String.format(STATUS_LOG, consentStudyResponseBean.getMessage()));
     return new ResponseEntity<>(consentStudyResponseBean, HttpStatus.OK);
   }
 }
