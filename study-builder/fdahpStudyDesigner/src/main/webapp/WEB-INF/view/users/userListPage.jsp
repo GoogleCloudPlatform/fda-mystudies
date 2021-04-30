@@ -230,7 +230,6 @@
       })
 
     });
-    $('#filterRole').prev().prev().find('.pull-left').removeClass('filter-option');
     //User_List page Datatable
     table = $('#user_list').DataTable({
       "paging": true,
