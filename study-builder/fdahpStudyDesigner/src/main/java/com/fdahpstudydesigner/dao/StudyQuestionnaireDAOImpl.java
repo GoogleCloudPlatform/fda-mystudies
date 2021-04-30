@@ -55,11 +55,12 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -67,7 +68,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
-  private static Logger logger = Logger.getLogger(StudyQuestionnaireDAOImpl.class.getName());
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(StudyQuestionnaireDAOImpl.class.getName());
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
@@ -90,7 +92,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String shortTitle,
       String questionnaireShortTitle,
       String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireStepShortTitle() - starts");
+    logger.entry("begin checkQuestionnaireStepShortTitle()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     List<QuestionnairesStepsBo> questionnairesStepsBo = null;
@@ -162,13 +164,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireStepShortTitle() - Ends");
+    logger.exit("checkQuestionnaireStepShortTitle() - Ends");
     return message;
   }
 
   @Override
   public String checkQuestionnaireResponseTypeValidation(Integer studyId, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireResponseTypeValidation() - starts");
+    logger.entry("begin checkQuestionnaireResponseTypeValidation()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     BigInteger questionCount = null;
@@ -209,7 +211,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireResponseTypeValidation() - Ends");
+    logger.exit("checkQuestionnaireResponseTypeValidation() - Ends");
     return message;
   }
 
@@ -217,7 +219,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @Override
   public String checkQuestionnaireShortTitle(
       Integer studyId, String shortTitle, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireShortTitle() - Starts");
+    logger.entry("begin checkQuestionnaireShortTitle()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     List<QuestionnaireBo> questionnaireBo = null;
@@ -282,7 +284,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireShortTitle() - Ends");
+    logger.exit("checkQuestionnaireShortTitle() - Ends");
     return message;
   }
 
@@ -294,7 +296,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String shortTitle,
       String questionnaireShortTitle,
       String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireStepShortTitle() - Starts");
+    logger.entry("begin checkQuestionnaireStepShortTitle()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     List<QuestionnairesStepsBo> questionnairesStepsBo = null;
@@ -365,14 +367,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireStepShortTitle() - Ends");
+    logger.exit("checkQuestionnaireStepShortTitle() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public String checkStatShortTitle(Integer studyId, String shortTitle, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - checkQuestionnaireStepShortTitle() - starts");
+    logger.entry("begin checkQuestionnaireStepShortTitle()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     List<QuestionsBo> questionsBo = null;
@@ -479,7 +481,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - checkStatShortTitle() - Ends");
+    logger.exit("checkStatShortTitle() - Ends");
     return message;
   }
 
@@ -487,7 +489,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @Override
   public QuestionnaireBo copyStudyQuestionnaireBo(
       Integer questionnaireId, String customStudyId, SessionObject sessionObject) {
-    logger.info("StudyQuestionnaireDAOImpl - copyStudyQuestionnaireBo() - Starts");
+    logger.entry("begin copyStudyQuestionnaireBo()");
     QuestionnaireBo questionnaireBo = null;
     QuestionnaireBo newQuestionnaireBo = null;
     Session session = null;
@@ -963,7 +965,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - copyStudyQuestionnaireBo() - Ends");
+    logger.exit("copyStudyQuestionnaireBo() - Ends");
     return newQuestionnaireBo;
   }
 
@@ -976,7 +978,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       AuditLogEventRequest auditRequest) {
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
-    logger.info("StudyQuestionnaireDAOImpl - deleteFromStepQuestion() - Starts");
+    logger.entry("begin deleteFromStepQuestion()");
     FormMappingBo formMappingBo = null;
     StudyVersionBo studyVersionBo = null;
     Map<String, String> values = new HashMap<>();
@@ -1103,7 +1105,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - deleteFromStepQuestion() - Ends");
+    logger.exit("deleteFromStepQuestion() - Ends");
     return message;
   }
 
@@ -1115,7 +1117,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String stepType,
       SessionObject sessionObject,
       String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - deleteQuestionnaireStep() - Starts");
+    logger.entry("begin deleteQuestionnaireStep()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     QuestionnairesStepsBo questionnairesStepsBo = null;
@@ -1311,7 +1313,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - deleteQuestionnaireStep() - Ends");
+    logger.exit("deleteQuestionnaireStep() - Ends");
     return message;
   }
 
@@ -1325,7 +1327,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       AuditLogEventRequest auditRequest,
       Transaction transaction) {
     String message = FdahpStudyDesignerConstants.FAILURE;
-    logger.info("StudyQuestionnaireDAOImpl - deleteQuestionnaireStep(session,transction) - starts");
+    logger.entry("StudyQuestionnaireDAOImpl - deleteQuestionnaireStep(session,transction)");
     String searchQuery = null;
     QuestionnairesStepsBo questionnairesStepsBo = null;
     Map<String, String> values = new HashMap<>();
@@ -1435,14 +1437,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       logger.error(
           "StudyQuestionnaireDAOImpl - deleteQuestionnaireStep(session,transction) - ERROR ", e);
     }
-    logger.info("StudyQuestionnaireDAOImpl - deleteQuestionnaireStep(session,transction) - Ends");
+    logger.exit("deleteQuestionnaireStep(session,transction) - Ends");
     return message;
   }
 
   @Override
   public String deleteQuestuionnaireInfo(
       Integer studyId, Integer questionnaireId, SessionObject sessionObject, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - deleteQuestuionnaireInfo() - Starts");
+    logger.entry("begin deleteQuestuionnaireInfo()");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     StudyVersionBo studyVersionBo = null;
@@ -1510,7 +1512,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - deleteQuestuionnaireInfo() - Ends");
+    logger.exit("deleteQuestuionnaireInfo() - Ends");
     return message;
   }
 
@@ -1520,8 +1522,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String customStudyId,
       Session session,
       Transaction transaction) {
-    logger.info(
-        "StudyQuestionnaireDAOImpl - deleteQuestuionnaireInfo(session,transction) - starts");
+    logger.entry("begin deleteQuestuionnaireInfo()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     int count = 0;
     try {
@@ -1663,14 +1664,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       logger.error(
           "StudyQuestionnaireDAOImpl - deleteQuestuionnaireInfo(session,transction) - ERROR ", e);
     }
-    logger.info("StudyQuestionnaireDAOImpl - deleteQuestuionnaireInfo(session,transction) - Ends");
+    logger.exit("deleteQuestuionnaireInfo() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<HealthKitKeysInfo> getHeanlthKitKeyInfoList() {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionReponseTypeList() - Starts");
+    logger.entry("begin getQuestionReponseTypeList()");
     Session session = null;
     List<HealthKitKeysInfo> healthKitKeysInfoList = null;
     try {
@@ -1684,7 +1685,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionReponseTypeList() - Ends");
+    logger.exit("getQuestionReponseTypeList() - Ends");
     return healthKitKeysInfoList;
   }
 
@@ -1694,7 +1695,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String questionnaireShortTitle,
       String customStudyId,
       Integer questionnaireId) {
-    logger.info("StudyQuestionnaireDAOImpl - getInstructionsBo - Starts");
+    logger.entry("begin getInstructionsBo()");
     Session session = null;
     InstructionsBo instructionsBo = null;
     QuestionnairesStepsBo questionnairesStepsBo = null;
@@ -1754,7 +1755,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getInstructionsBo - Ends");
+    logger.exit("getInstructionsBo() - Ends");
     return instructionsBo;
   }
 
@@ -1762,7 +1763,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings({"unchecked"})
   public List<QuestionConditionBranchBo> getQuestionConditionalBranchingLogic(
       Session session, Integer questionId) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionConditionalBranchingLogic() - Starts");
+    logger.entry("begin getQuestionConditionalBranchingLogic()");
     List<QuestionConditionBranchBo> questionConditionBranchList = null;
     List<QuestionConditionBranchBo> newQuestionConditionBranchList = null;
     Session newSession = null;
@@ -1811,14 +1812,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newSession.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionConditionalBranchingLogic() - Ends");
+    logger.exit("getQuestionConditionalBranchingLogic() - Ends");
     return newQuestionConditionBranchList;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public QuestionnaireBo getQuestionnaireById(Integer questionnaireId, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireById() - Starts");
+    logger.entry("begin getQuestionnaireById()");
     Session session = null;
     QuestionnaireBo questionnaireBo = null;
 
@@ -1918,7 +1919,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireById() - Ends");
+    logger.exit("getQuestionnaireById() - Ends");
     return questionnaireBo;
   }
 
@@ -1926,7 +1927,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @Override
   public List<QuestionnairesStepsBo> getQuestionnairesStepsList(
       Integer questionnaireId, Integer sequenceNo) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireStepList() - Starts");
+    logger.entry("begin getQuestionnaireStepList()");
     Session session = null;
     List<QuestionnairesStepsBo> questionnairesStepsList = null;
     try {
@@ -1955,7 +1956,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String questionnaireShortTitle,
       String customStudyId,
       Integer questionnaireId) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireStep() - Starts");
+    logger.entry("begin getQuestionnaireStep()");
     Session session = null;
     QuestionnairesStepsBo questionnairesStepsBo = null;
     try {
@@ -2228,7 +2229,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireStep() - Ends");
+    logger.exit("getQuestionnaireStep() - Ends");
     return questionnairesStepsBo;
   }
 
@@ -2236,7 +2237,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @Override
   public SortedMap<Integer, QuestionnaireStepBean> getQuestionnaireStepList(
       Integer questionnaireId) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireStepList() - Ends");
+    logger.entry("begin getQuestionnaireStepList() - Ends");
     Session session = null;
     List<QuestionnairesStepsBo> questionnairesStepsList = null;
     Map<String, Integer> sequenceNoMap = new HashMap<>();
@@ -2427,14 +2428,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireStepList() - Ends");
+    logger.exit("getQuestionnaireStepList() - Ends");
     return qTreeMap;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<QuestionResponseTypeMasterInfoBo> getQuestionReponseTypeList() {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionReponseTypeList() - Starts");
+    logger.entry("begin getQuestionReponseTypeList()");
     Session session = null;
     List<QuestionResponseTypeMasterInfoBo> questionResponseTypeMasterInfoBos = null;
     try {
@@ -2448,7 +2449,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionReponseTypeList() - Ends");
+    logger.exit("getQuestionReponseTypeList() - Ends");
     return questionResponseTypeMasterInfoBos;
   }
 
@@ -2456,7 +2457,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @Override
   public QuestionsBo getQuestionsById(
       Integer questionId, String questionnaireShortTitle, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionsById() - Starts");
+    logger.entry("begin getQuestionsById()");
     Session session = null;
     QuestionsBo questionsBo = null;
     try {
@@ -2651,13 +2652,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionsById() - Ends");
+    logger.exit("getQuestionsById() - Ends");
     return questionsBo;
   }
 
   public QuestionReponseTypeBo getQuestionsResponseTypeBo(
       QuestionReponseTypeBo questionsResponseTypeBo, Session session) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionsResponseTypeBo() - Starts");
+    logger.entry("begin getQuestionsResponseTypeBo()");
     QuestionReponseTypeBo addOrUpdateQuestionsResponseTypeBo = null;
     try {
       if ((questionsResponseTypeBo != null) && (session != null)) {
@@ -2935,14 +2936,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireDAOImpl - getQuestionsResponseTypeBo() - Error", e);
     }
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionsResponseTypeBo() - Ends");
+    logger.exit("getQuestionsResponseTypeBo() - Ends");
     return addOrUpdateQuestionsResponseTypeBo;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId, Boolean isLive) {
-    logger.info("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - Starts");
+    logger.entry("begin getStudyQuestionnairesByStudyId()");
     Session session = null;
     List<QuestionnaireBo> questionnaires = null;
     String searchQuery = "";
@@ -2969,13 +2970,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - Ends");
+    logger.exit("getStudyQuestionnairesByStudyId() - Ends");
     return questionnaires;
   }
 
   @Override
   public Boolean isAnchorDateExistsForStudy(Integer studyId, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - isAnchorDateExistsForStudy() - starts");
+    logger.entry("begin isAnchorDateExistsForStudy()");
     boolean isExists = false;
     Session session = null;
     try {
@@ -3056,13 +3057,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - isAnchorDateExistsForStudy() - Ends");
+    logger.exit("isAnchorDateExistsForStudy() - Ends");
     return isExists;
   }
 
   @Override
   public Boolean isQuestionnairesCompleted(Integer studyId) {
-    logger.info("StudyQuestionnaireDAOImpl - isAnchorDateExistsForStudy() - starts");
+    logger.entry("begin isAnchorDateExistsForStudy()");
     boolean isExists = true;
     Session session = null;
     try {
@@ -3083,13 +3084,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - isAnchorDateExistsForStudy() - Ends");
+    logger.exit("isAnchorDateExistsForStudy() - Ends");
     return isExists;
   }
 
   @Override
   public String reOrderFormStepQuestions(Integer formId, int oldOrderNumber, int newOrderNumber) {
-    logger.info("StudyQuestionnaireDAOImpl - reOrderFormStepQuestions() - Starts");
+    logger.entry("begin reOrderFormStepQuestions()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     int count = 0;
@@ -3160,7 +3161,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - reOrderFormStepQuestions() - Ends");
+    logger.exit("reOrderFormStepQuestions() - Ends");
     return message;
   }
 
@@ -3168,7 +3169,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @Override
   public String reOrderQuestionnaireSteps(
       Integer questionnaireId, int oldOrderNumber, int newOrderNumber) {
-    logger.info("StudyQuestionnaireDAOImpl - reOrderQuestionnaireSteps() - Starts");
+    logger.entry("begin reOrderQuestionnaireSteps()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     int count = 0;
@@ -3304,14 +3305,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - reOrderQuestionnaireSteps() - Ends");
+    logger.exit("reOrderQuestionnaireSteps() - Ends");
     return message;
   }
 
   @Override
   public QuestionnairesStepsBo saveOrUpdateFromQuestionnaireStep(
       QuestionnairesStepsBo questionnairesStepsBo, SessionObject sesObj, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateFromQuestionnaireStep() - Starts");
+    logger.entry("begin saveOrUpdateFromQuestionnaireStep()");
     Session session = null;
     QuestionnairesStepsBo addOrUpdateQuestionnairesStepsBo = null;
     try {
@@ -3443,14 +3444,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateFromQuestionnaireStep() - Ends");
+    logger.exit("saveOrUpdateFromQuestionnaireStep() - Ends");
     return addOrUpdateQuestionnairesStepsBo;
   }
 
   @Override
   public InstructionsBo saveOrUpdateInstructionsBo(
       InstructionsBo instructionsBo, SessionObject sessionObject, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateInstructionsBo() - Starts");
+    logger.entry("begin saveOrUpdateInstructionsBo()");
     Session session = null;
     QuestionnairesStepsBo existedQuestionnairesStepsBo = null;
     try {
@@ -3575,13 +3576,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateInstructionsBo() - Ends");
+    logger.exit("saveOrUpdateInstructionsBo() - Ends");
     return instructionsBo;
   }
 
   @Override
   public QuestionsBo saveOrUpdateQuestion(QuestionsBo questionsBo) {
-    logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateQuestion() - Starts");
+    logger.entry("begin saveOrUpdateQuestion()");
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -3809,14 +3810,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateQuestion() - Ends");
+    logger.exit("saveOrUpdateQuestion() - Ends");
     return questionsBo;
   }
 
   @Override
   public QuestionnaireBo saveORUpdateQuestionnaire(
       QuestionnaireBo questionnaireBo, SessionObject sessionObject, String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - saveORUpdateQuestionnaire() - Starts");
+    logger.entry("begin saveORUpdateQuestionnaire()");
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -4088,7 +4089,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - saveORUpdateQuestionnaire() - Ends");
+    logger.exit("saveORUpdateQuestionnaire() - Ends");
     return questionnaireBo;
   }
 
@@ -4097,7 +4098,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       QuestionnairesStepsBo questionnairesStepsBo,
       SessionObject sessionObject,
       String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateQuestionStep() - Starts");
+    logger.entry("begin saveOrUpdateQuestionStep()");
     Session session = null;
     QuestionnairesStepsBo addOrUpdateQuestionnairesStepsBo = null;
     boolean isChange = false;
@@ -4446,7 +4447,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateQuestionStep() - Ends");
+    logger.exit("saveOrUpdateQuestionStep() - Ends");
     return addOrUpdateQuestionnairesStepsBo;
   }
 
@@ -4462,7 +4463,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       Session session,
       Transaction transaction,
       String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - updateLineChartSchedule() - starts");
+    logger.entry("begin updateLineChartSchedule()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     String[] timeRange = null;
     Session newSession = null;
@@ -4538,13 +4539,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newSession.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - updateLineChartSchedule() - Ends");
+    logger.exit("updateLineChartSchedule() - Ends");
     return message;
   }
 
   @Override
   public String validateLineChartSchedule(Integer questionnaireId, String frequency) {
-    logger.info("StudyQuestionnaireDAOImpl - validateLineChartSchedule() - starts");
+    logger.entry("begin validateLineChartSchedule()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     String[] timeRange = null;
@@ -4592,13 +4593,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - validateLineChartSchedule() - Ends");
+    logger.exit("validateLineChartSchedule() - Ends");
     return message;
   }
 
   @Override
   public String validateRepetableFormQuestionStats(Integer formId) {
-    logger.info("StudyQuestionnaireDAOImpl - validateRepetableFormQuestionStats() - starts");
+    logger.entry("begin validateRepetableFormQuestionStats()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     try {
@@ -4619,14 +4620,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - validateRepetableFormQuestionStats() - Ends");
+    logger.exit("validateRepetableFormQuestionStats() - Ends");
     return message;
   }
 
   @Override
   public String checkUniqueAnchorDateName(
       String anchordateText, String customStudyId, String anchorDateId) {
-    logger.info("StudyQuestionnaireDAOImpl - checkUniqueAnchorDateName() - starts");
+    logger.entry("begin checkUniqueAnchorDateName()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     Integer dbAnchorId = 0;
@@ -4667,14 +4668,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - checkUniqueAnchorDateName() - Ends");
+    logger.exit("checkUniqueAnchorDateName() - Ends");
     return message;
   }
 
   @Override
   public Integer getStudyIdByCustomStudy(Session session, String customStudyId) {
-    logger.info(
-        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: Starts");
+    logger.entry("begin getStudyIdByCustomStudy()");
     Integer studyId = null;
     try {
       String searchQuery =
@@ -4695,7 +4695,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public List<AnchorDateTypeBo> getAnchorTypesByStudyId(String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - getAnchorTypesByStudyId - Starts");
+    logger.entry("begin getAnchorTypesByStudyId");
     Session session = null;
     List<AnchorDateTypeBo> anchorDateTypeBos = null;
     String queryString = "";
@@ -4727,13 +4727,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         session.close();
       }
     }
-    logger.info("StudyQuestionnaireDAOImpl - getAnchorTypesByStudyId - Ends");
+    logger.exit("getAnchorTypesByStudyId - Ends");
     return anchorDateTypeBos;
   }
 
   @Override
   public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId) {
-    logger.info("StudyQuestionnaireDAOImpl - isAnchorDateExistByQuestionnaire - Starts");
+    logger.entry("begin isAnchorDateExistByQuestionnaire");
     Session session = null;
     Boolean isExist = false;
     try {
@@ -4772,7 +4772,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireDAOImpl - isAnchorDateExistByQuestionnaire() - ERROR ", e);
     }
-    logger.info("StudyQuestionnaireDAOImpl - isAnchorDateExistByQuestionnaire - Ends");
+    logger.exit("isAnchorDateExistByQuestionnaire - Ends");
     return isExist;
   }
 
@@ -4789,7 +4789,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       Integer questionId,
       String stepType,
       boolean isChange) {
-    logger.info("StudyQuestionnaireDAOImpl - updateAnchordateInQuestionnaire - Starts");
+    logger.entry("begin updateAnchordateInQuestionnaire");
     List<Integer> anchorIds = new ArrayList<Integer>();
     List<Integer> anchorExistIds = new ArrayList<Integer>();
     Boolean isAnchorUsed = false;
@@ -4995,13 +4995,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       transaction.rollback();
       logger.error("StudyQuestionnaireDAOImpl - updateAnchordateInQuestionnaire - ERROR ", e);
     }
-    logger.info("StudyQuestionnaireDAOImpl - updateAnchordateInQuestionnaire - Ends");
+    logger.exit("updateAnchordateInQuestionnaire - Ends");
     return message;
   }
 
   @Override
   public QuestionnaireBo getQuestionnaireById(Integer questionnaireId) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionnaireById() - Starts");
+    logger.entry("begin getQuestionnaireById()");
     Session session = null;
     QuestionnaireBo questionnaireBo = null;
     try {
@@ -5027,7 +5027,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @Override
   public QuestionsBo getQuestionById(Integer questionId) {
-    logger.info("StudyQuestionnaireDAOImpl - getQuestionById() - Starts");
+    logger.entry("begin getQuestionById()");
     Session session = null;
     QuestionsBo questionBo = null;
     try {

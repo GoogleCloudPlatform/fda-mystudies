@@ -34,14 +34,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsersServiceImpl implements UsersService {
 
-  private static Logger logger = Logger.getLogger(UsersServiceImpl.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(UsersServiceImpl.class.getName());
 
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
@@ -58,7 +59,7 @@ public class UsersServiceImpl implements UsersService {
       int loginUser,
       SessionObject userSession,
       HttpServletRequest request) {
-    logger.info("UsersServiceImpl - activateOrDeactivateUser() - Starts");
+    logger.entry("begin activateOrDeactivateUser()");
     String msg = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> keyValueForSubject = null;
     String dynamicContent = "";
@@ -105,7 +106,7 @@ public class UsersServiceImpl implements UsersService {
     } catch (Exception e) {
       logger.error("UsersServiceImpl - activateOrDeactivateUser() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - activateOrDeactivateUser() - Ends");
+    logger.exit("activateOrDeactivateUser() - Ends");
     return msg;
   }
 
@@ -118,7 +119,7 @@ public class UsersServiceImpl implements UsersService {
       String permissionValues,
       SessionObject userSession,
       AuditLogEventRequest auditRequest) {
-    logger.info("UsersServiceImpl - addOrUpdateUserDetails() - Starts");
+    logger.entry("begin addOrUpdateUserDetails()");
     UserBO userBO2 = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
     boolean addFlag = false;
@@ -212,111 +213,111 @@ public class UsersServiceImpl implements UsersService {
     } catch (Exception e) {
       logger.error("UsersServiceImpl - addOrUpdateUserDetails() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - addOrUpdateUserDetails() - Ends");
+    logger.exit("addOrUpdateUserDetails() - Ends");
     return msg;
   }
 
   @Override
   public String enforcePasswordChange(Integer userId, String email) {
-    logger.info("UsersServiceImpl - enforcePasswordChange() - Starts");
+    logger.entry("begin enforcePasswordChange()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message = usersDAO.enforcePasswordChange(userId, email);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - enforcePasswordChange() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - enforcePasswordChange() - Ends");
+    logger.exit("enforcePasswordChange() - Ends");
     return message;
   }
 
   @Override
   public List<String> getActiveUserEmailIds() {
-    logger.info("UsersServiceImpl - getActiveUserEmailIds() - Starts");
+    logger.entry("begin getActiveUserEmailIds()");
     List<String> emails = null;
     try {
       emails = usersDAO.getActiveUserEmailIds();
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getActiveUserEmailIds() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getActiveUserEmailIds() - Ends");
+    logger.exit("getActiveUserEmailIds() - Ends");
     return emails;
   }
 
   @Override
   public List<Integer> getPermissionsByUserId(Integer userId) {
-    logger.info("UsersServiceImpl - permissionsByUserId() - Starts");
+    logger.entry("begin permissionsByUserId()");
     List<Integer> permissions = null;
     try {
       permissions = usersDAO.getPermissionsByUserId(userId);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - permissionsByUserId() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - permissionsByUserId() - Ends");
+    logger.exit("permissionsByUserId() - Ends");
     return permissions;
   }
 
   @Override
   public UserBO getUserDetails(Integer userId) {
-    logger.info("UsersServiceImpl - getUserDetails() - Starts");
+    logger.entry("begin getUserDetails()");
     UserBO userBO = null;
     try {
       userBO = usersDAO.getUserDetails(userId);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserDetails() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserDetails() - Ends");
+    logger.exit("getUserDetails() - Ends");
     return userBO;
   }
 
   @Override
   public List<UserBO> getUserList() {
-    logger.info("UsersServiceImpl - getUserList() - Starts");
+    logger.entry("begin getUserList()");
     List<UserBO> userList = null;
     try {
       userList = usersDAO.getUserList();
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserList() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserList() - Ends");
+    logger.exit("getUserList() - Ends");
     return userList;
   }
 
   @Override
   public Integer getUserPermissionByUserId(Integer sessionUserId) {
-    logger.info("UsersServiceImpl - getUserPermissionByUserId() - Starts");
+    logger.entry("begin getUserPermissionByUserId()");
     Integer userId = null;
     try {
       userId = usersDAO.getUserPermissionByUserId(sessionUserId);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserPermissionByUserId() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserPermissionByUserId() - Ends");
+    logger.exit("getUserPermissionByUserId() - Ends");
     return userId;
   }
 
   @Override
   public RoleBO getUserRole(int roleId) {
-    logger.info("UsersServiceImpl - getUserRole() - Starts");
+    logger.entry("begin getUserRole()");
     RoleBO roleBO = null;
     try {
       roleBO = usersDAO.getUserRole(roleId);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserRole() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserRole() - Ends");
+    logger.exit("getUserRole() - Ends");
     return roleBO;
   }
 
   @Override
   public List<RoleBO> getUserRoleList() {
-    logger.info("UsersServiceImpl - getUserRoleList() - Starts");
+    logger.entry("begin getUserRoleList()");
     List<RoleBO> roleBOList = null;
     try {
       roleBOList = usersDAO.getUserRoleList();
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserRoleList() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserRoleList() - Ends");
+    logger.exit("getUserRoleList() - Ends");
     return roleBOList;
   }
 }
