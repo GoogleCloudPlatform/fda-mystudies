@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -41,8 +41,8 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +50,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserProfileManagementDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(UserProfileManagementDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
@@ -65,7 +66,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   @Override
   public UserDetailsEntity getParticipantInfoDetails(String userId) {
 
-    logger.info("UserProfileManagementDaoImpl getParticipantInfoDetails() - Starts ");
+    logger.entry("Begin getParticipantInfoDetails()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> criteriaQuery = null;
     Root<UserDetailsEntity> userDetailsBoRoot = null;
@@ -82,13 +83,13 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     if (!userDetailsBoList.isEmpty()) {
       userDetails = userDetailsBoList.get(0);
     }
-    logger.info("UserProfileManagementDaoImpl getParticipantInfoDetails() - Ends ");
+    logger.exit("getParticipantInfoDetails() - Ends ");
     return userDetails;
   }
 
   @Override
   public AuthInfoEntity getAuthInfo(UserDetailsEntity userDetailsId) {
-    logger.info("UserProfileManagementDaoImpl getAuthInfo() - Starts ");
+    logger.entry("Begin getAuthInfo()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AuthInfoEntity> criteriaQuery = null;
     Root<AuthInfoEntity> authInfoBoRoot = null;
@@ -105,14 +106,14 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     if (!authInfoBoList.isEmpty()) {
       authInfo = authInfoBoList.get(0);
     }
-    logger.info("UserProfileManagementDaoImpl getAuthInfo() - Ends ");
+    logger.exit("getAuthInfo() - Ends ");
     return authInfo;
   }
 
   @Override
   public ErrorBean updateUserProfile(
       String userId, UserDetailsEntity userDetail, AuthInfoEntity authInfo) {
-    logger.info("UserProfileManagementDaoImpl updateUserProfile() - Starts ");
+    logger.entry("Begin updateUserProfile()");
     ErrorBean errorBean = null;
 
     if (null != userDetail) {
@@ -133,14 +134,14 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       errorBean = new ErrorBean(ErrorCode.EC_61.code(), ErrorCode.EC_61.errorMessage());
     }
 
-    logger.info("UserProfileManagementDaoImpl updateUserProfile() - Starts ");
+    logger.exit("updateUserProfile() - ends ");
     return errorBean;
   }
 
   @Override
   public UserDetailsEntity getParticipantDetailsByEmail(String email, AppEntity app) {
 
-    logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Starts ");
+    logger.entry("Begin getParticipantDetailsByEmail()");
     UserDetailsEntity userDetails = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> criteriaQuery = null;
@@ -163,13 +164,13 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     if (!userDetailsBoList.isEmpty()) {
       userDetails = userDetailsBoList.get(0);
     }
-    logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Ends ");
+    logger.exit("getParticipantDetailsByEmail() - Ends ");
     return userDetails;
   }
 
   @Override
   public LoginAttemptsEntity getLoginAttempts(String email) {
-    logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Starts ");
+    logger.entry("Begin getLoginAttempts()");
 
     LoginAttemptsEntity loginAttempt = null;
     CriteriaBuilder criteriaBuilder = null;
@@ -188,13 +189,13 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     if (!loginAttemptList.isEmpty()) {
       loginAttempt = loginAttemptList.get(0);
     }
-    logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Ends ");
+    logger.exit("getLoginAttempts() - Ends ");
     return loginAttempt;
   }
 
   @Override
   public UserDetailsEntity saveParticipant(UserDetailsEntity participant) {
-    logger.info("UserProfileManagementDaoImpl saveParticipant() - Starts ");
+    logger.entry("Begin saveParticipant()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> criteriaQuery = null;
     Predicate[] predicates = new Predicate[1];
@@ -216,7 +217,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       userDetails.setCodeExpireDate(participant.getCodeExpireDate());
       session.update(userDetails);
     }
-    logger.info("UserProfileManagementDaoImpl saveParticipant() - Ends ");
+    logger.exit("saveParticipant() - Ends ");
     return userDetails;
   }
 
@@ -225,7 +226,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     CriteriaBuilder criteriaBuilder = null;
     CriteriaDelete<LoginAttemptsEntity> criteriaDelete = null;
     Root<LoginAttemptsEntity> attemptRoot = null;
-    logger.info("UserProfileManagementDaoImpl - resetLoginAttempts() - starts");
+    logger.entry("Begin resetLoginAttempts()");
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
     criteriaDelete = criteriaBuilder.createCriteriaDelete(LoginAttemptsEntity.class);
@@ -233,12 +234,12 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     criteriaDelete.where(criteriaBuilder.equal(attemptRoot.get("email"), email));
     session.createQuery(criteriaDelete).executeUpdate();
 
-    logger.info("UserProfileManagementDaoImpl - resetLoginAttempts() - end");
+    logger.exit("resetLoginAttempts() - ends");
   }
 
   @Override
   public UserDetailsEntity getParticipantDetails(String userId) {
-    logger.info("UserProfileManagementDaoImpl getParticipantDetails() - Starts ");
+    logger.entry("Begin getParticipantDetails()");
     UserDetailsEntity userDetails = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> criteriaQuery = null;
@@ -255,13 +256,13 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     if (!userDetailsBoList.isEmpty()) {
       userDetails = userDetailsBoList.get(0);
     }
-    logger.info("UserProfileManagementDaoImpl getParticipantDetails() - Ends ");
+    logger.exit("getParticipantDetails() - Ends ");
     return userDetails;
   }
 
   @Override
   public void deactivateAcct(String userId, List<String> deleteData, String userDetailsId) {
-    logger.info("UserProfileManagementDaoImpl deActivateAcct() - Starts ");
+    logger.entry("Begin deActivateAcct()");
     CriteriaBuilder criteriaBuilder = null;
 
     CriteriaDelete<UserAppDetailsEntity> criteriaUserAppDetailsDelete = null;
@@ -335,13 +336,13 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     criteriaUserAppDetailsDelete.where(predicatesUserAppDetails);
     session.createQuery(criteriaUserAppDetailsDelete).executeUpdate();
 
-    logger.info("UserProfileManagementDaoImpl deActivateAcct() - Ends ");
+    logger.exit("deActivateAcct() - Ends ");
   }
 
   @Override
   @Transactional(readOnly = true)
   public AppEntity getAppPropertiesDetailsByAppId(String appId) {
-    logger.info("UserProfileManagementDaoImpl - resetLoginAttempts() - starts");
+    logger.entry("Begin getAppPropertiesDetailsByAppId()");
     AppEntity appPropertiesDetails = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppEntity> criteriaQuery = null;

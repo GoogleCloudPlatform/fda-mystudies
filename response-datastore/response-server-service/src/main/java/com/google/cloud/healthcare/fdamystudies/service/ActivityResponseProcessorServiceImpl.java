@@ -41,8 +41,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -57,8 +57,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
   @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(ActivityResponseProcessorServiceImpl.class);
+  private XLogger logger =
+      XLoggerFactory.getXLogger(ActivityResponseProcessorServiceImpl.class.getName());
 
   @Override
   public void saveActivityResponseDataForParticipant(
@@ -66,8 +66,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       ActivityResponseBean questionnaireActivityResponseBean,
       AuditLogEventRequest auditRequest)
       throws Exception {
-    logger.debug(
-        "ActivityResponseProcessorServiceImpl saveActivityResponseDataForParticipant() - starts ");
+    logger.entry("begin saveActivityResponseDataForParticipant()");
     if (activityMetadataBeanFromWcp == null) {
       throw new ProcessResponseException("QuestionnaireActivityStructureBean is null.");
     }
@@ -129,8 +128,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       throw new ProcessResponseException(
           "The activity ID in the response does not match activity ID in the metadata provided.");
     }
-    logger.debug(
-        "ActivityResponseProcessorServiceImpl saveActivityResponseDataForParticipant() - ends ");
+    logger.exit("saveActivityResponseDataForParticipant() - ends ");
   }
 
   @Override
@@ -341,7 +339,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   private void saveActivityResponseData(
       ActivityResponseBean questionnaireActivityResponseBean, String rawResponseData)
       throws Exception {
-    logger.debug("ActivityResponseProcessorServiceImpl saveActivityResponseData() - starts ");
+    logger.entry("begin saveActivityResponseData()");
     // Add Timestamp to bean
     questionnaireActivityResponseBean.setCreatedTimestamp(
         String.valueOf(System.currentTimeMillis()));
@@ -374,7 +372,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         studyCollectionName,
         AppConstants.ACTIVITIES_COLLECTION_NAME,
         dataToStoreActivityResults);
-    logger.debug("ActivityResponseProcessorServiceImpl saveActivityResponseData() - ends ");
+    logger.exit("saveActivityResponseData() - ends ");
   }
 
   private Map<String, Object> getMapForParticipantCollection(

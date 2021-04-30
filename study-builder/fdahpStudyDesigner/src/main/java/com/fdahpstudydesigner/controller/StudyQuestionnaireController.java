@@ -52,10 +52,11 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -68,7 +69,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class StudyQuestionnaireController {
-  private static Logger logger = Logger.getLogger(StudyQuestionnaireController.class.getName());
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(StudyQuestionnaireController.class.getName());
 
   @Autowired private StudyActiveTasksService studyActiveTasksService;
 
@@ -81,7 +83,7 @@ public class StudyQuestionnaireController {
   @RequestMapping("/adminStudies/copyQuestionnaire.do")
   public ModelAndView copyStudyQuestionnaire(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Starts");
+    logger.entry("begin saveOrUpdateFormQuestion");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     QuestionnaireBo copyQuestionnaireBo = null;
@@ -153,13 +155,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateFormQuestion - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Ends");
+    logger.exit("saveOrUpdateFormQuestion - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/deleteFormQuestion.do", method = RequestMethod.POST)
   public void deleteFormQuestionInfo(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - deleteFormQuestionInfo - Starts");
+    logger.entry("begin deleteFormQuestionInfo");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -276,12 +278,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - deleteFormQuestionInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - deleteFormQuestionInfo - Ends");
+    logger.exit("deleteFormQuestionInfo - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/deleteQuestionnaire.do", method = RequestMethod.POST)
   public void deleteQuestionnaireInfo(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - deleteQuestionnaireInfo - Starts");
+    logger.entry("begin deleteQuestionnaireInfo");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.SUCCESS;
@@ -371,13 +373,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - deleteQuestionnaireInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - deleteQuestionnaireInfo - Ends");
+    logger.exit("deleteQuestionnaireInfo - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/deleteQuestionnaireStep.do", method = RequestMethod.POST)
   public void deleteQuestionnaireStepInfo(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - deleteQuestionnaireStepInfo - Starts");
+    logger.entry("begin deleteQuestionnaireStepInfo");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -490,12 +492,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - deleteQuestionnaireStepInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - deleteQuestionnaireStepInfo - Ends");
+    logger.exit("deleteQuestionnaireStepInfo - Ends");
   }
 
   @RequestMapping("/adminStudies/formStep.do")
   public ModelAndView getFormStepPage(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getFormStepPage - Starts");
+    logger.entry("begin getFormStepPage");
     ModelAndView mav = new ModelAndView("formStepPage");
     String sucMsg = "";
     String errMsg = "";
@@ -690,14 +692,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getFormStepPage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getFormStepPage - Ends");
+    logger.exit("getFormStepPage - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/formQuestion.do")
   public ModelAndView getFormStepQuestionPage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getFormStepQuestionPage - Starts");
+    logger.entry("begin getFormStepQuestionPage");
     ModelAndView mav = new ModelAndView("questionPage");
     String sucMsg = "";
     String errMsg = "";
@@ -920,14 +922,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getFormStepQuestionPage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getFormStepQuestionPage - Ends");
+    logger.exit("getFormStepQuestionPage - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/instructionsStep.do")
   public ModelAndView getInstructionsPage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getInstructionsPage - Starts");
+    logger.entry("begin getInstructionsPage");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     String sucMsg = "";
     String errMsg = "";
@@ -1093,14 +1095,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getInstructionsPage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getInstructionsPage - Ends");
+    logger.exit("getInstructionsPage - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/viewQuestionnaire.do")
   public ModelAndView getQuestionnairePage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getQuestionnairePage - Starts");
+    logger.entry("begin getQuestionnairePage");
     ModelAndView mav = new ModelAndView("questionnairePage");
     ModelMap map = new ModelMap();
     String sucMsg = "";
@@ -1272,14 +1274,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getQuestionnairePage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getQuestionnairePage - Ends");
+    logger.exit("getQuestionnairePage - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/questionStep.do")
   public ModelAndView getQuestionStepPage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getQuestionStepPage - starts");
+    logger.entry("begin getQuestionStepPage");
     ModelAndView mav = new ModelAndView("questionStepPage");
     String sucMsg = "";
     String errMsg = "";
@@ -1488,14 +1490,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getQuestionStepPage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getQuestionStepPage - Ends");
+    logger.exit("getQuestionStepPage - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/reOrderFormQuestions.do", method = RequestMethod.POST)
   public void reOrderFromStepQuestionsInfo(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Starts");
+    logger.entry("begin reOrderQuestionnaireStepInfo");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -1558,7 +1560,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Ends");
+    logger.exit("reOrderQuestionnaireStepInfo - Ends");
   }
 
   @RequestMapping(
@@ -1566,7 +1568,7 @@ public class StudyQuestionnaireController {
       method = RequestMethod.POST)
   public void reOrderQuestionnaireStepInfo(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Starts");
+    logger.entry("begin reOrderQuestionnaireStepInfo");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -1667,12 +1669,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Ends");
+    logger.exit("reOrderQuestionnaireStepInfo - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveFromStep.do")
   public void saveFormStep(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveFormStep - starts");
+    logger.entry("begin saveFormStep");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -1739,12 +1741,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveFormStep - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveFormStep - Ends");
+    logger.exit("saveFormStep - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveInstructionStep.do")
   public void saveInstructionStep(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveInstructionStep - Starts");
+    logger.entry("begin saveInstructionStep");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -1824,13 +1826,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveInstructionStep - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveInstructionStep - Ends");
+    logger.exit("saveInstructionStep - Ends");
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateFromQuestion.do")
   public ModelAndView saveOrUpdateFormQuestion(
       HttpServletRequest request, HttpServletResponse response, QuestionsBo questionsBo) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Starts");
+    logger.entry("begin saveOrUpdateFormQuestion");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     QuestionsBo addQuestionsBo = null;
@@ -1904,7 +1906,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateFormQuestion - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Ends");
+    logger.exit("saveOrUpdateFormQuestion - Ends");
     return mav;
   }
 
@@ -1913,7 +1915,7 @@ public class StudyQuestionnaireController {
       HttpServletRequest request,
       HttpServletResponse response,
       QuestionnairesStepsBo questionnairesStepsBo) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Starts");
+    logger.entry("begin saveOrUpdateFormStepQuestionnaire");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     QuestionnairesStepsBo addQuestionnairesStepsBo = null;
@@ -1988,14 +1990,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Ends");
+    logger.exit("saveOrUpdateFormStepQuestionnaire - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateInstructionStep.do")
   public ModelAndView saveOrUpdateInstructionStep(
       HttpServletRequest request, HttpServletResponse response, InstructionsBo instructionsBo) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateInstructionStep - Starts");
+    logger.entry("begin saveOrUpdateInstructionStep");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     InstructionsBo addInstructionsBo = null;
@@ -2083,7 +2085,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateInstructionStep - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateInstructionStep - Ends");
+    logger.exit("saveOrUpdateInstructionStep - Ends");
     return mav;
   }
 
@@ -2092,7 +2094,7 @@ public class StudyQuestionnaireController {
       method = RequestMethod.POST)
   public ModelAndView saveorUpdateQuestionnaireSchedule(
       HttpServletRequest request, HttpServletResponse response, QuestionnaireBo questionnaireBo) {
-    logger.info("StudyQuestionnaireController - saveorUpdateQuestionnaireSchedule - Starts");
+    logger.entry("begin saveorUpdateQuestionnaireSchedule");
     ModelAndView mav = new ModelAndView("questionnairePage");
     ModelMap map = new ModelMap();
     QuestionnaireBo addQuestionnaireBo = null;
@@ -2189,7 +2191,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveorUpdateQuestionnaireSchedule - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveorUpdateQuestionnaireSchedule - Ends");
+    logger.exit("saveorUpdateQuestionnaireSchedule - Ends");
     return mav;
   }
 
@@ -2198,7 +2200,7 @@ public class StudyQuestionnaireController {
       HttpServletRequest request,
       HttpServletResponse response,
       QuestionnairesStepsBo questionnairesStepsBo) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Starts");
+    logger.entry("begin saveOrUpdateFormStepQuestionnaire");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     QuestionnairesStepsBo addQuestionnairesStepsBo = null;
@@ -2273,7 +2275,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Ends");
+    logger.exit("saveOrUpdateFormStepQuestionnaire - Ends");
     return mav;
   }
 
@@ -2282,7 +2284,7 @@ public class StudyQuestionnaireController {
       HttpServletRequest request,
       HttpServletResponse response,
       MultipartHttpServletRequest multipleRequest) {
-    logger.info("StudyQuestionnaireController - saveQuestion - Starts");
+    logger.entry("begin saveQuestion");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2386,12 +2388,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveQuestion - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveQuestion - Ends");
+    logger.exit("saveQuestion - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveQuestionnaireSchedule.do", method = RequestMethod.POST)
   public void saveQuestionnaireSchedule(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveQuestionnaireSchedule - Starts");
+    logger.entry("begin saveQuestionnaireSchedule");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2493,7 +2495,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveQuestionnaireSchedule - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveQuestionnaireSchedule - Ends");
+    logger.exit("saveQuestionnaireSchedule - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveQuestionStep.do", method = RequestMethod.POST)
@@ -2501,7 +2503,7 @@ public class StudyQuestionnaireController {
       HttpServletResponse response,
       MultipartHttpServletRequest multipleRequest,
       HttpServletRequest request) {
-    logger.info("StudyQuestionnaireController - saveQuestionStep - Starts");
+    logger.entry("begin saveQuestionStep");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2615,14 +2617,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveQuestionStep - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveQuestionStep - Ends");
+    logger.exit("saveQuestionStep - Ends");
   }
 
   @RequestMapping(
       value = "/adminStudies/validateconditionalFormula.do",
       method = RequestMethod.POST)
   public void validateconditionalFormula(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateconditionalFormula - Starts");
+    logger.entry("begin validateconditionalFormula");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     ObjectMapper mapper = new ObjectMapper();
@@ -2675,13 +2677,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateconditionalFormula - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateconditionalFormula - Ends");
+    logger.exit("validateconditionalFormula - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateLineChartSchedule.do", method = RequestMethod.POST)
   public void validateQuestionnaireLineChartSchedule(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionnaireLineChartSchedule - Starts");
+    logger.entry("begin validateQuestionnaireLineChartSchedule");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2722,13 +2724,13 @@ public class StudyQuestionnaireController {
       logger.error(
           "StudyQuestionnaireController - validateQuestionnaireLineChartSchedule - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionnaireLineChartSchedule - Ends");
+    logger.exit("validateQuestionnaireLineChartSchedule - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateQuestionnaireKey.do", method = RequestMethod.POST)
   public void validateQuestionnaireShortTitle(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionnaireShortTitle - Starts");
+    logger.entry("begin validateQuestionnaireShortTitle");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2785,7 +2787,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateQuestionnaireShortTitle - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionnaireShortTitle - Ends");
+    logger.exit("validateQuestionnaireShortTitle - Ends");
   }
 
   @RequestMapping(
@@ -2793,7 +2795,7 @@ public class StudyQuestionnaireController {
       method = RequestMethod.POST)
   public void validateQuestionnaireStepShortTitle(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionnaireStepShortTitle - Starts");
+    logger.entry("begin validateQuestionnaireStepShortTitle");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2853,12 +2855,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateQuestionnaireStepShortTitle - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionnaireStepShortTitle - Ends");
+    logger.exit("validateQuestionnaireStepShortTitle - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateQuestionKey.do", method = RequestMethod.POST)
   public void validateQuestionShortTitle(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionShortTitle - Starts");
+    logger.entry("begin validateQuestionShortTitle");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2913,13 +2915,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateQuestionShortTitle - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionShortTitle - Ends");
+    logger.exit("validateQuestionShortTitle - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateStatsShortName.do", method = RequestMethod.POST)
   public void validateQuestionStatsShortTitle(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionStatsShortTitle - Starts");
+    logger.entry("begin validateQuestionStatsShortTitle()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2961,14 +2963,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateQuestionStatsShortTitle - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionStatsShortTitle - Ends");
+    logger.exit("validateQuestionStatsShortTitle() - Ends");
   }
 
   @RequestMapping(
       value = "/adminStudies/validateRepeatableQuestion.do",
       method = RequestMethod.POST)
   public void validateRepeatableQuestion(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateRepeatableQuestion - Starts");
+    logger.entry("begin validateRepeatableQuestion()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2993,12 +2995,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateRepeatableQuestion - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateRepeatableQuestion - Ends");
+    logger.exit("validateRepeatableQuestion() - Ends");
   }
 
   @RequestMapping("/adminStudies/viewStudyQuestionnaires.do")
   public ModelAndView viewStudyQuestionnaires(HttpServletRequest request) {
-    logger.info("StudyQuestionnaireController - viewStudyQuestionnaires - Starts");
+    logger.entry("begin viewStudyQuestionnaires()");
     ModelAndView mav = new ModelAndView("redirect:viewBasicInfo.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
@@ -3129,13 +3131,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - viewStudyQuestionnaires - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - viewStudyQuestionnaires - Ends");
+    logger.exit("viewStudyQuestionnaires() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/validateAnchorDateName.do", method = RequestMethod.POST)
   public void validateAnchorDateName(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateAnchorDateName - Starts");
+    logger.entry("begin validateAnchorDateName()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -3183,6 +3185,6 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateAnchorDateName - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateAnchorDateName - Ends");
+    logger.exit("validateAnchorDateName() - Ends");
   }
 }

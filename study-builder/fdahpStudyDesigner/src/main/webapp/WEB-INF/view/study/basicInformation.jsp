@@ -231,7 +231,7 @@ margin-top:16px !important;
           
           <div class="thumb" style="display:inline-block; width:77px !important;">
                         <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.basicInformation.defaultImage')"/>"
+                           src="${defaultImageSignedUrl}"
                             class="wid100" alt=""/>
 
             </div>
@@ -241,7 +241,7 @@ margin-top:16px !important;
             <div class="thumb alternate" style=" width:77px !important;"> 
               <img
                   <c:if
-                       test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${studyBo.thumbnailImage}"
+                       test="${not empty studyBo.thumbnailImage}">src="${signedUrl}"
               </c:if>
                   <c:if
                       test="${empty studyBo.thumbnailImage}">src="/studybuilder/images/dummy-img.jpg" </c:if>

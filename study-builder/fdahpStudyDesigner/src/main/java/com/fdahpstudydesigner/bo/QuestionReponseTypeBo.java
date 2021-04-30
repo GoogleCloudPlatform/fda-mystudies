@@ -182,6 +182,10 @@ public class QuestionReponseTypeBo implements Serializable {
   @Column(name = "other_participant_fill")
   private String otherParticipantFill;
 
+  @Transient private String signedMaxImage;
+
+  @Transient private String signedMinImage;
+
   public Boolean getActive() {
     return active;
   }
@@ -540,5 +544,21 @@ public class QuestionReponseTypeBo implements Serializable {
 
   public void setOtherParticipantFill(String otherParticipantFill) {
     this.otherParticipantFill = otherParticipantFill;
+  }
+
+  public String getSignedMaxImage() {
+    return signedMaxImage;
+  }
+
+  public String getSignedMinImage() {
+    return signedMinImage;
+  }
+
+  public void setSignedMaxImage(String signedMaxImage) {
+    this.signedMaxImage = signedMaxImage;
+  }
+
+  public void setSignedMinImage(String signedMinImage) {
+    this.signedMinImage = signedMinImage;
   }
 }

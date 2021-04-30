@@ -24,8 +24,8 @@ import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +43,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RequestMapping("/studies")
 public class StudiesController {
-  private static Logger logger = LoggerFactory.getLogger(StudiesController.class);
+  private XLogger logger = XLoggerFactory.getXLogger(StudiesController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @Autowired private StudiesServices studiesServices;
 
@@ -53,7 +57,7 @@ public class StudiesController {
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
       @Valid @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request) {
-    logger.info("StudiesController - addUpdateStudyMetadata() : starts");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setStudyId(studyMetadataBean.getStudyId());
     auditRequest.setStudyVersion(studyMetadataBean.getStudyVersion());
@@ -66,7 +70,7 @@ public class StudiesController {
 
     userMgmntAuditHelper.logEvent(STUDY_METADATA_RECEIVED, auditRequest);
 
-    logger.info("StudiesController - getStudyParticipants() : ends");
+    logger.exit(String.format(STATUS_LOG, errorBean.getCode()));
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
@@ -75,7 +79,7 @@ public class StudiesController {
   public ResponseEntity<?> SendNotification(
       @Valid @RequestBody NotificationForm notificationForm, HttpServletRequest request)
       throws IOException {
-    logger.info("StudiesController - SendNotification() : starts");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userMgmntAuditHelper.logEvent(NOTIFICATION_METADATA_RECEIVED, auditRequest);
@@ -91,7 +95,7 @@ public class StudiesController {
     errorBean =
         new ErrorBean(
             ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage(), errorBean.getResponse());
-    logger.info("StudiesController - SendNotification() : ends");
+    logger.exit(String.format(STATUS_LOG, errorBean.getCode()));
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 }

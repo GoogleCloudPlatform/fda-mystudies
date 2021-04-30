@@ -66,14 +66,16 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 @Path("/")
 public class StudyMetaDataService {
 
-  private static final Logger LOGGER = Logger.getLogger(StudyMetaDataService.class);
+  private static final XLogger LOGGER =
+      XLoggerFactory.getXLogger(StudyMetaDataService.class.getName());
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -92,7 +94,7 @@ public class StudyMetaDataService {
       @HeaderParam("Authorization") String authorization,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - gatewayAppResourcesInfo() :: Starts");
+    LOGGER.entry("begin gatewayAppResourcesInfo()");
     GatewayInfoResponse gatewayInfo = new GatewayInfoResponse();
     try {
       gatewayInfo = studyMetaDataOrchestration.gatewayAppResourcesInfo(authorization);
@@ -111,7 +113,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - gatewayAppResourcesInfo() :: Ends");
+    LOGGER.exit("gatewayAppResourcesInfo() :: Ends");
     return gatewayInfo;
   }
 
@@ -124,7 +126,7 @@ public class StudyMetaDataService {
       @HeaderParam("applicationId") String applicationId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
+    LOGGER.entry("begin studyList()");
     StudyResponse studyResponse = new StudyResponse();
     try {
       if (!StringUtils.isEmpty(authorization) && !StringUtils.isEmpty(applicationId)) {
@@ -143,10 +145,12 @@ public class StudyMetaDataService {
               String logo = studyBeanObject.getLogo();
               if (logo == null || logo.isEmpty()) {
                 studyBeanObject.setLogo(
-                    propMap.get("fda.imgDisplaydPath")
-                        + propMap.get("cloud.bucket.name")
-                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + propMap.get(StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE));
+                    StudyMetaDataUtil.getSignedUrl(
+                        propMap.get("cloud.bucket.name"),
+                        propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                            + propMap.get(
+                                StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE),
+                        StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
               }
             }
           }
@@ -164,7 +168,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - studyList() :: Ends");
+    LOGGER.exit("studyList() :: Ends");
     return studyResponse;
   }
 
@@ -176,7 +180,7 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Starts");
+    LOGGER.entry("begin eligibilityConsentMetadata()");
     EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
     Boolean isValidFlag = false;
     try {
@@ -219,7 +223,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - eligibilityConsentMetadata() :: Ends");
+    LOGGER.exit("eligibilityConsentMetadata() :: Ends");
     return eligibilityConsentResponse;
   }
 
@@ -234,7 +238,7 @@ public class StudyMetaDataService {
       @QueryParam("activityVersion") String activityVersion,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
+    LOGGER.entry("begin resourcesForStudy()");
     ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
     Boolean isValidFlag = false;
     try {
@@ -279,7 +283,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Ends");
+    LOGGER.exit("resourcesForStudy() :: Ends");
     return consentDocumentResponse;
   }
 
@@ -291,7 +295,7 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
+    LOGGER.entry("begin resourcesForStudy()");
     ResourcesResponse resourcesResponse = new ResourcesResponse();
     Boolean isValidFlag = false;
     try {
@@ -334,7 +338,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Ends");
+    LOGGER.exit("resourcesForStudy() :: Ends");
     return resourcesResponse;
   }
 
@@ -346,7 +350,7 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Starts");
+    LOGGER.entry("begin studyInfo()");
     StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
     Boolean isValidFlag = false;
     try {
@@ -390,16 +394,18 @@ public class StudyMetaDataService {
         if (infoBean.getImage() == null || infoBean.getImage().equals("")) {
           if (count == 0) {
             infoBean.setImage(
-                propMap.get("fda.imgDisplaydPath")
-                    + propMap.get("cloud.bucket.name")
-                    + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                    + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE));
+                StudyMetaDataUtil.getSignedUrl(
+                    propMap.get("cloud.bucket.name"),
+                    propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                        + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE),
+                    StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
           } else {
             infoBean.setImage(
-                propMap.get("fda.imgDisplaydPath")
-                    + propMap.get("cloud.bucket.name")
-                    + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                    + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE));
+                StudyMetaDataUtil.getSignedUrl(
+                    propMap.get("cloud.bucket.name"),
+                    propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                        + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE),
+                    StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
           }
         }
         count++;
@@ -413,7 +419,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - studyInfo() :: Ends");
+    LOGGER.exit("studyInfo() :: Ends");
     return studyInfoResponse;
   }
 
@@ -426,7 +432,7 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Starts");
+    LOGGER.entry("begin studyActivityList()");
     ActivityResponse activityResponse = new ActivityResponse();
     Boolean isValidFlag = false;
     try {
@@ -469,7 +475,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - studyActivityList() :: Ends");
+    LOGGER.exit("studyActivityList() :: Ends");
     return activityResponse;
   }
 
@@ -483,7 +489,7 @@ public class StudyMetaDataService {
       @QueryParam("activityVersion") String activityVersion,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
+    LOGGER.entry("begin studyActivityMetadata()");
     QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse =
         new QuestionnaireActivityMetaDataResponse();
     ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse =
@@ -586,7 +592,7 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Starts");
+    LOGGER.entry("begin studyDashboardInfo()");
     StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
     Boolean isValidFlag = false;
     try {
@@ -629,7 +635,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - studyDashboardInfo() :: Ends");
+    LOGGER.exit("studyDashboardInfo() :: Ends");
     return studyDashboardResponse;
   }
 
@@ -639,7 +645,7 @@ public class StudyMetaDataService {
   @Path("termsPolicy")
   public Object termsPolicy(
       @Context ServletContext context, @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - termsPolicy() :: Starts");
+    LOGGER.entry("begin termsPolicy()");
     TermsPolicyResponse termsPolicyResponse = new TermsPolicyResponse();
     try {
       termsPolicyResponse = appMetaDataOrchestration.termsPolicy();
@@ -658,7 +664,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - termsPolicy() :: Ends");
+    LOGGER.exit("termsPolicy() :: Ends");
     return termsPolicyResponse;
   }
 
@@ -672,7 +678,7 @@ public class StudyMetaDataService {
       @HeaderParam("applicationId") String appId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - notifications() :: Starts");
+    LOGGER.entry("begin notifications()");
     NotificationsResponse notificationsResponse = new NotificationsResponse();
     try {
       if (StringUtils.isNotEmpty(skip)) {
@@ -702,7 +708,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - notifications() :: Ends");
+    LOGGER.exit("notifications() :: Ends");
     return notificationsResponse;
   }
 
@@ -715,7 +721,7 @@ public class StudyMetaDataService {
       @HeaderParam("Authorization") String authorization,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Starts");
+    LOGGER.entry("begin appUpdates()");
     AppUpdatesResponse appUpdatesResponse = new AppUpdatesResponse();
     try {
       if (StringUtils.isNotEmpty(appVersion) && StringUtils.isNotEmpty(authorization)) {
@@ -738,7 +744,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - appUpdates() :: Ends");
+    LOGGER.exit("appUpdates() :: Ends");
     return appUpdatesResponse;
   }
 
@@ -751,7 +757,7 @@ public class StudyMetaDataService {
       @QueryParam("studyVersion") String studyVersion,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Starts");
+    LOGGER.entry("begin studyUpdates()");
     StudyUpdatesResponse studyUpdatesResponse = new StudyUpdatesResponse();
     Boolean isValidFlag = false;
     try {
@@ -794,7 +800,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - studyUpdates() :: Ends");
+    LOGGER.exit("studyUpdates() :: Ends");
     return studyUpdatesResponse;
   }
 
@@ -804,7 +810,7 @@ public class StudyMetaDataService {
   @Path("updateAppVersion")
   public Object updateAppVersionDetails(
       String params, @Context ServletContext context, @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - updateAppVersionDetails() :: Starts");
+    LOGGER.entry("begin updateAppVersionDetails()");
     String updateAppVersionResponse = "OOPS! Something went wrong.";
     try {
       JSONObject serviceJson = new JSONObject(params);
@@ -874,7 +880,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - updateAppVersionDetails() :: Ends");
+    LOGGER.exit("updateAppVersionDetails() :: Ends");
     return updateAppVersionResponse;
   }
 
@@ -886,7 +892,7 @@ public class StudyMetaDataService {
       @QueryParam("token") String token,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - validateEnrollmentToken() :: Starts");
+    LOGGER.entry("begin validateEnrollmentToken()");
     EnrollmentTokenResponse enrollmentTokenResponse = new EnrollmentTokenResponse();
     Boolean isValidFlag = false;
     try {
@@ -922,7 +928,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - validateEnrollmentToken() :: Ends");
+    LOGGER.exit("validateEnrollmentToken() :: Ends");
     return enrollmentTokenResponse;
   }
 
@@ -940,7 +946,7 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
+    LOGGER.entry("begin study()");
     StudyResponse studyResponse = new StudyResponse();
     try {
       studyResponse = studyMetaDataOrchestration.study(studyId);
@@ -952,14 +958,14 @@ public class StudyMetaDataService {
             .build();
       }
     } catch (Exception e) {
-      LOGGER.error("StudyMetaDataService - studyList() :: ERROR ", e);
+      LOGGER.error("StudyMetaDataService - study() :: ERROR ", e);
       StudyMetaDataUtil.getFailureResponse(
           ErrorCodes.STATUS_104, ErrorCodes.UNKNOWN, StudyMetaDataConstants.FAILURE, response);
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - studyList() :: Ends");
+    LOGGER.exit("study() :: Ends");
     return studyResponse;
   }
 
@@ -970,7 +976,7 @@ public class StudyMetaDataService {
   public Object getAppVersionInfo(
       @HeaderParam("applicationId") String appId, @Context HttpServletResponse response) {
     AppVersionInfoBean appVersionInfoBean = null;
-    LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: Starts");
+    LOGGER.entry("begin getAppVersionInfo()");
 
     if (StringUtils.isBlank(appId)) {
       StudyMetaDataUtil.getFailureResponse(
@@ -998,7 +1004,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: ends");
+    LOGGER.exit("getAppVersionInfo() :: ends");
     return appVersionInfoBean;
   }
 
@@ -1012,7 +1018,7 @@ public class StudyMetaDataService {
       @Context ServletContext context,
       @Context HttpServletResponse response)
       throws Exception {
-    LOGGER.info("INFO: StudyMetaDataService - storeJsonResponseFile() :: starts");
+    LOGGER.entry("begin storeJsonResponseFile()");
     ErrorResponse errorResponse = new ErrorResponse();
     try {
 
@@ -1048,7 +1054,7 @@ public class StudyMetaDataService {
           .entity(StudyMetaDataConstants.FAILURE)
           .build();
     }
-    LOGGER.info("INFO: StudyMetaDataService - storeJsonResponseFile() :: ends");
+    LOGGER.exit("storeJsonResponseFile() :: ends");
     return errorResponse;
   }
 }

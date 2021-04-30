@@ -71,4 +71,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${mail.from-email}")
   private String fromEmail;
+
+  @Value("${study.builder.cloud.bucket.name}")
+  private String studyBuilderCloudBucketName;
 }
