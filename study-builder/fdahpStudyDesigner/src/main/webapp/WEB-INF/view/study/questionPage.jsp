@@ -4782,7 +4782,7 @@ if(document.getElementById("singleSelect").checked==true){
           $(item).parent().find(".help-block").empty();
           $(item).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please enter a value in the range (0,x)."));
+              "Please enter a value in the range (0,x)"));
         }
       } else {
         $(item).val('');
