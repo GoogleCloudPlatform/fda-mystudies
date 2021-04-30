@@ -60,6 +60,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
       buttonWatchVideo?.isHidden = true
     }
     textViewDescription?.isEditable = false
+    UITextView.appearance().linkTextAttributes = [.foregroundColor: UIColor.blue]
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -108,18 +109,19 @@ class StudyOverviewViewControllerFirst: UIViewController {
       if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
         let detailText = overviewSectionDetail.text ?? ""
         let regex = "<[^>]+>"
+        self.textViewDescription?.dataDetectorTypes = [.link, .phoneNumber]
         self.textViewDescription?.text = detailText
         if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
           self.textViewDescription?.text = detailText
         } else {
-          if let valText = detailText.stringByDecodingHTMLEntities.htmlToAttributedString {
-            self.textViewDescription?.attributedText = valText
-          }
+          self.textViewDescription?.attributedText =
+            detailText.stringByDecodingHTMLEntities.htmlToAttributedString
         }
       } else {
         self.textViewDescription?.text = ""
       }
       self.textViewDescription?.textAlignment = .center
+      self.textViewDescription?.textColor = .white
     }
 
     setNeedsStatusBarAppearanceUpdate()

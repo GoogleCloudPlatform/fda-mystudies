@@ -50,6 +50,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
       imageViewStudy?.sd_setImage(with: url, placeholderImage: nil)
     }
     textViewDescription?.isEditable = false
+    UITextView.appearance().linkTextAttributes = [.foregroundColor: UIColor.blue]
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -99,14 +100,13 @@ class StudyOverviewViewControllerSecond: UIViewController {
       if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
         let detailText = overviewSectionDetail.text ?? ""
         let regex = "<[^>]+>"
+        self.textViewDescription?.dataDetectorTypes = [.link, .phoneNumber]
         self.textViewDescription?.text = detailText
         if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
-          self.labelDescription?.text = detailText
           self.textViewDescription?.text = detailText
         } else {
-          if let valText = detailText.stringByDecodingHTMLEntities.htmlToAttributedString {
-            self.textViewDescription?.attributedText = valText
-          }
+          self.textViewDescription?.attributedText =
+            detailText.stringByDecodingHTMLEntities.htmlToAttributedString
         }
       } else {
         self.textViewDescription?.text = ""
