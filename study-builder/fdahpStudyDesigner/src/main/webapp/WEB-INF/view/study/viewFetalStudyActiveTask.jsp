@@ -158,7 +158,7 @@
               <select
                   class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
                   id="chartId" name="taskAttributeValueBos[2].timeRangeChart" title="Select">
-                <option value="" selected disabled>Select</option>
+                <option value="" disabled>Select</option>
                 <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                   <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                 </c:forEach>
