@@ -3057,7 +3057,7 @@ if(document.getElementById("singleSelect").checked==true){
           $("#displayStepsCount").parent().find(".help-block").empty();
           $("#displayStepsCount").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "(Max-Min) value should be exactly divisisble by the step size."));
+              "(Max-Min) value should be exactly divisisble by the step size"));
         }
       }
     });

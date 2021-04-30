@@ -2506,7 +2506,7 @@
         });
         if (!chkVal) {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Duplicate times cannot be set."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Duplicate times cannot be set"));
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty();
         }
@@ -3097,7 +3097,7 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
         + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
-        + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
+        + "].frequencyTime' class='form-control clock customTime cusTime' data-error='Please fill out this field'  placeholder='Time' onclick='timep(this.id);' disabled/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
