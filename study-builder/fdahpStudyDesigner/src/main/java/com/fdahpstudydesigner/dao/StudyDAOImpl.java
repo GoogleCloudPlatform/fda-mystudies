@@ -3696,13 +3696,14 @@ public class StudyDAOImpl implements StudyDAO {
         consentInfoList = query.list();
         if ((consentInfoList != null) && (consentInfoList.size() > 0)) {
           for (ConsentInfoBo consentInfo : consentInfoList) {
+
             content +=
-                "<span style=&#34;font-size:20px;&#34;><strong>"
+                "&lt;span style=&#34;font-size:20px;&#34;&gt;&lt;strong&gt;"
                     + consentInfo.getDisplayTitle()
-                    + "</strong></span><br/>"
-                    + "<span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>"
+                    + "&lt;/strong&gt;&lt;/span&gt;&lt;br/&gt;"
+                    + "&lt;span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;&gt;"
                     + consentInfo.getElaborated()
-                    + "</span><br/>";
+                    + "&lt;/span&gt;&lt;br/&gt;";
           }
           consentBo.setConsentDocContent(content);
         }
