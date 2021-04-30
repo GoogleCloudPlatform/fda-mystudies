@@ -30,6 +30,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "study_page")
@@ -65,6 +66,8 @@ public class StudyPageBo implements Serializable {
 
   @Column(name = "title")
   private String title;
+
+  @Transient public String signedUrl;
 
   public Integer getCreatedBy() {
     return createdBy;
@@ -136,5 +139,13 @@ public class StudyPageBo implements Serializable {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public String getSignedUrl() {
+    return signedUrl;
+  }
+
+  public void setSignedUrl(String signedUrl) {
+    this.signedUrl = signedUrl;
   }
 }
