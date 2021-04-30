@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,14 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EmailNotification {
 
-  private static Logger logger = Logger.getLogger(EmailNotification.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(EmailNotification.class.getName());
 
   @Autowired Mail mail;
 
@@ -67,7 +69,7 @@ public class EmailNotification {
     } catch (Exception e) {
       logger.error("EmailNotification.sendEmailNotification() :: ERROR ", e);
     }
-    logger.info("EmailNotification - Ends: sendLinkToEmail() - returning  a List value" + " : ");
+    logger.exit("EmailNotification - Ends: sendLinkToEmail() - returning  a List value" + " : ");
     return sentMail;
   }
 
@@ -78,7 +80,7 @@ public class EmailNotification {
       List<String> ccMailList,
       List<String> bccMailList) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    logger.info(
+    logger.entry(
         "EmailNotification - Starts: sendEmailNotificationToMany() - Input arg are ServletContext ");
     boolean sentMail = false;
     List<String> toMailListNew = new ArrayList<>();
@@ -107,7 +109,7 @@ public class EmailNotification {
       sentMail = false;
       logger.error("EmailNotification.sendEmailNotificationToMany() :: ERROR ", e);
     }
-    logger.info(
+    logger.exit(
         "EmailNotification - Ends: sendEmailNotificationToMany() - returning  a List value"
             + " : ");
     return sentMail;
@@ -144,7 +146,7 @@ public class EmailNotification {
     } catch (Exception e) {
       logger.error("EmailNotification.sendEmailNotification() :: ERROR ", e);
     }
-    logger.info("EmailNotification - Ends: sendLinkToEmail() - returning  a List value" + " : ");
+    logger.exit("EmailNotification - Ends: sendLinkToEmail() - returning  a List value" + " : ");
     return sentMail;
   }
 }

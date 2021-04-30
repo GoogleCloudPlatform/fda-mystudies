@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -30,21 +31,22 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorAdapter {
 
-  private static final Logger logger =
-      Logger.getLogger(FdahpStudyDesignerPreHandlerInterceptor.class);
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(FdahpStudyDesignerPreHandlerInterceptor.class.getName());
 
   @Autowired private UsersService usersService;
 
   @Override
   public boolean preHandle(
       HttpServletRequest request, HttpServletResponse response, Object handler) {
-    logger.info("FdahpStudyDesignerPreHandlerInterceptor - preHandle() - Starts");
+    logger.entry("begin preHandle()");
     SessionObject session = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String defaultURL = propMap.get("action.default.redirect.url");
@@ -147,7 +149,7 @@ public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorA
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerPreHandlerInterceptor - preHandle()", e);
     }
-    logger.info(
+    logger.exit(
         "FdahpStudyDesignerPreHandlerInterceptor - End Point: preHandle() - "
             + " : "
             + FdahpStudyDesignerUtil.getCurrentDateTime()
