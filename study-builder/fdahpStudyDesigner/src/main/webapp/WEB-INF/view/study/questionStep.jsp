@@ -4320,7 +4320,7 @@
             $("#displayStepsCount").parent().find(".help-block").empty();
             $("#displayStepsCount").parent().find(".help-block").append(
           		$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "(Max-Min) value should be exactly divisisble by the step size."));
+                      "(Max-Min) value should be exactly divisisble by the step size"));
           }
         }
       });
@@ -4602,7 +4602,7 @@
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30)."));
+              "Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30)"));
         }
       });
       $("#textScalePositionId").blur(function () {
@@ -6354,7 +6354,7 @@
             $(item).parent().find(".help-block").empty();
             $(item).parent().find(".help-block").append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter a value in the range (0,x)."));
+                "Please enter a value in the range (0,x)"));
           }
         } else {
           $(item).val('');
