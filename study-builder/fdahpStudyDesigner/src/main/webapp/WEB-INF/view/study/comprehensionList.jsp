@@ -341,7 +341,7 @@ var markAsComplete = "${markAsComplete}"
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The score should be less than or equal to the number of questions and greater than 0."));
+            "The score should be less than or equal to the number of questions and greater than 0"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");
@@ -562,7 +562,7 @@ var markAsComplete = "${markAsComplete}"
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The score should be less than or equal to the number of questions and greater than 0."));
+            "The score should be less than or equal to the number of questions and greater than 0"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");

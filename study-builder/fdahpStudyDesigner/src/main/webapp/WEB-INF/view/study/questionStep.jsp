@@ -4320,7 +4320,7 @@
             $("#displayStepsCount").parent().find(".help-block").empty();
             $("#displayStepsCount").parent().find(".help-block").append(
           		$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "(Max-Min) value should be exactly divisisble by the step size."));
+                      "(Max-Min) value should be exactly divisisble by the step size"));
           }
         }
       });
@@ -4602,7 +4602,7 @@
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30)."));
+              "Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30)"));
         }
       });
       $("#textScalePositionId").blur(function () {
@@ -4664,6 +4664,10 @@
         var thisAttr = this;
         var response_type = $("#rlaResonseType").val();
         if ((file = this.files[0])) {
+       	 const allowedExtensions =  ['jpg','png','jpeg'];
+         const { name:fileName } = file;
+         const fileExtension = fileName.split(".").pop().toLowerCase();
+         if(allowedExtensions.includes(fileExtension)){
           img = new Image();
           img.onload = function () {
         	var minHeightAndWidth=0;
@@ -4716,6 +4720,14 @@
             $(thisAttr).parent().parent().parent().find(".removeUrl").click();
           };
           img.src = _URL.createObjectURL(file);
+         }else{
+    	   $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
+           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+           $(thisAttr).parent().find(".help-block").empty().append(
+             $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
+               "Invalid image size or format"));
+           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+      }
         }
       });
 
@@ -4888,6 +4900,10 @@
     function readURL(input) {
 
       if (input.files && input.files[0]) {
+    	  const allowedExtensions =  ['jpg','png','jpeg'];
+       	  const { name:fileName } = input.files[0];
+       	  const fileExtension = fileName.split(".").pop().toLowerCase();
+       	  if(allowedExtensions.includes(fileExtension)){
         var reader = new FileReader();
 
         reader.onload = function (e) {
@@ -4900,6 +4916,7 @@
         };
 
         reader.readAsDataURL(input.files[0]);
+       	}
       }
     }
 
@@ -6337,7 +6354,7 @@
             $(item).parent().find(".help-block").empty();
             $(item).parent().find(".help-block").append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter a value in the range (0,x)."));
+                "Please enter a value in the range (0,x)"));
           }
         } else {
           $(item).val('');

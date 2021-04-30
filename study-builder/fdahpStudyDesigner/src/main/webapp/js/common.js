@@ -146,7 +146,7 @@ $(document)
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
                             .attr("style","white-space:nowrap")
-                            .text("Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."));
+                            .text("Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)"));
                       }
                     }
                   });       
@@ -213,7 +213,7 @@ $(document)
                             .empty()
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
-                            .text("The characters like (< >) are not allowed."));
+                            .text("The characters like (< >) are not allowed"));
                       }
                     }
                   });
@@ -335,7 +335,7 @@ $(document)
                                           ".help-block")
                                       .append($("<ul><li> </li></ul>")
                                       .attr("class","list-unstyled").text(email
-                                          + " already exists."));
+                                          + " already exists"));
                                 }
                               }
                             });

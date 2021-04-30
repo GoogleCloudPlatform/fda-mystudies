@@ -2338,7 +2338,7 @@
           e.preventDefault();
           $(this).val(newVal);
           $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."));
+              "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)"));
         }
       }
     });

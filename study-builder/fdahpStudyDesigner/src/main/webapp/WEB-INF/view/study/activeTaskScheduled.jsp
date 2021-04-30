@@ -212,7 +212,7 @@
             <span class="form-group m-none dis-inline vertical-align-middle pr-md">
               <input id="selectTime" type="text"
                      class="mt-sm form-control clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                     name="activeTaskFrequenciesBo.frequencyTime"
+                     name="activeTaskFrequenciesBo.frequencyTime" data-error="Please fill out this field" 
                      value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"  <c:if
                   test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if>
                      placeholder="Select time"/>
@@ -556,7 +556,7 @@
                class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                required data-error="Please fill out this field"
                onclick="timep(this.id)" placeholder="Time"
-               name="activeTaskFrequenciesBo.frequencyTime"
+               name="activeTaskFrequenciesBo.frequencyTime" 
                value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
         <span class='help-block with-errors red-txt'></span>
       </span>
@@ -1081,7 +1081,7 @@
           <span class="form-group  dis-inline vertical-align-middle pr-md"
                 style="margin-bottom: -13px"><input id="manualTime0"
                                                     type="text" class="form-control clock"
-                                                    name="activeTaskCustomScheduleBo[0].frequencyTime"
+                                                    name="activeTaskCustomScheduleBo[0].frequencyTime" data-error="Please fill out this field" 
                                                     value="${activeTaskCustomScheduleBo.frequencyTime}"
                                                     placeholder="Time" required/>
             <span
@@ -1101,11 +1101,11 @@
                    var="activeTaskCustomScheduleBo" varStatus="customVar">
           <div class="manually-anchor-option mb-md form-group"
                id="AnchorDate${customVar.index}">
-            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].id" id="id"
+            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].id" id="id" data-error="Please fill out this field" 
                    value="${activeTaskCustomScheduleBo.id}">
-            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].used"
+            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].used"  data-error="Please fill out this field" 
                    id="isUsed${customVar.index}" value="${activeTaskCustomScheduleBo.used}">
-            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].activeTaskId"
+            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].activeTaskId" data-error="Please fill out this field" 
                    id="activeTaskId" value="${activeTaskCustomScheduleBo.activeTaskId}">
             <span class="mb-sm pr-md">
               <span
@@ -1115,7 +1115,7 @@
             <span>
               <select
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                count='${customVar.index}' title="Select"
+                count='${customVar.index}' title="Select" data-error="Please select an item in the list"
                 name="activeTaskCustomScheduleBo[${customVar.index}].xDaysSign"
                 id="xSign${customVar.index}">
                 <option value="0"
@@ -1150,7 +1150,7 @@
             <span>
               <select
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                count='${customVar.index}' title="Select"
+                count='${customVar.index}' title="Select" data-error="Please select an item in the list"
                 name="activeTaskCustomScheduleBo[${customVar.index}].yDaysSign"
                 id="ySign${customVar.index}">
               <option value="0"
@@ -1823,7 +1823,7 @@
           var test =thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").find("ul").length;
           if(test === 0){
           	thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
-              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not yet added."));
+              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not yet added"));
           }
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty();
@@ -2257,7 +2257,7 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start date' onclick='customStartDate(this.id,"
+        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' data-error='Please fill out this field' placeholder='Start date' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -2267,14 +2267,14 @@
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End date' onclick='customEndDate(this.id,"
+        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' data-error='Please fill out this field' placeholder='End date' onclick='customEndDate(this.id,"
         + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
+        + "].frequencyTime' class='form-control clock customTime cusTime' data-error='Please fill out this field'  placeholder='Time' onclick='timep(this.id);' disabled/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
@@ -2957,7 +2957,7 @@
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
             'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
                     $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
-                    "Please ensure that the runs created do not have any overlapping time period."));
+                    "Please ensure that the runs created do not have any overlapping time period"));
       } else {
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass(
             'has-error has-danger').addClass('with-errors').find(".help-block").empty();
@@ -3192,7 +3192,7 @@
       if (moment(dt, "MM/DD/YYYY").toDate() < serverDateTime()) {
         couterRef.parent().addClass('has-error has-danger').find('.help-block.with-errors').empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please ensure the End Date/Time is greater than current date/time."));
+                "Please ensure the End Date/Time is greater than current date/time"));
         valid = false;
       } else {
         couterRef.parent().removeClass('has-error has-danger').find('.help-block.with-errors').empty();
@@ -3268,7 +3268,7 @@
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].frequencyTime' placeholder='Time' required/>"
+        + "].frequencyTime' placeholder='Time' required data-error='Please fill out this field' />"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
@@ -3423,7 +3423,7 @@
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row"));
           $(".addbtn").addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -3546,7 +3546,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-             $("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row."));
+             $("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row"));
           $(".addbtn").addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");

@@ -627,7 +627,7 @@
             $('#fetalKickId').val('');
             $('.timeDurationClass').find('.help-block').empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Number of kicks should be greater than zero."));
+            "Number of kicks should be greater than zero"));
           } else {
             $('.timeDurationClass').find('.help-block').empty();
           }

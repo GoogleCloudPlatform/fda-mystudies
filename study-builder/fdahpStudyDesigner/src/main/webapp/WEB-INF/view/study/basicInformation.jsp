@@ -796,22 +796,39 @@ margin-top:16px !important;
 
   // Displaying images from file upload
   function readURL(input) {
+	
     if (input.files && input.files[0]) {
-      var reader = new FileReader();
-
-      reader.onload = function (e) {
-    	  var image = new Image();
-    	    image.src = e.target.result;
-    	    image.onload = function() {
-    	        // access image size here 
-    	        if(this.width >=225 && this.height>=225 ){
-    	        	 $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
-         	                66);
-        	       }
-    	    };
-      };
-
-      reader.readAsDataURL(input.files[0]);
+      const allowedExtensions =  ['jpg','png','jpeg'];
+   	  const { name:fileName } = input.files[0];
+   	  const fileExtension = fileName.split(".").pop().toLowerCase();
+   	  if(allowedExtensions.includes(fileExtension)){  
+	      var reader = new FileReader();
+	
+	      reader.onload = function (e) {
+	    	  var image = new Image();
+	    	    image.src = e.target.result;
+	    	    image.onload = function() {
+	    	        // access image size here 
+	    	        if(this.width >=225 && this.height>=225 ){
+	    	        	 $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
+	         	                66);
+	        	       }
+	    	    };
+	      };
+	      reader.readAsDataURL(input.files[0]);
+   	  }else{
+   		  $("#uploadImg")
+          .parent()
+          .find(".help-block")
+          .empty()
+          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Invalid image size or format"));
+      	  $(".thumb.alternate img")
+          .attr("src",
+              "/studybuilder/images/dummy-img.jpg");
+      	  $('#uploadImg, #thumbnailImageId').val('');
+      	  $('#removeUrl').css("visibility", "hidden");
+   	  }
     }
   }
 
@@ -949,7 +966,32 @@ margin-top:16px !important;
       callback(false);
     }
   }
+  function validateFile(){
+	  const allowedExtensions =  ['jpg','png'],
+	        sizeLimit = 1000000; // 1 megabyte
 
+	  // destructuring file name and size from file object
+	  const { name:fileName, size:fileSize } = this.files[0];
+
+	  /*
+	  * if filename is apple.png, we split the string to get ["apple","png"]
+	  * then apply the pop() method to return the file extension
+	  *
+	  */
+	  const fileExtension = fileName.split(".").pop();
+
+	  /* 
+	    check if the extension of the uploaded file is included 
+	    in our array of allowed file extensions
+	  */
+	  if(!allowedExtensions.includes(fileExtension)){
+	    alert("file type not allowed");
+	    this.value = null;
+	  }else if(fileSize > sizeLimit){
+	    alert("file size too large")
+	    this.value = null;
+	  }
+	}
   function checkRadioRequired() {
     var rejoinRadioVal = $('input[name=type]:checked').val();
     if (rejoinRadioVal == 'GT') {
@@ -1013,7 +1055,7 @@ margin-top:16px !important;
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         appId
-                        + " has already been used in the past. Switch app type to 'gateway' or choose a unique App ID."))
+                        + " has already been used in the past. Switch app type to 'gateway' or choose a unique App ID"))
                     .append("</br>");
                 callback(false);
               }
