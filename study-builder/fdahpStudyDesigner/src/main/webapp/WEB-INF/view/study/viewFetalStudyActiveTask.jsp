@@ -14,6 +14,10 @@
     width: 250px !important;
 }
 
+.help-block ul {
+      width: max-content !important;
+}
+
 .bootstrap-select.btn-group .dropdown-toggle .filter-option {
     text-transform: inherit; !important
 	}
