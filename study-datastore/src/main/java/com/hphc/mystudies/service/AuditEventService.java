@@ -19,16 +19,18 @@ import com.google.cloud.logging.Severity;
 import com.hphc.mystudies.bean.AuditLogEventRequest;
 import java.util.Collections;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class AuditEventService {
 
-  private static final Logger LOGGER = Logger.getLogger(AuditEventService.class);
+  private static final XLogger LOGGER =
+      XLoggerFactory.getXLogger(AuditEventService.class.getName());
 
   private static final String AUDIT_LOG_NAME = "application-audit-log";
 
   public void postAuditLogEvent(AuditLogEventRequest auditRequest) {
-    LOGGER.debug(
+    LOGGER.entry(
         String.format("begin postAuditLogEvent() for %s event", auditRequest.getEventCode()));
     try (Logging logging = LoggingOptions.getDefaultInstance().getService()) {
 
@@ -51,7 +53,7 @@ public class AuditEventService {
     } catch (Exception e) {
       LOGGER.error(String.format("%s failed with an exception", auditRequest.getEventCode()), e);
     }
-    LOGGER.debug(
+    LOGGER.exit(
         String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }
 

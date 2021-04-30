@@ -29,8 +29,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -51,7 +51,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
   @Qualifier("cloudFirestoreResponsesDaoImpl")
   private ResponsesDao responsesDao;
 
-  private static Logger logger = LoggerFactory.getLogger(StudyMetadataServiceImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(StudyMetadataServiceImpl.class.getName());
 
   @Override
   public void saveStudyMetadata(StudyMetadataBean studyMetadataBean)
@@ -83,7 +83,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     logger.info("saveStudyMetadata() : \n Study Collection Name: " + studyCollectionName);
     responsesDao.saveStudyMetadata(
         studyCollectionName, studyMetadataBean.getStudyId(), dataToStore);
-    logger.debug(
+    logger.exit(
         "saveStudyMetadata() : \n Study Collection Name: "
             + studyCollectionName
             + " added successfully");
@@ -95,7 +95,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
       StudyActivityMetadataRequestBean studyActivityMetadataRequestBean,
       AuditLogEventRequest auditRequest)
       throws ProcessResponseException {
-    logger.debug("StudyMetadataServiceImpl getStudyActivityMetadata() - starts ");
+    logger.entry("begin getStudyActivityMetadata()");
     HttpHeaders headers = null;
 
     ResponseEntity<?> responseEntity = null;
@@ -124,7 +124,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
         (QuestionnaireActivityMetaDataBean) responseEntity.getBody();
     QuestionnaireActivityStructureBean retQuestionnaireActivityStructureBean =
         metadataParentBean.getActivity();
-    logger.debug("StudyMetadataServiceImpl getStudyActivityMetadata() - ends");
+    logger.exit("getStudyActivityMetadata() - ends");
     return retQuestionnaireActivityStructureBean;
   }
 

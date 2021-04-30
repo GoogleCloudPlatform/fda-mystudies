@@ -185,6 +185,7 @@
                   <div class="mt-xlg">
                     <div class="gray-xs-f mb-xs">
                       Description
+                      <small>(200 characters max)</small>
                       <span
                           class="requiredStar">*
                       </span>
@@ -326,6 +327,7 @@
                   <div class="mt-md">
                     <div class="gray-xs-f mb-xs">
                       Description
+                      <small>(200 characters max)</small>
                       <span
                           class="requiredStar">*
                       </span>
@@ -401,10 +403,37 @@
     $("[data-toggle=tooltip]").tooltip();
     var countId = ${fn:length(studyPageBos)+ 2};
   //summernote editor initialization
-    $('.summernote')
+  var maxwords=200;  
+  $('.summernote')
         .summernote(
             {
               placeholder: '',
+              callbacks: {
+                  onKeydown: function(e) {
+                    var t = e.currentTarget.innerText;
+                    if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                   onKeyup: function(e) {
+                      var t = e.currentTarget.innerText;
+                     if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                  onPaste: function(e) {
+                	  var t = e.currentTarget.innerText;
+                      var bufferText = ((e.originalEvent || e).clipboardData || 
+                                         window.clipboardData).getData('Text');
+                      e.preventDefault();
+                      var all = t + bufferText;
+                      var array = bufferText.slice(0, (maxwords-t.length))
+                      document.execCommand('insertText', false, array);
+                 
+               }
+      },
               disableResizeEditor: true,
               tabsize: 2,
               height: 200,
@@ -539,7 +568,7 @@
           "</div>" +
           "</div>" +
           "<div class=mt-lg>" +
-          "<div class='gray-xs-f mb-xs'>Description<span class='requiredStar'>*</span></div>"
+          "<div class='gray-xs-f mb-xs'>Description<small>(200 characters max)</small><span class='requiredStar'>*</span></div>"
           +
           "<div class='form-group elaborateClass'><textarea class='summernote form-control updateInput' name='description' id='editor"
           + countId
@@ -565,6 +594,32 @@
       .summernote(
           {
             placeholder: '',
+            callbacks: {
+                onKeydown: function(e) {
+                  var t = e.currentTarget.innerText;
+                  if (t.length >= maxwords) {
+                  if (e.keyCode != 8)
+                    e.preventDefault();
+                  }
+                },
+                 onKeyup: function(e) {
+                    var t = e.currentTarget.innerText;
+                   if (t.length >= maxwords) {
+                  if (e.keyCode != 8)
+                    e.preventDefault();
+                  }
+                },
+                onPaste: function(e) {
+              	  var t = e.currentTarget.innerText;
+                    var bufferText = ((e.originalEvent || e).clipboardData || 
+                                       window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    var all = t + bufferText;
+                    var array = bufferText.slice(0, (maxwords-t.length))
+                    document.execCommand('insertText', false, array);
+               
+             }
+    },
             disableResizeEditor: true,
             tabsize: 2,
             height: 200,

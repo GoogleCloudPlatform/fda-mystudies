@@ -71,14 +71,15 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class StudyMetaDataDao {
 
-  private static final Logger LOGGER = Logger.getLogger(StudyMetaDataDao.class);
+  private static final XLogger LOGGER = XLoggerFactory.getXLogger(StudyMetaDataDao.class.getName());
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -91,7 +92,7 @@ public class StudyMetaDataDao {
   String queryString = "";
 
   public boolean isValidAuthorizationId(String authorization) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
+    LOGGER.entry("begin isValidAuthorizationId()");
     boolean hasValidAuthorization = false;
     String bundleIdAndAppToken = null;
     try {
@@ -106,13 +107,13 @@ public class StudyMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
     }
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
+    LOGGER.exit("StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
     return hasValidAuthorization;
   }
 
   @SuppressWarnings("unchecked")
   public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - gatewayAppResourcesInfo() :: Starts");
+    LOGGER.entry("begin gatewayAppResourcesInfo()");
     Session session = null;
     GatewayInfoResponse gatewayInfoResponse = new GatewayInfoResponse();
     GatewayInfoDto gatewayInfo = null;
@@ -218,13 +219,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - gatewayAppResourcesInfo() :: Ends");
+    LOGGER.exit("gatewayAppResourcesInfo() :: Ends");
     return gatewayInfoResponse;
   }
 
   @SuppressWarnings("unchecked")
   public StudyResponse studyList(String authorization, String applicationId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - studyList() :: Starts");
+    LOGGER.entry("begin studyList()");
     Session session = null;
     StudyResponse studyResponse = new StudyResponse();
     List<StudyDto> studiesList = null;
@@ -356,13 +357,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - studyList() :: Ends");
+    LOGGER.exit("studyList() :: Ends");
     return studyResponse;
   }
 
   @SuppressWarnings("unchecked")
   public EligibilityConsentResponse eligibilityConsentMetadata(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - eligibilityConsentMetadata() :: Starts");
+    LOGGER.entry("begin eligibilityConsentMetadata()");
     Session session = null;
     EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
     EligibilityDto eligibilityDto = null;
@@ -744,14 +745,14 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - eligibilityConsentMetadata() :: Ends");
+    LOGGER.exit("eligibilityConsentMetadata() :: Ends");
     return eligibilityConsentResponse;
   }
 
   public ConsentDocumentResponse consentDocument(
       String studyId, String consentVersion, String activityId, String activityVersion)
       throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Starts");
+    LOGGER.entry("begin consentDocument()");
     Session session = null;
     ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
     ConsentDto consent = null;
@@ -872,13 +873,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Ends");
+    LOGGER.exit("consentDocument() :: Ends");
     return consentDocumentResponse;
   }
 
   @SuppressWarnings("unchecked")
   public ResourcesResponse resourcesForStudy(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Starts");
+    LOGGER.entry("begin resourcesForStudy()");
     Session session = null;
     ResourcesResponse resourcesResponse = new ResourcesResponse();
     List<ResourcesDto> resourcesDtoList = null;
@@ -1071,13 +1072,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Ends");
+    LOGGER.exit("resourcesForStudy() :: Ends");
     return resourcesResponse;
   }
 
   @SuppressWarnings("unchecked")
   public StudyInfoResponse studyInfo(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Starts");
+    LOGGER.entry("begin studyInfo()");
     Session session = null;
     StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
     List<StudyPageDto> studyPageDtoList = null;
@@ -1351,12 +1352,12 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Ends");
+    LOGGER.exit("studyInfo() :: Ends");
     return studyInfoResponse;
   }
 
   public boolean isValidStudy(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
+    LOGGER.entry("begin isValidStudy()");
     Session session = null;
     boolean isValidStudy = false;
     StudyDto studyDto = null;
@@ -1380,13 +1381,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Ends");
+    LOGGER.exit("StudyMetaDataOrchestration - isValidStudy() :: Ends");
     return isValidStudy;
   }
 
   public boolean isValidActivity(String activityId, String studyId, String activityVersion)
       throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
+    LOGGER.entry("begin isValidActivity()");
     Session session = null;
     boolean isValidActivity = false;
     ActiveTaskDto activeTaskDto = null;
@@ -1436,13 +1437,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Ends");
+    LOGGER.exit("StudyMetaDataOrchestration - isValidActivity() :: Ends");
     return isValidActivity;
   }
 
   public boolean isActivityTypeQuestionnaire(
       String activityId, String studyId, String activityVersion) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
+    LOGGER.entry("begin isActivityTypeQuestionnaire()");
     Session session = null;
     boolean isActivityTypeQuestionnaire = true;
     ActiveTaskDto activeTaskDto = null;
@@ -1473,12 +1474,12 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
+    LOGGER.exit("StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
     return isActivityTypeQuestionnaire;
   }
 
   public String getconsentDocumentDisplayTitle(String displaytitle) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Starts");
+    LOGGER.entry("begin getconsentDocumentDisplayTitle()");
     String consentTitle = "";
     try {
       switch (displaytitle) {
@@ -1516,12 +1517,12 @@ public class StudyMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataDao - getconsentDocumentDisplayTitle() :: ERROR", e);
     }
-    LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Ends");
+    LOGGER.exit("getconsentDocumentDisplayTitle() :: Ends");
     return consentTitle;
   }
 
   public boolean isValidToken(String token) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Starts");
+    LOGGER.entry("begin isValidToken()");
     Session session = null;
     boolean isValidStudy = false;
     EnrollmentTokenDto tokenDto = null;
@@ -1547,13 +1548,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Ends");
+    LOGGER.exit("isValidToken() :: Ends");
     return isValidStudy;
   }
 
   @SuppressWarnings("unchecked")
   public StudyResponse study(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - study() :: Starts");
+    LOGGER.entry("begin study()");
     Session session = null;
     StudyResponse studyResponse = new StudyResponse();
     List<StudyDto> studiesList = null;
@@ -1678,7 +1679,7 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - study() :: Ends");
+    LOGGER.exit("study() :: Ends");
     return studyResponse;
   }
 }
