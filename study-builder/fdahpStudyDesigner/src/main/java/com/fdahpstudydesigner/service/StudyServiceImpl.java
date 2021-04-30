@@ -384,6 +384,10 @@ public class StudyServiceImpl implements StudyService {
         for (StudyPageBo s : studyPageBos) {
           if (FdahpStudyDesignerUtil.isNotEmpty(s.getImagePath())) {
             // to make unique image
+            s.setSignedUrl(
+                FdahpStudyDesignerUtil.getSignedUrl(
+                    FdahpStudyDesignerConstants.STUDTYPAGES + "/" + s.getImagePath(),
+                    FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
             if (s.getImagePath().contains("?v=")) {
               String imagePathArr[] = s.getImagePath().split("\\?");
               s.setImagePath(imagePathArr[0] + "?v=" + new Date().getTime());

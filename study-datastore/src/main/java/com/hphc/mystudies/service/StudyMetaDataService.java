@@ -143,10 +143,12 @@ public class StudyMetaDataService {
               String logo = studyBeanObject.getLogo();
               if (logo == null || logo.isEmpty()) {
                 studyBeanObject.setLogo(
-                    propMap.get("fda.imgDisplaydPath")
-                        + propMap.get("cloud.bucket.name")
-                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + propMap.get(StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE));
+                    StudyMetaDataUtil.getSignedUrl(
+                        propMap.get("cloud.bucket.name"),
+                        propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                            + propMap.get(
+                                StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE),
+                        StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
               }
             }
           }
@@ -390,16 +392,18 @@ public class StudyMetaDataService {
         if (infoBean.getImage() == null || infoBean.getImage().equals("")) {
           if (count == 0) {
             infoBean.setImage(
-                propMap.get("fda.imgDisplaydPath")
-                    + propMap.get("cloud.bucket.name")
-                    + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                    + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE));
+                StudyMetaDataUtil.getSignedUrl(
+                    propMap.get("cloud.bucket.name"),
+                    propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                        + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE),
+                    StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
           } else {
             infoBean.setImage(
-                propMap.get("fda.imgDisplaydPath")
-                    + propMap.get("cloud.bucket.name")
-                    + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                    + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE));
+                StudyMetaDataUtil.getSignedUrl(
+                    propMap.get("cloud.bucket.name"),
+                    propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                        + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE),
+                    StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
           }
         }
         count++;
