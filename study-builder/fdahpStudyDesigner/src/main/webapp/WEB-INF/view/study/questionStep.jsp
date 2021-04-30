@@ -317,7 +317,7 @@
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control" name="questionsBo.anchorDateName"
-                         id="anchorTextId"
+                         id="anchorTextId" data-error="Please fill out this field" 
                          value="${questionnairesStepsBo.questionsBo.anchorDateName}"
                          maxlength="50" <c:if
                       test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
@@ -353,7 +353,7 @@
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control" name="questionsBo.anchorDateName"
-                         id="anchorTextId"
+                         id="anchorTextId" data-error="Please fill out this field" 
                          value="${fn:escapeXml(questionnairesStepsBo.questionsBo.anchorDateName)}"
                          maxlength="50"
                          <c:if test="${questionsBo.isShorTitleDuplicate gt 0}">disabled</c:if> <c:if

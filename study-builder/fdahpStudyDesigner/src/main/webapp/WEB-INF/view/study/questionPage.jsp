@@ -252,7 +252,7 @@
                   </span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="anchorDateName" id="anchorTextId"
+                  <input type="text" class="form-control" name="anchorDateName" id="anchorTextId" data-error="Please fill out this field" 
                          value="${questionsBo.anchorDateName}" maxlength="50" <c:if
                       test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
                   <div class="help-block with-errors red-txt"></div>
@@ -286,7 +286,7 @@
                   </span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control" name="anchorDateName" id="anchorTextId"
+                  <input type="text" class="form-control" name="anchorDateName" id="anchorTextId" data-error="Please fill out this field" 
                          value="${fn:escapeXml(questionsBo.anchorDateName)}" maxlength="50" <c:if
                       test="${not empty questionsBo.isShorTitleDuplicate && (questionsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
                   <div class="help-block with-errors red-txt"></div>
@@ -319,7 +319,7 @@
                       title="- Please select the appropriate HealthKit data type as suited to the question<br>- Please note that only the most recent value available in HealthKit would be read by the app<br>- Access to HealthKit data is subject to the user providing permissions for the app to read the data"></span>
               </div>
               <div class="form-group">
-                <select class="selectpicker elaborateClass healthkitrequireClass"
+                <select class="selectpicker elaborateClass healthkitrequireClass" data-error="Please select an item in the list"
                         id="healthkitDatatypeId" name="healthkitDatatype"
                         value="${questionsBo.healthkitDatatype}">
                   <option value="" selected>Select</option>
@@ -424,7 +424,7 @@
               </span>
             </div>
             <div class="form-group">
-              <input type="text" custAttType="cust" class="form-control requireClass"
+              <input type="text" custAttType="cust" class="form-control requireClass" data-error="Please fill out this field" 
                      name="statShortName"
                      id="statShortNameId" value="${fn:escapeXml(questionsBo.statShortName)}"
                      maxlength="20" <c:if
@@ -443,7 +443,7 @@
               <span class="requiredStar">*</span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control requireClass" name="statDisplayName"
+              <input type="text" class="form-control requireClass" name="statDisplayName" data-error="Please fill out this field" 
                      id="statDisplayNameId" value="${fn:escapeXml(
                   questionsBo.statDisplayName)}" maxlength="50">
               <div class="help-block with-errors red-txt"></div>
@@ -460,7 +460,7 @@
                     title="For Response Types of Time Interval and Height, participant responses are saved in hours and cms respectively. Please enter units accordingly."></span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control requireClass" name="statDisplayUnits"
+              <input type="text" class="form-control requireClass" name="statDisplayUnits" data-error="Please fill out this field" 
                      id="statDisplayUnitsId" value="${fn:escapeXml(
                   questionsBo.statDisplayUnits)}" maxlength="15">
               <div class="help-block with-errors red-txt"></div>
@@ -474,7 +474,7 @@
               </span>
             </div>
             <div class="form-group">
-              <select class="selectpicker elaborateClass requireClass" id="statTypeId"
+              <select class="selectpicker elaborateClass requireClass" id="statTypeId" data-error="Please select an item in the list"
                       title="Select"
                       name="statType">
                 <option value="" selected>Select</option>
@@ -494,7 +494,7 @@
               </span>
             </div>
             <div class="form-group">
-              <select class="selectpicker elaborateClass requireClass" id="statFormula"
+              <select class="selectpicker elaborateClass requireClass" id="statFormula" data-error="Please select an item in the list"
                       title="Select"
                       name="statFormula">
                 <option value="" selected>Select</option>
