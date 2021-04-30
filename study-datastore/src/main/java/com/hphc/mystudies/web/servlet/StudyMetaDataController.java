@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -31,11 +32,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class StudyMetaDataController extends HttpServlet {
 
-  private static final Logger LOGGER = Logger.getLogger(StudyMetaDataController.class);
+  private static final XLogger LOGGER =
+      XLoggerFactory.getXLogger(StudyMetaDataController.class.getName());
 
   private static final long serialVersionUID = 1L;
 
@@ -45,23 +48,23 @@ public class StudyMetaDataController extends HttpServlet {
 
   @Override
   public void init(ServletConfig servletConfig) throws ServletException {
-    LOGGER.info("INFO: StudyMetaDataController - init() :: Starts");
+    LOGGER.entry("begin init()");
     super.init(servletConfig);
-    LOGGER.info("INFO: StudyMetaDataController - init() :: Ends");
+    LOGGER.exit("init() :: Ends");
   }
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    LOGGER.info("INFO: StudyMetaDataController - doGet() :: Starts");
+    LOGGER.entry("begin doGet()");
     doPost(req, resp);
-    LOGGER.info("INFO: StudyMetaDataController - doGet() :: Ends");
+    LOGGER.exit("doGet() :: Ends");
   }
 
   @Override
   public void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    LOGGER.info("INFO: StudyMetaDataController - doPost() :: Starts");
+    LOGGER.entry("begin doPost()");
     String jsonp_callback = null;
     String localForwardURL = forwardURL;
     URL URL = new URL(localForwardURL);
@@ -103,6 +106,6 @@ public class StudyMetaDataController extends HttpServlet {
     } else {
       resp.getWriter().write(builder.toString());
     }
-    LOGGER.info("INFO: StudyMetaDataController - doPost() :: Ends ");
+    LOGGER.exit("doPost() :: Ends ");
   }
 }
