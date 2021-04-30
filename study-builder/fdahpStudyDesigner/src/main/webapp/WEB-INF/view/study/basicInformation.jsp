@@ -966,32 +966,7 @@ margin-top:16px !important;
       callback(false);
     }
   }
-  function validateFile(){
-	  const allowedExtensions =  ['jpg','png'],
-	        sizeLimit = 1000000; // 1 megabyte
 
-	  // destructuring file name and size from file object
-	  const { name:fileName, size:fileSize } = this.files[0];
-
-	  /*
-	  * if filename is apple.png, we split the string to get ["apple","png"]
-	  * then apply the pop() method to return the file extension
-	  *
-	  */
-	  const fileExtension = fileName.split(".").pop();
-
-	  /* 
-	    check if the extension of the uploaded file is included 
-	    in our array of allowed file extensions
-	  */
-	  if(!allowedExtensions.includes(fileExtension)){
-	    alert("file type not allowed");
-	    this.value = null;
-	  }else if(fileSize > sizeLimit){
-	    alert("file size too large")
-	    this.value = null;
-	  }
-	}
   function checkRadioRequired() {
     var rejoinRadioVal = $('input[name=type]:checked').val();
     if (rejoinRadioVal == 'GT') {
