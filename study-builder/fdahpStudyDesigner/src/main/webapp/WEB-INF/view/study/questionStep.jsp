@@ -2522,7 +2522,7 @@
                 <div class="OtherOptionCls" style="display:none;">
                   <div class="clearfix"></div>
                   <div class="col-md-6 p-none mt-md">
-                    <div class="gray-xs-f mb-xs pr-md">Place holder text for the text field</div>
+                    <div class="gray-xs-f mb-xs pr-md">Placeholder text for the text field</div>
                     <div class="form-group">
                       <input type="text" class="form-control"
                              name="questionReponseTypeBo.otherPlaceholderText" id=""
@@ -3698,7 +3698,7 @@
           var otherText = $('.otherIncludeTextCls:checked').val();
           if (otherText == 'Yes') {
             $('.OtherOptionCls').show();
-            $('.OtherOptionCls').find('input:text,select').attr('required', true);
+            $('.OtherOptionCls').find('input:text,select').attr('required', false);
           } else {
             $('.OtherOptionCls').hide();
             $('.OtherOptionCls').find('input:text,select').removeAttr('required');
