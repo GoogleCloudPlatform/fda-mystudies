@@ -121,7 +121,7 @@
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
-                        <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                        <img src="${defaultOverViewImageSignedUrl}"
                                 onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                     </div>                
@@ -178,7 +178,7 @@
                     </div>
                     <div class="form-group">
                       <input type="text" class="form-control updateInput"
-                             name="title" required maxlength="50"
+                             name="title" required data-error="Please fill out this field" maxlength="50"
                              value="${fn:escapeXml(studyBo.name)}"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -186,14 +186,15 @@
                   <div class="mt-xlg">
                     <div class="gray-xs-f mb-xs">
                       Description
+                      <small>(200 characters max)</small>
                       <span
                           class="requiredStar">*
                       </span>
                     </div>
                     <div class="form-group elaborateClass">
                       <textarea class=" form-control updateInput summernote" rows="5"
-                                id="editor1" name="description" required
-                                data-error="Please fill out this field."
+                                id="editor1" name="description" required data-error="Please fill out this field" 
+                                data-error="Please fill out this field"
                                 ></textarea>
 
                       <div class="help-block with-errors red-txt"></div>
@@ -251,13 +252,13 @@
                        <c:choose>
                        <c:when test="${spbSt.count==1}">
                         <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                           src="${defaultOverViewImageSignedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                             </c:when>
                             <c:otherwise>
                              <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/>"
+                           src="${defaultPageOverviewImageSignedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                             </c:otherwise>
@@ -266,7 +267,7 @@
                     <div style="display: inline-block">
                       <div class="thumb" style="display: inline-block;width:77px !important">
                         <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studypages/${fn:escapeXml(studyPageBo.imagePath)}"
+                           src="${studyPageBo.signedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                       </div>
@@ -321,21 +322,22 @@
                     <div class="form-group">
                       <input type="text" class="form-control updateInput"
                              name="title" value="${fn:escapeXml(studyPageBo.title)}"
-                             required maxlength="50"/>
+                             required data-error="Please fill out this field" maxlength="50"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
                   <div class="mt-md">
                     <div class="gray-xs-f mb-xs">
                       Description
+                      <small>(200 characters max)</small>
                       <span
                           class="requiredStar">*
                       </span>
                     </div>
                     <div class="form-group elaborateClass">
                       <textarea class="form-control summernote" rows="5"
-                                name="description" id="editor${spbSt.count}" required
-                                data-error="Please fill out this field."
+                                name="description" id="editor${spbSt.count}" required data-error="Please fill out this field" 
+                                data-error="Please fill out this field"
                                 >${studyPageBo.description}</textarea>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -403,10 +405,37 @@
     $("[data-toggle=tooltip]").tooltip();
     var countId = ${fn:length(studyPageBos)+ 2};
   //summernote editor initialization
-    $('.summernote')
+  var maxwords=200;  
+  $('.summernote')
         .summernote(
             {
               placeholder: '',
+              callbacks: {
+                  onKeydown: function(e) {
+                    var t = e.currentTarget.innerText;
+                    if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                   onKeyup: function(e) {
+                      var t = e.currentTarget.innerText;
+                     if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                  onPaste: function(e) {
+                	  var t = e.currentTarget.innerText;
+                      var bufferText = ((e.originalEvent || e).clipboardData || 
+                                         window.clipboardData).getData('Text');
+                      e.preventDefault();
+                      var all = t + bufferText;
+                      var array = bufferText.slice(0, (maxwords-t.length))
+                      document.execCommand('insertText', false, array);
+                 
+               }
+      },
               disableResizeEditor: true,
               tabsize: 2,
               height: 200,
@@ -507,7 +536,7 @@
           "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='Image requirements: The default image shown below will be used for the study overview screen (second page onwards) in the mobile app. Upload an alternate image if you wish to override it</br></br>The image must be of type .JPG or .PNG. The minimum image size required is 750 x 570. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger'></span></span> </div>"
           +
           "<div>" +
-          "<div class=thumb style='display: inline-block;width:77px !important'><img src=<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/> class=wid100></div>" +
+          "<div class=thumb style='display: inline-block;width:77px !important'><img src='${defaultPageOverviewImageSignedUrl}' class=wid100></div>" +
           "<div style='display: inline-block'>" +
           "<div class=thumb style='width:77px !important'><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
           "<div class=dis-inline>" +
@@ -535,17 +564,17 @@
           "<div class='gray-xs-f mb-xs'>Title <small>(50 characters max) </small><span class='requiredStar'>*</span></div>"
           +
           "<div class=form-group>" +
-          "<input type='text' class='form-control updateInput'  name='title' required maxlength='50'>"
+          "<input type='text' class='form-control updateInput'  name='title' required data-error='Please fill out this field' maxlength='50'>"
           +
           "<div class='help-block with-errors red-txt'></div>" +
           "</div>" +
           "</div>" +
           "<div class=mt-lg>" +
-          "<div class='gray-xs-f mb-xs'>Description<span class='requiredStar'>*</span></div>"
+          "<div class='gray-xs-f mb-xs'>Description<small>(200 characters max)</small><span class='requiredStar'>*</span></div>"
           +
           "<div class='form-group elaborateClass'><textarea class='summernote form-control updateInput' name='description' id='editor"
           + countId
-          + "' rows='5' required data-error='Please fill out this field.'></textarea>"
+          + "' rows='5' required data-error='Please fill out this field'></textarea>"
           +
           "<div class='help-block with-errors red-txt'></div></div>" +
           "</div>" +
@@ -567,6 +596,32 @@
       .summernote(
           {
             placeholder: '',
+            callbacks: {
+                onKeydown: function(e) {
+                  var t = e.currentTarget.innerText;
+                  if (t.length >= maxwords) {
+                  if (e.keyCode != 8)
+                    e.preventDefault();
+                  }
+                },
+                 onKeyup: function(e) {
+                    var t = e.currentTarget.innerText;
+                   if (t.length >= maxwords) {
+                  if (e.keyCode != 8)
+                    e.preventDefault();
+                  }
+                },
+                onPaste: function(e) {
+              	  var t = e.currentTarget.innerText;
+                    var bufferText = ((e.originalEvent || e).clipboardData || 
+                                       window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    var all = t + bufferText;
+                    var array = bufferText.slice(0, (maxwords-t.length))
+                    document.execCommand('insertText', false, array);
+               
+             }
+    },
             disableResizeEditor: true,
             tabsize: 2,
             height: 200,
@@ -636,7 +691,7 @@
       		       .find(".help-block")
       		       .empty()
       		       .append(
-      		           '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+      		           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
        			valid=false;
        			return false;
           }else{

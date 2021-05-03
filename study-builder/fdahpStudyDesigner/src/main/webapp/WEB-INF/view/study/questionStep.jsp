@@ -164,7 +164,7 @@
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"
                   <c:if
                       test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>
-                     required maxlength="15"/>
+                     required  data-error='Please fill out this field'  maxlength="15"/>
               <div class="help-block with-errors red-txt"></div>
               <input type="hidden" id="preShortTitleId"
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"/>
@@ -186,7 +186,7 @@
               </div>
               <div class="form-group">
                 <select name="destinationStep" id="destinationStepId"
-                        data-error="Please choose one option" class="selectpicker" required>
+                        data-error="Please choose one option" class="selectpicker" required  data-error='Please fill out this field' >
                   <c:forEach items="${destinationStepList}" var="destinationStep">
                     <option
                         value="${destinationStep.stepId}" ${questionnairesStepsBo.destinationStep eq destinationStep.stepId ? 'selected' :''}>
@@ -221,7 +221,7 @@
                    name="questionsBo.question"
                    id="questionTextId"
                    placeholder="Type the question you wish to ask the participant"
-                   value="${fn:escapeXml(questionnairesStepsBo.questionsBo.question)}" required
+                   value="${fn:escapeXml(questionnairesStepsBo.questionsBo.question)}" required  data-error='Please fill out this field' 
                    maxlength="300"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -266,7 +266,7 @@
           <div class="col-md-4 col-lg-3 p-none">
             <div class="form-group">
               <select id="responseTypeId" class="selectpicker" name="questionsBo.responseType"
-                      required
+                      required  data-error='Please fill out this field' 
                       value="${questionnairesStepsBo.questionsBo.responseType}" <c:if
                   test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>>
                 <option value=''>Select</option>
@@ -388,7 +388,7 @@
                       title="- Please select the appropriate HealthKit data type as suited to the question<br>- Please note that only the most recent value available in HealthKit would be read by the app<br>- Access to HealthKit data is subject to the user providing permissions for the app to read the data"></span>
               </div>
               <div class="form-group mb-xs">
-                <select class="selectpicker elaborateClass healthkitrequireClass"
+                <select class="selectpicker elaborateClass healthkitrequireClass"  data-error="Please select an item in the list"
                         id="healthkitDatatypeId" name="questionsBo.healthkitDatatype"
                         value="${questionnairesStepsBo.questionsBo.healthkitDatatype}">
                   <option value="" selected>Select</option>
@@ -423,7 +423,7 @@
                       title="The options available here depend on the scheduling frequency set for the activity. For multiple-times-a-day and custom- scheduled activities, the chart's X axis divisions will represent runs. For the former case, the chart will display all runs for the day while for the latter, the chart will display a max of 5 runs at a time."></span>
               </div>
               <div class="form-group">
-                <select class="selectpicker elaborateClass chartrequireClass"
+                <select class="selectpicker elaborateClass chartrequireClass" data-error="Please select an item in the list"
                         id="lineChartTimeRangeId"
                         name="questionsBo.lineChartTimeRange"
                         value="${questionnairesStepsBo.questionsBo.lineChartTimeRange}">
@@ -465,7 +465,7 @@
                 </span>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control chartrequireClass"
+                <input type="text" class="form-control chartrequireClass" data-error="Please fill out this field" 
                        name="questionsBo.chartTitle"
                        id="chartTitleId" value="${questionnairesStepsBo.questionsBo.chartTitle}"
                        maxlength="30">
@@ -493,12 +493,12 @@
               </span>
             </div>
             <div class="form-group">
-              <input type="text" custAttType="cust" class="form-control requireClass"
+              <input type="text" custAttType="cust" class="form-control requireClass" data-error="Please fill out this field" 
                      name="questionsBo.statShortName" id="statShortNameId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionsBo.statShortName)}"
               <c:if
                   test="${not empty questionnairesStepsBo.questionsBo.isStatShortNameDuplicate && (questionnairesStepsBo.questionsBo.isStatShortNameDuplicate gt 0)}">
-                     disabled</c:if> maxlength="20">
+                     disabled</c:if> data-error="Please fill out this field"  maxlength="20">
               <div class="help-block with-errors red-txt"></div>
               <input type="hidden" id="prevStatShortNameId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionsBo.statShortName)}">
@@ -512,7 +512,7 @@
               <span class="requiredStar">*</span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control requireClass"
+              <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                      name="questionsBo.statDisplayName"
                      id="statDisplayNameId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionsBo.statDisplayName)}"
@@ -531,7 +531,7 @@
                     title="For Response Types of Time Interval and Height, participant responses are saved in hours and cms respectively. Please enter units accordingly."></span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control requireClass"
+              <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                      name="questionsBo.statDisplayUnits"
                      id="statDisplayUnitsId"
                      value="${fn:escapeXml(questionnairesStepsBo.questionsBo.statDisplayUnits)}"
@@ -547,7 +547,7 @@
               </span>
             </div>
             <div class="form-group">
-              <select class="selectpicker elaborateClass requireClass" id="statTypeId"
+              <select class="selectpicker elaborateClass requireClass" data-error="Please fill out this field" id="statTypeId"
                       title="Select"
                       name="questionsBo.statType">
                 <option value="" selected>Select</option>
@@ -567,7 +567,7 @@
               </span>
             </div>
             <div class="form-group">
-              <select class="selectpicker elaborateClass requireClass" id="statFormula"
+              <select class="selectpicker elaborateClass requireClass" data-error="Please fill out this field" id="statFormula"
                       title="Select"
                       name="questionsBo.statFormula">
                 <option value="" selected>Select</option>
@@ -650,12 +650,12 @@
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="ScaleRequired" id="scalevertical" value="true"
+                  <input type="radio" class="ScaleRequired" id="scalevertical" value="true" data-error="Please fill out this field" 
                          name="questionReponseTypeBo.vertical"  ${questionnairesStepsBo.questionReponseTypeBo.vertical ? 'checked':''} >
                   <label for="scalevertical">Vertical</label>
                 </span>
                 <span class="radio radio-inline">
-                  <input type="radio" class="ScaleRequired" id="scalehorizontal" value="false"
+                  <input type="radio" class="ScaleRequired" id="scalehorizontal" value="false" data-error="Please fill out this field" 
                          name="questionReponseTypeBo.vertical" ${empty questionnairesStepsBo.questionReponseTypeBo.vertical || !questionnairesStepsBo.questionReponseTypeBo.vertical ? 'checked':''} >
                   <label for="scalehorizontal">Horizontal</label>
                 </span>
@@ -675,7 +675,7 @@
                         title="Enter an integer number in the range (Min, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" 
                            name="questionReponseTypeBo.minValue" id="scaleMinValueId"
                            value="${questionnairesStepsBo.questionReponseTypeBo.minValue}"
                            onkeypress="return isOnlyNumber(event)">
@@ -692,7 +692,7 @@
                         title="Enter an integer number in the range (Min+1, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" 
                            name="questionReponseTypeBo.maxValue" id="scaleMaxValueId"
                            value="${questionnairesStepsBo.questionReponseTypeBo.maxValue}"
                            onkeypress="return isOnlyNumber(event)">
@@ -743,12 +743,12 @@
                   <div class="form-group">
                     <c:if
                         test="${not empty questionnairesStepsBo.questionReponseTypeBo.step && questionnairesStepsBo.questionReponseTypeBo.step ne 0}">
-                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount"
+                      <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" id="displayStepsCount"
                              value="<fmt:formatNumber  value="${(questionnairesStepsBo.questionReponseTypeBo.maxValue-questionnairesStepsBo.questionReponseTypeBo.minValue)/questionnairesStepsBo.questionReponseTypeBo.step}"  groupingUsed="false" maxFractionDigits="0" type="number"/>"
                              onkeypress="return isNumber(event)">
                     </c:if>
                     <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.step}">
-                      <input type="text" class="form-control ScaleRequired" id="displayStepsCount"
+                      <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field"  id="displayStepsCount"
                              value="" onkeypress="return isNumber(event)">
                     </c:if>
                     <div class="help-block with-errors red-txt"></div>
@@ -763,7 +763,7 @@
                           title="This represents the number of steps the scale is divided into."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired" id="scaleStepId"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" id="scaleStepId"
                            value="${questionnairesStepsBo.questionReponseTypeBo.step}"
                            onkeypress="return isNumber(event)" maxlength="2" disabled="disabled">
                     <div class="help-block with-errors red-txt"></div>
@@ -784,7 +784,7 @@
                           title="Enter an integer number to indicate the desired default step position for the slider in the scale.  Ensure it is in the range (0,  Numer of  Steps). For example, if you have 6 steps,  0 indicates the minimum value, 1 indicates the first step and so on. 6 indicates the maximum value."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired"
+                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" 
                            name="questionReponseTypeBo.defaultValue" id="scaleDefaultValueId"
                            value="${questionnairesStepsBo.questionReponseTypeBo.defaultValue}"
                            onkeypress="return isOnlyNumber(event)">
@@ -807,7 +807,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
+                            src="${questionnairesStepsBo.questionReponseTypeBo.signedMinImage}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -848,7 +848,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
+                            src="${questionnairesStepsBo.questionReponseTypeBo.signedMaxImage}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -891,7 +891,7 @@
                         title="Enter an integer number in the range (Min, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired"
+                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field" 
                            name="questionReponseTypeBo.minValue" id="continuesScaleMinValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minValue)}"
                            onkeypress="return isNumberKey(event)">
@@ -908,7 +908,7 @@
                         title="Enter an integer number in the range (Min+1, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired"
+                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field" 
                            name="questionReponseTypeBo.maxValue" id="continuesScaleMaxValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxValue)}"
                            onkeypress="return isNumberKey(event)">
@@ -930,7 +930,7 @@
                           title="Enter an integer between the minimum and maximum."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired"
+                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field" 
                            name="questionReponseTypeBo.defaultValue"
                            id="continuesScaleDefaultValueId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.defaultValue)}"
@@ -949,7 +949,7 @@
                           title="Enter the maximum number of decimal places to be shown for the values on the scale. Note that your options  (0,1,2,3,4) are limited by the selected maximum and minimum values."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired"
+                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field" 
                            name="questionReponseTypeBo.maxFractionDigits"
                            id="continuesScaleFractionDigitsId"
                            value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxFractionDigits)}"
@@ -1005,7 +1005,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minImage)}"
+                            src="${questionnairesStepsBo.questionReponseTypeBo.signedMinImage}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -1047,7 +1047,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxImage)}"
+                            src="${questionnairesStepsBo.questionReponseTypeBo.signedMaxImage}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -1089,13 +1089,13 @@
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="LocationRequired" id="useCurrentLocationYes"
+                  <input type="radio" class="LocationRequired" id="useCurrentLocationYes" data-error="Please fill out this field" 
                          value="true"
                          name="questionReponseTypeBo.useCurrentLocation"  ${empty questionnairesStepsBo.questionReponseTypeBo.useCurrentLocation || questionnairesStepsBo.questionReponseTypeBo.useCurrentLocation eq true ? 'checked':''} >
                   <label for="useCurrentLocationYes">Yes</label>
                 </span>
-                <span class="radio radio-inline">
-                  <input type="radio" class="LocationRequired" id="useCurrentLocationNo"
+                <span class="radio radio-inline"> 
+                  <input type="radio" class="LocationRequired" id="useCurrentLocationNo" data-error="Please fill out this field" 
                          value="false"
                          name="questionReponseTypeBo.useCurrentLocation" ${questionnairesStepsBo.questionReponseTypeBo.useCurrentLocation eq false? 'checked':''} >
                   <label for="useCurrentLocationNo"">No</label>
@@ -1133,12 +1133,12 @@
               </div>
               <div>
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="TextRequired" id="multipleLinesYes" value="true"
+                  <input type="radio" class="TextRequired" data-error="Please fill out this field"  id="multipleLinesYes" value="true"
                          name="questionReponseTypeBo.multipleLines"  ${questionnairesStepsBo.questionReponseTypeBo.multipleLines ? 'checked':''} >
                   <label for="multipleLinesYes">Yes</label>
                 </span>
                 <span class="radio radio-inline">
-                  <input type="radio" class="TextRequired" id="multipleLinesNo" value="false"
+                  <input type="radio" class="TextRequired" data-error="Please fill out this field"  id="multipleLinesNo" value="false"
                          name="questionReponseTypeBo.multipleLines" ${empty questionnairesStepsBo.questionReponseTypeBo.multipleLines || !questionnairesStepsBo.questionReponseTypeBo.multipleLines ? 'checked':''} >
                   <label for="multipleLinesNo">No</label>
                 </span>
@@ -1268,7 +1268,7 @@
                   <textarea
                       class="form-control <c:if test="${not empty questionnairesStepsBo.questionReponseTypeBo.validationCondition }">TextRequired</c:if>"
                       rows="4" name="questionReponseTypeBo.invalidMessage"
-                      id="invalidMessageId"
+                      id="invalidMessageId" data-error="Please fill out this field" 
                       placeholder=""
                       maxlength="200">${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.invalidMessage)}</textarea>
                   <div class="help-block with-errors red-txt"></div>
@@ -1286,19 +1286,19 @@
               </div>
               <div>
                 <span class="radio radio-info radio-inline pr-sm">
-                  <input type="radio" class="HeightRequired" id="measurementSystemLocal"
+                  <input type="radio" class="HeightRequired" id="measurementSystemLocal" data-error="Please fill out this field" 
                          value="Local"
                          name="questionReponseTypeBo.measurementSystem"  ${questionnairesStepsBo.questionReponseTypeBo.measurementSystem eq 'Local'? 'checked':''} >
                   <label for="measurementSystemLocal">Local</label>
                 </span>
                 <span class="radio radio-inline pr-sm">
-                  <input type="radio" class="HeightRequired" id="measurementSystemMetric"
+                  <input type="radio" class="HeightRequired" id="measurementSystemMetric" data-error="Please fill out this field" 
                          value="Metric"
                          name="questionReponseTypeBo.measurementSystem" ${questionnairesStepsBo.questionReponseTypeBo.measurementSystem eq 'Metric' ? 'checked':''} >
                   <label for="measurementSystemMetric">Metric</label>
                 </span>
                 <span class="radio radio-inline">
-                  <input type="radio" class="HeightRequired" id="measurementSystemUS" value="US"
+                  <input type="radio" class="HeightRequired" id="measurementSystemUS" value="US" data-error="Please fill out this field" 
                          name="questionReponseTypeBo.measurementSystem" ${empty questionnairesStepsBo.questionReponseTypeBo.measurementSystem || questionnairesStepsBo.questionReponseTypeBo.measurementSystem eq 'US' ? 'checked':''} >
                   <label for="measurementSystemUS">US</label>
                 </span>
@@ -1317,7 +1317,7 @@
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="1-20 characters"
                            id="heightPlaceholderId"
-                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.placeholder)}"
+                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.placeholder)}" data-error="Please fill out this field" 
                            maxlength="20">
                   </div>
                 </div>
@@ -1334,7 +1334,7 @@
                       title="This is the step size in the time picker, in minutes. Choose a value from the following set (1,2,3,4,5,6,10,12,15,20 & 30)."></span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control TimeintervalRequired wid90"
+                  <input type="text" class="form-control TimeintervalRequired wid90" data-error="Please fill out this field" 
                          id="timeIntervalStepId"
                          value="${questionnairesStepsBo.questionReponseTypeBo.step}"
                          onkeypress="return isNumber(event)" maxlength="2">
@@ -1350,7 +1350,7 @@
                       title="The default value to be seen by the participant on the time interval picker widget."></span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control TimeintervalRequired wid90 clock"
+                  <input type="text" class="form-control TimeintervalRequired wid90 clock" data-error="Please fill out this field" 
                          name="questionReponseTypeBo.defaultTime" id="timeIntervalDefaultId"
                          value="${questionnairesStepsBo.questionReponseTypeBo.defaultTime}">
                   <div class="help-block with-errors red-txt"></div>
@@ -1368,12 +1368,12 @@
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="NumericRequired" id="styleDecimal" value="Decimal"
+                  <input type="radio" class="NumericRequired" id="styleDecimal" value="Decimal" data-error="Please fill out this field" 
                          name="questionReponseTypeBo.style"  ${questionnairesStepsBo.questionReponseTypeBo.style eq 'Decimal' ? 'checked':''} >
                   <label for="styleDecimal">Decimal</label>
                 </span>
                 <span class="radio radio-inline">
-                  <input type="radio" class="NumericRequired" id="styleInteger" value="Integer"
+                  <input type="radio" class="NumericRequired" id="styleInteger" value="Integer" data-error="Please fill out this field" 
                          name="questionReponseTypeBo.style" ${questionnairesStepsBo.questionReponseTypeBo.style eq 'Integer' ? 'checked':''} >
                   <label for="styleInteger">Integer</label>
                 </span>
@@ -1458,13 +1458,13 @@
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="DateRequired DateStyleRequired" id="date"
+                  <input type="radio" class="DateRequired DateStyleRequired" id="date" data-error="Please fill out this field" 
                          value="Date"
                          name="questionReponseTypeBo.style"  ${questionnairesStepsBo.questionReponseTypeBo.style eq 'Date' ? 'checked':''} >
                   <label for="date">Date</label>
                 </span>
-                <span class="radio radio-inline">
-                  <input type="radio" class="DateRequired DateStyleRequired" id="dateTime"
+                <span class="radio radio-inline"> 
+                  <input type="radio" class="DateRequired DateStyleRequired" id="dateTime" data-error="Please fill out this field" 
                          value="Date-Time"
                          name="questionReponseTypeBo.style" ${questionnairesStepsBo.questionReponseTypeBo.style eq 'Date-Time' ? 'checked':''} >
                   <label for="dateTime">Date-Time</label>
@@ -1481,21 +1481,21 @@
               </div>
               <div class="form-group">
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="DateRequired DateRangeRequired"
+                  <input type="radio" class="DateRequired DateRangeRequired" data-error="Please fill out this field" 
                          id="untilCurrentDateId"
                          value="Until current date"
                          name="questionReponseTypeBo.selectionStyle"  ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Until current date' ? 'checked':''} >
                   <label for="untilCurrentDateId">Until current date</label>
                 </span>
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="DateRequired DateRangeRequired"
+                  <input type="radio" class="DateRequired DateRangeRequired" data-error="Please fill out this field" 
                          id="afterCurrentDateId"
                          value="After current date"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'After current date' ? 'checked':''} >
                   <label for="afterCurrentDateId">After current date</label>
                 </span>
                 <span class="radio radio-inline">
-                  <input type="radio" class="DateRequired DateRangeRequired" id="customDateId"
+                  <input type="radio" class="DateRequired DateRangeRequired" id="customDateId" data-error="Please fill out this field" 
                          value="Custom"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Custom' ? 'checked':''} >
                   <label for="customDateId">Custom</label>
@@ -1698,11 +1698,11 @@
                                name="questionResponseSubTypeList[${subtype.index}].responseSubTypeValueId"
                                value="${questionResponseSubType.responseSubTypeValueId}">
                         <div class="col-md-3 pl-none">
-                          <div class="form-group">
-                            <input type="text" class="form-control ValuepickerRequired"
+                          <div class="form-group"> 
+                            <input type="text" class="form-control ValuepickerRequired"  data-error="Please fill out this field"
                                    name="questionResponseSubTypeList[${subtype.index}].text"
                                    id="displayValPickText${subtype.index}"
-                                   value="${fn:escapeXml(questionResponseSubType.text)}"
+                                   value="${fn:escapeXml(questionResponseSubType.text)}" data-error="Please fill out this field" 
                                    maxlength="20">
                             <div class="help-block with-errors red-txt"></div>
                           </div>
@@ -1710,10 +1710,10 @@
                         <div class="col-md-4 pl-none">
                           <div class="form-group">
                             <input type="text"
-                                   class="form-control ValuepickerRequired valuePickerVal"
+                                   class="form-control ValuepickerRequired valuePickerVal" data-error="Please fill out this field"
                                    name="questionResponseSubTypeList[${subtype.index}].value"
                                    id="displayValPickValue${subtype.index}"
-                                   value="${fn:escapeXml(questionResponseSubType.value)}"
+                                   value="${fn:escapeXml(questionResponseSubType.value)}" data-error="Please fill out this field" 
                                    maxlength="50">
                             <div class="help-block with-errors red-txt"></div>
                           </div>
@@ -1734,10 +1734,10 @@
                     <div class="value-picker row form-group mb-xs" id="0">
                       <div class="col-md-3 pl-none">
                         <div class="form-group">
-                          <input type="text" class="form-control ValuepickerRequired"
+                          <input type="text" class="form-control ValuepickerRequired"   data-error="Please fill out this field"
                                  name="questionResponseSubTypeList[0].text"
                                  id="displayValPickText0"
-                                 value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].text)}"
+                                 value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].text)}" data-error="Please fill out this field"
                                  maxlength="20">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -1745,10 +1745,10 @@
                       <div class="col-md-4 pl-none">
                         <div class="form-group">
                           <input type="text"
-                                 class="form-control ValuepickerRequired valuePickerVal"
+                                 class="form-control ValuepickerRequired valuePickerVal" data-error="Please fill out this field"
                                  name="questionResponseSubTypeList[0].value"
                                  id="displayValPickValue0"
-                                 value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}"
+                                 value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}"  data-error="Please fill out this field" 
                                  maxlength="50">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -1766,10 +1766,10 @@
                     <div class="value-picker row form-group mb-xs" id="1">
                       <div class="col-md-3 pl-none">
                         <div class="form-group">
-                          <input type="text" class="form-control ValuepickerRequired"
+                          <input type="text" class="form-control ValuepickerRequired" data-error="Please fill out this field" 
                                  name="questionResponseSubTypeList[1].text"
                                  id="displayValPickText1"
-                                 value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].text)}"
+                                 value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].text)}" data-error="Please fill out this field"
                                  maxlength="20">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -1777,10 +1777,10 @@
                       <div class="col-md-4 pl-none">
                         <div class="form-group">
                           <input type="text"
-                                 class="form-control ValuepickerRequired valuePickerVal"
+                                 class="form-control ValuepickerRequired valuePickerVal" data-error="Please fill out this field" 
                                  name="questionResponseSubTypeList[1].value"
                                  id="displayValPickValue1"
-                                 value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}"
+                                 value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}" data-error="Please fill out this field"
                                  maxlength="50">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -1841,13 +1841,13 @@
                       <input type="hidden" class="form-control"
                              id="textScaleSubTypeValueId${subtype.index}"
                              name="questionResponseSubTypeList[${subtype.index}].responseSubTypeValueId"
-                             value="${questionResponseSubType.responseSubTypeValueId}">
+                             value="${questionResponseSubType.responseSubTypeValueId}" data-error="Please fill out this field" >
                       <div class="col-md-3 pl-none">
                         <div class="form-group">
-                          <input type="text" class="form-control TextscaleRequired"
+                          <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field" 
                                  name="questionResponseSubTypeList[${subtype.index}].text"
                                  id="displayTextSclText${subtype.index}"
-                                 value="${fn:escapeXml(questionResponseSubType.text)}"
+                                 value="${fn:escapeXml(questionResponseSubType.text)}" data-error="Please fill out this field" 
                                  maxlength="100">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -1855,10 +1855,10 @@
                       <div class="col-md-4 pl-none">
                         <div class="form-group">
                           <input type="text"
-                                 class="form-control TextscaleRequired textScaleValue"
+                                 class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field" 
                                  name="questionResponseSubTypeList[${subtype.index}].value"
                                  id="displayTextSclValue${subtype.index}"
-                                 value="${fn:escapeXml(questionResponseSubType.value)}"
+                                 value="${fn:escapeXml(questionResponseSubType.value)}" data-error="Please fill out this field" 
                                  maxlength="50">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -1917,17 +1917,17 @@
                   <div class="text-scale row" id="0">
                     <div class="col-md-3 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired"
+                        <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[0].text"
                                id="displayTextSclText0"
-                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].text)}"
+                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].text)}" data-error="Please fill out this field" 
                                maxlength="100">
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
                     <div class="col-md-4 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired textScaleValue"
+                        <input type="text" class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[0].value"
                                id="displayTextSclValue0"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}"
@@ -1968,20 +1968,20 @@
                   <div class="text-scale row" id="1">
                     <div class="col-md-3 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired"
+                        <input type="text" class="form-control TextscaleRequired" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[1].text"
                                id="displayTextSclText1"
-                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].text)}"
+                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].text)}" data-error="Please fill out this field" 
                                maxlength="100">
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
                     <div class="col-md-4 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control TextscaleRequired textScaleValue"
+                        <input type="text" class="form-control TextscaleRequired textScaleValue" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[1].value"
                                id="displayTextSclValue1"
-                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}"
+                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}" data-error="Please fill out this field" 
                                maxlength="50">
                         <div class="help-block with-errors red-txt"></div>
                       </div>
@@ -2045,13 +2045,13 @@
               </div>
               <div>
                 <span class="radio radio-info radio-inline p-45">
-                  <input type="radio" class="TextchoiceRequired" id="singleSelect" value="Single"
+                  <input type="radio" class="TextchoiceRequired" data-error="Please fill out this field" id="singleSelect" value="Single" 
                          name="questionReponseTypeBo.selectionStyle"  ${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
                   <label for="singleSelect">Single select</label>
                 </span>
                 <span class="radio radio-inline">
-                  <input type="radio" class="TextchoiceRequired" id="multipleSelect"
+                  <input type="radio" class="TextchoiceRequired" data-error="Please fill out this field" id="multipleSelect"
                          value="Multiple"
                          name="questionReponseTypeBo.selectionStyle" ${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple' ? 'checked':''}
                          onchange="getSelectionStyle(this);">
@@ -2083,10 +2083,10 @@
                           </span>
                         </div>
                         <div class="form-group mb-none">
-                          <input type="text" class="form-control TextchoiceRequired"
+                          <input type="text" class="form-control TextchoiceRequired" data-error="Please fill out this field" 
                                  name="questionResponseSubTypeList[${subtype.index}].text"
                                  id="displayTextChoiceText${subtype.index}"
-                                 value="${fn:escapeXml(questionResponseSubType.text)}"
+                                 value="${fn:escapeXml(questionResponseSubType.text)}" data-error="Please fill out this field" 
                                  maxlength="100">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -2099,10 +2099,10 @@
                         </div>
                         <div class="form-group mb-none">
                           <input type="text"
-                                 class="form-control TextchoiceRequired textChoiceVal"
+                                 class="form-control TextchoiceRequired textChoiceVal" data-error="Please fill out this field" 
                                  name="questionResponseSubTypeList[${subtype.index}].value"
                                  id="displayTextChoiceValue${subtype.index}"
-                                 value="${fn:escapeXml(questionResponseSubType.value)}"
+                                 value="${fn:escapeXml(questionResponseSubType.value)}" data-error="Please fill out this field" 
                                  maxlength="100">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -2115,7 +2115,7 @@
                         </div>
                         <div class="form-group mb-none dropdown-font">
                           <select name="questionResponseSubTypeList[${subtype.index}].exclusive"
-                                  id="exclusiveId${subtype.index}" index="${subtype.index}"
+                                  id="exclusiveId${subtype.index}" index="${subtype.index}" data-error="Please fill out this field" 
                                   title="select" data-error="Please choose one option"
                                   class="selectpicker textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextchoiceRequired</c:if>"
                                   <c:if
@@ -2165,7 +2165,7 @@
                           <div class="gray-xs-f mb-xs margin-des">Description(1 to 150 characters)</div>
                           <div class="form-group">
                             <textarea class="form-control"
-                                      name="questionResponseSubTypeList[${subtype.index}].description"
+                                      name="questionResponseSubTypeList[${subtype.index}].description" data-error="Please fill out this field" 
                                       id="displayTextChoiceDescription${subtype.index}"
                                       value="${fn:escapeXml(questionResponseSubType.description)}"
                                       maxlength="150">${fn:escapeXml(questionResponseSubType.description)}</textarea>
@@ -2195,10 +2195,10 @@
                         </span>
                       </div>
                       <div class="form-group mb-none">
-                        <input type="text" class="form-control TextchoiceRequired"
+                        <input type="text" class="form-control TextchoiceRequired" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[0].text"
                                id="displayTextChoiceText0"
-                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].text)}"
+                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].text)}" data-error="Please fill out this field" 
                                maxlength="100">
                         <div class="help-block with-errors red-txt"></div>
                       </div>
@@ -2210,10 +2210,10 @@
                         </span>
                       </div>
                       <div class="form-group mb-none">
-                        <input type="text" class="form-control TextchoiceRequired textChoiceVal"
+                        <input type="text" class="form-control TextchoiceRequired textChoiceVal" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[0].value"
                                id="displayTextChoiceValue0"
-                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}"
+                               value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}" data-error="Please fill out this field" 
                                maxlength="100">
                         <div class="help-block with-errors red-txt"></div>
                       </div>
@@ -2300,7 +2300,7 @@
                         </span>
                       </div>
                       <div class="form-group mb-none">
-                        <input type="text" class="form-control TextchoiceRequired"
+                        <input type="text" class="form-control TextchoiceRequired" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[1].text"
                                id="displayTextChoiceText1"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].text)}"
@@ -2315,7 +2315,7 @@
                         </span>
                       </div>
                       <div class="form-group mb-none">
-                        <input type="text" class="form-control TextchoiceRequired textChoiceVal"
+                        <input type="text" class="form-control TextchoiceRequired textChoiceVal" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[1].value"
                                id="displayTextChoiceValue1"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}"
@@ -2332,7 +2332,7 @@
                       <div class="form-group mb-none">
                         <select name="questionResponseSubTypeList[1].exclusive"
                                 id="exclusiveId1" index="1" title="select"
-                                data-error="Please choose one option"
+                                data-error="Please choose one option" 
                                 class="selectpicker textChoiceExclusive <c:if test="${questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Multiple'}">TextchoiceRequired</c:if>"
                                 <c:if
                                     test="${empty questionnairesStepsBo.questionReponseTypeBo.selectionStyle || questionnairesStepsBo.questionReponseTypeBo.selectionStyle eq 'Single'}">disabled</c:if>
@@ -2416,7 +2416,7 @@
                       </span>
                     </div>
                     <div class="form-group mb-none">
-                      <input type="text" class="form-control TextchoiceRequired"
+                      <input type="text" class="form-control TextchoiceRequired" data-error="Please fill out this field" 
                              name="questionReponseTypeBo.otherText" id=""
                              value="${questionnairesStepsBo.questionReponseTypeBo.otherText}"
                              maxlength="100">
@@ -2430,7 +2430,7 @@
                       </span>
                     </div>
                     <div class="form-group mb-none">
-                      <input type="text" class="form-control TextchoiceRequired"
+                      <input type="text" class="form-control TextchoiceRequired" data-error="Please fill out this field" 
                              name="questionReponseTypeBo.otherValue" id=""
                              value="${questionnairesStepsBo.questionReponseTypeBo.otherValue}"
                              maxlength="100">
@@ -2621,7 +2621,7 @@
                   <c:forEach items="${questionnairesStepsBo.questionResponseSubTypeList}"
                              var="questionResponseSubType" varStatus="subtype">
                     <div class="image-choice row" id="${subtype.index}">
-                      <input type="hidden" class="form-control"
+                      <input type="hidden" class="form-control" data-error="Please fill out this field" 
                              id="imageChoiceSubTypeValueId${subtype.index}"
                              name="questionResponseSubTypeList[${subtype.index}].responseSubTypeValueId"
                              value="${questionResponseSubType.responseSubTypeValueId}">
@@ -2630,7 +2630,7 @@
                           <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                             <div class="thumb-img">
                               <img
-                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.image)}"
+                                  src="${questionResponseSubType.signedImage}"
                                   onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                   class="imageChoiceWidth"/>
                             </div>
@@ -2640,9 +2640,9 @@
                               class="dis-none upload-image <c:if test="${empty questionResponseSubType.image}">ImagechoiceRequired</c:if>"
                               data-imageId='${subtype.index}'
                               name="questionResponseSubTypeList[${subtype.index}].imageFile"
-                              id="imageFileId${subtype.index}" type="file"
+                              id="imageFileId${subtype.index}" type="file" data-error="Please fill out this field" 
                               accept=".png, .jpg, .jpeg" onchange="readURL(this);"
-                              value="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.image)}">
+                              value="${questionResponseSubType.signedImage}">
                           <input type="hidden"
                                  name="questionResponseSubTypeList[${subtype.index}].image"
                                  id="imagePathId${subtype.index}"
@@ -2655,7 +2655,7 @@
                           <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                             <div class="thumb-img">
                               <img
-                                  src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.selectedImage)}"
+                                  src="${questionResponseSubType.signedSelectedImage}"
                                   onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                   class="imageChoiceWidth"/>
                             </div>
@@ -2666,7 +2666,7 @@
                               class="dis-none upload-image <c:if test="${empty questionResponseSubType.selectedImage}">ImagechoiceRequired</c:if>"
                               data-imageId='${subtype.index}'
                               name="questionResponseSubTypeList[${subtype.index}].selectImageFile"
-                              id="selectImageFileId${subtype.index}" type="file"
+                              id="selectImageFileId${subtype.index}" type="file" data-error="Please fill out this field" 
                               accept=".png, .jpg, .jpeg" onchange="readURL(this);">
                           <input type="hidden"
                                  name="questionResponseSubTypeList[${subtype.index}].selectedImage"
@@ -2680,7 +2680,7 @@
                           <input type="text" class="form-control ImagechoiceRequired"
                                  name="questionResponseSubTypeList[${subtype.index}].text"
                                  id="displayImageChoiceText${subtype.index}"
-                                 value="${fn:escapeXml(questionResponseSubType.text)}"
+                                 value="${fn:escapeXml(questionResponseSubType.text)}" data-error="Please fill out this field" 
                                  maxlength="100">
                           <div class="help-block with-errors red-txt"></div>
                         </div>
@@ -2689,7 +2689,7 @@
                         <div class="form-group">
                           <input type="text"
                                  class="form-control ImagechoiceRequired imageChoiceVal"
-                                 name="questionResponseSubTypeList[${subtype.index}].value"
+                                 name="questionResponseSubTypeList[${subtype.index}].value" data-error="Please fill out this field" 
                                  id="displayImageChoiceValue${subtype.index}"
                                  value="${fn:escapeXml(questionResponseSubType.value)}"
                                  maxlength="50">
@@ -2738,7 +2738,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].image)}"
+                                src="${questionnairesStepsBo.questionResponseSubTypeList[0].signedImage}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2754,7 +2754,7 @@
                         <input
                             class="dis-none upload-image <c:if test="${empty questionnairesStepsBo.questionResponseSubTypeList[0].image}">ImagechoiceRequired</c:if>"
                             data-imageId='0' name="questionResponseSubTypeList[0].imageFile"
-                            id="imageFileId0" type="file" accept=".png, .jpg, .jpeg"
+                            id="imageFileId0" type="file" accept=".png, .jpg, .jpeg" data-error="Please fill out this field" 
                             onchange="readURL(this);">
                         <input type="hidden" name="questionResponseSubTypeList[0].image"
                                id="imagePathId0"
@@ -2767,7 +2767,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage)}"
+                                src="${questionnairesStepsBo.questionResponseSubTypeList[0].signedSelectedImage}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2784,7 +2784,7 @@
                             class="dis-none upload-image <c:if test="${empty questionnairesStepsBo.questionResponseSubTypeList[0].selectedImage}">ImagechoiceRequired</c:if>"
                             data-imageId='0'
                             name="questionResponseSubTypeList[0].selectImageFile"
-                            id="selectImageFileId0" type="file" accept=".png, .jpg, .jpeg"
+                            id="selectImageFileId0" type="file" accept=".png, .jpg, .jpeg" data-error="Please fill out this field" 
                             onchange="readURL(this);">
                         <input type="hidden" name="questionResponseSubTypeList[0].selectedImage"
                                id="selectImagePathId0"
@@ -2794,7 +2794,7 @@
                     </div>
                     <div class="col-md-2 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control ImagechoiceRequired"
+                        <input type="text" class="form-control ImagechoiceRequired" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[0].text"
                                id="displayImageChoiceText0"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].text)}"
@@ -2805,7 +2805,7 @@
                     <div class="col-md-2 col-lg-2 pl-none">
                       <div class="form-group">
                         <input type="text"
-                               class="form-control ImagechoiceRequired imageChoiceVal"
+                               class="form-control ImagechoiceRequired imageChoiceVal" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[0].value"
                                id="displayImageChoiceValue0"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[0].value)}"
@@ -2848,7 +2848,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].image)}"
+                                src="${questionnairesStepsBo.questionResponseSubTypeList[1].signedImage}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2864,7 +2864,7 @@
                         <input
                             class="dis-none upload-image <c:if test="${empty questionnairesStepsBo.questionResponseSubTypeList[1].image}"> ImagechoiceRequired</c:if>"
                             type="file" data-imageId='1' accept=".png, .jpg, .jpeg"
-                            name="questionResponseSubTypeList[1].imageFile" id="imageFileId1"
+                            name="questionResponseSubTypeList[1].imageFile" id="imageFileId1" data-error="Please fill out this field" 
                             onchange="readURL(this);">
                         <input type="hidden" name="questionResponseSubTypeList[1].image"
                                id="imagePathId1"
@@ -2877,7 +2877,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage)}"
+                                src="${questionnairesStepsBo.questionResponseSubTypeList[1].signedSelectedImage}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2893,7 +2893,7 @@
                         <input
                             class="dis-none upload-image <c:if test="${empty questionnairesStepsBo.questionResponseSubTypeList[1].selectedImage}">ImagechoiceRequired</c:if>"
                             type="file" data-imageId='1' accept=".png, .jpg, .jpeg"
-                            name="questionResponseSubTypeList[1].selectImageFile"
+                            name="questionResponseSubTypeList[1].selectImageFile" data-error="Please fill out this field" 
                             id="selectImageFileId1" onchange="readURL(this);">
                         <input type="hidden" name="questionResponseSubTypeList[1].selectedImage"
                                id="selectImagePathId1"
@@ -2903,7 +2903,7 @@
                     </div>
                     <div class="col-md-2 pl-none">
                       <div class="form-group">
-                        <input type="text" class="form-control ImagechoiceRequired"
+                        <input type="text" class="form-control ImagechoiceRequired" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[1].text"
                                id="displayImageChoiceText1"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].text)}"
@@ -2914,7 +2914,7 @@
                     <div class="col-md-2 col-lg-2 pl-none">
                       <div class="form-group">
                         <input type="text"
-                               class="form-control ImagechoiceRequired imageChoiceVal"
+                               class="form-control ImagechoiceRequired imageChoiceVal" data-error="Please fill out this field" 
                                name="questionResponseSubTypeList[1].value"
                                id="displayImageChoiceValue1"
                                value="${fn:escapeXml(questionnairesStepsBo.questionResponseSubTypeList[1].value)}"
@@ -2988,7 +2988,7 @@
                                value="true" id="conditionDestinationValueId0">
                         <div class="form-group sm-selection col-md-4 p-none">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
-                                  id="conditionDestinationId0"
+                                  id="conditionDestinationId0" data-error="Please fill out this field" 
                                   class="selectpicker conditionalBranchingRequired">
                             <option value="" selected>select</option>
                             <c:forEach items="${destinationStepList}" var="destinationStep">
@@ -3010,7 +3010,7 @@
                                value="false" id="conditionDestinationValueId1">
                         <div class="form-group sm-selection col-md-4 p-none">
                           <select name="questionResponseSubTypeList[1].destinationStepId"
-                                  id="conditionDestinationId1"
+                                  id="conditionDestinationId1" data-error="Please fill out this field" 
                                   class="selectpicker conditionalBranchingRequired">
                             <option value="" selected>select</option>
                             <c:forEach items="${destinationStepList}" var="destinationStep">
@@ -3052,7 +3052,7 @@
                           <div class="numeric__define gray__t">
                             <span>V1</span>
                             <div class="form-group sm-selection">
-                              <select class="selectpicker conditionalBranchingRequired"
+                              <select class="selectpicker conditionalBranchingRequired" data-error="Please fill out this field" 
                                       name="questionConditionBranchBoList[0].inputTypeValue"
                                       id="inputTypeValueId0" index="1" count="0"
                                       onchange='selectFunction(this);'>
@@ -3093,7 +3093,7 @@
                               <div class="form-group sm-selection">
                                 <select class="selectpicker conditionalBranchingRequired"
                                         name="questionConditionBranchBoList[0].questionConditionBranchBos[0].inputType"
-                                        id="inputTypeId2" index="2" count=0
+                                        id="inputTypeId2" index="2" count=0 data-error="Please fill out this field" 
                                         onchange="addFunctions(this);">
                                   <option value="" selected>Select</option>
                                   <option
@@ -3135,7 +3135,7 @@
                             <div class="numeric__row display__flex__base-webkit" id="3">
                               <span>V3 =</span>
                               <div class="form-group sm-selection">
-                                <select class="selectpicker conditionalBranchingRequired"
+                                <select class="selectpicker conditionalBranchingRequired" data-error="Please fill out this field" 
                                         name="questionConditionBranchBoList[0].questionConditionBranchBos[1].inputType"
                                         id="inputTypeId3" index="3" count=1
                                         onchange="addFunctions(this);">
@@ -3189,7 +3189,7 @@
                               <div class="numeric__define gray__t">
                                 <span>V${questionConditionBranchBo.sequenceNo}</span>
                                 <div class="form-group sm-selection">
-                                  <select class="selectpicker conditionalBranchingRequired"
+                                  <select class="selectpicker conditionalBranchingRequired" data-error="Please fill out this field" 
                                           name="questionConditionBranchBoList[${status.index}].inputTypeValue"
                                           id="inputTypeValueId${status.index}"
                                           count="${status.index}"
@@ -3257,7 +3257,7 @@
                                        id="${questionConditionsSubBranchBo.sequenceNo}">
                                     <span>V${questionConditionsSubBranchBo.sequenceNo} =</span>
                                     <div class="form-group sm-selection">
-                                      <select class="selectpicker conditionalBranchingRequired"
+                                      <select class="selectpicker conditionalBranchingRequired" data-error="Please fill out this field" 
                                               name="questionConditionBranchBoList[${status.index}].questionConditionBranchBos[${subStatus.index}].inputType"
                                               id="inputTypeId${questionConditionsSubBranchBo.sequenceNo}"
                                               index="${questionConditionsSubBranchBo.sequenceNo}"
@@ -3326,7 +3326,7 @@
                                              id="constantValId${questionConditionsSubBranchBo.sequenceNo}"
                                              index="${questionConditionsSubBranchBo.sequenceNo}"
                                              class="constant form-control <c:if test="${questionConditionsSubBranchBo.inputType eq 'C'}">conditionalBranchingRequired</c:if> <c:if test="${questionConditionsSubBranchBo.inputType ne 'C'}">add_var_hide</c:if>"
-                                             value="${questionConditionsSubBranchBo.inputTypeValue}"
+                                             value="${questionConditionsSubBranchBo.inputTypeValue}" data-error="Please fill out this field" 
                                              onkeypress="return isNumberKey(event)"/>
                                       <div class="help-block with-errors red-txt"></div>
                                     </div>
@@ -4302,11 +4302,11 @@
               if (parseInt(stepsCount) < 1) {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter  a smaller step size."));
+                    "Please enter  a smaller step size"));
               } else {
                 $("#displayStepsCount").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Please enter a larger step size."));
+                    "Please enter a larger step size"));
               }
 
             }
@@ -4634,7 +4634,7 @@
           $('#timeIntervalDefaultId').parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-               "Please select a non-zero Duration value."));
+               "Please select a non-zero Duration value"));
         } else {
           durationFlag = true;
           $('#timeIntervalDefaultId').parent().find(".help-block").empty();
@@ -5655,7 +5655,7 @@
               $("#questionResponseTypeId").val(questionResponseId);
               $("#responseQuestionId").val(questionId);
 
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
 
@@ -5693,7 +5693,7 @@
           $("#stepShortTitle").parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "This is a required field."));
+                "This is a required field"));
           $('.stepLevel a').tab('show');
         }
       }
@@ -5773,7 +5773,7 @@
           "	<div class='col-md-3 pl-none'>" +
           "   <div class='form-group'>" +
           "      <input type='text' class='form-control' name='questionResponseSubTypeList[" + count
-          + "].text' id='displayValPickText" + count + "' required maxlength='20'>" +
+          + "].text' id='displayValPickText" + count + "' required data-error='Please fill out this field'  maxlength='20'>" +
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
           "</div>" +
@@ -5781,7 +5781,7 @@
           "   <div class='form-group'>" +
           "      <input type='text' class='form-control valuePickerVal' name='questionResponseSubTypeList["
           + count + "].value' id='displayValPickValue" + count
-          + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Value picker&#34;,function(){})';>"
+          + "' required data-error='Please fill out this field' maxlength='50' onblur='validateForUniqueValue(this,&#34;Value picker&#34;,function(){})';>"
           +
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
@@ -5834,7 +5834,7 @@
         var newTextScale = "<div class='text-scale row' id=" + scaleCount + ">" +
             "	<div class='col-md-3 pl-none'>" +
             "    <div class='form-group'>" +
-            "      <input type='text' class='form-control TextscaleRequired' name='questionResponseSubTypeList["
+            "      <input type='text' class='form-control TextscaleRequired' data-error='Please fill out this field'  name='questionResponseSubTypeList["
             + scaleCount + "].text' id='displayTextSclText" + scaleCount
             + "'+  maxlength='15' required>" +
             "      <div class='help-block with-errors red-txt'></div>" +
@@ -5842,7 +5842,7 @@
             "</div>" +
             " <div class='col-md-4 pl-none'>" +
             "    <div class='form-group'>" +
-            "       <input type='text' class='form-control TextscaleRequired textScaleValue' class='form-control' name='questionResponseSubTypeList["
+            "       <input type='text' class='form-control TextscaleRequired textScaleValue' data-error='Please fill out this field'  class='form-control' name='questionResponseSubTypeList["
             + scaleCount + "].value' id='displayTextSclValue" + scaleCount
             + "' maxlength='50' required onblur='validateForUniqueValue(this,&#34;Text scale&#34;,function(){});'>"
             +
@@ -5939,7 +5939,7 @@
           "   <div class='form-group mb-none'>" +
           "   <input type='text' class='form-control TextchoiceRequired' name='questionResponseSubTypeList["
           + choiceCount + "].text' id='displayTextChoiceText" + choiceCount
-          + "'  maxlength='100' required>" +
+          + "'  maxlength='100' required data-error='Please fill out this field'>" +
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
           "</div>" +
@@ -5949,7 +5949,7 @@
           "   <div class='form-group mb-none'>" +
           "   <input type='text' class='form-control TextchoiceRequired textChoiceVal' name='questionResponseSubTypeList["
           + choiceCount + "].value' id='displayTextChoiceValue" + choiceCount
-          + "'  maxlength='100' required onblur='validateForUniqueValue(this,&#34;Text choice&#34;,function(){});'>"
+          + "'  maxlength='100' required data-error='Please fill out this field' onblur='validateForUniqueValue(this,&#34;Text choice&#34;,function(){});'>"
           +
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
@@ -5961,11 +5961,11 @@
       if (selectionStyle == 'Single') {
         newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
             + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
-            + " title='select' data-error='Please choose one option' class='selectpicker TextchoiceRequired textChoiceExclusive' disabled onchange='setExclusiveData(this);'>";
+            + " title='select' data-error='Please choose one option' class='selectpicker TextchoiceRequired textChoiceExclusive' data-error='Please fill out this field' disabled onchange='setExclusiveData(this);'>";
       } else {
         newTextChoice += "<select name='questionResponseSubTypeList[" + choiceCount
             + "].exclusive' id='exclusiveId" + choiceCount + "' index=" + choiceCount
-            + " title='select' data-error='Please choose one option' class='selectpicker TextchoiceRequired textChoiceExclusive' required onchange='setExclusiveData(this);'>";
+            + " title='select' data-error='Please choose one option' class='selectpicker TextchoiceRequired textChoiceExclusive' data-error='Please fill out this field' required onchange='setExclusiveData(this);'>";
       }
       newTextChoice += "<option value='Yes'>Yes</option>" +
           "<option value='No' >No</option>" +
@@ -6070,10 +6070,10 @@
           "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
           "         <div class='textLabelimagePathId" + imageCount + "'>Upload</div>" +
           "      </div>" +
-          "      <input class='dis-none upload-image ImagechoiceRequired' data-imageId='"
+          "      <input class='dis-none upload-image ImagechoiceRequired' data-error='Please fill out this field' data-imageId='"
           + imageCount + "' name='questionResponseSubTypeList[" + imageCount
           + "].imageFile' id='imageFileId" + imageCount
-          + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required>" +
+          + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required data-error='Please fill out this field'>" +
           "		<input type='hidden' name='questionResponseSubTypeList[" + imageCount
           + "].image' id='imagePathId" + imageCount + "' >" +
           "      <div class='help-block with-errors red-txt'></div>" +
@@ -6085,10 +6085,10 @@
           "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
           "         <div class='textLabelselectImagePathId" + imageCount + "'>Upload</div>" +
           "      </div>" +
-          "      <input class='dis-none upload-image ImagechoiceRequired' data-imageId='"
+          "      <input class='dis-none upload-image ImagechoiceRequired' data-error='Please fill out this field'data-imageId='"
           + imageCount + "' name='questionResponseSubTypeList[" + imageCount
           + "].selectImageFile' id='selectImageFileId" + imageCount
-          + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required>" +
+          + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required data-error='Please fill out this field'>" +
           "		<input type='hidden' name='questionResponseSubTypeList[" + imageCount
           + "].selectedImage' id='selectImagePathId" + imageCount + "'>" +
           "      <div class='help-block with-errors red-txt'></div>" +
@@ -6096,7 +6096,7 @@
           "</div>" +
           "<div class='col-md-2 pl-none'>" +
           "   <div class='form-group'>" +
-          "      <input type='text' class='form-control ImagechoiceRequired' name='questionResponseSubTypeList["
+          "      <input type='text' class='form-control ImagechoiceRequired' data-error='Please fill out this field' name='questionResponseSubTypeList["
           + imageCount + "].text' id='displayImageChoiceText" + imageCount
           + "' required maxlength='100'>" +
           "      <div class='help-block with-errors red-txt'></div>" +
@@ -6106,7 +6106,7 @@
           "   <div class='form-group'>" +
           "      <input type='text' class='form-control ImagechoiceRequired imageChoiceVal' name='questionResponseSubTypeList["
           + imageCount + "].value' id='displayImageChoiceValue" + imageCount
-          + "' required maxlength='50' onblur='validateForUniqueValue(this,&#34;Image choice&#34;,function(){});'>"
+          + "' required data-error='Please fill out this field' maxlength='50' onblur='validateForUniqueValue(this,&#34;Image choice&#34;,function(){});'>"
           +
           "      <div class='help-block with-errors red-txt'></div>" +
           "   </div>" +
@@ -6205,7 +6205,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     shortTitle
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 callback(false);
               }
             },
@@ -6254,7 +6254,7 @@
                 $("#statShortNameId").parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     short_title
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 if (callback)
                   callback(false);
 
@@ -6483,7 +6483,7 @@
             "   <div class='form-group sm-selection'>" +
             "      <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
             + rowCount + "].inputTypeValue' id='inputTypeValueId" + rowCount + "' index='" + index
-            + "' count='" + rowCount + "' onchange='selectFunction(this);' required>" +
+            + "' count='" + rowCount + "' onchange='selectFunction(this);' required data-error='Please fill out this field'>" +
             "         <option value=''  selected>Select</option>";
         if (parent_input == '&&' || parent_input == '||') {
           addFunction += "         <option value='>' >&gt;</option>" +
@@ -6507,7 +6507,7 @@
             + "'>" +
             "      <span>V" + (parseInt(v) + 1) + " =</span>" +
             "      <div class='form-group sm-selection' style=''>" +
-            "         <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
+            "         <select class='selectpicker conditionalBranchingRequired' data-error='Please fill out this field' name='questionConditionBranchBoList["
             + rowCount + "].questionConditionBranchBos[0].inputType' id='inputTypeId" + (parseInt(v)
                 + 1) + "' index='" + (parseInt(v) + 1)
             + "' count='0' onchange='addFunctions(this);' required>" +
@@ -6545,7 +6545,7 @@
             + "'>" +
             "      <span>V" + (parseInt(v) + 2) + " =</span>" +
             "      <div class='form-group sm-selection' style=''>" +
-            "         <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
+            "         <select class='selectpicker conditionalBranchingRequired' data-error='Please fill out this field' name='questionConditionBranchBoList["
             + rowCount + "].questionConditionBranchBos[1].inputType' id='inputTypeId" + (parseInt(v)
                 + 2) + "' index='" + (parseInt(v) + 2)
             + "' count='1' onchange='addFunctions(this);' required>" +
@@ -6636,7 +6636,7 @@
         if (!isValid) {
 
           $("#inputTypeErrorValueId" + index).show();
-          $("#inputTypeErrorValueId" + index).text('RDE (x) should be used only once.');
+          $("#inputTypeErrorValueId" + index).text('RDE (x) should be used only once');
         } else {
           $(".numeric__row").each(function (j) {
             var id = $(this).attr("id");
@@ -6793,7 +6793,7 @@
       var addVar = "<div class='numeric__row display__flex__base' id='" + (parseInt(v)) + "'>" +
           "   <span>V" + (parseInt(v)) + " =</span>" +
           "   <div class='form-group sm-selection' style=''>" +
-          "      <select class='selectpicker conditionalBranchingRequired' name='questionConditionBranchBoList["
+          "      <select class='selectpicker conditionalBranchingRequired' data-error='Please fill out this field' name='questionConditionBranchBoList["
           + index + "].questionConditionBranchBos[" + count + "].inputType' id='inputTypeId"
           + (parseInt(v)) + "' index='" + (parseInt(v)) + "' count='" + count
           + "' onchange='addFunctions(this);' required>" +
@@ -6895,7 +6895,7 @@
           if (!isSingle) {
             $('#alertMsg').show();
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-                "RDE (x) should be used only once.");
+                "RDE (x) should be used only once");
             setTimeout(hideDisplayMessage, 5000);
           }
         });
@@ -7136,7 +7136,7 @@
           $(thisAttr).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               anchordateText
-              + " has already been used in the past."));
+              + " has already been used in the past"));
           callback(false);
         } else {
           $(thisAttr).parent().removeClass("has-danger").removeClass("has-error");
@@ -7168,7 +7168,7 @@
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     anchordateText
-                    + " has already been used in the past."));
+                    + " has already been used in the past"));
                 callback(false);
               }
             },
