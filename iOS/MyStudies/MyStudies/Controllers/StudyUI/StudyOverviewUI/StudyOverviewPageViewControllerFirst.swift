@@ -33,6 +33,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
   @IBOutlet var buttonVisitWebsite: UIButton?
   @IBOutlet var labelTitle: UILabel?
   @IBOutlet var labelDescription: UILabel?
+  @IBOutlet var textViewDescription: UITextView?
   @IBOutlet var imageViewStudy: UIImageView?
 
   // MARK: - Properties
@@ -58,6 +59,8 @@ class StudyOverviewViewControllerFirst: UIViewController {
     } else {
       buttonWatchVideo?.isHidden = true
     }
+    textViewDescription?.isEditable = false
+    UITextView.appearance().linkTextAttributes = [.foregroundColor: UIColor.blue]
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -104,11 +107,21 @@ class StudyOverviewViewControllerFirst: UIViewController {
       )
 
       if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
-        self.labelDescription?.attributedText = attributedText
+        let detailText = overviewSectionDetail.text ?? ""
+        let regex = "<[^>]+>"
+        self.textViewDescription?.dataDetectorTypes = [.link, .phoneNumber]
+        self.textViewDescription?.text = detailText
+        if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+          self.textViewDescription?.text = detailText
+        } else {
+          self.textViewDescription?.attributedText =
+            detailText.stringByDecodingHTMLEntities.htmlToAttributedString
+        }
       } else {
-        self.labelDescription?.text = ""
+        self.textViewDescription?.text = ""
       }
-      self.labelDescription?.textAlignment = .center
+      self.textViewDescription?.textAlignment = .center
+      self.textViewDescription?.textColor = .white
     }
 
     setNeedsStatusBarAppearanceUpdate()
