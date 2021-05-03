@@ -343,7 +343,7 @@
                   <div class="add_notify_option">
                     <div class="form-group">
                       <input type="text" class="form-control requireClass"
-                             name="taskAttributeValueBos[7].titleChat" maxlength="30"/>
+                             name="taskAttributeValueBos[7].titleChat" maxlength="30" data-error="Please fill out this field" />
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
@@ -1147,8 +1147,8 @@
                     <div class="add_notify_option">
                       <div class="form-group">
                         <input type="text" class="form-control requireClass" id="lineChartId" data-error="Please fill out this field" 
-                               name="taskAttributeValueBos[7].titleChat" maxlength="30"
-                               value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
+                               name="taskAttributeValueBos[7].titleChat" maxlength="30" 
+                               value="${fn:escapeXml(taskValueAttributeBo.titleChat)}" />
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
