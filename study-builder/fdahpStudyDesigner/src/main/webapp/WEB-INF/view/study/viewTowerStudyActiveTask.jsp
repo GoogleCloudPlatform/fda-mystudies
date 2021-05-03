@@ -439,7 +439,7 @@
                 <div class="add_notify_option form-group mb-none">
                   <select
                       class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
-                      id="chartId" name="taskAttributeValueBos[1].timeRangeChart" title="Select">
+                      id="chartId" data-error="Please fill out this field"  name="taskAttributeValueBos[1].timeRangeChart" title="Select">
                     <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                       <option
                           value="${timeRangeAttr}" ${fn:escapeXml(taskValueAttributeBo.timeRangeChart) eq fn:escapeXml(timeRangeAttr)?'selected':''}>${timeRangeAttr}</option>
@@ -487,7 +487,7 @@
                 </div>
                 <div class="add_notify_option">
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass" id="lineChartId"
+                    <input type="text" class="form-control requireClass" id="lineChartId" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[1].titleChat" maxlength="30"
                            value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
                     <div class="help-block with-errors red-txt"></div>

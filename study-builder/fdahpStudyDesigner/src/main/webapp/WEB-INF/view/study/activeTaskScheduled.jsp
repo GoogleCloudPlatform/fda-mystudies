@@ -2207,7 +2207,7 @@
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
         "  <input id='time" + count + "' type='text' required name='activeTaskFrequenciesList["
         + count
-        + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>"
+        + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' data-error='Please fill out this field'  placeholder='00:00' onclick='timep(this.id);'/>"
         +
         "<span class='help-block with-errors red-txt'></span>" +
         " </span>" +

@@ -297,7 +297,7 @@
                   <div class="add_notify_option form-group">
                     <select
                         class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
-                        id="chartId" name="taskAttributeValueBos[7].timeRangeChart"
+                        id="chartId" name="taskAttributeValueBos[7].timeRangeChart" data-error="Please fill out this field" 
                         title="Select">
                       <option value="" disabled>Select</option>
                       <c:forEach items="${timeRangeList}" var="timeRangeAttr">
@@ -373,9 +373,9 @@
                 <div class="add_notify_option">
                   <div class="form-group statShortTitleClass">
                     <input autofocus="autofocus" type="text" custAttType="cust"
-                           class="form-control requireClass shortTitleStatCls"
+                           class="form-control requireClass shortTitleStatCls" 
                            id="static1" exist="" dbid=""
-                           name="taskAttributeValueBos[7].identifierNameStat"
+                           name="taskAttributeValueBos[7].identifierNameStat" data-error="Please fill out this field" 
                            maxlength="20"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -392,7 +392,7 @@
                   </span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control requireClass"
+                  <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                          name="taskAttributeValueBos[7].displayNameStat" maxlength="50"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -408,7 +408,7 @@
                 </div>
                 <div class="add_notify_option">
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[7].displayUnitStat"
                            maxlength="15"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -423,7 +423,7 @@
                 </div>
                 <div class="add_notify_option form-group">
                   <select
-                      class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                      class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                       title="Select" name="taskAttributeValueBos[7].uploadTypeStat">
                     <c:forEach items="${statisticImageList}" var="statisticImage">
                       <option
@@ -440,7 +440,7 @@
                   <span class="requiredStar"> *</span>
                 </div>
                 <div class="form-group">
-                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                           title="Select"
                           name="taskAttributeValueBos[7].formulaAppliedStat">
                     <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -487,7 +487,7 @@
                   </div>
                   <div class="add_notify_option form-group">
                     <select
-                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
+                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please select an item in the list"
                         id="chartId1" name="taskAttributeValueBos[8].timeRangeChart"
                         title="Select">
                       <option value="" disabled>Select</option>
@@ -533,7 +533,7 @@
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[8].titleChat" maxlength="30"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -564,9 +564,9 @@
                 <div class="add_notify_option">
                   <div class="form-group statShortTitleClass">
                     <input autofocus="autofocus" type="text" custAttType="cust"
-                           class="form-control requireClass shortTitleStatCls"
+                           class="form-control requireClass shortTitleStatCls" 
                            id="static2" exist="" dbid=""
-                           name="taskAttributeValueBos[8].identifierNameStat"
+                           name="taskAttributeValueBos[8].identifierNameStat" data-error="Please fill out this field" 
                            maxlength="20"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -583,7 +583,7 @@
                   </span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control requireClass"
+                  <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                          name="taskAttributeValueBos[8].displayNameStat" maxlength="50"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -599,7 +599,7 @@
                 </div>
                 <div class="add_notify_option">
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[8].displayUnitStat"
                            maxlength="15"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -614,7 +614,7 @@
                 </div>
                 <div class="add_notify_option form-group">
                   <select
-                      class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                      class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                       title="Select" name="taskAttributeValueBos[8].uploadTypeStat">
                     <c:forEach items="${statisticImageList}" var="statisticImage">
                       <option
@@ -631,7 +631,7 @@
                   <span class="requiredStar"> *</span>
                 </div>
                 <div class="form-group">
-                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                           title="Select"
                           name="taskAttributeValueBos[8].formulaAppliedStat">
                     <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -678,7 +678,7 @@
                   </div>
                   <div class="add_notify_option form-group">
                     <select
-                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
+                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please select an item in the list"
                         id="chartId2" name="taskAttributeValueBos[9].timeRangeChart"
                         title="Select">
                       <option value="" disabled>Select</option>
@@ -724,7 +724,7 @@
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[9].titleChat" maxlength="30"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -757,7 +757,7 @@
                     <input autofocus="autofocus" type="text" custAttType="cust"
                            class="form-control requireClass shortTitleStatCls"
                            id="static3" exist="" dbid=""
-                           name="taskAttributeValueBos[9].identifierNameStat"
+                           name="taskAttributeValueBos[9].identifierNameStat" data-error="Please fill out this field" 
                            maxlength="20"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -774,7 +774,7 @@
                   </span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control requireClass"
+                  <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                          name="taskAttributeValueBos[9].displayNameStat" maxlength="50"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -790,7 +790,7 @@
                 </div>
                 <div class="add_notify_option">
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[9].displayUnitStat"
                            maxlength="15"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -805,7 +805,7 @@
                 </div>
                 <div class="add_notify_option form-group">
                   <select
-                      class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                      class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                       title="Select" name="taskAttributeValueBos[9].uploadTypeStat">
                     <c:forEach items="${statisticImageList}" var="statisticImage">
                       <option
@@ -822,7 +822,7 @@
                   <span class="requiredStar"> *</span>
                 </div>
                 <div class="form-group">
-                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                           title="Select"
                           name="taskAttributeValueBos[9].formulaAppliedStat">
                     <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -1098,8 +1098,8 @@
                     </div>
                     <div class="add_notify_option form-group mb-none">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
-                          id="chartId" name="taskAttributeValueBos[7].timeRangeChart"
+                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass" data-error="Please select an item in the list"
+                          id="chartId" data-error="Please fill out this field"  name="taskAttributeValueBos[7].timeRangeChart"
                           title="Select">
                         <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                           <option
@@ -1146,7 +1146,7 @@
                     </div>
                     <div class="add_notify_option">
                       <div class="form-group">
-                        <input type="text" class="form-control requireClass" id="lineChartId"
+                        <input type="text" class="form-control requireClass" id="lineChartId" data-error="Please fill out this field" 
                                name="taskAttributeValueBos[7].titleChat" maxlength="30"
                                value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
                         <div class="help-block with-errors red-txt"></div>
@@ -1186,7 +1186,7 @@
                                exist="${taskValueAttributeBo.useForStatistic==true?'Y':'N'}"
                                dbid="${taskValueAttributeBo.attributeValueId}"
                                custAttType="cust" id="identifierId1"
-                               name="taskAttributeValueBos[7].identifierNameStat"
+                               name="taskAttributeValueBos[7].identifierNameStat" data-error="Please fill out this field" 
                                maxlength="20"
                                value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}"
                             <c:if
@@ -1205,7 +1205,7 @@
                       </span>
                     </div>
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass"  data-error="Please fill out this field" 
                              name="taskAttributeValueBos[7].displayNameStat" maxlength="50"
                              value="${fn:escapeXml(taskValueAttributeBo.displayNameStat)}"/>
                       <div class="help-block with-errors red-txt"></div>
@@ -1222,7 +1222,7 @@
                     </div>
                     <div class="add_notify_option">
                       <div class="form-group">
-                        <input type="text" class="form-control requireClass"
+                        <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                                name="taskAttributeValueBos[7].displayUnitStat" maxlength="15"
                                value="${fn:escapeXml(taskValueAttributeBo.displayUnitStat)}"/>
                         <div class="help-block with-errors red-txt"></div>
@@ -1238,7 +1238,7 @@
                       </div>
                       <div class="add_notify_option form-group">
                         <select
-                            class="selectpicker  aq-select aq-select-form elaborateClass requireClass"
+                            class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                             title="Select" name="taskAttributeValueBos[7].uploadTypeStat">
                           <c:forEach items="${statisticImageList}" var="statisticImage">
                             <option
@@ -1256,7 +1256,7 @@
                       </div>
                       <div class="form-group">
                         <select
-                            class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                            class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                             title="Select"
                             name="taskAttributeValueBos[7].formulaAppliedStat">
                           <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -1310,7 +1310,7 @@
                     </div>
                     <div class="add_notify_option form-group mb-none">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass" data-error="Please select an item in the list"
                           id="chartId1" name="taskAttributeValueBos[8].timeRangeChart"
                           title="Select">
                         <c:forEach items="${timeRangeList}" var="timeRangeAttr">
@@ -1358,7 +1358,7 @@
                     </div>
                     <div class="add_notify_option">
                       <div class="form-group">
-                        <input type="text" class="form-control requireClass" id="lineChartId1"
+                        <input type="text" class="form-control requireClass" id="lineChartId1"  data-error="Please fill out this field" 
                                name="taskAttributeValueBos[8].titleChat" maxlength="30"
                                value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
                         <div class="help-block with-errors red-txt"></div>
@@ -1398,7 +1398,7 @@
                              dbid="${taskValueAttributeBo.attributeValueId}" custAttType="cust"
                              id="identifierId2" name="taskAttributeValueBos[8].identifierNameStat"
                              maxlength="20"
-                             value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}"
+                             value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}" data-error="Please fill out this field" 
                           <c:if
                               test="${not empty taskValueAttributeBo.isIdentifierNameStatDuplicate && (taskValueAttributeBo.isIdentifierNameStatDuplicate gt 0)}"> disabled</c:if>/>
                       <div class="help-block with-errors red-txt"></div>
@@ -1416,7 +1416,7 @@
                     </span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[8].displayNameStat" maxlength="50"
                            value="${fn:escapeXml(taskValueAttributeBo.displayNameStat)}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -1433,7 +1433,7 @@
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[8].displayUnitStat" maxlength="15"
                              value="${fn:escapeXml(taskValueAttributeBo.displayUnitStat)}"/>
                       <div class="help-block with-errors red-txt"></div>
@@ -1449,7 +1449,7 @@
                     </div>
                     <div class="add_notify_option form-group">
                       <select
-                          class="selectpicker  aq-select aq-select-form elaborateClass requireClass"
+                          class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                           title="Select" name="taskAttributeValueBos[8].uploadTypeStat">
                         <c:forEach items="${statisticImageList}" var="statisticImage">
                           <option
@@ -1467,7 +1467,7 @@
                     </div>
                     <div class="form-group">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                           title="Select" name="taskAttributeValueBos[8].formulaAppliedStat">
                         <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
                           <option
@@ -1518,7 +1518,7 @@
                     </div>
                     <div class="add_notify_option form-group mb-none">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass" data-error="Please select an item in the list"
                           id="chartId2" name="taskAttributeValueBos[9].timeRangeChart"
                           title="Select">
                         <c:forEach items="${timeRangeList}" var="timeRangeAttr">
@@ -1566,7 +1566,7 @@
                     </div>
                     <div class="add_notify_option">
                       <div class="form-group">
-                        <input type="text" class="form-control requireClass" id="lineChartId2"
+                        <input type="text" class="form-control requireClass" id="lineChartId2" data-error="Please fill out this field" 
                                name="taskAttributeValueBos[9].titleChat" maxlength="30"
                                value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
                         <div class="help-block with-errors red-txt"></div>
@@ -1606,7 +1606,7 @@
                              dbid="${taskValueAttributeBo.attributeValueId}" custAttType="cust"
                              id="identifierId3" name="taskAttributeValueBos[9].identifierNameStat"
                              maxlength="20"
-                             value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}"
+                             value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}" data-error="Please fill out this field" 
                           <c:if
                               test="${not empty taskValueAttributeBo.isIdentifierNameStatDuplicate && (taskValueAttributeBo.isIdentifierNameStatDuplicate gt 0)}"> disabled</c:if>/>
                       <div class="help-block with-errors red-txt"></div>
@@ -1624,7 +1624,7 @@
                     </span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[9].displayNameStat" maxlength="50"
                            value="${fn:escapeXml(taskValueAttributeBo.displayNameStat)}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -1641,7 +1641,7 @@
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[9].displayUnitStat" maxlength="15"
                              value="${fn:escapeXml(taskValueAttributeBo.displayUnitStat)}"/>
                       <div class="help-block with-errors red-txt"></div>
@@ -1657,7 +1657,7 @@
                     </div>
                     <div class="add_notify_option form-group">
                       <select
-                          class="selectpicker  aq-select aq-select-form elaborateClass requireClass"
+                          class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                           title="Select" name="taskAttributeValueBos[9].uploadTypeStat">
                         <c:forEach items="${statisticImageList}" var="statisticImage">
                           <option
@@ -1675,7 +1675,7 @@
                     </div>
                     <div class="form-group">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                           title="Select" name="taskAttributeValueBos[9].formulaAppliedStat">
                         <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
                           <option

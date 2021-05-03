@@ -161,7 +161,7 @@
             <div class="add_notify_option form-group">
               <select
                   class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
-                  id="chartId" name="taskAttributeValueBos[2].timeRangeChart" title="Select">
+                  id="chartId" name="taskAttributeValueBos[2].timeRangeChart" title="Select" data-error="Please fill out this field" >
                 <option value="" disabled>Select</option>
                 <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                   <option value="${timeRangeAttr}">${timeRangeAttr}</option>
