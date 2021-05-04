@@ -45,7 +45,7 @@ HYDRA_BASE_URL = xxxxx
 // `auto-auth-server-client-id` secret in your GCP secrets project.
 HYDRA_CLIENT_ID = xxxx
 
-// API_KEY is <ios.bundleid>:<ios.apptoken>
+// API_KEY is auto-sd-ios-id:auto-sd-ios-token
 // e.g. com.bundleID:axdks
 // These values should match the ones set in study datastore server.
 // see: study-datastore/src/main/resources/authorizationResource.properties

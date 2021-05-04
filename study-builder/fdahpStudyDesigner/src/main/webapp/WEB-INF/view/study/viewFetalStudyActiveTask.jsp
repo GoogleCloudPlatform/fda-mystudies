@@ -17,6 +17,10 @@
 .bootstrap-select.btn-group .dropdown-toggle .filter-option {
     text-transform: inherit; !important
 	}
+	
+.help-block ul {
+      width: max-content !important;
+}
 </style>
 
 <div class="changeContent">
@@ -158,7 +162,7 @@
               <select
                   class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
                   id="chartId" name="taskAttributeValueBos[2].timeRangeChart" title="Select">
-                <option value="" selected disabled>Select</option>
+                <option value="" disabled>Select</option>
                 <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                   <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                 </c:forEach>
