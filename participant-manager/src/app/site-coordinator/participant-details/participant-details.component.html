@@ -285,7 +285,7 @@
         <tr>
           <th>Date of enrollment</th>
           <th>Date of withdrawal</th>
-          <th>Last enrollment status</th>
+          <th>&nbsp; Last enrollment status</th>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
@@ -312,7 +312,7 @@
                   enrollmentStatus.Withdrawn
               }"
             >
-              {{ enrollmentDetails.enrollmentStatus }}
+              &nbsp; {{ enrollmentDetails.enrollmentStatus }}
             </span>
           </td>
           <td>&nbsp;</td>
@@ -320,7 +320,9 @@
           <td>&nbsp;</td>
         </tr>
         <tr *ngIf="participant.participantDetails.enrollments.length === 0">
-          <td colspan="3" class="text-center">No records found</td>
+          <td colspan="6" class="text-center font12 txt__light-gray">
+            No records found
+          </td>
         </tr>
       </table>
 
@@ -350,12 +352,12 @@
               </th>
               <th>
                 <mfDefaultSorter by="consentedDate">
-                  &nbsp; &nbsp; &nbsp; Consented date
+                  Consented date
                 </mfDefaultSorter>
               </th>
               <th>
                 <mfDefaultSorter by="dataSharingPermissions">
-                  &nbsp; Data sharing permissions
+                  Data sharing permissions
                 </mfDefaultSorter>
               </th>
               <th>
@@ -369,7 +371,6 @@
             <tr *ngFor="let consentDetails of mf.data">
               <td>{{ consentDetails.consentVersion }}</td>
               <td>
-                &nbsp; &nbsp; &nbsp;
                 {{
                   consentDetails.consentedDate
                     ? consentDetails.consentedDate
@@ -377,7 +378,6 @@
                 }}
               </td>
               <td>
-                &nbsp;
                 {{
                   consentDetails.dataSharingPermissions
                     ? consentDetails.dataSharingPermissions
@@ -399,7 +399,9 @@
             <tr
               *ngIf="participant.participantDetails.consentHistory.length === 0"
             >
-              <td colspan="4" class="text-center">No records found</td>
+              <td colspan="4" class="text-center font12 txt__light-gray">
+                No records found
+              </td>
             </tr>
           </tbody>
 

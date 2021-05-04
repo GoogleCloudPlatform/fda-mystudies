@@ -81,7 +81,7 @@
         <div class="form-group">
           <select id="anchorDateId"
                   class="selectpicker ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                  required name="anchorDateId">
+                  required data-error="Please select an item in the list"  name="anchorDateId">
             <option value=''>Select</option>
             <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
               <option value="${anchorTypeInfo.id}"
@@ -190,7 +190,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimexdaysId" type="text"
@@ -200,7 +200,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -209,7 +209,7 @@
               <span class="light-txt opacity06"> days</span>
             </span>
             <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-              <input id="selectTime" type="text"
+              <input id="selectTime" type="text" data-error="Please fill out this field" 
                      class="mt-sm form-control clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                      name="activeTaskFrequenciesBo.frequencyTime"
                      value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"  <c:if
@@ -226,7 +226,7 @@
           <input id="chooseDate" type="text"
                  class="mt-sm form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="activeTaskFrequenciesBo.frequencyDate" placeholder="Choose date"
-                 value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}" required <c:if
+                 value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}" required data-error="Please fill out this field"  <c:if
               test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -234,7 +234,7 @@
           <input id="selectTime1" type="text"
                  class="mt-sm form-control clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="activeTaskFrequenciesBo.frequencyTime"
-                 value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}" required <c:if
+                 value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}" required data-error="Please fill out this field"  <c:if
               test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if>
                  placeholder="Select time"/>
           <span class='help-block with-errors red-txt'></span>
@@ -250,7 +250,7 @@
       <span class="checkbox checkbox-inline">
         <input type="checkbox" id="isStudyLifeTime" name="activeTaskFrequenciesBo.isStudyLifeTime"
                value="true" ${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}
-               required="required">
+               required="required" data-error="Please fill out this field" >
         <label for="isStudyLifeTime"> Study lifetime</label>
       </span>
       <div class="mt-md form-group regularClass">
@@ -262,13 +262,13 @@
                 class="form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                 name="activeTaskLifetimeEnd"
                 placeholder="Choose end date"
-                required <c:if
+                required data-error="Please fill out this field"  <c:if
                 test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                 value=""/></c:when>
             <c:otherwise><input id="chooseEndDate" type="text"
                                 class="form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                                 name="activeTaskLifetimeEnd" placeholder="Choose end date"
-                                required <c:if
+                                required data-error="Please fill out this field"  <c:if
                 test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                                 value="${activeTaskBo.activeTaskLifetimeEnd}"/></c:otherwise>
           </c:choose>
@@ -306,7 +306,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimeydaysId" type="text"
@@ -316,7 +316,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number."/>
+                         data-pattern-error="Please enter valid number"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -359,7 +359,7 @@
           <br/>
           <input id="startDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 placeholder="Choose date" required name="activeTaskLifetimeStart"
+                 placeholder="Choose date" required data-error="Please fill out this field"  name="activeTaskLifetimeStart"
                  value="${activeTaskBo.activeTaskLifetimeStart}"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -396,7 +396,7 @@
                        name="activeTaskFrequenciesList[0].timePeriodFromDays"
                        value="${(fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0)?activeTaskBo.activeTaskFrequenciesList[0].timePeriodFromDays:''}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -417,11 +417,11 @@
           <br/>
           <input id="days" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of times" required
+                 name="repeatActiveTask" placeholder="No of times" required data-error="Please fill out this field" 
                  value="${activeTaskBo.repeatActiveTask}"
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -454,7 +454,7 @@
         <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) eq 0}">
           <div class="time-opts mt-md dailyTimeDiv" id="0">
             <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-              <input id="time0" type="text" name="activeTaskFrequenciesList[0].frequencyTime" required
+              <input id="time0" type="text" name="activeTaskFrequenciesList[0].frequencyTime" required data-error="Please fill out this field" 
                      class="form-control clock dailyClock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                      placeholder="Time" onclick='timep(this.id);'/>
               <span class='help-block with-errors red-txt'></span>
@@ -473,7 +473,7 @@
                      value="${activeTasksFrequencies.id}">
               <span class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="time${frequeincesVar.index}" type="text"
-                       name="activeTaskFrequenciesList[${frequeincesVar.index}].frequencyTime" required
+                       name="activeTaskFrequenciesList[${frequeincesVar.index}].frequencyTime" required data-error="Please fill out this field" 
                        class="form-control clock dailyClock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                        placeholder="Time" onclick='timep(this.id);'
                        value="${activeTasksFrequencies.frequencyTime}"/>
@@ -533,7 +533,7 @@
         <span class="">
           <select id="startDateWeekly"
                   class="form-control mt-sm ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                  name="dayOfTheWeek" required>
+                  name="dayOfTheWeek" required data-error="Please select an item in the list">
             <option value=''>Select</option>
             <option
                 value='Sunday' ${activeTaskBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -557,7 +557,7 @@
       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
         <input id="selectWeeklyTime" type="text"
                class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-               required
+               required data-error="Please fill out this field" 
                onclick="timep(this.id)" placeholder="Time"
                name="activeTaskFrequenciesBo.frequencyTime"
                value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
@@ -580,7 +580,7 @@
           <br/>
           <input id="startWeeklyDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 required
+                 required data-error="Please fill out this field" 
                  name="activeTaskLifetimeStart" placeholder="Choose date"
                  value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
           <span class='help-block with-errors red-txt'></span>
@@ -613,8 +613,8 @@
                        class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                        placeholder="X" name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
-                       maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       maxlength="3" pattern="[0-9]+" data-error="Please fill out this field" 
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -630,7 +630,7 @@
           <span class="form-group m-none dis-inline vertical-align-middle pr-md">
             <input id="selectWeeklyTimeAnchor" type="text"
                    class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   required onclick="timep(this.id)" placeholder="Time"
+                   required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
                    name="activeTaskFrequenciesBo.frequencyTime"
                    value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
             <span class='help-block with-errors red-txt'></span>
@@ -647,10 +647,10 @@
             <input id="weeksAnchor" type="text"
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                    name="repeatActiveTask" placeholder="No of times"
-                   value="${activeTaskBo.repeatActiveTask}" required
+                   value="${activeTaskBo.repeatActiveTask}" required data-error="Please fill out this field" 
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                   data-pattern-error="Please enter valid number." maxlength="3"/>
+                   data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
           </span>
         </div>
@@ -668,10 +668,10 @@
           <input id="weeks" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="repeatActiveTask" placeholder="No of times"
-                 value="${activeTaskBo.repeatActiveTask}" required
+                 value="${activeTaskBo.repeatActiveTask}" required data-error="Please fill out this field" 
                  onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -735,7 +735,7 @@
         <span class="">
           <input id="startDateMonthly" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 required
+                 required data-error="Please fill out this field" 
                  placeholder="Choose date" name="activeTaskFrequenciesBo.frequencyDate"
                  value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}"/>
           <span class='help-block with-errors red-txt'></span>
@@ -744,7 +744,7 @@
       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
         <input id="selectMonthlyTime" type="text"
                class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-               required
+               required data-error="Please fill out this field" 
                onclick="timep(this.id)" placeholder="Time"
                name="activeTaskFrequenciesBo.frequencyTime"
                value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
@@ -771,7 +771,7 @@
           <br/>
           <input id="pickStartDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 placeholder="Choose start date" required name="activeTaskLifetimeStart"
+                 placeholder="Choose start date" required data-error="Please fill out this field"  name="activeTaskLifetimeStart"
                  value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -804,11 +804,11 @@
               <span class="form-group m-none dis-inline vertical-align-middle">
                 <input id="monthlyxdaysId" type="text"
                        class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                       placeholder="X"
+                       placeholder="X" data-error="Please fill out this field" 
                        name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -826,7 +826,7 @@
           <span class="form-group m-none dis-inline vertical-align-middle pr-md">
             <input id="selectMonthlyTimeAnchor" type="text"
                    class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   required onclick="timep(this.id)" placeholder="Time"
+                   required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
                    name="activeTaskFrequenciesBo.frequencyTime"
                    value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
             <span class='help-block with-errors red-txt'></span>
@@ -842,11 +842,11 @@
             <br/>
             <input id="monthsAnchor" type="text"
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   name="repeatActiveTask" placeholder="No of times" required
+                   name="repeatActiveTask" placeholder="No of times" required data-error="Please fill out this field" 
                    value="${activeTaskBo.repeatActiveTask}"
                    onkeypress="return isNumber(event, this)"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                   data-pattern-error="Please enter valid number." maxlength="3"/>
+                   data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
           </span>
         </div>
@@ -864,10 +864,10 @@
           <br/>
           <input id="months" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of times" required
+                 name="repeatActiveTask" placeholder="No of times" required data-error="Please fill out this field" 
                  value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                 data-pattern-error="Please enter valid number." maxlength="3"/>
+                 data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
@@ -934,7 +934,7 @@
                    class="form-control calendar customCalnder cusStrDate"
                    name="activeTaskCustomScheduleBo[0].frequencyStartDate" value=""
                    placeholder="Start date"
-                   onclick='customStartDate(this.id,0);' required/>
+                   onclick='customStartDate(this.id,0);' required data-error="Please fill out this field" />
             <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -944,7 +944,7 @@
             <input id="EndDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusEndDate"
                    name="activeTaskCustomScheduleBo[0].frequencyEndDate" placeholder="End date"
-                   onclick='customEndDate(this.id,0);' required/>
+                   onclick='customEndDate(this.id,0);' required data-error="Please fill out this field" />
             <span class='help-block with-errors red-txt'></span>
             </span>            
            
@@ -952,7 +952,7 @@
             <input id="customTime0" type="text" count='0' class="form-control clock cusTime"
                    name="activeTaskCustomScheduleBo[0].frequencyTime" placeholder="Time"
                    onclick='timep(this.id);'
-                   disabled required/>
+                   disabled required data-error="Please fill out this field" />
             <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
@@ -977,7 +977,7 @@
                      class="form-control calendar cusStrDate ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyStartDate"
                      value="${activeTaskCustomScheduleBo.frequencyStartDate}" placeholder="Start date"
-                     onclick='customStartDate(this.id,${customVar.index});' required/>
+                     onclick='customStartDate(this.id,${customVar.index});' required data-error="Please fill out this field" />
               <span class='help-block with-errors red-txt'></span>
             </span>
             <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -988,7 +988,7 @@
                      class="form-control calendar cusEndDate ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndDate"
                      value="${activeTaskCustomScheduleBo.frequencyEndDate}" placeholder="End date"
-                     onclick='customEndDate(this.id,${customVar.index});' required/>
+                     onclick='customEndDate(this.id,${customVar.index});' required data-error="Please fill out this field" />
               <span class='help-block with-errors red-txt'></span>
             </span>
             <span class="form-group  dis-inline vertical-align-middle pr-md">
@@ -997,7 +997,7 @@
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyTime"
                      value="${activeTaskCustomScheduleBo.frequencyTime}" placeholder="Time"
                      onclick='timep(this.id);'
-                     required/>
+                     required data-error="Please fill out this field" />
               <span class='help-block with-errors red-txt'></span>
             </span>
             <span id="AddButton"
@@ -1040,8 +1040,8 @@
                    count='0' placeholder="X"
                    name="activeTaskCustomScheduleBo[0].timePeriodFromDays"
                    value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
-                   maxlength="3" required pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number."/>
+                   maxlength="3" required data-error="Please fill out this field"  pattern="[0-9]+"
+                   data-pattern-error="Please enter valid number"/>
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1074,7 +1074,7 @@
                    name="activeTaskCustomScheduleBo[0].timePeriodToDays"
                    value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                    maxlength="3" pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number." required/>
+                   data-pattern-error="Please enter valid number" required data-error="Please fill out this field" />
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1091,7 +1091,7 @@
                 style="margin-bottom: -13px"><input id="manualTime0"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyTime"
-                                                    value="${activeTaskCustomScheduleBo.frequencyTime}"
+                                                    value="${activeTaskCustomScheduleBo.frequencyTime}" data-error="Please fill out this field" 
                                                     placeholder="Time" required/>
             <span
                 class='help-block with-errors red-txt'></span>
@@ -1141,8 +1141,8 @@
                      count='${customVar.index}' placeholder="X"
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                      value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
-                     maxlength="3" required pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number." data-type='xancorText'/>
+                     maxlength="3" required data-error="Please fill out this field"  pattern="[0-9]+"
+                     data-pattern-error="Please enter valid number" data-type='xancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
             </span>
@@ -1177,7 +1177,7 @@
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodToDays"
                      value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                      maxlength="3" pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number." required
+                     data-pattern-error="Please enter valid number" required data-error="Please fill out this field" 
                      data-type='yancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
@@ -1193,7 +1193,7 @@
                 class="form-control remove_required clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 name="activeTaskCustomScheduleBo[${customVar.index}].frequencyTime"
                 value="${activeTaskCustomScheduleBo.frequencyTime}"
-                placeholder="Time" required/>
+                placeholder="Time" required data-error="Please fill out this field" />
               <span
                   class='help-block with-errors red-txt'></span>
             </span>
@@ -2211,7 +2211,7 @@
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
-        "  <input id='time" + count + "' type='text' required name='activeTaskFrequenciesList["
+        "  <input id='time" + count + "' type='text' required data-error='Please fill out this field'  name='activeTaskFrequenciesList["
         + count
         + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>"
         +
@@ -2262,7 +2262,7 @@
     var newDateCon = "<div class='manually-option mb-md form-group' id='RegDate" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
-        + "' required name='activeTaskCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field'  name='activeTaskCustomScheduleBo[" + customCount
         + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start date' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
@@ -2272,14 +2272,14 @@
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
-        + "' required name='activeTaskCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field' name='activeTaskCustomScheduleBo[" + customCount
         + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End date' onclick='customEndDate(this.id,"
         + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
-        + "' required name='activeTaskCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field' name='activeTaskCustomScheduleBo[" + customCount
         + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -3048,7 +3048,7 @@
           callback(false);
       }
     } else {
-      showErrMsg("Please fill in all mandatory fields.");
+      showErrMsg("Please fill in all mandatory fields");
       $('.scheduleTaskClass a').tab('show');
       if (callback)
         callback(false);
@@ -3229,7 +3229,7 @@
           $('#onetimeydaysId').focus();
         $('#onetimeydaysId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         valid = false;
       } else {
         $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -3255,7 +3255,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate xancorText'"
         + "count='" + customAnchorCount + "' placeholder='X' name='activeTaskCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span  class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
@@ -3268,13 +3268,13 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate yancorText' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required  data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].frequencyTime' placeholder='Time' required/>"
+        + "].frequencyTime' placeholder='Time' required  data-error='Please fill out this field' />"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
@@ -3286,8 +3286,8 @@
     $(".manually-anchor-option").parents("form").validator();
     if ($('.manually-anchor-option').length > 1) {
       $('.manuallyAnchorContainer').find(".remBtnDis").removeClass("hide");
-      if ($('#anchorDateId').find('option:selected').text() == 'Enrollment Date') {
-        setAnchorDropdown('Manually Schedule', 'Enrollment Date');
+      if ($('#anchorDateId').find('option:selected').text() == 'Enrollment date') {
+        setAnchorDropdown('Manually Schedule', 'Enrollment date');
       }
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
@@ -3311,7 +3311,7 @@
   }
 
   function setAnchorDropdown(frequency_text, anchorType) {
-    if (anchorType == 'Enrollment Date') {
+    if (anchorType == 'Enrollment date') {
       if (frequency_text == 'One time') {
         $('#onetimeXSign').children('option').remove();
         $('#onetimeXSign').append("<option value='0' selected>+</option>");
@@ -3402,7 +3402,7 @@
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append(
-                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
             $(".addbtn").addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
@@ -3442,7 +3442,7 @@
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append(
-                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
               $(".addbtn").addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -3486,7 +3486,7 @@
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+            $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -3531,7 +3531,7 @@
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
-           $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+           $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         $(".addbtn").addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");

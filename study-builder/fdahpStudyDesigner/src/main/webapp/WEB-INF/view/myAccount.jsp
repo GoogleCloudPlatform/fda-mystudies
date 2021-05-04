@@ -38,7 +38,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="firstName" value="${fn:escapeXml(userBO.firstName)}"
                      oldVal="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required readonly/>
+                     maxlength="50" required data-error="Please fill out this field"  readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -59,7 +59,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="lastName" value="${fn:escapeXml(userBO.lastName)}"
                      oldVal="${fn:escapeXml(userBO.lastName)}"
-                     maxlength="50" required readonly/>
+                     maxlength="50" required data-error="Please fill out this field" readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -82,7 +82,7 @@
                      id="userEmail" name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" maxlength="100"
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                     data-pattern-error="Email address is invalid" required readonly/>
+                     data-pattern-error="Email address is invalid" required data-error="Please fill out this field" readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -168,7 +168,7 @@
                   <input autofocus="autofocus" type="password"
                          class="input-field wow_input emptyField" maxlength="64" id="oldPassword"
                          name="oldPassword"
-                         required tabindex="1" autocomplete="off"/>
+                         required data-error="Please fill out this field" tabindex="1" autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
               </div>
@@ -187,7 +187,7 @@
                          maxlength="64" data-minlength="8"
                          tabindex="2" name="password" data-error="Password is invalid"
                          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                         required autocomplete="off"/>
+                         required data-error="Please fill out this field" autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                   <span class="arrowLeftSugg"></span>
                 </div>
@@ -206,7 +206,7 @@
                   <input type="password" class="input-field wow_input emptyField" maxlength="64"
                          data-minlength="8" data-match-error="Passwords do not match"
                          id="conpassword" data-match="#password"
-                         tabindex="3" required autocomplete="off"/>
+                         tabindex="3" required data-error="Please fill out this field" autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
 
                 </div>
@@ -239,7 +239,7 @@
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW') or
               fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
       <div class="edit-user-list-widget mb-xs">
-        <span>Users</span>
+        <span>Admins</span>
         <span class="gray-xs-f pull-right">
            <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
