@@ -733,7 +733,6 @@
           $('#inlineRadio5').prop('disabled', true);
           $('.disRadBtn1').prop('disabled', true);
           $('.disRadBtn1').prop('checked', false);
-          $('.disRadBtn1').val('');
           $('.disBtn1').removeAttr('required');
           $('.disBtn1').val('');
 
@@ -922,7 +921,7 @@
 
     $('#anchorDateId').change(function () {
       var element = $(this).find('option:selected').text();
-      if (element == 'Enrollment Date') {
+      if (element == 'Enrollment date') {
         $('#xSign').children('option').remove();
         $('#xSign').append("<option value='0' selected>+</option>");
         $('#ySign').children('option').remove();

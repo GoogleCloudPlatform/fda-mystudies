@@ -159,7 +159,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/user-w.png" alt="">
                     </a>
-                    <div>Manage<br> Users<br>
+                    <div>Manage<br> Admins<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>

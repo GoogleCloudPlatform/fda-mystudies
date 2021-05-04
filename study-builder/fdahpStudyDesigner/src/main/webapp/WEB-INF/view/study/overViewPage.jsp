@@ -120,7 +120,7 @@
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
-                        <img src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                        <img src="${defaultOverViewImageSignedUrl}"
                                 onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                     </div>                
@@ -185,6 +185,7 @@
                   <div class="mt-xlg">
                     <div class="gray-xs-f mb-xs">
                       Description
+                      <small>(200 characters max)</small>
                       <span
                           class="requiredStar">*
                       </span>
@@ -249,13 +250,13 @@
                        <c:choose>
                        <c:when test="${spbSt.count==1}">
                         <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.defaultImage')"/>"
+                           src="${defaultOverViewImageSignedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                             </c:when>
                             <c:otherwise>
                              <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/>"
+                           src="${defaultPageOverviewImageSignedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                             </c:otherwise>
@@ -264,7 +265,7 @@
                     <div style="display: inline-block">
                       <div class="thumb" style="display: inline-block;width:77px !important">
                         <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studypages/${fn:escapeXml(studyPageBo.imagePath)}"
+                           src="${studyPageBo.signedUrl}"
                             onerror="this.src='/studybuilder/images/dummy-img.jpg';"
                             class="wid100" alt=""/>
                       </div>
@@ -326,6 +327,7 @@
                   <div class="mt-md">
                     <div class="gray-xs-f mb-xs">
                       Description
+                      <small>(200 characters max)</small>
                       <span
                           class="requiredStar">*
                       </span>
@@ -401,10 +403,37 @@
     $("[data-toggle=tooltip]").tooltip();
     var countId = ${fn:length(studyPageBos)+ 2};
   //summernote editor initialization
-    $('.summernote')
+  var maxwords=200;  
+  $('.summernote')
         .summernote(
             {
               placeholder: '',
+              callbacks: {
+                  onKeydown: function(e) {
+                    var t = e.currentTarget.innerText;
+                    if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                   onKeyup: function(e) {
+                      var t = e.currentTarget.innerText;
+                     if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                  onPaste: function(e) {
+                	  var t = e.currentTarget.innerText;
+                      var bufferText = ((e.originalEvent || e).clipboardData || 
+                                         window.clipboardData).getData('Text');
+                      e.preventDefault();
+                      var all = t + bufferText;
+                      var array = bufferText.slice(0, (maxwords-t.length))
+                      document.execCommand('insertText', false, array);
+                 
+               }
+      },
               disableResizeEditor: true,
               tabsize: 2,
               height: 200,
@@ -505,7 +534,7 @@
           "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='<span class= font24></span></span> The default image shown below will be used for the study overview screens in the mobile app. You can over-ride it by uploading an alternate image in JPG or PNG format. The image must have a size of 750x570 pixels.'></span> </div>"
           +
           "<div>" +
-          "<div class=thumb style='display: inline-block;width:77px !important'><img src=<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${fn:escapeXml(studyPageBo.imagePath)}<spring:eval expression="@propertyConfigurer.getProperty('study.page2.defaultImage')"/> class=wid100></div>" +
+          "<div class=thumb style='display: inline-block;width:77px !important'><img src='${defaultPageOverviewImageSignedUrl}' class=wid100></div>" +
           "<div style='display: inline-block'>" +
           "<div class=thumb style='width:77px !important'><img src=/studybuilder/images/dummy-img.jpg class=wid100></div>" +
           "<div class=dis-inline>" +
@@ -539,7 +568,7 @@
           "</div>" +
           "</div>" +
           "<div class=mt-lg>" +
-          "<div class='gray-xs-f mb-xs'>Description<span class='requiredStar'>*</span></div>"
+          "<div class='gray-xs-f mb-xs'>Description<small>(200 characters max)</small><span class='requiredStar'>*</span></div>"
           +
           "<div class='form-group elaborateClass'><textarea class='summernote form-control updateInput' name='description' id='editor"
           + countId
@@ -565,6 +594,32 @@
       .summernote(
           {
             placeholder: '',
+            callbacks: {
+                onKeydown: function(e) {
+                  var t = e.currentTarget.innerText;
+                  if (t.length >= maxwords) {
+                  if (e.keyCode != 8)
+                    e.preventDefault();
+                  }
+                },
+                 onKeyup: function(e) {
+                    var t = e.currentTarget.innerText;
+                   if (t.length >= maxwords) {
+                  if (e.keyCode != 8)
+                    e.preventDefault();
+                  }
+                },
+                onPaste: function(e) {
+              	  var t = e.currentTarget.innerText;
+                    var bufferText = ((e.originalEvent || e).clipboardData || 
+                                       window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    var all = t + bufferText;
+                    var array = bufferText.slice(0, (maxwords-t.length))
+                    document.execCommand('insertText', false, array);
+               
+             }
+    },
             disableResizeEditor: true,
             tabsize: 2,
             height: 200,
@@ -695,6 +750,10 @@
       var thisAttr = this;
       var thisId = $(this).attr("data-imageId");
       if ((file = this.files[0])) {
+    	  const allowedExtensions =  ['jpg','png','jpeg'];
+         	const { name:fileName } = file;
+         	const fileExtension = fileName.split(".").pop().toLowerCase();
+          if(allowedExtensions.includes(fileExtension)){ 
         img = new Image();
         img.onload = function () {
           var ht = this.height;
@@ -745,8 +804,17 @@
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
-
+        
+          }else{
+        	  $(thisAttr).val();
+              $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+              $(thisAttr).parent().find(".help-block").empty().append(
+            	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Invalid image size or format"));
+              $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+        }
       }
+      
       var file = $(this).find('input[type=file]').val();
       var thumbnailImageId = $(this).find('input[type=file]').parent().find(
           'input[name="imagePath"]').val();
@@ -761,10 +829,28 @@
   // Displaying images from file upload
   function readURL(input) {
     if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function (e) {
-      };
-      reader.readAsDataURL(input.files[0]);
+    	
+    	const allowedExtensions =  ['jpg','png','jpeg'];
+     	const { name:fileName } = input.files[0];
+     	const fileExtension = fileName.split(".").pop().toLowerCase();
+     	if(allowedExtensions.includes(fileExtension)){  
+      		var reader = new FileReader();
+		      reader.onload = function (e) {
+		      };
+		      reader.readAsDataURL(input.files[0]);
+	    }else{
+	   		  $("#uploadImg")
+	          .parent()
+	          .find(".help-block")
+	          .empty()
+	          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	              "Invalid image size or format"));
+	      	  $(".thumb.alternate img")
+	          .attr("src",
+	              "/studybuilder/images/dummy-img.jpg");
+	      	  $('#uploadImg, #thumbnailImageId').val('');
+	      	  $('#removeUrl').css("visibility", "hidden");
+	   	  }
     }
   }
 

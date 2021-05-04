@@ -738,7 +738,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}"
+                            src="${questionsBo.questionReponseTypeBo.signedMinImage}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -779,7 +779,7 @@
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                       <div class="thumb-img">
                         <img
-                            src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}"
+                            src="${questionsBo.questionReponseTypeBo.signedMaxImage}"
                             onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                             class="imageChoiceWidth" alt=""/>
                       </div>
@@ -932,7 +932,7 @@
                   <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                     <div class="thumb-img">
                       <img
-                          src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.minImage)}"
+                          src="${questionsBo.questionReponseTypeBo.signedMinImage}"
                           onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                           class="imageChoiceWidth" alt=""/>
                     </div>
@@ -972,7 +972,7 @@
                   <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                     <div class="thumb-img">
                       <img
-                          src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionsBo.questionReponseTypeBo.maxImage)}"
+                          src="${questionsBo.questionReponseTypeBo.signedMaxImage}"
                           onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                           class="imageChoiceWidth" alt=""/>
                     </div>
@@ -2200,7 +2200,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.image)}"
+                                src="${questionResponseSubType.signedImage}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2212,7 +2212,7 @@
                             name="questionResponseSubTypeList[${subtype.index}].imageFile"
                             id="imageFileId${subtype.index}" type="file" data-error="Please fill out this field" 
                             accept=".png, .jpg, .jpeg" onchange="readURL(this);"
-                            value="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.image)}">
+                            value="${questionResponseSubType.signedImage}">
                         <input type="hidden"
                                name="questionResponseSubTypeList[${subtype.index}].image"
                                id="imagePathId${subtype.index}"
@@ -2225,7 +2225,7 @@
                         <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                           <div class="thumb-img">
                             <img
-                                src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionResponseSubType.selectedImage)}"
+                                src="${questionResponseSubType.signedSelectedImage}"
                                 onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                                 class="imageChoiceWidth"/>
                           </div>
@@ -2285,7 +2285,7 @@
                       <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                         <div class="thumb-img">
                           <img
-                              src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].image)}"
+                              src="${questionsBo.questionResponseSubTypeList[0].signedImage}"
                               onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                               class="imageChoiceWidth"/>
                         </div>
@@ -2312,7 +2312,7 @@
                       <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                         <div class="thumb-img">
                           <img
-                              src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[0].selectedImage)}"
+                              src="${questionsBo.questionResponseSubTypeList[0].signedSelectedImage}"
                               onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                               class="imageChoiceWidth"/>
                         </div>
@@ -2373,7 +2373,7 @@
                       <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                         <div class="thumb-img">
                           <img
-                              src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].image)}"
+                              src="${questionsBo.questionResponseSubTypeList[1].signedImage}"
                               onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                               class="imageChoiceWidth"/>
                         </div>
@@ -2400,7 +2400,7 @@
                       <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
                         <div class="thumb-img">
                           <img
-                              src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/questionnaire/${fn:escapeXml(questionsBo.questionResponseSubTypeList[1].selectedImage)}"
+                              src="${questionsBo.questionResponseSubTypeList[1].signedSelectedImage}"
                               onerror="this.src='/studybuilder/images/icons/sm-thumb.jpg';"
                               class="imageChoiceWidth"/>
                         </div>
@@ -3454,6 +3454,10 @@ if(document.getElementById("singleSelect").checked==true){
       var thisAttr = this;
       var response_type = $("#rlaResonseType").val();
       if ((file = this.files[0])) {
+    	  const allowedExtensions =  ['jpg','png','jpeg'];
+          const { name:fileName } = file;
+          const fileExtension = fileName.split(".").pop().toLowerCase();
+          if(allowedExtensions.includes(fileExtension)){
         img = new Image();
         img.onload = function () {
           var ht = this.height;
@@ -3491,6 +3495,14 @@ if(document.getElementById("singleSelect").checked==true){
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
+          }else{
+          	   $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
+                 $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+                 $(thisAttr).parent().find(".help-block").empty().append(
+                   $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
+                     "Invalid image size or format"));
+                 $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+            }
       }
     });
     $('.textScaleValue').on('blur', function () {
@@ -3581,6 +3593,10 @@ if(document.getElementById("singleSelect").checked==true){
   function readURL(input) {
 
     if (input.files && input.files[0]) {
+    	const allowedExtensions =  ['jpg','png','jpeg'];
+   	  const { name:fileName } = input.files[0];
+   	  const fileExtension = fileName.split(".").pop().toLowerCase();
+   	  if(allowedExtensions.includes(fileExtension)){
       var reader = new FileReader();
 
       reader.onload = function (e) {
@@ -3593,6 +3609,7 @@ if(document.getElementById("singleSelect").checked==true){
       };
 
       reader.readAsDataURL(input.files[0]);
+   	  }
     }
   }
 
@@ -4904,7 +4921,7 @@ if(document.getElementById("singleSelect").checked==true){
     var thisAttr = $("#anchorTextId");
     var anchorDateId = '${questionsBo.anchorDateId}';
     if (anchordateText != null && anchordateText != '' && typeof anchordateText != 'undefined') {
-      var staticText = "Enrollment Date";
+      var staticText = "Enrollment date";
       if (anchordateText.toUpperCase() === staticText.toUpperCase()) {
         $(thisAttr).val('');
         $(thisAttr).parent().addClass("has-danger").addClass("has-error");

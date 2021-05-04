@@ -231,7 +231,7 @@ margin-top:16px !important;
           
           <div class="thumb" style="display:inline-block; width:77px !important;">
                         <img
-                           src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/<spring:eval expression="@propertyConfigurer.getProperty('study.basicInformation.defaultImage')"/>"
+                           src="${defaultImageSignedUrl}"
                             class="wid100" alt=""/>
 
             </div>
@@ -241,7 +241,7 @@ margin-top:16px !important;
             <div class="thumb alternate" style=" width:77px !important;"> 
               <img
                   <c:if
-                       test="${not empty studyBo.thumbnailImage}">src="<spring:eval expression="@propertyConfigurer.getProperty('fda.imgDisplaydPath')" />${sessionObject.gcpBucketName}/studylogo/${studyBo.thumbnailImage}"
+                       test="${not empty studyBo.thumbnailImage}">src="${signedUrl}"
               </c:if>
                   <c:if
                       test="${empty studyBo.thumbnailImage}">src="/studybuilder/images/dummy-img.jpg" </c:if>
@@ -796,7 +796,11 @@ margin-top:16px !important;
   // Displaying images from file upload
   function readURL(input) {
     if (input.files && input.files[0]) {
-      var reader = new FileReader();
+    	const allowedExtensions =  ['jpg','png','jpeg'];
+     	  const { name:fileName } = input.files[0];
+     	  const fileExtension = fileName.split(".").pop().toLowerCase();
+     	  if(allowedExtensions.includes(fileExtension)){      	
+    	var reader = new FileReader();
 
       reader.onload = function (e) {
     	  var image = new Image();
@@ -811,6 +815,19 @@ margin-top:16px !important;
       };
 
       reader.readAsDataURL(input.files[0]);
+     	 }else{
+      		  $("#uploadImg")
+             .parent()
+             .find(".help-block")
+             .empty()
+             .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                 "Invalid image size or format"));
+         	  $(".thumb.alternate img")
+             .attr("src",
+                 "/studybuilder/images/dummy-img.jpg");
+         	  $('#uploadImg, #thumbnailImageId').val('');
+         	  $('#removeUrl').css("visibility", "hidden");
+      	  }
     }
   }
 
