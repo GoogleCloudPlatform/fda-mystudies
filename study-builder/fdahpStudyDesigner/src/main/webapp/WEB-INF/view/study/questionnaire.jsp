@@ -2768,7 +2768,7 @@
           if (isFromValid("#contentFormId")) {
             doneQuestionnaire(this, 'save', function (val) {
               if (val) {
-                showSucMsg("Content saved as draft.");
+                showSucMsg("Content saved as draft");
               } else {
                 var slaCount = $('#contentTab').find('.has-error.has-danger').length;
                 var flaCount = $('#schedule').find('.has-error.has-danger').length;
@@ -3879,13 +3879,13 @@
           if (!val) {
             $('.scheduleQusClass a').tab('show');
           } else if (actType === 'save') {
-            showSucMsg("Content saved as draft.");
+            showSucMsg("Content saved as draft");
             $("body").removeClass("loading");
           }
           callback(val);
         });
       } else {
-        showErrMsg("Please choose anchor date for date/time of the launch.");
+        showErrMsg("Please choose anchor date for date/time of the launch");
         $('.scheduleTaskClass a').tab('show');
         if (callback)
           callback(false);

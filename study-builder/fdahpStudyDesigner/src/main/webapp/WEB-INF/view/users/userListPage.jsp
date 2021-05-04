@@ -283,12 +283,12 @@
             var message = data.message;
             if (message == 'SUCCESS') {
               if (status == 1) {
-                showSucMsg('Admin user successfully deactivated.');
+                showSucMsg('Admin user successfully deactivated');
                 $('#' + userId).val("0");
                 $('#label' + userId).attr('data-original-title', 'Account status: Deactivated');
                 $('#editIcon' + userId).addClass('cursor-none');
               } else {
-                showSucMsg('Admin user successfully activated.');
+                showSucMsg('Admin user successfully activated');
                 $('#' + userId).val("1");
                 $('#label' + userId).attr('data-original-title', 'Account status: Active');
                 $('#editIcon' + userId).removeClass('cursor-none');

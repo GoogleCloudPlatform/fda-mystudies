@@ -126,7 +126,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                  "Questionnaire copyied successfully.");
+                  "Questionnaire copied successfully");
           request
               .getSession()
               .setAttribute(
@@ -147,7 +147,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Questionnaire not copyied successfully.");
+                  "Questionnaire not copied successfully");
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/viewStudyQuestionnaires.do", map);
         }
@@ -1871,13 +1871,13 @@ public class StudyQuestionnaireController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Form Question updated successfully.");
+                    "Form question updated successfully");
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Form Question added successfully.");
+                    "Form question added successfully");
           }
           String studyId =
               (String)
@@ -1899,7 +1899,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Form not added successfully.");
+                  "Form not added successfully");
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/formQuestion.do", map);
         }
@@ -1968,13 +1968,13 @@ public class StudyQuestionnaireController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Form Step updated successfully.");
+                    "Form step updated successfully");
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Form Step added successfully.");
+                    "Form step added successfully");
           }
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/viewQuestionnaire.do", map);
@@ -1983,7 +1983,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Form not added successfully.");
+                  "Form not added successfully");
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/formStep.do", map);
         }
@@ -2139,13 +2139,13 @@ public class StudyQuestionnaireController {
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                      "Questionnaire Updated successfully.");
+                      "Questionnaire updated successfully");
             } else {
               request
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                      "Questionnaire added successfully.");
+                      "Questionnaire added successfully");
             }
             String studyId =
                 (String)
@@ -2175,7 +2175,7 @@ public class StudyQuestionnaireController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Questionnaire not added successfully.");
+                    "Questionnaire not added successfully");
             map.addAttribute("_S", sessionStudyCount);
             mav = new ModelAndView("redirect:/adminStudies/viewQuestionnaire.do", map);
           }
@@ -2245,13 +2245,13 @@ public class StudyQuestionnaireController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Question Step updated successfully.");
+                    "Question step updated successfully");
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Question Step added successfully.");
+                    "Question step added successfully");
           }
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/viewQuestionnaire.do", map);
@@ -2260,7 +2260,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Form not added successfully.");
+                  "Form not added successfully");
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/questionStep.do", map);
         }
@@ -2423,7 +2423,7 @@ public class StudyQuestionnaireController {
                     .getSession()
                     .setAttribute(
                         sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                        "Questionnaire Updated successfully.");
+                        "Questionnaire updated successfully");
               }
             } else {
               questionnaireBo.setCreatedBy(sesObj.getUserId());
@@ -2433,7 +2433,7 @@ public class StudyQuestionnaireController {
                     .getSession()
                     .setAttribute(
                         sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                        "Questionnaire added successfully.");
+                        "Questionnaire added successfully");
               }
             }
             customStudyId =

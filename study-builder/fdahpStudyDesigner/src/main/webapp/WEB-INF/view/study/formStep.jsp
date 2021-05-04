@@ -215,8 +215,8 @@
           </div>
           <div class="clearfix"></div>
           <div class="row mt-lg" id="addQuestionContainer">
-            <div class="col-md-6 p-none blue-md-f mt-xs text-uppercase">
-              Questions in the Form
+            <div class="col-md-6 p-none black-md-f mt-xs">
+              Questions in the form
             </div>
             <div class="col-md-6 p-none">
               <div class="dis-line form-group mb-md pull-right">

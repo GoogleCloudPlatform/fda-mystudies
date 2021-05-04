@@ -521,7 +521,7 @@ public class StudyActiveTasksController {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
               request
                   .getSession()
-                  .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully.");
+                  .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully");
               return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
             } else {
               StudyBuilderAuditEvent event =
@@ -542,7 +542,7 @@ public class StudyActiveTasksController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Task not added successfully.");
+                    "Task not added successfully");
             mav =
                 new ModelAndView(
                     "redirect:/adminStudies/viewStudyActiveTasks.do" + "#" + currentPage, map);

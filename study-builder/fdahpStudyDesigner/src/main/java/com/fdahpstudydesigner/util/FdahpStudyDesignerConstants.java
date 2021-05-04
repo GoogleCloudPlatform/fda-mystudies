@@ -29,22 +29,22 @@ public class FdahpStudyDesignerConstants {
 
   public static final String ACTION_DEACTIVATE = "deactivateId";
   public static final String ACTION_DEACTIVATE_SUCCESS_MSG =
-      "The study has been successfully deactivated.";
+      "The study has been successfully deactivated";
 
   public static final String ACTION_LUNCH = "lunchId";
   public static final String ACTION_LUNCH_SUCCESS_MSG =
-      "The study has been launched and is now available to participants in the mobile applications.";
+      "The study has been launched and is now available to participants in the mobile applications";
   public static final String ACTION_ON = "actionOn";
   public static final String ACTION_PAGE = "actionPage";
   public static final String ACTION_PAUSE = "pauseId";
-  public static final String ACTION_PAUSE_SUCCESS_MSG = "The study has been paused.";
+  public static final String ACTION_PAUSE_SUCCESS_MSG = "The study has been paused";
   // Action buttons
   public static final String ACTION_PUBLISH = "publishId";
   // Action success Messages
   public static final String ACTION_PUBLISH_SUCCESS_MSG =
       "The study has been published as an upcoming study.";
   public static final String ACTION_RESUME = "resumeId";
-  public static final String ACTION_RESUME_SUCCESS_MSG = "The study has been resumed.";
+  public static final String ACTION_RESUME_SUCCESS_MSG = "The study has been resumed";
 
   public static final String ACTION_SUC_MSG = "actionSucMsg";
   public static final String ACTION_TYPE = "actionType";
@@ -57,7 +57,7 @@ public class FdahpStudyDesignerConstants {
   public static final String ACTION_UNPUBLISH_SUCCESS_MSG =
       "The study has been removed from the list of upcoming studies.";
   public static final String ACTION_UPDATES = "updatesId";
-  public static final String ACTION_UPDATES_SUCCESS_MSG = "Study updates have been published.";
+  public static final String ACTION_UPDATES_SUCCESS_MSG = "Study updates have been published";
 
   public static final String ACTIVE = "active";
   public static final int ACTIVE_STATUS = 1;
