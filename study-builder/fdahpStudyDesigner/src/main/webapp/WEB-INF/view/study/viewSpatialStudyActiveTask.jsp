@@ -299,7 +299,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                         class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
                         id="chartId" name="taskAttributeValueBos[7].timeRangeChart"
                         title="Select">
-                      <option value="" selected disabled>Select</option>
+                      <option value="" disabled>Select</option>
                       <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                         <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                       </c:forEach>
@@ -490,7 +490,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                         class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
                         id="chartId1" name="taskAttributeValueBos[8].timeRangeChart"
                         title="Select">
-                      <option value="" selected disabled>Select</option>
+                      <option value="" disabled>Select</option>
                       <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                         <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                       </c:forEach>
@@ -681,7 +681,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                         class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
                         id="chartId2" name="taskAttributeValueBos[9].timeRangeChart"
                         title="Select">
-                      <option value="" selected disabled>Select</option>
+                      <option value="" disabled>Select</option>
                       <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                         <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                       </c:forEach>

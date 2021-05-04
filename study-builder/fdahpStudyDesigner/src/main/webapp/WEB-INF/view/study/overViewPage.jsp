@@ -752,6 +752,10 @@
       var thisAttr = this;
       var thisId = $(this).attr("data-imageId");
       if ((file = this.files[0])) {
+    	  const allowedExtensions =  ['jpg','png','jpeg'];
+         	const { name:fileName } = file;
+         	const fileExtension = fileName.split(".").pop().toLowerCase();
+          if(allowedExtensions.includes(fileExtension)){ 
         img = new Image();
         img.onload = function () {
           
@@ -821,8 +825,17 @@
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
-
+        
+          }else{
+        	  $(thisAttr).val();
+              $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+              $(thisAttr).parent().find(".help-block").empty().append(
+            	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Invalid image size or format"));
+              $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+        }
       }
+      
       var file = $(this).find('input[type=file]').val();
       var thumbnailImageId = $(this).find('input[type=file]').parent().find(
           'input[name="imagePath"]').val();
@@ -837,10 +850,28 @@
   // Displaying images from file upload
   function readURL(input) {
     if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function (e) {
-      };
-      reader.readAsDataURL(input.files[0]);
+    	
+    	const allowedExtensions =  ['jpg','png','jpeg'];
+     	const { name:fileName } = input.files[0];
+     	const fileExtension = fileName.split(".").pop().toLowerCase();
+     	if(allowedExtensions.includes(fileExtension)){  
+      		var reader = new FileReader();
+		      reader.onload = function (e) {
+		      };
+		      reader.readAsDataURL(input.files[0]);
+	    }else{
+	   		  $("#uploadImg")
+	          .parent()
+	          .find(".help-block")
+	          .empty()
+	          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	              "Invalid image size or format"));
+	      	  $(".thumb.alternate img")
+	          .attr("src",
+	              "/studybuilder/images/dummy-img.jpg");
+	      	  $('#uploadImg, #thumbnailImageId').val('');
+	      	  $('#removeUrl').css("visibility", "hidden");
+	   	  }
     }
   }
 

@@ -3454,6 +3454,10 @@ if(document.getElementById("singleSelect").checked==true){
       var thisAttr = this;
       var response_type = $("#rlaResonseType").val();
       if ((file = this.files[0])) {
+    	  const allowedExtensions =  ['jpg','png','jpeg'];
+          const { name:fileName } = file;
+          const fileExtension = fileName.split(".").pop().toLowerCase();
+          if(allowedExtensions.includes(fileExtension)){
         img = new Image();
         img.onload = function () {
         	var minHeightAndWidth=0;
@@ -3503,6 +3507,14 @@ if(document.getElementById("singleSelect").checked==true){
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
+          }else{
+          	   $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
+                 $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+                 $(thisAttr).parent().find(".help-block").empty().append(
+                   $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
+                     "Invalid image size or format"));
+                 $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+            }
       }
     });
     $('.textScaleValue').on('blur', function () {
@@ -3593,6 +3605,10 @@ if(document.getElementById("singleSelect").checked==true){
   function readURL(input) {
 
     if (input.files && input.files[0]) {
+    	const allowedExtensions =  ['jpg','png','jpeg'];
+   	  const { name:fileName } = input.files[0];
+   	  const fileExtension = fileName.split(".").pop().toLowerCase();
+   	  if(allowedExtensions.includes(fileExtension)){
       var reader = new FileReader();
 
       reader.onload = function (e) {
@@ -3605,6 +3621,7 @@ if(document.getElementById("singleSelect").checked==true){
       };
 
       reader.readAsDataURL(input.files[0]);
+   	  }
     }
   }
 
@@ -4916,7 +4933,7 @@ if(document.getElementById("singleSelect").checked==true){
     var thisAttr = $("#anchorTextId");
     var anchorDateId = '${questionsBo.anchorDateId}';
     if (anchordateText != null && anchordateText != '' && typeof anchordateText != 'undefined') {
-      var staticText = "Enrollment Date";
+      var staticText = "Enrollment date";
       if (anchordateText.toUpperCase() === staticText.toUpperCase()) {
         $(thisAttr).val('');
         $(thisAttr).parent().addClass("has-danger").addClass("has-error");
