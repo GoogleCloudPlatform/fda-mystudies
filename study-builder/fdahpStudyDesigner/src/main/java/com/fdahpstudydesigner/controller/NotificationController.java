@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,7 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class NotificationController {
 
-  private static Logger logger = Logger.getLogger(NotificationController.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(NotificationController.class.getName());
 
   @Autowired private NotificationService notificationService;
 
@@ -41,7 +42,7 @@ public class NotificationController {
 
   @RequestMapping("/adminNotificationEdit/deleteNotification.do")
   public ModelAndView deleteNotification(HttpServletRequest request) {
-    logger.info("NotificationController - deleteNotification - Starts");
+    logger.entry("begin deleteNotification");
     ModelAndView mav = new ModelAndView();
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -85,7 +86,7 @@ public class NotificationController {
 
   @RequestMapping("/adminNotificationEdit/getNotificationToEdit.do")
   public ModelAndView getNotificationToEdit(HttpServletRequest request) {
-    logger.info("NotificationController - getNotificationToEdit - Starts");
+    logger.entry("begin getNotificationToEdit");
     ModelMap map = new ModelMap();
     NotificationBO notificationBO = null;
     ModelAndView mav = new ModelAndView();
@@ -153,13 +154,13 @@ public class NotificationController {
     } catch (Exception e) {
       logger.error("NotificationController - getNotificationToEdit - ERROR", e);
     }
-    logger.info("NotificationController - getNotificationToEdit - Ends");
+    logger.exit("getNotificationToEdit - Ends");
     return mav;
   }
 
   @RequestMapping("/adminNotificationView/getNotificationToView.do")
   public ModelAndView getNotificationToView(HttpServletRequest request) {
-    logger.info("NotificationController - getNotification - Starts");
+    logger.entry("begin getNotificationToView()");
     ModelMap map = new ModelMap();
     NotificationBO notificationBO = null;
     ModelAndView mav = new ModelAndView();
@@ -205,14 +206,14 @@ public class NotificationController {
     } catch (Exception e) {
       logger.error("NotificationController - getNotification - ERROR", e);
     }
-    logger.info("NotificationController - getNotification - Ends");
+    logger.exit("getNotificationToView() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminNotificationEdit/saveOrUpdateNotification.do")
   public ModelAndView saveOrUpdateOrResendNotification(
       HttpServletRequest request, NotificationBO notificationBO) {
-    logger.info("NotificationController - saveOrUpdateOrResendNotification - Starts");
+    logger.info("begin saveOrUpdateOrResendNotification()");
     Integer notificationId = 0;
     ModelAndView mav = new ModelAndView();
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -327,13 +328,13 @@ public class NotificationController {
     } catch (Exception e) {
       logger.error("NotificationController - saveOrUpdateOrResendNotification - ERROR", e);
     }
-    logger.info("NotificationController - saveOrUpdateOrResendNotification - Ends");
+    logger.exit("saveOrUpdateOrResendNotification() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminNotificationView/viewNotificationList.do")
   public ModelAndView viewNotificationList(HttpServletRequest request) {
-    logger.info("NotificationController - viewNotificationList() - Starts");
+    logger.entry("begin viewNotificationList()");
     String sucMsg = "";
     String errMsg = "";
     ModelMap map = new ModelMap();
@@ -377,7 +378,7 @@ public class NotificationController {
     } catch (Exception e) {
       logger.error("NotificationController - viewNotificationList() - ERROR ", e);
     }
-    logger.info("NotificationController - viewNotificationList() - ends");
+    logger.exit("viewNotificationList() - ends");
     return mav;
   }
 }

@@ -4660,6 +4660,10 @@
         var thisAttr = this;
         var response_type = $("#rlaResonseType").val();
         if ((file = this.files[0])) {
+        	const allowedExtensions =  ['jpg','png','jpeg'];
+            const { name:fileName } = file;
+            const fileExtension = fileName.split(".").pop().toLowerCase();
+            if(allowedExtensions.includes(fileExtension)){
           img = new Image();
           img.onload = function () {
             var ht = this.height;
@@ -4702,6 +4706,14 @@
             $(thisAttr).parent().parent().parent().find(".removeUrl").click();
           };
           img.src = _URL.createObjectURL(file);
+            }else{
+         	   $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
+                $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
+                $(thisAttr).parent().find(".help-block").empty().append(
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
+                    "Invalid image size or format"));
+                $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+           }
         }
       });
 
@@ -4872,9 +4884,13 @@
 
     //Displaying images from file upload
     function readURL(input) {
-
+    	
       if (input.files && input.files[0]) {
-        var reader = new FileReader();
+    	  const allowedExtensions =  ['jpg','png','jpeg'];
+       	  const { name:fileName } = input.files[0];
+       	  const fileExtension = fileName.split(".").pop().toLowerCase();
+       	  if(allowedExtensions.includes(fileExtension)){
+    	  var reader = new FileReader();
 
         reader.onload = function (e) {
           var a = input.getAttribute("id");
@@ -4886,6 +4902,7 @@
         };
 
         reader.readAsDataURL(input.files[0]);
+       	  }
       }
     }
 

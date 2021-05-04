@@ -44,8 +44,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -56,7 +57,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class UsersController {
 
-  private static Logger logger = Logger.getLogger(UsersController.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(UsersController.class.getName());
 
   @Autowired private LoginService loginService;
 
@@ -70,7 +71,7 @@ public class UsersController {
   public void activateOrDeactivateUser(
       HttpServletRequest request, HttpServletResponse response, String userId, String userStatus)
       throws IOException {
-    logger.info("UsersController - activateOrDeactivateUser() - Starts");
+    logger.entry("begin activateOrDeactivateUser()");
     String msg = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out;
@@ -90,7 +91,7 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - activateOrDeactivateUser() - ERROR", e);
     }
-    logger.info("UsersController - activateOrDeactivateUser() - Ends");
+    logger.exit("activateOrDeactivateUser() - Ends");
     jsonobject.put("message", msg);
     response.setContentType("application/json");
     out = response.getWriter();
@@ -99,7 +100,7 @@ public class UsersController {
 
   @RequestMapping("/adminUsersEdit/addOrEditUserDetails.do")
   public ModelAndView addOrEditUserDetails(HttpServletRequest request) {
-    logger.info("UsersController - addOrEditUserDetails() - Starts");
+    logger.entry("begin addOrEditUserDetails()");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     UserBO userBO = null;
@@ -147,14 +148,14 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - addOrEditUserDetails() - ERROR", e);
     }
-    logger.info("UsersController - addOrEditUserDetails() - Ends");
+    logger.exit("addOrEditUserDetails() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersEdit/addOrUpdateUserDetails.do")
   public ModelAndView addOrUpdateUserDetails(
       HttpServletRequest request, UserBO userBO, BindingResult result) {
-    logger.info("UsersController - addOrUpdateUserDetails() - Starts");
+    logger.entry("begin addOrUpdateUserDetails()");
     ModelAndView mav = new ModelAndView();
     String msg = "";
     String permissions = "";
@@ -288,13 +289,13 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - addOrUpdateUserDetails() - ERROR", e);
     }
-    logger.info("UsersController - addOrUpdateUserDetails() - Ends");
+    logger.exit("addOrUpdateUserDetails() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersEdit/enforcePasswordChange.do")
   public ModelAndView enforcePasswordChange(HttpServletRequest request) {
-    logger.info("UsersController - enforcePasswordChange() - Starts");
+    logger.entry("begin enforcePasswordChange()");
     ModelAndView mav = new ModelAndView();
     String msg = "";
     List<String> emails = null;
@@ -381,13 +382,13 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - enforcePasswordChange() - ERROR", e);
     }
-    logger.info("UsersController - enforcePasswordChange() - Ends");
+    logger.exit("enforcePasswordChange() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersView/getUserList.do")
   public ModelAndView getUserList(HttpServletRequest request) {
-    logger.info("UsersController - getUserList() - Starts");
+    logger.entry("begin getUserList()");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     List<UserBO> userList = null;
@@ -418,13 +419,13 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - getUserList() - ERROR", e);
     }
-    logger.info("UsersController - getUserList() - Ends");
+    logger.exit("getUserList() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersEdit/resendActivateDetailsLink.do")
   public ModelAndView resendActivateDetailsLink(HttpServletRequest request) {
-    logger.info("UsersController - resendActivateDetailsLink() - Starts");
+    logger.entry("begin resendActivateDetailsLink()");
     ModelAndView mav = new ModelAndView();
     String msg = "";
     UserBO userBo = null;
@@ -464,13 +465,13 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - resendActivateDetailsLink() - ERROR", e);
     }
-    logger.info("UsersController - resendActivateDetailsLink() - Ends");
+    logger.exit("resendActivateDetailsLink() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersView/viewUserDetails.do")
   public ModelAndView viewUserDetails(HttpServletRequest request) {
-    logger.info("UsersController - viewUserDetails() - Starts");
+    logger.entry("begin viewUserDetails()");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     UserBO userBO = null;
@@ -526,7 +527,7 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - viewUserDetails() - ERROR", e);
     }
-    logger.info("UsersController - viewUserDetails() - Ends");
+    logger.exit("viewUserDetails() - Ends");
     return mav;
   }
 }
