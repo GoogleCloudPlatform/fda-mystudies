@@ -1976,10 +1976,10 @@
         $('.weeklyStartCls').show();
         $('.weeklyStartCls').find('input:text,select').attr('required', true);
         $("#weekDaysId").show();
-        $("#weekDaysId").find('input:text').attr('required', true);
+        $("#weekDaysId").find('input:text,select').attr('required', true);
 
         $(".weeklyRegular").show();
-        $(".weeklyRegular").attr('required', true);
+        $(".weeklyRegular").find('input:text').attr('required', true);
 
         $(".weeklyanchorDiv").hide();
         $(".weeklyanchorDiv").find('input:text').removeAttr('required', true);
@@ -1987,7 +1987,7 @@
         $('.monthlyStartCls').show();
         $('.monthlyStartCls').find('input:text').attr('required', true);
         $("#monthlyDateId").show();
-        $("#monthlyDateId").find('input:text').attr('required', true);
+        $("#monthlyDateId").find('input:text,select').attr('required', true);
 
         $(".monthlyRegular").show();
         $(".monthlyRegular").attr('required', true);
