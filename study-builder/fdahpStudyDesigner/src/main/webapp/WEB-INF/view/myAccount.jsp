@@ -402,7 +402,7 @@
             },
           });
         } else {
-          showErrMsg('New password should not be same as old Password.');
+          showErrMsg('New password should not be same as old Password');
           $(window).scrollTop(0);
           $(".changepwd .emptyField").val("");
           $("#updateBtn").prop('disabled', false);
