@@ -908,8 +908,12 @@ template "project_data" {
             member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           },
           {
-            role   = "roles/storage.objectViewer"
-            member = "allUsers"
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:study-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          },
+          {
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
