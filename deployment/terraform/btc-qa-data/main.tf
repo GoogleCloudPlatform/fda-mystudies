@@ -170,8 +170,12 @@ module "btc_qa_mystudies_study_resources" {
       role   = "roles/storage.objectAdmin"
     },
     {
-      member = "allUsers"
-      role   = "roles/storage.objectViewer"
+      member = "serviceAccount:study-datastore-gke-sa@btc-qa-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
+    },
+    {
+      member = "serviceAccount:participant-manager-gke-sa@btc-qa-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
     },
   ]
 }
