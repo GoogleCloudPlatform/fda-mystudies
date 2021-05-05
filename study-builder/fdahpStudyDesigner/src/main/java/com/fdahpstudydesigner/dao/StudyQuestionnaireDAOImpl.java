@@ -4019,7 +4019,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             query.executeUpdate();
             for (QuestionnaireCustomScheduleBo questionnaireCustomScheduleBo :
                 questionnaireBo.getQuestionnaireCustomScheduleBo()) {
-              if (questionnaireCustomScheduleBo.getFrequencyTime() != null) {
+              if (questionnaireCustomScheduleBo.getFrequencyEndTime() != null) {
                 if (questionnaireCustomScheduleBo.getQuestionnairesId() == null) {
                   questionnaireCustomScheduleBo.setQuestionnairesId(questionnaireBo.getId());
                 }
@@ -4039,11 +4039,20 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           FdahpStudyDesignerConstants.UI_SDF_DATE,
                           FdahpStudyDesignerConstants.SD_DATE_FORMAT));
                 }
-                if ((questionnaireCustomScheduleBo.getFrequencyTime() != null)
-                    && !questionnaireCustomScheduleBo.getFrequencyTime().isEmpty()) {
-                  questionnaireCustomScheduleBo.setFrequencyTime(
+                if ((questionnaireCustomScheduleBo.getFrequencyEndTime() != null)
+                    && !questionnaireCustomScheduleBo.getFrequencyEndTime().isEmpty()) {
+                  questionnaireCustomScheduleBo.setFrequencyEndTime(
                       FdahpStudyDesignerUtil.getFormattedDate(
-                          questionnaireCustomScheduleBo.getFrequencyTime(),
+                          questionnaireCustomScheduleBo.getFrequencyEndTime(),
+                          FdahpStudyDesignerConstants.SDF_TIME,
+                          FdahpStudyDesignerConstants.UI_SDF_TIME));
+                }
+
+                if ((questionnaireCustomScheduleBo.getFrequencyStartTime() != null)
+                    && !questionnaireCustomScheduleBo.getFrequencyStartTime().isEmpty()) {
+                  questionnaireCustomScheduleBo.setFrequencyStartTime(
+                      FdahpStudyDesignerUtil.getFormattedDate(
+                          questionnaireCustomScheduleBo.getFrequencyStartTime(),
                           FdahpStudyDesignerConstants.SDF_TIME,
                           FdahpStudyDesignerConstants.UI_SDF_TIME));
                 }

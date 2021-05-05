@@ -29,7 +29,9 @@ public class ActivityFrequencyAnchorRunsBean {
 
   private Integer endDays = 0;
 
-  private String time = "";
+  private String startTime = "";
+
+  private String endTime = "";
 
   public Integer getStartDays() {
     return startDays;
@@ -47,11 +49,19 @@ public class ActivityFrequencyAnchorRunsBean {
     this.endDays = endDays;
   }
 
-  public String getTime() {
-    return time;
+  public String getStartTime() {
+    return startTime;
   }
 
-  public void setTime(String time) {
-    this.time = time;
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
+
+  public String getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
   }
 }

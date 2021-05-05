@@ -582,7 +582,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           query.executeUpdate();
           for (ActiveTaskCustomScheduleBo activeTaskCustomScheduleBo :
               activeTaskBo.getActiveTaskCustomScheduleBo()) {
-            if (activeTaskCustomScheduleBo.getFrequencyTime() != null) {
+            if (activeTaskCustomScheduleBo.getFrequencyStartTime() != null
+                && activeTaskCustomScheduleBo.getFrequencyEndTime() != null) {
               if (activeTaskCustomScheduleBo.getActiveTaskId() == null) {
                 activeTaskCustomScheduleBo.setActiveTaskId(activeTaskBo.getId());
               }
@@ -602,11 +603,19 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                         FdahpStudyDesignerConstants.UI_SDF_DATE,
                         FdahpStudyDesignerConstants.SD_DATE_FORMAT));
               }
-              if ((activeTaskCustomScheduleBo.getFrequencyTime() != null)
-                  && !activeTaskCustomScheduleBo.getFrequencyTime().isEmpty()) {
-                activeTaskCustomScheduleBo.setFrequencyTime(
+              if ((activeTaskCustomScheduleBo.getFrequencyStartTime() != null)
+                  && !activeTaskCustomScheduleBo.getFrequencyStartTime().isEmpty()) {
+                activeTaskCustomScheduleBo.setFrequencyStartTime(
                     FdahpStudyDesignerUtil.getFormattedDate(
-                        activeTaskCustomScheduleBo.getFrequencyTime(),
+                        activeTaskCustomScheduleBo.getFrequencyStartTime(),
+                        FdahpStudyDesignerConstants.SDF_TIME,
+                        FdahpStudyDesignerConstants.UI_SDF_TIME));
+              }
+              if ((activeTaskCustomScheduleBo.getFrequencyEndTime() != null)
+                  && !activeTaskCustomScheduleBo.getFrequencyEndTime().isEmpty()) {
+                activeTaskCustomScheduleBo.setFrequencyEndTime(
+                    FdahpStudyDesignerUtil.getFormattedDate(
+                        activeTaskCustomScheduleBo.getFrequencyEndTime(),
                         FdahpStudyDesignerConstants.SDF_TIME,
                         FdahpStudyDesignerConstants.UI_SDF_TIME));
               }
