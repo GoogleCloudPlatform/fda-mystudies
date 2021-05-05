@@ -24,7 +24,7 @@ INSERT INTO `active_task_attrtibutes_values` (`active_task_attribute_id`, `activ
 
 INSERT INTO `active_task_frequencies` (`id`, `active_task_id`, `frequency_date`, `frequency_time`, `is_launch_study`, `is_study_life_time`) VALUES (28500, 2850, NULL, NULL, 1, 1);
 
-INSERT INTO `active_task_custom_frequencies` (`id`, `frequency_start_date`, `frequency_end_date`, `frequency_time`, `active_task_id`, `is_used`) VALUES (28500, '2020-03-24', '2020-03-30', '22:07:00', 2862, 'N');
+INSERT INTO `active_task_custom_frequencies` (`id`, `frequency_start_date`, `frequency_end_date`, `frequency_start_time`, `active_task_id`, `is_used`) VALUES (28500, '2020-03-24', '2020-03-30', '22:07:00', 2862, 'N');
 
 INSERT INTO `study_version` (`version_id`, `activity_version`, `custom_study_id`, `study_version`, `consent_version`) VALUES (1979, 1, 67859, 1, 1);
 
