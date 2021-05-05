@@ -50,7 +50,6 @@ locals {
     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
     "participant-manager"                       = ["participant-manager/**"]
-    "db-migration/auth-server-db-migration"     = ["db-migration/auth-server-db-migration/**"]
   }
 }
 
