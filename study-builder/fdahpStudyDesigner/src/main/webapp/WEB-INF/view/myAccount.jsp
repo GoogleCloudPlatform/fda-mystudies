@@ -8,7 +8,7 @@
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="black-lg-f">
-      My Account <c:if test="${accountManager eq 'Yes'}">
+      My account <c:if test="${accountManager eq 'Yes'}">
       <span
           class="gray-xs-f ml-xlg">Account Manager
       </span>
