@@ -909,11 +909,11 @@ EOF
           },
           {
             role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-          }, 
+            member = "serviceAccount:study-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          },
           {
             role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:study-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+            member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
