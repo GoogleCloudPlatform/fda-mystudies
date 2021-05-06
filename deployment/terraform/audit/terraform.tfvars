@@ -13,5 +13,5 @@
 # limitations under the License.
 
 
-folder         = "folders/0000000000"
-auditors_group = "example-dev-auditors@example.com"
+folder         = "folders/924672158484"
+auditors_group = "btc-qa-auditors@boston-technology.com"

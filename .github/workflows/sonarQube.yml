@@ -1,0 +1,21 @@
+name: Sonar Qube
+on:
+  pull_request:
+    paths:
+    - 'common-modules/**'
+    - 'participant-manager-datastore/**'
+    - '.github/workflows/build-participant-manager-datastore.yml'
+jobs:
+  sonarQubeTrigger:
+    name: SonarQube Trigger
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: SonarQube Scan
+      uses: kitabisa/sonarqube-action@v1.1.0
+      with:
+        projectBaseDir: "participant-manager-datastore"
+        host: "http://35.222.67.4:9095"
+        projectKey: "newproject"
+        login: "9325b3af34081bd97f25ff7c2bb4383adf0d1ae1"
+          
