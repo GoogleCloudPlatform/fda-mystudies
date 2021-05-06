@@ -1438,13 +1438,13 @@
         localStorage.setItem("IsActiveRegularSelected", "true");
 
         $("#weekDaysId").show();
-        $("#weekDaysId").attr('required', true);
+        $("#weekDaysId").find('input:text,select').attr('required', true);
 
         $(".weeklyRegular").show();
-        $(".weeklyRegular").attr('required');
+        $(".weeklyRegular").find('input:text').attr('required', true);
 
         $("#monthlyDateId").show();
-        $("#monthlyDateId").attr('required', true);
+        $("#monthlyDateId").find('input:text,select').attr('required', true);
 
         $(".monthlyRegular").show();
         $(".monthlyRegular").attr('required', true);
