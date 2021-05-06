@@ -154,7 +154,7 @@ $(document)
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
                             .attr("style","white-space:nowrap")
-                            .text("Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and -(minus)."));
+                            .text("Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and -(minus)"));
                       }
                     }
                   });       

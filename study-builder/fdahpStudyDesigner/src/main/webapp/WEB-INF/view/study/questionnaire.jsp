@@ -781,7 +781,7 @@
                                name="questionnairesFrequenciesList[0].timePeriodFromDays"
                                value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number"/>
+                               data-pattern-error="Please enter valid number" data-error="Please fill out this field" />
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -3809,7 +3809,7 @@
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
             'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
-                   "Please ensure that the runs created do not have any overlapping time period."));
+                   "Please ensure that the runs created do not have any overlapping time period"));
       } else {
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass(
             'has-error has-danger').find(".help-block").addClass('with-errors').empty();
@@ -4578,7 +4578,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current row and greater than Y of the previous row."));
+              "X should be less than Y of the current row and greater than Y of the previous row"));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -4703,7 +4703,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current row and greater than Y of the previous row."));
+              "X should be less than Y of the current row and greater than Y of the previous row"));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
