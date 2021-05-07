@@ -66,7 +66,7 @@
 
   /* error box css start here  */
   .help-block ul {
-    width: 150px;
+    width: 155px;
   / / font-size: 10 px !important;
   }
  /* error box css end here  */
@@ -940,12 +940,13 @@
                     title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                 </span>
+                 </span>
                 <br/>
-                <span
+                <div
                     class=" form-group m-none dis-inline vertical-align-middle pr-md">
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                         name="dayOfTheWeek" required data-error="Please fill out this field" >
+                                         name="dayOfTheWeek" required data-error="Please select an item in the list" >
                     <option value=''>Select</option>
                     <option value='Sunday'
                       ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -971,10 +972,10 @@
                   </select>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
-                </span>
-              </span>
+                </div>
+             
               <span
-                  class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  class="form-group m-none dis-inline vertical-align-middle pr-md ml-lg">
                 <input id="selectWeeklyTime" type="text" data-error="Please fill out this field" 
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
                        required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
