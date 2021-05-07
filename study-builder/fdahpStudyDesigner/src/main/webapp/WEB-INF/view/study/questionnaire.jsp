@@ -940,7 +940,7 @@
                     class=" form-group m-none dis-inline vertical-align-middle pr-md">
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                         name="dayOfTheWeek" required data-error="Please fill out this field">
+                                         name="dayOfTheWeek" required data-error="Please select an item in the list">
                     <option value=''>Select</option>
                     <option value='Sunday'
                       ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -969,7 +969,7 @@
                 </span>
               </span>
               <span
-                  class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  class="form-group m-none dis-inline vertical-align-middle pr-md ml-lg">
                 <input id="selectWeeklyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
                        required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
