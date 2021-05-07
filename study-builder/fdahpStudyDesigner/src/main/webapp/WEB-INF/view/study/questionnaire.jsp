@@ -66,7 +66,7 @@
 
   /* error box css start here  */
   .help-block ul {
-    width: 150px;
+    width: 155px;
    /* font-size: 10 px !important; */
   }
  /* error box css end here  */
@@ -935,12 +935,13 @@
                     data-placement="bottom"
                     title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
                 </span>
+                </span>
                 <br/>
-                <span
+                <div
                     class=" form-group m-none dis-inline vertical-align-middle pr-md">
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                         name="dayOfTheWeek" required data-error="Please fill out this field">
+                                         name="dayOfTheWeek" required data-error="Please select an item in the list">
                     <option value=''>Select</option>
                     <option value='Sunday'
                       ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -966,10 +967,10 @@
                   </select>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
-                </span>
-              </span>
+                </div>
+              
               <span
-                  class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  class="form-group m-none dis-inline vertical-align-middle pr-md ml-lg">
                 <input id="selectWeeklyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
                        required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
