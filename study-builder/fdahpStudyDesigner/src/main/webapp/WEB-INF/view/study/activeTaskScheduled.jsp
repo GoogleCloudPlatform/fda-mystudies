@@ -36,7 +36,7 @@
   }
 
   .help-block ul {
-    width: 150px;
+    width: 155px;
    /* font-size: 10 px !important; */
   }
 .tool-tip {
