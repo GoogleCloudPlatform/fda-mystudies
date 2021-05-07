@@ -1,3 +1,1 @@
-UPDATE fda_hphc.anchordate_type anchor SET anchor.name='Enrollment date' WHERE anchor.name='Enrollment Date';
-
-
+UPDATE fda_hphc.anchordate_type SET name = 'Enrollment date' WHERE name = 'Enrollment Date';
