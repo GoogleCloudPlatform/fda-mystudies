@@ -3042,7 +3042,7 @@
           callback(val);
         });
       } else {
-        showErrMsg("Please choose anchor date for date/time of the launch.");
+        showErrMsg("Please choose anchor date for date/time of the launch");
         $('.scheduleTaskClass a').tab('show');
         if (callback)
           callback(false);
