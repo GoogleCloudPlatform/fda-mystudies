@@ -396,7 +396,7 @@
                        name="activeTaskFrequenciesList[0].timePeriodFromDays"
                        value="${(fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0)?activeTaskBo.activeTaskFrequenciesList[0].timePeriodFromDays:''}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number"/>
+                       data-pattern-error="Please enter valid number" data-error="Please fill out this field" />
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -1438,13 +1438,13 @@
         localStorage.setItem("IsActiveRegularSelected", "true");
 
         $("#weekDaysId").show();
-        $("#weekDaysId").attr('required', true);
+        $("#weekDaysId").find('input:text,select').attr('required', true);
 
         $(".weeklyRegular").show();
-        $(".weeklyRegular").attr('required');
+        $(".weeklyRegular").find('input:text').attr('required', true);
 
         $("#monthlyDateId").show();
-        $("#monthlyDateId").attr('required', true);
+        $("#monthlyDateId").find('input:text,select').attr('required', true);
 
         $(".monthlyRegular").show();
         $(".monthlyRegular").attr('required', true);
@@ -1829,7 +1829,7 @@
           var test =thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").find("ul").length;
           if(test === 0){
           	thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
-              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not been added already."));
+              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not been added already"));
           }
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty();
@@ -2963,7 +2963,7 @@
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
             'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
                     $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
-                    "Please ensure that the runs created do not have any overlapping time period."));
+                    "Please ensure that the runs created do not have any overlapping time period"));
       } else {
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass(
             'has-error has-danger').addClass('with-errors').find(".help-block").empty();
@@ -3042,7 +3042,7 @@
           callback(val);
         });
       } else {
-        showErrMsg("Please choose anchor date for date/time of the launch.");
+        showErrMsg("Please choose anchor date for date/time of the launch");
         $('.scheduleTaskClass a').tab('show');
         if (callback)
           callback(false);
@@ -3198,7 +3198,7 @@
       if (moment(dt, "MM/DD/YYYY").toDate() < serverDateTime()) {
         couterRef.parent().addClass('has-error has-danger').find('.help-block.with-errors').empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please ensure the End Date/Time is greater than current date/time."));
+                "Please ensure the End Date/Time is greater than current date/time"));
         valid = false;
       } else {
         couterRef.parent().removeClass('has-error has-danger').find('.help-block.with-errors').empty();
@@ -3429,7 +3429,7 @@
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row"));
           $(".addbtn").addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -3552,7 +3552,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append(
-             $("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row."));
+             $("<ul><li> </li></ul>").attr("class","list-unstyled").text("X should be less than Y of the current row and greater than Y of the previous row"));
           $(".addbtn").addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");

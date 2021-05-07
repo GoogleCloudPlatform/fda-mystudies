@@ -8,7 +8,7 @@
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="black-lg-f">
-      My Account <c:if test="${accountManager eq 'Yes'}">
+      My account <c:if test="${accountManager eq 'Yes'}">
       <span
           class="gray-xs-f ml-xlg">Account Manager
       </span>
@@ -390,7 +390,7 @@
             success: function getResponse(data, status) {
               var message = data.message;
               if ('SUCCESS' == message) {
-                showSucMsg('Password updated successfully.');
+                showSucMsg('Password updated successfully');
                 $("#cancelBtn").click();
               } else {
                 showErrMsg(message);
@@ -402,7 +402,7 @@
             },
           });
         } else {
-          showErrMsg('New password should not be same as old Password.');
+          showErrMsg('New password should not be same as old password');
           $(window).scrollTop(0);
           $(".changepwd .emptyField").val("");
           $("#updateBtn").prop('disabled', false);

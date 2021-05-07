@@ -3216,7 +3216,7 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set BasicInfo.");
+                  "Error in set BasicInfo");
           return new ModelAndView("redirect:viewBasicInfo.do", map);
         }
       }
@@ -3284,7 +3284,7 @@ public class StudyController {
           } else {
             request
                 .getSession()
-                .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Unable to add Question added.");
+                .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Unable to add Question added");
             return new ModelAndView("redirect:/adminStudies/comprehensionQuestionList.do", map);
           }
         }
@@ -3355,7 +3355,7 @@ public class StudyController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Consent not added successfully.");
+                    "Consent not added successfully");
             map.addAttribute("_S", sessionStudyCount);
             mav = new ModelAndView("redirect:/adminStudies/consentListPage.do", map);
           }
@@ -3471,7 +3471,7 @@ public class StudyController {
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                      "Resource successfully added.");
+                      "Resource successfully added");
             }
           } else {
             if (("save").equalsIgnoreCase(buttonText)) {
@@ -3487,7 +3487,7 @@ public class StudyController {
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                      "Resource successfully updated.");
+                      "Resource successfully updated");
             }
           }
         } else {
@@ -3496,13 +3496,13 @@ public class StudyController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Failed to add resource.");
+                    "Failed to add resource");
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Failed to update resource.");
+                    "Failed to update resource");
           }
         }
         map.addAttribute("_S", sessionStudyCount);
@@ -3586,7 +3586,7 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Setting and Admins.");
+                  "Error in set Setting and Admins");
           return new ModelAndView("redirect:viewSettingAndAdmins.do", map);
         }
       }
@@ -3671,7 +3671,7 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Eligibility.");
+                  "Error in set Eligibility");
           mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
         }
       }
@@ -3771,7 +3771,7 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Eligibility Questions.");
+                  "Error in set Eligibility Questions");
           mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
         }
       }
@@ -4068,7 +4068,7 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in setting Overview.");
+                  "Error in setting Overview");
           return new ModelAndView("redirect:overviewStudyPages.do", map);
         }
       }
