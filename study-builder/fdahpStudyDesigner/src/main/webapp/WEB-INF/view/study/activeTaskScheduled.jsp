@@ -36,7 +36,7 @@
   }
 
   .help-block ul {
-    width: 150px;
+    width: 155px;
   / / font-size: 10 px !important;
   }
 .tool-tip {
@@ -554,7 +554,7 @@
           <span class='help-block with-errors red-txt'></span>
         </span>
       </div>
-      <span class="form-group m-none dis-inline vertical-align-middle pr-md">
+      <span class="form-group m-none dis-inline vertical-align-middle pr-md ml-lg">
         <input id="selectWeeklyTime" type="text"
                class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                required data-error="Please fill out this field" 
