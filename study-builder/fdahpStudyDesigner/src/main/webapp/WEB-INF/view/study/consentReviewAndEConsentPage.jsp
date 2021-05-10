@@ -257,10 +257,9 @@
               </div>
             </div>
             <div class="mt-xlg">
-              <div class="black-md-f text-uppercase">
-                CONSENT DOCUMENT
-                <span id="requiredStarId" class="requiredStar">*</span>
-              </div>
+<div class="black-md-f"> Consent document  
+</div>
+
               <div class="mt-lg">
                 <div class="cont_doc" id="autoCreateDivId"
                      style="display: block;">

@@ -216,7 +216,7 @@
                     $('#spancomId').removeAttr('data-original-title');
                   }
                   $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                      "ActiveTask deleted successfully");
+                      "Active task deleted successfully");
                   $('#alertMsg').show();
                   if ($('.sixthTask').find('span').hasClass(
                       'sprites-icons-2 tick pull-right mt-xs')) {

@@ -51,23 +51,20 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="165dp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/adjustContentCentral"
-                android:layout_below="@id/bgImg"
-                android:gravity="center">
 
-                <android.support.v7.widget.AppCompatTextView
+                <WebView
                     android:id="@+id/desc"
-                    style="@style/TextType2"
                     android:layout_centerHorizontal="true"
+                    android:layout_above="@id/adjustContentCentral"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/bgImg"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:gravity="center"
                     android:text="@string/gateway_des1"
+                    android:background="@android:color/transparent"
                     android:textColor="@color/colorPrimaryBlack" />
-            </RelativeLayout>
 
             <!--<LinearLayout
                 android:id="@+id/bottom_bar"
