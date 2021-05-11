@@ -72,7 +72,7 @@
               <c:if test="${fn:contains(studyBo.platform,'I')}">checked</c:if>
               <c:if
                   test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if>
-              data-error="Please check these box if you want to proceed."
+              data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox1"> iOS </label>
           </span>
           <span class="checkbox checkbox-inline"><input
@@ -81,7 +81,7 @@
               <c:if test="${fn:contains(studyBo.platform,'A')}">checked</c:if>
               <c:if
                   test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if>
-              data-error="Please check these box if you want to proceed."
+              data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox2"> Android </label>
           </span>
           <div class="help-block with-errors red-txt"></div>
@@ -103,13 +103,13 @@
 						type="radio" id="inlineRadio1" value="Yes" 
 						name="enrollingParticipants"
 						<c:if test="${studyBo.enrollingParticipants eq 'Yes' || studyBo.status eq 'Pre-launch'}">checked</c:if>
-						 required> <label
+						 required data-error="Please fill out this field" > <label
 						for="inlineRadio1">Yes</label> </span> <span class="radio radio-inline"><input
 						type="radio" id="inlineRadio2" value="No"
 						name="enrollingParticipants"
 						${studyBo.status eq 'Pre-launch' ?'disabled':''}
 						<c:if test="${ studyBo.enrollingParticipants eq 'No' }">checked</c:if>
-						 required>
+						 required data-error="Please fill out this field" >
 						<label for="inlineRadio2">No</label> </span>
 					<div class="help-block with-errors red-txt"></div>
 				</div>
@@ -136,7 +136,7 @@
               type="radio" id="inlineRadio11" value="Yes"
               name="enrollmentdateAsAnchordate"
               <c:if test="${studyBo.enrollmentdateAsAnchordate}">checked</c:if>
-              required> <label for="inlineRadio11">Yes</label>
+              required data-error="Please fill out this field" > <label for="inlineRadio11">Yes</label>
           </span>
           <span class="radio radio-inline"><input type="radio"
                                                   id="inlineRadio22" value="No"
@@ -144,7 +144,7 @@
             ${isAnchorForEnrollmentLive?'disabled':''}
                                                   <c:if
                                                       test="${studyBo.enrollmentdateAsAnchordate eq false}">checked</c:if>
-                                                  required> <label
+                                                  required data-error="Please fill out this field" > <label
               for="inlineRadio22">No</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
@@ -194,7 +194,7 @@
 					available for Android as compared to iOS. Please note the same
                     in your creation of study content:
                   </li>
-                  <li>i. Active tasks: Tower Of Hanoi, Spatial Span Memory
+                  <li>i. Active tasks: Tower of hanoi, Spatial span memory
                   </li>
                 </ul>
               </li>
@@ -423,4 +423,21 @@
       $("#settingfoFormId").submit();
     }
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+  function showSucMsg(message) {
+	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	 $('#alertMsg').show('5000');
+	 if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
+		    }, 5000);
+	  }else{
+	  	setTimeout(hideDisplayMessage, 5000);
+	  }
+   }
 </script>

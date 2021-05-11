@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class PropertiesUtil {
 
-  private static Logger logger = Logger.getLogger(PropertiesUtil.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(PropertiesUtil.class.getName());
 
   // Constructs a Properties class using the provided `properties_file` and substitutes in
   // environment variables.

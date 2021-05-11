@@ -117,7 +117,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
     <section class="bg__white card__inside__pad box__shadow-cmn m-none">
       <div class="form-group pb-0">
         <div class="user__card__title pb-lg">Sites, studies and apps</div>
-        <div class="col-md-6 mb-4 p-0">
+        <div *ngIf="user.apps?.length !== 0" class="col-md-6 mb-4 p-0">
           <input
             type="text"
             autocomplete="off"
@@ -321,7 +321,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
             </div>
           </div>
           <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
-            <div class="text-center p-2" *ngIf="user.apps.length === 0">
+            <div
+              class="text-center p-2 font12 txt__light-gray"
+              *ngIf="user.apps?.length === 0"
+            >
               No records found
             </div>
           </div>

@@ -135,16 +135,8 @@ class ActivityStepResult {
       stepDict?[kActivityStepResultType] = ActvityStepResultType.formOrActiveTask.rawValue
 
     case .active:
-
-      if self.step?.resultType != nil {
-
-        stepDict?[kActivityStepResultType] =
-          (self.step?.resultType as? String)!
-            == "fetalKickCounter" ? "grouped" : (self.step?.resultType)
-
-      } else {
-        stepDict?[kActivityStepResultType] = "grouped"
-      }
+      stepDict?[kActivityStepResultType] = "grouped"
+      
     default: break
 
     }

@@ -275,7 +275,7 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
-      </plugin>
+      </plugin>	  
     </plugins>
   </build>
   <reporting>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -19,23 +18,21 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CommonDaoImpl implements CommonDao {
 
-  private static Logger logger = LoggerFactory.getLogger(CommonDaoImpl.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(CommonDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
-  @Autowired ApplicationPropertyConfiguration appConfig;
-
   @Override
   public UserDetailsEntity getUserInfoDetails(String userId) {
-    logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
+    logger.entry("Begin getUserInfoDetails()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> userDetailsCriteriaQuery = null;
     Root<UserDetailsEntity> userDetailsEntityRoot = null;
@@ -54,13 +51,13 @@ public class CommonDaoImpl implements CommonDao {
       userDetailsEntity = userDetailsList.get(0);
     }
 
-    logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
+    logger.exit("getUserInfoDetails() - Ends ");
     return userDetailsEntity;
   }
 
   @Override
   public String getStudyId(String customStudyId) {
-    logger.info("CommonDaoImpl getStudyId() - Starts ");
+    logger.entry("Begin getStudyId()");
     CriteriaBuilder criteriaBuilder = null;
     String studyInfoId = "";
     CriteriaQuery<StudyEntity> criteriaQuery = null;
@@ -80,13 +77,13 @@ public class CommonDaoImpl implements CommonDao {
       studyInfoId = studyInfo.getId();
     }
 
-    logger.info("CommonDaoImpl getStudyId() - Ends ");
+    logger.exit("getStudyId() - Ends ");
     return studyInfoId;
   }
 
   @Override
   public StudyEntity getStudyDetails(String customStudyId) {
-    logger.info("CommonDaoImpl getStudyDetails() - Starts ");
+    logger.entry("Begin getStudyDetails()");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> criteriaQuery = null;
     Root<StudyEntity> root = null;

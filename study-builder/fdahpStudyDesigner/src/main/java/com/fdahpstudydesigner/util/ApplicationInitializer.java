@@ -16,14 +16,15 @@ import java.io.OutputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
-  private static Logger logger = Logger.getLogger(ApplicationInitializer.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(ApplicationInitializer.class.getName());
 
   @Override
   public void onStartup(ServletContext servletContext) throws ServletException {
