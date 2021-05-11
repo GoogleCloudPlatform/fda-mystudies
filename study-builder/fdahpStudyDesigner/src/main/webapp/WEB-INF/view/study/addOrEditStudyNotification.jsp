@@ -295,9 +295,13 @@ For studies that are already launched, notifications get scheduled for delivery 
       });
     });
 
+    var today, datepicker;
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false
     }).on('dp.change change', function (e) {
       validateTime();
