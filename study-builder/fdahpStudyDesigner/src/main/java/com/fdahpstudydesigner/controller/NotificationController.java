@@ -263,6 +263,10 @@ public class NotificationController {
             FdahpStudyDesignerUtil.getTimeStamp(
                 notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
 
+        System.out.println("currentDate" + notificationBO.getScheduleDate());
+        System.out.println("currentTime " + notificationBO.getScheduleTime());
+        System.out.println("currentTimeStamp " + notificationBO.getScheduleTimestamp());
+        
         notificationBO.setNotificationScheduleType(
             FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE);
       } else {

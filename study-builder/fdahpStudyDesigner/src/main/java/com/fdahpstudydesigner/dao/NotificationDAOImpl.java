@@ -306,6 +306,14 @@ public class NotificationDAOImpl implements NotificationDAO {
                     notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
                 : null);
 
+
+        System.out.println(
+            "currentDate notificationBOUpdate" + notificationBOUpdate.getScheduleDate());
+        System.out.println(
+            "currentTime notificationBOUpdate" + notificationBOUpdate.getScheduleTime());
+        System.out.println(
+            "currentTimeStamp notificationBOUpdate" + notificationBOUpdate.getScheduleTimestamp());
+        
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
