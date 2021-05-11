@@ -156,8 +156,8 @@ public class FDASchedulerService {
               new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_TIME).format(new Date()),
               FdahpStudyDesignerConstants.DB_SDF_TIME,
               1);
-      logger.info("date " + date);
-      logger.info("time " + time);
+      logger.info("date in scheduler " + date);
+      logger.info("time in scheduler" + time);
       pushNotificationBeans =
           notificationDAO.getPushNotificationList(
               FdahpStudyDesignerUtil.getTimeStamp(date, time).toString());
