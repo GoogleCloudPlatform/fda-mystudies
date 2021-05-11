@@ -74,6 +74,30 @@ public class StudyListBean {
     this.appId = appid;
   }
 
+  public StudyListBean(
+      Integer id,
+      String customStudyId,
+      String name,
+      String category,
+      String researchSponsor,
+      String createdFirstName,
+      String createdLastName,
+      String status,
+      String createdOn,
+      String appid) {
+    super();
+    this.id = id;
+    this.customStudyId = customStudyId;
+    this.name = name;
+    this.category = category;
+    this.researchSponsor = researchSponsor;
+    this.createdFirstName = createdFirstName;
+    this.createdLastName = createdLastName;
+    this.status = status;
+    this.createdOn = createdOn;
+    this.appId = appid;
+  }
+
   public String getAppId() {
     return appId;
   }

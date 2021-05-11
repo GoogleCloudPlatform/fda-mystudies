@@ -212,10 +212,7 @@ public class UsersDAOImpl implements UsersDAO {
           }
         }
       } else if (userBO2.getRoleId().equals(1)) {
-        query =
-            session.createQuery(
-                " FROM StudyBo SBO WHERE SBO.version = 0 AND SBO.status <> :deActivateStatus");
-        query.setParameter("deActivateStatus", FdahpStudyDesignerConstants.STUDY_DEACTIVATED);
+        query = session.createQuery(" FROM StudyBo SBO WHERE SBO.version = 0");
         List<StudyBo> studyBOList = query.list();
         if (CollectionUtils.isNotEmpty(studyBOList)) {
           for (int i = 0; i < studyBOList.size(); i++) {
