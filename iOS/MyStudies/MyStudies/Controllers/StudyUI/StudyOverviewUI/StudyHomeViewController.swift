@@ -756,6 +756,13 @@ class StudyHomeViewController: UIViewController {
     }
     if htmlText != nil {
       webView.htmlString = htmlText
+      let regex = "<[^>]+>"
+      let detailText = htmlText ?? ""
+      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) != nil {
+        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
+          webView.htmlString = "\(valReConversiontoHTMLfromHTML)"
+        }
+      }
     }
     navigationController?.present(webViewController, animated: true, completion: nil)
   }
