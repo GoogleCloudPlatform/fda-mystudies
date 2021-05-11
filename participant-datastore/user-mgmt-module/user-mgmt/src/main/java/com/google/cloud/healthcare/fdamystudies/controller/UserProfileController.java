@@ -129,6 +129,7 @@ public class UserProfileController {
       @Context HttpServletResponse response,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    logger.info("Begin updateUserProfile()");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(userId);
 

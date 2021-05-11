@@ -108,6 +108,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Transactional()
   public ErrorBean updateUserProfile(String userId, UserRequestBean user) {
     logger.entry("Begin updateUserProfile()");
+    logger.info("Begin updateUserProfile() in service class");
     ErrorBean errorBean = null;
     UserDetailsEntity userDetails = null;
     AuthInfoEntity authInfo = null;
