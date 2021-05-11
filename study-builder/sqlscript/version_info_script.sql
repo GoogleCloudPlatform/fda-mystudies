@@ -156,7 +156,7 @@ INSERT INTO `reference_tables` (`id`, `str_value`, `category`, `type`) VALUES
 	(8, 'Public health', 'Categories', 'Pre-defined'),
 	(9, 'Radiation-emitting products', 'Categories', 'Pre-defined'),
 	(10, 'Tobacco use', 'Categories', 'Pre-defined'),
-	(11, 'University research institute', 'Data Partner', 'Pre-defined'),
+	(11, 'University research institute', 'Data partner', 'Pre-defined'),
 	(12, 'FDA', 'Research sponsors', 'Pre-defined');
 /*!40000 ALTER TABLE `reference_tables` ENABLE KEYS */;
 
@@ -175,7 +175,7 @@ INSERT INTO `statistic_master_images` (`statistic_image_id`, `value`) VALUES
 	(5, 'Heart rate'),
 	(6, 'Blood glucose'),
 	(7, 'Active task'),
-	(8, 'Baby kicks'),
+	(8, 'Baby Kicks'),
 	(9, 'Other');
 /*!40000 ALTER TABLE `statistic_master_images` ENABLE KEYS */;
 

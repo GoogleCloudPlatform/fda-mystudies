@@ -1,7 +1,6 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "Participant Consent Datastore",
     "version" : "1.0",
     "title" : "Api Documentation",
     "contact" : { },
@@ -14,7 +13,7 @@
   "basePath" : "/participant-consent-datastore",
   "tags" : [ {
     "name" : "Consent",
-    "description" : "Operations pertaining to consent document in consent management"
+    "description" : "Operations pertaining to save or retrive consent document"
   }, {
     "name" : "Get Health",
     "description" : "Provides an indication about the health of the service"
@@ -26,7 +25,7 @@
     "/consentDocument" : {
       "get" : {
         "tags" : [ "Consent" ],
-        "summary" : "fetch study consent document",
+        "summary" : "fetch consent document",
         "operationId" : "getStudyConsentPdfUsingGET",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -85,6 +84,7 @@
       "get" : {
         "tags" : [ "Get Health" ],
         "summary" : "Provides an indication about the health of the service",
+        "description" : "Default response codes 400 and 401 are not applicable for this operation",
         "operationId" : "healthUsingGET",
         "produces" : [ "application/json" ],
         "responses" : {
@@ -110,7 +110,7 @@
             }
           },
           "500" : {
-            "description" : "Service is down",
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
             "schema" : {
               "$ref" : "#/definitions/BaseResponse"
             }
@@ -207,7 +207,7 @@
     "/updateEligibilityConsentStatus" : {
       "post" : {
         "tags" : [ "Consent" ],
-        "summary" : "update eligibility consent status of a participant",
+        "summary" : "save consent document in cloud",
         "operationId" : "updateEligibilityConsentStatusUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -257,8 +257,25 @@
     }
   },
   "definitions" : {
+    "BaseResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "BaseResponse"
+    },
     "ConsentReqBean" : {
       "type" : "object",
+      "required" : [ "pdf", "status", "version" ],
       "properties" : {
         "pdf" : {
           "type" : "string"
@@ -278,7 +295,7 @@
     },
     "ConsentStatusBean" : {
       "type" : "object",
-      "required" : [ "consent" ],
+      "required" : [ "consent", "siteId", "studyId" ],
       "properties" : {
         "consent" : {
           "$ref" : "#/definitions/ConsentReqBean"
@@ -299,6 +316,39 @@
         }
       },
       "title" : "ConsentStatusBean"
+    },
+    "ValidationErrorResponse" : {
+      "type" : "object",
+      "properties" : {
+        "error_code" : {
+          "type" : "string"
+        },
+        "error_description" : {
+          "type" : "string"
+        },
+        "error_type" : {
+          "type" : "string"
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "title" : "ValidationErrorResponse"
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Violation"
     }
   }
 }

@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/MIT.
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/jibstudy-datastore', '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/study-datastore', '.']
   dir: "study-datastore"
 
-images: ['gcr.io/$PROJECT_ID/jibstudy-datastore']
+images: ['gcr.io/$PROJECT_ID/study-datastore']
