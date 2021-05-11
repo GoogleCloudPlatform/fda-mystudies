@@ -66,7 +66,7 @@ let kSettingsTouchId = "touchId"
 let kSettingsLeadTime = "reminderLeadTime"
 let kSettingsLocale = "locale"
 let kVerifyCode = "code"
-let kDeactivateAccountDeleteData = "deleteData"
+let kDeactivateAccountDeleteData = "studyData"
 let kBookmarked = "bookmarked"
 let kStatus = "status"
 let kActivityId = "activityId"
@@ -163,8 +163,6 @@ class UserServices: NSObject {
       let dict: JSONDictionary =
         [
           "studyId": studyToDelete.studyId,
-          "delete": "\(studyToDelete.shouldDelete ?? false)",
-          kStudyParticipantId: studyToDelete.participantId,
         ]
       studiesDict.append(dict)
     }

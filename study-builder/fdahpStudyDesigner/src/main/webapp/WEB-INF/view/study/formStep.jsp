@@ -113,7 +113,7 @@
               <div class="form-group">
                 <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
                        name="stepShortTitle" id="stepShortTitle"
-                       value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}" required
+                       value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}" required data-error="Please fill out this field" 
                        maxlength="15" <c:if
                     test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
                 <div class="help-block with-errors red-txt"></div>
@@ -158,7 +158,7 @@
                 </div>
                 <div class="form-group">
                   <select class="selectpicker" name="destinationStep" id="destinationStepId"
-                          value="${questionnairesStepsBo.destinationStep}" required>
+                          value="${questionnairesStepsBo.destinationStep}" required data-error="Please fill out this field" >
                     <c:forEach items="${destinationStepList}" var="destinationStep">
                       <option
                           value="${destinationStep.stepId}" ${questionnairesStepsBo.destinationStep eq destinationStep.stepId ? 'selected' :''}>
@@ -205,18 +205,18 @@
             <div class="form-group mb-none col-md-4 p-none">
               <input type="text" class="form-control"
                      placeholder="Eg: I have more medications to add"
-                     name="repeatableText" id="repeatableText"
+                     name="repeatableText" id="repeatableText" data-error="Please fill out this field" 
                      value="${fn:escapeXml(questionnairesStepsBo.repeatableText)}"
                      <c:if test="${questionnairesStepsBo.repeatable ne 'Yes'}">disabled</c:if>
                      maxlength="30"
-                     <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}">required</c:if>/>
+                     <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}">required </c:if>/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
           <div class="clearfix"></div>
           <div class="row mt-lg" id="addQuestionContainer">
-            <div class="col-md-6 p-none blue-md-f mt-xs text-uppercase">
-              Questions in the Form
+            <div class="col-md-6 p-none black-md-f mt-xs">
+              Questions in the form
             </div>
             <div class="col-md-6 p-none">
               <div class="dis-line form-group mb-md pull-right">
@@ -621,7 +621,7 @@
                   'sprites-icons-2 tick pull-right mt-xs');
             }
             $("#addQuestionId").removeClass("cursor-none");
-            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             if ($("#saveBtn").text() == 'Next') {
@@ -867,7 +867,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },

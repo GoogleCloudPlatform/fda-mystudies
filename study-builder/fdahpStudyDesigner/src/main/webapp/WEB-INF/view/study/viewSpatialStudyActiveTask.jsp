@@ -40,11 +40,11 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
       <div class="add_notify_option">
         <div class="form-group shortTitleClass">
           <input autofocus="autofocus" type="text" custAttType="cust"
-                 class="form-control shortTitleCls" id="shortTitleId"
+                 class="form-control shortTitleCls" id="shortTitleId" data-error="Please fill out this field" 
                  name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
               <c:if
                   test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
-                 maxlength="50" required/>
+                 maxlength="50" required data-error="Please fill out this field" />
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -64,7 +64,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         <div class="form-group">
           <input type="text" class="form-control" name="displayName"
                  value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150"
-                 required/>
+                 required data-error="Please fill out this field" />
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -78,7 +78,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
     </div>
     <div class="form-group">
       <textarea class="form-control" rows="5" id="comment" name="instruction" maxlength="150"
-                required>${activeTaskBo.instruction}</textarea>
+                required data-error="Please fill out this field" >${activeTaskBo.instruction}</textarea>
       <div class="help-block with-errors red-txt"></div>
     </div>
     <c:if test="${fn:length(activeTaskBo.taskAttributeValueBos) eq 0}">
@@ -101,7 +101,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
             <div class="form-group">
               <input type="text" id="initialspanId" class="form-control"
                      name="taskAttributeValueBos[0].attributeVal" maxlength="2"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field" />
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -124,7 +124,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
             <div class="form-group">
               <input type="text" id="minimumspanId" class="form-control"
                      name="taskAttributeValueBos[1].attributeVal" maxlength="2"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field" />
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -148,7 +148,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
             <div class="form-group">
               <input type="text" id="maximumspanId" class="form-control"
                      name="taskAttributeValueBos[2].attributeVal" maxlength="2"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field" />
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -171,7 +171,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                    value="${taskMasterAttributeBo.addToDashboard}">
             <div class="form-group">
               <input type="text" id="playspeedId" class="form-control"
-                     name="taskAttributeValueBos[3].attributeVal" maxlength="5" required
+                     name="taskAttributeValueBos[3].attributeVal" maxlength="5" required data-error="Please fill out this field" 
                      onkeypress="return isNumberFloat(event)"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -196,7 +196,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
             <div class="form-group">
               <input type="text" id="maximumtestId" class="form-control"
                      name="taskAttributeValueBos[4].attributeVal" maxlength="3"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field" />
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -220,7 +220,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
             <div class="form-group">
               <input type="text" id="maximumFailureId" class="form-control"
                      name="taskAttributeValueBos[5].attributeVal" maxlength="3"
-                     onkeypress="return isNumber(event)" required/>
+                     onkeypress="return isNumber(event)" required data-error="Please fill out this field" />
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -246,14 +246,14 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 <input type="radio" id="inlineRadio7"
                        class="rejoin_radio studyTypeClass"
                        name="taskAttributeValueBos[6].attributeVal" value="Y"
-                       required>
+                       required data-error="Please fill out this field" >
                 <label for="inlineRadio7">Yes</label>
               </span>
               <span class="radio radio-inline">
                 <input type="radio" id="inlineRadio8"
                        class="rejoin_radio studyTypeClass"
                        name="taskAttributeValueBos[6].attributeVal" value="N"
-                       checked required>
+                       checked required data-error="Please fill out this field" >
                 <label for="inlineRadio8">No</label>
               </span>
               <div class="help-block with-errors red-txt"></div>
@@ -296,10 +296,10 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </div>
                   <div class="add_notify_option form-group">
                     <select
-                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
+                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
                         id="chartId" name="taskAttributeValueBos[7].timeRangeChart"
                         title="Select">
-                      <option value="" selected disabled>Select</option>
+                      <option value="" disabled>Select</option>
                       <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                         <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                       </c:forEach>
@@ -342,7 +342,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[7].titleChat" maxlength="30"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -373,7 +373,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 <div class="add_notify_option">
                   <div class="form-group statShortTitleClass">
                     <input autofocus="autofocus" type="text" custAttType="cust"
-                           class="form-control requireClass shortTitleStatCls"
+                           class="form-control requireClass shortTitleStatCls" data-error="Please fill out this field" 
                            id="static1" exist="" dbid=""
                            name="taskAttributeValueBos[7].identifierNameStat"
                            maxlength="20"/>
@@ -392,7 +392,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control requireClass"
+                  <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                          name="taskAttributeValueBos[7].displayNameStat" maxlength="50"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -408,7 +408,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 </div>
                 <div class="add_notify_option">
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[7].displayUnitStat"
                            maxlength="15"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -423,7 +423,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 </div>
                 <div class="add_notify_option form-group">
                   <select
-                      class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                      class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                       title="Select" name="taskAttributeValueBos[7].uploadTypeStat">
                     <c:forEach items="${statisticImageList}" var="statisticImage">
                       <option
@@ -440,7 +440,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   <span class="requiredStar"> *</span>
                 </div>
                 <div class="form-group">
-                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                           title="Select"
                           name="taskAttributeValueBos[7].formulaAppliedStat">
                     <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -487,10 +487,10 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </div>
                   <div class="add_notify_option form-group">
                     <select
-                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
+                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
                         id="chartId1" name="taskAttributeValueBos[8].timeRangeChart"
                         title="Select">
-                      <option value="" selected disabled>Select</option>
+                      <option value="" disabled>Select</option>
                       <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                         <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                       </c:forEach>
@@ -533,7 +533,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[8].titleChat" maxlength="30"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -564,7 +564,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 <div class="add_notify_option">
                   <div class="form-group statShortTitleClass">
                     <input autofocus="autofocus" type="text" custAttType="cust"
-                           class="form-control requireClass shortTitleStatCls"
+                           class="form-control requireClass shortTitleStatCls" data-error="Please fill out this field" 
                            id="static2" exist="" dbid=""
                            name="taskAttributeValueBos[8].identifierNameStat"
                            maxlength="20"/>
@@ -583,7 +583,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control requireClass"
+                  <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                          name="taskAttributeValueBos[8].displayNameStat" maxlength="50"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -599,7 +599,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 </div>
                 <div class="add_notify_option">
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[8].displayUnitStat"
                            maxlength="15"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -614,7 +614,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 </div>
                 <div class="add_notify_option form-group">
                   <select
-                      class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                      class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                       title="Select" name="taskAttributeValueBos[8].uploadTypeStat">
                     <c:forEach items="${statisticImageList}" var="statisticImage">
                       <option
@@ -631,7 +631,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   <span class="requiredStar"> *</span>
                 </div>
                 <div class="form-group">
-                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                           title="Select"
                           name="taskAttributeValueBos[8].formulaAppliedStat">
                     <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -678,10 +678,10 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </div>
                   <div class="add_notify_option form-group">
                     <select
-                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass"
+                        class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
                         id="chartId2" name="taskAttributeValueBos[9].timeRangeChart"
                         title="Select">
-                      <option value="" selected disabled>Select</option>
+                      <option value="" disabled>Select</option>
                       <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                         <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                       </c:forEach>
@@ -724,7 +724,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[9].titleChat" maxlength="30"/>
                       <div class="help-block with-errors red-txt"></div>
                     </div>
@@ -755,7 +755,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 <div class="add_notify_option">
                   <div class="form-group statShortTitleClass">
                     <input autofocus="autofocus" type="text" custAttType="cust"
-                           class="form-control requireClass shortTitleStatCls"
+                           class="form-control requireClass shortTitleStatCls" data-error="Please fill out this field" 
                            id="static3" exist="" dbid=""
                            name="taskAttributeValueBos[9].identifierNameStat"
                            maxlength="20"/>
@@ -774,7 +774,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </span>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control requireClass"
+                  <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                          name="taskAttributeValueBos[9].displayNameStat" maxlength="50"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -790,7 +790,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 </div>
                 <div class="add_notify_option">
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[9].displayUnitStat"
                            maxlength="15"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -805,7 +805,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 </div>
                 <div class="add_notify_option form-group">
                   <select
-                      class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                      class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                       title="Select" name="taskAttributeValueBos[9].uploadTypeStat">
                     <c:forEach items="${statisticImageList}" var="statisticImage">
                       <option
@@ -822,7 +822,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   <span class="requiredStar"> *</span>
                 </div>
                 <div class="form-group">
-                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                  <select class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                           title="Select"
                           name="taskAttributeValueBos[9].formulaAppliedStat">
                     <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -863,11 +863,11 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                      value="${taskMasterAttributeBo.addToDashboard}">
               <div class="form-group">
                 <input type="text" id="initialspanId" class="form-control"
-                       name="taskAttributeValueBos[0].attributeVal" maxlength="2" required
+                       name="taskAttributeValueBos[0].attributeVal" maxlength="2" required data-error="Please fill out this field" 
                        value="${taskValueAttributeBo.attributeVal}"
                        onkeypress="return isNumber(event)"
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
@@ -892,11 +892,11 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                      value="${taskMasterAttributeBo.addToDashboard}">
               <div class="form-group">
                 <input type="text" id="minimumspanId" class="form-control"
-                       name="taskAttributeValueBos[1].attributeVal" maxlength="2" required
+                       name="taskAttributeValueBos[1].attributeVal" maxlength="2" required data-error="Please fill out this field" 
                        value="${taskValueAttributeBo.attributeVal}"
                        onkeypress="return isNumber(event)"
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
@@ -923,10 +923,10 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
               <div class="form-group">
                 <input type="text" id="maximumspanId" class="form-control"
                        name="taskAttributeValueBos[2].attributeVal" maxlength="2"
-                       onkeypress="return isNumber(event)" required
-                       value="${taskValueAttributeBo.attributeVal}"
+                       onkeypress="return isNumber(event)" required data-error="Please fill out this field" 
+                       value="${taskValueAttributeBo.attributeVal}" 
                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                       data-pattern-error="Please enter valid number."/>
+                       data-pattern-error="Please enter valid number"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
@@ -953,7 +953,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
               <div class="form-group">
                 <input type="text" id="playspeedId" class="form-control"
                        name="taskAttributeValueBos[3].attributeVal" maxlength="5"
-                       onkeypress="return isNumberFloat(event)" required
+                       onkeypress="return isNumberFloat(event)" required data-error="Please fill out this field" 
                        value="${taskValueAttributeBo.attributeVal}"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -981,7 +981,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
               <div class="form-group">
                 <input type="text" id="maximumtestId" class="form-control"
                        name="taskAttributeValueBos[4].attributeVal" maxlength="3"
-                       onkeypress="return isNumber(event)" required
+                       onkeypress="return isNumber(event)" required data-error="Please fill out this field" 
                        value="${taskValueAttributeBo.attributeVal}"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -1008,7 +1008,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
               <div class="form-group">
                 <input type="text" id="maximumFailureId" class="form-control"
                        name="taskAttributeValueBos[5].attributeVal" maxlength="3"
-                       onkeypress="return isNumber(event)" required
+                       onkeypress="return isNumber(event)" required data-error="Please fill out this field" 
                        value="${taskValueAttributeBo.attributeVal}"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -1039,7 +1039,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 <span class="radio radio-info radio-inline p-45">
                   <input type="radio" id="inlineRadio7"
                          class="rejoin_radio studyTypeClass"
-                         name="taskAttributeValueBos[6].attributeVal" value="Y"
+                         name="taskAttributeValueBos[6].attributeVal" value="Y" data-error="Please fill out this field" 
                          required ${taskValueAttributeBo.attributeVal eq 'Y'?'checked':""}>
                   <label for="inlineRadio7">Yes</label>
                 </span>
@@ -1047,7 +1047,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   <input type="radio" id="inlineRadio8"
                          class="rejoin_radio studyTypeClass"
                          name="taskAttributeValueBos[6].attributeVal" value="N"
-                         required
+                         required data-error="Please fill out this field" 
                          <c:if
                              test="${empty taskValueAttributeBo.attributeVal  || empty taskValueAttributeBo}">checked</c:if> ${taskValueAttributeBo.attributeVal eq 'N'?'checked':""}>
                   <label for="inlineRadio8">No</label>
@@ -1098,7 +1098,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option form-group mb-none">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass" data-error="Please fill out this field" 
                           id="chartId" name="taskAttributeValueBos[7].timeRangeChart"
                           title="Select">
                         <c:forEach items="${timeRangeList}" var="timeRangeAttr">
@@ -1146,7 +1146,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option">
                       <div class="form-group">
-                        <input type="text" class="form-control requireClass" id="lineChartId"
+                        <input type="text" class="form-control requireClass" id="lineChartId" data-error="Please fill out this field" 
                                name="taskAttributeValueBos[7].titleChat" maxlength="30"
                                value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
                         <div class="help-block with-errors red-txt"></div>
@@ -1182,7 +1182,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                                title="${taskValueAttributeBo.attributeValueId}"
                                value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}">
                         <input autofocus="autofocus" type="text"
-                               class="form-control requireClass shortTitleStatCls"
+                               class="form-control requireClass shortTitleStatCls" data-error="Please fill out this field" 
                                exist="${taskValueAttributeBo.useForStatistic==true?'Y':'N'}"
                                dbid="${taskValueAttributeBo.attributeValueId}"
                                custAttType="cust" id="identifierId1"
@@ -1205,7 +1205,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                       </span>
                     </div>
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[7].displayNameStat" maxlength="50"
                              value="${fn:escapeXml(taskValueAttributeBo.displayNameStat)}"/>
                       <div class="help-block with-errors red-txt"></div>
@@ -1222,7 +1222,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option">
                       <div class="form-group">
-                        <input type="text" class="form-control requireClass"
+                        <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                                name="taskAttributeValueBos[7].displayUnitStat" maxlength="15"
                                value="${fn:escapeXml(taskValueAttributeBo.displayUnitStat)}"/>
                         <div class="help-block with-errors red-txt"></div>
@@ -1238,7 +1238,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                       </div>
                       <div class="add_notify_option form-group">
                         <select
-                            class="selectpicker  aq-select aq-select-form elaborateClass requireClass"
+                            class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                             title="Select" name="taskAttributeValueBos[7].uploadTypeStat">
                           <c:forEach items="${statisticImageList}" var="statisticImage">
                             <option
@@ -1256,7 +1256,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                       </div>
                       <div class="form-group">
                         <select
-                            class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                            class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                             title="Select"
                             name="taskAttributeValueBos[7].formulaAppliedStat">
                           <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
@@ -1310,7 +1310,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option form-group mb-none">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass" data-error="Please fill out this field" 
                           id="chartId1" name="taskAttributeValueBos[8].timeRangeChart"
                           title="Select">
                         <c:forEach items="${timeRangeList}" var="timeRangeAttr">
@@ -1358,7 +1358,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option">
                       <div class="form-group">
-                        <input type="text" class="form-control requireClass" id="lineChartId1"
+                        <input type="text" class="form-control requireClass" id="lineChartId1" data-error="Please fill out this field" 
                                name="taskAttributeValueBos[8].titleChat" maxlength="30"
                                value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
                         <div class="help-block with-errors red-txt"></div>
@@ -1393,7 +1393,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                              title="${taskValueAttributeBo.attributeValueId}"
                              value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}">
                       <input autofocus="autofocus" type="text"
-                             class="form-control requireClass shortTitleStatCls"
+                             class="form-control requireClass shortTitleStatCls" data-error="Please fill out this field" 
                              exist="${taskValueAttributeBo.useForStatistic==true?'Y':'N'}"
                              dbid="${taskValueAttributeBo.attributeValueId}" custAttType="cust"
                              id="identifierId2" name="taskAttributeValueBos[8].identifierNameStat"
@@ -1416,7 +1416,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[8].displayNameStat" maxlength="50"
                            value="${fn:escapeXml(taskValueAttributeBo.displayNameStat)}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -1433,7 +1433,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[8].displayUnitStat" maxlength="15"
                              value="${fn:escapeXml(taskValueAttributeBo.displayUnitStat)}"/>
                       <div class="help-block with-errors red-txt"></div>
@@ -1449,7 +1449,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option form-group">
                       <select
-                          class="selectpicker  aq-select aq-select-form elaborateClass requireClass"
+                          class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                           title="Select" name="taskAttributeValueBos[8].uploadTypeStat">
                         <c:forEach items="${statisticImageList}" var="statisticImage">
                           <option
@@ -1467,7 +1467,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="form-group">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                           title="Select" name="taskAttributeValueBos[8].formulaAppliedStat">
                         <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
                           <option
@@ -1518,7 +1518,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option form-group mb-none">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass" data-error="Please fill out this field" 
                           id="chartId2" name="taskAttributeValueBos[9].timeRangeChart"
                           title="Select">
                         <c:forEach items="${timeRangeList}" var="timeRangeAttr">
@@ -1566,7 +1566,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option">
                       <div class="form-group">
-                        <input type="text" class="form-control requireClass" id="lineChartId2"
+                        <input type="text" class="form-control requireClass" id="lineChartId2" data-error="Please fill out this field" 
                                name="taskAttributeValueBos[9].titleChat" maxlength="30"
                                value="${fn:escapeXml(taskValueAttributeBo.titleChat)}"/>
                         <div class="help-block with-errors red-txt"></div>
@@ -1601,7 +1601,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                              title="${taskValueAttributeBo.attributeValueId}"
                              value="${fn:escapeXml(taskValueAttributeBo.identifierNameStat)}">
                       <input autofocus="autofocus" type="text"
-                             class="form-control requireClass shortTitleStatCls"
+                             class="form-control requireClass shortTitleStatCls" data-error="Please fill out this field" 
                              exist="${taskValueAttributeBo.useForStatistic==true?'Y':'N'}"
                              dbid="${taskValueAttributeBo.attributeValueId}" custAttType="cust"
                              id="identifierId3" name="taskAttributeValueBos[9].identifierNameStat"
@@ -1624,7 +1624,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control requireClass"
+                    <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                            name="taskAttributeValueBos[9].displayNameStat" maxlength="50"
                            value="${fn:escapeXml(taskValueAttributeBo.displayNameStat)}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -1641,7 +1641,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   </div>
                   <div class="add_notify_option">
                     <div class="form-group">
-                      <input type="text" class="form-control requireClass"
+                      <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
                              name="taskAttributeValueBos[9].displayUnitStat" maxlength="15"
                              value="${fn:escapeXml(taskValueAttributeBo.displayUnitStat)}"/>
                       <div class="help-block with-errors red-txt"></div>
@@ -1657,7 +1657,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="add_notify_option form-group">
                       <select
-                          class="selectpicker  aq-select aq-select-form elaborateClass requireClass"
+                          class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                           title="Select" name="taskAttributeValueBos[9].uploadTypeStat">
                         <c:forEach items="${statisticImageList}" var="statisticImage">
                           <option
@@ -1675,7 +1675,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     </div>
                     <div class="form-group">
                       <select
-                          class="selectpicker aq-select aq-select-form elaborateClass requireClass"
+                          class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
                           title="Select" name="taskAttributeValueBos[9].formulaAppliedStat">
                         <c:forEach items="${activetaskFormulaList}" var="activetaskFormula">
                           <option
@@ -1733,7 +1733,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
       if (frequencyType && frequencyType == 'Manually Schedule') {
         $('.activeaddToChartText').show();
         $('.activeaddToChartText').text(
-            'A max of x runs will be displayed in each view of the chart.');
+            'A max of x runs will be displayed in each view of the chart');
       }
     }
     $('#initialspanId').blur(function () {
@@ -2133,7 +2133,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   } else {
                     $("#doneId").attr("disabled", false);
                     $("body").removeClass('loading');
-                    showErrMsg("Please fill in all mandatory fields.");
+                    showErrMsg("Please fill in all mandatory fields");
                     $('.contentClass a').tab('show');
                   }
                 });
@@ -2163,7 +2163,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $("body").removeClass('loading');
         $("#doneId").attr("disabled", false);
         $('.contentClass a').tab('show');
-        showErrMsg("Please fill in all mandatory fields.");
+        showErrMsg("Please fill in all mandatory fields");
       }
     });
 
@@ -2172,7 +2172,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
       $("#saveId").attr("disabled", true);
       var shortTitleCount = $('.shortTitleClass').find('.help-block').children().length;
       if (shortTitleCount >= 1) {
-        showErrMsg("Please fill in all mandatory fields.");
+        showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         $("body").removeClass('loading');
         $("#saveId").attr("disabled", false);
@@ -2181,8 +2181,8 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $("#shortTitleId").parent().addClass('has-error has-danger').find(
             ".help-block").empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "This is a required field."));
-        showErrMsg("Please fill in all mandatory fields.");
+            "This is a required field"));
+        showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         $("body").removeClass('loading');
         $("#saveId").attr("disabled", false);
@@ -2281,7 +2281,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 } else {
                   $("#saveId").attr("disabled", false);
                   $("body").removeClass('loading');
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                 }
               });
@@ -2322,7 +2322,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $(this).val(newVal);
           $(this).parent().addClass("has-danger has-error");
           $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Special characters such as #^}{ are not allowed."));
+              "Special characters such as #^}{ are not allowed"));
         }
       }
     });
@@ -2339,7 +2339,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $(this).val(newVal);
           $(this).parent().addClass("has-danger has-error");
           $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-        		  "Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."));
+        		  "Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)"));
         }
       }
     });
@@ -2384,7 +2384,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -2438,8 +2438,8 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $(thisAttr).parent().find(".help-block").append(
           $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             activeTaskAttIdVal
-            + " has already been used in the past."));
-        showErrMsg("Please fill in all mandatory fields.");
+            + " has already been used in the past"));
+        showErrMsg("Please fill in all mandatory fields");
         $('.contentClass a').tab('show');
         shortTitleStatFlag = false;
         callback(false);
@@ -2476,8 +2476,8 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                 $(thisAttr).parent().find(".help-block").append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                     activeTaskAttIdVal
-                    + " has already been used in the past."));
-                showErrMsg("Please fill in all mandatory fields.");
+                    + " has already been used in the past"));
+                showErrMsg("Please fill in all mandatory fields");
                 $('.contentClass a').tab('show');
                 if (callback)
                   callback(false);
@@ -2533,9 +2533,9 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   $(thisAttr).parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                       activeTaskAttIdVal
-                      + " has already been used in the past."));
+                      + " has already been used in the past"));
                   $(thisAttr).focus();
-                  showErrMsg("Please fill in all mandatory fields.");
+                  showErrMsg("Please fill in all mandatory fields");
                   $('.contentClass a').tab('show');
                   shortTitleStatFlag = false;
                   callback(false);
@@ -2595,7 +2595,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
               "has-error");
           $("#" + shortSatId).parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field."));
+              "Please fill out this field"));
         } else {
           $("#" + shortSatId).val('');
           $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
@@ -2605,7 +2605,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $("#" + shortSatId).parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               shortSatIdVal
-              + " has already been used in the past."));
+              + " has already been used in the past"));
         }
       }
       callback(false);
@@ -2637,7 +2637,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                   $("#" + obj.id).parent().find(".help-block").empty().append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                       obj.idVal
-                      + " has already been used in the past."));
+                      + " has already been used in the past"));
                 }
               });
 
@@ -2688,7 +2688,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
               "has-error");
           $("#" + shortSatId).parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field."));
+              "Please fill out this field"));
         } else {
           $("#" + shortSatId).val('');
           $("#" + shortSatId).parent().find('.statShortTitleClass').parent().find(
@@ -2698,7 +2698,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
           $("#" + shortSatId).parent().find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
               shortSatIdVal
-              + " has already been used in the past."));
+              + " has already been used in the past"));
         }
       }
       callback(false);
@@ -2745,7 +2745,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
                     $("#" + obj.id).parent().find(".help-block").empty().append(
                     	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         obj.idVal
-                        + " has already been used in the past."));
+                        + " has already been used in the past"));
                   }
                 });
 

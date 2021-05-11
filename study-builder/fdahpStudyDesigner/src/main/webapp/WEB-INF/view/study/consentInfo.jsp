@@ -112,7 +112,7 @@
         </div>
         <div class="form-group">
           <input autofocus="autofocus" type="text" id="displayTitle"
-                 class="form-control" name="displayTitle" required
+                 class="form-control" name="displayTitle" required data-error="Please fill out this field" 
                  value="${fn:escapeXml(consentInfoBo.displayTitle)}" maxlength="75">
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -127,7 +127,7 @@
         </div>
         <div class="form-group">
           <textarea class="form-control" rows="7" id="briefSummary"
-                    name="briefSummary" required
+                    name="briefSummary" required data-error="Please fill out this field" 
                     maxlength="500">${consentInfoBo.briefSummary}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -142,7 +142,7 @@
         </div>
         <div class="form-group">
           <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE"
-                    required>${consentInfoBo.elaborated}</textarea>
+                    required data-error="Please fill out this field" >${consentInfoBo.elaborated}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -449,7 +449,7 @@
                 $("#id").val(consentInfoId);
                 $("#alertMsg").removeClass('e-box').addClass(
                     's-box')
-                    .text("Content saved as draft.");
+                    .text("Content saved as draft");
                 $(item).prop('disabled', false);
                 $('#alertMsg').show();
               } else {
@@ -476,7 +476,7 @@
             .find(".help-block")
             .empty()
             .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "This is a required field."));
+                "This is a required field"));
         setTimeout(hideDisplayMessage, 5000);
       }
 
@@ -616,7 +616,7 @@
 	        }
 	        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
 	        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	            "Maximum 15000 characters are allowed."));
+	            "Maximum 15000 characters are allowed"));
 
 	      } else {
 	        $('#elaboratedRTE').parent().removeClass("has-danger")
@@ -631,7 +631,7 @@
 	          .find(".help-block")
 	          .empty()
 	          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	              "Please fill out this field."));
+	              "Please fill out this field"));
 
 	    }
 	    return isValid;

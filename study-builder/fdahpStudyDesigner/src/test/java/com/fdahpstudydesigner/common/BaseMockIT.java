@@ -23,7 +23,6 @@ import com.fdahpstudydesigner.config.HibernateTestConfig;
 import com.fdahpstudydesigner.config.WebAppTestConfig;
 import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,6 +46,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -85,7 +85,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 })
 public class BaseMockIT {
 
-  private static Logger logger = Logger.getLogger(BaseMockIT.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(BaseMockIT.class.getName());
 
   @Rule public TestName testName = new TestName();
 
@@ -126,8 +126,6 @@ public class BaseMockIT {
   public void setUp() throws IOException {
     logger.debug(String.format("BEGIN TEST: %s", testName.getMethodName()));
 
-    loadAppProperties();
-
     MockHttpServletRequest request = new MockHttpServletRequest();
     RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
@@ -148,15 +146,6 @@ public class BaseMockIT {
             })
         .when(mockAuditService)
         .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
-  }
-
-  private void loadAppProperties() throws IOException {
-    Map<String, String> appProperties = FdahpStudyDesignerUtil.getAppProperties();
-    appProperties.put("from.email.address", "sendmail029@gmail.com");
-    appProperties.put("from.email.password", "Password@009");
-    appProperties.put("smtp.hostname", "smtp.gmail.com");
-    appProperties.put("from.email.use_ip_whitelist", " ");
-    appProperties.put("from.email.domain", " ");
   }
 
   @After

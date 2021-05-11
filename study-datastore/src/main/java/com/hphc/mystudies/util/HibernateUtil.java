@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,13 +23,14 @@
  */
 package com.hphc.mystudies.util;
 
-import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class HibernateUtil {
 
-  private static Logger logger = Logger.getLogger(HibernateUtil.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(HibernateUtil.class.getName());
 
   private static SessionFactory sessionFactory = null;
 
@@ -37,7 +39,7 @@ public class HibernateUtil {
   }
 
   public static SessionFactory getSessionFactory() {
-    logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
+    logger.entry("begin getSessionFactory() :: Starts");
     try {
       if (sessionFactory == null) {
         sessionFactory =
@@ -50,7 +52,7 @@ public class HibernateUtil {
     } catch (Exception e) {
       logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);
     }
-    logger.info("INFO: HibernateUtil - getSessionFactory() :: Ends");
+    logger.exit("getSessionFactory() :: Ends");
     return sessionFactory;
   }
 
