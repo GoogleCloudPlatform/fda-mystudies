@@ -96,7 +96,7 @@ public class StudiesServicesImpl implements StudiesServices {
     Map<String, JSONArray> allDeviceTokens = new HashMap<>();
     Map<Object, AppEntity> appInfobyAppCustomId = new HashMap<>();
     logger.entry("Begin SendNotificationAction()");
-
+    logger.info("Begin SendNotificationAction()");
     for (NotificationBean notificationBean : notificationForm.getNotifications()) {
       if (notificationBean.getNotificationType().equalsIgnoreCase(AppConstants.STUDY_LEVEL)) {
         studySet.add(notificationBean.getCustomStudyId());
@@ -105,17 +105,17 @@ public class StudiesServicesImpl implements StudiesServices {
     }
 
     if (appSet == null && appSet.isEmpty()) {
-      logger.debug("appset is empty return bad request");
+      logger.info("appset is empty return bad request");
       return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
     } else {
       List<AppEntity> appInfos = commonDao.getAppInfoSet(appSet);
-      logger.debug(String.format("hasAppInfos=%b", (appInfos != null && !appInfos.isEmpty())));
+      logger.info(String.format("hasAppInfos=%b", (appInfos != null && !appInfos.isEmpty())));
       if (appInfos != null && !appInfos.isEmpty()) {
         allDeviceTokens = authInfoBoDao.getDeviceTokenOfAllUsers(appInfos);
         appInfobyAppCustomId =
             appInfos.stream().collect(Collectors.toMap(AppEntity::getAppId, Function.identity()));
       }
-      logger.debug(String.format("hasStudiesSet=%b", (studySet != null && !studySet.isEmpty())));
+      logger.info(String.format("hasStudiesSet=%b", (studySet != null && !studySet.isEmpty())));
       if (studySet != null && !studySet.isEmpty()) {
         List<StudyEntity> studyInfos = commonDao.getStudyInfoSet(studySet);
         if (studyInfos != null && !studyInfos.isEmpty()) {
@@ -148,7 +148,7 @@ public class StudiesServicesImpl implements StudiesServices {
               userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
             }
 
-            logger.debug(
+            logger.info(
                 String.format(
                     "status=%d and fcmNotificationResponse=%s",
                     fcmNotificationResponse.getStatus(), fcmNotificationResponse.getFcmResponse()));
@@ -176,7 +176,7 @@ public class StudiesServicesImpl implements StudiesServices {
               userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
             }
 
-            logger.debug(
+            logger.info(
                 String.format(
                     "status=%d and fcmNotificationResponse=%s",
                     fcmNotificationResponse.getStatus(), fcmNotificationResponse.getFcmResponse()));
@@ -187,7 +187,7 @@ public class StudiesServicesImpl implements StudiesServices {
           }
         }
       } else {
-        logger.debug(
+        logger.info(
             String.format(
                 "hasDeviceTokens=%b and hasElementsInStudiesMap=%b",
                 (allDeviceTokens != null && !allDeviceTokens.isEmpty()),
@@ -206,7 +206,7 @@ public class StudiesServicesImpl implements StudiesServices {
       Map<Object, AppEntity> appInfobyAppCustomId,
       NotificationBean notificationBean)
       throws IOException {
-
+	  logger.info("sendStudyLevelNotification()");
     Map<String, JSONArray> deviceTokensMap =
         studiesMap.get(studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()).getId());
     notificationBean.setNotificationType(AppConstants.STUDY);
@@ -233,7 +233,7 @@ public class StudiesServicesImpl implements StudiesServices {
       Map<Object, AppEntity> appInfobyAppCustomId,
       NotificationBean notificationBean)
       throws IOException {
-
+	  logger.info("sendGatewaylevelNotification()");
     notificationBean.setNotificationType(AppConstants.GATEWAY);
     FcmPushNotificationResponse pushNotificationResponse = null;
     if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
@@ -257,6 +257,7 @@ public class StudiesServicesImpl implements StudiesServices {
 
     String authKey = "";
     logger.entry("Begin pushFCMNotification()");
+    logger.info("Begin pushFCMNotification()");
 
     if (notification.getDeviceToken() != null
         && notification.getDeviceToken().length() > 0
@@ -298,7 +299,7 @@ public class StudiesServicesImpl implements StudiesServices {
       FcmPushNotificationResponse fcmNotificationResponse =
           new FcmPushNotificationResponse(
               responseJson, conn.getResponseCode(), conn.getResponseMessage());
-      logger.trace(
+      logger.info(
           String.format(
               "FCM Notification Response status=%d, response=%s",
               conn.getResponseCode(), response));
@@ -312,6 +313,7 @@ public class StudiesServicesImpl implements StudiesServices {
       throws IOException {
 
     logger.entry("Begin pushNotification()");
+    logger.info("Begin pushNotification()");
     String certificatePassword = "";
 
     File file = null;

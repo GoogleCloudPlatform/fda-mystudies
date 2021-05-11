@@ -80,6 +80,7 @@ public class StudiesController {
       @Valid @RequestBody NotificationForm notificationForm, HttpServletRequest request)
       throws IOException {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    logger.info("SendNotification()");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userMgmntAuditHelper.logEvent(NOTIFICATION_METADATA_RECEIVED, auditRequest);
