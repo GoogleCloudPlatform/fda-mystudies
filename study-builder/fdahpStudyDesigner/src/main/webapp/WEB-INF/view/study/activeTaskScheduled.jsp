@@ -2804,7 +2804,7 @@
         activeTaskFrequencey.frequencyTime = frequence_time;
       }
       if (frequence_time_anchor != null && frequence_time_anchor != ''
-          && typeof frequence_time_anchor != 'undefined') {
+          && typeof frequence_time_anchor != 'undefined' && activeTask.scheduleType == 'AnchorDate') {
         activeTaskFrequencey.frequencyTime = frequence_time_anchor;
       }
       if (weeklyXSign != null && weeklyXSign != '' && typeof weeklyXSign != 'undefined') {
@@ -2872,7 +2872,7 @@
       }
 
       if (frequencetime_anchor != null && frequencetime_anchor != '' && typeof frequencetime_anchor
-          != 'undefined') {
+          != 'undefined' && activeTask.scheduleType == 'AnchorDate') {
         activeTaskFrequencey.frequencyTime = frequencetime_anchor;
       }
 
