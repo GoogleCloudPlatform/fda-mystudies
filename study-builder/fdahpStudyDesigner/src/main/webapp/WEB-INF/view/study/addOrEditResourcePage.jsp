@@ -630,17 +630,25 @@
     $("#xdays, #ydays").on('blur', function () {
       chkDaysValid(false);
     });
+
+    var today, datepicker;
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    
     $('#StartDate').datetimepicker({
       format: 'MM/DD/YYYY',
+      minDate: today,
       ignoreReadonly: true,
       useCurrent: false,
     });
     $('#EndDate').datetimepicker({
       format: 'MM/DD/YYYY',
+      minDate: today,
       ignoreReadonly: true,
       useCurrent: false,
     });
 
+
+    
     $(".datepicker").on("click", function (e) {
       $('#StartDate').data("DateTimePicker").minDate(
           new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
