@@ -317,7 +317,7 @@
           }
           var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewResourceInfo("
               + parseInt(obj.id) + ");'></span>";
-          if (obj.status) {
+          if (obj.action) {
             actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo(" + parseInt(obj.id)
                 + ");'></span>"
           } else {
@@ -331,7 +331,7 @@
 
         }
       });
-      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete) {
+      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete == '') {
         $("#markAsComp").attr("disabled", false);
       }
       $('#resource_list').DataTable().draw();
