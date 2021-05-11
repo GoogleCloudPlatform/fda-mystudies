@@ -2171,6 +2171,9 @@ public class StudyDAOImpl implements StudyDAO {
                 bean.setProjectLeadName("None");
               }
             }
+            if (userBO.getRoleId().equals(1)) {
+              bean.setViewPermission(true);
+            }
           }
         }
       }
