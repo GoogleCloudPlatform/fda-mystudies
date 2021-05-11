@@ -1054,15 +1054,8 @@ public class FdahpStudyDesignerUtil {
   public static Timestamp getTimeStamp(String inputDate, String inputTime) {
 
     String timestampInString = inputDate + " " + inputTime;
-    java.sql.Date date = null;
     try {
-      DateFormat dateFormat =
-          new SimpleDateFormat(
-              FdahpStudyDesignerConstants.DB_SDF_DATE
-                  + " "
-                  + FdahpStudyDesignerConstants.DB_SDF_TIME);
-      date = new java.sql.Date(dateFormat.parse(timestampInString).getTime());
-      return new Timestamp(date.getTime());
+        return java.sql.Timestamp.valueOf(timestampInString);
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
     }
