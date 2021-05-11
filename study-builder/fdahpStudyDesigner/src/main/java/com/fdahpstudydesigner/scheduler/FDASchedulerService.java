@@ -158,6 +158,8 @@ public class FDASchedulerService {
               1);
       logger.info("date in scheduler " + date);
       logger.info("time in scheduler" + time);
+      System.out.println("date in scheduler " + date);
+      System.out.println("time in scheduler " + time);
       pushNotificationBeans =
           notificationDAO.getPushNotificationList(
               FdahpStudyDesignerUtil.getTimeStamp(date, time).toString());
