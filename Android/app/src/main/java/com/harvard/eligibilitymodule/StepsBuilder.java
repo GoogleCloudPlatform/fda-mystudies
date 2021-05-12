@@ -54,7 +54,7 @@ public class StepsBuilder {
         InstructionStep instructionStep =
                 new InstructionStep(
                         "Eligibility Test",
-                        "Eligibility Test",
+                        context.getString(R.string.eligibilitytest),
                         "Please answer the questions that follow to help ascertain your eligibility for this study.");
         instructionStep.setStepTitle(R.string.notxt);
         instructionStep.setOptional(false);
