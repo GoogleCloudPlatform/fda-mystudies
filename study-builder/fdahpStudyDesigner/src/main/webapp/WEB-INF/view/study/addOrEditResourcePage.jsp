@@ -629,14 +629,20 @@
     $("#xdays, #ydays").on('blur', function () {
       chkDaysValid(false);
     });
+
+    var today, datepicker;
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    
     $('#StartDate').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false,
     });
     $('#EndDate').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false,
     });
 
