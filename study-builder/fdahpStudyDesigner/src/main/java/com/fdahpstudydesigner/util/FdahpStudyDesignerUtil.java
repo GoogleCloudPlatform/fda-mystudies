@@ -1051,13 +1051,13 @@ public class FdahpStudyDesignerUtil {
     }
   }
 
-  public static Timestamp getTimeStamp(String inputDate, String inputTime) {
+  public static String getTimeStamp(String inputDate, String inputTime) {
 
     String timestampInString = inputDate + " " + inputTime;
     try {
     	System.out.println(
-    	          "timestamp of notification method getTimeStamp() " + java.sql.Timestamp.valueOf(timestampInString));
-        return java.sql.Timestamp.valueOf(timestampInString);
+    	          "timestamp of notification method getTimeStamp() " + timestampInString);
+        return timestampInString;
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
     }
