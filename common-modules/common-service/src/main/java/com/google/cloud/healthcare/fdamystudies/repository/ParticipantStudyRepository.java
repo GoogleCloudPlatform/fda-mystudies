@@ -5,7 +5,6 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCount;
@@ -100,18 +99,18 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
   @Query(
       value =
           "SELECT ps.id "
-              + "FROM participant_registry_site prs, participant_study_info ps "
-              + "WHERE prs.id=ps.participant_registry_site_id AND prs.email=:email AND ps.site_id IN (:siteIds)",
-      nativeQuery = true)
-  public List<String> findByEmailAndSiteIds(String email, List<String> siteIds);
-
-  @Query(
-      value =
-          "SELECT ps.id "
               + "FROM participant_registry_site prs, participant_study_info ps, study_info stu "
               + "WHERE prs.id=ps.participant_registry_site_id AND stu.id=ps.study_info_id AND prs.email=:email AND stu.custom_id IN (:studyCustomIds) AND ps.status IN ('yetToEnroll','notEligible','withdrawn') ",
       nativeQuery = true)
   public List<String> findByEmailAndStudyCustomIds(String email, List<String> studyCustomIds);
+
+  @Query(
+      value =
+          "SELECT ps.id "
+              + "FROM participant_registry_site prs, participant_study_info ps "
+              + "WHERE prs.id=ps.participant_registry_site_id AND prs.email=:email AND ps.site_id IN (:siteIds)",
+      nativeQuery = true)
+  public List<String> findByEmailAndSiteIds(String email, List<String> siteIds);
 
   @Query(
       value =

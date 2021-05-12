@@ -162,13 +162,13 @@ public enum ErrorCode {
       400,
       "EC_0032",
       Constants.BAD_REQUEST,
-      "The admin must have at least one permission assigned"),
+      "The admin should have atleast one permission in the system to access this resource"),
 
   SECURITY_CODE_EXPIRED(
       410,
       "EC_0034",
       HttpStatus.GONE.toString(),
-      "This page is no longer valid. For any assistance needed with your account, please contact the system admin."),
+      "This link is no longer valid to be used. Please contact the system admin for assistance with your account or sign in if already registered."),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC_0035", Constants.BAD_REQUEST, "Error in getting participants details"),
@@ -203,9 +203,9 @@ public enum ErrorCode {
   ADMIN_NOT_FOUND(404, "EC_0042", HttpStatus.NOT_FOUND.toString(), "Admin user not found"),
 
   PENDING_CONFIRMATION(
-      409,
+      403,
       "EC_0043",
-      HttpStatus.CONFLICT.toString(),
+      HttpStatus.BAD_REQUEST.toString(),
       "Your account is pending activation. Please check your email for details and sign in to complete activation."),
 
   ACCOUNT_NOT_VERIFIED(
@@ -278,10 +278,7 @@ public enum ErrorCode {
       "You do not have permission to access this app."),
 
   CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION(
-      400,
-      "EC_0122",
-      Constants.BAD_REQUEST,
-      "Sites cannot be added using decommissioned locations."),
+      400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site using a decommissioned location."),
 
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
       403,
