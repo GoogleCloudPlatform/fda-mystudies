@@ -80,7 +80,7 @@
         <div class="form-group">
           <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
                     id="notificationText"
-                    name="notificationText" required data-error="Please fill out this field" 
+                    name="notificationText" required data-error="Please fill out this field"
           >${notificationBO.notificationText}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -95,7 +95,7 @@
                        test="${notificationBO.notificationScheduleType eq 'notImmediate'}">checked</c:if>
                    <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
             <label for="inlineRadio1">Schedule this notification</label>
-              <span
+            <span
       <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           data-toggle="tooltip"
@@ -128,9 +128,9 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group date">
-          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" data-error="Please fill out this field" 
+          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal"
                  id="scheduleDate"
-                 name="scheduleDate" value="${notificationBO.scheduleDate}"
+                 name="scheduleDate" value="${notificationBO.scheduleDate}" data-error="Please fill out this field"
                  oldValue="${notificationBO.scheduleDate}"
                  placeholder="MM/DD/YYYY" disabled/>
           <div class="help-block with-errors red-txt"></div>
@@ -142,15 +142,15 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group">
-          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime" data-error="Please fill out this field" 
-                 name="scheduleTime" value="${notificationBO.scheduleTime}"
+          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime"
+                 name="scheduleTime" value="${notificationBO.scheduleTime}" data-error="Please fill out this field"
                  oldValue="${notificationBO.scheduleTime}"
                  placeholder="00:00" disabled/>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
  <div class="form-group mr-sm" style="white-space: normal; margin-top: -9px;">
-For studies that are already launched, notifications get scheduled for delivery upon marking the Notifications section as complete, not requiring an explicit 'Publish updates' action.
+ For studies that are live, notifications get published for scheduled delivery to participants as soon as you mark the Notifications section complete.
  </div>
     </div>
   </form:form>
@@ -181,13 +181,6 @@ For studies that are already launched, notifications get scheduled for delivery 
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    <c:if test="${studyBo.status eq 'Active'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
-
-    <c:if test="${notificationBO.actionPage eq 'view'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
 
     <c:if test="${notificationBO.actionPage eq 'view'}">
     $('#studyNotificationFormId input,textarea').prop('disabled', true);

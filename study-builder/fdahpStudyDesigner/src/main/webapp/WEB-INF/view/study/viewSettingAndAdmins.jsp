@@ -25,6 +25,7 @@
     <input type="hidden" id="permissions" name="permissions">
     <input type="hidden" id="projectLead" name="projectLead">
     
+	
     <!-- Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
@@ -103,13 +104,13 @@
 						type="radio" id="inlineRadio1" value="Yes" 
 						name="enrollingParticipants"
 						<c:if test="${studyBo.enrollingParticipants eq 'Yes' || studyBo.status eq 'Pre-launch'}">checked</c:if>
-						 required data-error="Please fill out this field" > <label
+						 required data-error="Please fill out this field"> <label
 						for="inlineRadio1">Yes</label> </span> <span class="radio radio-inline"><input
 						type="radio" id="inlineRadio2" value="No"
 						name="enrollingParticipants"
 						${studyBo.status eq 'Pre-launch' ?'disabled':''}
 						<c:if test="${ studyBo.enrollingParticipants eq 'No' }">checked</c:if>
-						 required data-error="Please fill out this field" >
+						 required data-error="Please fill out this field">
 						<label for="inlineRadio2">No</label> </span>
 					<div class="help-block with-errors red-txt"></div>
 				</div>
@@ -136,7 +137,7 @@
               type="radio" id="inlineRadio11" value="Yes"
               name="enrollmentdateAsAnchordate"
               <c:if test="${studyBo.enrollmentdateAsAnchordate}">checked</c:if>
-              required data-error="Please fill out this field" > <label for="inlineRadio11">Yes</label>
+              required data-error="Please fill out this field"> <label for="inlineRadio11">Yes</label>
           </span>
           <span class="radio radio-inline"><input type="radio"
                                                   id="inlineRadio22" value="No"
@@ -144,7 +145,7 @@
             ${isAnchorForEnrollmentLive?'disabled':''}
                                                   <c:if
                                                       test="${studyBo.enrollmentdateAsAnchordate eq false}">checked</c:if>
-                                                  required data-error="Please fill out this field" > <label
+                                                  required data-error="Please fill out this field"> <label
               for="inlineRadio22">No</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
@@ -241,7 +242,7 @@
     });
     $(".menuNav li.active").removeClass('active');
     $(".menuNav li.second").addClass('active');
-  
+   
     <c:if test="${(not empty permission) || (sessionObject.role eq 'Org-level Admin')}">
     $('#settingfoFormId input,textarea,select').prop('disabled', true);
     $('#settingfoFormId').find('.elaborateClass').addClass('linkDis');
@@ -250,10 +251,10 @@
     $('.radcls').prop('disabled', true);
     </c:if>
     $("#completedId").on('click', function (e) {
+
       if ($('.checkbox input:checked').length == 0) {
-    	    $("input").attr("required", true);
+  	    $("input").attr("required", true);
       }
-      
       var rowCount = 0;
       if (isFromValid("#settingfoFormId")) {
         rowCount = $('.leadCls').length;
@@ -273,6 +274,7 @@
         }
       }
     });
+    
     $("#saveId").click(function () {
       platformTypeValidation('save');
     });
@@ -282,7 +284,7 @@
       $('#myModal').modal('show');
     });
   });
-  
+ 
   
   function platformTypeValidation(buttonText) {
     var platformNames = '';
@@ -308,15 +310,15 @@
           "${_csrf.parameterName}": "${_csrf.token}",
         },
         success: function platformValid(data, status) {
-      	  var message = data.message;
-          var errorMessage = data.errorMessage;
+        	 var message = data.message;
+             var errorMessage = data.errorMessage;
             
           $("body").removeClass("loading");
           if (message == "SUCCESS") {
             $('#completedId').removeAttr('disabled');
             bootbox.alert(errorMessage);
           } else {
-              submitButton(buttonText);
+            submitButton(buttonText);
           }
         },
         error: function status(data, status) {
@@ -342,7 +344,7 @@
         $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
         $("#buttonText").val('completed');
         $("#settingfoFormId").submit();
-      }
+    }
   }
   function admins() {
     var userIds = "";
@@ -423,21 +425,20 @@
       $("#settingfoFormId").submit();
     }
   }
-
   var sucMsg = '${sucMsg}';
   if (sucMsg.length > 0) {
     showSucMsg(sucMsg);
   }
 
-  function showSucMsg(message) {
-	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
-	 $('#alertMsg').show('5000');
-	 if('${param.buttonText}' == 'completed'){
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
 		    window.setTimeout(function(){
 		        window.location.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
 		    }, 5000);
 	  }else{
 	  	setTimeout(hideDisplayMessage, 5000);
 	  }
-   }
+	}
 </script>

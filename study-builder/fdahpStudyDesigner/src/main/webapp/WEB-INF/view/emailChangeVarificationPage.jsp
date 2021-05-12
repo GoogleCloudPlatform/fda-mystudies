@@ -19,23 +19,19 @@
     <meta name="author" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png"
-          type="image/x-icon"/>
-    <link rel="apple-touch-icon"
-          href="/studybuilder/images/icons/FAV_Icon.png">
+    <link rel="shortcut icon" href="/studybuilder/images/icons/FAV_Icon.png" type="image/x-icon"/>
+    <link rel="apple-touch-icon" href="/studybuilder/images/icons/FAV_Icon.png">
 
     <!-- Mobile Metas -->
     <meta name="viewport"
           content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Web Fonts  -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
 
     <!-- Vendor CSS -->
     <link rel="stylesheet" href="vendor/boostrap/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="vendor/datatable/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/datatable/css/dataTables.bootstrap.min.css">
 
     <!-- Your custom styles (optional) -->
     <link href="/studybuilder/css/loader.css" rel="stylesheet">
@@ -59,10 +55,6 @@
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
 		.hover_text_white:focus { color:#fff !important;}
-		
-    .arrowLeftSugg {
-    top: 82px; !important;
-    }
 	</style>
 
   </head>
@@ -71,128 +63,44 @@
       <span></span>
     </div>
     <div id="lg-container" class="lg-container">
-
       <div class="logo__space">
-      	<a id="login" class="gray-link backToLogin white__text hover_text_white"
-                 href="javascript:void(0)">
-        	<img src="images/logo/logo_landing_welcome.png" alt=""/>
-        </a>
+        <img src="images/logo/logo_innerScreens.png" alt=""/>
       </div>
 
       <div class="login__container">
-        <input type="hidden" id="csrfDet"
-               csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}"/>
-        <div>
-          <form:form id="passwordResetForm" data-toggle="validator"
-                     role="form" action="addPassword.do" method="post"
-                     autocomplete="off" style="top: 20% !important;">
+        <div class="">
+          <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
+                 csrfToken="${_csrf.token}"/>
+          <form:form id="accessCodeForm" data-toggle="validator" role="form"
+                     action="validateEmailChangeVerification.do"
+                     method="post" autocomplete="off">
+
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
-            <c:if test="${not isInactiveUser && isValidToken}">
+            <c:if test="${isValidToken}">
+              <p class="white__text">Thank you. Your email verification process is completed. 
+              Please use the new email address to sign in.</p>
               <div>
-              <p class="white__text">Create new password</p>
-              <div class="mb-lg form-group">
-                <input type="password" class="input-field wow_input"
-                       id="password" tabindex="2" maxlength="64" data-minlength="8"
-                       placeholder="New password*" required
-                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                       data-error="Password is invalid" autocomplete="off"/>
-                <div class="help-block with-errors red-txt"></div>
-                <span class="arrowLeftSugg"></span>
-
-              </div>
-
-              <div class="mb-lg form-group">
-                <input type="password" class="input-field wow_input"
-                       id="cfnPassword" tabindex="3" name="" maxlength="64"
-                       data-match="#password"
-                       data-match-error="Passwords do not match" data-error="Please fill out this field"
-                       placeholder="Confirm new password*" required autocomplete="off"/>
-                <div class="help-block with-errors red-txt"></div>
-              </div>
-              <div class="mb-lg form-group">
-                <button type="button" class="btn lg-btn" id="resetPasswordBut">Submit
-                </button>
-              </div>
-            </c:if>
-            <c:if test="${isInactiveUser}">
-              <p class="passwordExp">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                Your account has been
-                deactivated.
-              </p>
-            </c:if>
-            <c:if test="${not isInactiveUser && not isValidToken}">
-              <jsp:forward page="errorPage.jsp" />
-            </c:if>
-            <div>
-              <a id="login" class="gray-link backToLogin white__text hover_text_white"
-                 href="javascript:void(0)">Back to sign in
+              <a id="login" class="gray-link backToLogin white__text hover_text_white" href="javascript:void(0)">Back to
+                Sign in
               </a>
             </div>
-            </div>
+            </c:if>
+            <c:if test="${not isValidToken}">
+              <jsp:forward page="errorPage.jsp" />
+            </c:if>
             <input type="hidden" name="securityToken" value="${securityToken}"/>
-            <input type="password" name="password" id="hidePass"
-                   style="display: none;"/>
           </form:form>
         </div>
-
-
-        <div class="clearfix"></div>
-
-        <jsp:include page="../templates/copyright.jsp">
-          <jsp:param name="footerClass" value="footer" />
-        </jsp:include>
-
       </div>
-      <!-- End Login Right Section-->
-      <!-- Modal -->
-      <div class="modal fade" id="termsModal" role="dialog">
-        <div class="modal-dialog modal-lg">
-          <!-- Modal content-->
-          <div class="modal-content">
-
-            <div class="modal-header cust-hdr">
-              <button type="button" class="close pull-right" data-dismiss="modal">&times;
-              </button>
-            </div>
-            <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
-              <div>
-                <div class="mt-md mb-md">
-                  <u><strong>Terms</strong></u>
-                </div>
-                <span>${masterDataBO.termsText}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal fade" id="privacyModal" role="dialog">
-        <div class="modal-dialog modal-lg">
-          <!-- Modal content-->
-          <div class="modal-content">
-
-            <div class="modal-header cust-hdr">
-              <button type="button" class="close pull-right" data-dismiss="modal">&times;
-              </button>
-            </div>
-
-            <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
-              <div>
-                <div class="mt-md mb-md">
-                  <u><strong>Privacy Policy</strong></u>
-                </div>
-                <span>${masterDataBO.privacyPolicyText}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <jsp:include page="../templates/copyright.jsp">
+        <jsp:param name="footerClass" value="footer" />
+      </jsp:include>
 
     </div>
-    <form:form action="/studybuilder/login.do" id="backToLoginForm"
-               name="backToLoginForm" method="post">
+    <!-- End Login Right Section-->
+    <form:form action="/studybuilder/login.do" id="backToLoginForm" name="backToLoginForm"
+               method="post">
     </form:form>
 
     <!-- Vendor -->
@@ -207,8 +115,7 @@
     <script src="/studybuilder/js/jquery.mask.min.js"></script>
     <script src="/studybuilder/js/jquery.password-validator.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
-    <script type="text/javascript"
-            src="/studybuilder/js/jquery.password-validator.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/jquery.password-validator.js"></script>
     <script src="/studybuilder/js/underscore-min.js"></script>
 
     <!-- Theme Custom JS-->
@@ -230,9 +137,13 @@
 
         addPasswordPopup();
         $('.backToLogin').on('click', function () {
-          $('#backToLoginForm').submit();
+          $('#accessCodeForm').submit();
         });
 
+        $('.backToLogin1').on('click', function () {
+          $('#backToLoginForm').submit();
+        });
+        
         var errMsg = '${errMsg}';
         var isValidToken = '${isValidToken}';
         if (isValidToken) {
@@ -252,9 +163,7 @@
           }
         }
         $("#password").passwordValidator({
-          // list of qualities to require
           require: ['length', 'lower', 'upper', 'digit', 'spacial'],
-          // minimum length requirement
           length: 8
         });
 
@@ -288,8 +197,8 @@
             }
           };
         }
-        $(document).find('.md-container.white-bg ').removeClass(
-            'md-container');
+        $(document).find('.md-container.white-bg ')
+            .removeClass('md-container');
       }
 
       var addPasswordPopup = function () {

@@ -161,7 +161,6 @@ public class UsersDAOImpl implements UsersDAO {
         query.executeUpdate();
       }
 
-      // Study admin flow
       if (!"".equals(selectedStudies)
           && !"".equals(permissionValues)
           && userBO2.getRoleId().equals(2)) {
@@ -198,7 +197,6 @@ public class UsersDAOImpl implements UsersDAO {
           }
         }
       } else if (userBO2.getRoleId().equals(1)) {
-        // Superadmin flow
         query = session.createQuery(" FROM StudyBo SBO WHERE SBO.version = 0");
         List<StudyBo> studyBOList = query.list();
         if (CollectionUtils.isNotEmpty(studyBOList)) {
@@ -451,7 +449,8 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
-                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id  ORDER BY u.user_id DESC ");
+                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id  "
+                  + " ORDER BY u.user_id DESC ");
       objList = query.list();
       if ((null != objList) && !objList.isEmpty()) {
         userList = new ArrayList<>();
@@ -535,7 +534,7 @@ public class UsersDAOImpl implements UsersDAO {
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.createQuery(" FROM RoleBO RBO ");
+      query = session.createQuery(" FROM RoleBO RBO");
       roleBOList = query.list();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserRoleList() - ERROR", e);

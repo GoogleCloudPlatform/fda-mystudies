@@ -72,12 +72,14 @@ import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.dao.NotificationDAOImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1183,6 +1185,11 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678999");
 
+    Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
+    String responseDatastoreUrl = map.get("responseServerUrl");
+    String participantDatastoreUrl = map.get("userRegistrationServerUrl");
+    String authServerUrl = map.get("security.oauth2.token_endpoint");
+
     RestGatewaySupport gateway = new RestGatewaySupport();
     gateway.setRestTemplate(restTemplate);
     mockServer = MockRestServiceServer.createServer(gateway);
@@ -1191,7 +1198,7 @@ public class StudyControllerTest extends BaseMockIT {
     studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
 
     mockServer
-        .expect(requestTo(OAUTH_TOKEN))
+        .expect(requestTo(authServerUrl))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.OK)
@@ -1199,7 +1206,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .body(readJsonFile("/token_response_oauth_scim_service.json")));
 
     mockServer
-        .expect(requestTo(STUDIES_META_DATA_URI))
+        .expect(requestTo(participantDatastoreUrl))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.OK)
@@ -1207,7 +1214,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .body(mapper.writeValueAsString(studyDetailsBean)));
 
     mockServer
-        .expect(requestTo(STUDY_META_DATA_URI))
+        .expect(requestTo(responseDatastoreUrl))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.OK)
@@ -1243,6 +1250,11 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
+    Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
+    String responseDatastoreUrl = map.get("responseServerUrl");
+    String participantDatastoreUrl = map.get("userRegistrationServerUrl");
+    String authServerUrl = map.get("security.oauth2.token_endpoint");
+
     RestGatewaySupport gateway = new RestGatewaySupport();
     gateway.setRestTemplate(restTemplate);
     mockServer = MockRestServiceServer.createServer(gateway);
@@ -1251,7 +1263,7 @@ public class StudyControllerTest extends BaseMockIT {
     studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
 
     mockServer
-        .expect(requestTo(OAUTH_TOKEN))
+        .expect(requestTo(authServerUrl))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.OK)
@@ -1259,7 +1271,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .body(readJsonFile("/token_response_oauth_scim_service.json")));
 
     mockServer
-        .expect(requestTo(STUDIES_META_DATA_URI))
+        .expect(requestTo(participantDatastoreUrl))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.FOUND)
@@ -1267,7 +1279,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .body(mapper.writeValueAsString(studyDetailsBean)));
 
     mockServer
-        .expect(requestTo(STUDY_META_DATA_URI))
+        .expect(requestTo(responseDatastoreUrl))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.FOUND)

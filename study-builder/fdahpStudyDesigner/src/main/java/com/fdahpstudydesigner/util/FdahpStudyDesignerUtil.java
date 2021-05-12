@@ -25,15 +25,12 @@ package com.fdahpstudydesigner.util;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
-import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,7 +51,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -77,7 +73,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FdahpStudyDesignerUtil {
 
-  private static Map<String, String> appProperties = null;
   /* Read Properties file */
   private static XLogger logger = XLoggerFactory.getXLogger(FdahpStudyDesignerUtil.class.getName());
 
@@ -253,12 +248,8 @@ public class FdahpStudyDesignerUtil {
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public static Map<String, String> getAppProperties() {
+    HashMap hm = new HashMap<String, String>();
     logger.entry("begin getAppProperties() :: Properties Initialization");
-    if (appProperties != null && !appProperties.isEmpty()) {
-      return appProperties;
-    }
-    appProperties = new HashMap<>();
-
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
     Resource resource = null;
@@ -268,7 +259,7 @@ public class FdahpStudyDesignerUtil {
       while (keys.hasMoreElements()) {
         String key = keys.nextElement();
         String value = rb.getString(key);
-        appProperties.put(key, value);
+        hm.put(key, value);
       }
       ServletContext context = ServletContextHolder.getServletContext();
       Properties prop =
@@ -277,14 +268,14 @@ public class FdahpStudyDesignerUtil {
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();
         String value = prop.getProperty(key);
-        appProperties.put(key, value);
+        hm.put(key, value);
       }
 
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getAppProperties() - ERROR ", e);
     }
     logger.exit("getAppProperties() - ends");
-    return appProperties;
+    return hm;
   }
 
   public static FormulaInfoBean getConditionalFormulaResult(
@@ -1005,22 +996,6 @@ public class FdahpStudyDesignerUtil {
     return generatedHash;
   }
 
-  public static String getUserAccessLevel(Set<UserPermissions> userPermission) {
-    if (CollectionUtils.isNotEmpty(userPermission)) {
-      for (UserPermissions up : userPermission) {
-        if (FdahpStudyDesignerConstants.ROLE_SUPERADMIN_NAME.equals(up.getPermissions())) {
-          return UserAccessLevel.SUPER_ADMIN.getValue();
-        } else if (FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW_NAME.equals(
-                up.getPermissions())
-            || FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT_NAME.equals(
-                up.getPermissions())) {
-          return UserAccessLevel.STUDY_BUILDER_ADMIN.getValue();
-        }
-      }
-    }
-    return UserAccessLevel.APP_STUDY_ADMIN.getValue();
-  }
-
   public static String saveImage(MultipartFile fileStream, String fileName, String underDirectory) {
     String fileNameWithExtension =
         fileName + "." + FilenameUtils.getExtension(fileStream.getOriginalFilename());
@@ -1029,13 +1004,24 @@ public class FdahpStudyDesignerUtil {
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
 
     try {
+      byte[] b = fileStream.getBytes();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      storage.create(blobInfo, fileStream.getBytes());
-
+      storage.create(blobInfo, b);
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);
     }
     return fileNameWithExtension;
+  }
+
+  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+    } catch (Exception e) {
+      logger.error("Unable to generate signed url", e);
+    }
+    return null;
   }
 
   public static void saveDefaultImageToCloudStorage(
@@ -1055,22 +1041,10 @@ public class FdahpStudyDesignerUtil {
 
     String timestampInString = inputDate + " " + inputTime;
     try {
-    	System.out.println(
-    	          "timestamp of notification method getTimeStamp() " + timestampInString);
-        return timestampInString;
+      System.out.println("timestamp of notification " + timestampInString);
+      return timestampInString;
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
-    }
-    return null;
-  }
-
-  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
-    try {
-      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
-      Storage storage = StorageOptions.getDefaultInstance().getService();
-      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
-    } catch (Exception e) {
-      logger.error("Unable to generate signed url", e);
     }
     return null;
   }

@@ -38,7 +38,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="firstName" value="${fn:escapeXml(userBO.firstName)}"
                      oldVal="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required data-error="Please fill out this field"  readonly/>
+                     maxlength="50" required data-error="Please fill out this field" readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -82,7 +82,7 @@
                      id="userEmail" name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" maxlength="100"
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                     data-pattern-error="Email address is invalid" required data-error="Please fill out this field" readonly/>
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" required data-error="Please fill out this field" readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -167,8 +167,8 @@
                 <div class="form-group">
                   <input autofocus="autofocus" type="password"
                          class="input-field wow_input emptyField" maxlength="64" id="oldPassword"
-                         name="oldPassword"
-                         required data-error="Please fill out this field" tabindex="1" autocomplete="off"/>
+                         name="oldPassword" data-error="Please fill out this field"
+                         required tabindex="1" autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
               </div>
@@ -187,7 +187,7 @@
                          maxlength="64" data-minlength="8"
                          tabindex="2" name="password" data-error="Password is invalid"
                          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                         required data-error="Please fill out this field" autocomplete="off"/>
+                         required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                   <span class="arrowLeftSugg"></span>
                 </div>
@@ -204,9 +204,9 @@
               <div class="col-md-6 p-none">
                 <div class="form-group">
                   <input type="password" class="input-field wow_input emptyField" maxlength="64"
-                         data-minlength="8" data-match-error="Passwords do not match"
+                         data-minlength="8" data-match-error="Passwords do not match" data-error="Please fill out this field"
                          id="conpassword" data-match="#password"
-                         tabindex="3" required data-error="Please fill out this field" autocomplete="off"/>
+                         tabindex="3" required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
 
                 </div>

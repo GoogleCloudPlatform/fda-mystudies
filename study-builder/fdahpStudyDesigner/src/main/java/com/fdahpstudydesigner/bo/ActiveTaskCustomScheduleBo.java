@@ -51,8 +51,11 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
   @Column(name = "frequency_start_date")
   private String frequencyStartDate;
 
-  @Column(name = "frequency_time")
-  private String frequencyTime;
+  @Column(name = "frequency_start_time")
+  private String frequencyStartTime;
+
+  @Column(name = "frequency_end_time")
+  private String frequencyEndTime;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,10 +93,6 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
     return this.frequencyStartDate;
   }
 
-  public String getFrequencyTime() {
-    return this.frequencyTime;
-  }
-
   public Integer getId() {
     return this.id;
   }
@@ -112,10 +111,6 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
 
   public void setFrequencyStartDate(String frequencyStartDate) {
     this.frequencyStartDate = frequencyStartDate;
-  }
-
-  public void setFrequencyTime(String frequencyTime) {
-    this.frequencyTime = frequencyTime;
   }
 
   public void setId(Integer id) {
@@ -156,5 +151,21 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
 
   public void setTimePeriodToDays(Integer timePeriodToDays) {
     this.timePeriodToDays = timePeriodToDays;
+  }
+
+  public String getFrequencyStartTime() {
+    return frequencyStartTime;
+  }
+
+  public void setFrequencyStartTime(String frequencyStartTime) {
+    this.frequencyStartTime = frequencyStartTime;
+  }
+
+  public String getFrequencyEndTime() {
+    return frequencyEndTime;
+  }
+
+  public void setFrequencyEndTime(String frequencyEndTime) {
+    this.frequencyEndTime = frequencyEndTime;
   }
 }

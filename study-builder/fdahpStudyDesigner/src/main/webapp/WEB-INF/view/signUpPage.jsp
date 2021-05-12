@@ -95,7 +95,7 @@
 	  .arrowLeftSugg {
 	    left: 95.5%; !important;
 	    }
-  	</style>
+	</style>
   </head>
   <body class="loading background__img">
     <div id="loader">
@@ -147,8 +147,8 @@
                            name="userEmail" placeholder="Email Address"
                            value="${userBO.userEmail}" oldVal="${userBO.userEmail}"
                            pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                           data-pattern-error="Email address is invalid" maxlength="100"
-                           required data-error="Please fill out this field" readonly="readonly" autocomplete="off"/>
+                           data-pattern-error="Email address is invalid" data-error="Please fill out this field"  maxlength="100"
+                           required readonly="readonly" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -165,7 +165,7 @@
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="password" maxlength="64" data-minlength="8"
-                           placeholder="Password*" required data-error="Please fill out this field" 
+                           placeholder="Password*" required
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                            autocomplete="off" data-error="Password is invalid"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -178,16 +178,16 @@
                     <input type="password" class="input-field wow_input"
                            id="cfnPassword" name="" maxlength="64"
                            data-match="#password"
-                           data-match-error="Passwords do not match"
-                           placeholder="Confirm password*" required data-error="Please fill out this field" autocomplete="off"/>
+                           data-match-error="Passwords do not match" data-error="Please fill out this field"
+                           placeholder="Confirm password*" required autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-12 text-center">
+                <div class="col-xs-12">
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required" data-error="Please fill out this field" > <label for="inlineCheckbox">
+                        required="required"> <label for="inlineCheckbox">
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"

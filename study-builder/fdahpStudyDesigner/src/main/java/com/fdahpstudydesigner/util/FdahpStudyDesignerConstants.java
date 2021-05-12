@@ -1,10 +1,26 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package com.fdahpstudydesigner.util;
 
 public class FdahpStudyDesignerConstants {
@@ -51,7 +67,7 @@ public class FdahpStudyDesignerConstants {
       "The study must have at least one questionnaire or active task added before attempting this action.";
 
   public static final String ACTIVETASK_DATE_ERROR_MSG =
-      "One or more of the study's activities are scheduled for dates that are in the past. Please configure activity schedules to have upcoming dates and try again.";
+      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again.";
   public static final String ACTIVETASK_LIST = "activeTaskList";
   public static final String ACTIVITY_MESSAGE = "activityMsg";
   public static final String ACTIVITY_STUDY_ID = "activityStudyId";
@@ -228,7 +244,7 @@ public class FdahpStudyDesignerConstants {
   public static final String NOTIFICATION_DEACTIVATE_TEXT =
       "The study $customId has been closed. We thank you for your participation.";
   public static final String NOTIFICATION_ERROR_MSG =
-      "One or more of the study's notifications are scheduled for dates that are in the past. Please configure notification schedules to have upcoming dates and try again.";
+      "One or more of the study's notifications is scheduled for a date in the past. Please correct the same and try again.";
   public static final String NOTIFICATION_GT = "GT";
   public static final String NOTIFICATION_IMMEDIATE = "immediate";
 
@@ -286,14 +302,14 @@ public class FdahpStudyDesignerConstants {
       "This section has been marked as complete";
   public static final String QUESTIONNARIE_STUDY_ID = "questionnarieStudyId";
   public static final String QUESTIONNARIES_ERROR_MSG =
-      "One or more of the study's activities are scheduled for dates that are in the past. Please configure activity schedules to have upcoming dates and try again.";
+      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again.";
   public static final String QUESTIONSTEP_ACTIVITY = "Question step";
   public static final String QUESTIONSTEP_DELETED = "Question step deleted";
   public static final String QUESTIONSTEP_DONE = "Question step marked complete";
   public static final String QUESTIONSTEP_SAVED = "Question step saved";
   public static final String REDIRECT_SESSION_PARAM_NAME = "sessionUserId=";
   public static final String REFERENCE_TYPE_CATEGORIES = "Categories";
-  public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research sponsors";
+  public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research Sponsors";
   public static final String REQUIRED_DATE_TIME = "MM/dd/yyyy HH:mm";
   public static final String REQUIRED_DATE_TIME_FOR_DATE_DIFF = "MM/dd/yyyy HH:mm:ss";
   public static final String REQUIRED_TIME = "HH:mm";
@@ -441,6 +457,4 @@ public class FdahpStudyDesignerConstants {
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
-
-  public static final int SIGNED_URL_DURATION_IN_HOURS = 12;
 }

@@ -76,7 +76,7 @@
           <div class="form-group">
             <input autofocus="autofocus" type="text" class="form-control" id="resourceTitle"
                    name="title"
-                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required data-error="Please fill out this field" 
+                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required data-error="Please fill out this field"
                    <c:if test="${isstudyProtocol eq 'isstudyProtocol'}">readonly</c:if>/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -108,7 +108,7 @@
       <div id="richEditor"
            class="mt-lg form-group resetContentType <c:if test="${resourceBO.textOrPdf}">dis-none</c:if>">
         <textarea class="remReqOnSave" id="richText" name="richText"
-                  required data-error="Please fill out this field"  >${resourceBO.richText}</textarea>
+                  required data-error="Please fill out this field">${resourceBO.richText}</textarea>
         <div class="help-block with-errors red-txt"></div>
       </div>
 
@@ -119,8 +119,8 @@
           Upload PDF
         </button>
         <input id="uploadImg" class="dis-none remReqOnSave" type="file" name="pdfFile" accept=".pdf"
-               data-error="Please select a pdf file" required data-error="Please fill out this field" >
-        <input type="hidden" class="remReqOnSave" value="${resourceBO.pdfUrl}" required data-error="Please fill out this field"  id="pdfUrl"
+               data-error="Please select a pdf file" required>
+        <input type="hidden" class="remReqOnSave" value="${resourceBO.pdfUrl}" required data-error="Please fill out this field" id="pdfUrl"
                name="pdfUrl">
         <input type="hidden" value="${resourceBO.pdfName}" id="pdfName" name="pdfName">
         <span class="alert customalert pdfDiv">
@@ -182,7 +182,7 @@
               </div>
               <div class="col-md-3 col-lg-3 p-none">
                 <div class="form-group">
-                  <select id="anchorDateId" class="selectpicker disBtn1" required data-error="Please fill out this field" 
+                  <select id="anchorDateId" class="selectpicker disBtn1" required data-error="Please fill out this field"
                           name="anchorDateId">
                     <option value=''>Select</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
@@ -213,7 +213,7 @@
                      placeholder="X" name="timePeriodFromDays"
                      value="${resourceBO.timePeriodFromDays}"
                      oldxDaysVal="${resourceBO.timePeriodFromDays}"
-                     maxlength="3" required data-error="Please fill out this field"  pattern="[0-9]+"
+                     maxlength="3" required pattern="[0-9]+" data-error="Please fill out this field"
                      data-pattern-error="Please enter valid number"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
@@ -242,7 +242,7 @@
                      class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm resetAncDate"
                      placeholder="Y"
                      name="timePeriodToDays" value="${resourceBO.timePeriodToDays}"
-                     oldyDaysVal="${resourceBO.timePeriodToDays}" maxlength="3" required data-error="Please fill out this field" />
+                     oldyDaysVal="${resourceBO.timePeriodToDays}" maxlength="3" required data-error="Please fill out this field"/>
 
               <span class="help-block with-errors red-txt"></span>
             </span>
@@ -266,7 +266,7 @@
                      class="form-control disRadBtn1 disBtn2 datepicker remReqOnSave mt-md"
                      placeholder="Start date" name="startDate"
                      value="${resourceBO.startDate}"
-                     oldStartDateVal="${resourceBO.startDate}" required data-error="Please fill out this field" />
+                     oldStartDateVal="${resourceBO.startDate}" required data-error="Please fill out this field"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
             <span class="gray-xs-f mb-sm pr-md">
@@ -276,7 +276,7 @@
               <input id="EndDate" type="text"
                      class="form-control disRadBtn1 disBtn2 datepicker remReqOnSave mt-md"
                      placeholder="End date" name="endDate" value="${resourceBO.endDate}"
-                     oldEndDateVal="${resourceBO.endDate}" required data-error="Please fill out this field" />
+                     oldEndDateVal="${resourceBO.endDate}" required data-error="Please fill out this field"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
             <div class="help-block with-errors red-txt"></div>
@@ -441,12 +441,13 @@
     });
 
     $('#saveResourceId').click(function () {
-    	var richTextVal = $('#richText').val();
-      if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
-        var richText=$('#richText').summernote('code');
-        var escaped = $('#richText').text(richText).html();
-        $('#richText').val(escaped);
-      }
+    	 var richTextVal = $('#richText').val();
+         if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+           var richText=$('#richText').summernote('code');
+           var escaped = $('#richText').text(richText).html();
+           $('#richText').val(escaped);
+          }
+
       $('#saveResourceId').prop('disabled', true);
       $("#resourceTitle").parent().find(".help-block").empty();
       $('#resourceForm').validator('destroy').validator();
@@ -635,17 +636,19 @@
     
     $('#StartDate').datetimepicker({
       format: 'MM/DD/YYYY',
-      ignoreReadonly: true,
       minDate: today,
+      ignoreReadonly: true,
       useCurrent: false,
     });
     $('#EndDate').datetimepicker({
       format: 'MM/DD/YYYY',
-      ignoreReadonly: true,
       minDate: today,
+      ignoreReadonly: true,
       useCurrent: false,
     });
 
+
+    
     $(".datepicker").on("click", function (e) {
       $('#StartDate').data("DateTimePicker").minDate(
           new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
@@ -888,6 +891,18 @@
       resetValidation($(this).parents('form'));
     }
 
+    if ($('#inlineRadio4').prop('checked') == true) {
+        $('.disRadBtn1').prop('disabled', true);
+        $('.disRadBtn1').val('');
+        $('.disRadBtn1').prop('checked', false);
+        $('.disBtn1').prop('disabled', true);
+        $('.disBtn1').val('');
+        $('.disBtn1').removeAttr('required');
+        $('.disBtn2').removeAttr('required');
+        $('.disBtn1').selectpicker('refresh');
+        resetValidation($('.resetDate'));
+      }
+    
     $('#inlineRadio4').on('click', function () {
       if ($('#inlineRadio4').prop('checked') == true) {
         $('.disRadBtn1').prop('disabled', true);
@@ -900,7 +915,7 @@
         $('.disBtn1').selectpicker('refresh');
         resetValidation($('.resetDate'));
       }
-
+      
       var a = $("#inlineRadio4").val();
       if (a == 1) {
         $(".light-txt").addClass("opacity06");

@@ -8,7 +8,11 @@
 
 package com.fdahpstudydesigner.common;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public enum PlatformComponent {
   MOBILE_APPS(
       "MOBILE APPS", "The iOS and Android apps that participants use to interact with MyStudies"),
@@ -50,38 +54,7 @@ public enum PlatformComponent {
 
   private String description;
 
-  private PlatformComponent(String value, String description) {
-	this.value = value;
-	this.description = description;
-}
-
-
-
-public String getValue() {
-	return value;
-}
-
-
-
-public void setValue(String value) {
-	this.value = value;
-}
-
-
-
-public String getDescription() {
-	return description;
-}
-
-
-
-public void setDescription(String description) {
-	this.description = description;
-}
-
-
-
-public static PlatformComponent fromValue(String value) {
+  public static PlatformComponent fromValue(String value) {
     for (PlatformComponent type : PlatformComponent.values()) {
       if (type.getValue().equals(value)) {
         return type;

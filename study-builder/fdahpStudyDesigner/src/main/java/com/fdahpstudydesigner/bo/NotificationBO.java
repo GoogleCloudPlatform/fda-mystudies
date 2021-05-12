@@ -24,7 +24,6 @@
 package com.fdahpstudydesigner.bo;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -308,6 +307,14 @@ public class NotificationBO implements Serializable {
     this.scheduleTime = scheduleTime;
   }
 
+  public String getScheduleTimestamp() {
+    return scheduleTimestamp;
+  }
+
+  public void setScheduleTimestamp(String scheduleTimestamp) {
+    this.scheduleTimestamp = scheduleTimestamp;
+  }
+
   public void setStudyId(Integer studyId) {
     this.studyId = studyId;
   }
@@ -322,15 +329,5 @@ public class NotificationBO implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
-  }
-
-  /** @return the scheduleTimestamp */
-  public String getScheduleTimestamp() {
-    return scheduleTimestamp;
-  }
-
-  /** @param scheduleTimestamp the scheduleTimestamp to set */
-  public void setScheduleTimestamp(String scheduleTimestamp) {
-    this.scheduleTimestamp = scheduleTimestamp;
   }
 }

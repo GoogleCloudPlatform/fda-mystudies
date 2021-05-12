@@ -10,6 +10,7 @@
   pointer-events: none;
   cursor: default;
 }
+
 .filter-option {
   text-transform: inherit !important;
 }
@@ -140,7 +141,7 @@
             <div class="form-group">
               <input autofocus="autofocus" type="text" class="form-control"
                      name="firstName" value="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required data-error="Please fill out this field" 
+                     maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -153,7 +154,7 @@
             </div>
             <div class="form-group">
               <input type="text" class="form-control" name="lastName"
-                     value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required data-error="Please fill out this field" 
+                     value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -176,8 +177,8 @@
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}"
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                     data-pattern-error="Email address is invalid" maxlength="100"
-                     required data-error="Please fill out this field" 
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
+                     required
                      <c:if
                          test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -206,12 +207,12 @@
             <div class="blue-md-f mt-lg mb-md">
               Role
               <span class="requiredStar"> *</span>
-              <span data-toggle="tooltip" data-placement="top" title="" class="filled-tooltip" data-original-title="Superadmin users have application-wide permissions. They can manage admins of the Study Builder and in addition, can manage app-level notifications and studies as well. Non-superadmins or 'study admins' will have permissions-based access to specific sections and studies only." aria-describedby="tooltip739612"></span>
+              <span data-toggle="tooltip" data-placement="top" title="" class="filled-tooltip" data-original-title="Superadmin users have application-wide permissions. They can manage users of the Study Builder and in addition, can manage app-level notifications and studies as well. Non-superadmins or 'study admins' will have permissions-based access to specific sections and studies only." aria-describedby="tooltip739612"></span>
             </div>
             <div class="form-group">
               <select id="roleId"
                       class="selectpicker <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
-                      name="roleId" required data-error="Please fill out this field" >
+                      name="roleId" required data-error="Please fill out this field">
                 <option value="" selected disabled>- Select Role -</option>
                 <c:forEach items="${roleBOList}" var="role">
                   <option ${role.roleId eq userBO.roleId ? 'selected' : ''}
@@ -403,15 +404,22 @@
            id="backOrCancelBtnForm" name="backOrCancelBtnForm" method="post">
 </form:form>
 <script>
+
+
   $(document).ready(function () {
     $('#rowId').parent().removeClass('white-bg');
+
     <c:if test="${empty studyBOList && empty studyBOs}">
     $('.addHide').hide();
     </c:if>
+
     $('#users').addClass('active');
+
     $('[data-toggle="tooltip"]').tooltip();
+
     var isManageStudyChecked = $("#inlineCheckbox4").is(":checked");
     if (isManageStudyChecked) {
+
     } else {
       $('#inlineCheckbox5').val('');
       $('#inlineCheckbox5').prop('checked', false);
@@ -425,11 +433,13 @@
       setStudySettingByRole(role);
     }
     </c:if>
+
     <c:if test="${actionPage eq 'ADD_PAGE'}">
     $('.edit-user-list-widget').hide();
  	 $('.perm-assign').hide();
  	 $('.pull-right').hide();
     </c:if>
+
     <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
     if($('#roleId').find('option:selected').text() == 'Superadmin' ){
     $('.edit-user-list-widget').hide();
@@ -437,13 +447,16 @@
  	 $('.pull-right').hide();
     }
     </c:if>
+
     
     
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       setStudySettingByRole(element);
     });
+
    
+
     var countCall = 0;
     $(window).on('load', function () {
       countCall = 1;
@@ -460,6 +473,7 @@
             });
       });
     });
+
     if (countCall == 0) {
       $('.selStd').each(function () {
         var stdTxt = $(this).find('.stdCls').attr('stdTxt');
@@ -517,22 +531,27 @@
         $('#emailId').parent().find(".help-block").empty();
       }
     });
+
     //cancel or back click
     $('.backOrCancelBttn').on('click', function () {
       $('#backOrCancelBtnForm').submit();
     });
+
     if ($('#inlineCheckbox1').prop("checked") == false) {
       $('.musr').prop('checked', false);
       $('.musr').prop('disabled', true);
     }
+
     if ($('#inlineCheckbox3').prop("checked") == false) {
       $('.mnotf').prop('checked', false);
       $('.mnotf').prop('disabled', true);
     }
+
     if ($('#inlineCheckbox4').prop("checked") == false) {
       $('#inlineCheckbox5').prop('checked', false);
       $('#inlineCheckbox5').prop('disabled', true);
     }
+
     $('#inlineCheckbox1').on('click', function () {
       if ($(this).prop("checked") == true) {
         $('.musr').prop('disabled', false);
@@ -542,6 +561,7 @@
         $('.musr').prop('disabled', true);
       }
     });
+
     $('#inlineCheckbox3').on('click', function () {
       if ($(this).prop("checked") == true) {
         $('.mnotf').prop('disabled', false);
@@ -551,6 +571,7 @@
         $('.mnotf').prop('disabled', true);
       }
     });
+
     $('#inlineCheckbox4').on('click', function () {
       if ($(this).prop("checked") == true) {
         $(this).val(1);
@@ -571,6 +592,7 @@
         $('.changeView1').prop('disabled', true);
       }
     });
+
     $('#inlineCheckbox5').on('click', function () {
       if ($(this).prop("checked") == true) {
         $(this).val(1);
@@ -580,12 +602,15 @@
     });
     // Adding selected study items
     $(".study-addbtn").click(function () {
+
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
+
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
         if ($(this).text() == "- All items are already selected -") {
           $(this).hide();
         }
       });
+
       $('#multiple :selected').each(function (i, sel) {
         var selVal = parseInt($(sel).val());
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -607,8 +632,10 @@
             + "</span>"
             + "</span>"
             + "</div>";
+
         $('.study-selected').append(existingStudyDiv);
       });
+
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(
@@ -617,7 +644,9 @@
         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").empty().append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
       }
+
     });
+
 //Removing selected study items
     $(".removeAll").click(function () {
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
@@ -628,6 +657,7 @@
       });
       $(".study-selected-item").remove();
     });
+
     $('.addUpdate').on('click', function () {
       var email = $('#emailId').val();
       var oldEmail = $('#emailId').attr('oldVal');
@@ -674,7 +704,9 @@
         saveUser();
       }
     });
+
     
+
     $('#resendLinkId').on('click', function () {
       var form = document.createElement('form');
       form.method = 'post';
@@ -683,15 +715,18 @@
       input.name = 'userId';
       input.value = '${userBO.userId}';
       form.appendChild(input);
+
       input = document.createElement('input');
       input.type = 'hidden';
       input.name = '${_csrf.parameterName}';
       input.value = '${_csrf.token}';
       form.appendChild(input);
+
       form.action = '/studybuilder/adminUsersEdit/resendActivateDetailsLink.do';
       document.body.appendChild(form);
       form.submit();
     });
+
     $('#enforcePasswordId').on('click', function () {
       bootbox.confirm({
         closeButton: false,
@@ -713,26 +748,33 @@
             input.name = 'changePassworduserId';
             input.value = '${userBO.userId}';
             form.appendChild(input);
+
             var input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'emailId';
             input.value = '${userBO.userEmail}';
             form.appendChild(input);
+
             input = document.createElement('input');
             input.type = 'hidden';
             input.name = '${_csrf.parameterName}';
             input.value = '${_csrf.token}';
             form.appendChild(input);
+
             form.action = '/studybuilder/adminUsersEdit/enforcePasswordChange.do';
             document.body.appendChild(form);
             form.submit();
           }
         }
       })
+
     });
+
   });
+
   function del(id) {
     var atxt = $('#std' + id).children().text();
+
     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
         function () {
           var ltxt = $(this).text();
@@ -742,13 +784,17 @@
             $(this).parent().parent().show();
           }
         });
+
     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
       if ($(this).text() == "- All items are already selected -") {
         $(this).hide();
       }
     });
+
     $('#std' + id).remove();
+
   }
+
   function activateOrDeactivateUser(userId) {
     var status = $('#change' + userId).val();
     var msgPart = "";
@@ -770,6 +816,7 @@
         if (status == 'true') {
           $('#change' + userId).prop('checked', true);
           $('#userStatus').val(true);
+
         } else if (status == 'false') {
           $('#change' + userId).prop('checked', false);
           $('#userStatus').val(false);
@@ -778,6 +825,7 @@
       }
     });
   }
+
   function saveUser() {
     $('#emailId').prop('disabled', false);
     var selectedStudies = "";
@@ -807,6 +855,7 @@
       $("body").removeClass("loading");
     }
   }
+
   function setStudySettingByRole(element) {
     if (element == 'Org-level Admin') {
       $('#inlineCheckbox1').prop('checked', false);
@@ -826,10 +875,13 @@
       $('#inlineCheckbox3').attr('disabled', false);
       $('#inlineCheckbox5').attr('disabled', false);
     }
+
   }
+
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");
   });
+
   $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       if(element == "Study admin"){ 
@@ -843,4 +895,6 @@
               }
     });
   
+  
 </script>
+

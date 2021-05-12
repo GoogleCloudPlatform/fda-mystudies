@@ -77,6 +77,7 @@ public class LoginController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String sucMsg = "";
     try {
+
       HttpSession session = request.getSession(false);
       SessionObject sesObj =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -113,6 +114,7 @@ public class LoginController {
     } catch (Exception e) {
       logger.error("LoginController - addPassword() - ERROR ", e);
     }
+
     logger.exit("addPassword() - Ends");
     return mv;
   }
@@ -314,7 +316,7 @@ public class LoginController {
         checkSecurityToken = true;
       }
       map.addAttribute("isValidToken", checkSecurityToken);
-      mv = new ModelAndView("emailChangeVerificationPage", map);
+      mv = new ModelAndView("emailChangeVarificationPage", map);
     } catch (Exception e) {
       logger.error("LoginController - createPassword() - ERROR ", e);
     }

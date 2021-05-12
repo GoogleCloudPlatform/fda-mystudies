@@ -89,7 +89,7 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if></li>
       <li class="sub sixthTask commonCls ">
-        Active tasks
+        Active Tasks
         <c:if test="${studyBo.studySequenceBo.studyExcActiveTask}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
@@ -160,12 +160,12 @@
       document.body.appendChild(a).click();
     });
 
-    <c:if test="${(not empty studyBo.studySequenceBo && studyBo.studySequenceBo.basicInfo) || studyBo.status eq 'Active'}">
+    <c:if test="${(not empty studyBo.studySequenceBo && studyBo.studySequenceBo.basicInfo) || studyBo.status ne 'Pre-launch'}">
     $('.second').click(function () {
       a.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
-    <c:if test="${studyBo.studySequenceBo.settingAdmins || studyBo.status eq 'Active'}">
+    <c:if test="${studyBo.studySequenceBo.settingAdmins || studyBo.status ne 'Pre-launch'}">
     $('.third').click(function () {
       a.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
       document.body.appendChild(a).click();

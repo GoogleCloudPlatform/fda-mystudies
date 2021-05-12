@@ -57,7 +57,7 @@
           </div>
           <div class="form-group">
             <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
-                      id="notificationText" name="notificationText" required data-error="Please fill out this field" 
+                      id="notificationText" name="notificationText" required data-error="Please fill out this field"
             >${notificationBO.notificationText}</textarea>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -74,11 +74,13 @@
                          test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
               <label for="inlineRadio1">Schedule this notification
               <span
-               <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
+      <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           data-toggle="tooltip"
           data-placement="top"
-          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}."></span>
+           data-html="true"
+          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}.">
+      </span>
               </label>
             </span>
             <span class="radio radio-inline">
@@ -107,10 +109,10 @@
             <span class="requiredStar">*</span>
           </div>
           <div class="form-group date">
-            <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" data-error="Please fill out this field" 
-                   name="scheduleDate" value="${notificationBO.scheduleDate}"
+            <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal"
+                   name="scheduleDate" value="${notificationBO.scheduleDate}" data-error="Please fill out this field"
                    oldValue="${notificationBO.scheduleDate}"
-                   placeholder="MM/DD/YYYY" disabled/>
+                   placeholder="MM/DD/YYYY" disabled data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -121,10 +123,10 @@
             <span class="requiredStar">*</span>
           </div>
           <div class="form-group">
-            <input id="timepicker1" class="form-control clock timepicker resetVal" data-error="Please fill out this field" 
+            <input id="timepicker1" class="form-control clock timepicker resetVal"
                    name="scheduleTime"
                    value="${notificationBO.scheduleTime}" oldValue="${notificationBO.scheduleTime}"
-                   placeholder="00:00" disabled/>
+                   placeholder="00:00" disabled data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -215,7 +217,6 @@
 	$('[data-toggle="tooltip"]').tooltip();
     $('#rowId').parent().removeClass('white-bg');
     $("#notification").addClass("active");
-
     <c:if test="${notificationBO.notificationSent || notificationBO.actionPage eq 'view'}">
     $('#appNotificationFormId input,textarea').prop('disabled', true);
     if ($('#inlineRadio2').prop('checked')) {

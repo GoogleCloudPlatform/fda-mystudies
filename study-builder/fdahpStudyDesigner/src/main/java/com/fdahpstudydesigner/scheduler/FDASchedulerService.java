@@ -148,6 +148,7 @@ public class FDASchedulerService {
     String time;
     ObjectMapper objectMapper = new ObjectMapper();
     String responseString = "";
+
     try {
 
       date = FdahpStudyDesignerUtil.getCurrentDate();
@@ -156,13 +157,10 @@ public class FDASchedulerService {
               new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_TIME).format(new Date()),
               FdahpStudyDesignerConstants.DB_SDF_TIME,
               1);
-      logger.info("date in scheduler " + date);
-      logger.info("time in scheduler" + time);
-      System.out.println("date in scheduler " + date);
-      System.out.println("time in scheduler " + time);
       pushNotificationBeans =
           notificationDAO.getPushNotificationList(
               FdahpStudyDesignerUtil.getTimeStamp(date, time).toString());
+      // pushNotificationToSaveInHistory = pushNotificationBeans;
       if ((pushNotificationBeans != null) && !pushNotificationBeans.isEmpty()) {
         for (PushNotificationBean p : pushNotificationBeans) {
           if (p.getAppId() == null) {
@@ -190,7 +188,7 @@ public class FDASchedulerService {
             }
           }
         }
-        List<PushNotificationBean> pushNotification = new ArrayList<>();
+        List<PushNotificationBean> pushNotification = new ArrayList<PushNotificationBean>();
         for (PushNotificationBean finalPushNotificationBean : finalPushNotificationBeans) {
           pushNotification.add(finalPushNotificationBean);
 
@@ -238,32 +236,6 @@ public class FDASchedulerService {
     logger.exit("sendPushNotification() - Ends");
   }
 
-  private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSource(PlatformComponent.STUDY_BUILDER.getValue());
-    auditRequest.setDestination(PlatformComponent.PARTICIPANT_DATASTORE.getValue());
-    auditRequest.setCorrelationId(UUID.randomUUID().toString());
-    auditRequest.setDescription(eventEnum.getDescription());
-    auditRequest.setEventCode(eventEnum.getEventCode());
-    auditRequest.setOccurred(new Timestamp(Instant.now().toEpochMilli()));
-    auditLogEventHelper.logEvent(eventEnum, auditRequest);
-  }
-
-  private HttpResponse invokePushNotificationApi(
-      JSONObject json, HttpClient client, String accessToken)
-      throws IOException, ClientProtocolException {
-    HttpPost post =
-        new HttpPost(
-            FdahpStudyDesignerUtil.getAppProperties().get("fda.registration.root.url")
-                + FdahpStudyDesignerUtil.getAppProperties().get("push.notification.uri"));
-    post.setHeader("Authorization", "Bearer " + accessToken);
-    post.setHeader("Content-type", "application/json");
-
-    StringEntity requestEntity = new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
-    post.setEntity(requestEntity);
-    return client.execute(post);
-  }
-
   private void updateNotification(PushNotificationBean pushNotificationBean) {
     String sb = "";
     Session session = hibernateTemplate.getSessionFactory().openSession();
@@ -288,5 +260,31 @@ public class FDASchedulerService {
           .executeUpdate();
     }
     trans.commit();
+  }
+
+  private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSource(PlatformComponent.STUDY_BUILDER.getValue());
+    auditRequest.setDestination(PlatformComponent.PARTICIPANT_DATASTORE.getValue());
+    auditRequest.setCorrelationId(UUID.randomUUID().toString());
+    auditRequest.setDescription(eventEnum.getDescription());
+    auditRequest.setEventCode(eventEnum.getEventCode());
+    auditRequest.setOccurred(new Timestamp(Instant.now().toEpochMilli()));
+    auditLogEventHelper.logEvent(eventEnum, auditRequest);
+  }
+
+  private HttpResponse invokePushNotificationApi(
+      JSONObject json, HttpClient client, String accessToken)
+      throws IOException, ClientProtocolException {
+    HttpPost post =
+        new HttpPost(
+            FdahpStudyDesignerUtil.getAppProperties().get("fda.registration.root.url")
+                + FdahpStudyDesignerUtil.getAppProperties().get("push.notification.uri"));
+    post.setHeader("Authorization", "Bearer " + accessToken);
+    post.setHeader("Content-type", "application/json");
+
+    StringEntity requestEntity = new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
+    post.setEntity(requestEntity);
+    return client.execute(post);
   }
 }

@@ -8,7 +8,11 @@
 
 package com.fdahpstudydesigner.common;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public enum UserAccessLevel {
   SUPER_ADMIN("SUPERADMIN", "Has all permissions "),
 
@@ -27,27 +31,4 @@ public enum UserAccessLevel {
   private String value;
 
   private String description;
-
-private UserAccessLevel(String value, String description) {
-	this.value = value;
-	this.description = description;
-}
-
-public String getValue() {
-	return value;
-}
-
-public void setValue(String value) {
-	this.value = value;
-}
-
-public String getDescription() {
-	return description;
-}
-
-public void setDescription(String description) {
-	this.description = description;
-}
-  
-  
 }

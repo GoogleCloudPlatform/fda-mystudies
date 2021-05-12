@@ -86,7 +86,7 @@
             <th id="">ROLE
               <span class="sort"></span>
             </th>
-            <th id="">Actions</th>
+            <th id="" >Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -116,7 +116,8 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"</c:if>
+                                                 test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"
+                                                 </c:if>
                                              <c:if
                                                  test="${user.emailChanged}">title="Account status: Pending verification"</c:if>
                                              <c:if
@@ -229,7 +230,6 @@
       })
 
     });
-    
     //User_List page Datatable
     table = $('#user_list').DataTable({
       "paging": true,

@@ -132,15 +132,15 @@
     } else {
       reorder = true;
     }
-
+  
     var resourcesSavedListSize = ${resourcesSavedList.size()};
     if(resourcesSavedListSize > 0){
     	 $('#spanMarkAsComp')
          .attr(
              'data-original-title',
              'Please ensure individual list items are marked Done, before marking the section as Complete');
-    }
-    
+        }
+
     var dataTable = $('#resource_list').DataTable({
       "paging": false,
       "info": false,
@@ -324,14 +324,14 @@
             actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo("
                 + parseInt(obj.id) + ");'></span>";
           }
-          actions += "<span class='sprites_icon copy delete'  data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteResourceInfo(" + parseInt(obj.id)
+          actions += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteResourceInfo(" + parseInt(obj.id)
               + ");'></span>";
           datarow.push(actions);
           $('#resource_list').DataTable().row.add(datarow);
 
         }
       });
-      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete=='') {
+      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete == '') {
         $("#markAsComp").attr("disabled", false);
       }
       $('#resource_list').DataTable().draw();

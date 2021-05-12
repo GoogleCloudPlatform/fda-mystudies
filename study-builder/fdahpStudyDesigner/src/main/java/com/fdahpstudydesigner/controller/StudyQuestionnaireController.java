@@ -228,6 +228,7 @@ public class StudyQuestionnaireController {
               values.put(STEP_ID, questionBo.getShortTitle());
             }
             auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_IN_FORM_DELETED, auditRequest, values);
+
             questionnairesStepsBo =
                 studyQuestionnaireService.getQuestionnaireStep(
                     Integer.valueOf(formId),
@@ -2099,8 +2100,6 @@ public class StudyQuestionnaireController {
     ModelMap map = new ModelMap();
     QuestionnaireBo addQuestionnaireBo = null;
     String customStudyId = "";
-    StudyBuilderAuditEvent eventEnum = null;
-    Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
@@ -2136,18 +2135,12 @@ public class StudyQuestionnaireController {
                   questionnaireBo, sesObj, customStudyId);
           if (addQuestionnaireBo != null) {
             if (questionnaireBo.getId() != null) {
-              values.put(QUESTION_ID, questionnaireBo.getId().toString());
-              eventEnum = STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
-              auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                       "Questionnaire updated successfully");
             } else {
-              values.put("questionnaire_id", addQuestionnaireBo.getId().toString());
-              eventEnum = STUDY_NEW_QUESTIONNAIRE_CREATED;
-              auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(
@@ -2171,8 +2164,8 @@ public class StudyQuestionnaireController {
                 StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
                 auditRequest.setStudyVersion(studyBo.getVersion().toString());
                 auditRequest.setAppId(studyBo.getAppId());
-                eventEnum = STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
-                auditLogEventHelper.logEvent(eventEnum, auditRequest);
+                auditLogEventHelper.logEvent(
+                    STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
               }
             }
             map.addAttribute("_S", sessionStudyCount);

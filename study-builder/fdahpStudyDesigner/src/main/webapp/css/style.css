@@ -762,15 +762,15 @@ table.dataTable thead th, table.dataTable thead td {
   outline: none;
 }
 
-	tbody > tr:last-child > td {	
-  border-bottom: 1px solid #ddd;	
-}
-
 #comprehension_list thead th:last-child, .dragtbl thead th:last-child, .tbl_rightalign thead th:last-child {
   padding-right: 0px;
 }
 
 #comprehension_list tbody > tr:last-child > td {
+  border-bottom: 1px solid #ddd;
+}
+
+tbody > tr:last-child > td {
   border-bottom: 1px solid #ddd;
 }
 
@@ -2681,7 +2681,6 @@ a:focus {
   padding-top: 30px !important;
 } 
 
-
 td span.edit-inc-draft:hover {
     background: url(../images/icons/edit_draft_icon__hover.png) no-repeat;
     width: 20px;
@@ -2710,21 +2709,16 @@ td span.eye-inc:hover {
 }
     
     
-   
 .tooltip > .tooltip-inner {
 text-align: left !important;
 align-items: left !important;
-max-width: 400px !important;
 width:100% !important;
 }
 
 .dataTables_empty {
 	font-size: 12px;
     color: #7c868d;
-    padding-top: 12px !important;
+    padding-top: 20px !important;
     }
-.tooltip-inner {
-    max-width: 400px !important;
-}
 
-    
+

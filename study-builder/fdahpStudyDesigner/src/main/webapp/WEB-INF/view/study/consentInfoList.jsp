@@ -392,7 +392,6 @@
       $("#consentInfoForm").submit();
     }
   }
-
   var sucMsg = '${sucMsg}';
   if (sucMsg.length > 0) {
     showSucMsg(sucMsg);

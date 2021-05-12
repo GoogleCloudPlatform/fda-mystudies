@@ -37,7 +37,6 @@ import org.springframework.stereotype.Component;
 public class EmailNotification {
 
   private static XLogger logger = XLoggerFactory.getXLogger(EmailNotification.class.getName());
-
   @Autowired Mail mail;
 
   public boolean sendEmailNotification(

@@ -154,7 +154,7 @@ $(document)
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
                             .attr("style","white-space:nowrap")
-                            .text("Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and -(minus)"));
+                            .text("Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)"));
                       }
                     }
                   });       
@@ -354,7 +354,7 @@ $(document)
           document.onkeypress = function (event) {
             event = (event || window.event);
             if (event.keyCode == 123) {
-              alert("This action is disabled")
+              alert("This action is disabled.")
               return false;
             }
           }
@@ -362,33 +362,33 @@ $(document)
           document.onmousedown = function (event) {
             event = (event || window.event);
             if (event.keyCode == 123) {
-              alert("This action is disabled")
+              alert("This action is disabled.")
               return false;
             }
           }
 
           document.onkeydown = function (e) {
             if (e.keyCode == 123) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'I'.charCodeAt(0)) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'J'.charCodeAt(0)) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
             if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'C'.charCodeAt(0)) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
           }

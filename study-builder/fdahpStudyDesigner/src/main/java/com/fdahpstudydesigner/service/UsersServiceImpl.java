@@ -50,7 +50,7 @@ public class UsersServiceImpl implements UsersService {
 
   @Autowired private UsersDAO usersDAO;
 
-  @Autowired EmailNotification emailNotification;
+  @Autowired private EmailNotification emailNotification;
 
   @Override
   public String activateOrDeactivateUser(
@@ -66,7 +66,6 @@ public class UsersServiceImpl implements UsersService {
     UserBO userBo = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customerCareMail = "";
-
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);

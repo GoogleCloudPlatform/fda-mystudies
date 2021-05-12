@@ -59,13 +59,18 @@ import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.service.UsersService;
+import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.ImageUtility;
 import com.fdahpstudydesigner.util.SessionObject;
 import com.google.cloud.ReadChannel;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -74,9 +79,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -94,6 +101,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -1543,6 +1551,8 @@ public class StudyController {
     SessionObject sesObj = null;
     String studyId = "";
     List<ConsentInfoBo> consentInfoBoList = null;
+    List<ConsentBo> consentBoList = null;
+    String lastPublishedVersion = null;
     StudyBo studyBo = null;
     ConsentBo consentBo = null;
     String sucMsg = "";
@@ -1642,6 +1652,13 @@ public class StudyController {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
 
+          consentBoList = studyService.getConsentList(studyBo.getCustomStudyId());
+          if (!CollectionUtils.isEmpty(consentBoList)) {
+            lastPublishedVersion = 'V' + String.valueOf(consentBoList.get(0).getVersion());
+          } else {
+            lastPublishedVersion = "N/A";
+          }
+
           if (consentBo != null) {
             request
                 .getSession()
@@ -1663,7 +1680,9 @@ public class StudyController {
         }
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_ID, studyId);
         map.addAttribute("consentBo", consentBo);
+        map.addAttribute("status", studyBo.getStatus());
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("lastPublishedVersion", lastPublishedVersion);
         mav = new ModelAndView("consentReviewAndEConsentPage", map);
       }
     } catch (Exception e) {
@@ -2147,6 +2166,7 @@ public class StudyController {
           studyPageBos = studyService.getOverviewStudyPagesById(studyId, sesObj.getUserId());
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           studyPageBean.setStudyId(studyBo.getId().toString());
+
           map.addAttribute("studyPageBos", studyPageBos);
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute("studyPageBean", studyPageBean);
@@ -2159,14 +2179,15 @@ public class StudyController {
                   FdahpStudyDesignerConstants.STUDTYLOGO
                       + "/"
                       + configMap.get("study.defaultImage"),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                  12));
           map.addAttribute(
               "defaultPageOverviewImageSignedUrl",
               FdahpStudyDesignerUtil.getSignedUrl(
                   FdahpStudyDesignerConstants.STUDTYLOGO
                       + "/"
                       + configMap.get("study.page2.defaultImage"),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                  12));
+
           mav = new ModelAndView("overviewStudyPages", map);
         } else {
           return new ModelAndView("redirect:studyList.do");
@@ -3158,6 +3179,18 @@ public class StudyController {
                     "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
           }
 
+          BufferedImage newBi =
+              ImageIO.read(new ByteArrayInputStream(studyBo.getFile().getBytes()));
+          BufferedImage resizedImage = ImageUtility.resizeImage(newBi, 225, 225);
+          String extension = FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename());
+
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          ImageIO.write(resizedImage, extension, baos);
+          baos.flush();
+
+          studyBo.setFile(
+              new CustomMultipartFile(
+                  baos.toByteArray(), studyBo.getFile().getOriginalFilename(), extension));
           fileName =
               FdahpStudyDesignerUtil.saveImage(
                   studyBo.getFile(), file, FdahpStudyDesignerConstants.STUDTYLOGO);
@@ -3846,6 +3879,7 @@ public class StudyController {
                             FdahpStudyDesignerConstants.SDF_TIME,
                             FdahpStudyDesignerConstants.DB_SDF_TIME))
                     : "");
+
             notificationBO.setScheduleTimestamp(
                 (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
                         && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
@@ -4005,6 +4039,7 @@ public class StudyController {
   public ModelAndView saveOrUpdateStudyOverviewPage(
       HttpServletRequest request, StudyPageBean studyPageBean) {
     logger.entry("begin saveOrUpdateStudyOverviewPage");
+
     if (request instanceof MultipartHttpServletRequest) {
       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
       Map<String, String[]> m = multipartRequest.getParameterMap();
@@ -4559,13 +4594,20 @@ public class StudyController {
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID,
                   studyBo.getCustomStudyId());
+
           map.addAttribute(
               "signedUrl",
               FdahpStudyDesignerUtil.getSignedUrl(
-                  FdahpStudyDesignerConstants.STUDTYLOGO + "/" + studyBo.getThumbnailImage(),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                  FdahpStudyDesignerConstants.STUDTYLOGO + "/" + studyBo.getThumbnailImage(), 12));
         }
-        // grouped for Study category , Research sponsors , Data partner
+        map.addAttribute(
+            "defaultImageSignedUrl",
+            FdahpStudyDesignerUtil.getSignedUrl(
+                FdahpStudyDesignerConstants.STUDTYLOGO
+                    + "/"
+                    + configMap.get("study.basicInformation.defaultImage"),
+                12));
+        // grouped for Study category , Research Sponsors , Data partner
         referenceMap =
             (HashMap<String, List<ReferenceTablesBo>>) studyService.getreferenceListByCategory();
         if ((referenceMap != null) && (referenceMap.size() > 0)) {
@@ -4581,13 +4623,6 @@ public class StudyController {
             }
           }
         }
-        map.addAttribute(
-            "defaultImageSignedUrl",
-            FdahpStudyDesignerUtil.getSignedUrl(
-                FdahpStudyDesignerConstants.STUDTYLOGO
-                    + "/"
-                    + configMap.get("study.basicInformation.defaultImage"),
-                FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");
@@ -5171,9 +5206,9 @@ public class StudyController {
                 ? ""
                 : request.getParameter("studyType");
         String dbCustomStudyId =
-            FdahpStudyDesignerUtil.isEmpty(request.getParameter("dbCustomStudyId"))
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("dbcustomStudyId"))
                 ? ""
-                : request.getParameter("dbCustomStudyId");
+                : request.getParameter("dbcustomStudyId");
         flag = studyService.validateAppId(customStudyId, appId, studyType, dbCustomStudyId);
         if (flag) {
           message = FdahpStudyDesignerConstants.SUCCESS;

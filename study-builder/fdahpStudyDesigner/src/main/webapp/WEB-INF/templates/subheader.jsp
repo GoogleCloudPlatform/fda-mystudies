@@ -53,7 +53,7 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-
+	  
     $('.addEditStudy').on('click', function () {
       $('#addEditStudyForm').submit();
     });

@@ -37,7 +37,7 @@
 
   .help-block ul {
     width: 155px;
-  / / font-size: 10 px !important;
+   /* font-size: 10 px !important; */
   }
 .tool-tip {
     display: inline-block;
@@ -46,11 +46,13 @@
   .tool-tip [disabled] {
     pointer-events: none;
   }
-  
+   
    .help-block-txt ul {
       width: max-content !important;
     }
-   
+  
+
+ 
 </style>
 <div class="gray-xs-f mb-sm">Active task schedule type</div>
 <div class="pb-lg ">
@@ -81,7 +83,7 @@
         <div class="form-group">
           <select id="anchorDateId"
                   class="selectpicker ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                  required data-error="Please select an item in the list"  name="anchorDateId">
+                  required data-error="Please fill out this field" name="anchorDateId">
             <option value=''>Select</option>
             <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
               <option value="${anchorTypeInfo.id}"
@@ -146,8 +148,7 @@
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           data-toggle="tooltip"
           data-placement="bottom"
-          title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+          title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
       </span>
     </div>
     <div class="mt-sm">
@@ -167,7 +168,7 @@
         <div class="mt-none resetDate">
           <div>
             <span class="pr-md">Anchor date</span>
-            <span  class="mr-xs">
+            <span>
               <select
                   class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                   title="Select" name="activeTaskFrequenciesBo.xDaysSign" id="onetimeXSign">
@@ -190,7 +191,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number"/>
+                         data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimexdaysId" type="text"
@@ -200,7 +201,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number"/>
+                         data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -209,9 +210,9 @@
               <span class="light-txt opacity06"> days</span>
             </span>
             <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-              <input id="selectTime" type="text" data-error="Please fill out this field" 
+              <input id="selectTime" type="text"
                      class="mt-sm form-control clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                     name="activeTaskFrequenciesBo.frequencyTime"
+                     name="activeTaskFrequenciesBo.frequencyTime" data-error="Please fill out this field" 
                      value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"  <c:if
                   test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if>
                      placeholder="Select time"/>
@@ -226,7 +227,7 @@
           <input id="chooseDate" type="text"
                  class="mt-sm form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="activeTaskFrequenciesBo.frequencyDate" placeholder="Choose date"
-                 value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}" required data-error="Please fill out this field"  <c:if
+                 value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}" required data-error="Please fill out this field" <c:if
               test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -234,7 +235,7 @@
           <input id="selectTime1" type="text"
                  class="mt-sm form-control clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="activeTaskFrequenciesBo.frequencyTime"
-                 value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}" required data-error="Please fill out this field"  <c:if
+                 value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}" required  data-error="Please fill out this field" <c:if
               test="${activeTaskBo.activeTaskFrequenciesBo.isLaunchStudy}"> disabled </c:if>
                  placeholder="Select time"/>
           <span class='help-block with-errors red-txt'></span>
@@ -250,7 +251,7 @@
       <span class="checkbox checkbox-inline">
         <input type="checkbox" id="isStudyLifeTime" name="activeTaskFrequenciesBo.isStudyLifeTime"
                value="true" ${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime ?'checked':''} ${(activeTaskBo.isDuplicate > 0)?'disabled' : ''}
-               required="required" data-error="Please fill out this field" >
+               required="required" data-error="Please fill out this field">
         <label for="isStudyLifeTime"> Study lifetime</label>
       </span>
       <div class="mt-md form-group regularClass">
@@ -262,13 +263,13 @@
                 class="form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                 name="activeTaskLifetimeEnd"
                 placeholder="Choose end date"
-                required data-error="Please fill out this field"  <c:if
+                required data-error="Please fill out this field" <c:if
                 test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                 value=""/></c:when>
             <c:otherwise><input id="chooseEndDate" type="text"
                                 class="form-control calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                                 name="activeTaskLifetimeEnd" placeholder="Choose end date"
-                                required data-error="Please fill out this field"  <c:if
+                                required data-error="Please fill out this field" <c:if
                 test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                                 value="${activeTaskBo.activeTaskLifetimeEnd}"/></c:otherwise>
           </c:choose>
@@ -283,7 +284,7 @@
         <div class="mt-none resetDate">
           <div>
             <span class="pr-md">Anchor date</span>
-            <span class="mr-xs">
+            <span>
               <select
                   class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                   title="Select" name="activeTaskFrequenciesBo.yDaysSign"
@@ -306,7 +307,7 @@
                          value="" <c:if
                       test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number"/>
+                         data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                 </c:when>
                 <c:otherwise>
                   <input id="onetimeydaysId" type="text"
@@ -316,7 +317,7 @@
                       <c:if
                           test="${activeTaskBo.activeTaskFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                          maxlength="3" pattern="[0-9]+"
-                         data-pattern-error="Please enter valid number"/>
+                         data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                 </c:otherwise>
               </c:choose>
               <span class="help-block with-errors red-txt"></span>
@@ -353,13 +354,12 @@
             <span class="requiredStar"> *</span>
             <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                   data-placement="bottom"
-                  title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time."></span>
+                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed."></span>
           </span>
           <br/>
           <input id="startDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 placeholder="Choose date" required data-error="Please fill out this field"  name="activeTaskLifetimeStart"
+                 placeholder="Choose date" required data-error="Please fill out this field" name="activeTaskLifetimeStart"
                  value="${activeTaskBo.activeTaskLifetimeStart}"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -374,7 +374,7 @@
               </span>
               <br/>
               <span class="pr-md">Anchor date</span>
-              <span class="mr-xs">
+              <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                     title="Select" name="activeTaskFrequenciesList[0].xDaysSign"
@@ -396,7 +396,7 @@
                        name="activeTaskFrequenciesList[0].timePeriodFromDays"
                        value="${(fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0)?activeTaskBo.activeTaskFrequenciesList[0].timePeriodFromDays:''}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number" data-error="Please fill out this field" />
+                       data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -417,9 +417,9 @@
           <br/>
           <input id="days" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of times" required data-error="Please fill out this field" 
+                 name="repeatActiveTask" placeholder="No of times" required
                  value="${activeTaskBo.repeatActiveTask}"
-                 onkeypress="return isNumber(event, this)"
+                 onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
@@ -432,8 +432,7 @@
         <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
               data-toggle="tooltip"
               data-placement="bottom"
-              title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+              title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -447,14 +446,13 @@
         <span class="requiredStar"> *</span>
         <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip" data-toggle="tooltip"
               data-placement="bottom" id="helpNote"
-              title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time."></span>
+              title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed."></span>
       </div>
       <div class="dailyContainer">
         <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) eq 0}">
           <div class="time-opts mt-md dailyTimeDiv" id="0">
             <span class="form-group m-none dis-inline vertical-align-middle pr-md">
-              <input id="time0" type="text" name="activeTaskFrequenciesList[0].frequencyTime" required data-error="Please fill out this field" 
+              <input id="time0" type="text" name="activeTaskFrequenciesList[0].frequencyTime" required data-error="Please fill out this field"
                      class="form-control clock dailyClock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                      placeholder="Time" onclick='timep(this.id);'/>
               <span class='help-block with-errors red-txt'></span>
@@ -473,7 +471,7 @@
                      value="${activeTasksFrequencies.id}">
               <span class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="time${frequeincesVar.index}" type="text"
-                       name="activeTaskFrequenciesList[${frequeincesVar.index}].frequencyTime" required data-error="Please fill out this field" 
+                       name="activeTaskFrequenciesList[${frequeincesVar.index}].frequencyTime" required data-error="Please fill out this field"
                        class="form-control clock dailyClock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                        placeholder="Time" onclick='timep(this.id);'
                        value="${activeTasksFrequencies.frequencyTime}"/>
@@ -524,8 +522,7 @@
             class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </span>
       <br/>
@@ -556,10 +553,10 @@
       </div>
       <span class="form-group m-none dis-inline vertical-align-middle pr-md ml-lg">
         <input id="selectWeeklyTime" type="text"
-               class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-               required data-error="Please fill out this field" 
+               class="form-control  mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
+               required data-error="Please fill out this field"
                onclick="timep(this.id)" placeholder="Time"
-               name="activeTaskFrequenciesBo.frequencyTime"
+               name="activeTaskFrequenciesBo.frequencyTime" 
                value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
         <span class='help-block with-errors red-txt'></span>
       </span>
@@ -573,14 +570,13 @@
                 class="ml-xs sprites_v3 filled-tooltip"
                 data-toggle="tooltip"
                 data-placement="bottom"
-                title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
             </span>
           </span>
           <br/>
           <input id="startWeeklyDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 required data-error="Please fill out this field" 
+                 required data-error="Please fill out this field"
                  name="activeTaskLifetimeStart" placeholder="Choose date"
                  value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
           <span class='help-block with-errors red-txt'></span>
@@ -596,7 +592,7 @@
               </span>
               <br/>
               <span class="pr-md">Anchor date</span>
-              <span class="mr-xs">
+              <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                     title="Select" name="activeTaskFrequenciesBo.xDaysSign" id="weeklyXSign">
@@ -613,8 +609,8 @@
                        class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                        placeholder="X" name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
-                       maxlength="3" pattern="[0-9]+" data-error="Please fill out this field" 
-                       data-pattern-error="Please enter valid number"/>
+                       maxlength="3" pattern="[0-9]+"
+                       data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -630,7 +626,7 @@
           <span class="form-group m-none dis-inline vertical-align-middle pr-md">
             <input id="selectWeeklyTimeAnchor" type="text"
                    class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
+                   required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                    name="activeTaskFrequenciesBo.frequencyTime"
                    value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
             <span class='help-block with-errors red-txt'></span>
@@ -647,8 +643,8 @@
             <input id="weeksAnchor" type="text"
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                    name="repeatActiveTask" placeholder="No of times"
-                   value="${activeTaskBo.repeatActiveTask}" required data-error="Please fill out this field" 
-                   onkeypress="return isNumber(event, this)"
+                   value="${activeTaskBo.repeatActiveTask}" required
+                   onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                    data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
@@ -668,8 +664,8 @@
           <input id="weeks" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                  name="repeatActiveTask" placeholder="No of times"
-                 value="${activeTaskBo.repeatActiveTask}" required data-error="Please fill out this field" 
-                 onkeypress="return isNumber(event, this)"
+                 value="${activeTaskBo.repeatActiveTask}" required
+                 onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
@@ -683,8 +679,7 @@
             class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -726,8 +721,7 @@
             class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </span>
       <br/>
@@ -735,7 +729,7 @@
         <span class="">
           <input id="startDateMonthly" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 required data-error="Please fill out this field" 
+                 required data-error="Please fill out this field"
                  placeholder="Choose date" name="activeTaskFrequenciesBo.frequencyDate"
                  value="${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}"/>
           <span class='help-block with-errors red-txt'></span>
@@ -744,7 +738,7 @@
       <span class="form-group m-none dis-inline vertical-align-middle pr-md">
         <input id="selectMonthlyTime" type="text"
                class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-               required data-error="Please fill out this field" 
+               required data-error="Please fill out this field"
                onclick="timep(this.id)" placeholder="Time"
                name="activeTaskFrequenciesBo.frequencyTime"
                value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
@@ -764,14 +758,13 @@
                 class="ml-xs sprites_v3 filled-tooltip"
                 data-toggle="tooltip"
                 data-placement="bottom"
-                title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
             </span>
           </span>
           <br/>
           <input id="pickStartDate" type="text"
                  class="form-control mt-sm calendar ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 placeholder="Choose start date" required data-error="Please fill out this field"  name="activeTaskLifetimeStart"
+                 placeholder="Choose start date" required data-error="Please fill out this field" name="activeTaskLifetimeStart"
                  value="${activeTaskBo.activeTaskLifetimeStart}" readonly="readonly"/>
           <span class='help-block with-errors red-txt'></span>
         </span>
@@ -788,7 +781,7 @@
               </span>
               <br/>
               <span class="pr-md">Anchor date</span>
-              <span class="mr-xs">
+              <span>
                 <select
                     class="signDropDown selectpicker sign-box ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                     title="Select" name="activeTaskFrequenciesBo.xDaysSign"
@@ -804,11 +797,11 @@
               <span class="form-group m-none dis-inline vertical-align-middle">
                 <input id="monthlyxdaysId" type="text"
                        class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                       placeholder="X" data-error="Please fill out this field" 
+                       placeholder="X"
                        name="activeTaskFrequenciesBo.timePeriodFromDays"
                        value="${activeTaskBo.activeTaskFrequenciesBo.timePeriodFromDays}"
                        maxlength="3" pattern="[0-9]+"
-                       data-pattern-error="Please enter valid number"/>
+                       data-pattern-error="Please enter valid number" data-error="Please fill out this field"/>
                 <span class="help-block with-errors red-txt"></span>
               </span>
               <span class="mb-sm pr-md">
@@ -826,7 +819,7 @@
           <span class="form-group m-none dis-inline vertical-align-middle pr-md">
             <input id="selectMonthlyTimeAnchor" type="text"
                    class="form-control mt-sm clock ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
+                   required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                    name="activeTaskFrequenciesBo.frequencyTime"
                    value="${activeTaskBo.activeTaskFrequenciesBo.frequencyTime}"/>
             <span class='help-block with-errors red-txt'></span>
@@ -842,9 +835,9 @@
             <br/>
             <input id="monthsAnchor" type="text"
                    class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                   name="repeatActiveTask" placeholder="No of times" required data-error="Please fill out this field" 
+                   name="repeatActiveTask" placeholder="No of times" required
                    value="${activeTaskBo.repeatActiveTask}"
-                   onkeypress="return isNumber(event, this)"
+                   onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                    data-pattern-error="Please enter valid number" maxlength="3"/>
             <span class='help-block with-errors red-txt'></span>
@@ -864,8 +857,8 @@
           <br/>
           <input id="months" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                 name="repeatActiveTask" placeholder="No of times" required data-error="Please fill out this field" 
-                 value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)"
+                 name="repeatActiveTask" placeholder="No of times" required
+                 value="${activeTaskBo.repeatActiveTask}" onkeypress="return isNumber(event, this)" data-error="Please fill out this field"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
@@ -879,8 +872,7 @@
             class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+            title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
         </span>
       </div>
       <div class="black-xs-f"
@@ -918,11 +910,9 @@
          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
          data-toggle="tooltip"
          data-placement="bottom"
-         title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
-           2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+         title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
        </span>
     </div>
-                  
     <div class="manuallyContainer">
       <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) eq 0}">
         <div class="manually-option mb-md form-group" id="0">
@@ -934,8 +924,18 @@
                    class="form-control calendar customCalnder cusStrDate"
                    name="activeTaskCustomScheduleBo[0].frequencyStartDate" value=""
                    placeholder="Start date"
-                   onclick='customStartDate(this.id,0);' required data-error="Please fill out this field" />
+                   onclick='customStartDate(this.id,0);' required data-error="Please fill out this field"/>
             <span class='help-block with-errors red-txt'></span>
+            </span>
+            
+            <span
+                      class="form-group  dis-inline vertical-align-middle pr-md">
+                    <input id="customStartTime0" type="text" count='0'
+                           class="form-control clock cusTime startTime"
+                           name="activeTaskCustomScheduleBo[0].frequencyStartTime"
+                           placeholder="Start time" onclick='timep(this.id);' disabled required data-error="Please fill out this field"/>
+                    <span class='help-block with-errors red-txt'></span>
+                 
           </span>
           <span class="gray-xs-f mb-sm pr-md align-span-center">
             to
@@ -944,21 +944,22 @@
             <input id="EndDate0" type="text" count='0'
                    class="form-control calendar customCalnder cusEndDate"
                    name="activeTaskCustomScheduleBo[0].frequencyEndDate" placeholder="End date"
-                   onclick='customEndDate(this.id,0);' required data-error="Please fill out this field" />
+                   onclick='customEndDate(this.id,0);' required data-error="Please fill out this field"/>
             <span class='help-block with-errors red-txt'></span>
             </span>            
            
           <span class="form-group dis-inline vertical-align-middle pr-md">
-            <input id="customTime0" type="text" count='0' class="form-control clock cusTime"
-                   name="activeTaskCustomScheduleBo[0].frequencyTime" placeholder="Time"
+            <input id="customTime0" type="text" count='0' class="form-control clock endTime"
+                   name="activeTaskCustomScheduleBo[0].frequencyEndTime" placeholder="End time"
                    onclick='timep(this.id);'
-                   disabled required data-error="Please fill out this field" />
+                   disabled required data-error="Please fill out this field"/>
             <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
-          <span id="delete"
+             <span id="delete"
                   class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                   onclick="removeDate(this);"></span>
+          
         </div>
       </c:if>
       <c:if test="${fn:length(activeTaskBo.activeTaskCustomScheduleBo) gt 0}">
@@ -977,9 +978,22 @@
                      class="form-control calendar cusStrDate ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyStartDate"
                      value="${activeTaskCustomScheduleBo.frequencyStartDate}" placeholder="Start date"
-                     onclick='customStartDate(this.id,${customVar.index});' required data-error="Please fill out this field" />
+                     onclick='customStartDate(this.id,${customVar.index});' required data-error="Please fill out this field"/>
               <span class='help-block with-errors red-txt'></span>
             </span>
+            
+            
+            <span class="form-group  dis-inline vertical-align-middle pr-md">
+              <input id="customStartTime${customVar.index}" type="text" count='${customVar.index}'
+                     class="form-control clock startTime cusTime ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
+                     name="activeTaskCustomScheduleBo[${customVar.index}].frequencyStartTime"
+                     value="${activeTaskCustomScheduleBo.frequencyStartTime}" placeholder="Start time"
+                     onclick='timep(this.id);'
+                     required data-error="Please fill out this field"/>
+              <span class='help-block with-errors red-txt'></span>
+            </span>
+            
+            
             <span class="gray-xs-f mb-sm pr-md align-span-center">
               to
             </span>
@@ -988,16 +1002,16 @@
                      class="form-control calendar cusEndDate ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndDate"
                      value="${activeTaskCustomScheduleBo.frequencyEndDate}" placeholder="End date"
-                     onclick='customEndDate(this.id,${customVar.index});' required data-error="Please fill out this field" />
+                     onclick='customEndDate(this.id,${customVar.index});' required data-error="Please fill out this field"/>
               <span class='help-block with-errors red-txt'></span>
             </span>
             <span class="form-group  dis-inline vertical-align-middle pr-md">
               <input id="customTime${customVar.index}" type="text" count='${customVar.index}'
-                     class="form-control clock cusTime ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                     name="activeTaskCustomScheduleBo[${customVar.index}].frequencyTime"
-                     value="${activeTaskCustomScheduleBo.frequencyTime}" placeholder="Time"
+                     class="form-control clock cusTime endTime  ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
+                     name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndTime"
+                     value="${activeTaskCustomScheduleBo.frequencyEndTime}" placeholder="End time"
                      onclick='timep(this.id);'
-                     required data-error="Please fill out this field" />
+                     required data-error="Please fill out this field"/>
               <span class='help-block with-errors red-txt'></span>
             </span>
             <span id="AddButton"
@@ -1016,7 +1030,7 @@
         <div class="manually-anchor-option mb-md form-group" id="0">
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
-              
+            
           <span class="mb-sm pr-md">
             <span class="light-txt opacity06">
               Anchor date
@@ -1040,7 +1054,7 @@
                    count='0' placeholder="X"
                    name="activeTaskCustomScheduleBo[0].timePeriodFromDays"
                    value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
-                   maxlength="3" required data-error="Please fill out this field"  pattern="[0-9]+"
+                   maxlength="3" required data-error="Please fill out this field" pattern="[0-9]+"
                    data-pattern-error="Please enter valid number"/>
             <span
                 class="help-block with-errors red-txt"></span>
@@ -1048,8 +1062,22 @@
           <span class="mb-sm pr-md">
             <span
                 class="light-txt opacity06"> days
-              <span
-                  style="padding-right: 5px; padding-left: 5px">to
+              </span>
+
+                <span class="form-group  dis-inline vertical-align-middle pr-md"
+                style="margin-bottom: -13px"><input id="manualStartTime0"
+                                                    type="text" class="form-control clock"
+                                                    name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
+                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"
+                                                    placeholder="Start time" required/>
+            <span
+                class='help-block with-errors red-txt'></span>
+          </span>
+
+          <span
+                class="light-txt opacity06">
+              <span>
+                  to
               </span>
               Anchor
               Date
@@ -1074,7 +1102,7 @@
                    name="activeTaskCustomScheduleBo[0].timePeriodToDays"
                    value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                    maxlength="3" pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number" required data-error="Please fill out this field" />
+                   data-pattern-error="Please enter valid number" data-error="Please fill out this field" required/>
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
@@ -1088,18 +1116,18 @@
                 
             
           <span class="form-group  dis-inline vertical-align-middle pr-md"
-                style="margin-bottom: -13px"><input id="manualTime0"
+                style="margin-bottom: -13px"><input id="manualEndTime0"
                                                     type="text" class="form-control clock"
-                                                    name="activeTaskCustomScheduleBo[0].frequencyTime"
-                                                    value="${activeTaskCustomScheduleBo.frequencyTime}" data-error="Please fill out this field" 
-                                                    placeholder="Time" required/>
+                                                    name="activeTaskCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field" 
+                                                    value="${activeTaskCustomScheduleBo.frequencyEndTime}"
+                                                    placeholder="End time" required/>
             <span
                 class='help-block with-errors red-txt'></span>
           </span>
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
                 onclick="addDateAnchor(0);">+
           </span>
-          <span id="deleteAncchor"
+             <span id="deleteAncchor"
                   class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                   onclick="removeDateAnchor(this);"></span>
         </div>
@@ -1110,21 +1138,21 @@
                    var="activeTaskCustomScheduleBo" varStatus="customVar">
           <div class="manually-anchor-option mb-md form-group"
                id="AnchorDate${customVar.index}">
-            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].id" id="id"
+            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].id" id="id" data-error="Please fill out this field" 
                    value="${activeTaskCustomScheduleBo.id}">
-            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].used"
+            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].used"  data-error="Please fill out this field" 
                    id="isUsed${customVar.index}" value="${activeTaskCustomScheduleBo.used}">
-            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].activeTaskId"
+            <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].activeTaskId" data-error="Please fill out this field" 
                    id="activeTaskId" value="${activeTaskCustomScheduleBo.activeTaskId}">
             <span class="mb-sm pr-md">
               <span
                   class="light-txt opacity06"> Anchor date
               </span>
             </span>
-            <span class="mr-xs">
+            <span>
               <select
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                count='${customVar.index}' title="Select"
+                count='${customVar.index}' title="Select" data-error="Please select an item in the list"
                 name="activeTaskCustomScheduleBo[${customVar.index}].xDaysSign"
                 id="xSign${customVar.index}">
                 <option value="0"
@@ -1141,7 +1169,7 @@
                      count='${customVar.index}' placeholder="X"
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                      value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
-                     maxlength="3" required data-error="Please fill out this field"  pattern="[0-9]+"
+                     maxlength="3" required pattern="[0-9]+" data-error="Please fill out this field"
                      data-pattern-error="Please enter valid number" data-type='xancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
@@ -1149,6 +1177,20 @@
             <span class="mb-sm pr-md">
               <span
                   class="light-txt opacity06"> days
+                  </span>
+
+                <span class="form-group  dis-inline vertical-align-middle pr-md"
+                style="margin-bottom: -13px"><input id="manualStartTime${customVar.index}"
+                                                    type="text" class="form-control clock"
+                                                    name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
+                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"
+                                                    placeholder="Start time" required data-error="Please fill out this field"/>
+            <span
+                class='help-block with-errors red-txt'></span>
+          </span>
+
+          <span
+                class="light-txt opacity06">
                 <span
                     style="padding-right: 5px; padding-left: 5px">to
                 </span>
@@ -1156,10 +1198,10 @@
                 Date
               </span>
             </span>
-            <span class="mr-xs">
+            <span>
               <select
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                count='${customVar.index}' title="Select"
+                count='${customVar.index}' title="Select" data-error="Please select an item in the list"
                 name="activeTaskCustomScheduleBo[${customVar.index}].yDaysSign"
                 id="ySign${customVar.index}">
               <option value="0"
@@ -1177,7 +1219,7 @@
                      name="activeTaskCustomScheduleBo[${customVar.index}].timePeriodToDays"
                      value="${activeTaskCustomScheduleBo.timePeriodToDays}"
                      maxlength="3" pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number" required data-error="Please fill out this field" 
+                     data-pattern-error="Please enter valid number" required data-error="Please fill out this field"
                      data-type='yancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
@@ -1189,11 +1231,11 @@
             </span>
             <span class="form-group  dis-inline vertical-align-middle pr-md"
                   style="margin-bottom: -13px"><input
-                id="manualTime${customVar.index}" type="text"
+                id="manualEndTime${customVar.index}" type="text"
                 class="form-control remove_required clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                name="activeTaskCustomScheduleBo[${customVar.index}].frequencyTime"
-                value="${activeTaskCustomScheduleBo.frequencyTime}"
-                placeholder="Time" required data-error="Please fill out this field" />
+                name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndTime"
+                value="${activeTaskCustomScheduleBo.frequencyEndTime}"
+                placeholder="End time" required data-error="Please fill out this field"/>
               <span
                   class='help-block with-errors red-txt'></span>
             </span>
@@ -1239,13 +1281,14 @@
     if ($('.dailyTimeDiv').length == 1) {
 	   	 $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
 	     }
-    if($('.manually-option').length == 1){
+   if($('.manually-option').length == 1){
  	  $('.manually-option').find(".delete").css("visibility", "hidden");
-        }
-    if($('.manually-anchor-option').length == 1){
-	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
-        }
+   }
 
+  if($('.manually-anchor-option').length == 1){
+	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+  }
+   
     if ($("#schedule2").prop("checked")) {
     	 var schedule_opts = $("input[name='frequency']:checked").val();
     	 
@@ -1299,6 +1342,7 @@
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
+
     } else {
     	localStorage.setItem("IsActiveAnchorDateSelected", "false");
         localStorage.setItem("IsActiveRegularSelected", "true");
@@ -1410,30 +1454,31 @@
         $(".Selectedtooltip").hide();
 
         $($('.manually-anchor-option').get().reverse()).each(function () {
-            var id = $(this).attr("id");
-            var countId = $("#"+id).find(".xdays").attr("count");
-            if($('#'+id).find('#xdays'+countId).val()=="" && $('.manually-anchor-option').filter(function() {
-                return $(this).css('display') !== 'none';
-            }).length !== 1){
-          
-                    $("#"+id).remove();
-                    $("#"+id).find('input:text').removeAttr('required', true);
-                    $("#AddButton").show();
-                    $("#AddButton").attr('required', true);
-                }else {
-                      $("#AddButton").hide();
-                      $("#AddButton").attr('required', false);
-                  }
-         });
+           var id = $(this).attr("id");
+           var count12 = $("#"+id).find(".xdays").attr("count");
+           if($('#'+id).find('#xdays'+count12).val()=="" && $('.manually-anchor-option').filter(function() {
+               return $(this).css('display') !== 'none';
+           }).length !== 1){
          
-         if( $('.manually-anchor-option').filter(function() {
-             return $(this).css('display') !== 'none';}).length == 1){
-          $("#AddButton").show();
-          $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
-         }
-         
-      } else {
+                   $("#"+id).remove();
+                   $("#"+id).find('input:text').removeAttr('required', true);
 
+                   $("#AddButton").show();
+                   $("#AddButton").attr('required', true);
+               }else {
+                     $("#AddButton").hide();
+                     $("#AddButton").attr('required', false);
+                 }
+        });
+        
+        if( $('.manually-anchor-option').filter(function() {
+            return $(this).css('display') !== 'none';
+        }).length == 1){
+         $("#AddButton").show();
+       $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+           }
+        
+      } else {
         localStorage.setItem("IsActiveAnchorDateSelected", "false");
         localStorage.setItem("IsActiveRegularSelected", "true");
 
@@ -1442,9 +1487,9 @@
 
         $(".weeklyRegular").show();
         $(".weeklyRegular").find('input:text').attr('required', true);
-
+   
         $("#monthlyDateId").show();
-        $("#monthlyDateId").find('input:text,select').attr('required', true);
+       $("#monthlyDateId").find('input:text,select').attr('required', true);
 
         $(".monthlyRegular").show();
         $(".monthlyRegular").attr('required', true);
@@ -1482,33 +1527,33 @@
         $(".Selectedtooltip").show();
 
         $('.manually-option').each(function () {
-            var id = $(this).attr("id");
-            var countId = $("#"+id).find(".cusStrDate").attr("count");
-            if($('#'+id).find('#StartDate'+countId).val()=="" && $('.manually-option').filter(function() {
-                return $(this).css('display') !== 'none';
-            }).length !== 1){
-                  
-                    $("#"+id).remove();
-                    $("#"+id).find('input:text').removeAttr('required', true);
-                    $("#AddButton").show();
-                    $("#AddButton").attr('required', true);
-                }else {
-                      $("#AddButton").hide();
-                      $("#AddButton").attr('required', false);
-                  }
-         });
-        
-         if( $('.manually-option').filter(function() {
-         	return $(this).css('display') !== 'none'; }).length == 1){
-     	     $("#AddButton").show();
+           var id = $(this).attr("id");
+           var count12 = $("#"+id).find(".cusStrDate").attr("count");
+           if($('#'+id).find('#StartDate'+count12).val()=="" && $('.manually-option').filter(function() {
+               return $(this).css('display') !== 'none';
+           }).length !== 1){
+                 
+                   $("#"+id).remove();
+                   $("#"+id).find('input:text').removeAttr('required', true);
+
+                   $("#AddButton").show();
+                   $("#AddButton").attr('required', true);
+               }else {
+                     $("#AddButton").hide();
+                     $("#AddButton").attr('required', false);
+                 }
+        });
+       
+        if( $('.manually-option').filter(function() {
+        	return $(this).css('display') !== 'none'; }).length == 1){
+    	     $("#AddButton").show();
              $('.manually-option').find(".delete").css("visibility", "hidden");
-         }
-         
-
-         if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
-             $('.manually-option').find('#AddButton').first().hide();
-
-         }
+           }
+        
+        if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
+            $('.manually-option').find('#AddButton').first().hide();
+        }
+       
       }
 
       if (schedule_opts == 'One time') {
@@ -1589,10 +1634,13 @@
             isValidManuallySchedule = true;
             $('.manually-option:not(:first)').find('.remBtnDis').click();
             $('.manually-option').find('input').val('');
-            $('.manually-option').find('.cusTime').prop('disabled', true);
+            $('.manually-option').find('.startTime').prop('disabled', true);
+            $('.manually-option').find('.endTime').prop('disabled', true);
+            
             $('.manually-anchor-option:not(:first)').find('.remBtnDis').click();
             $('.manually-anchor-option').find('input').val('');
-            $('.manually-anchor-option').find('.cusTime').prop('disabled', true);
+            $('.manually-anchor-option').find('.startTime').prop('disabled', true);
+            $('.manually-anchor-option').find('.endTime').prop('disabled', true);
           } else if (val == 'Daily') {
             $("#startDate").val('');
             $("#days").val('');
@@ -1641,8 +1689,10 @@
         $('.manually-option').find('input').val('');
         $('.dailyClock').val('');
         $('.dailyClock:not(:first)').parent().parent().remove();
-        $('.manually-option').find('.cusTime').prop('disabled', true);
-        $('.manually-anchor-option').find('.cusTime').prop('disabled', true);
+        $('.manually-option').find('.startTime').prop('disabled', true);
+        $('.manually-anchor-option').find('.startTime').prop('disabled', true);
+         $('.manually-option').find('.endTime').prop('disabled', true);
+        $('.manually-anchor-option').find('.endTime').prop('disabled', true);
       }
       var flag = 'schedule';
       setFrequencyVal(flag);
@@ -1829,7 +1879,7 @@
           var test =thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").find("ul").length;
           if(test === 0){
           	thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
-              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not been added already"));
+              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not yet added"));
           }
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty();
@@ -1910,11 +1960,14 @@
             "DateTimePicker").minDate(nxtDate);
     });
     $(document).on('dp.change change', '.cusStrDate, .cusEndDate', function () {
-      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents(
-          '.manually-option').find('.cusEndDate').val()) {
-        $(this).parents('.manually-option').find('.cusTime').prop('disabled', false);
+    	if ($(this).parents('.manually-option').find('.cusStrDate').val()) {
+            $(this).parents('.manually-option').find('.startTime').prop('disabled', false);
+          }else if($(this).parents('.manually-option').find('.cusEndDate').val()){
+                  $(this).parents('.manually-option').find('.endTime').prop('disabled', false);
+          
       } else {
-        $(this).parents('.manually-option').find('.cusTime').prop('disabled', true);
+    	  $(this).parents('.manually-option').find('.startTime').prop('disabled', true);
+          $(this).parents('.manually-option').find('.endTime').prop('disabled', true);
       }
       resetValidation($(this).parents('form'));
     });
@@ -2125,14 +2178,18 @@
     disablePastTime('#selectMonthlyTime', '#startDateMonthly');
     disablePastTime('#selectTime1', '#chooseDate');
 
-    $(document).on('click change dp.change', '.cusStrDate, .cusTime', function (e) {
-      if ($(this).is('.cusTime') && !$(this).prop('disabled')) {
+    $(document).on('click change dp.change', '.cusStrDate, .startTime', function (e) {
+        if ($(this).is('.startTime') && !$(this).prop('disabled')) {
         disablePastTime('#' + $(this).attr('id'),
             '#' + $(this).parents('.manually-option').find('.cusStrDate').attr('id'));
       }
-      if ($(this).is('.cusStrDate') && !$(this).parents('.manually-option').find('.cusTime').prop(
+        if ($(this).is('.endTime') && !$(this).prop('disabled')) {
+            disablePastTime('#' + $(this).attr('id'),
+                '#' + $(this).parents('.manually-option').find('.cusStrDate').attr('id'));
+          }
+          if ($(this).is('.cusStrDate') && !$(this).parents('.manually-option').find('.startTime').prop(
           'disabled')) {
-        disablePastTime('#' + $(this).parents('.manually-option').find('.cusTime').attr('id'),
+        	  disablePastTime('#' + $(this).parents('.manually-option').find('.startTime').attr('id'),
             '#' + $(this).attr('id'));
       }
     });
@@ -2211,9 +2268,9 @@
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
-        "  <input id='time" + count + "' type='text' required data-error='Please fill out this field'  name='activeTaskFrequenciesList["
+        "  <input id='time" + count + "' type='text' required name='activeTaskFrequenciesList["
         + count
-        + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>"
+        + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' data-error='Please fill out this field'  placeholder='00:00' onclick='timep(this.id);'/>"
         +
         "<span class='help-block with-errors red-txt'></span>" +
         " </span>" +
@@ -2253,7 +2310,7 @@
   }
 
   function addDate() {
-	  $('.manually-option').find(".delete").css("visibility", "visible");
+	$('.manually-option').find(".delete").css("visibility", "visible");
     customCount =  parseInt(customCount) + 1;
     
     $("#AddButton").hide();
@@ -2262,25 +2319,33 @@
     var newDateCon = "<div class='manually-option mb-md form-group' id='RegDate" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
-        + "' required data-error='Please fill out this field'  name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start date' onclick='customStartDate(this.id,"
+        + "' required name='activeTaskCustomScheduleBo[" + customCount
+        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' data-error='Please fill out this field' placeholder='Start date' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
+        
+        + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
+        + "  <input id='customStartTime" + customCount + "' type='text' count='" + customCount
+        + "' required name='activeTaskCustomScheduleBo[" + customCount
+        + "].frequencyStartTime' class='form-control clock customTime startTime cusTime' data-error='Please fill out this field' placeholder='Start time' onclick='timep(this.id);' disabled/>"
+        + "<span class='help-block with-errors red-txt'></span>"
+        + "  </span>"
+        
         + "  <span class='gray-xs-f mb-sm pr-md align-span-center'>"
         + "  to "
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
-        + "' required data-error='Please fill out this field' name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End date' onclick='customEndDate(this.id,"
+        + "' required name='activeTaskCustomScheduleBo[" + customCount
+        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' data-error='Please fill out this field' placeholder='End date' onclick='customEndDate(this.id,"
         + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
-        + "' required data-error='Please fill out this field' name='activeTaskCustomScheduleBo[" + customCount
-        + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
+        + "' required name='activeTaskCustomScheduleBo[" + customCount
+        + "].frequencyEndTime' class='form-control clock customTime endTime' data-error='Please fill out this field'  placeholder='End time' onclick='timep(this.id);' disabled/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
@@ -2289,9 +2354,9 @@
 
         if ($('.manually-option').length > 1) {
             $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
-        } else {
+          } else {
             $('.manuallyContainer').find(".remBtnDis").addClass("hide");
-        }
+          }
         
     $(".manually-option:last").after(newDateCon);
     $(".manually-option").parents("form").validator("destroy");
@@ -2299,23 +2364,27 @@
    
     customStartDate('StartDate' + customCount, customCount);
     customEndDate('EndDate' + customCount, customCount);
+    timep('customStartTime' + customCount);
     timep('customTime' + customCount);
+
+    $('#customStartTime' + customCount).val("");
     $('#customTime' + customCount).val("");
-    $('#' + customCount).find('input:first').focus();
+    
+    $('#customTime' + customCount).val("");
   }
 
   function removeDate(param) {
     $(param).parents(".manually-option").remove();
 	if($('.manually-option').length == 1){
-   	  $('.manually-option').find(".delete").css("visibility", "hidden");
-   	  $('#AddButton').show();
-    }
+	    	 $('.manually-option').find(".delete").css("visibility", "hidden");
+	    	 $('#AddButton').show();
+	}
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
     if ($('.manually-option').length > 1) {
       $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
     } else if ( $('.manually-option').length == 1 ) {
-    	 $('.manually-option').find(".delete").css("visibility", "hidden");
+   	 $('.manually-option').find(".delete").css("visibility", "hidden");
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
@@ -2325,7 +2394,7 @@
       $('.manually-option').find(".delete").css("visibility", "hidden");
     }
     
-    $(document).find('.cusTime').trigger('dp.change');
+    $(document).find('.startTime').trigger('dp.change');
   }
 
   function timep(item) {
@@ -2336,7 +2405,7 @@
   }
 
   function customStartDate(id, count) {
-	$('.manually-option').find('.cusTime').prop('disabled', false);
+	  $('.manually-option').find('.startTime').prop('disabled', false);
     $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       minDate: serverDate(),
@@ -2351,7 +2420,7 @@
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
         $("#" + id).parent().find(".help-block").text(
-            '<ul class="list-unstyled"><li>Start Date and Time Should not be greater than End Date and Time</li></ul>');
+        '<ul class="list-unstyled"><li>Start Date and Time Should not be greater than End Date and Time</li></ul>');
       } else {
         $("#activeTaskId").parent().removeClass("has-danger").removeClass("has-error");
         $("#activeTaskId").parent().find(".help-block").empty();
@@ -2363,7 +2432,7 @@
   }
 
   function customEndDate(id, count) {
-    $('.manually-option').find('.cusTime').prop('disabled', false);
+    $('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       minDate: serverDate(),
@@ -2556,13 +2625,17 @@
           var xSignVal = $('#xdays' + id).val();
           var ySign = $('#ySign' + id).val();
           var ySignVal = $('#ydays' + id).val();
-          var time = $("#manualTime" + id).val();
+          var manualStartTime = $("#manualStartTime" + id).val();
+          var manualEndTime = $("#manualEndTime" + id).val();
           var isUsed = $("#isUsed" + id).val();
 
           activeTaskCustomFrequencey.frequencyStartDate = null;
           activeTaskCustomFrequencey.frequencyEndDate = null;
-          if (time != null && time != '' && typeof time != 'undefined') {
-            activeTaskCustomFrequencey.frequencyTime = time;
+          if (manualStartTime != null && manualStartTime != '' && typeof manualStartTime != 'undefined') {
+              activeTaskCustomFrequencey.frequencyStartTime = manualStartTime;
+            }
+            if (manualEndTime != null && manualEndTime != '' && typeof manualEndTime != 'undefined') {
+              activeTaskCustomFrequencey.frequencyEndTime = manualEndTime;
           }
           if (isUsed) {
             activeTaskCustomFrequencey.used = isUsed;
@@ -2595,7 +2668,8 @@
           var id = $(this).attr("id").replace('RegDate','');
           var startdate = $("#StartDate" + id).val();
           var enddate = $("#EndDate" + id).val();
-          var time = $("#customTime" + id).val();
+          var startTime = $("#customStartTime" + id).val();
+          var endTime = $("#customTime" + id).val();
           var isUsed = $("#isUsed" + id).val();
           if (startdate != null && startdate != '' && typeof startdate != 'undefined') {
             activeTaskCustomFrequencey.frequencyStartDate = startdate;
@@ -2603,8 +2677,12 @@
           if (enddate != null && enddate != '' && typeof enddate != 'undefined') {
             activeTaskCustomFrequencey.frequencyEndDate = enddate;
           }
-          if (time != null && time != '' && typeof time != 'undefined') {
-            activeTaskCustomFrequencey.frequencyTime = time;
+          if (startTime != null && startTime != '' && typeof startTime != 'undefined') {
+              activeTaskCustomFrequencey.frequencyStartTime = startTime;
+            }
+            
+            if (endTime != null && endTime != '' && typeof endTime != 'undefined') {
+              activeTaskCustomFrequencey.frequencyEndTime = endTime;
           }
           if (isUsed) {
             activeTaskCustomFrequencey.used = isUsed;
@@ -2616,7 +2694,7 @@
           $(document).find('.manually-option').each(function () {
             var returnFlag = validateTime(
                 $(this).find(".cusStrDate").not('.cursor-none, :disabled'),
-                $(this).find(".cusTime").not('.cursor-none, :disabled'));
+                $(this).find(".startTime").not('.cursor-none, :disabled'));
             if (isFormValid) {
               isFormValid = returnFlag;
             }
@@ -2924,62 +3002,88 @@
   }
 
   function checkDateRange() {
-    $(document).on('dp.change change', '.cusStrDate, .cusEndDate, .cusTime', function (e) {
-      var chkVal = true;
-      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents(
-          '.manually-option').find('.cusEndDate').val() && $(this).parents('.manually-option').find(
-          '.cusTime').val()) {
-        var thisAttr = this;
-        $(this).parents('.manuallyContainer').find('.manually-option').each(function () {
-          if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
-              '.cusStrDate').val() && $(this).find('.cusEndDate').val() && $(this).find(
-              '.cusTime').val()) {
-            var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
-            var cusTime = moment($(this).find('.cusTime').val(), "HH:mm").toDate()
-            fromDate.setHours(cusTime.getHours());
-            fromDate.setMinutes(cusTime.getMinutes());
-            var toDate = moment($(this).find('.cusEndDate').val(), "MM/DD/YYYY").toDate();
-            toDate.setHours(cusTime.getHours());
-            toDate.setMinutes(cusTime.getMinutes());
-            var thisFromDate = moment(
-                $(thisAttr).parents('.manually-option').find('.cusStrDate').val(),
-                "MM/DD/YYYY").toDate();
-            var thisCusTime = moment($(thisAttr).parents('.manually-option').find('.cusTime').val(),
-                "HH:mm").toDate()
-            thisFromDate.setHours(thisCusTime.getHours());
-            thisFromDate.setMinutes(thisCusTime.getMinutes());
-            var thisToDate = moment(
-                $(thisAttr).parents('.manually-option').find('.cusEndDate').val(),
-                "MM/DD/YYYY").toDate();
-            thisToDate.setHours(thisCusTime.getHours());
-            thisToDate.setMinutes(thisCusTime.getMinutes());
-            if (chkVal)
-              chkVal = !((thisFromDate >= fromDate && thisFromDate <= toDate) || (thisToDate
-                  >= fromDate && thisToDate <= toDate));
-          }
-        });
-      }
-      if (!chkVal) {
-        $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
-            'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
-                    $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
-                    "Please ensure that the runs created do not have any overlapping time period"));
-      } else {
-        $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass(
-            'has-error has-danger').addClass('with-errors').find(".help-block").empty();
-      }
-      var a = 0;
-      $('.manuallyContainer').find('.manually-option').each(function () {
-        if ($(this).find('.cusTime').parent().find('.help-block').children().length > 0) {
-          a++;
-          $(this).find('.cusTime').val('');
-        }
-      });
-      isValidManuallySchedule = !(a > 0);
-    });
-    return isValidManuallySchedule;
-  }
-
+	  $(document).on('dp.change change', '.cusStrDate, .cusEndDate, .startTime, .endTime', function (e) {
+	      var chkVal = true;
+	      var chkValFromDate=true;
+	      var chkValToDate = true;
+	      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents('.manually-option').find(
+	          '.startTime').val()) {
+	        var thisAttr = this;
+	        $(this).parents('.manuallyContainer').find('.manually-option').each(function () {
+	          if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
+	              '.cusStrDate').val() && $(this).find('.cusEndDate').val() && $(this).find(
+	              '.startTime').val()) {
+	            
+				
+				 var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
+	              var startTime = moment($(this).find('.startTime').val(), "HH:mm").toDate()
+	              fromDate.setHours(startTime.getHours());
+	              fromDate.setMinutes(startTime.getMinutes());
+	              var toDate = moment($(this).find('.cusEndDate').val(), "MM/DD/YYYY").toDate();
+	              var endTime = moment($(this).find('.endTime').val(), "HH:mm").toDate()
+	              toDate.setHours(endTime.getHours());
+	              toDate.setMinutes(endTime.getMinutes());
+	              var thisFromDate = moment(
+	                  $(thisAttr).parents('.manually-option').find('.cusStrDate').val(),
+	                  "MM/DD/YYYY").toDate();
+	              var thisStartTime = moment($(thisAttr).parents('.manually-option').find('.startTime').val(),
+	                  "HH:mm").toDate()
+	              thisFromDate.setHours(thisStartTime.getHours());
+	              thisFromDate.setMinutes(thisStartTime.getMinutes());
+	              var thisToDate = moment(
+	                  $(thisAttr).parents('.manually-option').find('.cusEndDate').val(),
+	                  "MM/DD/YYYY").toDate();
+	              var thisEndTime = moment($(thisAttr).parents('.manually-option').find('.endTime').val(),
+	              "HH:mm").toDate()
+	              thisToDate.setHours(thisEndTime.getHours());
+	              thisToDate.setMinutes(thisEndTime.getMinutes());
+				  
+				  
+				  
+	            if (chkValFromDate && chkValToDate){
+	            	 chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate) 
+	            	 chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
+	            }
+	             
+	          }
+	        });
+	      }
+	       if (!chkValFromDate) {
+	          $(thisAttr).parents('.manually-option').find('.startTime').parent().addClass(
+	              'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
+	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
+	                     "Please ensure that the runs created do not have any overlapping time period."));
+	        } 
+	      else if (!chkValToDate) {
+	        $(thisAttr).parents('.manually-option').find('.endTime').parent().addClass(
+	              'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
+	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
+	                     "Please ensure that the runs created do not have any overlapping time period."));
+	        } else {
+	        $(thisAttr).parents('.manually-option').find('.startTime').parent().removeClass(
+	            'has-error has-danger').find(".help-block").addClass('with-errors').empty();
+	        $(thisAttr).parents('.manually-option').find('.endTime').parent().removeClass(
+	        'has-error has-danger').find(".help-block").addClass('with-errors').empty(); 
+	      }
+	      var a = 0;
+	      $('.manuallyContainer').find('.manually-option').each(function () {
+	        if ($(this).find('.cusStartTime').parent().find('.help-block').children().length > 0) {
+	          a++;
+	          $(this).find('.cusStartTime').val('');
+	        }
+	      });
+	      var b = 0;
+	      $('.manuallyContainer').find('.manually-option').each(function () {
+	          if ($(this).find('.endTime').parent().find('.help-block').children().length > 0) {
+	            b++;
+	            $(this).find('.endTime').val('');
+	          }
+	        });
+	      isValidManuallySchedule = !(a > 0 &&  b>0);
+	    });
+	    return isValidManuallySchedule;
+	  }
+  
   function doneActiveTask(item, actType, callback) {
     var frequency = $('input[name="frequency"]:checked').val();
     console.log("frequency:" + frequency);
@@ -3240,7 +3344,7 @@
   }
 
   function addDateAnchor(customCountIndex) {
-	  $('.manually-anchor-option').find(".delete").css("visibility", "visible");
+	$('.manually-anchor-option').find(".delete").css("visibility", "visible");
 	customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
@@ -3255,10 +3359,20 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate xancorText'"
         + "count='" + customAnchorCount + "' placeholder='X' name='activeTaskCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
-        + "<span  class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
+		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days</span>" 
+        
+        + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
+        + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
+        + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
+        + "].frequencyStartTime' placeholder='Start time' required data-error='Please fill out this field' />"
+        + "<span class='help-block with-errors red-txt'></span>"
+        + "</span>"
+        
+        +"<span class='light-txt opacity06'>"
+        +"<span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
+        + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].yDaysSign' id='ySign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
@@ -3268,13 +3382,13 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate yancorText' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required  data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
-        + "<input id='manualTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
+        + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].frequencyTime' placeholder='Time' required  data-error='Please fill out this field' />"
+        + "].frequencyEndTime' placeholder='End time' required data-error='Please fill out this field' />"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
@@ -3292,7 +3406,9 @@
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
-    timep('manualTime' + customAnchorCount);
+    timep('manualStartTime' + customAnchorCount);
+    timep('manualEndTime' + customAnchorCount);
+    
     $('#' + customAnchorCount).find('input:first').focus();
     $('.selectpicker').selectpicker('refresh');
   }
@@ -3304,7 +3420,7 @@
     if ($('.manually-anchor-option').length > 1) {
       $('.manuallyAnchorContainer').find(".remBtnDis").removeClass("hide");
     } else if ( $('.manually-anchor-option').length == 1 ) {
-    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+   	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
@@ -3465,9 +3581,9 @@
       $(".current").nextAll().remove();
       
       if( $('.manually-anchor-option').filter(function() {
-  	    return $(this).css('display') !== 'none';}).length == 1){
-  	   $("#AddButton").show();
-  	   $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+    	    return $(this).css('display') !== 'none';}).length == 1){
+    	 $("#AddButton").show();
+    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
       }
     });
 
@@ -3507,9 +3623,9 @@
       $(".current").nextAll().remove();
       
       if( $('.manually-anchor-option').filter(function() {
-  	    return $(this).css('display') !== 'none';}).length == 1){
-  	   $("#AddButton").show();
-  	   $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+    	    return $(this).css('display') !== 'none';}).length == 1){
+    	 $("#AddButton").show();
+    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
       }
 
     });

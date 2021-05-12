@@ -310,7 +310,7 @@
     showSucMsg(sucMsg);
   }
 
-  function showSucMsg(message) {
+	function showSucMsg(message) {
 	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
 	  $('#alertMsg').show('5000');
 	  if('${param.buttonText}' == 'completed'){
@@ -320,7 +320,7 @@
 	  }else{
 	    	setTimeout(hideDisplayMessage, 5000);
 	  }
-  }
+	}
 </script>     
         
         

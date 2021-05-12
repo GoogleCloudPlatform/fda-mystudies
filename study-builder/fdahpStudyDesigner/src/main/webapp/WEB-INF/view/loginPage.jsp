@@ -104,7 +104,7 @@
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
                        data-pattern-error="Email address is invalid"
-                       placeholder="Email address" required data-error="Please fill out this field"  maxlength="100"
+                       placeholder="Email address" required maxlength="100"
                        data-error="Please complete this field"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" autofocus
                        autocomplete="off">
@@ -112,7 +112,7 @@
               </div>
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input" id="password"
-                       placeholder="Password" required data-error="Please fill out this field" maxlength="64"
+                       placeholder="Password" required maxlength="64"
                        data-error="Please complete this field"
                        autocomplete="off" readonly onfocus="$(this).removeAttr('readonly');">
                 <div class="help-block with-errors red-txt"></div>
@@ -142,7 +142,7 @@
                 <input type="text" class="input-field wow_input" id="emailReg" name="email"
                        maxlength="100"
                        placeholder="Email address"
-                       data-pattern-error="Email address is invalid" required data-error="Please fill out this field" maxlength="100"
+                       data-pattern-error="Email address is invalid" required maxlength="100"
                        data-error="Please complete this field"
                        pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
                 <div class="help-block with-errors red-txt"></div>

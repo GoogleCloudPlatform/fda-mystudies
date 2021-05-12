@@ -55,7 +55,7 @@
     <div class="tab-content pl-xlg pr-xlg">
       <!-- Content-->
       <div id="content" class="tab-pane fade in active mt-xlg">
-        <div class="mt-md blue-md-f text-uppercase">Select Active task</div>
+        <div class="mt-md blue-md-f text-uppercase">Select Active Task</div>
         <div class="gray-xs-f mt-md mb-sm">Choose from a list of pre-defined active tasks</div>
         <div class="col-md-4 p-none">
           <select class="selectpicker targetOption" id="targetOptionId" taskId="${activeTaskBo.id}"

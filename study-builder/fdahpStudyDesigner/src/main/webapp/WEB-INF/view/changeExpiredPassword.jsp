@@ -81,7 +81,7 @@
 
     <div id="lg-container" class="lg-container">
       <div class="logo__space">
-        <a href="/studybuilder/sessionOut.do"
+      	<a href="/studybuilder/sessionOut.do"
              class="blue-link text-weight-normal text-uppercase">
         	<img src="../images/logo/logo_landing_welcome.png" alt=""/>
         </a>
@@ -102,16 +102,16 @@
                 <input type="password" class="form-control input-field wow_input" id="oldPassword"
                        name=""
                        maxlength="14" data-minlength="8" placeholder="Previous password"
-                       data-error="Invalid previous password" required data-error="Please fill out this field" 
+                       data-error="Invalid previous password" required data-error="Please fill out this field"
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
-                <input type="hidden" name="oldPassword" id="hideOldPass"/>
+                <input type="hidden" name="oldPassword" id="hideOldPass" data-error="Please fill out this field"/>
               </div>
               <div class="mb-lg form-group">
                 <input type="password" class="form-control input-field wow_input" id="password" name=""
                        maxlength="14" data-minlength="8" placeholder="New password"
-                       data-error="Password is invalid"
-                       required data-error="Please fill out this field" 
+                       data-error="New password is invalid" data-error="Please fill out this field"
+                       required
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,14}"
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
@@ -121,9 +121,9 @@
                 <input type="password" class="form-control input-field wow_input" id="cfnPassword"
                        name=""
                        maxlength="14" data-match="#password"
-                       data-match-error="Passwords do not match"
+                       data-match-error="Passwords do not match" data-error="Please fill out this field"
                        placeholder="Confirm new password"
-                       required data-error="Please fill out this field" autocomplete="off"/>
+                       required autocomplete="off"/>
                 <div class="help-block with-errors"></div>
               </div>
               <div class="mb-lg form-group">

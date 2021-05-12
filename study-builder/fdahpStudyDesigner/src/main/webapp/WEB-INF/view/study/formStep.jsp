@@ -113,7 +113,7 @@
               <div class="form-group">
                 <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
                        name="stepShortTitle" id="stepShortTitle"
-                       value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}" required data-error="Please fill out this field" 
+                       value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}" required data-error="Please fill out this field"
                        maxlength="15" <c:if
                     test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
                 <div class="help-block with-errors red-txt"></div>
@@ -158,7 +158,7 @@
                 </div>
                 <div class="form-group">
                   <select class="selectpicker" name="destinationStep" id="destinationStepId"
-                          value="${questionnairesStepsBo.destinationStep}" required data-error="Please fill out this field" >
+                          value="${questionnairesStepsBo.destinationStep}" required data-error="Please fill out this field">
                     <c:forEach items="${destinationStepList}" var="destinationStep">
                       <option
                           value="${destinationStep.stepId}" ${questionnairesStepsBo.destinationStep eq destinationStep.stepId ? 'selected' :''}>
@@ -205,11 +205,11 @@
             <div class="form-group mb-none col-md-4 p-none">
               <input type="text" class="form-control"
                      placeholder="Eg: I have more medications to add"
-                     name="repeatableText" id="repeatableText" data-error="Please fill out this field" 
+                     name="repeatableText" id="repeatableText"
                      value="${fn:escapeXml(questionnairesStepsBo.repeatableText)}"
                      <c:if test="${questionnairesStepsBo.repeatable ne 'Yes'}">disabled</c:if>
                      maxlength="30"
-                     <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}">required </c:if>/>
+                     <c:if test="${questionnairesStepsBo.repeatable eq'Yes'}">required</c:if>/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -264,7 +264,7 @@
                           <span class="ellipse" onmouseenter="ellipseHover(this);"></span>
                           <div class="ellipse-hover-icon"
                                onmouseleave="ellipseUnHover(this);">
-                            <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View"
+                            <span class="sprites_icon preview-g mr-sm"data-toggle="tooltip" data-placement="top" title="View"
                                   onclick="viewQuestion(${entry.value.questionInstructionId});"></span>
                             <span
                                 class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionTypeForQuestionPage eq 'view'}"> cursor-none-without-event </c:if>"
@@ -273,7 +273,7 @@
                                     test="${actionTypeForQuestionPage ne 'view'}">onclick="editQuestion(${entry.value.questionInstructionId});"</c:if>></span>
                             <span
                                 class="sprites_icon delete <c:if test="${actionTypeForQuestionPage eq 'view'}"> cursor-none-without-event </c:if>"
-                                 data-toggle="tooltip" data-placement="top" title="Delete"
+                                data-toggle="tooltip" data-placement="top" title="Delete"
                                 <c:if
                                     test="${actionTypeForQuestionPage ne 'view'}">onclick="deletQuestion(${entry.value.stepId},${entry.value.questionInstructionId})"</c:if>></span>
                           </div>
@@ -766,7 +766,7 @@
         }
         dynamicAction += '<span class="ellipse" onmouseenter="ellipseHover(this);"></span>' +
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
-            '  <span class="sprites_icon preview-g mr-sm"  data-toggle="tooltip" data-placement="top" title="View"></span>';
+            '  <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View"></span>';
         if (value.status) {
           dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion('
               + parseInt(value.questionInstructionId) + ');"></span>';
@@ -916,5 +916,5 @@
 
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");
-  });
+});
 </script>

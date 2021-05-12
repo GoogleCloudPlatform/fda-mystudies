@@ -13,6 +13,9 @@ import static com.fdahpstudydesigner.common.PlatformComponent.RESPONSE_DATASTORE
 import static com.fdahpstudydesigner.common.PlatformComponent.STUDY_BUILDER;
 import static com.fdahpstudydesigner.common.PlatformComponent.STUDY_DATASTORE;
 
+import lombok.Getter;
+
+@Getter
 public enum StudyBuilderAuditEvent {
   USER_SIGNOUT_SUCCEEDED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "USER_SIGNOUT_SUCCEEDED"),
 
@@ -332,7 +335,7 @@ public enum StudyBuilderAuditEvent {
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
-      "Settings section marked complete with enrollment setting '${enrollment_setting}'.",
+      "Settings section marked complete with enrollment setting '${enrollment_setting}'. ",
       "STUDY_SETTINGS_MARKED_COMPLETE"),
 
   STUDY_DEACTIVATED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_DEACTIVATED"),
@@ -515,26 +518,4 @@ public enum StudyBuilderAuditEvent {
     this.description = description;
     this.eventCode = eventCode;
   }
-
-public PlatformComponent getSource() {
-	return source;
-}
-
-public PlatformComponent getDestination() {
-	return destination;
-}
-
-public PlatformComponent getResourceServer() {
-	return resourceServer;
-}
-
-public String getDescription() {
-	return description;
-}
-
-public String getEventCode() {
-	return eventCode;
-}
-  
-  
 }

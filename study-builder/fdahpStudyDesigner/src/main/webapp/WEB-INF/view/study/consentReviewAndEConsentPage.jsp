@@ -70,9 +70,7 @@
                  value="${consentBo.version}">
           <div id="menu1" class="tab-pane fade in active">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm">Enable data-sharing permission
-                step for this study? (This will let participants choose whether
-                they want to allow their data to be shared with 3rd parties)
+              <div class="gray-xs-f mb-sm">Enable data-sharing permission step for this study? (This lets participants choose if they want to allow their data to be shared with 3rd parties)
               </div>
               <div class="col-md-12 pl-none">
                 <div class="form-group custom-form">
@@ -109,8 +107,8 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
-                           placeholde="" id="titleId" name="title"
+                    <input type="text" class="form-control requiredClass"
+                           placeholde="" id="titleId" name="title" data-error="Please fill out this field"
                            value="${consentBo.title}" maxlength="250"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -133,8 +131,8 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
-                           placeholder="" maxlength="250" name="taglineDescription"
+                    <input type="text" class="form-control requiredClass"
+                           placeholder="" maxlength="250" name="taglineDescription" data-error="Please fill out this field"
                            id="taglineDescriptionId"
                            value="${consentBo.taglineDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -155,8 +153,8 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
-                           placeholder="" maxlength="250" name="shortDescription"
+                    <input type="text" class="form-control requiredClass"
+                           placeholder="" maxlength="250" name="shortDescription" data-error="Please fill out this field"
                            id="shortDescriptionId" value="${consentBo.shortDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -176,8 +174,8 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <textarea class="form-control requiredClass" rows="5" data-error="Please fill out this field" 
-                              maxlength="500" placeholder="" name="longDescription"
+                    <textarea class="form-control requiredClass" rows="5"
+                              maxlength="500" placeholder="" name="longDescription" data-error="Please fill out this field"
                               id="longDescriptionId">${consentBo.longDescription}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -194,8 +192,8 @@
             		</span>
                   </div>
                   <div class="form-group">
-                    <textarea id="learnMoreTextId" name="learnMoreText"
-                              required data-error="Please fill out this field" >${consentBo.learnMoreText}</textarea>
+                    <textarea id="learnMoreTextId" name="learnMoreText" data-error="Please fill out this field"
+                              required>${consentBo.learnMoreText}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -220,7 +218,7 @@
                 <div id="consentDocTypeDivId">
                   <span class="radio radio-info radio-inline p-45"><input
                       type="radio" id="inlineRadio1" value="Auto"
-                      name="consentDocType" required 
+                      name="consentDocType" required
                       data-error="Please choose consent document type"
                     ${consentBo.consentDocType=='Auto'?'checked':''}> <label
                       for="inlineRadio1">Auto-created consent document</label>
@@ -256,10 +254,30 @@
                 </small>
               </div>
             </div>
+            <c:if  test="${status ne 'Pre-launch'}"> 
+            <div class="pt-lg mt-xs pb-lg">
+        		<span class="checkbox checkbox-inline">
+          		<input type="checkbox" id="consentAgain" name="enrollAgain" <c:if test="${consentBo.enrollAgain eq 'true'}">checked</c:if>>	
+          		<label for="consentAgain">Enforce e-consent flow again for enrolled participants</label>
+          		</span>
+          		<span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Check this box if you want enrolled participants to undergo consent in the mobile app again with the latest version of the consent document. New participants will always see the latest version of the consent document.">
+            	</span>	
+      		</div>
+      		</c:if>
             <div class="mt-xlg">
-<div class="black-md-f"> Consent document  
-</div>
-
+              <div class="black-md-f">
+                Consent document
+                <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
+                <span id="requiredStarId" class="requiredStar">*</span>
+                <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> The version of the consent document gets updated each time you mark this section complete and publish updates to the study.">
+            	</span>	
+              </div>
               <div class="mt-lg">
                 <div class="cont_doc" id="autoCreateDivId"
                      style="display: block;">
@@ -633,7 +651,6 @@
       var dateTimeCB = $("#dateTimeCB").val();
       var consentDocumentContent = "";
       var consentDocType = $('input[name="consentDocType"]:checked').val();
-
       var shareDataPermissionsTxt = $('input[name="shareDataPermissions"]:checked').val();
       var title_txt = $("#titleId").val();
       var tagline_description = $("#taglineDescriptionId").val();
@@ -642,7 +659,11 @@
       var learn_more_text = $('#learnMoreTextId').summernote('code');
       learn_more_text = replaceSpecialCharacters(learn_more_text);
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-
+      var enrollAgain;
+      <c:if test="${status ne 'Pre-launch'}">
+       enrollAgain = document.getElementById("consentAgain").checked;
+      </c:if>
+      
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
         consentDocumentContent = replaceSpecialCharacters(consentDocumentContent);
@@ -701,6 +722,9 @@
       }
       if (null != allow_Permission) {
         consentInfo.allowWithoutPermission = allow_Permission;
+      }
+      if (null != enrollAgain) {
+        consentInfo.enrollAgain = enrollAgain;
       }
       var data = JSON.stringify(consentInfo);
       $.ajax({
@@ -944,17 +968,16 @@
           "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
     });
   }
-
   var sucMsg = '${sucMsg}';
   if (sucMsg.length > 0) {
     showSucMsg(sucMsg);
   }
 
-  function showSucMsg(message) {
-	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
-	 $('#alertMsg').show('5000');
-	   window.setTimeout(function(){
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	    window.setTimeout(function(){
 	        window.location.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
 	    }, 5000);
-  }
+	}
 </script>

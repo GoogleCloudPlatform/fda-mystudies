@@ -2094,7 +2094,6 @@ public class StudyDAOImpl implements StudyDAO {
                       + " order by s.createdOn desc");
           query.setInteger(FdahpStudyDesignerConstants.IMP_VALUE, userId);
         }
-
         studyListBeans = query.list();
 
         if ((studyListBeans != null) && !studyListBeans.isEmpty()) {
@@ -3428,7 +3427,7 @@ public class StudyDAOImpl implements StudyDAO {
             }
             /** Content Purpose creating draft End * */
           }
-        } // Active task end
+        } // Active TAsk End
 
         // Consent updated update Start
         query =
@@ -3703,6 +3702,7 @@ public class StudyDAOImpl implements StudyDAO {
         consentInfoList = query.list();
         if ((consentInfoList != null) && (consentInfoList.size() > 0)) {
           for (ConsentInfoBo consentInfo : consentInfoList) {
+
             content +=
                 "&lt;span style=&#34;font-size:20px;&#34;&gt;&lt;strong&gt;"
                     + consentInfo.getDisplayTitle()
@@ -4466,7 +4466,6 @@ public class StudyDAOImpl implements StudyDAO {
                   .setString("enrollment", FdahpStudyDesignerConstants.ANCHOR_TYPE_ENROLLMENTDATE)
                   .executeUpdate();
             }
-            // Phase2a code end
           }
         }
 
@@ -5437,7 +5436,7 @@ public class StudyDAOImpl implements StudyDAO {
                   .createQuery("UPDATE ActiveTaskBo set live=0, isChange = 0 where studyId=:id")
                   .setInteger("id", studyBo.getId())
                   .executeUpdate();
-            } // Active task end
+            } // Active TAsk End
           } // In ActiveTask change or not
           // Activities End
 
@@ -5473,11 +5472,19 @@ public class StudyDAOImpl implements StudyDAO {
               newConsentBo.setVersion(newstudyVersionBo.getConsentVersion());
               newConsentBo.setLive(1);
               newConsentBo.setCustomStudyId(studyBo.getCustomStudyId());
+              if (newstudyVersionBo.getConsentVersion() == 1) {
+                newConsentBo.setEnrollAgain(true);
+              }
               session.save(newConsentBo);
               values.put("consent_document_version", String.valueOf(newConsentBo.getVersion()));
               auditLogEventHelper.logEvent(
                   STUDY_CONSENT_DOCUMENT_NEW_VERSION_PUBLISHED, auditRequest, values);
+              if (newstudyVersionBo.getConsentVersion() == 1 || consentBo.getEnrollAgain()) {
+                consentBo.setEnrollAgain(false);
+                session.save(consentBo);
+              }
             }
+
             query =
                 session
                     .getNamedQuery("getConsentInfoByStudyId")
@@ -6694,7 +6701,6 @@ public class StudyDAOImpl implements StudyDAO {
                     .setString("studyType", FdahpStudyDesignerConstants.STUDY_TYPE_SD)
                     .list();
           }
-
         } else {
           if (StringUtils.isNotEmpty(dbCustomStudyId)) {
             searchQuery = " From StudyBo WHERE appId=:appId and customStudyId!=:customStudyId ";
@@ -6952,5 +6958,30 @@ public class StudyDAOImpl implements StudyDAO {
       }
     }
     return completed;
+  }
+
+  @Override
+  public List<ConsentBo> getConsentList(String customStudyId) {
+    List<ConsentBo> consentBoList = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      String searchQuery =
+          " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId ORDER BY CBO.version desc ";
+      query = session.createQuery(searchQuery);
+      query.setString("customStudyId", customStudyId);
+      consentBoList = query.list();
+      transaction.commit();
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("StudyDAOImpl - getConsentList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getConsentList() - Ends");
+    return consentBoList;
   }
 }

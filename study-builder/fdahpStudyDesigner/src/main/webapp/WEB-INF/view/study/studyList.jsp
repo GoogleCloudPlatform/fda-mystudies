@@ -149,7 +149,6 @@
           {"bSortable": true},
           {"bSortable": true},
           {"bSortable": true},
-          {"bSortable": true},
           {"bSortable": false}
         ],
         "columnDefs": [{orderable: false, targets: [6]}],

@@ -96,10 +96,18 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
                       FdahpStudyDesignerConstants.DB_SDF_DATE,
                       FdahpStudyDesignerConstants.UI_SDF_DATE));
             }
-            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyTime())) {
-              activeTaskCustomScheduleBo.setFrequencyTime(
+            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyStartTime())) {
+              activeTaskCustomScheduleBo.setFrequencyStartTime(
                   FdahpStudyDesignerUtil.getFormattedDate(
-                      activeTaskCustomScheduleBo.getFrequencyTime(),
+                      activeTaskCustomScheduleBo.getFrequencyStartTime(),
+                      FdahpStudyDesignerConstants.UI_SDF_TIME,
+                      FdahpStudyDesignerConstants.SDF_TIME));
+            }
+
+            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyEndTime())) {
+              activeTaskCustomScheduleBo.setFrequencyEndTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyEndTime(),
                       FdahpStudyDesignerConstants.UI_SDF_TIME,
                       FdahpStudyDesignerConstants.SDF_TIME));
             }

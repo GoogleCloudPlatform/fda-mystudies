@@ -143,6 +143,7 @@ public class NotificationDAOImpl implements NotificationDAO {
                 ? FdahpStudyDesignerUtil.getTimeStamp(
                     notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
                 : null);
+
         notificationBO.setNotificationSent(notificationBO.isNotificationSent());
         notificationBO.setNotificationScheduleType(
             null != notificationBO.getNotificationScheduleType()
@@ -299,6 +300,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         } else {
           notificationBOUpdate.setScheduleDate(notificationBO.getScheduleDate());
         }
+
         notificationBOUpdate.setScheduleTimestamp(
             (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
                     && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
@@ -306,14 +308,6 @@ public class NotificationDAOImpl implements NotificationDAO {
                     notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
                 : null);
 
-
-        System.out.println(
-            "currentDate notificationBOUpdate" + notificationBOUpdate.getScheduleDate());
-        System.out.println(
-            "currentTime notificationBOUpdate" + notificationBOUpdate.getScheduleTime());
-        System.out.println(
-            "currentTimeStamp notificationBOUpdate" + notificationBOUpdate.getScheduleTimestamp());
-        
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
@@ -363,14 +357,12 @@ public class NotificationDAOImpl implements NotificationDAO {
         } else {
           notificationBOUpdate.setScheduleDate(null);
         }
-
         notificationBOUpdate.setScheduleTimestamp(
             (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
                     && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
                 ? FdahpStudyDesignerUtil.getTimeStamp(
                     notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
                 : null);
-
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);

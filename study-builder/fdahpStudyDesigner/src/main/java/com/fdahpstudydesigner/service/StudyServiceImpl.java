@@ -41,9 +41,14 @@ import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.dao.StudyDAO;
+import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.ImageUtility;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +56,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -58,6 +64,7 @@ import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -387,8 +394,7 @@ public class StudyServiceImpl implements StudyService {
             // to make unique image
             s.setSignedUrl(
                 FdahpStudyDesignerUtil.getSignedUrl(
-                    FdahpStudyDesignerConstants.STUDTYPAGES + "/" + s.getImagePath(),
-                    FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                    FdahpStudyDesignerConstants.STUDTYPAGES + "/" + s.getImagePath(), 12));
             if (s.getImagePath().contains("?v=")) {
               String imagePathArr[] = s.getImagePath().split("\\?");
               s.setImagePath(imagePathArr[0] + "?v=" + new Date().getTime());
@@ -807,6 +813,11 @@ public class StudyServiceImpl implements StudyService {
         updateConsentBo.setComprehensionTestMinimumScore(
             consentBo.getComprehensionTestMinimumScore());
       }
+
+      if (consentBo.getEnrollAgain() != null) {
+        updateConsentBo.setEnrollAgain(consentBo.getEnrollAgain());
+      }
+
       updateConsentBo =
           studyDAO.saveOrCompleteConsentReviewDetails(updateConsentBo, sesObj, customStudyId);
     } catch (Exception e) {
@@ -1022,7 +1033,49 @@ public class StudyServiceImpl implements StudyService {
   public String saveOrUpdateOverviewStudyPages(StudyPageBean studyPageBean, SessionObject sesObj) {
     logger.entry("StudyServiceImpl - saveOrUpdateOverviewStudyPages() - Starts");
     String message = "";
+    CustomMultipartFile[] customMultipart = null;
     try {
+      // Resize Image
+
+      if (studyPageBean.getMultipartFiles() != null
+          && studyPageBean.getMultipartFiles().length > 0) {
+        int height = 0;
+        int width = 0;
+
+        MultipartFile[] multipartFiles = studyPageBean.getMultipartFiles();
+        customMultipart = new CustomMultipartFile[multipartFiles.length];
+
+        for (int i = 0; i < multipartFiles.length; i++) {
+
+          MultipartFile multipartFile = multipartFiles[i];
+
+          if (i == 0) {
+            width = 750;
+            height = 1334;
+          } else {
+            width = 750;
+            height = 570;
+          }
+
+          BufferedImage newBi = ImageIO.read(new ByteArrayInputStream(multipartFile.getBytes()));
+          BufferedImage resizedImage = ImageUtility.resizeImage(newBi, width, height);
+          String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          ImageIO.write(resizedImage, extension, baos);
+          baos.flush();
+
+          CustomMultipartFile imageResizeMultipartFile =
+              new CustomMultipartFile(
+                  baos.toByteArray(), multipartFile.getOriginalFilename(), extension);
+          customMultipart[i] = imageResizeMultipartFile;
+        }
+      }
+
+      if (customMultipart != null) {
+        studyPageBean.setMultipartFiles(customMultipart);
+      }
+
       if ((studyPageBean.getMultipartFiles() != null)
           && (studyPageBean.getMultipartFiles().length > 0)) {
         String imagePath[] = new String[studyPageBean.getImagePath().length];
@@ -1462,5 +1515,18 @@ public class StudyServiceImpl implements StudyService {
 
   public StudyBo getStudyInfo(String studyId) {
     return studyDAO.getStudy(Integer.valueOf(studyId));
+  }
+
+  @Override
+  public List<ConsentBo> getConsentList(String customStudyId) {
+    logger.entry("StudyServiceImpl - getConsentList() - Starts");
+    List<ConsentBo> consentBoList = null;
+    try {
+      consentBoList = studyDAO.getConsentList(customStudyId);
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - getConsentList() - ERROR ", e);
+    }
+    logger.exit("StudyServiceImpl - getConsentList() - Ends");
+    return consentBoList;
   }
 }
