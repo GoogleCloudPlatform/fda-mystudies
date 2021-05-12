@@ -195,7 +195,7 @@ public class CustomDateQuestionBody implements StepBody {
           }
         }
       });
-      datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, inflater.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+      datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, inflater.getContext().getString(R.string.ok_2), new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
           if (which == DialogInterface.BUTTON_POSITIVE) {
             dialog.dismiss();
@@ -313,7 +313,7 @@ public class CustomDateQuestionBody implements StepBody {
           }
         }
       });
-      datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, inflater.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+      datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, inflater.getContext().getString(R.string.ok_2), new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
           if (which == DialogInterface.BUTTON_POSITIVE) {
             dialog.dismiss();
