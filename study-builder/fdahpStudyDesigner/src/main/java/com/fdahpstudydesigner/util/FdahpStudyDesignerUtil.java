@@ -1056,7 +1056,7 @@ public class FdahpStudyDesignerUtil {
     String timestampInString = inputDate + " " + inputTime;
     try {
     	System.out.println(
-    	          "timestamp of notification " + java.sql.Timestamp.valueOf(timestampInString));
+    	          "timestamp of notification method getTimeStamp() " + java.sql.Timestamp.valueOf(timestampInString));
         return java.sql.Timestamp.valueOf(timestampInString);
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
