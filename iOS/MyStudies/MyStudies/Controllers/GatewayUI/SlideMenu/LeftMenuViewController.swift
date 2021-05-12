@@ -26,9 +26,9 @@ let kLeftMenuTitle = "menuTitle"
 let kLeftMenuIconName = "iconName"
 let kLeftMenuCellTitleHome = "Home"
 let kLeftMenuCellTitleResources = "Resources"
-let kLeftMenuCellTitleProfile = "My account"
-let kLeftMenuCellTitleSignIn = "Sign in"
-let kLeftMenuCellTitleNewUser = "New user?"
+let kLeftMenuCellTitleProfile = "My Account"
+let kLeftMenuCellTitleSignIn = "Sign In"
+let kLeftMenuCellTitleNewUser = "New User?"
 let kLeftMenuCellSubTitleValue = "Sign up"
 let kAlertMessageReachoutText = "This feature will be available in the next sprint."
 
@@ -36,7 +36,7 @@ let kAlertMessageForSignOut = "Are you sure you want to sign out?"
 let kAlertMessageSignOutSync =
   """
   Are you sure you want to sign out? \
-  Incomplete activities and activities that were completed in offline mode must be re-started when you next sign in.
+  Incomplete activities and activities completed while offline must be re-started when you next sign in.
   """
 
 let kAlertSignOutLaterTitle = "Sign Out later"
@@ -280,7 +280,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     if user.userType == .loggedInUser {
       menus.append(
         [
-          "menuTitle": "My account",
+          "menuTitle": "My Account",
           "iconName": "profile_menu1",
           "menuType": LeftMenu.profileReachOut,
         ])
@@ -288,14 +288,14 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       if shouldAllowToGiveFeedback {
         menus.append(
           [
-            "menuTitle": "Reach out",
+            "menuTitle": "Reach Out",
             "iconName": "reachout_menu1",
             "menuType": LeftMenu.reachOutSignIn,
           ])
       }
       menus.append(
         [
-          "menuTitle": "Sign out",
+          "menuTitle": "Sign Out",
           "iconName": "ic_signout_menu",
           "menuType": LeftMenu.signOut,
         ])
@@ -303,7 +303,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       if shouldAllowToGiveFeedback {
         menus.append(
           [
-            "menuTitle": "Reach out",
+            "menuTitle": "Reach Out",
             "iconName": "reachout_menu1",
             "menuType": LeftMenu.profileReachOut,
           ])
@@ -311,14 +311,14 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
       menus.append(
         [
-          "menuTitle": "Sign in",
+          "menuTitle": "Sign In",
           "iconName": "signin_menu1",
           "menuType": LeftMenu.reachOutSignIn,
         ])
 
       menus.append(
         [
-          "menuTitle": "New user?",
+          "menuTitle": "New User?",
           "iconName": "newuser_menu1",
           "subTitle": "Sign up",
           "menuType": LeftMenu.signup,

@@ -92,7 +92,7 @@ let kActiveFetalKickCounterkickCounts = "kickCount"
 
 /// Completion Text
 let kActiveTaskCompletionStepText =
-  "Tap on 'Done' to submit your responses. Responses cannot be modified after submission."
+  "Tap Done to submit responses. Responses cannot be modified after submission."
 
 enum ActiveStepType: String {
   /// Active Steps.

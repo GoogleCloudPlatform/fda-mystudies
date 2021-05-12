@@ -13,23 +13,23 @@
 	<key>JoinStudyButtonTitle</key>
 	<string>Participate</string>
 	<key>ViewConsentButtonTitle</key>
-	<string>View consent</string>
+	<string>View Consent</string>
 	<key>VisitWebsiteButtonTitle</key>
-	<string>Visit website</string>
+	<string>Visit Website</string>
 	<key>ConsentPDF</key>
 	<string>Consent PDF</string>
 	<key>LeaveStudy</key>
-	<string>Leave study</string>
+	<string>Leave Study</string>
 	<key>WebsiteLink</key>
 	<string></string>
 	<key>WebsiteButtonTitle</key>
-	<string>App website</string>
+	<string>App Website</string>
 	<key>TermsAndConditionURL</key>
 	<string></string>
 	<key>PrivacyPolicyURL</key>
 	<string></string>
 	<key>ValidatedTitle</key>
-	<string>Eligibility confirmed</string>
+	<string>Eligibility Confirmed</string>
 	<key>AllowFeedback</key>
 	<true/>
 	<key>NavigationTitleName</key>

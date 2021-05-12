@@ -208,7 +208,7 @@ class Study: Hashable {
 class StudySettings {
 
   lazy var enrollingAllowed = true
-  lazy var rejoinStudyAfterWithdrawn = true
+  lazy var rejoinStudyAfterWithdrawn = false
   lazy var platform = "ios"
 
   init() {

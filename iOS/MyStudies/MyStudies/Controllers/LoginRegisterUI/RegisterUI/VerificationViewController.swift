@@ -24,7 +24,7 @@ let kDefaultEmail = "xyz@gmail.com"
 let kSignupCompletionSegue = "signupCompletionSegue"
 let kAlertMessageText = "Message"
 let kAlertMessageVerifyEmail = "Please verify your email address."
-let kAlertMessageResendEmail = "A verification code has been sent to your registered email"
+let kAlertMessageResendEmail = "An email verification code has been sent to your registered email."
 
 let kChangePasswordViewControllerIdentifier = "ChangePasswordViewController"
 

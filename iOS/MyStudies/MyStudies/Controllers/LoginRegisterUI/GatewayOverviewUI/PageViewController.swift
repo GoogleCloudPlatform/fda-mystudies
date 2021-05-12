@@ -47,7 +47,6 @@ class PageViewController: UIPageViewController {
 
     dataSource = self
     delegate = self
-    UITextView.appearance().linkTextAttributes = [.foregroundColor: UIColor.blue]
 
     if let initialViewController = orderedViewControllers.first {
       scrollToViewController(viewController: initialViewController)

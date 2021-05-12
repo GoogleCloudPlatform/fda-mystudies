@@ -133,10 +133,10 @@ class ActivityBuilder {
           // addding completion step
           let completionStep = ORKCompletionStep(identifier: kCompletionStep)
 
-          completionStep.title = "Activity completed"
+          completionStep.title = "Activity Completed"
           completionStep.image = #imageLiteral(resourceName: "successBlueBig")
           completionStep.detailText =
-            "Tap on 'Done' to submit your responses. Responses cannot be modified after submission."
+            "Tap Done to submit responses. Responses cannot be modified after submission."
           orkStepArray?.append(completionStep)
 
           // Creating ordered or navigable task

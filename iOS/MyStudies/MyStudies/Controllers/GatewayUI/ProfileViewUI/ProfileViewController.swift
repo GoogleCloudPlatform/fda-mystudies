@@ -24,26 +24,26 @@ import UIKit
 
 let kProfileTableViewCellIdentifier = "ProfileTableViewCell"
 
-let kLeadTimeSelectText = "Select lead time"
+let kLeadTimeSelectText = "Select Lead Time"
 let kActionSheetDoneButtonTitle = "Done"
 let kActionSheetCancelButtonTitle = "Cancel"
 
 let kChangePasswordSegueIdentifier = "changePasswordSegue"
 let kErrorTitle = ""
 let kProfileAlertTitleText = "Profile"
-let kProfileAlertUpdatedText = "Your profile has been updated."
+let kProfileAlertUpdatedText = "Profile updated Successfully."
 
 let signupCellLastIndex = 2
 
-let kProfileTitleText = "My account"
+let kProfileTitleText = "My Account"
 
-let kSignOutText = "Sign out"
+let kSignOutText = "Sign Out"
 let kLabelName = "LabelName"
 
-let kUseTouchIdOrPasscode = "Use passcode or Touch ID to access app"
-let kUseFaceIdOrPasscode = "Use passcode or Face ID to access app"
+let kUseTouchIdOrPasscode = "Use Passcode or Touch ID to access app"
+let kUseFaceIdOrPasscode = "Use Passcode or Face ID to access app"
 
-let kUsePasscodeToAccessApp = "Use passcode to access the app?"
+let kUsePasscodeToAccessApp = "Use Passcode to access app"
 
 let ktouchid = "touchIdEnabled"
 let korkPasscode = "ORKPasscode"
@@ -635,7 +635,7 @@ extension ProfileViewController: UITableViewDataSource {
 
         cell.textFieldValue?.isHidden = true
         cell.buttonChangePassword?.isHidden = false
-        cell.buttonChangePassword?.setTitle("Change passcode", for: .normal)
+        cell.buttonChangePassword?.setTitle("Change Passcode", for: .normal)
 
         if User.currentUser.settings?.passcode == true {
           cell.buttonChangePassword?.isUserInteractionEnabled = true

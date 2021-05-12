@@ -21,6 +21,7 @@ import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
 
+let kStudyWithStudyId = "Study with StudyId"
 let kTitleOK = "OK"
 
 class EligibilityStep: ORKStep {
@@ -216,6 +217,18 @@ extension EligibilityStepViewController: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     self.removeProgressIndicator()
-    self.showAlert(message: error.localizedDescription)
+    if error.localizedDescription.localizedCaseInsensitiveContains(tokenTextField.text!) {
+
+      self.showAlert(message: kMessageInvalidTokenOrIfStudyDoesNotExist)
+
+    } else {
+      if error.localizedDescription.localizedCaseInsensitiveContains(kStudyWithStudyId) {
+
+        self.showAlert(message: kMessageInvalidTokenOrIfStudyDoesNotExist)
+
+      } else {
+        self.showAlert(message: error.localizedDescription)
+      }
+    }
   }
 }

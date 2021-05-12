@@ -176,7 +176,7 @@ class LocalNotification: NSObject {
           // start notification
           let startMessage =
             "A new run of the weekly activity " + activity.name!
-            + ", is now available. Please visit the study to complete it."
+            + ", is now available. Please visit the study to complete it now."
           LocalNotification.composeRunNotification(
             startDate: run.startDate!,
             endDate: run.endDate,
@@ -199,7 +199,7 @@ class LocalNotification: NSObject {
           // start notification
           let startMessage =
             "A new run of the monthly activity " + activity.name!
-            + ", is now available. Please visit the study to complete it."
+            + ", is now available. Please visit the study to complete it now."
           LocalNotification.composeRunNotification(
             startDate: run.startDate!,
             endDate: run.endDate,

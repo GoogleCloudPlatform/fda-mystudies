@@ -53,7 +53,7 @@ class ContactUsViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    self.navigationItem.title = NSLocalizedString("Contact us", comment: "")
+    self.navigationItem.title = NSLocalizedString("Contact Us", comment: "")
 
     //  Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground

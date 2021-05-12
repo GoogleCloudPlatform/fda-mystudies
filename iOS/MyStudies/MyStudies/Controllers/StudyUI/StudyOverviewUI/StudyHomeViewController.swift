@@ -581,10 +581,19 @@ class StudyHomeViewController: UIViewController {
             )
           }
         } else if participatedStatus == .withdrawn {
-          WCPServices().getEligibilityConsentMetadata(
-            studyId: (Study.currentStudy?.studyId)!,
-            delegate: self as NMWebServiceDelegate
-          )
+          // check if rejoining is allowed after withrdrawn from study
+          if currentStudy.studySettings.rejoinStudyAfterWithdrawn {
+            WCPServices().getEligibilityConsentMetadata(
+              studyId: (Study.currentStudy?.studyId)!,
+              delegate: self as NMWebServiceDelegate
+            )
+          } else {
+            UIUtilities.showAlertWithTitleAndMessage(
+              title: "",
+              message: NSLocalizedString(kMessageForStudyWithdrawnState, comment: "")
+                as NSString
+            )
+          }
         }
       case .paused:
         UIUtilities.showAlertWithTitleAndMessage(
@@ -756,13 +765,6 @@ class StudyHomeViewController: UIViewController {
     }
     if htmlText != nil {
       webView.htmlString = htmlText
-      let regex = "<[^>]+>"
-      let detailText = htmlText ?? ""
-      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) != nil {
-        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
-          webView.htmlString = "\(valReConversiontoHTMLfromHTML)"
-        }
-      }
     }
     navigationController?.present(webViewController, animated: true, completion: nil)
   }
@@ -1245,7 +1247,9 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           let currentStatus = Study.currentStudy?.userParticipateState.status
           if currentStatus == .yetToEnroll
             || currentStatus == .notEligible
-            || currentStatus == .withdrawn
+            || (currentStatus == .withdrawn
+              && Study.currentStudy?.studySettings
+                .rejoinStudyAfterWithdrawn ?? false)
           {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 

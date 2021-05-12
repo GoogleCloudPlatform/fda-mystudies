@@ -38,7 +38,7 @@ let kFetalKickActivityId = "FetalKickActivityId"
 let kFetalkickStudyId = "FetalKickStudyId"
 let kFetalKickCounterValue = "FetalKickCounterValue"
 let kFetalKickCounterRunId = "FetalKickCounterRunid"
-let kSelectTimeLabel = "Select a time"
+let kSelectTimeLabel = "Select Time"
 
 class FetalKickCounterStepViewController: ORKStepViewController {
 

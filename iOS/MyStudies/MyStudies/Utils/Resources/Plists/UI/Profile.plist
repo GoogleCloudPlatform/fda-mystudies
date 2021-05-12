@@ -22,15 +22,15 @@
 	</dict>
 	<dict>
 		<key>LabelName</key>
-		<string>Use passcode to access the app?</string>
+		<string>Use Passcode to access app</string>
 	</dict>
 	<dict>
 		<key>LabelName</key>
-		<string>Receive push notifications?</string>
+		<string>Receive Push Notifications?</string>
 	</dict>
 	<dict>
 		<key>LabelName</key>
-		<string>Receive study activity reminders?</string>
+		<string>Receive Study Activity Reminders?</string>
 	</dict>
 </array>
 </plist>
