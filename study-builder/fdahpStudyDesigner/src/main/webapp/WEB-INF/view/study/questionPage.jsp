@@ -3634,6 +3634,28 @@ if(document.getElementById("singleSelect").checked==true){
     }
   }
 
+  var today, datepicker;
+  today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  
+  $('#minDateId').datetimepicker({
+      minDate: today,
+      ignoreReadonly: true,
+      useCurrent: false,
+    });
+
+  $('#maxDateId').datetimepicker({
+      minDate: today,
+      ignoreReadonly: true,
+      useCurrent: false,
+    });
+
+  $('#defaultDate').datetimepicker({
+      minDate: today,
+      ignoreReadonly: true,
+      useCurrent: false,
+    });
+
+  
   function setResponseDate(type) {
 
     if (type == 'Date-Time') {
