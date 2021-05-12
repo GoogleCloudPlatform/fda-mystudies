@@ -4,17 +4,6 @@ def apikeyPropertiesFile = rootProject.file("api.properties");
 def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 android {
-    productFlavors {
-        fda {
-            dimension 'version'
-            // Update `applicationId` with your Applicaiton ID (see https://developer.android.com/studio/build/application-id)
-            // For example, you could set `applicationId` to "<prefix>_<env>.<domain>" or "com.<domain>.<subdomain>"
-            applicationId "YOUR_APPLICATION_ID"
-            versionCode 15
-            versionName "1.0"
-        }
-    }
-    
     compileSdkVersion 29
     buildToolsVersion "28.0.3"
     defaultConfig {
@@ -66,6 +55,14 @@ android {
         }
     }
     flavorDimensions("version")
+    productFlavors {
+        fda {
+            dimension 'version'
+            applicationId "com.google.FDAMyStudies"
+            versionCode 15
+            versionName "1.0"
+        }
+    }
 }
 
 dependencies {

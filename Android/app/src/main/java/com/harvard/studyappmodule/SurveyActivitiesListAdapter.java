@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,7 +11,6 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package com.harvard.studyappmodule;
@@ -89,8 +88,7 @@ public class SurveyActivitiesListAdapter
   }
 
   @Override
-  public void clicked(int positon) {
-  }
+  public void clicked(int positon) {}
 
   class Holder extends RecyclerView.ViewHolder {
     final RelativeLayout stateLayout;
@@ -243,7 +241,7 @@ public class SurveyActivitiesListAdapter
                 context.getResources().getString(R.string.run)
                         + ": "
                         + currentRunStatusForActivities.get(position).getCurrentRunId()
-                        + " of "
+                        + "/"
                         + currentRunStatusForActivities.get(position).getTotalRun()
                         + ", "
                         + currentRunStatusForActivities.get(position).getCompletedRun()
@@ -473,39 +471,23 @@ public class SurveyActivitiesListAdapter
                                         .toString()
                                         .split("\\.")[0]);
               }
-              if (i < items
-                      .get(position)
-                      .getFrequency()
-                      .getRuns().size() - 1) {
-                pos = checkCurrentTimeInBetweenDates(items
-                        .get(position)
-                        .getFrequency()
-                        .getRuns()
-                        .get(i)
-                        .getStartTime()
-                        .split("\\.")[0], items
-                        .get(position)
-                        .getFrequency()
-                        .getRuns()
-                        .get(i + 1)
-                        .getStartTime()
-                        .split("\\.")[0], i);
-              } else {
-                pos = checkCurrentTimeInBetweenDates(items
-                        .get(position)
-                        .getFrequency()
-                        .getRuns()
-                        .get(i)
-                        .getStartTime()
-                        .split("\\.")[0], items
-                        .get(position)
-                        .getFrequency()
-                        .getRuns()
-                        .get(i)
-                        .getEndTime()
-                        .split("\\.")[0], i);
-              }
-
+              pos =
+                      checkCurrentTimeInBetweenDates(
+                              items
+                                      .get(position)
+                                      .getFrequency()
+                                      .getRuns()
+                                      .get(i)
+                                      .getStartTime()
+                                      .split("\\.")[0],
+                              items
+                                      .get(position)
+                                      .getFrequency()
+                                      .getRuns()
+                                      .get(i)
+                                      .getEndTime()
+                                      .split("\\.")[0],
+                              i);
               finalTime = startTime + " to " + endTime;
               mScheduledTime.add(finalTime);
 
@@ -564,45 +546,6 @@ public class SurveyActivitiesListAdapter
                                                   .getEndTime()
                                                   .toString()
                                                   .split("\\.")[0])));
-
-                  if ((currentRunStatusForActivities
-                          .get(position)
-                          .getStatus()
-                          .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
-                          .get(position)
-                          .getStatus()
-                          .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) && pos < items
-                          .get(position)
-                          .getFrequency()
-                          .getRuns()
-                          .size() && status
-                          .get(position)
-                          .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT) || currentRunStatusForActivities
-                          .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
-                    holder.date.setText(
-                            simpleDateFormatForOtherFreq.format(
-                                    simpleDateFormat5.parse(
-                                            items
-                                                    .get(position)
-                                                    .getFrequency()
-                                                    .getRuns()
-                                                    .get(pos + 1)
-                                                    .getStartTime()
-                                                    .toString()
-                                                    .split("\\.")[0]))
-                                    + " to "
-                                    + simpleDateFormatForOtherFreq.format(
-                                    simpleDateFormat5.parse(
-                                            items
-                                                    .get(position)
-                                                    .getFrequency()
-                                                    .getRuns()
-                                                    .get(pos + 1)
-                                                    .getEndTime()
-                                                    .toString()
-                                                    .split("\\.")[0])));
-                  }
-
                 }
 
                 if (pos > 0) {
@@ -632,44 +575,6 @@ public class SurveyActivitiesListAdapter
                             simpleDateFormatForOtherFreq.format(d1)
                                     + " to "
                                     + simpleDateFormatForOtherFreq.format(d2));
-
-                    if ((currentRunStatusForActivities
-                            .get(position)
-                            .getStatus()
-                            .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
-                            .get(position)
-                            .getStatus()
-                            .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) && pos < items
-                            .get(position)
-                            .getFrequency()
-                            .getRuns()
-                            .size() && status
-                            .get(position)
-                            .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT) || currentRunStatusForActivities
-                            .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
-                      holder.date.setText(
-                              simpleDateFormatForOtherFreq.format(
-                                      simpleDateFormat5.parse(
-                                              items
-                                                      .get(position)
-                                                      .getFrequency()
-                                                      .getRuns()
-                                                      .get(pos + 1)
-                                                      .getStartTime()
-                                                      .toString()
-                                                      .split("\\.")[0]))
-                                      + " to "
-                                      + simpleDateFormatForOtherFreq.format(
-                                      simpleDateFormat5.parse(
-                                              items
-                                                      .get(position)
-                                                      .getFrequency()
-                                                      .getRuns()
-                                                      .get(pos + 1)
-                                                      .getEndTime()
-                                                      .toString()
-                                                      .split("\\.")[0])));
-                    }
                   } catch (Exception e) {
                     Logger.log(e);
                   }
@@ -711,12 +616,15 @@ public class SurveyActivitiesListAdapter
           int totalRunVal = currentRunStatusForActivities.get(position).getTotalRun();
           if (click) {
             click = false;
-            new Handler().postDelayed(new Runnable() {
-              @Override
-              public void run() {
-                click = true;
-              }
-            }, 1500);
+            new Handler()
+                    .postDelayed(
+                         new Runnable() {
+                            @Override
+                              public void run() {
+                              click = true;
+                            }
+                          },
+                            1500);
             if (paused) {
               Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
             } else {
@@ -784,9 +692,7 @@ public class SurveyActivitiesListAdapter
           }
           CustomActivitiesDailyDialogClass c =
                   new CustomActivitiesDailyDialogClass(
-                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this, status
-                          .get(holder.getAdapterPosition()), currentRunStatusForActivities
-                          .get(holder.getAdapterPosition()));
+                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this);
           c.show();
         }
       });
@@ -807,25 +713,6 @@ public class SurveyActivitiesListAdapter
             holder.itemlayout.setBackgroundColor(Color.parseColor("#c6ccd0"));
             holder.box1.setAlpha(.5f);
             holder.box2.setAlpha(.5f);
-
-            if (currentRunStatusForActivities.get(position).getCurrentRunId() <= currentRunStatusForActivities.get(position).getTotalRun()) {
-              holder.run.setText(
-                      context.getResources().getString(R.string.run)
-                              + ": "
-                              + (currentRunStatusForActivities.get(position).getCurrentRunId() + 1)
-                              + " of "
-                              + currentRunStatusForActivities.get(position).getTotalRun()
-                              + ", "
-                              + currentRunStatusForActivities.get(position).getCompletedRun()
-                              + " "
-                              + context.getResources().getString(R.string.done2)
-                              + ", "
-                              + currentRunStatusForActivities.get(position).getMissedRun()
-                              + " "
-                              + context.getResources().getString(R.string.missed));
-              holder.process.setText(R.string.start);
-              bgShape.setColor(context.getResources().getColor(R.color.colorPrimary));
-            }
           } else {
             holder.container.setBackgroundColor(context.getResources().getColor(R.color.white));
             holder.itemlayout.setBackgroundColor(context.getResources().getColor(R.color.white));

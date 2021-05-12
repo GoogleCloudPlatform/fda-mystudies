@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -136,6 +136,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 intent.putExtra("studyStatus", ((SurveyActivity) context).getStudyStatus());
                 intent.putExtra("position", "" + ((SurveyActivity) context).getPosition());
                 intent.putExtra("enroll", "" + ((SurveyActivity) context).getTitle1());
+                intent.putExtra("rejoin", "" + ((SurveyActivity) context).getTitle1());
                 intent.putExtra("about_this_study", true);
                 (context).startActivity(intent);
 
@@ -156,31 +157,22 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                   .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.leave_study))) {
 
-                String message;
-                if (items
-                        .get(i)
-                        .getTitle()
-                        .equalsIgnoreCase(context.getResources().getString(R.string.leave_study))
-                        && AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_standalone))) {
-                  message = context.getString(R.string.leaveStudyDeleteAccount);
-                } else {
-                  message = context.getString(R.string.leaveStudy);
-                }
+                String message = ((SurveyResourcesFragment) fragment).getLeaveStudyMessage();
                 AlertDialog.Builder builder =
                     new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
                 builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
                 builder.setMessage(message);
                 builder.setPositiveButton(
-                    context.getResources().getString(R.string.yes),
+                    context.getResources().getString(R.string.proceed_caps),
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
-                        ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy();
+                        typeUserShowDialog();
                       }
                     });
 
                 builder.setNegativeButton(
-                    context.getResources().getString(R.string.cancel),
+                    context.getResources().getString(R.string.cancel_caps),
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
@@ -194,6 +186,72 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
           });
     } catch (Exception e) {
       Logger.log(e);
+    }
+  }
+
+  private void typeUserShowDialog() {
+    try {
+      String withdrawalType = ((SurveyResourcesFragment) fragment).getType();
+      switch (withdrawalType) {
+        case "ask_user":
+          showDialog(3);
+          break;
+        case "delete_data":
+          showDialog(2);
+
+          break;
+        case "no_action":
+          showDialog(1);
+          break;
+      }
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+  }
+
+  private void showDialog(int count) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
+    // withdrawalType ask_user
+    if (count == 3) {
+      builder.setMessage(
+          context.getResources().getString(R.string.leave_study_retained_or_deleted_message));
+
+      builder.setPositiveButton(
+          context.getResources().getString(R.string.retain_my_data_caps),
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("false");
+            }
+          });
+
+      builder.setNeutralButton(
+          context.getResources().getString(R.string.cancel_caps),
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.cancel();
+            }
+          });
+
+      builder.setNegativeButton(
+          context.getResources().getString(R.string.delete_my_data_caps),
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("true");
+              dialog.cancel();
+            }
+          });
+
+      AlertDialog diag = builder.create();
+      diag.show();
+    } else if (count == 2) {
+      // withdrawalType delete_data
+      ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("true");
+    } else if (count == 1) {
+      // withdrawalType no_action
+      ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("false");
     }
   }
 }

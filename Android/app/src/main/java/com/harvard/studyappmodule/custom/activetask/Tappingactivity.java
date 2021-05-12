@@ -299,11 +299,7 @@ public class Tappingactivity implements StepBody {
     } else {
       TappingResultFormat tappingResultFormat = new TappingResultFormat();
       tappingResultFormat.setDuration("" + finalSecond);
-      if (kickcounter.getText().toString().trim().equalsIgnoreCase("")) {
-        tappingResultFormat.setValue(0);
-      } else {
-        tappingResultFormat.setValue(Double.parseDouble(kickcounter.getText().toString()));
-      }
+      tappingResultFormat.setValue(Double.parseDouble(kickcounter.getText().toString()));
       result.setResult(tappingResultFormat);
     }
     return result;
@@ -393,7 +389,7 @@ public class Tappingactivity implements StepBody {
         .setMessage(message)
         .setCancelable(false)
         .setPositiveButton(
-            context.getString(R.string.proceed),
+            "Proceed",
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
                 ((CustomSurveyViewTaskActivity) context)
@@ -401,7 +397,7 @@ public class Tappingactivity implements StepBody {
               }
             })
         .setNegativeButton(
-            context.getString(R.string.edit),
+            "EDIT",
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

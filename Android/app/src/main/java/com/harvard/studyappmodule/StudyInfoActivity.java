@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,7 +11,6 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package com.harvard.studyappmodule;
@@ -95,6 +94,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private String position = "";
   private String title = "";
   private String enroll = "";
+  private String rejoin = "";
   private AppCompatTextView joinButton;
   private StudyHome studyHome;
   private ConsentDocumentData consentDocumentData;
@@ -129,6 +129,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       position = getIntent().getStringExtra("position");
       title = getIntent().getStringExtra("title");
       enroll = getIntent().getStringExtra("enroll");
+      rejoin = getIntent().getStringExtra("rejoin");
       aboutThisStudy = getIntent().getBooleanExtra("about_this_study", false);
     } catch (Exception e) {
       Logger.log(e);
@@ -217,6 +218,10 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                   getIntent().getStringExtra("enroll"));
               SharedPreferenceHelper.writePreference(
                   StudyInfoActivity.this,
+                  "login_studyinfo_rejoin",
+                  getIntent().getStringExtra("rejoin"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
                   "login_studyinfo_about_this_study",
                   "" + getIntent().getBooleanExtra("about_this_study", false));
 
@@ -299,6 +304,9 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
     } else if (status.equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
+    } else if (rejoin.equalsIgnoreCase("false")
+        && studyStatus.equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
+      Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT).show();
     } else {
       if (eligibilityConsent.getEligibility().getType().equalsIgnoreCase("token")) {
         Intent intent = new Intent(StudyInfoActivity.this, EligibilityEnrollmentActivity.class);
@@ -657,6 +665,9 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
         } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
           Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
+        } else if (!studyList.getSetting().getRejoin()
+            && studyList.getStudyStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
+          Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT).show();
         } else {
           new CallConsentMetaData(false).execute();
         }

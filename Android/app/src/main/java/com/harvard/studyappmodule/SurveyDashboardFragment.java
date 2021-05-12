@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,7 +11,6 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 package com.harvard.studyappmodule;
@@ -193,7 +192,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     setStudyStatus();
     setParticipationStatus();
     getDashboardData();
-    nextDateLayout.setVisibility(View.INVISIBLE);
     return view;
   }
 
@@ -425,7 +423,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           @Override
           public void onClick(View view) {
             if (!dateType.equalsIgnoreCase(DAY)) {
-              nextDateLayout.setVisibility(View.INVISIBLE);
               setDay();
               addViewStatisticsValuesRefresh();
             }
@@ -437,7 +434,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           @Override
           public void onClick(View view) {
             if (!dateType.equalsIgnoreCase(WEEK)) {
-              nextDateLayout.setVisibility(View.INVISIBLE);
               setWeek();
               addViewStatisticsValuesRefresh();
             }
@@ -449,7 +445,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           public void onClick(View view) {
             try {
               if (!dateType.equalsIgnoreCase(MONTH)) {
-                nextDateLayout.setVisibility(View.INVISIBLE);
                 setMonth();
                 addViewStatisticsValuesRefresh();
               }
@@ -462,7 +457,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            nextDateLayout.setVisibility(View.VISIBLE);
+
             if (dateType.equalsIgnoreCase(DAY)) {
               try {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
@@ -554,11 +549,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
                   changeDateLabel.setText(simpleDateFormat.format(calendarStart.getTime()));
                   addViewStatisticsValuesRefresh();
-
-                  calendarStart.add(Calendar.DATE, 1);
-                  if (calendarStart.getTime().after(new Date())) {
-                    nextDateLayout.setVisibility(View.INVISIBLE);
-                  }
                 }
               } catch (ParseException e) {
                 Logger.log(e);
@@ -592,11 +582,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                             + simpleDateFormat.format(calendarEnd.getTime()));
                   }
                   addViewStatisticsValuesRefresh();
-
-                  calendarStart.add(Calendar.DATE, 7);
-                  if (calendarStart.getTime().after(new Date())) {
-                    nextDateLayout.setVisibility(View.INVISIBLE);
-                  }
                 }
               } catch (ParseException e) {
                 Logger.log(e);
@@ -621,11 +606,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                   changeDateLabel.setText(
                       dateFormatForChartAndStat.format(calendarStart.getTime()));
                   addViewStatisticsValuesRefresh();
-
-                  calendarStart.add(Calendar.MONTH, 1);
-                  if (calendarStart.getTime().after(new Date())) {
-                    nextDateLayout.setVisibility(View.INVISIBLE);
-                  }
                 }
               } catch (ParseException e) {
                 Logger.log(e);
@@ -1220,12 +1200,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
     fromDayVal = dateFormatForApi.format(calendar.getTime());
 
-    SimpleDateFormat simpleDateFormat =
-            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-    String text =
-            simpleDateFormat.format(calendar.getTime()) + " - " + simpleDateFormat.format(new Date());
-    changeDateLabel.setText(text);
-
     calendar.add(Calendar.DATE, 6);
     calendar.set(Calendar.HOUR_OF_DAY, 23);
     calendar.set(Calendar.MINUTE, 59);
@@ -1233,6 +1207,11 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     calendar.set(Calendar.MILLISECOND, 999);
     toDayVal = dateFormatForApi.format(calendar.getTime());
 
+    SimpleDateFormat simpleDateFormat =
+        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+    String text =
+        simpleDateFormat.format(calendar.getTime()) + " - " + simpleDateFormat.format(new Date());
+    changeDateLabel.setText(text);
     setColorForSelectedDayMonthYear(weekLayout);
     dateType = WEEK;
   }
@@ -1250,10 +1229,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     fromDayVal = simpleDateFormat.format(calendar.getTime());
     toDayVal = simpleDateFormat.format(new Date());
 
-    SimpleDateFormat dateFormatForChartAndStat = AppController.getDateFormatForChartAndStat();
-    String text = dateFormatForChartAndStat.format(calendar.getTime());
-    changeDateLabel.setText(text);
-
     calendar.add(Calendar.MONTH, 1);
     calendar.add(Calendar.DATE, -1);
     calendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -1262,6 +1237,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     calendar.set(Calendar.MILLISECOND, 999);
     toDayVal = simpleDateFormat.format(calendar.getTime());
 
+    SimpleDateFormat dateFormatForChartAndStat = AppController.getDateFormatForChartAndStat();
+    String text = dateFormatForChartAndStat.format(calendar.getTime());
+    changeDateLabel.setText(text);
     setColorForSelectedDayMonthYear(monthLayout);
     dateType = MONTH;
   }
