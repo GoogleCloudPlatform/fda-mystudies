@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,6 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Transactional()
   public ErrorBean updateUserProfile(String userId, UserRequestBean user) {
     logger.entry("Begin updateUserProfile()");
-    logger.info("Begin updateUserProfile() in service class");
     ErrorBean errorBean = null;
     UserDetailsEntity userDetails = null;
     AuthInfoEntity authInfo = null;
@@ -256,6 +256,10 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     }
 
     userDetailsId = commonDao.getUserInfoDetails(userId);
+
+    logger.info(
+        "deactivateAcctBean Request=" + ReflectionToStringBuilder.toString(deactivateAcctBean));
+    logger.info("deactivateAcctBean Request=" + deactivateAcctBean.toString());
 
     if (deactivateAcctBean != null
         && deactivateAcctBean.getStudyData() != null

@@ -150,6 +150,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                     ParticipantStudyEntity::getStudyId,
                     Function.identity(),
                     (existing, replacement) -> existing));
+
     try {
       for (StudiesBean studyBean : studiesBeenList) {
         String participantId =
@@ -227,6 +228,7 @@ public class StudyStateServiceImpl implements StudyStateService {
           studyStateBean.setHashedToken(
               EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
         }
+
         if (participantStudy.getStudy() != null) {
           studyStateBean.setStudyId(participantStudy.getStudy().getCustomId());
         }

@@ -69,7 +69,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(
     tags = "Consent",
     value = "consent management",
-    description = "Operations pertaining to consent document")
+    description = "Operations pertaining to save or retrive consent document")
 @RestController
 public class UserConsentManagementController {
 
@@ -96,8 +96,7 @@ public class UserConsentManagementController {
 
   private static final String BEGIN_REQUEST_LOG = "%s request";
 
-  @ApiOperation(
-      value = "Update consent status and store the consent document in Google Cloud Storage (GCS)")
+  @ApiOperation(value = "save consent document in cloud")
   @PostMapping(
       value = "/updateEligibilityConsentStatus",
       consumes = "application/json",
@@ -157,6 +156,7 @@ public class UserConsentManagementController {
       studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
       studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
       if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
+        //        String underDirectory = userId + "/" + consentStatusBean.getStudyId();
         String underDirectory =
             studyInfo.getCustomId()
                 + "/"
@@ -227,7 +227,7 @@ public class UserConsentManagementController {
     }
   }
 
-  @ApiOperation(value = "Returns a response related to consent document")
+  @ApiOperation(value = "fetch consent document")
   @GetMapping(value = "/consentDocument", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getStudyConsentPdf(
       @RequestHeader("userId") String userId,

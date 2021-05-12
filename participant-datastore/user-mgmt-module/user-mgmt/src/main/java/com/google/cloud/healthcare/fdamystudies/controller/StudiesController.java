@@ -53,7 +53,7 @@ public class StudiesController {
 
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
-  @ApiOperation(value = "Add or update metadata details of the study")
+  @ApiOperation(value = "Add or update studymetadata")
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
       @Valid @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request) {
@@ -74,13 +74,12 @@ public class StudiesController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
-  @ApiOperation(value = "Sends notifications to users")
+  @ApiOperation(value = "Send Notification")
   @PostMapping("/sendNotification")
   public ResponseEntity<?> SendNotification(
       @Valid @RequestBody NotificationForm notificationForm, HttpServletRequest request)
       throws IOException {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    logger.info("SendNotification()");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userMgmntAuditHelper.logEvent(NOTIFICATION_METADATA_RECEIVED, auditRequest);

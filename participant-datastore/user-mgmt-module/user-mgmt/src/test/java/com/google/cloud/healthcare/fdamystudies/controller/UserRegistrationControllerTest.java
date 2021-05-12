@@ -113,8 +113,9 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForInvalidPassword() throws Exception {
+
+    // invalid  password
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-    headers.add("appName", "AppName_BTCDEV001");
 
     // invalid  password
     String requestJson = getRegisterUser("mockito123@gmail.com", Constants.INVALID_PASSWORD);
@@ -133,7 +134,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnBadRequestForEmailExists() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-    headers.add("appName", "AppName_BTCDEV001");
 
     // user exists
     String requestJson = getRegisterUser(Constants.EMAIL_ID, Constants.PASSWORD);
@@ -161,7 +161,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Test
   public void shouldRegisterUser() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-    headers.add("appName", "AppName_BTCDEV001");
 
     String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
     MvcResult result =

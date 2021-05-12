@@ -129,7 +129,6 @@ public class UserProfileController {
       @Context HttpServletResponse response,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    logger.info("Begin updateUserProfile()");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(userId);
 
@@ -188,9 +187,9 @@ public class UserProfileController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resendConfirmation(
       @RequestHeader("appId") String appId,
+      @RequestHeader String appName,
       @Valid @RequestBody ResetPasswordBean resetPasswordBean,
       @Context HttpServletResponse response,
-      @RequestHeader String appName,
       HttpServletRequest request)
       throws Exception {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));

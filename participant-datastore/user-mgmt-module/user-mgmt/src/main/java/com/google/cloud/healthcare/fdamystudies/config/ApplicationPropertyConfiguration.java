@@ -31,10 +31,10 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${messaging.fcm.url}")
   private String apiUrlFcm;
-
+  //
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;
-
+  //
   @Value("${ios.push.notification.type}")
   private String iosPushNotificationType;
 

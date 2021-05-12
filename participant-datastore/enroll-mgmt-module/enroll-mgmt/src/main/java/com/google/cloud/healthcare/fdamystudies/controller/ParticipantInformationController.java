@@ -57,7 +57,7 @@ public class ParticipantInformationController {
 
   @Autowired private StudyRepository studyRepository;
 
-  @ApiOperation(value = "Returns a response containing participant's enrollment details")
+  @ApiOperation(value = "fetch participant's enrollment details")
   @GetMapping(value = "/participantInfo", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getParticipantDetails(
       @RequestParam(name = "studyId") String studyId,
