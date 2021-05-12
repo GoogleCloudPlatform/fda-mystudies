@@ -519,9 +519,16 @@ public class StudyActiveTasksController {
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
-              request
-                  .getSession()
-                  .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully");
+              if (ADD.equalsIgnoreCase(activeTaskBo.getActionPage())) {
+                request
+                    .getSession()
+                    .setAttribute(sessionStudyCount + "sucMsg", "Active task created successfully");
+              } else {
+                request
+                    .getSession()
+                    .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully");
+              }
+
               return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
             } else {
               StudyBuilderAuditEvent event =
