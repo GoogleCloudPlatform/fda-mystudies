@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -47,11 +47,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 @Api(
     tags = "Users",
     value = "user management in auth server",
     description = "Operations pertaining to users in auth server")
-@RestController
 public class UserController {
 
   private static final String STATUS_LOG = "status=%d";

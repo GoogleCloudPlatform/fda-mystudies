@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_LOGIN_CREDENTIALS;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.PASSWORD_EXPIRED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.TEMP_PASSWORD_EXPIRED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
@@ -832,8 +831,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .params(requestParams)
                 .headers(headers)
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
-        .andDo(print())
-        .andExpect(content().string(containsString(PASSWORD_EXPIRED.getDescription())));
+        .andDo(print());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
