@@ -58,7 +58,7 @@ public class LocationController {
 
   @Autowired private LocationService locationService;
 
-  @ApiOperation(value = "Valid data submitted to this resource will create a new location")
+  @ApiOperation(value = "create a new location")
   @PostMapping("/locations")
   @ResponseStatus(HttpStatus.CREATED)
   public LocationDetailsResponse addNewLocation(
@@ -77,7 +77,7 @@ public class LocationController {
     return LocationMapper.toLocationDetailsResponse(created, MessageCode.ADD_LOCATION_SUCCESS);
   }
 
-  @ApiOperation(value = "Updates existing location")
+  @ApiOperation(value = "update existing location")
   @PutMapping("/locations/{locationId}")
   public ResponseEntity<LocationDetailsResponse> updateLocation(
       @RequestHeader(name = USER_ID_HEADER) String userId,
@@ -99,7 +99,7 @@ public class LocationController {
     return ResponseEntity.status(locationResponse.getHttpStatusCode()).body(locationResponse);
   }
 
-  @ApiOperation(value = "Returns a list of location details")
+  @ApiOperation(value = "fetch location details")
   @GetMapping(value = {"/locations"})
   public ResponseEntity<LocationResponse> getLocations(
       @RequestHeader(name = USER_ID_HEADER) String userId,
@@ -144,7 +144,7 @@ public class LocationController {
     return ResponseEntity.status(locationResponse.getHttpStatusCode()).body(locationResponse);
   }
 
-  @ApiOperation(value = "Returns a response containing location based on location id")
+  @ApiOperation(value = "fetch location based on location id")
   @GetMapping(value = {"/locations/{locationId}"})
   public ResponseEntity<LocationDetailsResponse> getLocationById(
       @RequestHeader(name = USER_ID_HEADER) String userId,

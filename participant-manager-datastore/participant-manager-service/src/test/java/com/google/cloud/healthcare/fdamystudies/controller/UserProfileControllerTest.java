@@ -456,7 +456,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(user.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ADMIN_DEACTIVATED.getEventCode(), auditRequest);
@@ -499,7 +499,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(user.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ADMIN_REACTIVATED.getEventCode(), auditRequest);

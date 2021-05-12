@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -54,7 +54,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
@@ -1197,8 +1196,7 @@ public class SiteServiceImpl implements SiteService {
       if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
         StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
         studyDetail.setLogoImageUrl(
-            participantManagerUtil.getSignedUrl(
-                studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+            participantManagerUtil.getSignedUrl(studySiteInfo.getLogoImageUrl(), 12));
         studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
 
@@ -1245,8 +1243,7 @@ public class SiteServiceImpl implements SiteService {
         if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
           StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
           studyDetail.setLogoImageUrl(
-              participantManagerUtil.getSignedUrl(
-                  studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+              participantManagerUtil.getSignedUrl(studySiteInfo.getLogoImageUrl(), 12));
           studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
         StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
@@ -1294,7 +1291,6 @@ public class SiteServiceImpl implements SiteService {
       site.setInvited(invitedCount);
       site.setEnrolled(enrolledCount);
     }
-
     if (site.getInvited() != null && site.getEnrolled() != null) {
       if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
         Double percentage =

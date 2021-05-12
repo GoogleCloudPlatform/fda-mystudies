@@ -36,7 +36,7 @@ public class ConsentController {
 
   @Autowired private ConsentService consentService;
 
-  @ApiOperation(value = "Returns a response of encoded base 64 consent document")
+  @ApiOperation(value = "fetch consent document")
   @GetMapping("/consents/{consentId}/consentDocument")
   public ResponseEntity<ConsentDocumentResponse> getConsentDocument(
       @PathVariable String consentId,

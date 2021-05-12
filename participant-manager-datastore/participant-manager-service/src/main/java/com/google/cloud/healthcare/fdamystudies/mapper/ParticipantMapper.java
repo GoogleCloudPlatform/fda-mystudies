@@ -195,7 +195,7 @@ public final class ParticipantMapper {
     participantDetail.setOnboardingStatus(status);
 
     ParticipantStudyEntity participantStudy = participantRegistry.getParticipantStudies().get(0);
-
+    
     if (participantRegistry.getStudy().getType().equals(CommonConstants.OPEN_STUDY)
         && !EnrollmentStatus.ENROLLED.getStatus().equals(participantStudy.getStatus())) {
       participantDetail.setEnrollmentStatus(EnrollmentStatus.WITHDRAWN.getDisplayValue());

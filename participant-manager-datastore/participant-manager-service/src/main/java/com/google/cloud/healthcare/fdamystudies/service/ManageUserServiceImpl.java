@@ -141,6 +141,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       Map<String, String> map = new HashMap<>();
       map.put(CommonConstants.NEW_USER_ID, userResponse.getUserId());
       map.put("new_user_access_level", accessLevel);
+      logger.info("userId" + userResponse.getUserId());
       participantManagerHelper.logEvent(NEW_ADMIN_ADDED, auditRequest, map);
     }
 
@@ -893,8 +894,8 @@ public class ManageUserServiceImpl implements ManageUserService {
                 ? NEW_ADMIN_INVITATION_EMAIL_SENT
                 : ACCOUNT_UPDATE_EMAIL_SENT;
 
-        logAuditEvent(adminRecordToSendEmail, admin, auditEnum);
-
+        invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
+        //        logger.info("audit Request=" + ReflectionToStringBuilder.toString(auditEnum));
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
         auditEnum =
@@ -904,12 +905,12 @@ public class ManageUserServiceImpl implements ManageUserService {
                 ? NEW_ADMIN_INVITATION_EMAIL_FAILED
                 : ACCOUNT_UPDATE_EMAIL_FAILED;
         userAccountEmailSchedulerTaskRepository.updateStatus(adminRecordToSendEmail.getUserId(), 0);
-        logAuditEvent(adminRecordToSendEmail, admin, auditEnum);
+        invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
       }
     }
   }
 
-  private void logAuditEvent(
+  private void invokeAuditEvent(
       UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail,
       UserRegAdminEntity admin,
       ParticipantManagerEvent auditEnum) {

@@ -65,7 +65,7 @@ public class SiteController {
 
   @Autowired private SiteService siteService;
 
-  @ApiOperation(value = "Creates a new site for a study based on permission")
+  @ApiOperation(value = "create a new site for a study")
   @PostMapping(
       value = "/sites",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -86,7 +86,7 @@ public class SiteController {
     return ResponseEntity.status(siteResponse.getHttpStatusCode()).body(siteResponse);
   }
 
-  @ApiOperation(value = "Add a new participant for a site")
+  @ApiOperation(value = "add a new participant for a site")
   @PostMapping(
       value = "/sites/{siteId}/participants",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -106,7 +106,7 @@ public class SiteController {
     return ResponseEntity.status(participantResponse.getHttpStatusCode()).body(participantResponse);
   }
 
-  @ApiOperation(value = "Returns a list of site participants with onboarding status")
+  @ApiOperation(value = "fetch participants related to particular site")
   @GetMapping(value = "/sites/{siteId}/participants", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ParticipantRegistryResponse> getSiteParticipant(
       @PathVariable String siteId,
@@ -129,7 +129,7 @@ public class SiteController {
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
 
-  @ApiOperation(value = "Activate/Deactivate's site for a study")
+  @ApiOperation(value = "Activate/Deactivate site for a study")
   @PutMapping(
       value = "/sites/{siteId}/decommission",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -149,7 +149,7 @@ public class SiteController {
         .body(decomissionSiteResponse);
   }
 
-  @ApiOperation(value = "Returns participant details with enrollment history")
+  @ApiOperation(value = "fetch participant details with enrollment history")
   @GetMapping("/sites/{participantRegistrySiteId}/participant")
   public ResponseEntity<ParticipantDetailResponse> getParticipantDetails(
       @PathVariable String participantRegistrySiteId,
@@ -166,7 +166,7 @@ public class SiteController {
     return ResponseEntity.status(participantDetails.getHttpStatusCode()).body(participantDetails);
   }
 
-  @ApiOperation(value = "Send/Resend's invitation to participants")
+  @ApiOperation(value = "Send/Resend invitation to participants")
   @PostMapping("/sites/{siteId}/participants/invite")
   public ResponseEntity<InviteParticipantResponse> inviteParticipants(
       @Valid @RequestBody InviteParticipantRequest inviteParticipantRequest,
@@ -187,7 +187,7 @@ public class SiteController {
         .body(inviteParticipantResponse);
   }
 
-  @ApiOperation(value = "Imports participants from a file")
+  @ApiOperation(value = "import participants from file")
   @PostMapping(
       value = "/sites/{siteId}/participants/import",
       produces = MediaType.APPLICATION_JSON_VALUE)
@@ -205,7 +205,7 @@ public class SiteController {
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
 
-  @ApiOperation(value = "Updates onbording status for a participant")
+  @ApiOperation(value = "update onbording status for a participant")
   @PatchMapping("/sites/{siteId}/participants/status")
   public ResponseEntity<ParticipantStatusResponse> updateOnboardingStatus(
       @PathVariable String siteId,
@@ -224,7 +224,7 @@ public class SiteController {
     return ResponseEntity.status(response.getHttpStatusCode()).body(response);
   }
 
-  @ApiOperation(value = "Returns a response containing list of sites based on permission")
+  @ApiOperation(value = "fetch a list of sites that user have permissions")
   @GetMapping("/sites")
   public ResponseEntity<SiteDetailsResponse> getSites(
       @RequestHeader(name = USER_ID_HEADER) String userId,

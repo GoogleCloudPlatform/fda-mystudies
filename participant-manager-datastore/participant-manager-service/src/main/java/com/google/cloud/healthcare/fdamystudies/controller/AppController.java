@@ -50,7 +50,8 @@ public class AppController {
 
   private static final String BEGIN_REQUEST_LOG = "%s request";
 
-  @ApiOperation(value = "Returns a list of apps based on permissions")
+  @ApiOperation(
+      value = "fetch a list of apps that correspond to the Studies to which user have permissions")
   @GetMapping
   public ResponseEntity<AppResponse> getApps(
       @RequestHeader(name = USER_ID_HEADER) String userId,
@@ -78,7 +79,7 @@ public class AppController {
     return ResponseEntity.status(appResponse.getHttpStatusCode()).body(appResponse);
   }
 
-  @ApiOperation(value = "Returns a response of app registrants with enrolled studies and sites")
+  @ApiOperation(value = "fetch app registrants with enrolled studies")
   @GetMapping("/{appId}/participants")
   public ResponseEntity<AppParticipantsResponse> getAppParticipants(
       @PathVariable String appId,
