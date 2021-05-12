@@ -39,6 +39,7 @@ import com.hphc.mystudies.bean.DestinationBean;
 import com.hphc.mystudies.bean.FetalKickCounterFormatBean;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityStepsBean;
+import com.hphc.mystudies.bean.QuestionnaireStepsBean;
 import com.hphc.mystudies.bean.SpatialSpanMemoryFormatBean;
 import com.hphc.mystudies.bean.TowerOfHanoiFormatBean;
 import com.hphc.mystudies.bean.appendix.QuestionnaireActivityStructureBean;
@@ -1152,11 +1153,11 @@ public class ActivityMetaDataDao {
           String startDate =
               customFrequencyDto.getFrequencyStartDate()
                   + " "
-                  + customFrequencyDto.getFrequencyTime();
+                  + customFrequencyDto.getFrequencyStartTime();
           String endDate =
               customFrequencyDto.getFrequencyEndDate()
                   + " "
-                  + customFrequencyDto.getFrequencyTime();
+                  + customFrequencyDto.getFrequencyEndTime();
           manuallyScheduleBean.setStartTime(
               StudyMetaDataUtil.getFormattedDateTimeZone(
                   startDate,
@@ -1501,14 +1502,14 @@ public class ActivityMetaDataDao {
               StudyMetaDataUtil.getFormattedDateTimeZone(
                   customFrequencyDto.getFrequencyEndDate()
                       + " "
-                      + customFrequencyDto.getFrequencyTime(),
+                      + customFrequencyDto.getFrequencyEndTime(),
                   StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                   StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
           manuallyScheduleBean.setStartTime(
               StudyMetaDataUtil.getFormattedDateTimeZone(
                   customFrequencyDto.getFrequencyStartDate()
                       + " "
-                      + customFrequencyDto.getFrequencyTime(),
+                      + customFrequencyDto.getFrequencyStartTime(),
                   StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                   StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
           runDetailsBean.add(manuallyScheduleBean);
@@ -1954,8 +1955,8 @@ public class ActivityMetaDataDao {
                           + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
                       .toString());
           QuestionnaireActivityStepsBean formBean = new QuestionnaireActivityStepsBean();
-          List<QuestionnaireActivityStepsBean> formSteps = new ArrayList<>();
-          HashMap<Integer, QuestionnaireActivityStepsBean> formStepsMap = new HashMap<>();
+          List<QuestionnaireStepsBean> formSteps = new ArrayList<>();
+          HashMap<Integer, QuestionnaireStepsBean> formStepsMap = new HashMap<>();
 
           formBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM.toLowerCase());
           formBean.setResultType(StudyMetaDataConstants.RESULT_TYPE_GROUPED);
@@ -2003,8 +2004,7 @@ public class ActivityMetaDataDao {
                   .list();
           if ((formQuestionsList != null) && !formQuestionsList.isEmpty()) {
             for (QuestionsDto formQuestionDto : formQuestionsList) {
-              QuestionnaireActivityStepsBean formQuestionBean =
-                  new QuestionnaireActivityStepsBean();
+              QuestionnaireStepsBean formQuestionBean = new QuestionnaireStepsBean();
               formQuestionBean.setType(
                   StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION.toLowerCase());
               if (formQuestionDto.getResponseType() != null) {
@@ -2347,7 +2347,7 @@ public class ActivityMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + reponseType.getMaxImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                      12)));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
@@ -2357,7 +2357,7 @@ public class ActivityMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + reponseType.getMinImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                      12)));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
     }
@@ -2416,7 +2416,7 @@ public class ActivityMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + reponseType.getMaxImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                      12)));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
@@ -2426,7 +2426,7 @@ public class ActivityMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + reponseType.getMinImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                      12)));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
     }
@@ -2553,7 +2553,7 @@ public class ActivityMetaDataDao {
                           propMap.get("cloud.bucket.name"),
                           propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                               + subType.getImage(),
-                          StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                          12)));
           imageChoiceMap.put(
               "selectedImage",
               StringUtils.isEmpty(subType.getSelectedImage())
@@ -2563,7 +2563,7 @@ public class ActivityMetaDataDao {
                           propMap.get("cloud.bucket.name"),
                           propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                               + subType.getSelectedImage(),
-                          StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                          12)));
           imageChoiceMap.put(
               "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
           imageChoiceMap.put(
@@ -2995,13 +2995,13 @@ public class ActivityMetaDataDao {
             }
 
             startDateTime =
-                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyTime();
+                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyStartTime();
             endDateTime =
                 endDate
                     + " "
                     + activeTaskCustomFrequencyList
                         .get(activeTaskCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
+                        .getFrequencyEndTime();
           }
 
           activityBean.setStartTime(
@@ -3156,13 +3156,13 @@ public class ActivityMetaDataDao {
             }
 
             startDateTime =
-                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyTime();
+                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyStartTime();
             endDateTime =
                 endDate
                     + " "
                     + questionnaireCustomFrequencyList
                         .get(questionnaireCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
+                        .getFrequencyEndTime();
           }
 
           activityBean.setStartTime(
@@ -3955,7 +3955,7 @@ public class ActivityMetaDataDao {
                 manuallyScheduleFrequencyList.get(0).isxDaysSign()
                     ? -manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays()
                     : manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays());
-            start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyTime());
+            start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyStartTime());
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
@@ -3969,7 +3969,7 @@ public class ActivityMetaDataDao {
             end.setTime(
                 manuallyScheduleFrequencyList
                     .get(manuallyScheduleFrequencyList.size() - 1)
-                    .getFrequencyTime());
+                    .getFrequencyEndTime());
           }
         } else if (activeTaskDto
             .getFrequency()
@@ -4079,11 +4079,14 @@ public class ActivityMetaDataDao {
               customFrequencyDto.isxDaysSign()
                   ? -customFrequencyDto.getTimePeriodFromDays()
                   : customFrequencyDto.getTimePeriodFromDays());
+
+          activityFrequencyAnchorRunsBean.setStartTime(customFrequencyDto.getFrequencyStartTime());
+
           activityFrequencyAnchorRunsBean.setEndDays(
               customFrequencyDto.isyDaysSign()
                   ? -customFrequencyDto.getTimePeriodToDays()
                   : customFrequencyDto.getTimePeriodToDays());
-          activityFrequencyAnchorRunsBean.setTime(customFrequencyDto.getFrequencyTime());
+          activityFrequencyAnchorRunsBean.setEndTime(customFrequencyDto.getFrequencyEndTime());
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);
         }
       }
@@ -4193,7 +4196,7 @@ public class ActivityMetaDataDao {
                 manuallyScheduleFrequencyList.get(0).isxDaysSign()
                     ? -manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays()
                     : manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays());
-            start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyTime());
+            start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyStartTime());
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
@@ -4207,7 +4210,7 @@ public class ActivityMetaDataDao {
             end.setTime(
                 manuallyScheduleFrequencyList
                     .get(manuallyScheduleFrequencyList.size() - 1)
-                    .getFrequencyTime());
+                    .getFrequencyEndTime());
           }
         } else if (questionaire
             .getFrequency()
@@ -4318,11 +4321,14 @@ public class ActivityMetaDataDao {
               customFrequencyDto.isxDaysSign()
                   ? -customFrequencyDto.getTimePeriodFromDays()
                   : customFrequencyDto.getTimePeriodFromDays());
+
+          activityFrequencyAnchorRunsBean.setStartTime(customFrequencyDto.getFrequencyStartTime());
+
           activityFrequencyAnchorRunsBean.setEndDays(
               customFrequencyDto.isyDaysSign()
                   ? -customFrequencyDto.getTimePeriodToDays()
                   : customFrequencyDto.getTimePeriodToDays());
-          activityFrequencyAnchorRunsBean.setTime(customFrequencyDto.getFrequencyTime());
+          activityFrequencyAnchorRunsBean.setEndTime(customFrequencyDto.getFrequencyEndTime());
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);
         }
       }

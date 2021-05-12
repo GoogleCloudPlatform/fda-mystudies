@@ -31,6 +31,7 @@ import com.hphc.mystudies.bean.StudyUpdatesResponse;
 import com.hphc.mystudies.bean.TermsPolicyResponse;
 import com.hphc.mystudies.dto.AppVersionDto;
 import com.hphc.mystudies.dto.AppVersionInfo;
+import com.hphc.mystudies.dto.ConsentDto;
 import com.hphc.mystudies.dto.NotificationDto;
 import com.hphc.mystudies.dto.ResourcesDto;
 import com.hphc.mystudies.dto.StudyDto;
@@ -329,6 +330,7 @@ public class AppMetaDataDao {
     Session session = null;
     StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
     StudyUpdatesBean updates = new StudyUpdatesBean();
+    ConsentDto consent = null;
     List<StudyVersionDto> studyVersionList = null;
     StudyVersionDto currentVersion = null;
     StudyVersionDto latestVersion = null;
@@ -430,6 +432,21 @@ public class AppMetaDataDao {
             break;
           default:
             break;
+        }
+
+        consent =
+            (ConsentDto)
+                session
+                    .createQuery(
+                        "from ConsentDto CDTO"
+                            + " where CDTO.customStudyId= :customStudyId ORDER BY CDTO.id DESC")
+                    .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
+                    .setMaxResults(1)
+                    .uniqueResult();
+
+        if (consent != null) {
+          studyUpdates.setEnrollAgain(
+              consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
         }
 
         // get the latest version of study
