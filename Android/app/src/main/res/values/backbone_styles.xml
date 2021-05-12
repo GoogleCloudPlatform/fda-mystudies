@@ -9,6 +9,7 @@
         <item name="alertDialogTheme">@style/Theme.BackboneApp.Dialog</item>
         <item name="toolbarTheme">@style/Theme.BackboneApp.Toolbar</item>
         <item name="actionMenuTextColor">#FFFFFF</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Theme.BackboneApp.Survey">
@@ -16,33 +17,39 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="colorPrimaryDark">@color/dark_gray</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Theme.BackboneApp.Toolbar.Transparent">
         <item name="colorControlNormal">@color/rsb_warm_gray</item>
         <item name="colorPrimary">@android:color/white</item>
         <item name="toolbarStyle">@style/Widget.BackboneApp.Toolbar.Transparent</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Theme.BackboneApp.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/rsb_warm_gray</item>
         <item name="android:background">@android:color/white</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Theme.BackboneApp.Toolbar">
         <item name="colorControlNormal">@android:color/white</item>
         <item name="toolbarStyle">@style/Widget.BackboneApp.Toolbar</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Base.Widget.BackboneApp.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:minHeight">56dp</item>
         <item name="titleTextAppearance">@style/TextAppearance.Widget.BackboneApp.Toolbar.Title</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Widget.BackboneApp.Toolbar" parent="@style/Base.Widget.BackboneApp.Toolbar">
         <item name="android:foreground">?android:windowContentOverlay</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
 
@@ -50,10 +57,12 @@
         parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="TextAppearance.Widget.BackboneApp.Toolbar.Title.Transparent">
         <item name="android:textColor">@color/rsb_warm_gray</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <!--<style name="Theme.SDLRSXExample.Survey">
@@ -73,6 +82,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/rsb_warm_gray</item>
         <item name="android:background">@android:color/white</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <!--<style name="Theme.SDLRSXExample.Toolbar">
