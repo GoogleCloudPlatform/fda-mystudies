@@ -7,8 +7,10 @@ import {Study} from '../../studies/shared/study.model';
 import {AddSiteRequest} from '../shared/add.sites.request';
 import {LocationService} from '../../location/shared/location.service';
 import {ManageLocations} from '../../location/shared/location.model';
+import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Observable, of} from 'rxjs';
-import {Site, SiteResponse} from '../../studies/shared/site.model';
+import { Site, SiteResponse } from '../../studies/shared/site.model';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'add-site',
   templateUrl: './add-site.component.html',
@@ -25,7 +27,7 @@ export class AddSiteComponent
   location$: Observable<ManageLocations> = of();
   disableButton = false;
   addedSite = {} as Site;
-  siteName = '';
+  siteName ='';
   constructor(
     private readonly siteService: SitesService,
     private readonly toastr: ToastrService,
@@ -45,6 +47,8 @@ export class AddSiteComponent
   getLocation(studyId: string): void {
     this.location$ = this.locationService.getLocationsForSiteCreation(studyId);
   }
+
+  
   add(): void {
     this.disableButton = true;
     this.subs.add(

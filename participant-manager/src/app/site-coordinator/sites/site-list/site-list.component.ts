@@ -11,6 +11,7 @@ import {Permission} from 'src/app/shared/permission-enums';
 import {Status, StudyType} from 'src/app/shared/enums';
 import {SearchParameterService} from 'src/app/service/search-parameter.service';
 import {ViewportScroller} from '@angular/common';
+
 const limit = 10;
 @Component({
   selector: 'app-site-list',

@@ -2,6 +2,7 @@
 import {FormGroup, ValidatorFn, AbstractControl} from '@angular/forms';
 export function emailvaliadtor(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
+    //  const validemail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(control.value);
     var email_filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     const validemail = email_filter.test(control.value);
 

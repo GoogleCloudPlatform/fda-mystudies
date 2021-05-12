@@ -143,6 +143,7 @@ export class SetUpAccountComponent
       const secretkeylenth = String(
         this.setupAccountForm.controls['password'].value,
       );
+
       if (secretkeylenth.length === 0) {
         this.passwordMeterLow = ' ';
         this.passwordMeterHigh = ' ';

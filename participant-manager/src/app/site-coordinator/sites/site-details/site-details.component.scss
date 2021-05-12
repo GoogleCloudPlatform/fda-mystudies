@@ -103,6 +103,7 @@ input[type="checkbox"]:checked + label::before {
 .chk_box_hidden:before {
   visibility: hidden;
 }
+
 .chk_box_hidden2:before {
   display: none;
 }

@@ -12,6 +12,7 @@ export interface Site {
 export interface UpdateTargetEnrollmentRequest {
   targetEnrollment: number;
 }
+
 export interface SiteResponse extends ApiResponse {
   siteId: string;
   siteName: string;

@@ -38,6 +38,7 @@ export class ChangePasswordComponent
   consecutiveCharacter = '';
   passwordLength = '';
   userName = '';
+  dataServiceProcessed = false;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -118,7 +119,6 @@ special characters.`);
       const secretkeylenth = String(
         this.resetPasswordForm.controls['newPassword'].value,
       );
-
       if (secretkeylenth.length === 0) {
         this.passwordMeterLow = ' ';
         this.passwordMeterHigh = ' ';
