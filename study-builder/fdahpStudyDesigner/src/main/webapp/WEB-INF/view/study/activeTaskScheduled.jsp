@@ -1286,7 +1286,6 @@
   if($('.manually-anchor-option').length == 1){
 	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
   }
-  debugger;
     if ($("#schedule2").prop("checked")) {
     	 var schedule_opts = $("input[name='frequency']:checked").val();
     	 
@@ -1386,7 +1385,6 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
     }
-    debugger;
     $(".typeofschedule").change(function () {
       var scheduletype = $(this).attr('scheduletype');
       $('#isLaunchStudy').prop('checked', false);
@@ -1695,7 +1693,6 @@
       var flag = 'schedule';
       setFrequencyVal(flag);
       //AnchorDate start
-      debugger;
       var scheduletype = $('input[name="scheduleType"]:checked').val();
       if (scheduletype == 'AnchorDate') {
     	  
@@ -1779,7 +1776,6 @@
       } else if (frequencey == 'Monthly') {
         $(".month").removeClass("dis-none");
       }
-      debugger;
       var scheduletype = $('input[name="scheduleType"]:checked').val();
       if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined'
           && scheduletype == 'AnchorDate') {

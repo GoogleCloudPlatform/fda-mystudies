@@ -3621,7 +3621,7 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Setting and Admins");
+                  "Error encountered. Your settings could not be saved.");
           return new ModelAndView("redirect:viewSettingAndAdmins.do", map);
         }
       }
