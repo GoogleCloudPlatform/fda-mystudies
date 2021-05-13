@@ -181,14 +181,6 @@ For studies that are already launched, notifications get scheduled for delivery 
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    <c:if test="${studyBo.status eq 'Active'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
-
-    <c:if test="${notificationBO.actionPage eq 'view'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
-
     <c:if test="${notificationBO.actionPage eq 'view'}">
     $('#studyNotificationFormId input,textarea').prop('disabled', true);
     $('.studyNotificationButtonHide').addClass('dis-none');
