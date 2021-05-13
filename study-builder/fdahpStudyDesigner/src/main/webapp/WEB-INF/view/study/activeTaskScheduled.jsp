@@ -81,7 +81,7 @@
       <div class="col-md-5 col-lg-5 p-none">
         <div class="form-group">
           <select id="anchorDateId"
-                  class="selectpicker ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}" ${isAnchorQuestionnaire?'disabled':''}
+                  class="selectpicker ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                   required data-error="Please fill out this field" name="anchorDateId">
             <option value=''>Select</option>
             <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
