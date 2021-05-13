@@ -377,7 +377,6 @@
         <form:form action="" name="anchorFormId" id="anchorFormId"
                    method="post" role="form" data-toggle="validator">
           <div class="anchortypeclass" style="display: none;">
-            <c:if test="${fn:length(anchorTypeList) gt 0}">
               <div class="gray-xs-f mb-sm">Select anchor date type</div>
               <div class="clearfix"></div>
               <div class="col-md-5 col-lg-5 p-none">
@@ -395,7 +394,6 @@
                 </div>
               </div>
               <div class="clearfix"></div>
-            </c:if>
           </div>
         </form:form>
         <!-- Ancor date type -->
