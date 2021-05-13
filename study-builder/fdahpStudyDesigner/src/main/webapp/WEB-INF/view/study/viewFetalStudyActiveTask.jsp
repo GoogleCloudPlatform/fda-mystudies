@@ -29,6 +29,7 @@
   <input type="hidden" name="id" id="taskContentId" value="${activeTaskBo.id}">
   <input type="hidden" name="taskTypeId" value="${activeTaskBo.taskTypeId}">
   <input type="hidden" name="studyId" value="${activeTaskBo.studyId}">
+  <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <input type="hidden" value="" id="buttonText" name="buttonText">
   <input type="hidden" value="${actionPage}" id="actionPage" name="actionPage">
   <input type="hidden" value="${currentPage}" id="currentPageId" name="currentPage">
