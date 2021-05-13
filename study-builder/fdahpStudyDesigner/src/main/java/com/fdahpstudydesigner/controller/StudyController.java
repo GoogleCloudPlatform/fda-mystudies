@@ -3659,7 +3659,7 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Eligibility");
+                  "Error encountered. Your settings could not be saved.");
           mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
         }
       }
