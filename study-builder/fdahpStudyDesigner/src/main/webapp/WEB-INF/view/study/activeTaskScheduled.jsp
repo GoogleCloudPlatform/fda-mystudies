@@ -2843,7 +2843,9 @@
             if (message == "SUCCESS") {
               var activeTaskId = data.activeTaskId;
               var activeTaskFrequenceId = data.activeTaskFrequenceId;
+              var activeTaskCreated=data.activeTaskCreated
               $("#activeTaskId, #taskId,#taskContentId,.activeTaskIdClass").val(activeTaskId);
+              $("#activeTaskCreated").val(activeTaskCreated);
               $("#previousFrequency").val(frequency_text);
               if (frequency_text == 'One time') {
                 $("#oneTimeFreId").val(activeTaskFrequenceId);
@@ -2885,7 +2887,9 @@
             if (message == "SUCCESS") {
               var activeTaskId = data.activeTaskId;
               var activeTaskFrequenceId = data.activeTaskFrequenceId;
+              var activeTaskCreated=data.activeTaskCreated
               $("#activeTaskId, #taskId,#taskContentId,.activeTaskIdClass").val(activeTaskId);
+              $("#activeTaskCreated").val(activeTaskCreated);
               $("#previousFrequency").val(frequency_text);
               if (frequency_text == 'One time') {
                 $("#oneTimeFreId").val(activeTaskFrequenceId);
