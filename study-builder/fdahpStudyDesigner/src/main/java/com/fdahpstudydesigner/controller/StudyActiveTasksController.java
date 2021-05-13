@@ -408,6 +408,7 @@ public class StudyActiveTasksController {
               activeTaskBo.setModifiedBy(sesObj.getUserId());
               activeTaskBo.setModifiedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
             } else {
+              jsonobject.put("activeTaskCreated", "true");
               activeTaskBo.setCreatedBy(sesObj.getUserId());
               activeTaskBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
               if ((activeTaskBo.getScheduleType() == null)
@@ -521,7 +522,8 @@ public class StudyActiveTasksController {
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
 
-              if (ADD.equalsIgnoreCase(activeTaskBo.getActionPage())) {
+              if (ADD.equalsIgnoreCase(activeTaskBo.getActionPage())
+                  && activeTaskBo.getActiveTaskCreated().equals("true")) {
                 request
                     .getSession()
                     .setAttribute(sessionStudyCount + "sucMsg", "Active task created successfully");
