@@ -3349,6 +3349,8 @@ public class StudyController {
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
               : 0;
+      String elaboratedText = request.getParameter("elaborated");
+      consentInfoBo.setElaborated(elaboratedText);
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
