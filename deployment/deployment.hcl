@@ -14,7 +14,7 @@ template "mystudies" {
   data = {
     # Prefix that will be prepended to your project and resource names
     # For example, "mystudies"
-    prefix           = "btc"
+    prefix           = "btcsoft"
     # Environment label that will be appended to PREFIX in your project and resource names
     # For example, "dev"
     env              = "dev"
@@ -47,7 +47,7 @@ template "mystudies" {
     master_authorized_networks = [
       {
         cidr_block   = "0.0.0.0/0"
-        display_name = "btc-dev-dev"
+        display_name = "btcsoft-dev-ip"
       },
     ]
   }
